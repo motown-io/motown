@@ -11,4 +11,12 @@
 
     <groupId>io.motown.domain</groupId>
     <artifactId>core-api</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-core</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>
