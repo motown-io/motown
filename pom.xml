@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.motown</groupId>
+    <artifactId>motown-io</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+        
+    <modules>
+        <module>domain/core-api</module>
+        <module>domain/command-handling</module> 
+        <module>domain/app</module>
+        <module>ocpp/soap</module>
+        <module>ocpp/websocket-json</module>
+        <module>operator-api/view-model</module>      
+        <module>operator-api/json</module>             
+        <module>operator-ui/view-model</module>
+        <module>operator-ui/web</module>
+    </modules>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+</project>
