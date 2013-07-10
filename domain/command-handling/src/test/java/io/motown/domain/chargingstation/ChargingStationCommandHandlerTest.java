@@ -9,7 +9,7 @@ import org.axonframework.test.Fixtures;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ChargingStationTest {
+public class ChargingStationCommandHandlerTest {
 
     private FixtureConfiguration<ChargingStation> fixture;
 
