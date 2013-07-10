@@ -9,11 +9,14 @@ import org.junit.Test;
 
 public class ChargingStationTest {
 
-    private FixtureConfiguration fixture;
+    private FixtureConfiguration<ChargingStation> fixture;
 
     @Before
     public void setUp() throws Exception {
         fixture = Fixtures.newGivenWhenThenFixture(ChargingStation.class);
+        ChargingStationCommandHandler commandHandler = new ChargingStationCommandHandler();
+        commandHandler.setRepository(fixture.getRepository());
+        fixture.registerAnnotatedCommandHandler(commandHandler);
     }
 
     @Test

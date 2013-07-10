@@ -1,8 +1,6 @@
 package io.motown.domain.chargingstation;
 
-import io.motown.domain.api.chargingstation.RequestUnlockConnectorCommand;
 import io.motown.domain.api.chargingstation.UnlockConnectorRequestedEvent;
-import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 
@@ -20,8 +18,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         this.id = id;
     }
 
-    @CommandHandler
-    public void requestUnlockConnector(RequestUnlockConnectorCommand command) {
-        apply(new UnlockConnectorRequestedEvent(command.getChargingStationId(), command.getConnectorId()));
+    public void requestUnlockConnector(int connectorId) {
+        apply(new UnlockConnectorRequestedEvent(this.id, connectorId));
     }
 }
