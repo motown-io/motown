@@ -1,5 +1,7 @@
 package io.motown.domain.chargingstation;
 
+import io.motown.domain.api.chargingstation.BootChargingStationCommand;
+import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
 import io.motown.domain.api.chargingstation.RequestUnlockConnectorCommand;
 import io.motown.domain.api.chargingstation.UnlockConnectorRequestedEvent;
 import org.axonframework.test.FixtureConfiguration;
@@ -21,8 +23,16 @@ public class ChargingStationTest {
 
     @Test
     public void testRequestUnlockConnector() {
-        fixture.given(new ChargingStation("CS-001"))
+        fixture.given(new ChargingStationCreatedEvent("CS-001", "MODEL-001"))
                 .when(new RequestUnlockConnectorCommand("CS-001", 1))
                 .expectEvents(new UnlockConnectorRequestedEvent("CS-001", 1));
     }
+
+    @Test
+    public void testBootChargingStation() {
+        fixture.given()
+                .when(new BootChargingStationCommand("CS-001", "MODEL-001"))
+                .expectEvents(new ChargingStationCreatedEvent("CS-001", "MODEL-001"));
+    }
+
 }
