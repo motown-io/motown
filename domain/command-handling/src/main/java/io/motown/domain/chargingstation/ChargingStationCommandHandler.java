@@ -3,6 +3,7 @@ package io.motown.domain.chargingstation;
 import io.motown.domain.api.chargingstation.BootChargingStationCommand;
 import io.motown.domain.api.chargingstation.RequestUnlockConnectorCommand;
 import org.axonframework.commandhandling.annotation.CommandHandler;
+import org.axonframework.repository.AggregateNotFoundException;
 import org.axonframework.repository.Repository;
 
 public class ChargingStationCommandHandler {
@@ -17,8 +18,16 @@ public class ChargingStationCommandHandler {
 
     @CommandHandler
     public void handleBootChargingStation(BootChargingStationCommand command) {
-        ChargingStation chargingStation = new ChargingStation(command.getChargingStationId(), command.getModel());
-        repository.add(chargingStation);
+        ChargingStation chargingStation;
+
+        try {
+            chargingStation = repository.load(command.getChargingStationId());
+        } catch (AggregateNotFoundException e) {
+            chargingStation = new ChargingStation(command.getChargingStationId(), command.getModel());
+            repository.add(chargingStation);
+        }
+
+        chargingStation.boot(command.getChargingStationId(), command.getModel());
     }
 
     public void setRepository(Repository<ChargingStation> chargingStationRepository) {

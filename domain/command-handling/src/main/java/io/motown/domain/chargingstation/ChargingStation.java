@@ -1,5 +1,6 @@
 package io.motown.domain.chargingstation;
 
+import io.motown.domain.api.chargingstation.ChargingStationBootedEvent;
 import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
 import io.motown.domain.api.chargingstation.UnlockConnectorRequestedEvent;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -16,6 +17,10 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     ChargingStation(String id, String model) {
         apply(new ChargingStationCreatedEvent(id, model));
+    }
+
+    public void boot(String chargingStationId, String model) {
+        apply(new ChargingStationBootedEvent(chargingStationId, model));
     }
 
     public void requestUnlockConnector(int connectorId) {
