@@ -22,14 +22,14 @@ public class ChargingStationCommandHandlerTest {
     }
 
     @Test
-    public void testRequestUnlockConnector() {
+    public void testRequestingToUnlockConnector() {
         fixture.given(new ChargingStationCreatedEvent("CS-001", "MODEL-001"))
                 .when(new RequestUnlockConnectorCommand("CS-001", 1))
                 .expectEvents(new UnlockConnectorRequestedEvent("CS-001", 1));
     }
 
     @Test
-    public void testBootChargingStation() {
+    public void testBootingChargingStationForUnknownChargingStation() {
         fixture.given()
                 .when(new BootChargingStationCommand("CS-001", "MODEL-001"))
                 .expectEvents(new ChargingStationCreatedEvent("CS-001", "MODEL-001"));
