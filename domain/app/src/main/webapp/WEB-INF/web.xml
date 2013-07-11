@@ -4,7 +4,7 @@
            xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 		  http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
            version="3.0">
-    <display-name>Axon framework Trader sample</display-name>
+    <display-name>Motown.IO - Domain</display-name>
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
