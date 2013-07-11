@@ -12,6 +12,7 @@
         <module>domain/command-handling</module> 
         <module>domain/app</module>
         <module>ocpp/soap</module>
+        <module>ocpp/view-model</module>
         <module>ocpp/websocket-json</module>
         <module>operator-api/view-model</module>      
         <module>operator-api/json</module>             
