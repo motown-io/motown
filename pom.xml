@@ -74,7 +74,12 @@
                 <version>1.7.5</version>
             </dependency>
             <dependency>
-                <groupId>org.axonframework</groupId>
+                <groupId>com.sparkjava</groupId>
+                <artifactId>spark-core</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+            <groupId>org.axonframework</groupId>
                 <artifactId>axon-test</artifactId>
                 <version>${axon.version}</version>
                 <scope>test</scope>
