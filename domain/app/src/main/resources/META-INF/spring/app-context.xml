@@ -12,7 +12,9 @@
 
     <axon:event-bus id="eventBus"/>
 
-    <axon:command-bus id="commandBus"/>
+    <bean id="commandBus" class="org.axonframework.commandhandling.distributed.DistributedCommandBus">
+        <constructor-arg ref="jgroupsConnector"/>
+    </bean>
 
     <axon:filesystem-event-store id="eventStore" base-dir="${java.io.tmpdir}"/>
 
@@ -28,5 +30,16 @@
         <constructor-arg>
             <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean"/>
         </constructor-arg>
+    </bean>
+
+    <bean id="jgroupsConnector" class="org.axonframework.commandhandling.distributed.jgroups.JGroupsConnectorFactoryBean">
+        <property name="configuration" value="flush-udp.xml"/>
+        <property name="clusterName" value="motown.io"/>
+        <property name="localSegment">
+            <axon:command-bus/>
+        </property>
+        <property name="serializer">
+            <bean id="serializer" class="org.axonframework.serializer.xml.XStreamSerializer"/>
+        </property>
     </bean>
 </beans>
