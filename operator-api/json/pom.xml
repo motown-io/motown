@@ -10,5 +10,5 @@
     </parent>
 
     <groupId>io.motown.operator-api</groupId>
-    <artifactId>rest</artifactId>
+    <artifactId>json</artifactId>
 </project>
