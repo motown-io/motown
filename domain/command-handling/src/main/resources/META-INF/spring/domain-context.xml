@@ -5,9 +5,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd">
 
-    <bean class="io.motown.domain.chargingstation.ChargingStationCommandHandler">
-        <property name="repository" ref="chargingStationRepository"/>
-    </bean>
 
     <axon:event-sourcing-repository id="chargingStationRepository"
                                     aggregate-type="io.motown.domain.chargingstation.ChargingStation"
