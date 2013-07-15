@@ -25,7 +25,17 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         apply(new ChargingStationCreatedEvent(command.getChargingStationId(), command.getModel(), command.getConnectors()));
     }
 
-    @CommandHandler
+    /**
+     * Handles a BootChargingStationCommand.
+     *
+     * In contrast to the other command handling methods in ChargingStation, this method is not annotated with {@link
+     * org.axonframework.commandhandling.annotation.CommandHandler}. This command is handled by a dedicated command
+     * handler class, {@link io.motown.domain.chargingstation.BootChargingStationCommandHandler}, to handle creating a
+     * ChargingStation instance when a {@link io.motown.domain.api.chargingstation.BootChargingStationCommand} is
+     * received for a non-existent ChargingStation.
+     *
+     * @param command the command which needs to be applied to the ChargingStation.
+     */
     public void handle(BootChargingStationCommand command) {
         apply(new ChargingStationBootedEvent(id));
     }
