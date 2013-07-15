@@ -6,7 +6,6 @@ import org.axonframework.test.Fixtures;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,9 +13,7 @@ public class ChargingStationCommandHandlerTest {
 
     private FixtureConfiguration<ChargingStation> fixture;
 
-    private  List<Connector> connectors = new LinkedList<Connector>();
-
-
+    private List<Connector> connectors = new LinkedList<Connector>();
 
     @Before
     public void setUp() throws Exception {

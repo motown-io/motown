@@ -10,7 +10,6 @@ import java.util.List;
 
 public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
-
     @AggregateIdentifier
     private String id;
 
@@ -37,15 +36,14 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
             apply(new ConnectorNotFoundEvent(this.id, command.getConnectorId()));
         } else {
             if (command.getConnectorId() == Connector.ALL) {
-               for(Connector connector: connectors) {
-                   apply(new UnlockConnectorRequestedEvent(this.id, connector.getConnectorId()));
-               }
+                for (Connector connector : connectors) {
+                    apply(new UnlockConnectorRequestedEvent(this.id, connector.getConnectorId()));
+                }
             } else {
                 apply(new UnlockConnectorRequestedEvent(this.id, command.getConnectorId()));
             }
         }
     }
-
 
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {

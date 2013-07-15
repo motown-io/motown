@@ -1,12 +1,5 @@
 package io.motown.domain.api.chargingstation;
 
-/**
- * Created with IntelliJ IDEA.
- * User: olger
- * Date: 7/12/13
- * Time: 5:54 PM
- * To change this template use File | Settings | File Templates.
- */
 public class Connector {
 
     public final static Integer ALL = 0;
