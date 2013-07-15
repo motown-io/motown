@@ -1,6 +1,7 @@
 package io.motown.operatorapi.json;
 
 import io.motown.domain.api.chargingstation.BootChargingStationCommand;
+import io.motown.domain.api.chargingstation.Connector;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.commandhandling.SimpleCommandBus;
@@ -14,6 +15,10 @@ import spark.Response;
 import spark.Route;
 import spark.servlet.SparkApplication;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import static spark.Spark.connect;
 import static spark.Spark.post;
 
 public class JsonOperatorApiApplication implements SparkApplication {
@@ -36,7 +41,13 @@ public class JsonOperatorApiApplication implements SparkApplication {
         post(new Route("/charging-station/boot") {
             @Override
             public Object handle(Request request, Response response) {
-                commandBus.dispatch(new GenericCommandMessage<BootChargingStationCommand>(new BootChargingStationCommand("CP-001", "TUBE")));
+                // Make use of a view model class that keeps track of all known chargepoints (identifiers)
+                // in order to understand if a create is required before a boot can be sent.
+
+                List<Connector> connectors = new LinkedList<Connector>();
+                connectors.add(new Connector(1, "CONTYPE", 32));
+
+                commandBus.dispatch(new GenericCommandMessage<BootChargingStationCommand>(new BootChargingStationCommand("CP-001", "TUBE", connectors)));
                 return "command dispatched!";
             }
         });

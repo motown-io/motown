@@ -8,7 +8,7 @@ import java.util.List;
  * The Boot command contains all information about a chargepoint.
  * When the point does not exist (yet), you have the option to create it.
  */
-public class BootChargingStationCommand {
+public class CreateChargingStationCommand {
 
     @TargetAggregateIdentifier
     private final String chargingStationId;
@@ -17,7 +17,7 @@ public class BootChargingStationCommand {
 
     private final List<Connector> connectors;
 
-    public BootChargingStationCommand(String chargingStationId, String model, List<Connector> connectors) {
+    public CreateChargingStationCommand(String chargingStationId, String model, List<Connector> connectors) {
         this.chargingStationId = chargingStationId;
         this.model = model;
         this.connectors = connectors;

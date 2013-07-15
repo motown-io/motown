@@ -1,34 +1,55 @@
 package io.motown.domain.chargingstation;
 
-import io.motown.domain.api.chargingstation.ChargingStationBootedEvent;
-import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
-import io.motown.domain.api.chargingstation.UnlockConnectorRequestedEvent;
+import io.motown.domain.api.chargingstation.*;
+import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 
+import java.util.List;
+
 public class ChargingStation extends AbstractAnnotatedAggregateRoot {
+
 
     @AggregateIdentifier
     private String id;
 
-    ChargingStation() {
+    private List<Connector> connectors;
+
+    protected ChargingStation() {
     }
 
-    ChargingStation(String id, String model) {
-        apply(new ChargingStationCreatedEvent(id, model));
+    @CommandHandler
+    public ChargingStation(CreateChargingStationCommand command) {
+        this();
+
+        apply(new ChargingStationCreatedEvent(command.getChargingStationId(), command.getModel(), command.getConnectors()));
     }
 
-    public void boot(String chargingStationId, String model) {
-        apply(new ChargingStationBootedEvent(chargingStationId, model));
+    @CommandHandler
+    public void handle(BootChargingStationCommand command) {
+        apply(new ChargingStationBootedEvent(id));
     }
 
-    public void requestUnlockConnector(int connectorId) {
-        apply(new UnlockConnectorRequestedEvent(this.id, connectorId));
+    @CommandHandler
+    public void handle(RequestUnlockConnectorCommand command) {
+        if (command.getConnectorId() > connectors.size()) {
+            apply(new ConnectorNotFoundEvent(this.id, command.getConnectorId()));
+        } else {
+            if (command.getConnectorId() == Connector.ALL) {
+               for(Connector connector: connectors) {
+                   apply(new UnlockConnectorRequestedEvent(this.id, connector.getConnectorId()));
+               }
+            } else {
+                apply(new UnlockConnectorRequestedEvent(this.id, command.getConnectorId()));
+            }
+        }
     }
+
 
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
         this.id = event.getChargingStationId();
+        this.connectors = event.getConnectors();
     }
 }
