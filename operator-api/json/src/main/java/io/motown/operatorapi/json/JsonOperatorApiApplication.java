@@ -41,9 +41,6 @@ public class JsonOperatorApiApplication implements SparkApplication {
         post(new Route("/charging-station/boot") {
             @Override
             public Object handle(Request request, Response response) {
-                // Make use of a view model class that keeps track of all known chargepoints (identifiers)
-                // in order to understand if a create is required before a boot can be sent.
-
                 List<Connector> connectors = new LinkedList<Connector>();
                 connectors.add(new Connector(1, "CONTYPE", 32));
 
