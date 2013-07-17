@@ -7,9 +7,14 @@ import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.commandhandling.SimpleCommandBus;
 import org.axonframework.commandhandling.distributed.DistributedCommandBus;
 import org.axonframework.commandhandling.distributed.jgroups.JGroupsConnector;
+import org.axonframework.eventhandling.*;
 import org.axonframework.serializer.Serializer;
 import org.axonframework.serializer.xml.XStreamSerializer;
 import org.jgroups.JChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -18,14 +23,20 @@ import spark.servlet.SparkApplication;
 import java.util.LinkedList;
 import java.util.List;
 
-import static spark.Spark.connect;
 import static spark.Spark.post;
 
 public class JsonOperatorApiApplication implements SparkApplication {
 
+    private static final Logger log = LoggerFactory.getLogger(JsonOperatorApiApplication.class);
+
     private CommandBus commandBus;
 
+    private EventBus eventBus;
+
     public JsonOperatorApiApplication() throws Exception {
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring/view-model-context.xml");
+        this.eventBus = (EventBus) context.getBean("eventBus");
+
         JChannel channel = new JChannel("flush-udp.xml");
         CommandBus localSegment = new SimpleCommandBus();
         Serializer serializer = new XStreamSerializer();
