@@ -12,6 +12,10 @@
     <groupId>io.motown.domain</groupId>
     <artifactId>app</artifactId>
 
+    <properties>
+        <jetty.port>8080</jetty.port>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -71,7 +75,7 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <configuration>
                     <httpConnector>
-                        <port>8080</port>
+                        <port>${jetty.port}</port>
                     </httpConnector>
                 </configuration>
             </plugin>
