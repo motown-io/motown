@@ -56,11 +56,7 @@
 
     <rabbit:admin id="amqpAdmin" connection-factory="amqpConnection"/>
 
-    <rabbit:queue id="queue" name="events"/>
-
-    <rabbit:fanout-exchange id="exchange" name="motown.io-events">
-        <rabbit:bindings>
-            <rabbit:binding queue="queue"/>
-        </rabbit:bindings>
-    </rabbit:fanout-exchange>
+    <rabbit:fanout-exchange id="exchange"
+                            name="motown.io-events"
+                            durable="true"/>
 </beans>

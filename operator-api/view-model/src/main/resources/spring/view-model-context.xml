@@ -59,10 +59,12 @@
                   connection-factory="amqpConnection"/>
 
     <rabbit:queue id="queue"
-                  name="events"/>
+                  name="events"
+                  durable="true"/>
 
     <rabbit:fanout-exchange id="exchange"
-                            name="motown.io-events">
+                            name="motown.io-events"
+                            durable="true">
         <rabbit:bindings>
             <rabbit:binding queue="queue"/>
         </rabbit:bindings>
