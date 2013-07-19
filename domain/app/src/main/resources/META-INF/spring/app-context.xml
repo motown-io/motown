@@ -41,8 +41,8 @@
     <bean id="serializer" class="org.axonframework.serializer.xml.XStreamSerializer"/>
 
     <bean id="jgroupsConnector" class="org.axonframework.commandhandling.distributed.jgroups.JGroupsConnectorFactoryBean">
-        <property name="configuration" value="io.motown.domain.app.commandbus.jgroups.configuration"/>
-        <property name="clusterName" value="io.motown.domain.app.commandbus.jgroups.cluster.name"/>
+        <property name="configuration" value="${io.motown.domain.app.commandbus.jgroups.configuration}"/>
+        <property name="clusterName" value="${io.motown.domain.app.commandbus.jgroups.cluster.name}"/>
         <property name="localSegment">
             <axon:command-bus/>
         </property>
