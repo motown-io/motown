@@ -52,13 +52,17 @@
     <axon-amqp:terminal id="terminal"
                         connection-factory="amqpConnection"
                         serializer="serializer"
-                        exchange-name="motown.io-events"/>
+                        exchange-name="${io.motown.domain.app.eventbus.amqp.rabbit.exchange.name}"/>
 
-    <rabbit:connection-factory id="amqpConnection" username="motown.io" password="motown.io" virtual-host="motown.io" host="localhost" />
+    <rabbit:connection-factory id="amqpConnection"
+                               host="${io.motown.domain.app.eventbus.amqp.rabbit.host}"
+                               username="${io.motown.domain.app.eventbus.amqp.rabbit.username}"
+                               password="${io.motown.domain.app.eventbus.amqp.rabbit.password}"
+                               virtual-host="${io.motown.domain.app.eventbus.amqp.rabbit.virtualhost}"/>
 
     <rabbit:admin id="amqpAdmin" connection-factory="amqpConnection"/>
 
     <rabbit:fanout-exchange id="exchange"
-                            name="motown.io-events"
+                            name="${io.motown.domain.app.eventbus.amqp.rabbit.exchange.name}"
                             durable="true"/>
 </beans>
