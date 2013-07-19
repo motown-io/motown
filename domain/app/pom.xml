@@ -14,6 +14,7 @@
 
     <properties>
         <jetty.port>8080</jetty.port>
+        <jetty.scanIntervalSeconds>10</jetty.scanIntervalSeconds>
     </properties>
 
     <dependencies>
@@ -77,6 +78,7 @@
                     <httpConnector>
                         <port>${jetty.port}</port>
                     </httpConnector>
+                    <scanIntervalSeconds>${jetty.scanIntervalSeconds}</scanIntervalSeconds>
                 </configuration>
             </plugin>
         </plugins>
