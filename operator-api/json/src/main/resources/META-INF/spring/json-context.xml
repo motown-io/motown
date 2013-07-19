@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:axon="http://www.axonframework.org/schema/core"
+       xsi:schemaLocation="http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
+                           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="commandBus" class="org.axonframework.commandhandling.distributed.DistributedCommandBus">
+        <constructor-arg ref="jgroupsConnector"/>
+    </bean>
+
+    <bean id="jgroupsConnector"
+          class="org.axonframework.commandhandling.distributed.jgroups.JGroupsConnectorFactoryBean">
+        <property name="configuration" value="flush-udp.xml"/>
+        <property name="clusterName" value="motown.io"/>
+        <property name="localSegment">
+            <axon:command-bus/>
+        </property>
+        <property name="serializer" ref="serializer"/>
+    </bean>
+</beans>

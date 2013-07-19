@@ -4,19 +4,12 @@ import io.motown.domain.api.chargingstation.BootChargingStationCommand;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.Connector;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
+import io.motown.operatorapi.viewmodel.spring.ApplicationContextProvider;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
-import org.axonframework.commandhandling.SimpleCommandBus;
-import org.axonframework.commandhandling.distributed.DistributedCommandBus;
-import org.axonframework.commandhandling.distributed.jgroups.JGroupsConnector;
-import org.axonframework.eventhandling.EventBus;
-import org.axonframework.serializer.Serializer;
-import org.axonframework.serializer.xml.XStreamSerializer;
-import org.jgroups.JChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -35,27 +28,15 @@ public class JsonOperatorApiApplication implements SparkApplication {
 
     private CommandBus commandBus;
 
-    private EventBus eventBus;
-
     private ChargingStationRepository repository;
 
     private Random random;
 
     public JsonOperatorApiApplication() throws Exception {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring/view-model-context.xml");
-        this.eventBus = (EventBus) context.getBean("eventBus");
+        ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 
-        JChannel channel = new JChannel("flush-udp.xml");
-        CommandBus localSegment = new SimpleCommandBus();
-        Serializer serializer = new XStreamSerializer();
-
-        JGroupsConnector connector = new JGroupsConnector(channel, "motown.io", localSegment, serializer);
-        this.commandBus = new DistributedCommandBus(connector);
-
-        connector.connect(100);
-
-        this.repository = (ChargingStationRepository) context.getBeansOfType(ChargingStationRepository.class).values().toArray()[0];
-
+        this.commandBus = (CommandBus) context.getBean("commandBus");
+        this.repository = (ChargingStationRepository) context.getBean("chargingStationRepository");
         this.random = new Random();
     }
 
