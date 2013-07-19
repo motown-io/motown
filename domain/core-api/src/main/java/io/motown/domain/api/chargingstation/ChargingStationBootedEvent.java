@@ -2,14 +2,14 @@ package io.motown.domain.api.chargingstation;
 
 public class ChargingStationBootedEvent {
 
-    private final String chargingStationId;
+    private final ChargingStationId chargingStationId;
 
 
-    public ChargingStationBootedEvent(String chargingStationId) {
+    public ChargingStationBootedEvent(ChargingStationId chargingStationId) {
         this.chargingStationId = chargingStationId;
     }
 
-    public String getChargingStationId() {
+    public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
     }
 

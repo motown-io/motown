@@ -11,7 +11,7 @@ import java.util.List;
 public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @AggregateIdentifier
-    private String id;
+    private ChargingStationId id;
 
     private List<Connector> connectors;
 

@@ -1,6 +1,7 @@
 package io.motown.operatorapi.json;
 
 import io.motown.domain.api.chargingstation.BootChargingStationCommand;
+import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.Connector;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.axonframework.commandhandling.CommandBus;
@@ -66,7 +67,7 @@ public class JsonOperatorApiApplication implements SparkApplication {
                 List<Connector> connectors = new LinkedList<Connector>();
                 connectors.add(new Connector(1, "CONTYPE", 32));
 
-                commandBus.dispatch(new GenericCommandMessage<BootChargingStationCommand>(new BootChargingStationCommand("CP-0" + random.nextInt(100), "TUBE", connectors)));
+                commandBus.dispatch(new GenericCommandMessage<BootChargingStationCommand>(new BootChargingStationCommand(new ChargingStationId("CP-0" + random.nextInt(100)), "TUBE", connectors)));
                 return "command dispatched!";
             }
         });

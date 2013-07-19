@@ -1,9 +1,6 @@
 package io.motown.domain.chargingstation;
 
-import io.motown.domain.api.chargingstation.BootChargingStationCommand;
-import io.motown.domain.api.chargingstation.ChargingStationBootedEvent;
-import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
-import io.motown.domain.api.chargingstation.Connector;
+import io.motown.domain.api.chargingstation.*;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;
@@ -30,15 +27,15 @@ public class BootChargingStationCommandHandlerTest {
 
     @Test
     public void testBootingChargingStationForKnownChargingStation() {
-        fixture.given(new ChargingStationCreatedEvent("CS-001", "MODEL-001", connectors))
-                .when(new BootChargingStationCommand("CS-001", "MODEL-001", connectors))
-                .expectEvents(new ChargingStationBootedEvent("CS-001"));
+        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), "MODEL-001", connectors))
+                .when(new BootChargingStationCommand(new ChargingStationId("CS-001"), "MODEL-001", connectors))
+                .expectEvents(new ChargingStationBootedEvent(new ChargingStationId("CS-001")));
     }
 
     @Test
     public void testBootingChargingStationForUnknownChargingStation() {
         fixture.given()
-                .when(new BootChargingStationCommand("CS-001", "MODEL-001", connectors))
-                .expectEvents(new ChargingStationCreatedEvent("CS-001", "MODEL-001", connectors), new ChargingStationBootedEvent("CS-001"));
+                .when(new BootChargingStationCommand(new ChargingStationId("CS-001"), "MODEL-001", connectors))
+                .expectEvents(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), "MODEL-001", connectors), new ChargingStationBootedEvent(new ChargingStationId("CS-001")));
     }
 }

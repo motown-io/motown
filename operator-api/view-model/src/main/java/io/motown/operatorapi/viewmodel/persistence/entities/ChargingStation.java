@@ -1,5 +1,7 @@
 package io.motown.operatorapi.viewmodel.persistence.entities;
 
+import io.motown.domain.api.chargingstation.ChargingStationId;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Date;
@@ -7,17 +9,17 @@ import java.util.Date;
 @Entity
 public class ChargingStation {
     @Id
-    private String id;
+    private ChargingStationId id;
 
     private Date updated;
 
     private Date created;
 
-    public String getId() {
+    public ChargingStationId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(ChargingStationId id) {
         this.id = id;
     }
 

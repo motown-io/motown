@@ -11,19 +11,19 @@ import java.util.List;
 public class CreateChargingStationCommand {
 
     @TargetAggregateIdentifier
-    private final String chargingStationId;
+    private final ChargingStationId chargingStationId;
 
     private final String model;
 
     private final List<Connector> connectors;
 
-    public CreateChargingStationCommand(String chargingStationId, String model, List<Connector> connectors) {
+    public CreateChargingStationCommand(ChargingStationId chargingStationId, String model, List<Connector> connectors) {
         this.chargingStationId = chargingStationId;
         this.model = model;
         this.connectors = connectors;
     }
 
-    public String getChargingStationId() {
+    public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
     }
 
