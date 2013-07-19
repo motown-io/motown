@@ -52,9 +52,10 @@ public class JsonOperatorApiApplication implements SparkApplication {
                 return "command dispatched!";
             }
         });
-        get(new Route("/charging-stations") {
+        get(new JsonTransformerRoute("/charging-stations") {
             @Override
             public Object handle(Request request, Response response) {
+                response.type("application/json");
                 return repository.findAll();
             }
         });

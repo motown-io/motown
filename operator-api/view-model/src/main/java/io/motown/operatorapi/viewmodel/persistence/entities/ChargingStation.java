@@ -38,9 +38,4 @@ public class ChargingStation {
     public void setCreated(Date created) {
         this.created = created;
     }
-
-    @Override
-    public String toString() {
-        return "{\"id\":\"" + id + "\",\"created\":" + created + "\"updated\":" + updated + "\"}";
-    }
 }
