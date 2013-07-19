@@ -27,8 +27,8 @@
     <axon:snapshotter id="snapshotter" event-store="eventStore" executor="taskExecutor"/>
 
     <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-        <property name="corePoolSize" value="2"/>
-        <property name="maxPoolSize" value="5"/>
+        <property name="corePoolSize" value="${io.motown.domain.app.eventstore.snapshotter.executor.pool.size}"/>
+        <property name="maxPoolSize" value="${io.motown.domain.app.eventstore.snapshotter.executor.pool.size.max}"/>
         <property name="waitForTasksToCompleteOnShutdown" value="true"/>
     </bean>
 
