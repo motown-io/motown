@@ -14,13 +14,15 @@
     <axon:annotation-config/>
     <context:component-scan base-package="io.motown.domain"/>
 
+    <context:property-placeholder location="classpath:config.properties, file:${io.motown.domain.app.config}" ignore-resource-not-found="true" />
+
     <axon:event-bus id="eventBus" terminal="terminal"/>
 
     <bean id="commandBus" class="org.axonframework.commandhandling.distributed.DistributedCommandBus">
         <constructor-arg ref="jgroupsConnector"/>
     </bean>
 
-    <axon:filesystem-event-store id="eventStore" base-dir="#{systemProperties['java.io.tmpdir']}"/>
+    <axon:filesystem-event-store id="eventStore" base-dir="${io.motown.domain.app.eventstore.filesystem.basedir}"/>
 
     <axon:snapshotter id="snapshotter" event-store="eventStore" executor="taskExecutor"/>
 
