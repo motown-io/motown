@@ -20,7 +20,7 @@
         <constructor-arg ref="jgroupsConnector"/>
     </bean>
 
-    <axon:filesystem-event-store id="eventStore" base-dir="${java.io.tmpdir}"/>
+    <axon:filesystem-event-store id="eventStore" base-dir="#{systemProperties['java.io.tmpdir']}"/>
 
     <axon:snapshotter id="snapshotter" event-store="eventStore" executor="taskExecutor"/>
 
