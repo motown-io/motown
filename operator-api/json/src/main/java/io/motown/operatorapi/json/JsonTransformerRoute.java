@@ -1,6 +1,7 @@
 package io.motown.operatorapi.json;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import spark.ResponseTransformerRoute;
 
 public abstract class JsonTransformerRoute extends ResponseTransformerRoute {
@@ -12,7 +13,7 @@ public abstract class JsonTransformerRoute extends ResponseTransformerRoute {
     protected JsonTransformerRoute(String path) {
         super(path, ACCEPT_TYPE);
 
-        this.gson = new Gson();
+        this.gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").create();
     }
 
     @Override
