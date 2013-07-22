@@ -24,15 +24,11 @@ public class ChargingStationEventListener {
         log.info("ChargingStationBootedEvent for [{}] received!", event.getChargingStationId());
 
         ChargingStation chargingStation = repository.findOne(event.getChargingStationId());
-        Date now = new Date();
 
         if (chargingStation == null) {
             chargingStation = new ChargingStation();
             chargingStation.setId(event.getChargingStationId());
-            chargingStation.setCreated(now);
         }
-
-        chargingStation.setUpdated(now);
 
         repository.save(chargingStation);
     }
