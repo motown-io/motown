@@ -35,7 +35,9 @@ public class ChargingStation {
 
     @PrePersist
     protected void onCreate() {
-        created = new Date();
+        Date now = new Date();
+        created = now;
+        updated = now;
     }
 
     @PreUpdate
