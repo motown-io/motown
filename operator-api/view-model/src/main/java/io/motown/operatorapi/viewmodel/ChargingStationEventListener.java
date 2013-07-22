@@ -21,7 +21,7 @@ public class ChargingStationEventListener {
 
     @EventHandler
     public void handle(ChargingStationBootedEvent event) {
-        log.info("ChargingStationBootedEvent for ChargingStation [{}] received!", event.getChargingStationId());
+        log.info("ChargingStationBootedEvent for [{}] received!", event.getChargingStationId());
 
         ChargingStation chargingStation = repository.findOne(event.getChargingStationId());
         Date now = new Date();
