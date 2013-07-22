@@ -23,11 +23,10 @@ public class ChargingStationEventListener {
     public void handle(ChargingStationBootedEvent event) {
         log.info("ChargingStationBootedEvent for [{}] received!", event.getChargingStationId());
 
-        ChargingStation chargingStation = repository.findOne(event.getChargingStationId());
+        ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
 
         if (chargingStation == null) {
-            chargingStation = new ChargingStation();
-            chargingStation.setId(event.getChargingStationId());
+            chargingStation = new ChargingStation(event.getChargingStationId().getId());
         }
 
         repository.save(chargingStation);

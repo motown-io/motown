@@ -11,18 +11,20 @@ import java.util.Date;
 @Entity
 public class ChargingStation {
     @Id
-    private ChargingStationId id;
+    private String id;
 
     private Date updated;
 
     private Date created;
 
-    public ChargingStationId getId() {
-        return id;
+    private ChargingStation() {}
+
+    public ChargingStation(String id) {
+        this.id = id;
     }
 
-    public void setId(ChargingStationId id) {
-        this.id = id;
+    public String getId() {
+        return id;
     }
 
     public Date getUpdated() {
