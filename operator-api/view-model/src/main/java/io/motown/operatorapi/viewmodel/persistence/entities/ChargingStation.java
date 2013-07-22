@@ -17,7 +17,9 @@ public class ChargingStation {
 
     private Date created;
 
-    private ChargingStation() {}
+    private ChargingStation() {
+        // Private no-arg constructor for Hibernate.
+    }
 
     public ChargingStation(String id) {
         this.id = id;
