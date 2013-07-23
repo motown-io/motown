@@ -18,5 +18,4 @@
             <artifactId>axon-core</artifactId>
         </dependency>
     </dependencies>
-
 </project>
