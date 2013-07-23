@@ -12,6 +12,13 @@
     <groupId>io.motown.ocpp</groupId>
     <artifactId>soap</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.ws</groupId>
+            <artifactId>spring-ws-core</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
