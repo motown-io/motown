@@ -24,6 +24,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <axon.version>2.0.3</axon.version>
         <spring.version>3.2.3.RELEASE</spring.version>
+        <slf4j.version>1.7.5</slf4j.version>
     </properties>
 
     <dependencyManagement>
@@ -57,6 +58,11 @@
                 <groupId>org.jgroups</groupId>
                 <artifactId>jgroups</artifactId>
                 <version>3.1.0.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -95,8 +101,13 @@
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j12</artifactId>
-                <version>1.7.5</version>
+                <version>${slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sparkjava</groupId>
@@ -112,6 +123,11 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-entitymanager</artifactId>
                 <version>4.2.2.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate.javax.persistence</groupId>
+                <artifactId>hibernate-jpa-2.0-api</artifactId>
+                <version>1.0.1.Final</version>
             </dependency>
             <dependency>
                 <groupId>org.hsqldb</groupId>
