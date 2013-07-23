@@ -1,7 +1,5 @@
 package io.motown.operatorapi.viewmodel.persistence.entities;
 
-import io.motown.domain.api.chargingstation.ChargingStationId;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
