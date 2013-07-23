@@ -16,7 +16,6 @@ public class ChargingStationEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(ChargingStationEventListener.class);
 
-    @Autowired
     private ChargingStationRepository repository;
 
     @EventHandler
@@ -32,6 +31,7 @@ public class ChargingStationEventListener {
         repository.save(chargingStation);
     }
 
+    @Autowired
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
     }
