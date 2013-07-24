@@ -11,6 +11,7 @@
 
     <groupId>io.motown.ocpp</groupId>
     <artifactId>soap</artifactId>
+    <packaging>war</packaging>
 
     <properties>
         <jetty.port>8083</jetty.port>
@@ -19,7 +20,15 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework</groupId>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        <dependency>
+        <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
         </dependency>
         <dependency>
@@ -31,7 +40,25 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <schemaDirectory>src/main/resources</schemaDirectory>
+                    <schemaFiles>ocpp_15_centralsystem.wsdl</schemaFiles>
+                    <packageName>io.motown.ocpp.soap.v1_5.schema</packageName>
+                    <wsdl>true</wsdl>
+                    <xmlschema>false</xmlschema>
+                </configuration>
+            </plugin>
+            <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <compilerId>groovy-eclipse-compiler</compilerId>
                 </configuration>

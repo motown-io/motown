@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.motown</groupId>
     <artifactId>motown-io</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-        
+
     <modules>
         <module>domain/app</module>
         <module>domain/command-handling</module>
@@ -19,7 +20,7 @@
         <module>operator-ui/view-model</module>
         <module>operator-ui/web</module>
     </modules>
-    
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <axon.version>2.0.3</axon.version>
@@ -58,6 +59,11 @@
                 <groupId>org.axonframework</groupId>
                 <artifactId>axon-distributed-commandbus</artifactId>
                 <version>${axon.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-all</artifactId>
+                <version>2.1.5</version>
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
@@ -141,7 +147,7 @@
                 <scope>runtime</scope>
             </dependency>
             <dependency>
-            <groupId>org.axonframework</groupId>
+                <groupId>org.axonframework</groupId>
                 <artifactId>axon-test</artifactId>
                 <version>${axon.version}</version>
                 <scope>test</scope>
@@ -161,6 +167,11 @@
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>jaxb2-maven-plugin</artifactId>
+                    <version>1.5</version>
                 </plugin>
                 <plugin>
                     <groupId>org.eclipse.jetty</groupId>
