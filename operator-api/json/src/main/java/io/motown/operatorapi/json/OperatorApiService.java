@@ -30,6 +30,8 @@ public class OperatorApiService {
         commandBus.dispatch(new GenericCommandMessage<BootChargingStationCommand>(new BootChargingStationCommand(new ChargingStationId("CP-" + random.nextInt(100)), "TUBE", connectors)));
     }
 
+    public void sendUnlockConnectorCommand(String chargingStationId, int connectorId) { }
+
     public List<ChargingStation> findAllChargingStations() {
         return repository.findAll();
     }

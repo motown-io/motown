@@ -35,7 +35,12 @@ public class JsonOperatorApiApplication implements SparkApplication {
         post(new Route("/charging-stations/:chargingStationId/commands") {
             @Override
             public Object handle(Request request, Response response) {
-                return request.params(":chargingStationId");
+                String chargingStationId = request.params(":chargingStationId");
+                int connectorId = 1;
+
+                service.sendUnlockConnectorCommand(chargingStationId, connectorId);
+
+                return "";
             }
         });
         get(new JsonTransformerRoute("/charging-stations") {
