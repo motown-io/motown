@@ -1,4 +1,4 @@
-package io.motown.operatorapi.json;
+package io.motown.operatorapi.json.queries;
 
 import io.motown.domain.api.chargingstation.BootChargingStationCommand;
 import io.motown.domain.api.chargingstation.ChargingStationId;

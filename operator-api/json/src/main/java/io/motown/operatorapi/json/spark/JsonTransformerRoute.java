@@ -1,4 +1,4 @@
-package io.motown.operatorapi.json;
+package io.motown.operatorapi.json.spark;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -21,7 +21,7 @@
 
     <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
         <property name="commandBus" ref="commandBus"/>
-        <property name="gatewayInterface" value="io.motown.operatorapi.json.DomainCommandGateway"/>
+        <property name="gatewayInterface" value="io.motown.operatorapi.json.commands.DomainCommandGateway"/>
     </bean>
 
     <bean id="commandBus" class="org.axonframework.commandhandling.distributed.DistributedCommandBus">

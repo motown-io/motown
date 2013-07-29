@@ -1,5 +1,8 @@
 package io.motown.operatorapi.json;
 
+import io.motown.operatorapi.json.commands.JsonCommandService;
+import io.motown.operatorapi.json.queries.OperatorApiService;
+import io.motown.operatorapi.json.spark.JsonTransformerRoute;
 import io.motown.operatorapi.viewmodel.spring.ApplicationContextProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

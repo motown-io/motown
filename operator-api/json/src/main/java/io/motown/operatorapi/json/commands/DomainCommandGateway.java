@@ -1,4 +1,4 @@
-package io.motown.operatorapi.json;
+package io.motown.operatorapi.json.commands;
 
 import io.motown.domain.api.chargingstation.RequestUnlockConnectorCommand;
 

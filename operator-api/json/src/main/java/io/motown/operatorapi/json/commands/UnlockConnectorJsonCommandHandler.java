@@ -1,10 +1,12 @@
-package io.motown.operatorapi.json;
+package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestUnlockConnectorCommand;
+import io.motown.operatorapi.json.commands.DomainCommandGateway;
+import io.motown.operatorapi.json.commands.JsonCommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
