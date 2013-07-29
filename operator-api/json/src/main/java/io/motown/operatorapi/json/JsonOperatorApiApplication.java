@@ -32,6 +32,12 @@ public class JsonOperatorApiApplication implements SparkApplication {
                 return "command dispatched!";
             }
         });
+        post(new Route("/charging-stations/:chargingStationId/commands") {
+            @Override
+            public Object handle(Request request, Response response) {
+                return request.params(":chargingStationId");
+            }
+        });
         get(new JsonTransformerRoute("/charging-stations") {
             @Override
             public Object handle(Request request, Response response) {
