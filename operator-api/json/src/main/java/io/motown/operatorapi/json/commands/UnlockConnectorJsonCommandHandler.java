@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component
-public class UnlockConnectorJsonCommandHandler implements JsonCommandHandler {
+class UnlockConnectorJsonCommandHandler implements JsonCommandHandler {
 
     private static final String COMMAND_NAME = "UnlockConnector";
 
