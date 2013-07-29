@@ -54,18 +54,37 @@
                 <artifactId>jaxb2-maven-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>ocpp-15-centralsystem-xjc</id>
                         <goals>
                             <goal>xjc</goal>
                         </goals>
+                        <configuration>
+                            <schemaDirectory>src/main/resources</schemaDirectory>
+                            <schemaFiles>ocpp_15_centralsystem.wsdl</schemaFiles>
+                            <packageName>io.motown.ocpp.soap.centralsystem.v1_5.schema</packageName>
+                            <wsdl>true</wsdl>
+                            <xmlschema>false</xmlschema>
+                            <staleFile>${project.build.directory}/generated-sources/jaxb/.ocpp-15-centralsystem-xjc-stale</staleFile>
+                            <outputDirectory>${project.build.directory}/generated-sources/jaxb/ocpp-15-centralsystem-xjc</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>ocpp-15-chargepoint-xjc</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <schemaDirectory>src/main/resources</schemaDirectory>
+                            <schemaFiles>ocpp_15_chargepoint.wsdl</schemaFiles>
+                            <packageName>io.motown.ocpp.soap.chargepoint.v1_5.schema</packageName>
+                            <wsdl>true</wsdl>
+                            <xmlschema>false</xmlschema>
+                            <staleFile>${project.build.directory}/generated-sources/jaxb/.ocpp-15-chargepoint-xjc-stale</staleFile>
+                            <outputDirectory>${project.build.directory}/generated-sources/jaxb/ocpp-15-chargepoint-xjc</outputDirectory>
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <schemaDirectory>src/main/resources</schemaDirectory>
-                    <schemaFiles>ocpp_15_centralsystem.wsdl</schemaFiles>
-                    <packageName>io.motown.ocpp.soap.v1_5.schema</packageName>
-                    <wsdl>true</wsdl>
-                    <xmlschema>false</xmlschema>
-                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>

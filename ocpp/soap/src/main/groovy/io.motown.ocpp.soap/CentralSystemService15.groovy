@@ -1,9 +1,9 @@
 package io.motown.ocpp.soap
 
-import io.motown.ocpp.soap.v1_5.schema.BootNotificationRequest
-import io.motown.ocpp.soap.v1_5.schema.BootNotificationResponse
-import io.motown.ocpp.soap.v1_5.schema.ObjectFactory
-import io.motown.ocpp.soap.v1_5.schema.RegistrationStatus
+import io.motown.ocpp.soap.centralsystem.v1_5.schema.BootNotificationRequest
+import io.motown.ocpp.soap.centralsystem.v1_5.schema.BootNotificationResponse
+import io.motown.ocpp.soap.centralsystem.v1_5.schema.ObjectFactory
+import io.motown.ocpp.soap.centralsystem.v1_5.schema.RegistrationStatus
 import io.motown.ocpp.viewmodel.DomainService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.ws.server.endpoint.annotation.Endpoint
