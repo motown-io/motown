@@ -31,13 +31,6 @@ public class JsonOperatorApiApplication implements SparkApplication {
 
     @Override
     public void init() {
-        post(new Route("/charging-station/boot") {
-            @Override
-            public Object handle(Request request, Response response) {
-                service.sendBootNotification();
-                return "command dispatched!";
-            }
-        });
         post(new Route("/charging-stations/:chargingStationId/commands") {
             @Override
             public Object handle(Request request, Response response) {
