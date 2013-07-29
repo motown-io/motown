@@ -18,9 +18,12 @@ public class JsonOperatorApiApplication implements SparkApplication {
 
     private OperatorApiService service;
 
+    private JsonCommandService commandService;
+
     public JsonOperatorApiApplication() throws Exception {
         ApplicationContext context = ApplicationContextProvider.getApplicationContext();
         this.service = (OperatorApiService) context.getBean("operatorApiService");
+        this.commandService = (JsonCommandService) context.getBean("jsonCommandService");
     }
 
     @Override
@@ -36,10 +39,10 @@ public class JsonOperatorApiApplication implements SparkApplication {
             @Override
             public Object handle(Request request, Response response) {
                 String chargingStationId = request.params(":chargingStationId");
-                int connectorId = 1;
 
-                service.sendUnlockConnectorCommand(chargingStationId, connectorId);
+                commandService.handleCommand(chargingStationId, request.body());
 
+                response.status(202);
                 return "";
             }
         });
