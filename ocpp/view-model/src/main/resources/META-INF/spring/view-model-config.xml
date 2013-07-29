@@ -9,6 +9,11 @@
 
     <context:component-scan base-package="io.motown.ocpp.viewmodel"/>
 
+    <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
+        <property name="commandBus" ref="commandBus"/>
+        <property name="gatewayInterface" value="io.motown.ocpp.viewmodel.DomainCommandGateway"/>
+    </bean>
+
     <bean id="commandBus"
           class="org.axonframework.commandhandling.distributed.DistributedCommandBus">
         <constructor-arg ref="jgroupsConnector"/>
