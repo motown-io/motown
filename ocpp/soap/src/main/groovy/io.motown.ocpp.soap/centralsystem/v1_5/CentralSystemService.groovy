@@ -1,4 +1,4 @@
-package io.motown.ocpp.soap
+package io.motown.ocpp.soap.centralsystem.v1_5
 
 import io.motown.ocpp.soap.centralsystem.v1_5.schema.BootNotificationRequest
 import io.motown.ocpp.soap.centralsystem.v1_5.schema.BootNotificationResponse
@@ -17,7 +17,7 @@ import javax.xml.bind.JAXBElement
 import javax.xml.datatype.DatatypeFactory
 
 @Endpoint
-class CentralSystemService15 {
+class CentralSystemService {
 
     private DomainService domainService
 
