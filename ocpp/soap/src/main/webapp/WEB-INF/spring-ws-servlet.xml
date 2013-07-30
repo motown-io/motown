@@ -14,14 +14,17 @@
 
     <sws:annotation-driven/>
 
-    <oxm:jaxb2-marshaller id="marshaller"
+    <oxm:jaxb2-marshaller id="centralSystemMarshaller"
                           contextPath="io.motown.ocpp.soap.centralsystem.v1_5.schema"/>
+
+    <oxm:jaxb2-marshaller id="chargePointMarshaller"
+                          contextPath="io.motown.ocpp.soap.chargepoint.v1_5.schema"/>
 
     <bean class="io.motown.ocpp.soap.centralsystem.v1_5.schema.ObjectFactory"/>
 
     <bean id="marshallingPayloadMethodProcessor"
           class="org.springframework.ws.server.endpoint.adapter.method.MarshallingPayloadMethodProcessor">
-        <constructor-arg ref="marshaller"/>
+        <constructor-arg ref="centralSystemMarshaller"/>
     </bean>
 
     <bean id="soapHeaderElementMethodArgumentResolver"
