@@ -7,5 +7,5 @@
 
     <context:component-scan base-package="io.motown.ocpp.soap"/>
 
-    <bean class="io.motown.ocpp.soap.v1_5.schema.ObjectFactory"/>
+    <bean class="io.motown.ocpp.soap.centralsystem.v1_5.schema.ObjectFactory"/>
 </beans>

@@ -15,9 +15,9 @@
     <sws:annotation-driven/>
 
     <oxm:jaxb2-marshaller id="marshaller"
-                          contextPath="io.motown.ocpp.soap.v1_5.schema"/>
+                          contextPath="io.motown.ocpp.soap.centralsystem.v1_5.schema"/>
 
-    <bean class="io.motown.ocpp.soap.v1_5.schema.ObjectFactory"/>
+    <bean class="io.motown.ocpp.soap.centralsystem.v1_5.schema.ObjectFactory"/>
 
     <bean id="marshallingPayloadMethodProcessor"
           class="org.springframework.ws.server.endpoint.adapter.method.MarshallingPayloadMethodProcessor">
