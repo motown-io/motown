@@ -5,6 +5,7 @@ import io.motown.ocpp.soap.centralsystem.v1_5.schema.BootNotificationResponse
 import io.motown.ocpp.soap.centralsystem.v1_5.schema.ObjectFactory
 import io.motown.ocpp.soap.centralsystem.v1_5.schema.RegistrationStatus
 import io.motown.ocpp.viewmodel.DomainService
+import io.motown.ocpp.viewmodel.OcppSubscriber
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.ws.server.endpoint.annotation.Endpoint
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot
@@ -23,12 +24,16 @@ class CentralSystemService {
 
     private ObjectFactory objectFactory
 
+    private OcppSubscriber ocppSubscriber
+
     @PayloadRoot(namespace = "urn://Ocpp/Cs/2012/06/", localPart = "bootNotificationRequest")
     @ResponsePayload
     JAXBElement<BootNotificationResponse> handle(@RequestPayload JAXBElement<BootNotificationRequest> bootNotificationRequest, @SoapHeader("{urn://Ocpp/Cs/2012/06/}chargeBoxIdentity") SoapHeaderElement chargeBoxIdentityHeader) {
         def chargeBoxIdentity = chargeBoxIdentityHeader.text
         def chargePointVendor = bootNotificationRequest.value.chargePointVendor
         def chargePointModel = bootNotificationRequest.value.chargePointModel
+
+        ocppSubscriber.subscribe(chargeBoxIdentity)
 
         def result = domainService.bootChargingStation(chargeBoxIdentity, chargePointVendor, chargePointModel)
 
@@ -62,5 +67,10 @@ class CentralSystemService {
     @Autowired
     void setObjectFactory(ObjectFactory objectFactory) {
         this.objectFactory = objectFactory
+    }
+
+    @Autowired
+    void setOcppSubscriber(OcppSubscriber ocppSubscriber) {
+        this.ocppSubscriber = ocppSubscriber
     }
 }
