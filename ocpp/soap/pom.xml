@@ -64,8 +64,12 @@
                             <packageName>io.motown.ocpp.soap.centralsystem.v1_5.schema</packageName>
                             <wsdl>true</wsdl>
                             <xmlschema>false</xmlschema>
-                            <staleFile>${project.build.directory}/generated-sources/jaxb/.ocpp-15-centralsystem-xjc-stale</staleFile>
-                            <outputDirectory>${project.build.directory}/generated-sources/jaxb/ocpp-15-centralsystem-xjc</outputDirectory>
+                            <staleFile>
+                                ${project.build.directory}/generated-sources/jaxb/.ocpp-15-centralsystem-xjc-stale
+                            </staleFile>
+                            <outputDirectory>
+                                ${project.build.directory}/generated-sources/jaxb/ocpp-15-centralsystem-xjc
+                            </outputDirectory>
                         </configuration>
                     </execution>
                     <execution>
@@ -79,8 +83,11 @@
                             <packageName>io.motown.ocpp.soap.chargepoint.v1_5.schema</packageName>
                             <wsdl>true</wsdl>
                             <xmlschema>false</xmlschema>
-                            <staleFile>${project.build.directory}/generated-sources/jaxb/.ocpp-15-chargepoint-xjc-stale</staleFile>
-                            <outputDirectory>${project.build.directory}/generated-sources/jaxb/ocpp-15-chargepoint-xjc</outputDirectory>
+                            <staleFile>
+                                ${project.build.directory}/generated-sources/jaxb/.ocpp-15-chargepoint-xjc-stale
+                            </staleFile>
+                            <outputDirectory>${project.build.directory}/generated-sources/jaxb/ocpp-15-chargepoint-xjc
+                            </outputDirectory>
                             <clearOutputDir>false</clearOutputDir>
                         </configuration>
                     </execution>
