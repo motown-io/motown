@@ -14,39 +14,56 @@
     <axon:annotation-config/>
     <context:component-scan base-package="io.motown.domain"/>
 
-    <context:property-placeholder location="classpath:config.properties, file:${io.motown.domain.app.config}" ignore-resource-not-found="true" />
+    <context:property-placeholder location="classpath:config.properties, file:${io.motown.domain.app.config}"
+                                  ignore-resource-not-found="true"/>
 
-    <axon:event-bus id="eventBus" terminal="terminal"/>
+    <axon:event-bus id="eventBus"
+                    terminal="terminal"/>
 
-    <bean id="commandBus" class="org.axonframework.commandhandling.distributed.DistributedCommandBus">
+    <bean id="commandBus"
+          class="org.axonframework.commandhandling.distributed.DistributedCommandBus">
         <constructor-arg ref="jgroupsConnector"/>
     </bean>
 
-    <axon:filesystem-event-store id="eventStore" base-dir="${io.motown.domain.app.eventstore.filesystem.basedir}"/>
+    <axon:filesystem-event-store id="eventStore"
+                                 base-dir="${io.motown.domain.app.eventstore.filesystem.basedir}"/>
 
-    <axon:snapshotter id="snapshotter" event-store="eventStore" executor="taskExecutor"/>
+    <axon:snapshotter id="snapshotter"
+                      event-store="eventStore"
+                      executor="taskExecutor"/>
 
-    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-        <property name="corePoolSize" value="${io.motown.domain.app.eventstore.snapshotter.executor.pool.size}"/>
-        <property name="maxPoolSize" value="${io.motown.domain.app.eventstore.snapshotter.executor.pool.size.max}"/>
-        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+    <bean id="taskExecutor"
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize"
+                  value="${io.motown.domain.app.eventstore.snapshotter.executor.pool.size}"/>
+        <property name="maxPoolSize"
+                  value="${io.motown.domain.app.eventstore.snapshotter.executor.pool.size.max}"/>
+        <property name="waitForTasksToCompleteOnShutdown"
+                  value="true"/>
     </bean>
 
-    <bean id="cache" class="net.sf.ehcache.jcache.JCache">
+    <bean id="cache"
+          class="net.sf.ehcache.jcache.JCache">
         <constructor-arg>
             <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean"/>
         </constructor-arg>
     </bean>
 
-    <bean id="serializer" class="org.axonframework.serializer.xml.XStreamSerializer"/>
+    <bean id="serializer"
+          class="org.axonframework.serializer.xml.XStreamSerializer"/>
 
-    <bean id="jgroupsConnector" class="org.axonframework.commandhandling.distributed.jgroups.JGroupsConnectorFactoryBean">
-        <property name="configuration" value="${io.motown.domain.app.commandbus.jgroups.configuration}"/>
-        <property name="clusterName" value="${io.motown.domain.app.commandbus.jgroups.cluster.name}"/>
-        <property name="serializer" ref="serializer"/>
+    <bean id="jgroupsConnector"
+          class="org.axonframework.commandhandling.distributed.jgroups.JGroupsConnectorFactoryBean">
+        <property name="configuration"
+                  value="${io.motown.domain.app.commandbus.jgroups.configuration}"/>
+        <property name="clusterName"
+                  value="${io.motown.domain.app.commandbus.jgroups.cluster.name}"/>
+        <property name="serializer"
+                  ref="serializer"/>
     </bean>
 
-    <bean id="routingKeyResolver" class="io.motown.domain.app.axon.MotownRoutingKeyResolver"/>
+    <bean id="routingKeyResolver"
+          class="io.motown.domain.app.axon.MotownRoutingKeyResolver"/>
 
     <axon-amqp:terminal id="terminal"
                         connection-factory="amqpConnection"
@@ -60,7 +77,8 @@
                                password="${io.motown.domain.app.eventbus.amqp.rabbit.password}"
                                virtual-host="${io.motown.domain.app.eventbus.amqp.rabbit.virtualhost}"/>
 
-    <rabbit:admin id="amqpAdmin" connection-factory="amqpConnection"/>
+    <rabbit:admin id="amqpAdmin"
+                  connection-factory="amqpConnection"/>
 
     <rabbit:fanout-exchange id="exchange"
                             name="${io.motown.domain.app.eventbus.amqp.rabbit.exchange.name}"
