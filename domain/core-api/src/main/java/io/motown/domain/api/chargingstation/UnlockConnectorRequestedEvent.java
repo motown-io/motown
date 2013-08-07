@@ -1,6 +1,6 @@
 package io.motown.domain.api.chargingstation;
 
-public class UnlockConnectorRequestedEvent {
+public class UnlockConnectorRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
     private final ChargingStationId chargingStationId;
     private final Integer connectorId;
 
@@ -9,6 +9,7 @@ public class UnlockConnectorRequestedEvent {
         this.connectorId = connectorId;
     }
 
+    @Override
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
     }
