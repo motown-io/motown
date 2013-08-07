@@ -24,7 +24,7 @@
         <property name="configuration"
                   value="flush-udp.xml"/>
         <property name="clusterName"
-                  value="motown.io"/>
+                  value="io.motown.commands"/>
         <property name="localSegment">
             <axon:command-bus/>
         </property>

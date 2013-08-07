@@ -7,20 +7,24 @@
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                            http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
 
+    <context:property-placeholder location="classpath:config.properties, file:${io.motown.ocpp.soap.config}"
+                                  ignore-resource-not-found="true"/>
+
+
     <context:component-scan base-package="io.motown.ocpp.soap"/>
 
     <bean class="io.motown.ocpp.soap.centralsystem.v1_5.schema.ObjectFactory"/>
 
     <rabbit:connection-factory id="amqpConnection"
-                               username="motown.io"
-                               password="motown.io"
-                               virtual-host="motown.io"
-                               host="localhost"/>
+                               username="${io.motown.ocpp.soap.eventbus.amqp.rabbit.username}"
+                               password="${io.motown.ocpp.soap.eventbus.amqp.rabbit.password}"
+                               virtual-host="${io.motown.ocpp.soap.eventbus.amqp.rabbit.virtualhost}"
+                               host="${io.motown.ocpp.soap.eventbus.amqp.rabbit.host}"/>
 
     <rabbit:admin id="amqpAdmin"
                   connection-factory="amqpConnection"/>
 
     <rabbit:direct-exchange id="ocpp-exchange"
-                            name="io.motown.exchanges.ocpp"
+                            name="${io.motown.ocpp.soap.eventbus.amqp.rabbit.exchange.events.ocpp.name}"
                             durable="true"/>
 </beans>
