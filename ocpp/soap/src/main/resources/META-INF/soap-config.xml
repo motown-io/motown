@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:axon="http://www.axonframework.org/schema/core"
+       xmlns:axon-amqp="http://www.axonframework.org/schema/amqp"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:rabbit="http://www.springframework.org/schema/rabbit"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       xsi:schemaLocation="http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
+                           http://www.axonframework.org/schema/amqp http://www.axonframework.org/schema/axon-amqp.xsd
+                           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                            http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
 
     <context:property-placeholder location="classpath:config.properties, file:${io.motown.ocpp.soap.config}"
                                   ignore-resource-not-found="true"/>
 
+    <axon:annotation-config/>
 
     <context:component-scan base-package="io.motown.ocpp.soap"/>
 
@@ -24,7 +29,39 @@
     <rabbit:admin id="amqpAdmin"
                   connection-factory="amqpConnection"/>
 
-    <rabbit:direct-exchange id="ocpp-exchange"
+    <rabbit:queue id="queue"
+                  name="io.motown.queues.ocpp.soap.1"
+                  durable="true"/>
+
+    <rabbit:direct-exchange id="ocppExchange"
                             name="${io.motown.ocpp.soap.eventbus.amqp.rabbit.exchange.events.ocpp.name}"
                             durable="true"/>
+
+    <rabbit:fanout-exchange id="eventsExchange"
+                            name="${io.motown.ocpp.soap.eventbus.amqp.rabbit.exchange.events.name}"
+                            durable="true">
+        <rabbit:bindings>
+            <rabbit:binding queue="queue"/>
+            <rabbit:binding exchange="ocppExchange"/>
+        </rabbit:bindings>
+    </rabbit:fanout-exchange>
+
+    <axon:event-bus id="eventBus" terminal="terminal" cluster-selector=""/>
+
+    <axon-amqp:terminal id="terminal"
+                        connection-factory="amqpConnection"
+                        serializer="serializer"
+                        exchange-name="io.motown.exchanges.events">
+        <axon-amqp:default-configuration/>
+    </axon-amqp:terminal>
+
+    <axon:cluster id="cluster" default="true">
+        <bean class="org.axonframework.eventhandling.async.AsynchronousCluster">
+            <constructor-arg value="io.motown.queues.ocpp.soap.1"/>
+            <constructor-arg ref="asyncExecutor"/>
+            <constructor-arg>
+                <bean class="org.axonframework.eventhandling.async.FullConcurrencyPolicy"/>
+            </constructor-arg>
+        </bean>
+    </axon:cluster>
 </beans>

@@ -54,4 +54,10 @@
 
     <sws:static-wsdl id="ocpp_15_centralsystem"
                      location="classpath:ocpp_15_centralsystem.wsdl"/>
+
+    <bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+        <constructor-arg ref="messageFactory"/>
+        <property name="marshaller" ref="chargePointMarshaller"/>
+        <property name="unmarshaller" ref="chargePointMarshaller"/>
+    </bean>
 </beans>
