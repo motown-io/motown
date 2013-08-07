@@ -49,10 +49,13 @@
         <property name="serializer" ref="serializer"/>
     </bean>
 
+    <bean id="routingKeyResolver" class="io.motown.domain.app.axon.MotownRoutingKeyResolver"/>
+
     <axon-amqp:terminal id="terminal"
                         connection-factory="amqpConnection"
                         serializer="serializer"
-                        exchange-name="${io.motown.domain.app.eventbus.amqp.rabbit.exchange.name}"/>
+                        exchange-name="${io.motown.domain.app.eventbus.amqp.rabbit.exchange.name}"
+                        routing-key-resolver="routingKeyResolver"/>
 
     <rabbit:connection-factory id="amqpConnection"
                                host="${io.motown.domain.app.eventbus.amqp.rabbit.host}"
