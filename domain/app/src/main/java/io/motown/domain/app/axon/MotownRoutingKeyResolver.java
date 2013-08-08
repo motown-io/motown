@@ -9,10 +9,10 @@ public class MotownRoutingKeyResolver implements RoutingKeyResolver {
 
     private static final String ROUTING_KEY_PREFIX = "io.motown.routingkeys.ocpp.soap.chargingstations.";
 
-    private PackageRoutingKeyResolver packageRoutingKeyResolver;
+    private RoutingKeyResolver routingKeyResolver;
 
     public MotownRoutingKeyResolver() {
-        this.packageRoutingKeyResolver = new PackageRoutingKeyResolver();
+        this.routingKeyResolver = new PackageRoutingKeyResolver();
     }
 
     @Override
@@ -21,7 +21,7 @@ public class MotownRoutingKeyResolver implements RoutingKeyResolver {
             CommunicationWithChargingStationRequestedEvent event = (CommunicationWithChargingStationRequestedEvent) eventMessage.getPayload();
             return ROUTING_KEY_PREFIX + event.getChargingStationId().getId().toLowerCase();
         } else {
-            return this.packageRoutingKeyResolver.resolveRoutingKey(eventMessage);
+            return this.routingKeyResolver.resolveRoutingKey(eventMessage);
         }
     }
 }
