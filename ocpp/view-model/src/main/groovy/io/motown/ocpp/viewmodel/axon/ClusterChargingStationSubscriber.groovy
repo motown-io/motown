@@ -6,7 +6,8 @@ import io.motown.ocpp.viewmodel.amqp.ChargingStationQueueNameProvider
 import org.axonframework.eventhandling.Cluster
 import org.axonframework.eventhandling.EventBusTerminal
 import org.axonframework.eventhandling.EventListener as AxonEventListener
-import org.axonframework.eventhandling.amqp.spring.SpringAMQPTerminal
+import org.axonframework.eventhandling.amqp.AMQPConsumerConfiguration
+import org.axonframework.eventhandling.amqp.spring.SpringAMQPConsumerConfiguration
 import org.axonframework.eventhandling.async.AsynchronousCluster
 import org.axonframework.eventhandling.async.FullConcurrencyPolicy
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,8 +34,13 @@ class ClusterChargingStationSubscriber implements ChargingStationSubscriber {
     void subscribe(ChargingStationId chargingStationId) {
         def queueName = queueNameProvider.getQueueName(chargingStationId)
 
+        def config = new SpringAMQPConsumerConfiguration()
+        config.queueName = queueName
+        config.exclusive = false
+
         Cluster cluster = new AsynchronousCluster(queueName, asyncExecutor, new FullConcurrencyPolicy())
         cluster.subscribe(eventListener)
+        cluster.metaData.setProperty(AMQPConsumerConfiguration.AMQP_CONFIG_PROPERTY, config)
 
         terminal.onClusterCreated(cluster)
     }
