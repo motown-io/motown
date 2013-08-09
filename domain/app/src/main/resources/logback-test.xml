@@ -15,12 +15,7 @@
             <pattern>%date{ISO8601} [%.20thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
-    <logger name="ch.qos.logback" level="WARN"/>
-    <logger name="org.springframework" level="INFO"/>
-    <logger name="org.jgroups.protocols.pbcast.GMS" level="INFO"/>
-    <logger name="org.axonframework" level="INFO"/>
-    <logger name="com.rabbitmq" level="INFO"/>
-    <logger name="io.motown.domain" level="INFO"/>
+    <logger name="org.axonframework" level="DEBUG"/>
     <root level="INFO">
         <appender-ref ref="Console"/>
         <appender-ref ref="File"/>
