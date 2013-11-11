@@ -7,6 +7,7 @@
     <artifactId>motown-io</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+    <inceptionYear>2013</inceptionYear>
 
     <modules>
         <module>domain/app</module>
@@ -38,6 +39,7 @@
         <jpa-2.0.version>1.0.1.Final</jpa-2.0.version>
         <junit.version>4.8.1</junit.version>
         <logback.version>1.0.13</logback.version>
+        <license-maven-plugin.version>2.5</license-maven-plugin.version>
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
         <slf4j.version>1.7.5</slf4j.version>
         <spark.version>1.0</spark.version>
@@ -185,21 +187,6 @@
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.springframework.amqp</groupId>
-                <artifactId>spring-amqp</artifactId>
-                <version>${spring-amqp.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.amqp</groupId>
-                <artifactId>spring-rabbit</artifactId>
-                <version>${spring-amqp.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.data</groupId>
-                <artifactId>spring-data-jpa</artifactId>
-                <version>${spring-data.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.springframework.ws</groupId>
                 <artifactId>spring-ws-core</artifactId>
                 <version>${spring-ws.version}</version>
@@ -259,7 +246,12 @@
                     <artifactId>jetty-maven-plugin</artifactId>
                     <version>${jetty-maven-plugin.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>2.5</version>
+                </plugin>
             </plugins>
         </pluginManagement>
-    </build>
+   </build>
 </project>
