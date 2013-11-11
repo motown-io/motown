@@ -1,0 +1,6 @@
+box: pjvds/java@0.1.3
+build:
+  steps:
+    - script:
+        name: mvn-install
+        code: mvn install
