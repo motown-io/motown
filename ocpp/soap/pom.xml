@@ -173,7 +173,7 @@
                 <configuration>
                     <header>com/mycila/maven/plugin/license/templates/APACHE-2.txt</header>
                     <properties>
-                        <owner>Alliander N.V.</owner>
+                        <owner>Motown.IO</owner>
                         <email>info@motown.io</email>
                     </properties>
                     <excludes>
