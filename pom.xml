@@ -24,7 +24,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <axon.version>2.0.3</axon.version>
+        <axon.version>2.0.6</axon.version>
         <dom4j.version>1.6.1</dom4j.version>
         <ehcache.version>1.2</ehcache.version>
         <groovy.version>2.1.5</groovy.version>
