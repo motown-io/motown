@@ -1,4 +1,4 @@
-box: pjvds/java@0.1.3
+box: mies/java7-oracle@0.0.1
 build:
   steps:
     - script:
