@@ -39,7 +39,7 @@ public class DomainService {
         commandGateway.send(command);
 
         // TODO: this (results in Maps) is only placeholder code and should be removed as soon as we properly implement BootNotifications. - Dennis Laumen, November 13th 2013
-        Map<String, Serializable> map = new LinkedHashMap<String, Serializable>(3);
+        Map<String, Serializable> map = new LinkedHashMap<>(3);
         map.put("registrationStatus", "ACCEPTED");
         map.put("heartbeatInterval", 60);
         map.put("timestamp", new Date());
