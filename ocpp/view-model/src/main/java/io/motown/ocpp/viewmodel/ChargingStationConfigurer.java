@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.viewmodel
+package io.motown.ocpp.viewmodel;
 
-import io.motown.domain.api.chargingstation.ChargingStationId
+import io.motown.domain.api.chargingstation.ChargingStationId;
 
-interface ChargingStationSubscriber {
-
-    void subscribe(ChargingStationId chargingStationId)
+public interface ChargingStationConfigurer {
+    public void configure(ChargingStationId chargingStationId);
 }

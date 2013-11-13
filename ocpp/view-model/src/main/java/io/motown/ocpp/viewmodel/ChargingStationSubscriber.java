@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.viewmodel.amqp
+package io.motown.ocpp.viewmodel;
 
-import io.motown.domain.api.chargingstation.ChargingStationId
+import io.motown.domain.api.chargingstation.ChargingStationId;
 
-interface ChargingStationRoutingKeyProvider {
-
-    String getRoutingKey(ChargingStationId chargingStationId)
+public interface ChargingStationSubscriber {
+    public void subscribe(ChargingStationId chargingStationId);
 }

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.viewmodel
+package io.motown.ocpp.viewmodel;
 
-import io.motown.domain.api.chargingstation.BootChargingStationCommand
+import io.motown.domain.api.chargingstation.BootChargingStationCommand;
 
-interface DomainCommandGateway {
-    void send(BootChargingStationCommand command)
+public interface DomainCommandGateway {
+    public void send(BootChargingStationCommand command);
 }

@@ -13,11 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.viewmodel.amqp
+package io.motown.ocpp.viewmodel;
 
-import io.motown.domain.api.chargingstation.ChargingStationId
+import io.motown.domain.api.chargingstation.UnlockConnectorRequestedEvent;
+import org.axonframework.eventhandling.annotation.EventHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-interface ChargingStationQueueNameProvider {
+@Component
+public class OcppRequestHandler {
+    private static final Logger log = LoggerFactory.getLogger(io.motown.ocpp.viewmodel.OcppRequestHandler.class);
 
-    String getQueueName(ChargingStationId chargingStationId)
+    @EventHandler
+    public void handle(UnlockConnectorRequestedEvent event) {
+        log.info("UnlockConnectorRequestedEvent");
+    }
 }

@@ -13,20 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.viewmodel.amqp
+package io.motown.ocpp.viewmodel.amqp;
 
-import io.motown.domain.api.chargingstation.ChargingStationId
+import io.motown.domain.api.chargingstation.ChargingStationId;
 
-class PrefixChargingStationQueueNameProvider implements ChargingStationQueueNameProvider {
-
-    private String prefix
-
-    PrefixChargingStationQueueNameProvider(String prefix) {
-        this.prefix = prefix
-    }
-
-    @Override
-    String getQueueName(ChargingStationId chargingStationId) {
-        prefix + chargingStationId.id.toLowerCase()
-    }
+public interface ChargingStationRoutingKeyProvider {
+    public String getRoutingKey(ChargingStationId chargingStationId);
 }
