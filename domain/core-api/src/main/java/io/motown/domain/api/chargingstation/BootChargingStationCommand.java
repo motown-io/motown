@@ -15,10 +15,10 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import com.google.common.collect.ImmutableMap;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.Map;
 
 /**
  * The Boot command contains all information about a chargepoint.
@@ -29,26 +29,23 @@ public class BootChargingStationCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    @NotNull(message = "Charging station model is required")
-    private final String model;
+    private final Map<String, String> attributes;
 
-    private final List<Connector> connectors;
-
-    public BootChargingStationCommand(ChargingStationId chargingStationId, String model, List<Connector> connectors) {
+    public BootChargingStationCommand(ChargingStationId chargingStationId) {
         this.chargingStationId = chargingStationId;
-        this.model = model;
-        this.connectors = connectors;
+        this.attributes = ImmutableMap.of();
+    }
+
+    public BootChargingStationCommand(ChargingStationId chargingStationId, Map<String, String> attributes) {
+        this.chargingStationId = chargingStationId;
+        this.attributes = ImmutableMap.copyOf(attributes);
     }
 
     public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
     }
 
-    public String getModel() {
-        return this.model;
-    }
-
-    public List<Connector> getConnectors() {
-        return this.connectors;
+    public Map<String, String> getAttributes() {
+        return ImmutableMap.copyOf(attributes);
     }
 }

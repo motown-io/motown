@@ -34,7 +34,12 @@ public class DomainService {
         List<Connector> connectors = new ArrayList<Connector>();
         connectors.add(connector);
 
-        BootChargingStationCommand command = new BootChargingStationCommand(chargingStationId, model, connectors);
+        // TODO: Use Guava's collections for a more fluent interface. - Dennis Laumen, November 14th 2013
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("vendor", vendor);
+        attributes.put("model", model);
+
+        BootChargingStationCommand command = new BootChargingStationCommand(chargingStationId, attributes);
 
         commandGateway.send(command);
 

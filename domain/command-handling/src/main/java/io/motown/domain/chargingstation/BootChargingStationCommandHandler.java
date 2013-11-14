@@ -16,6 +16,7 @@
 package io.motown.domain.chargingstation;
 
 import io.motown.domain.api.chargingstation.BootChargingStationCommand;
+import io.motown.domain.api.chargingstation.Connector;
 import io.motown.domain.api.chargingstation.CreateChargingStationCommand;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.AggregateNotFoundException;
@@ -23,6 +24,9 @@ import org.axonframework.repository.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class BootChargingStationCommandHandler {
@@ -36,7 +40,9 @@ public class BootChargingStationCommandHandler {
         try {
             chargingStation = repository.load(command.getChargingStationId());
         } catch (AggregateNotFoundException e) {
-            chargingStation = new ChargingStation(new CreateChargingStationCommand(command.getChargingStationId(), command.getModel(), command.getConnectors()));
+            List<Connector> connectors = new ArrayList<>();
+            connectors.add(new Connector(1, "CONTYPE", 32));
+            chargingStation = new ChargingStation(new CreateChargingStationCommand(command.getChargingStationId(), "MODEL", connectors));
             repository.add(chargingStation);
         }
 

@@ -15,17 +15,12 @@
  */
 package io.motown.operatorapi.json.queries;
 
-import io.motown.domain.api.chargingstation.BootChargingStationCommand;
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.Connector;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.GenericCommandMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -37,13 +32,6 @@ public class OperatorApiService {
     private CommandBus commandBus;
 
     private ChargingStationRepository repository;
-
-    public void sendBootNotification() {
-        List<Connector> connectors = new LinkedList<Connector>();
-        connectors.add(new Connector(1, "CONTYPE", 32));
-
-        commandBus.dispatch(new GenericCommandMessage<BootChargingStationCommand>(new BootChargingStationCommand(new ChargingStationId("CP-" + random.nextInt(100)), "TUBE", connectors)));
-    }
 
     public void sendUnlockConnectorCommand(String chargingStationId, int connectorId) { }
 

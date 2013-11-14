@@ -27,6 +27,7 @@
         <axon.version>2.0.6</axon.version>
         <dom4j.version>1.6.1</dom4j.version>
         <ehcache.version>1.2</ehcache.version>
+        <guava.version>15.0</guava.version>
         <gson.version>2.2.4</gson.version>
         <hibernate.version>4.2.2.Final</hibernate.version>
         <hsqldb.version>2.2.8</hsqldb.version>
@@ -101,6 +102,11 @@
                 <artifactId>axon-test</artifactId>
                 <version>${axon.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>

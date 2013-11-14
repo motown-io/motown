@@ -21,6 +21,7 @@ import org.axonframework.test.Fixtures;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -43,14 +44,28 @@ public class BootChargingStationCommandHandlerTest {
     @Test
     public void testBootingChargingStationForKnownChargingStation() {
         fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), "MODEL-001", connectors))
-                .when(new BootChargingStationCommand(new ChargingStationId("CS-001"), "MODEL-001", connectors))
+                .when(new BootChargingStationCommand(new ChargingStationId("CS-001")))
+                .expectEvents(new ChargingStationBootedEvent(new ChargingStationId("CS-001")));
+    }
+
+    @Test
+    public void testBootingChargingStationWithAttributesForKnownChargingStation() {
+        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), "MODEL-001", connectors))
+                .when(new BootChargingStationCommand(new ChargingStationId("CS-001"), new HashMap<String, String>()))
                 .expectEvents(new ChargingStationBootedEvent(new ChargingStationId("CS-001")));
     }
 
     @Test
     public void testBootingChargingStationForUnknownChargingStation() {
         fixture.given()
-                .when(new BootChargingStationCommand(new ChargingStationId("CS-001"), "MODEL-001", connectors))
-                .expectEvents(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), "MODEL-001", connectors), new ChargingStationBootedEvent(new ChargingStationId("CS-001")));
+                .when(new BootChargingStationCommand(new ChargingStationId("CS-001")))
+                .expectEvents(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), "MODEL", connectors), new ChargingStationBootedEvent(new ChargingStationId("CS-001")));
+    }
+
+    @Test
+    public void testBootingChargingStationWithAttributesForUnknownChargingStation() {
+        fixture.given()
+                .when(new BootChargingStationCommand(new ChargingStationId("CS-001"), new HashMap<String, String>()))
+                .expectEvents(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), "MODEL", connectors), new ChargingStationBootedEvent(new ChargingStationId("CS-001")));
     }
 }

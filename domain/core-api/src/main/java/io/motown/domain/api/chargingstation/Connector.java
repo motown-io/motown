@@ -32,4 +32,28 @@ public class Connector {
     public Integer getConnectorId() {
         return this.connectorId;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Connector connector = (Connector) o;
+
+        if (maxAmp != connector.maxAmp) return false;
+        if (connectorId != null ? !connectorId.equals(connector.connectorId) : connector.connectorId != null)
+            return false;
+        if (connectorType != null ? !connectorType.equals(connector.connectorType) : connector.connectorType != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = connectorId != null ? connectorId.hashCode() : 0;
+        result = 31 * result + (connectorType != null ? connectorType.hashCode() : 0);
+        result = 31 * result + maxAmp;
+        return result;
+    }
 }
