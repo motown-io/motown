@@ -52,14 +52,14 @@ public class BootChargingStationCommandHandlerTest {
     public void testBootingChargingStationForKnownChargingStation() {
         fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), "MODEL-001", connectors))
                 .when(new BootChargingStationCommand(new ChargingStationId("CS-001")))
-                .expectEvents(new ChargingStationBootedEvent(new ChargingStationId("CS-001"), new HashMap<String, String>()));
+                .expectEvents(new RegisteredChargingStationBootedEvent(new ChargingStationId("CS-001"), new HashMap<String, String>()));
     }
 
     @Test
     public void testBootingChargingStationWithAttributesForKnownChargingStation() {
         fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), "MODEL-001", connectors))
                 .when(new BootChargingStationCommand(new ChargingStationId("CS-001"), attributes))
-                .expectEvents(new ChargingStationBootedEvent(new ChargingStationId("CS-001"), attributes));
+                .expectEvents(new RegisteredChargingStationBootedEvent(new ChargingStationId("CS-001"), attributes));
     }
 
     @Test
@@ -67,7 +67,7 @@ public class BootChargingStationCommandHandlerTest {
         fixture.given()
                 .when(new BootChargingStationCommand(new ChargingStationId("CS-001")))
                 .expectEvents(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), "MODEL", connectors),
-                        new ChargingStationBootedEvent(new ChargingStationId("CS-001"), new HashMap<String, String>()));
+                        new RegisteredChargingStationBootedEvent(new ChargingStationId("CS-001"), new HashMap<String, String>()));
     }
 
     @Test
@@ -75,6 +75,6 @@ public class BootChargingStationCommandHandlerTest {
         fixture.given()
                 .when(new BootChargingStationCommand(new ChargingStationId("CS-001"), attributes))
                 .expectEvents(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), "MODEL", connectors),
-                        new ChargingStationBootedEvent(new ChargingStationId("CS-001"), attributes));
+                        new RegisteredChargingStationBootedEvent(new ChargingStationId("CS-001"), attributes));
     }
 }
