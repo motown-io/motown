@@ -15,17 +15,25 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import com.google.common.collect.ImmutableMap;
+
+import java.util.Map;
+
 public class ChargingStationBootedEvent {
 
     private final ChargingStationId chargingStationId;
+    private final Map<String, String> attributes;
 
-
-    public ChargingStationBootedEvent(ChargingStationId chargingStationId) {
+    public ChargingStationBootedEvent(ChargingStationId chargingStationId, Map<String, String> attributes) {
         this.chargingStationId = chargingStationId;
+        this.attributes = ImmutableMap.copyOf(attributes);
     }
 
     public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
     }
 
+    public Map<String, String> getAttributes() {
+        return ImmutableMap.copyOf(attributes);
+    }
 }

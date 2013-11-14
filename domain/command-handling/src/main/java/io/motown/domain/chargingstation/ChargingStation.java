@@ -52,7 +52,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
      * @param command the command which needs to be applied to the ChargingStation.
      */
     public void handle(BootChargingStationCommand command) {
-        apply(new ChargingStationBootedEvent(id));
+        apply(new ChargingStationBootedEvent(id, command.getAttributes()));
     }
 
     @CommandHandler
