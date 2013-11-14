@@ -15,9 +15,12 @@
         <property name="gatewayInterface" value="io.motown.ocpp.viewmodel.DomainCommandGateway"/>
     </bean>
 
+    <bean id="beanValidationInterceptor" class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor"/>
+
     <bean id="commandBus"
           class="org.axonframework.commandhandling.distributed.DistributedCommandBus">
         <constructor-arg ref="jgroupsConnector"/>
+        <property name="CommandDispatchInterceptors" ref="beanValidationInterceptor"/>
     </bean>
 
     <bean id="jgroupsConnector"

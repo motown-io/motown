@@ -17,6 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -28,6 +29,7 @@ public class BootChargingStationCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
+    @NotNull(message = "Charging station model is required")
     private final String model;
 
     private final List<Connector> connectors;
