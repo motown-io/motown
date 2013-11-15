@@ -23,29 +23,40 @@ import java.util.Date;
 public class BootChargingStationResult {
 
     /**
-     * @param accepted whether the charging station has been accepted by the central system
-     * @param heartbeatInterval the interval for heartbeats in seconds
-     * @param timeStamp current time of the server
-     */
-    public BootChargingStationResult(boolean accepted, int heartbeatInterval, Date timeStamp) {
-        this.accepted = accepted;
-        this.heartbeatInterval = heartbeatInterval;
-        this.timeStamp = timeStamp;
-    }
-
-    /**
      * Whether the charging station has been accepted by the central system
      */
-    public boolean accepted;
+    private boolean accepted;
 
     /**
      * The interval for heartbeats in seconds
      */
-    public int heartbeatInterval;
+    private int heartbeatInterval;
 
     /**
      * Current time of the server, used by the charging station to synchronize its local time
      */
-    public Date timeStamp;
+    private Date timeStamp;
 
+    /**
+     * @param accepted          whether the charging station has been accepted by the central system
+     * @param heartbeatInterval the interval for heartbeats in seconds
+     * @param timeStamp         current time of the server
+     */
+    public BootChargingStationResult(boolean accepted, int heartbeatInterval, Date timeStamp) {
+        this.accepted = accepted;
+        this.heartbeatInterval = heartbeatInterval;
+        this.timeStamp = new Date(timeStamp.getTime());
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public int getHeartbeatInterval() {
+        return heartbeatInterval;
+    }
+
+    public Date getTimeStamp() {
+        return new Date(timeStamp.getTime());
+    }
 }

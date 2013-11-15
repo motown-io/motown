@@ -63,9 +63,9 @@ public class CentralSystemService {
         BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargePointVendor, chargePointModel);
         BootNotificationResponse response = objectFactory.createBootNotificationResponse();
 
-        response.setStatus(result.accepted?RegistrationStatus.ACCEPTED:RegistrationStatus.REJECTED);
-        response.setHeartbeatInterval(result.heartbeatInterval);
-        response.setCurrentTime(DateConverter.toXmlGregorianCalendar(result.timeStamp));
+        response.setStatus(result.isAccepted() ? RegistrationStatus.ACCEPTED : RegistrationStatus.REJECTED);
+        response.setHeartbeatInterval(result.getHeartbeatInterval());
+        response.setCurrentTime(DateConverter.toXmlGregorianCalendar(result.getTimeStamp()));
 
         return objectFactory.createBootNotificationResponse(response);
     }
