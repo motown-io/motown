@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -34,13 +35,10 @@ public class BootChargingStationCommandHandler {
     @CommandHandler
     public ChargingStationRegistrationStatus handle(BootChargingStationCommand command) {
         ChargingStation chargingStation;
-
         try {
             chargingStation = repository.load(command.getChargingStationId());
         } catch (AggregateNotFoundException e) {
-            List<Connector> connectors = new ArrayList<>();
-            connectors.add(new Connector(1, "CONTYPE", 32));
-            chargingStation = new ChargingStation(new CreateChargingStationCommand(command.getChargingStationId(), "MODEL", connectors));
+            chargingStation = new ChargingStation(new CreateChargingStationCommand(command.getChargingStationId(), new ArrayList<Connector>(), new HashMap<String, String>()));
             repository.add(chargingStation);
         }
 

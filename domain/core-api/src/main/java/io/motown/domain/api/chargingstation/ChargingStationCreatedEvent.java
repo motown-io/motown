@@ -16,30 +16,31 @@
 package io.motown.domain.api.chargingstation;
 
 import java.util.List;
+import java.util.Map;
 
 public class ChargingStationCreatedEvent {
 
     private final ChargingStationId chargingStationId;
 
-    private final String model;
-
     private final List<Connector> connectors;
 
-    public ChargingStationCreatedEvent(ChargingStationId chargingStationId, String model, List<Connector> connectors) {
+    private final Map<String, String> attributes;
+
+    public ChargingStationCreatedEvent(ChargingStationId chargingStationId, List<Connector> connectors, Map<String, String> attributes) {
         this.chargingStationId = chargingStationId;
-        this.model = model;
         this.connectors = connectors;
+        this.attributes = attributes;
     }
 
     public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
     }
 
-    public String getModel() {
-        return this.model;
+    public List<Connector> getConnectors() {
+        return connectors;
     }
 
-    public List<Connector> getConnectors() {
-        return this.connectors;
+    public Map<String, String> getAttributes() {
+        return attributes;
     }
 }

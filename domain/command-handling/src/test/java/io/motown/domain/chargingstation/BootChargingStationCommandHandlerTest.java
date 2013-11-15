@@ -15,17 +15,16 @@
  */
 package io.motown.domain.chargingstation;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import io.motown.domain.api.chargingstation.*;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BootChargingStationCommandHandlerTest {
 
@@ -50,14 +49,9 @@ public class BootChargingStationCommandHandlerTest {
 
     @Test
     public void testBootingChargingStationForKnownChargingStation() {
-        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), "MODEL-001", connectors))
-                .when(new BootChargingStationCommand(new ChargingStationId("CS-001")))
-                .expectEvents(new RegisteredChargingStationBootedEvent(new ChargingStationId("CS-001"), new HashMap<String, String>()));
-    }
-
-    @Test
-    public void testBootingChargingStationWithAttributesForKnownChargingStation() {
-        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), "MODEL-001", connectors))
+        fixture.given(ImmutableList.builder()
+                        .add(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), connectors, attributes))
+                        .add(new ChargingStationRegisteredEvent(new ChargingStationId("CS-001"))).build())
                 .when(new BootChargingStationCommand(new ChargingStationId("CS-001"), attributes))
                 .expectEvents(new RegisteredChargingStationBootedEvent(new ChargingStationId("CS-001"), attributes));
     }
@@ -65,16 +59,8 @@ public class BootChargingStationCommandHandlerTest {
     @Test
     public void testBootingChargingStationForUnknownChargingStation() {
         fixture.given()
-                .when(new BootChargingStationCommand(new ChargingStationId("CS-001")))
-                .expectEvents(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), "MODEL", connectors),
-                        new RegisteredChargingStationBootedEvent(new ChargingStationId("CS-001"), new HashMap<String, String>()));
-    }
-
-    @Test
-    public void testBootingChargingStationWithAttributesForUnknownChargingStation() {
-        fixture.given()
                 .when(new BootChargingStationCommand(new ChargingStationId("CS-001"), attributes))
-                .expectEvents(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), "MODEL", connectors),
-                        new RegisteredChargingStationBootedEvent(new ChargingStationId("CS-001"), attributes));
+                .expectEvents(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), new ArrayList<Connector>(), new HashMap<String, String>()),
+                        new UnregisteredChargingStationBootedEvent(new ChargingStationId("CS-001"), attributes));
     }
 }

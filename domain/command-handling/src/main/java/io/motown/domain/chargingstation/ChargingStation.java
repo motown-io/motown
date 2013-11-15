@@ -30,6 +30,8 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     private List<Connector> connectors;
 
+    private Boolean isRegistered = false;
+
     protected ChargingStation() {
     }
 
@@ -37,7 +39,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     public ChargingStation(CreateChargingStationCommand command) {
         this();
 
-        apply(new ChargingStationCreatedEvent(command.getChargingStationId(), command.getModel(), command.getConnectors()));
+        apply(new ChargingStationCreatedEvent(command.getChargingStationId(), command.getConnectors(), command.getAttributes()));
     }
 
     /**
@@ -52,9 +54,18 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
      * @param command the command which needs to be applied to the ChargingStation.
      */
     public ChargingStationRegistrationStatus handle(BootChargingStationCommand command) {
-        // TODO: implement logic to determine whether a registered or unregistered event should be applied. - Dennis Laumen, November 14th 2013
-        apply(new RegisteredChargingStationBootedEvent(id, command.getAttributes()));
-        return ChargingStationRegistrationStatus.REGISTERED;
+        ChargingStationRegistrationStatus status;
+
+        if(this.isRegistered){
+            apply(new RegisteredChargingStationBootedEvent(this.id, command.getAttributes()));
+            status = ChargingStationRegistrationStatus.REGISTERED;
+        }
+        else{
+            apply(new UnregisteredChargingStationBootedEvent(this.id, command.getAttributes()));
+            status = ChargingStationRegistrationStatus.UNREGISTERED;
+        }
+
+        return status;
     }
 
     @CommandHandler
@@ -70,6 +81,16 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
                 apply(new UnlockConnectorRequestedEvent(this.id, command.getConnectorId()));
             }
         }
+    }
+
+    @CommandHandler
+    public void handle(RegisterChargingStationCommand command) {
+        apply(new ChargingStationRegisteredEvent(this.id));
+    }
+
+    @EventHandler
+    public void handle(ChargingStationRegisteredEvent event) {
+        this.isRegistered = true;
     }
 
     @EventHandler
