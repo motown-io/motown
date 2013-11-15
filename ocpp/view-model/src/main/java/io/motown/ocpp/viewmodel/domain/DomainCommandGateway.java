@@ -13,10 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.viewmodel;
+package io.motown.ocpp.viewmodel.domain;
 
 import io.motown.domain.api.chargingstation.BootChargingStationCommand;
+import io.motown.domain.api.chargingstation.ChargingStationRegistrationStatus;
 
-public interface DomainCommandGateway {
-    public void send(BootChargingStationCommand command);
+import java.util.concurrent.TimeUnit;
+
+interface DomainCommandGateway {
+
+    ChargingStationRegistrationStatus sendAndWait(BootChargingStationCommand command, long timeout, TimeUnit unit);
+
 }

@@ -15,9 +15,7 @@
  */
 package io.motown.domain.chargingstation;
 
-import io.motown.domain.api.chargingstation.BootChargingStationCommand;
-import io.motown.domain.api.chargingstation.Connector;
-import io.motown.domain.api.chargingstation.CreateChargingStationCommand;
+import io.motown.domain.api.chargingstation.*;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.AggregateNotFoundException;
 import org.axonframework.repository.Repository;
@@ -34,7 +32,7 @@ public class BootChargingStationCommandHandler {
     private Repository<ChargingStation> repository;
 
     @CommandHandler
-    public void handle(BootChargingStationCommand command) {
+    public ChargingStationRegistrationStatus handle(BootChargingStationCommand command) {
         ChargingStation chargingStation;
 
         try {
@@ -46,7 +44,7 @@ public class BootChargingStationCommandHandler {
             repository.add(chargingStation);
         }
 
-        chargingStation.handle(command);
+        return chargingStation.handle(command);
     }
 
     @Autowired

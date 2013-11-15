@@ -51,9 +51,10 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
      *
      * @param command the command which needs to be applied to the ChargingStation.
      */
-    public void handle(BootChargingStationCommand command) {
+    public ChargingStationRegistrationStatus handle(BootChargingStationCommand command) {
         // TODO: implement logic to determine whether a registered or unregistered event should be applied. - Dennis Laumen, November 14th 2013
         apply(new RegisteredChargingStationBootedEvent(id, command.getAttributes()));
+        return ChargingStationRegistrationStatus.REGISTERED;
     }
 
     @CommandHandler

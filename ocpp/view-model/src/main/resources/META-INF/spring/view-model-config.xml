@@ -12,7 +12,7 @@
 
     <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
         <property name="commandBus" ref="commandBus"/>
-        <property name="gatewayInterface" value="io.motown.ocpp.viewmodel.DomainCommandGateway"/>
+        <property name="gatewayInterface" value="io.motown.ocpp.viewmodel.domain.DomainCommandGateway"/>
     </bean>
 
     <bean id="beanValidationInterceptor" class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor"/>

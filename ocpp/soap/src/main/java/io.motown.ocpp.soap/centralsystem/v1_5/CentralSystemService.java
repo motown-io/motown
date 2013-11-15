@@ -15,14 +15,15 @@
  */
 package io.motown.ocpp.soap.centralsystem.v1_5;
 
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.ocpp.soap.centralsystem.v1_5.schema.BootNotificationRequest;
 import io.motown.ocpp.soap.centralsystem.v1_5.schema.BootNotificationResponse;
 import io.motown.ocpp.soap.centralsystem.v1_5.schema.ObjectFactory;
 import io.motown.ocpp.soap.centralsystem.v1_5.schema.RegistrationStatus;
+import io.motown.ocpp.soap.util.DateConverter;
 import io.motown.ocpp.viewmodel.ChargingStationSubscriber;
-import io.motown.ocpp.viewmodel.DomainService;
+import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
@@ -33,45 +34,38 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapHeader;
 
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBElement;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Map;
 
 @Endpoint
 public class CentralSystemService {
+
+    private static final String WS_NAMESPACE = "urn://Ocpp/Cs/2012/06/";
+
+    private static final String CB_IDENTITY_NAMESPACE = "{urn://Ocpp/Cs/2012/06/}chargeBoxIdentity";
+
     @Autowired
     private DomainService domainService;
+
     @Autowired
     private ObjectFactory objectFactory;
+
     @Resource(name = "axonAmqpChargingStationSubscriber")
     private ChargingStationSubscriber chargingStationSubscriber;
 
-    @PayloadRoot(namespace = "urn://Ocpp/Cs/2012/06/", localPart = "bootNotificationRequest")
+    @PayloadRoot(namespace = WS_NAMESPACE, localPart = "bootNotificationRequest")
     @ResponsePayload
-    public JAXBElement<BootNotificationResponse> handle(@RequestPayload JAXBElement<BootNotificationRequest> bootNotificationRequest, @SoapHeader("{urn://Ocpp/Cs/2012/06/}chargeBoxIdentity") SoapHeaderElement chargeBoxIdentityHeader) {
+    public JAXBElement<BootNotificationResponse> handle(@RequestPayload JAXBElement<BootNotificationRequest> bootNotificationRequest, @SoapHeader(CB_IDENTITY_NAMESPACE) SoapHeaderElement chargeBoxIdentityHeader) {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentityHeader.getText());
         String chargePointVendor = bootNotificationRequest.getValue().getChargePointVendor();
         String chargePointModel = bootNotificationRequest.getValue().getChargePointModel();
 
         chargingStationSubscriber.subscribe(chargingStationId);
 
-        // TODO: this (results in Maps) is only placeholder code and should be removed as soon as we properly implement BootNotifications. - Dennis Laumen, November 13th 2013
-        Map<String, Serializable> result = domainService.bootChargingStation(chargingStationId, chargePointVendor, chargePointModel);
-
+        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargePointVendor, chargePointModel);
         BootNotificationResponse response = objectFactory.createBootNotificationResponse();
 
-        if ("ACCEPTED".equalsIgnoreCase((String) result.get("registrationStatus"))) {
-            response.setStatus(RegistrationStatus.ACCEPTED);
-        } else if ("REJECTED".equalsIgnoreCase((String) result.get("registrationStatus"))) {
-            response.setStatus(RegistrationStatus.REJECTED);
-        }
-
-        response.setHeartbeatInterval((Integer) result.get("heartbeatInterval"));
-
-        GregorianCalendar now = new GregorianCalendar();
-        now.setTime((Date) result.get("timestamp"));
-        response.setCurrentTime(new XMLGregorianCalendarImpl(now));
+        response.setStatus(result.accepted?RegistrationStatus.ACCEPTED:RegistrationStatus.REJECTED);
+        response.setHeartbeatInterval(result.heartbeatInterval);
+        response.setCurrentTime(DateConverter.toXmlGregorianCalendar(result.timeStamp));
 
         return objectFactory.createBootNotificationResponse(response);
     }

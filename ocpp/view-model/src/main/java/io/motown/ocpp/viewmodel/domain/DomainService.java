@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.viewmodel;
+package io.motown.ocpp.viewmodel.domain;
 
-import io.motown.domain.api.chargingstation.BootChargingStationCommand;
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.Connector;
+import io.motown.domain.api.chargingstation.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.*;
 
 @Service
 public class DomainService {
+
     @Resource(name = "domainCommandGateway")
     private DomainCommandGateway commandGateway;
 
-    public Map<String, Serializable> bootChargingStation(ChargingStationId chargingStationId, String vendor, String model) {
+    public BootChargingStationResult bootChargingStation(ChargingStationId chargingStationId, String vendor, String model) {
         Connector connector = new Connector(1, "DEFAULT", 32);
         List<Connector> connectors = new ArrayList<Connector>();
         connectors.add(connector);
@@ -41,14 +40,12 @@ public class DomainService {
 
         BootChargingStationCommand command = new BootChargingStationCommand(chargingStationId, attributes);
 
-        commandGateway.send(command);
+        // TODO: Timeout should be configurable. - Mark van den Bergh, November 15th 2013
+        long timeout = 2000;
+        ChargingStationRegistrationStatus result = commandGateway.sendAndWait(command, timeout, TimeUnit.MILLISECONDS);
 
-        // TODO: this (results in Maps) is only placeholder code and should be removed as soon as we properly implement BootNotifications. - Dennis Laumen, November 13th 2013
-        Map<String, Serializable> map = new LinkedHashMap<>(3);
-        map.put("registrationStatus", "ACCEPTED");
-        map.put("heartbeatInterval", 60);
-        map.put("timestamp", new Date());
-        return map;
+        // TODO: Where should the interval come from? - Mark van den Bergh, November 15th 2013
+        return new BootChargingStationResult(ChargingStationRegistrationStatus.REGISTERED.equals(result), 60, new Date());
     }
 
     public DomainCommandGateway getCommandGateway() {
@@ -58,4 +55,5 @@ public class DomainService {
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
+
 }
