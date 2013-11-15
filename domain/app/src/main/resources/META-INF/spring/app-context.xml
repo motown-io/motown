@@ -23,6 +23,13 @@
     <bean id="commandBus"
           class="org.axonframework.commandhandling.distributed.DistributedCommandBus">
         <constructor-arg ref="jgroupsConnector"/>
+
+        <!-- TODO: Add command validation in a different way, as the DistributedCommandBus does not have the handlerInterceptors property the SimpleCommandBus is having. - Ingo Pak, November 15th 2013
+        <property name="handlerInterceptors">
+            <list>
+                <bean class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor" />
+            </list>
+        </property>-->
     </bean>
 
     <axon:filesystem-event-store id="eventStore"
