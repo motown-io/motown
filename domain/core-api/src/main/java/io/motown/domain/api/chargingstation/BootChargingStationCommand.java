@@ -48,6 +48,6 @@ public class BootChargingStationCommand {
     }
 
     public Map<String, String> getAttributes() {
-        return ImmutableMap.copyOf(attributes);
+        return attributes;
     }
 }
