@@ -20,10 +20,14 @@ import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class ChargingStation extends AbstractAnnotatedAggregateRoot {
+
+    private static final Logger log = LoggerFactory.getLogger(BootChargingStationCommandHandler.class);
 
     @AggregateIdentifier
     private ChargingStationId id;
@@ -38,7 +42,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @CommandHandler
     public ChargingStation(CreateChargingStationCommand command) {
         this();
-
+        log.info("Creating new chargingstation {}", command.getChargingStationId());
         apply(new ChargingStationCreatedEvent(command.getChargingStationId(), command.getConnectors(), command.getAttributes()));
     }
 
@@ -57,10 +61,12 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         ChargingStationRegistrationStatus status;
 
         if(this.isRegistered){
+            log.info("Received bootnotification for registered chargingstation {}", command.getChargingStationId());
             apply(new RegisteredChargingStationBootedEvent(this.id, command.getAttributes()));
             status = ChargingStationRegistrationStatus.REGISTERED;
         }
         else{
+            log.info("Received bootnotification for NOT registered chargingstation {}", command.getChargingStationId());
             apply(new UnregisteredChargingStationBootedEvent(this.id, command.getAttributes()));
             status = ChargingStationRegistrationStatus.UNREGISTERED;
         }
@@ -85,17 +91,21 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RegisterChargingStationCommand command) {
+        log.info("Registering chargingstation {}", command.getChargingStationId());
         apply(new ChargingStationRegisteredEvent(this.id));
     }
 
     @EventHandler
     public void handle(ChargingStationRegisteredEvent event) {
         this.isRegistered = true;
+        log.info("Registered chargingstation {}", event.getChargingStationId());
     }
 
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
         this.id = event.getChargingStationId();
         this.connectors = event.getConnectors();
+
+        log.info("Created new chargingstation {}", event.getChargingStationId());
     }
 }
