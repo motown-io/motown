@@ -15,15 +15,21 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import com.google.common.base.Strings;
+
 import java.io.Serializable;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 public class ChargingStationId implements Serializable {
 
-    private static final long serialVersionUID = -7377717426406852262L;
+    private static final long serialVersionUID = 2404131746394766605L;
 
     private final String id;
 
     public ChargingStationId(String id) {
+        checkArgument(!Strings.isNullOrEmpty(id));
+
         this.id = id;
     }
 
