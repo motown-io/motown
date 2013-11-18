@@ -19,13 +19,15 @@ import com.google.common.collect.ImmutableMap;
 
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class ChargingStationBootedEvent {
 
     private final ChargingStationId chargingStationId;
     private final Map<String, String> attributes;
 
     public ChargingStationBootedEvent(ChargingStationId chargingStationId, Map<String, String> attributes) {
-        this.chargingStationId = chargingStationId;
+        this.chargingStationId = checkNotNull(chargingStationId);
         this.attributes = ImmutableMap.copyOf(attributes);
     }
 
