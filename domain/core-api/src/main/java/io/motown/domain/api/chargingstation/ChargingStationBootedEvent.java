@@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableMap;
 
 import java.util.Map;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * {@code ChargingStationBootedEvent} is the event which is published when a charging station has booted.
@@ -40,7 +40,10 @@ public class ChargingStationBootedEvent {
      * @throws NullPointerException if {@code chargingStationId} or {@code attributes} is {@code null}.
      */
     public ChargingStationBootedEvent(ChargingStationId chargingStationId, Map<String, String> attributes) {
-        this.chargingStationId = checkNotNull(chargingStationId);
+        checkArgument(chargingStationId != null);
+        checkArgument(attributes != null);
+
+        this.chargingStationId = chargingStationId;
         this.attributes = ImmutableMap.copyOf(attributes);
     }
 

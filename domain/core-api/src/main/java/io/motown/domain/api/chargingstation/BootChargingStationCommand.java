@@ -20,6 +20,7 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -39,6 +40,8 @@ public class BootChargingStationCommand {
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
     public BootChargingStationCommand(ChargingStationId chargingStationId) {
+        checkArgument(chargingStationId != null);
+
         this.chargingStationId = checkNotNull(chargingStationId);
         this.attributes = ImmutableMap.of();
     }
@@ -53,6 +56,9 @@ public class BootChargingStationCommand {
      * @throws NullPointerException if {@code chargingStationId} or {@code attributes} is {@code null}.
      */
     public BootChargingStationCommand(ChargingStationId chargingStationId, Map<String, String> attributes) {
+        checkArgument(chargingStationId != null);
+        checkArgument(attributes != null);
+
         this.chargingStationId = checkNotNull(chargingStationId);
         this.attributes = ImmutableMap.copyOf(attributes);
     }
