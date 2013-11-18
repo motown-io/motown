@@ -53,7 +53,8 @@ public class BootChargingStationCommandHandlerTest {
                         .add(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), connectors, attributes))
                         .add(new ChargingStationRegisteredEvent(new ChargingStationId("CS-001"))).build())
                 .when(new BootChargingStationCommand(new ChargingStationId("CS-001"), attributes))
-                .expectEvents(new RegisteredChargingStationBootedEvent(new ChargingStationId("CS-001"), attributes));
+                .expectEvents(new RegisteredChargingStationBootedEvent(new ChargingStationId("CS-001"), attributes))
+                .expectReturnValue(ChargingStationRegistrationStatus.REGISTERED);
     }
 
     @Test
@@ -61,6 +62,8 @@ public class BootChargingStationCommandHandlerTest {
         fixture.given()
                 .when(new BootChargingStationCommand(new ChargingStationId("CS-001"), attributes))
                 .expectEvents(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), new ArrayList<Connector>(), new HashMap<String, String>()),
-                        new UnregisteredChargingStationBootedEvent(new ChargingStationId("CS-001"), attributes));
+                        new UnregisteredChargingStationBootedEvent(new ChargingStationId("CS-001"), attributes))
+                .expectReturnValue(ChargingStationRegistrationStatus.UNREGISTERED);
     }
+
 }
