@@ -27,6 +27,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ChargingStationBootedEvent {
 
     private final ChargingStationId chargingStationId;
+
     private final Map<String, String> attributes;
 
     /**
