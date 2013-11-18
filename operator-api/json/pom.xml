@@ -28,7 +28,7 @@
     </parent>
 
     <groupId>io.motown.operator-api</groupId>
-    <artifactId>json</artifactId>
+    <artifactId>operator-api-json</artifactId>
     <packaging>war</packaging>
 
     <properties>
@@ -38,7 +38,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>view-model</artifactId>
+            <artifactId>operator-api-view-model</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

@@ -28,7 +28,7 @@
     </parent>
 
     <groupId>io.motown.operator-api</groupId>
-    <artifactId>view-model</artifactId>
+    <artifactId>operator-api-view-model</artifactId>
 
     <dependencies>
         <dependency>

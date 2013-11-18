@@ -28,7 +28,7 @@
     </parent>
 
     <groupId>io.motown.ocpp</groupId>
-    <artifactId>view-model</artifactId>
+    <artifactId>ocpp-view-model</artifactId>
 
     <dependencies>
         <dependency>

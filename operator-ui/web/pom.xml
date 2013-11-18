@@ -27,7 +27,7 @@
     </parent>
 
     <groupId>io.motown.operator-ui</groupId>
-    <artifactId>web</artifactId>
+    <artifactId>operator-ui-web</artifactId>
 
     <build>
         <plugins>
