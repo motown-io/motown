@@ -16,6 +16,7 @@
 package io.motown.domain.chargingstation;
 
 import io.motown.domain.api.chargingstation.*;
+import org.axonframework.repository.AggregateNotFoundException;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;
@@ -25,6 +26,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 public class ChargingStationTest {
 
@@ -60,6 +62,17 @@ public class ChargingStationTest {
         fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), connectors, attributes))
                 .when(new RegisterChargingStationCommand(new ChargingStationId("CS-001")))
                 .expectEvents(new ChargingStationRegisteredEvent(new ChargingStationId("CS-001")));
+    }
+
+    @Test
+    public void testAttemptToRegisterNonExistingChargePoint() {
+
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("nodel", "MODEL-001");
+
+        fixture.given()
+                .when(new RegisterChargingStationCommand(new ChargingStationId("CS-002")))
+                .expectException(AggregateNotFoundException.class);
     }
 
     @Test
