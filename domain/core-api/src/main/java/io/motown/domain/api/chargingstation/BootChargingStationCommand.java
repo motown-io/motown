@@ -20,6 +20,8 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * The Boot command contains all information about a chargepoint.
  * When the point does not exist (yet), you have the option to create it.
@@ -32,12 +34,12 @@ public class BootChargingStationCommand {
     private final Map<String, String> attributes;
 
     public BootChargingStationCommand(ChargingStationId chargingStationId) {
-        this.chargingStationId = chargingStationId;
+        this.chargingStationId = checkNotNull(chargingStationId);
         this.attributes = ImmutableMap.of();
     }
 
     public BootChargingStationCommand(ChargingStationId chargingStationId, Map<String, String> attributes) {
-        this.chargingStationId = chargingStationId;
+        this.chargingStationId = checkNotNull(chargingStationId);
         this.attributes = ImmutableMap.copyOf(attributes);
     }
 
