@@ -34,7 +34,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     private List<Connector> connectors;
 
-    private Boolean isRegistered = false;
+    private boolean isRegistered = false;
 
     protected ChargingStation() {
     }
