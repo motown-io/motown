@@ -27,7 +27,7 @@
     </parent>
 
     <groupId>io.motown.ocpp</groupId>
-    <artifactId>websocket-json</artifactId>
+    <artifactId>ocpp-websocket-json</artifactId>
 
     <build>
         <plugins>

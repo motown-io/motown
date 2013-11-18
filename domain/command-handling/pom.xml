@@ -28,12 +28,12 @@
     </parent>
 
     <groupId>io.motown.domain</groupId>
-    <artifactId>command-handling</artifactId>
+    <artifactId>domain-command-handling</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>core-api</artifactId>
+            <artifactId>domain-core-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

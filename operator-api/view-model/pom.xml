@@ -33,7 +33,7 @@
     <dependencies>
         <dependency>
             <groupId>io.motown.domain</groupId>
-            <artifactId>core-api</artifactId>
+            <artifactId>domain-core-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

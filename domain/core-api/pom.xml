@@ -27,7 +27,7 @@
     </parent>
 
     <groupId>io.motown.domain</groupId>
-    <artifactId>core-api</artifactId>
+    <artifactId>domain-core-api</artifactId>
 
     <dependencies>
         <dependency>
