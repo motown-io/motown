@@ -21,20 +21,45 @@ import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * {@code ChargingStationBootedEvent} is the event which is published when a charging station has booted.
+ */
 public class ChargingStationBootedEvent {
 
     private final ChargingStationId chargingStationId;
     private final Map<String, String> attributes;
 
+    /**
+     * Creates a {@code ChargingStationBootedEvent} with an identifier and a {@link java.util.Map} of attributes.
+     *
+     * @param chargingStationId the identifier of the charging station.
+     * @param attributes        a {@link java.util.Map} of attributes. These attributes are additional information provided by
+     *                          the charging station when it booted but which are not required by Motown. Because
+     *                          {@link java.util.Map} implementations are potentially mutable a defensive copy is made.
+     * @throws NullPointerException if {@code chargingStationId} or {@code attributes} is {@code null}.
+     */
     public ChargingStationBootedEvent(ChargingStationId chargingStationId, Map<String, String> attributes) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.attributes = ImmutableMap.copyOf(attributes);
     }
 
+    /**
+     * Gets the charging station identifier.
+     *
+     * @return the charging station identifier.
+     */
     public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
     }
 
+    /**
+     * Gets the attributes associated with the boot.
+     *
+     * These attributes are additional information provided by the charging station when it booted but which are not
+     * required by Motown.
+     *
+     * @return an immutable {@link java.util.Map} of attributes.
+     */
     public Map<String, String> getAttributes() {
         return ImmutableMap.copyOf(attributes);
     }
