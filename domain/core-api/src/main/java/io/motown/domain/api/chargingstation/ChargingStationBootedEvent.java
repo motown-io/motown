@@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableMap;
 
 import java.util.Map;
 
-public abstract class ChargingStationBootedEvent {
+public class ChargingStationBootedEvent {
 
     private final ChargingStationId chargingStationId;
     private final Map<String, String> attributes;

@@ -58,18 +58,18 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
      * @param command the command which needs to be applied to the ChargingStation.
      */
     public ChargingStationRegistrationStatus handle(BootChargingStationCommand command) {
+        log.info("Received bootnotification for chargingstation {}", command.getChargingStationId());
+
         ChargingStationRegistrationStatus status;
 
         if(this.isRegistered){
-            log.info("Received bootnotification for registered chargingstation {}", command.getChargingStationId());
-            apply(new RegisteredChargingStationBootedEvent(this.id, command.getAttributes()));
             status = ChargingStationRegistrationStatus.REGISTERED;
         }
         else{
-            log.info("Received bootnotification for NOT registered chargingstation {}", command.getChargingStationId());
-            apply(new UnregisteredChargingStationBootedEvent(this.id, command.getAttributes()));
             status = ChargingStationRegistrationStatus.UNREGISTERED;
         }
+
+        apply(new ChargingStationBootedEvent(this.id, command.getAttributes()));
 
         return status;
     }
