@@ -23,8 +23,7 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * The Boot command contains all information about a chargepoint.
- * When the point does not exist (yet), you have the option to create it.
+ * {@code BootChargingStationCommand} is the command which should be sent when a charging station boots.
  */
 public class BootChargingStationCommand {
 
@@ -33,20 +32,48 @@ public class BootChargingStationCommand {
 
     private final Map<String, String> attributes;
 
+    /**
+     * Creates a {@code BootChargingStationCommand} with an identifier.
+     *
+     * @param chargingStationId the identifier of the charging station.
+     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     */
     public BootChargingStationCommand(ChargingStationId chargingStationId) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.attributes = ImmutableMap.of();
     }
 
+    /**
+     * Creates a {@code BootChargingStationCommand} with an identifier and a {@link java.util.Map} of attributes.
+     *
+     * @param chargingStationId the identifier of the charging station.
+     * @param attributes        a {@link java.util.Map} of attributes. These attributes are additional information provided by
+     *                          the charging station when it booted but which are not required by Motown. Because
+     *                          {@link java.util.Map} implementations are potentially mutable a defensive copy is made.
+     * @throws NullPointerException if {@code chargingStationId} or {@code attributes} is {@code null}.
+     */
     public BootChargingStationCommand(ChargingStationId chargingStationId, Map<String, String> attributes) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.attributes = ImmutableMap.copyOf(attributes);
     }
 
+    /**
+     * Gets the charging station identifier.
+     *
+     * @return the charging station identifier.
+     */
     public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
     }
 
+    /**
+     * Gets the attributes associated with the boot.
+     *
+     * These attributes are additional information provided by the charging station when it booted but which are not
+     * required by Motown.
+     *
+     * @return an immutable {@link java.util.Map} of attributes.
+     */
     public Map<String, String> getAttributes() {
         return attributes;
     }
