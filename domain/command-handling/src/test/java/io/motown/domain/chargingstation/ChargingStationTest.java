@@ -49,8 +49,8 @@ public class ChargingStationTest {
         attributes.put("model", "MODEL-001");
 
         fixture.given()
-                .when(new CreateChargingStationCommand(new ChargingStationId("CS-001"), connectors, attributes))
-                .expectEvents(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), connectors, attributes));
+                .when(new CreateChargingStationCommand(new ChargingStationId("CS-001"), attributes))
+                .expectEvents(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), attributes));
     }
 
     @Test
@@ -59,7 +59,7 @@ public class ChargingStationTest {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("model", "MODEL-001");
 
-        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), connectors, attributes))
+        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), attributes))
                 .when(new RegisterChargingStationCommand(new ChargingStationId("CS-001")))
                 .expectEvents(new ChargingStationRegisteredEvent(new ChargingStationId("CS-001")));
     }
@@ -77,21 +77,21 @@ public class ChargingStationTest {
 
     @Test
     public void testRequestingToUnlockConnector() {
-        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), connectors, null))
+        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), null))
                 .when(new RequestUnlockConnectorCommand(new ChargingStationId("CS-001"), 1))
                 .expectEvents(new UnlockConnectorRequestedEvent(new ChargingStationId("CS-001"), 1));
     }
 
     @Test
     public void testRequestingToUnlockUnknownConnector() {
-        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), connectors, null))
+        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), null))
                 .when(new RequestUnlockConnectorCommand(new ChargingStationId("CS-001"), 3))
                 .expectEvents(new ConnectorNotFoundEvent(new ChargingStationId("CS-001"), 3));
     }
 
     @Test
     public void testRequestingToUnlockAllConnectors() {
-        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), connectors, null))
+        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), null))
                 .when(new RequestUnlockConnectorCommand(new ChargingStationId("CS-001"), Connector.ALL))
                 .expectEvents(new UnlockConnectorRequestedEvent(new ChargingStationId("CS-001"), 1), new UnlockConnectorRequestedEvent(new ChargingStationId("CS-001"), 2));
     }

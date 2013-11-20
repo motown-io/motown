@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 @Component
@@ -37,7 +36,7 @@ public class BootChargingStationCommandHandler {
         try {
             chargingStation = repository.load(command.getChargingStationId());
         } catch (AggregateNotFoundException e) {
-            chargingStation = new ChargingStation(new CreateChargingStationCommand(command.getChargingStationId(), new ArrayList<Connector>(), new HashMap<String, String>()));
+            chargingStation = new ChargingStation(new CreateChargingStationCommand(command.getChargingStationId(), new HashMap<String, String>()));
             repository.add(chargingStation);
         }
 

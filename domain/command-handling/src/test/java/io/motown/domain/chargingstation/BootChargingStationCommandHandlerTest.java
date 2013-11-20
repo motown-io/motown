@@ -49,7 +49,7 @@ public class BootChargingStationCommandHandlerTest {
     @Test
     public void testBootingChargingStationForKnownChargingStation() {
         fixture.given(ImmutableList.builder()
-                        .add(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), connectors, attributes))
+                        .add(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), attributes))
                         .add(new ChargingStationRegisteredEvent(new ChargingStationId("CS-001"))).build())
                 .when(new BootChargingStationCommand(new ChargingStationId("CS-001"), attributes))
                 .expectEvents(new ChargingStationBootedEvent(new ChargingStationId("CS-001"), attributes))
@@ -60,7 +60,7 @@ public class BootChargingStationCommandHandlerTest {
     public void testBootingChargingStationForUnknownChargingStation() {
         fixture.given()
                 .when(new BootChargingStationCommand(new ChargingStationId("CS-001"), attributes))
-                .expectEvents(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), new ArrayList<Connector>(), new HashMap<String, String>()),
+                .expectEvents(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), new HashMap<String, String>()),
                         new ChargingStationBootedEvent(new ChargingStationId("CS-001"), attributes))
                 .expectReturnValue(ChargingStationRegistrationStatus.UNREGISTERED);
     }

@@ -23,6 +23,7 @@ import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChargingStation extends AbstractAnnotatedAggregateRoot {
@@ -43,7 +44,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     public ChargingStation(CreateChargingStationCommand command) {
         this();
         log.info("Creating new chargingstation {}", command.getChargingStationId());
-        apply(new ChargingStationCreatedEvent(command.getChargingStationId(), command.getConnectors(), command.getAttributes()));
+        apply(new ChargingStationCreatedEvent(command.getChargingStationId(), command.getAttributes()));
     }
 
     /**
@@ -95,7 +96,11 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
         this.id = event.getChargingStationId();
-        this.connectors = event.getConnectors();
+        // TODO temporarily adding hardcoded connectors here so the unlocking logic keeps working (until we add proper provisioning of connectors). - Dennis Laumen, November 20th 2013
+        List<Connector> c = new ArrayList<>();
+        c.add(new Connector(1, "TYPE", 32));
+        c.add(new Connector(2, "TYPE", 32));
+        this.connectors = c;
 
         log.info("Created new chargingstation {}", event.getChargingStationId());
     }

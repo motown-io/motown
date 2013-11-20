@@ -30,22 +30,15 @@ public class CreateChargingStationCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final List<Connector> connectors;
-
     private final Map<String, String> attributes;
 
-    public CreateChargingStationCommand(ChargingStationId chargingStationId, List<Connector> connectors, Map<String, String> attributes) {
+    public CreateChargingStationCommand(ChargingStationId chargingStationId, Map<String, String> attributes) {
         this.chargingStationId = chargingStationId;
-        this.connectors = connectors;
         this.attributes = ImmutableMap.copyOf(attributes);
     }
 
     public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
-    }
-
-    public List<Connector> getConnectors() {
-        return connectors;
     }
 
     public Map<String, String> getAttributes() {
