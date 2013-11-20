@@ -46,7 +46,7 @@ public class ChargingStationTest {
     public void testChargePointCreation() {
 
         Map<String, String> attributes = new HashMap<>();
-        attributes.put("nodel", "MODEL-001");
+        attributes.put("model", "MODEL-001");
 
         fixture.given()
                 .when(new CreateChargingStationCommand(new ChargingStationId("CS-001"), connectors, attributes))
@@ -57,7 +57,7 @@ public class ChargingStationTest {
     public void testChargePointRegistration() {
 
         Map<String, String> attributes = new HashMap<>();
-        attributes.put("nodel", "MODEL-001");
+        attributes.put("model", "MODEL-001");
 
         fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), connectors, attributes))
                 .when(new RegisterChargingStationCommand(new ChargingStationId("CS-001")))
@@ -68,7 +68,7 @@ public class ChargingStationTest {
     public void testAttemptToRegisterNonExistingChargePoint() {
 
         Map<String, String> attributes = new HashMap<>();
-        attributes.put("nodel", "MODEL-001");
+        attributes.put("model", "MODEL-001");
 
         fixture.given()
                 .when(new RegisterChargingStationCommand(new ChargingStationId("CS-002")))
