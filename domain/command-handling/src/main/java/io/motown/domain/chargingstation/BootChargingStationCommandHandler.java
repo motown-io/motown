@@ -36,7 +36,7 @@ public class BootChargingStationCommandHandler {
         try {
             chargingStation = repository.load(command.getChargingStationId());
         } catch (AggregateNotFoundException e) {
-            chargingStation = new ChargingStation(new CreateChargingStationCommand(command.getChargingStationId(), new HashMap<String, String>()));
+            chargingStation = new ChargingStation(new CreateChargingStationCommand(command.getChargingStationId()));
             repository.add(chargingStation);
         }
 

@@ -48,13 +48,13 @@ public class ChargingStationTest {
     @Test
     public void testChargePointCreation() {
         fixture.given()
-                .when(new CreateChargingStationCommand(new ChargingStationId("CS-001"), attributes))
-                .expectEvents(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), attributes));
+                .when(new CreateChargingStationCommand(new ChargingStationId("CS-001")))
+                .expectEvents(new ChargingStationCreatedEvent(new ChargingStationId("CS-001")));
     }
 
     @Test
     public void testChargePointRegistration() {
-        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), attributes))
+        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001")))
                 .when(new RegisterChargingStationCommand(new ChargingStationId("CS-001")))
                 .expectEvents(new ChargingStationRegisteredEvent(new ChargingStationId("CS-001")));
     }
@@ -69,7 +69,7 @@ public class ChargingStationTest {
     @Test
     public void testRetrieveChargingStationConfiguration() {
         fixture.given(ImmutableList.builder()
-                .add(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), attributes))
+                .add(new ChargingStationCreatedEvent(new ChargingStationId("CS-001")))
                 .add(new ChargingStationRegisteredEvent(new ChargingStationId("CS-001"))).build())
                 .when(new RequestConfigurationCommand(new ChargingStationId("CS-001")))
                 .expectEvents(new ConfigurationRequestedEvent(new ChargingStationId("CS-001")));
@@ -77,35 +77,35 @@ public class ChargingStationTest {
 
     @Test
     public void testRetrieveChargingStationConfigurationForNonRegisteredChargingStation() {
-        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), attributes))
+        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001")))
                 .when(new RequestConfigurationCommand(new ChargingStationId("CS-001")))
                 .expectEvents(new ConfigurationRequestedEvent(new ChargingStationId("CS-001")));
     }
 
     @Test
     public void testReceiveChargingStationConfiguration() {
-        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), attributes))
+        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001")))
                 .when(new ReceivedConfigurationCommand(new ChargingStationId("CS-001"), connectors))
                 .expectEvents(new ConfigurationReceivedEvent(new ChargingStationId("CS-001"), connectors));
     }
 
     @Test
     public void testRequestingToUnlockConnector() {
-        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), null))
+        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001")))
                 .when(new RequestUnlockConnectorCommand(new ChargingStationId("CS-001"), 1))
                 .expectEvents(new UnlockConnectorRequestedEvent(new ChargingStationId("CS-001"), 1));
     }
 
     @Test
     public void testRequestingToUnlockUnknownConnector() {
-        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), null))
+        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001")))
                 .when(new RequestUnlockConnectorCommand(new ChargingStationId("CS-001"), 3))
                 .expectEvents(new ConnectorNotFoundEvent(new ChargingStationId("CS-001"), 3));
     }
 
     @Test
     public void testRequestingToUnlockAllConnectors() {
-        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), null))
+        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001")))
                 .when(new RequestUnlockConnectorCommand(new ChargingStationId("CS-001"), Connector.ALL))
                 .expectEvents(new UnlockConnectorRequestedEvent(new ChargingStationId("CS-001"), 1), new UnlockConnectorRequestedEvent(new ChargingStationId("CS-001"), 2));
     }

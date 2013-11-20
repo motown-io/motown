@@ -46,7 +46,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     public ChargingStation(CreateChargingStationCommand command) {
         this();
         log.info("Creating new chargingstation {}", command.getChargingStationId());
-        apply(new ChargingStationCreatedEvent(command.getChargingStationId(), command.getAttributes()));
+        apply(new ChargingStationCreatedEvent(command.getChargingStationId()));
     }
 
     /**

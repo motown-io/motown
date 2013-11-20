@@ -15,24 +15,15 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import java.util.Map;
-
 public class ChargingStationCreatedEvent {
 
     private final ChargingStationId chargingStationId;
 
-    private final Map<String, String> attributes;
-
-    public ChargingStationCreatedEvent(ChargingStationId chargingStationId, Map<String, String> attributes) {
+    public ChargingStationCreatedEvent(ChargingStationId chargingStationId) {
         this.chargingStationId = chargingStationId;
-        this.attributes = attributes;
     }
 
     public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
-    }
-
-    public Map<String, String> getAttributes() {
-        return attributes;
     }
 }
