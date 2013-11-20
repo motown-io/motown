@@ -16,31 +16,21 @@
 package io.motown.ocpp.soap.centralsystem.v1_5;
 
 import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.ocpp.soap.centralsystem.v1_5.schema.BootNotificationRequest;
-import io.motown.ocpp.soap.centralsystem.v1_5.schema.BootNotificationResponse;
-import io.motown.ocpp.soap.centralsystem.v1_5.schema.ObjectFactory;
-import io.motown.ocpp.soap.centralsystem.v1_5.schema.RegistrationStatus;
+import io.motown.ocpp.soap.centralsystem.v1_5.schema.*;
 import io.motown.ocpp.soap.util.DateConverter;
 import io.motown.ocpp.viewmodel.ChargingStationSubscriber;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ws.server.endpoint.annotation.Endpoint;
-import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
-import org.springframework.ws.server.endpoint.annotation.RequestPayload;
-import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-import org.springframework.ws.soap.SoapHeaderElement;
-import org.springframework.ws.soap.server.endpoint.annotation.SoapHeader;
+import org.springframework.beans.factory.annotation.Qualifier;
 
-import javax.annotation.Resource;
-import javax.xml.bind.JAXBElement;
-
-@Endpoint
-public class CentralSystemService {
-
-    private static final String WS_NAMESPACE = "urn://Ocpp/Cs/2012/06/";
-
-    private static final String CB_IDENTITY_NAMESPACE = "{urn://Ocpp/Cs/2012/06/}chargeBoxIdentity";
+@javax.jws.WebService(
+        serviceName = "CentralSystemService",
+        portName = "CentralSystemServiceSoap12",
+        targetNamespace = "urn://Ocpp/Cs/2012/06/",
+        wsdlLocation = "WEB-INF/wsdl/ocpp_15_centralsystem.wsdl",
+        endpointInterface = "io.motown.ocpp.soap.centralsystem.v1_5.schema.CentralSystemService")
+public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v1_5.schema.CentralSystemService {
 
     @Autowired
     private DomainService domainService;
@@ -48,25 +38,79 @@ public class CentralSystemService {
     @Autowired
     private ObjectFactory objectFactory;
 
-    @Resource(name = "axonAmqpChargingStationSubscriber")
+    // not using @Resource(name = "axonAmqpChargingStationSubscriber") as this causes startup issues on Glassfish. JNDI lookups vs Spring.
+    @Autowired
+    @Qualifier("axonAmqpChargingStationSubscriber")
     private ChargingStationSubscriber chargingStationSubscriber;
 
-    @PayloadRoot(namespace = WS_NAMESPACE, localPart = "bootNotificationRequest")
-    @ResponsePayload
-    public JAXBElement<BootNotificationResponse> handle(@RequestPayload JAXBElement<BootNotificationRequest> bootNotificationRequest, @SoapHeader(CB_IDENTITY_NAMESPACE) SoapHeaderElement chargeBoxIdentityHeader) {
-        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentityHeader.getText());
-        String chargePointVendor = bootNotificationRequest.getValue().getChargePointVendor();
-        String chargePointModel = bootNotificationRequest.getValue().getChargePointModel();
+    @Override
+    public DataTransferResponse dataTransfer(DataTransferRequest parameters, String chargeBoxIdentity) {
+        //FIXME implement me
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    @Override
+    public StatusNotificationResponse statusNotification(StatusNotificationRequest parameters, String chargeBoxIdentity) {
+        //FIXME implement me
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    @Override
+    public StopTransactionResponse stopTransaction(StopTransactionRequest parameters, String chargeBoxIdentity) {
+        //FIXME implement me
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    @Override
+    public BootNotificationResponse bootNotification(BootNotificationRequest parameters, String chargeBoxIdentity) {
+        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
         chargingStationSubscriber.subscribe(chargingStationId);
 
-        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargePointVendor, chargePointModel);
-        BootNotificationResponse response = objectFactory.createBootNotificationResponse();
+        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, parameters.getChargePointVendor(), parameters.getChargePointModel());
 
+        BootNotificationResponse response = new BootNotificationResponse();
         response.setStatus(result.isAccepted() ? RegistrationStatus.ACCEPTED : RegistrationStatus.REJECTED);
         response.setHeartbeatInterval(result.getHeartbeatInterval());
         response.setCurrentTime(DateConverter.toXmlGregorianCalendar(result.getTimeStamp()));
 
-        return objectFactory.createBootNotificationResponse(response);
+        return response;
     }
+
+    @Override
+    public HeartbeatResponse heartbeat(HeartbeatRequest parameters, String chargeBoxIdentity) {
+        //FIXME implement me
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    @Override
+    public MeterValuesResponse meterValues(MeterValuesRequest parameters, String chargeBoxIdentity) {
+        //FIXME implement me
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    @Override
+    public DiagnosticsStatusNotificationResponse diagnosticsStatusNotification(DiagnosticsStatusNotificationRequest parameters, String chargeBoxIdentity) {
+        //FIXME implement me
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    @Override
+    public AuthorizeResponse authorize(AuthorizeRequest parameters, String chargeBoxIdentity) {
+        //FIXME implement me
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    @Override
+    public FirmwareStatusNotificationResponse firmwareStatusNotification(FirmwareStatusNotificationRequest parameters, String chargeBoxIdentity) {
+        //FIXME implement me
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    @Override
+    public StartTransactionResponse startTransaction(StartTransactionRequest parameters, String chargeBoxIdentity) {
+        //FIXME implement me
+        throw new RuntimeException("Not yet implemented");
+    }
+
 }
