@@ -79,58 +79,51 @@
             <artifactId>spring-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.ws</groupId>
-            <artifactId>spring-ws-core</artifactId>
-        </dependency>
-        <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jaxb2-maven-plugin</artifactId>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-codegen-plugin</artifactId>
+                <version>${cxf.version}</version>
                 <executions>
                     <execution>
-                        <id>ocpp-15-centralsystem-xjc</id>
-                        <goals>
-                            <goal>xjc</goal>
-                        </goals>
+                        <id>generate-sources</id>
+                        <phase>generate-sources</phase>
                         <configuration>
-                            <schemaDirectory>src/main/resources</schemaDirectory>
-                            <schemaFiles>ocpp_15_centralsystem.wsdl</schemaFiles>
-                            <packageName>io.motown.ocpp.soap.centralsystem.v1_5.schema</packageName>
-                            <wsdl>true</wsdl>
-                            <xmlschema>false</xmlschema>
-                            <staleFile>
-                                ${project.build.directory}/generated-sources/jaxb/.ocpp-15-centralsystem-xjc-stale
-                            </staleFile>
-                            <outputDirectory>
-                                ${project.build.directory}/generated-sources/jaxb/ocpp-15-centralsystem-xjc
-                            </outputDirectory>
+                            <wsdlOptions>
+                                <wsdlOption>
+                                    <wsdl>src/main/webapp/WEB-INF/wsdl/ocpp_15_centralsystem.wsdl</wsdl>
+                                    <wsdlLocation>wsdl/ocpp_15_centralsystem.wsdl</wsdlLocation>
+                                    <packagenames>
+                                        <packagename>io.motown.ocpp.soap.centralsystem.v1_5.schema</packagename>
+                                    </packagenames>
+                                    <extraargs>
+                                        <extraarg>-exsh</extraarg>
+                                        <extraarg>true</extraarg>
+                                    </extraargs>
+                                </wsdlOption>
+                            </wsdlOptions>
                         </configuration>
-                    </execution>
-                    <execution>
-                        <id>ocpp-15-chargepoint-xjc</id>
                         <goals>
-                            <goal>xjc</goal>
+                            <goal>wsdl2java</goal>
                         </goals>
-                        <configuration>
-                            <schemaDirectory>src/main/resources</schemaDirectory>
-                            <schemaFiles>ocpp_15_chargepoint.wsdl</schemaFiles>
-                            <packageName>io.motown.ocpp.soap.chargepoint.v1_5.schema</packageName>
-                            <wsdl>true</wsdl>
-                            <xmlschema>false</xmlschema>
-                            <staleFile>
-                                ${project.build.directory}/generated-sources/jaxb/.ocpp-15-chargepoint-xjc-stale
-                            </staleFile>
-                            <outputDirectory>${project.build.directory}/generated-sources/jaxb/ocpp-15-chargepoint-xjc
-                            </outputDirectory>
-                            <clearOutputDir>false</clearOutputDir>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
