@@ -15,6 +15,8 @@
  */
 package io.motown.domain.chargingstation;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import io.motown.domain.api.chargingstation.*;
 import org.axonframework.repository.AggregateNotFoundException;
 import org.axonframework.test.FixtureConfiguration;
@@ -22,10 +24,7 @@ import org.axonframework.test.Fixtures;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 
 public class ChargingStationTest {
@@ -34,20 +33,20 @@ public class ChargingStationTest {
 
     private List<Connector> connectors = new LinkedList<Connector>();
 
+    private Map<String, String> attributes = new HashMap<>();
+
     @Before
     public void setUp() throws Exception {
         fixture = Fixtures.newGivenWhenThenFixture(ChargingStation.class);
         // simple default Connector for the test ChargingPoint.
         connectors.add(new Connector(1, "CONTYPE", 32));
         connectors.add(new Connector(2, "CONTYPE", 32));
+
+        attributes.put("model", "MODEL-001");
     }
 
     @Test
     public void testChargePointCreation() {
-
-        Map<String, String> attributes = new HashMap<>();
-        attributes.put("model", "MODEL-001");
-
         fixture.given()
                 .when(new CreateChargingStationCommand(new ChargingStationId("CS-001"), attributes))
                 .expectEvents(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), attributes));
@@ -55,10 +54,6 @@ public class ChargingStationTest {
 
     @Test
     public void testChargePointRegistration() {
-
-        Map<String, String> attributes = new HashMap<>();
-        attributes.put("model", "MODEL-001");
-
         fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), attributes))
                 .when(new RegisterChargingStationCommand(new ChargingStationId("CS-001")))
                 .expectEvents(new ChargingStationRegisteredEvent(new ChargingStationId("CS-001")));
@@ -66,13 +61,32 @@ public class ChargingStationTest {
 
     @Test
     public void testAttemptToRegisterNonExistingChargePoint() {
-
-        Map<String, String> attributes = new HashMap<>();
-        attributes.put("model", "MODEL-001");
-
         fixture.given()
                 .when(new RegisterChargingStationCommand(new ChargingStationId("CS-002")))
                 .expectException(AggregateNotFoundException.class);
+    }
+
+    @Test
+    public void testRetrieveChargingStationConfiguration() {
+        fixture.given(ImmutableList.builder()
+                .add(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), attributes))
+                .add(new ChargingStationRegisteredEvent(new ChargingStationId("CS-001"))).build())
+                .when(new RequestConfigurationCommand(new ChargingStationId("CS-001")))
+                .expectEvents(new ConfigurationRequestedEvent(new ChargingStationId("CS-001")));
+    }
+
+    @Test
+    public void testRetrieveChargingStationConfigurationForNonRegisteredChargingStation() {
+        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), attributes))
+                .when(new RequestConfigurationCommand(new ChargingStationId("CS-001")))
+                .expectEvents(new ConfigurationRequestedEvent(new ChargingStationId("CS-001")));
+    }
+
+    @Test
+    public void testReceiveChargingStationConfiguration() {
+        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001"), attributes))
+                .when(new ReceivedConfigurationCommand(new ChargingStationId("CS-001"), connectors))
+                .expectEvents(new ConfigurationReceivedEvent(new ChargingStationId("CS-001"), connectors));
     }
 
     @Test

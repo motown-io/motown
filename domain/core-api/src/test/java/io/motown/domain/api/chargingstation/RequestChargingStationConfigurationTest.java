@@ -13,18 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.viewmodel.domain;
+package io.motown.domain.api.chargingstation;
 
-import io.motown.domain.api.chargingstation.BootChargingStationCommand;
-import io.motown.domain.api.chargingstation.ChargingStationRegistrationStatus;
-import io.motown.domain.api.chargingstation.ReceivedConfigurationCommand;
+import org.junit.Test;
 
-import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
+import java.util.Map;
 
-interface DomainCommandGateway {
+public class RequestChargingStationConfigurationTest {
 
-    ChargingStationRegistrationStatus sendAndWait(BootChargingStationCommand command, long timeout, TimeUnit unit);
+    @Test(expected = IllegalArgumentException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
+        new RequestConfigurationCommand(null);
+    }
 
-    void send(ReceivedConfigurationCommand command);
+    @Test(expected = IllegalArgumentException.class)
+    public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
+        new ConfigurationRequestedEvent(null);
+    }
 
 }

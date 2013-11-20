@@ -13,18 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.viewmodel.domain;
+package io.motown.domain.api.chargingstation;
 
-import io.motown.domain.api.chargingstation.BootChargingStationCommand;
-import io.motown.domain.api.chargingstation.ChargingStationRegistrationStatus;
-import io.motown.domain.api.chargingstation.ReceivedConfigurationCommand;
+import static com.google.common.base.Preconditions.checkArgument;
 
-import java.util.concurrent.TimeUnit;
+/**
+ * Requests the retrieval of the Chargingstation's configuration
+ */
+public class ConfigurationRequestedEvent {
+    private final ChargingStationId chargingStationId;
 
-interface DomainCommandGateway {
+    public ConfigurationRequestedEvent(ChargingStationId chargingStationId) {
+        checkArgument(chargingStationId != null);
 
-    ChargingStationRegistrationStatus sendAndWait(BootChargingStationCommand command, long timeout, TimeUnit unit);
+        this.chargingStationId = chargingStationId;
+    }
 
-    void send(ReceivedConfigurationCommand command);
+    public ChargingStationId getChargingStationId() {
+        return chargingStationId;
+    }
 
 }

@@ -15,6 +15,8 @@
  */
 package io.motown.domain.chargingstation;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -87,9 +89,32 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         apply(new ChargingStationRegisteredEvent(this.id));
     }
 
+    @CommandHandler
+    public void handle(RequestConfigurationCommand command) {
+        log.info("Retrieving configuration of chargingstation {}", command.getChargingStationId());
+
+        // Trigger the ocpp add-on through eventbus, this will not change state
+        apply(new ConfigurationRequestedEvent(this.id));
+    }
+
+    @CommandHandler
+    public void handle(ReceivedConfigurationCommand command) {
+        log.info("Received configuration for chargingstation {}", command.getChargingStationId());
+
+        apply(new ConfigurationReceivedEvent(this.id, command.getConnectors()));
+    }
+
+    @EventHandler
+    public void handle(ConfigurationReceivedEvent event) {
+        this.connectors = event.getConnectors();
+
+        log.info("Applied configuration to chargingstation {}", event.getChargingStationId());
+    }
+
     @EventHandler
     public void handle(ChargingStationRegisteredEvent event) {
         this.isRegistered = true;
+
         log.info("Registered chargingstation {}", event.getChargingStationId());
     }
 

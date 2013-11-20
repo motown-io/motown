@@ -15,10 +15,7 @@
  */
 package io.motown.ocpp.viewmodel;
 
-import io.motown.domain.api.chargingstation.ChargingStationBootedEvent;
-import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
-import io.motown.domain.api.chargingstation.ConnectorNotFoundEvent;
-import io.motown.domain.api.chargingstation.UnlockConnectorRequestedEvent;
+import io.motown.domain.api.chargingstation.*;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,5 +43,10 @@ public class OcppEventHandler {
     @EventHandler
     public void handle(UnlockConnectorRequestedEvent event) {
         log.info("UnlockConnectorRequestedEvent");
+    }
+
+    @EventHandler
+    public void handle(ConfigurationRequestedEvent event) {
+        log.info("Handling ConfigurationRequestedEvent");
     }
 }

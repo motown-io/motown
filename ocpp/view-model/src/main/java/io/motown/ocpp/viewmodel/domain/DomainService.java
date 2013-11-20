@@ -15,6 +15,8 @@
  */
 package io.motown.ocpp.viewmodel.domain;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +36,7 @@ public class DomainService {
         connectors.add(connector);
 
         // TODO: Use Guava's collections for a more fluent interface. - Dennis Laumen, November 14th 2013
-        Map<String, String> attributes = new HashMap<>();
+        Map<String, String> attributes = Maps.newHashMap();
         attributes.put("vendor", vendor);
         attributes.put("model", model);
 
@@ -46,6 +48,14 @@ public class DomainService {
 
         // TODO: Where should the interval come from? - Mark van den Bergh, November 15th 2013
         return new BootChargingStationResult(ChargingStationRegistrationStatus.REGISTERED.equals(result), 60, new Date());
+    }
+
+    public void configureChargingStation(ChargingStationId chargingStationId, Map<String, String> attributes) {
+        //TODO: Convert the attributes into the parameters required for configuring a charging station - ipak 20 nov 2013
+        List<Connector> connectors = Lists.newArrayList();
+        ReceivedConfigurationCommand command = new ReceivedConfigurationCommand(chargingStationId, connectors);
+
+        commandGateway.send(command);
     }
 
     public DomainCommandGateway getCommandGateway() {
