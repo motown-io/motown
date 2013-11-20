@@ -65,6 +65,6 @@ public class ChargingStationBootedEvent {
      * @return an immutable {@link java.util.Map} of attributes.
      */
     public Map<String, String> getAttributes() {
-        return ImmutableMap.copyOf(attributes);
+        return attributes;
     }
 }
