@@ -42,7 +42,7 @@ public class BootChargingStationCommand {
     public BootChargingStationCommand(ChargingStationId chargingStationId) {
         checkArgument(chargingStationId != null);
 
-        this.chargingStationId = checkNotNull(chargingStationId);
+        this.chargingStationId = chargingStationId;
         this.attributes = ImmutableMap.of();
     }
 
@@ -59,7 +59,7 @@ public class BootChargingStationCommand {
         checkArgument(chargingStationId != null);
         checkArgument(attributes != null);
 
-        this.chargingStationId = checkNotNull(chargingStationId);
+        this.chargingStationId = chargingStationId;
         this.attributes = ImmutableMap.copyOf(attributes);
     }
 
