@@ -17,6 +17,8 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /**
  * The Boot command contains all information about a chargepoint.
  * When the point does not exist (yet), you have the option to create it.
@@ -27,6 +29,8 @@ public class CreateChargingStationCommand {
     private final ChargingStationId chargingStationId;
 
     public CreateChargingStationCommand(ChargingStationId chargingStationId) {
+        checkArgument(chargingStationId != null);
+
         this.chargingStationId = chargingStationId;
     }
 

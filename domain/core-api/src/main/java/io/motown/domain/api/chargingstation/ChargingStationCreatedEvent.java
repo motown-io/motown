@@ -15,11 +15,15 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 public class ChargingStationCreatedEvent {
 
     private final ChargingStationId chargingStationId;
 
     public ChargingStationCreatedEvent(ChargingStationId chargingStationId) {
+        checkArgument(chargingStationId != null);
+
         this.chargingStationId = chargingStationId;
     }
 

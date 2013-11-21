@@ -17,12 +17,16 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 public class ChargingStationRegisteredEvent {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
     public ChargingStationRegisteredEvent(ChargingStationId chargingStationId) {
+        checkArgument(chargingStationId != null);
+
         this.chargingStationId = chargingStationId;
     }
 

@@ -15,21 +15,12 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
+import org.junit.Test;
 
-import static com.google.common.base.Preconditions.checkArgument;
+public class ChargingStationRegisteredEventTest {
 
-public class RegisterChargingStationCommand {
-    @TargetAggregateIdentifier
-    private final ChargingStationId chargingStationId;
-
-    public RegisterChargingStationCommand(ChargingStationId chargingStationId) {
-        checkArgument(chargingStationId != null);
-
-        this.chargingStationId = chargingStationId;
-    }
-
-    public ChargingStationId getChargingStationId() {
-        return chargingStationId;
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalArgumentExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
+        new ChargingStationRegisteredEvent(null);
     }
 }
