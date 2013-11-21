@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 /**
  * Requests the retrieval of the Chargingstation's configuration
  */
-public class ConfigurationRequestedEvent {
+public class ConfigurationRequestedEvent implements CommunicationWithChargingStationRequestedEvent{
     private final ChargingStationId chargingStationId;
 
     public ConfigurationRequestedEvent(ChargingStationId chargingStationId) {
