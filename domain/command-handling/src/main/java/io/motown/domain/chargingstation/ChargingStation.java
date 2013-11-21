@@ -15,8 +15,6 @@
  */
 package io.motown.domain.chargingstation;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -38,6 +36,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     private List<Connector> connectors;
 
     private boolean isRegistered = false;
+    private boolean isConfigured = false;
 
     protected ChargingStation() {
     }
@@ -70,7 +69,12 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestUnlockConnectorCommand command) {
-        if (command.getConnectorId() > connectors.size()) {
+        if(!this.isRegistered || !this.isConfigured){
+            //TODO: Decide what to do in this situation (respond with event or return value) - Ingo Pak 21 nov 2013
+            throw new RuntimeException("Chargingstation is not registered or configured");
+        }
+
+        if (connectors == null || command.getConnectorId() > connectors.size()) {
             apply(new ConnectorNotFoundEvent(this.id, command.getConnectorId()));
         } else {
             if (command.getConnectorId() == Connector.ALL) {
@@ -93,21 +97,37 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     public void handle(RequestConfigurationCommand command) {
         log.info("Retrieving configuration of chargingstation {}", command.getChargingStationId());
 
-        // Trigger the ocpp add-on through eventbus, this will not change state
-        apply(new ConfigurationRequestedEvent(this.id));
+        if(this.isRegistered){
+            //TODO: This event does not have to be stored in the eventstore - Ingo Pak 21 nov 2013
+            apply(new ConfigurationRequestedEvent(this.id));
+        }
+        else{
+            //TODO: Decide what to do in this situation (respond with event or return value) - Ingo Pak 21 nov 2013
+            throw new RuntimeException("Chargingstation is not registered");
+        }
     }
 
     @CommandHandler
-    public void handle(ReceivedConfigurationCommand command) {
+    public void handle(ConfigureChargingStationCommand command) {
         log.info("Received configuration for chargingstation {}", command.getChargingStationId());
 
-        apply(new ConfigurationReceivedEvent(this.id, command.getConnectors()));
+        if(!this.isRegistered){
+            //TODO: Decide what to do in this situation (respond with event or return value) - Ingo Pak 21 nov 2013
+            throw new RuntimeException("Chargingstation is not registered");
+        }
+
+        apply(new ChargingStationConfiguredEvent(this.id, command.getConfigurationItems()));
     }
 
     @EventHandler
-    public void handle(ConfigurationReceivedEvent event) {
-        this.connectors = event.getConnectors();
+    public void handle(ChargingStationConfiguredEvent event) {
+        //TODO: Interpret the Map holding the configuration items, first we need to know how the information is structured (for now use temporary hardcoded connectors so the unlocking logic keeps working) - Ingo Pak, 21 nov 2013
+        List<Connector> c = new ArrayList<>();
+        c.add(new Connector(1, "TYPE", 32));
+        c.add(new Connector(2, "TYPE", 32));
+        this.connectors = c;
 
+        this.isConfigured = true;
         log.info("Applied configuration to chargingstation {}", event.getChargingStationId());
     }
 
@@ -121,11 +141,6 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
         this.id = event.getChargingStationId();
-        // TODO temporarily adding hardcoded connectors here so the unlocking logic keeps working (until we add proper provisioning of connectors). - Dennis Laumen, November 20th 2013
-        List<Connector> c = new ArrayList<>();
-        c.add(new Connector(1, "TYPE", 32));
-        c.add(new Connector(2, "TYPE", 32));
-        this.connectors = c;
 
         log.info("Created new chargingstation {}", event.getChargingStationId());
     }

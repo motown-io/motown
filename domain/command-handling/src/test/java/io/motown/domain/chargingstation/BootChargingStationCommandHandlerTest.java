@@ -15,8 +15,8 @@
  */
 package io.motown.domain.chargingstation;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import io.motown.domain.api.chargingstation.*;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
@@ -48,20 +48,21 @@ public class BootChargingStationCommandHandlerTest {
 
     @Test
     public void testBootingChargingStationForKnownChargingStation() {
-        fixture.given(ImmutableList.builder()
-                        .add(new ChargingStationCreatedEvent(new ChargingStationId("CS-001")))
-                        .add(new ChargingStationRegisteredEvent(new ChargingStationId("CS-001"))).build())
-                .when(new BootChargingStationCommand(new ChargingStationId("CS-001"), attributes))
-                .expectEvents(new ChargingStationBootedEvent(new ChargingStationId("CS-001"), attributes))
+        ChargingStationId csid = new ChargingStationId("CS-001");
+
+        fixture.given( Lists.newArrayList(new ChargingStationCreatedEvent(csid), new ChargingStationRegisteredEvent(csid)) )
+                .when(new BootChargingStationCommand(csid, attributes))
+                .expectEvents(new ChargingStationBootedEvent(csid, attributes))
                 .expectReturnValue(ChargingStationRegistrationStatus.REGISTERED);
     }
 
     @Test
     public void testBootingChargingStationForUnknownChargingStation() {
+        ChargingStationId csid = new ChargingStationId("CS-001");
         fixture.given()
-                .when(new BootChargingStationCommand(new ChargingStationId("CS-001"), attributes))
-                .expectEvents(new ChargingStationCreatedEvent(new ChargingStationId("CS-001")),
-                        new ChargingStationBootedEvent(new ChargingStationId("CS-001"), attributes))
+                .when(new BootChargingStationCommand(csid, attributes))
+                .expectEvents(new ChargingStationCreatedEvent(csid),
+                        new ChargingStationBootedEvent(csid, attributes))
                 .expectReturnValue(ChargingStationRegistrationStatus.UNREGISTERED);
     }
 

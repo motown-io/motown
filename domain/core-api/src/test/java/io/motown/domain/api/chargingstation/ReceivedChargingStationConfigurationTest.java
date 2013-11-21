@@ -24,22 +24,22 @@ public class ReceivedChargingStationConfigurationTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdAndConnectorsNull() {
-        new ReceivedConfigurationCommand(null, null);
+        new ConfigureChargingStationCommand(null, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithConnectorsNull() {
-        new ReceivedConfigurationCommand(new ChargingStationId("CS-001"), null);
+        new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdAndConnectorsNull() {
-        new ConfigurationReceivedEvent(null, null);
+        new ChargingStationConfiguredEvent(null, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithConnectorsNull() {
-        new ConfigurationReceivedEvent(new ChargingStationId("CS-001"), null);
+        new ChargingStationConfiguredEvent(new ChargingStationId("CS-001"), null);
     }
 
     @Test(expected = UnsupportedOperationException.class)

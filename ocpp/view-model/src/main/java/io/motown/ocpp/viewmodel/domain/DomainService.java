@@ -15,7 +15,6 @@
  */
 package io.motown.ocpp.viewmodel.domain;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
 import org.springframework.stereotype.Service;
@@ -50,11 +49,8 @@ public class DomainService {
         return new BootChargingStationResult(ChargingStationRegistrationStatus.REGISTERED.equals(result), 60, new Date());
     }
 
-    public void configureChargingStation(ChargingStationId chargingStationId, Map<String, String> attributes) {
-        //TODO: Convert the attributes into the parameters required for configuring a charging station - ipak 20 nov 2013
-        List<Connector> connectors = Lists.newArrayList();
-        ReceivedConfigurationCommand command = new ReceivedConfigurationCommand(chargingStationId, connectors);
-
+    public void configureChargingStation(ChargingStationId chargingStationId, Map<String, String> configurationItems) {
+        ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(chargingStationId, configurationItems);
         commandGateway.send(command);
     }
 

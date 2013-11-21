@@ -15,36 +15,36 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import java.util.List;
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * The Configuration command holds the configuration information of a chargepoint.
+ * Holds the retrieved Chargingstation configuration information.
  */
-public class ReceivedConfigurationCommand {
+public class ChargingStationConfiguredEvent {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final List<Connector> connectors;
+    private final Map<String, String> configurationItems;
 
-    public ReceivedConfigurationCommand(ChargingStationId chargingStationId, List<Connector> connectors) {
+    public ChargingStationConfiguredEvent(ChargingStationId chargingStationId, Map<String, String> configurationItems) {
         checkArgument(chargingStationId != null);
-        checkArgument(connectors != null);
+        checkArgument(configurationItems != null);
 
         this.chargingStationId = chargingStationId;
-        this.connectors = ImmutableList.copyOf(connectors);
+        this.configurationItems = ImmutableMap.copyOf(configurationItems);
     }
 
     public ChargingStationId getChargingStationId() {
-        return this.chargingStationId;
+        return chargingStationId;
     }
 
-    public List<Connector> getConnectors() {
-        return ImmutableList.copyOf(connectors);
+    public Map<String, String> getConfigurationItems() {
+        return configurationItems;
     }
 }
