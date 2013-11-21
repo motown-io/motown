@@ -31,7 +31,7 @@ public class CreateChargingStationCommand {
      * Creates a {@code CreateChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @throws IllegalArgumentException if {@code chargingStationId} is {@code null}.
      */
     public CreateChargingStationCommand(ChargingStationId chargingStationId) {
         checkArgument(chargingStationId != null);

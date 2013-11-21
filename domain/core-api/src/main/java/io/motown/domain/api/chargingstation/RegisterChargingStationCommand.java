@@ -30,7 +30,7 @@ public class RegisterChargingStationCommand {
      * Creates a {@code RegisterChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @throws IllegalArgumentException if {@code chargingStationId} is {@code null}.
      */
     public RegisterChargingStationCommand(ChargingStationId chargingStationId) {
         checkArgument(chargingStationId != null);

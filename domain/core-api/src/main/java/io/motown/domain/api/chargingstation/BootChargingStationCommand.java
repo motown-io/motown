@@ -23,7 +23,7 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * {@code BootChargingStationCommand} is the command which should be sent when a charging station boots.
+ * {@code BootChargingStationCommand} is the command which is published when a charging station has booted.
  */
 public class BootChargingStationCommand {
 
@@ -36,7 +36,7 @@ public class BootChargingStationCommand {
      * Creates a {@code BootChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @throws IllegalArgumentException if {@code chargingStationId} is {@code null}.
      */
     public BootChargingStationCommand(ChargingStationId chargingStationId) {
         checkArgument(chargingStationId != null);
@@ -52,7 +52,7 @@ public class BootChargingStationCommand {
      * @param attributes        a {@link java.util.Map} of attributes. These attributes are additional information provided by
      *                          the charging station when it booted but which are not required by Motown. Because
      *                          {@link java.util.Map} implementations are potentially mutable a defensive copy is made.
-     * @throws NullPointerException if {@code chargingStationId} or {@code attributes} is {@code null}.
+     * @throws IllegalArgumentException if {@code chargingStationId} or {@code attributes} is {@code null}.
      */
     public BootChargingStationCommand(ChargingStationId chargingStationId, Map<String, String> attributes) {
         checkArgument(chargingStationId != null);

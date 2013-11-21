@@ -37,7 +37,7 @@ public class ChargingStationBootedEvent {
      * @param attributes        a {@link java.util.Map} of attributes. These attributes are additional information provided by
      *                          the charging station when it booted but which are not required by Motown. Because
      *                          {@link java.util.Map} implementations are potentially mutable a defensive copy is made.
-     * @throws NullPointerException if {@code chargingStationId} or {@code attributes} is {@code null}.
+     * @throws IllegalArgumentException if {@code chargingStationId} or {@code attributes} is {@code null}.
      */
     public ChargingStationBootedEvent(ChargingStationId chargingStationId, Map<String, String> attributes) {
         checkArgument(chargingStationId != null);
