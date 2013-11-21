@@ -16,7 +16,6 @@
 package io.motown.domain.api.chargingstation;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.List;
