@@ -17,16 +17,30 @@ package io.motown.domain.api.chargingstation;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+/**
+ * {@code ChargingStationCreatedEvent} is the event which is published when a charging station has been created.
+ */
 public class ChargingStationCreatedEvent {
 
     private final ChargingStationId chargingStationId;
 
+    /**
+     * Creates a {@code ChargingStationCreatedEvent} with an identifier.
+     *
+     * @param chargingStationId the identifier of the charging station.
+     * @throws IllegalArgumentException if {@code chargingStationId} is {@code null}.
+     */
     public ChargingStationCreatedEvent(ChargingStationId chargingStationId) {
         checkArgument(chargingStationId != null);
 
         this.chargingStationId = chargingStationId;
     }
 
+    /**
+     * Gets the charging station identifier.
+     *
+     * @return the charging station identifier.
+     */
     public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
     }

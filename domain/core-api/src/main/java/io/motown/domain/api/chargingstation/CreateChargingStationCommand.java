@@ -20,20 +20,30 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * The Boot command contains all information about a chargepoint.
- * When the point does not exist (yet), you have the option to create it.
+ * {@code CreateChargingStationCommand} is the command which is published when a charging station should be created.
  */
 public class CreateChargingStationCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
+    /**
+     * Creates a {@code CreateChargingStationCommand} with an identifier.
+     *
+     * @param chargingStationId the identifier of the charging station.
+     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     */
     public CreateChargingStationCommand(ChargingStationId chargingStationId) {
         checkArgument(chargingStationId != null);
 
         this.chargingStationId = chargingStationId;
     }
 
+    /**
+     * Gets the charging station identifier.
+     *
+     * @return the charging station identifier.
+     */
     public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
     }

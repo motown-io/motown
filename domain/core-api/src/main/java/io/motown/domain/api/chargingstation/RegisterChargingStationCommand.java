@@ -19,16 +19,30 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+/**
+ * {@code RegisterChargingStationCommand} is the command which is published when a charging station should be registered.
+ */
 public class RegisterChargingStationCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
+    /**
+     * Creates a {@code RegisterChargingStationCommand} with an identifier.
+     *
+     * @param chargingStationId the identifier of the charging station.
+     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     */
     public RegisterChargingStationCommand(ChargingStationId chargingStationId) {
         checkArgument(chargingStationId != null);
 
         this.chargingStationId = chargingStationId;
     }
 
+    /**
+     * Gets the charging station identifier.
+     *
+     * @return the charging station identifier.
+     */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
     }

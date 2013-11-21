@@ -19,17 +19,31 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+/**
+ * {@code ChargingStationRegisteredEvent} is the event which is published when a charging station has been registered.
+ */
 public class ChargingStationRegisteredEvent {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
+    /**
+     * Creates a {@code ChargingStationRegisteredEvent} with an identifier.
+     *
+     * @param chargingStationId the identifier of the charging station.
+     * @throws IllegalArgumentException if {@code chargingStationId} is {@code null}.
+     */
     public ChargingStationRegisteredEvent(ChargingStationId chargingStationId) {
         checkArgument(chargingStationId != null);
 
         this.chargingStationId = chargingStationId;
     }
 
+    /**
+     * Gets the charging station identifier.
+     *
+     * @return the charging station identifier.
+     */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
     }
