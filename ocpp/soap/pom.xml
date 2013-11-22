@@ -94,6 +94,10 @@
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-tools-common</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -110,6 +114,9 @@
                             <wsdlOptions>
                                 <wsdlOption>
                                     <wsdl>src/main/webapp/WEB-INF/wsdl/ocpp_15_centralsystem.wsdl</wsdl>
+                                    <bindingFiles>
+                                        <bindingFile>src/main/webapp/WEB-INF/wsdl/XMLGregorianCalendarBinding.xml</bindingFile>
+                                    </bindingFiles>
                                     <wsdlLocation>wsdl/ocpp_15_centralsystem.wsdl</wsdlLocation>
                                     <packagenames>
                                         <packagename>io.motown.ocpp.soap.centralsystem.v1_5.schema</packagename>

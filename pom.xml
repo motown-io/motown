@@ -238,6 +238,11 @@
                 <artifactId>cxf-rt-transports-http</artifactId>
                 <version>${cxf.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-tools-common</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

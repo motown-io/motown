@@ -19,7 +19,6 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.ocpp.soap.async.RequestHandler;
 import io.motown.ocpp.soap.async.ResponseFactory;
 import io.motown.ocpp.soap.centralsystem.v1_5.schema.*;
-import io.motown.ocpp.soap.util.DateConverter;
 import io.motown.ocpp.viewmodel.ChargingStationSubscriber;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
@@ -100,7 +99,7 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
                     BootNotificationResponse response = new BootNotificationResponse();
                     response.setStatus(result.isAccepted() ? RegistrationStatus.ACCEPTED : RegistrationStatus.REJECTED);
                     response.setHeartbeatInterval(result.getHeartbeatInterval());
-                    response.setCurrentTime(DateConverter.toXmlGregorianCalendar(result.getTimeStamp()));
+                    response.setCurrentTime(result.getTimeStamp());
 
                     return response;
                 }
@@ -111,7 +110,7 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
                     BootNotificationResponse response = new BootNotificationResponse();
                     response.setHeartbeatInterval(HEARTBEAT_INTERVAL_FALLBACK);
                     response.setStatus(RegistrationStatus.REJECTED);
-                    response.setCurrentTime(DateConverter.toXmlGregorianCalendar(new Date()));
+                    response.setCurrentTime(new Date());
                     return response;
                 }
             }
