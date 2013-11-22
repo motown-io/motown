@@ -20,7 +20,7 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Map;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The Configuration command holds the configuration information of a chargepoint.
@@ -33,11 +33,8 @@ public class ConfigureChargingStationCommand {
     private final Map<String, String> configurationItems;
 
     public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Map<String, String> configurationItems) {
-        checkArgument(chargingStationId != null);
-        checkArgument(configurationItems != null);
-
-        this.chargingStationId = chargingStationId;
-        this.configurationItems = ImmutableMap.copyOf(configurationItems);
+        this.chargingStationId = checkNotNull(chargingStationId);
+        this.configurationItems = ImmutableMap.copyOf(checkNotNull(configurationItems));
     }
 
     public ChargingStationId getChargingStationId() {

@@ -22,17 +22,17 @@ import java.util.Map;
 
 public class BootChargingStationCommandTest {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingChargingStationWithChargingStationIdNull() {
         new BootChargingStationCommand(null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingChargingStationWithChargingStationIdNullAndAttributes() {
         new BootChargingStationCommand(null, new HashMap<String, String>());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingChargingStationWithChargingStationIdAndAttributesNull() {
         new BootChargingStationCommand(new ChargingStationId("CS-001"), null);
     }

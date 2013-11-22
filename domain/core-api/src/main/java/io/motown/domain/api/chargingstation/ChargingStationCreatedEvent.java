@@ -15,7 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * {@code ChargingStationCreatedEvent} is the event which is published when a charging station has been created.
@@ -28,12 +28,10 @@ public class ChargingStationCreatedEvent {
      * Creates a {@code ChargingStationCreatedEvent} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @throws IllegalArgumentException if {@code chargingStationId} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
     public ChargingStationCreatedEvent(ChargingStationId chargingStationId) {
-        checkArgument(chargingStationId != null);
-
-        this.chargingStationId = chargingStationId;
+        this.chargingStationId = checkNotNull(chargingStationId);
     }
 
     /**

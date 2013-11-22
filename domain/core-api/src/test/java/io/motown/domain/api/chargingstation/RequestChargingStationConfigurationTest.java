@@ -17,17 +17,14 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class RequestChargingStationConfigurationTest {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
         new RequestConfigurationCommand(null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
         new ConfigurationRequestedEvent(null);
     }

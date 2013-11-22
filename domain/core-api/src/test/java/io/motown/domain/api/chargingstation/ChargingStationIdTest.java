@@ -19,7 +19,7 @@ import org.junit.Test;
 
 public class ChargingStationIdTest {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithIdNull() {
         new ChargingStationId(null);
     }

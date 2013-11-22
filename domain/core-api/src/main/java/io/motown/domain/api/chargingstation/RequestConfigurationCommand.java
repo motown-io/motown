@@ -17,7 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * The command to trigger the retrieval of the ChargingStation's configuration
@@ -28,9 +28,7 @@ public class RequestConfigurationCommand {
     private final ChargingStationId chargingStationId;
 
     public RequestConfigurationCommand(ChargingStationId chargingStationId) {
-        checkArgument(chargingStationId != null);
-
-        this.chargingStationId = chargingStationId;
+        this.chargingStationId = checkNotNull(chargingStationId);
     }
 
     public ChargingStationId getChargingStationId() {

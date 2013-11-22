@@ -22,22 +22,22 @@ import java.util.Map;
 
 public class ReceivedChargingStationConfigurationTest {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdAndConnectorsNull() {
         new ConfigureChargingStationCommand(null, null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithConnectorsNull() {
         new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdAndConnectorsNull() {
         new ChargingStationConfiguredEvent(null, null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithConnectorsNull() {
         new ChargingStationConfiguredEvent(new ChargingStationId("CS-001"), null);
     }

@@ -19,8 +19,8 @@ import org.junit.Test;
 
 public class ChargingStationRegisteredEventTest {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void illegalArgumentExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
         new ChargingStationRegisteredEvent(null);
     }
 }

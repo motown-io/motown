@@ -22,12 +22,12 @@ import java.util.Map;
 
 public class ChargingStationBootedEventTest {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNullAndAttributes() {
         new ChargingStationBootedEvent(null, new HashMap<String, String>());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdAndAttributesNull() {
         new ChargingStationBootedEvent(new ChargingStationId("CS-001"), null);
     }

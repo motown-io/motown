@@ -15,7 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Requests the retrieval of the Chargingstation's configuration
@@ -24,9 +24,7 @@ public class ConfigurationRequestedEvent implements CommunicationWithChargingSta
     private final ChargingStationId chargingStationId;
 
     public ConfigurationRequestedEvent(ChargingStationId chargingStationId) {
-        checkArgument(chargingStationId != null);
-
-        this.chargingStationId = chargingStationId;
+        this.chargingStationId = checkNotNull(chargingStationId);
     }
 
     public ChargingStationId getChargingStationId() {

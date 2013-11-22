@@ -17,7 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * {@code RegisterChargingStationCommand} is the command which is published when a charging station should be registered.
@@ -30,12 +30,10 @@ public class RegisterChargingStationCommand {
      * Creates a {@code RegisterChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @throws IllegalArgumentException if {@code chargingStationId} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
     public RegisterChargingStationCommand(ChargingStationId chargingStationId) {
-        checkArgument(chargingStationId != null);
-
-        this.chargingStationId = chargingStationId;
+        this.chargingStationId = checkNotNull(chargingStationId);
     }
 
     /**

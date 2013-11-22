@@ -15,11 +15,10 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import com.google.common.base.Strings;
-
 import java.io.Serializable;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ChargingStationId implements Serializable {
 
@@ -28,7 +27,8 @@ public class ChargingStationId implements Serializable {
     private final String id;
 
     public ChargingStationId(String id) {
-        checkArgument(!Strings.isNullOrEmpty(id));
+        checkNotNull(id);
+        checkArgument(!id.isEmpty());
 
         this.id = id;
     }

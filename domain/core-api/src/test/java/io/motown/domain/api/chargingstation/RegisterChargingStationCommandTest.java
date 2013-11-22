@@ -19,8 +19,8 @@ import org.junit.Test;
 
 public class RegisterChargingStationCommandTest {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void illegalArgumentExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
         new RegisterChargingStationCommand(null);
     }
 }
