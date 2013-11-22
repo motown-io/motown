@@ -20,7 +20,7 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ReceivedChargingStationConfigurationTest {
+public class ConfigureChargingStationCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdAndConnectorsNull() {
@@ -30,26 +30,5 @@ public class ReceivedChargingStationConfigurationTest {
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithConnectorsNull() {
         new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), null);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdAndConnectorsNull() {
-        new ChargingStationConfiguredEvent(null, null);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingEventWithConnectorsNull() {
-        new ChargingStationConfiguredEvent(new ChargingStationId("CS-001"), null);
-    }
-
-    @Test(expected = UnsupportedOperationException.class)
-    public void unsupportedOperationExceptionThrownWhenModifyingAttributes() {
-        Map<String, String> attributes = new HashMap<>();
-        attributes.put("vendor", "VENDOR");
-        attributes.put("model", "MODEL");
-
-        ChargingStationBootedEvent command = new ChargingStationBootedEvent(new ChargingStationId("CS-001"), attributes);
-
-        command.getAttributes().put("vendor", "ANOTHER_VENDOR");
     }
 }
