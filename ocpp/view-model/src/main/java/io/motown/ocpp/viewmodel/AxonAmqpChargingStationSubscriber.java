@@ -17,11 +17,12 @@ package io.motown.ocpp.viewmodel;
 
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
-@Component
+@Component @Qualifier("axonAmqpChargingStationSubscriber")
 public class AxonAmqpChargingStationSubscriber implements ChargingStationSubscriber {
     @Autowired
     private ChargingStationConfigurer amqpConfigurer;
