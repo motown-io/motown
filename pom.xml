@@ -47,7 +47,8 @@
         <hibernate-validator.version>5.0.1.Final</hibernate-validator.version>
         <servlet-api.version>3.0.1</servlet-api.version>
         <!-- using 2.7.0 instead of newer versions of CXF, as newer versions have a problem with continuations resulting
-             in very bad performance and stack traces if several requests arrive short after each other (6 seconds in between or less) -->
+             in very bad performance and stack traces if several requests arrive short after each other (6 seconds in between or less).
+             Bug has been reported: https://issues.apache.org/jira/browse/CXF-5414 -->
         <cxf.version>2.7.0</cxf.version>
     </properties>
 
