@@ -17,6 +17,8 @@ package io.motown.ocpp.viewmodel.domain;
 
 import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,6 +27,8 @@ import java.util.concurrent.*;
 
 @Service
 public class DomainService {
+
+    private static final Logger log = LoggerFactory.getLogger(DomainService.class);
 
     @Resource(name = "domainCommandGateway")
     private DomainCommandGateway commandGateway;

@@ -58,6 +58,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
      * received for a non-existent ChargingStation.
      *
      * @param command the command which needs to be applied to the ChargingStation.
+     * @return status of the charging station after applying this command
      */
     public ChargingStationRegistrationStatus handle(BootChargingStationCommand command) {
         log.info("Received bootnotification for chargingstation {}", command.getChargingStationId());

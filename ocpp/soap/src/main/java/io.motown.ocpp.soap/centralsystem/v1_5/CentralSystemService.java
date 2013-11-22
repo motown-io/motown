@@ -16,13 +16,13 @@
 package io.motown.ocpp.soap.centralsystem.v1_5;
 
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.ocpp.soap.async.RequestHandler;
+import io.motown.ocpp.soap.async.ResponseFactory;
 import io.motown.ocpp.soap.centralsystem.v1_5.schema.*;
 import io.motown.ocpp.soap.util.DateConverter;
 import io.motown.ocpp.viewmodel.ChargingStationSubscriber;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
-import org.apache.cxf.continuations.Continuation;
-import org.apache.cxf.continuations.ContinuationProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +32,6 @@ import org.springframework.core.task.TaskExecutor;
 import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
 import java.util.Date;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
 
 @javax.jws.WebService(
         serviceName = "CentralSystemService",
@@ -45,12 +42,6 @@ import java.util.concurrent.FutureTask;
 public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v1_5.schema.CentralSystemService {
 
     private static final Logger log = LoggerFactory.getLogger(CentralSystemService.class);
-
-    //TODO make this configurable
-    /**
-     * Timeout in milliseconds for the continuation suspend functionality
-     */
-    private final int CONTINUATION_TIMEOUT = 5000;
 
     //TODO make this configurable
     /**
@@ -94,68 +85,37 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
     }
 
     @Override
-    public BootNotificationResponse bootNotification(final BootNotificationRequest parameters, final String chargeBoxIdentity) {
-        final Continuation continuation = getContinuation();
+    public BootNotificationResponse bootNotification(final BootNotificationRequest request, final String chargeBoxIdentity) {
+        RequestHandler<BootNotificationResponse> requestHandler = new RequestHandler<>(context.getMessageContext(), taskExecutor);
+        return requestHandler.handle(
+            new ResponseFactory<BootNotificationResponse>() {
+                @Override
+                public BootNotificationResponse createResponse() {
+                    ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
-        if (continuation == null) {
-            log.error("Failed to get continuation, falling back to synchronous request handling. Make sure async-supported is set to true on the CXF servlet (web.xml)");
-            //TODO implement fallback - Mark van den Bergh, November 21st 2013
-            throw new RuntimeException("Failed to get continuation");
-        }
+                    chargingStationSubscriber.subscribe(chargingStationId);
 
-        synchronized (continuation) {
-            if(continuation.isNew()) {
-                FutureTask futureResponse = new FutureTask<>(new Callable<BootNotificationResponse>() {
-                    @Override
-                    public BootNotificationResponse call() throws Exception {
-                        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
+                    BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, request.getChargePointVendor(), request.getChargePointModel());
 
-                        chargingStationSubscriber.subscribe(chargingStationId);
+                    BootNotificationResponse response = new BootNotificationResponse();
+                    response.setStatus(result.isAccepted() ? RegistrationStatus.ACCEPTED : RegistrationStatus.REJECTED);
+                    response.setHeartbeatInterval(result.getHeartbeatInterval());
+                    response.setCurrentTime(DateConverter.toXmlGregorianCalendar(result.getTimeStamp()));
 
-                        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, parameters.getChargePointVendor(), parameters.getChargePointModel());
-
-                        BootNotificationResponse response = new BootNotificationResponse();
-                        response.setStatus(result.isAccepted() ? RegistrationStatus.ACCEPTED : RegistrationStatus.REJECTED);
-                        response.setHeartbeatInterval(result.getHeartbeatInterval());
-                        response.setCurrentTime(DateConverter.toXmlGregorianCalendar(result.getTimeStamp()));
-
-                        // the blocking call has finished, we resume the transport thread
-                        continuation.resume();
-
-                        return response;
-                    }
-                });
-                taskExecutor.execute(futureResponse);
-                continuation.setObject(futureResponse);
-
-                // suspend the transport thread so it can handle other requests
-                continuation.suspend(CONTINUATION_TIMEOUT);
-                return null;
-            } else {
-                FutureTask futureTask = (FutureTask) continuation.getObject();
-                if(futureTask.isDone()) {
-                    try {
-                        return (BootNotificationResponse) futureTask.get();
-                    } catch (InterruptedException | ExecutionException e) {
-                        // handling the bootNotification has (probably) failed, log the error and return REJECTED
-
-                        log.error(e.getClass().getName() + " while waiting for response on boot notification, returning REJECTED to client.");
-                        e.printStackTrace();
-
-                        BootNotificationResponse response = new BootNotificationResponse();
-                        response.setHeartbeatInterval(HEARTBEAT_INTERVAL_FALLBACK);
-                        response.setStatus(RegistrationStatus.REJECTED);
-                        response.setCurrentTime(DateConverter.toXmlGregorianCalendar(new Date()));
-                        return response;
-                    }
-                } else {
-                    //TODO should the timeout decrease every time the task is not yet done? - Mark van den Bergh, November 21st 2013
-                    continuation.suspend(CONTINUATION_TIMEOUT);
+                    return response;
+                }
+            },
+            new ResponseFactory<BootNotificationResponse>() {
+                @Override
+                public BootNotificationResponse createResponse() {
+                    BootNotificationResponse response = new BootNotificationResponse();
+                    response.setHeartbeatInterval(HEARTBEAT_INTERVAL_FALLBACK);
+                    response.setStatus(RegistrationStatus.REJECTED);
+                    response.setCurrentTime(DateConverter.toXmlGregorianCalendar(new Date()));
+                    return response;
                 }
             }
-        }
-        // unreachable
-        return null;
+        );
     }
 
     @Override
@@ -199,15 +159,4 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
         log.error("Unimplemented method [startTransaction] called.");
         throw new RuntimeException("Not yet implemented");
     }
-
-    /**
-     * Gets a continuation object from the provider which is present in message context
-     *
-     * @return continuation
-     */
-    private Continuation getContinuation() {
-        ContinuationProvider provider = (ContinuationProvider) context.getMessageContext().get(ContinuationProvider.class.getName());
-        return provider.getContinuation();
-    }
-
 }
