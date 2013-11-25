@@ -15,7 +15,6 @@
  */
 package io.motown.domain.chargingstation;
 
-import com.google.common.collect.Lists;
 import io.motown.domain.api.chargingstation.*;
 import org.axonframework.repository.AggregateNotFoundException;
 import org.axonframework.test.FixtureConfiguration;
@@ -23,115 +22,84 @@ import org.axonframework.test.Fixtures;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import static io.motown.domain.chargingstation.ChargingStationTestUtils.*;
 
 public class ChargingStationTest {
 
     private FixtureConfiguration<ChargingStation> fixture;
 
-    private List<Connector> connectors = new LinkedList<>();
-
-    private Map<String, String> attributes = new HashMap<>();
-
-    private Map<String, String> configurationItems = new HashMap<>();
-
     @Before
     public void setUp() throws Exception {
         fixture = Fixtures.newGivenWhenThenFixture(ChargingStation.class);
-        // simple default Connector for the test ChargingPoint.
-        connectors.add(new Connector(1, "CONTYPE", 32));
-        connectors.add(new Connector(2, "CONTYPE", 32));
-
-        attributes.put("model", "MODEL-001");
-
-        configurationItems.put("socket1_id", "1");
-        configurationItems.put("socket1_type", "Type1");
-        configurationItems.put("socket1_charge", "19");
-        configurationItems.put("socket2_id", "1");
-        configurationItems.put("socket2_type", "Type2");
-        configurationItems.put("socket2_charge", "10");
     }
 
     @Test
     public void testChargePointCreation() {
         fixture.given()
-                .when(new CreateChargingStationCommand(new ChargingStationId("CS-001")))
-                .expectEvents(new ChargingStationCreatedEvent(new ChargingStationId("CS-001")));
+                .when(new CreateChargingStationCommand(getChargingStationId()))
+                .expectEvents(new ChargingStationCreatedEvent(getChargingStationId()));
     }
 
     @Test
     public void testChargePointRegistration() {
-        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001")))
-                .when(new RegisterChargingStationCommand(new ChargingStationId("CS-001")))
-                .expectEvents(new ChargingStationRegisteredEvent(new ChargingStationId("CS-001")));
+        fixture.given(getCreatedChargingStation())
+                .when(new RegisterChargingStationCommand(getChargingStationId()))
+                .expectEvents(new ChargingStationRegisteredEvent(getChargingStationId()));
     }
 
     @Test
     public void testAttemptToRegisterNonExistingChargePoint() {
         fixture.given()
-                .when(new RegisterChargingStationCommand(new ChargingStationId("CS-002")))
+                .when(new RegisterChargingStationCommand(getChargingStationId()))
                 .expectException(AggregateNotFoundException.class);
     }
 
     @Test
     public void testRetrieveChargingStationConfiguration() {
-        fixture.given( Lists.newArrayList(new ChargingStationCreatedEvent(new ChargingStationId("CS-001")),
-                                            new ChargingStationRegisteredEvent(new ChargingStationId("CS-001"))) )
-                .when(new RequestConfigurationCommand(new ChargingStationId("CS-001")))
-                .expectEvents(new ConfigurationRequestedEvent(new ChargingStationId("CS-001")));
+        fixture.given(getRegisteredChargingStation())
+                .when(new RequestConfigurationCommand(getChargingStationId()))
+                .expectEvents(new ConfigurationRequestedEvent(getChargingStationId()));
     }
 
     @Test
     public void testRetrieveChargingStationConfigurationForNonRegisteredChargingStation() {
-        fixture.given(new ChargingStationCreatedEvent(new ChargingStationId("CS-001")))
-                .when(new RequestConfigurationCommand(new ChargingStationId("CS-001")))
+        fixture.given(getCreatedChargingStation())
+                .when(new RequestConfigurationCommand(getChargingStationId()))
                 .expectException(RuntimeException.class);
     }
 
     @Test
     public void testConfigureChargingStation() {
-        ChargingStationId csid = new ChargingStationId("CS-001");
-        fixture.given( Lists.newArrayList(new ChargingStationCreatedEvent(csid),
-                                            new ChargingStationRegisteredEvent(csid)) )
-                .when(new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), configurationItems))
-                .expectEvents(new ChargingStationConfiguredEvent(new ChargingStationId("CS-001"), configurationItems));
+        fixture.given(getRegisteredChargingStation())
+                .when(new ConfigureChargingStationCommand(getChargingStationId(), getConfigurationItems()))
+                .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), getConfigurationItems()));
     }
 
     @Test
     public void testAttemptToConfigureUnregisteredChargingStation() {
-        ChargingStationId csid = new ChargingStationId("CS-001");
-        fixture.given( new ChargingStationCreatedEvent(csid))
-                .when(new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), configurationItems))
+        fixture.given(getCreatedChargingStation())
+                .when(new ConfigureChargingStationCommand(getChargingStationId(), getConfigurationItems()))
                 .expectException(RuntimeException.class);
     }
 
     @Test
     public void testRequestingToUnlockConnector() {
-        ChargingStationId csid = new ChargingStationId("CS-001");
-        fixture.given( Lists.newArrayList(new ChargingStationCreatedEvent(csid),
-                                            new ChargingStationRegisteredEvent(csid),
-                                            new ChargingStationConfiguredEvent(csid, new HashMap<String, String>())) )
-                .when(new RequestUnlockConnectorCommand(csid, 1))
-                .expectEvents(new UnlockConnectorRequestedEvent(csid, 1));
+        fixture.given(getConfiguredChargingStation())
+                .when(new RequestUnlockConnectorCommand(getChargingStationId(), 1))
+                .expectEvents(new UnlockConnectorRequestedEvent(getChargingStationId(), 1));
     }
 
     @Test
     public void testRequestingToUnlockUnknownConnector() {
-        ChargingStationId csid = new ChargingStationId("CS-001");
-        fixture.given( Lists.newArrayList(new ChargingStationCreatedEvent(csid),
-                                            new ChargingStationRegisteredEvent(csid),
-                                            new ChargingStationConfiguredEvent(csid, new HashMap<String, String>())) )
-                .when(new RequestUnlockConnectorCommand(csid, 3))
-                .expectEvents(new ConnectorNotFoundEvent(csid, 3));
+        fixture.given(getConfiguredChargingStation())
+                .when(new RequestUnlockConnectorCommand(getChargingStationId(), 3))
+                .expectEvents(new ConnectorNotFoundEvent(getChargingStationId(), 3));
     }
 
     @Test
     public void testRequestingToUnlockAllConnectors() {
-        ChargingStationId csid = new ChargingStationId("CS-001");
-        fixture.given( Lists.newArrayList(new ChargingStationCreatedEvent(csid),
-                                            new ChargingStationRegisteredEvent(csid),
-                                            new ChargingStationConfiguredEvent(csid, new HashMap<String, String>())) )
-                .when(new RequestUnlockConnectorCommand(new ChargingStationId("CS-001"), Connector.ALL))
-                .expectEvents(new UnlockConnectorRequestedEvent(new ChargingStationId("CS-001"), 1), new UnlockConnectorRequestedEvent(new ChargingStationId("CS-001"), 2));
+        fixture.given(getConfiguredChargingStation())
+                .when(new RequestUnlockConnectorCommand(getChargingStationId(), Connector.ALL))
+                .expectEvents(new UnlockConnectorRequestedEvent(getChargingStationId(), 1), new UnlockConnectorRequestedEvent(getChargingStationId(), 2));
     }
 }
