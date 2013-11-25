@@ -44,4 +44,9 @@ public class ConfigureChargingStationCommand {
     public Map<String, String> getConfigurationItems() {
         return configurationItems;
     }
+
+    @Override
+    public String toString() {
+        return "ConfigureChargingStationCommand(chargingStationId=" + chargingStationId.toString() + ", configurationItems=" + configurationItems.toString() + ")";
+    }
 }

@@ -17,8 +17,21 @@ package io.motown.operatorapi.json.commands;
 
 import io.motown.domain.api.chargingstation.ConfigureChargingStationCommand;
 import io.motown.domain.api.chargingstation.RequestUnlockConnectorCommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-interface DomainCommandGateway {
-    void send(RequestUnlockConnectorCommand command);
-    void send(ConfigureChargingStationCommand command);
+public class TestDomainCommandGateway implements DomainCommandGateway {
+
+    private static final Logger log = LoggerFactory.getLogger(TestDomainCommandGateway.class);
+
+
+    @Override
+    public void send(RequestUnlockConnectorCommand command) {
+        log.debug("RequestUnlockConnectorCommand:" + command.toString());
+    }
+
+    @Override
+    public void send(ConfigureChargingStationCommand command) {
+        log.debug("ConfigureChargingStationCommand:" + command.toString());
+    }
 }
