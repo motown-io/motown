@@ -48,17 +48,17 @@ Also provides entry point to use external API.
 
 ### Maven
 
-maven is used as tool for building Motown.IO
+Maven is used as tool for building Motown.IO
 See http://maven.apache.org for more information, use version 3.0.5 or higher.
 
 ### Running the development setup
 
-You need to run rabbitMQ in order to run the development setup.
+You need to run [RabbitMQ](http://www.rabbitmq.com/) in order to run the development setup.
 The remainder of elements is based on local databases and a filesystem event store.
 
  * Install RabbitMQ
- * Create a new virtual host "motown.io"
- *  Create a user "motown" with password "motown" (and give rights to motown.io virtual host)
+ * Create a new virtual host "io.motown"
+ *  Create a user "motown" with password "motown" (and give rights to io.motown virtual host)
     This can be done with the RabbitMQ management plugin (normally running on http://localhost:15672 )
  * Check out the motown-io sources with git
  * Build with mvn install
