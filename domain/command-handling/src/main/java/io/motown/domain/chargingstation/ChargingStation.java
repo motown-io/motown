@@ -65,6 +65,10 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
         apply(new ChargingStationBootedEvent(this.id, command.getAttributes()));
 
+        if(this.isRegistered && !this.isConfigured){
+            apply(new ConfigurationRequestedEvent(this.id));
+        }
+
         return this.isRegistered ? ChargingStationRegistrationStatus.REGISTERED : ChargingStationRegistrationStatus.UNREGISTERED;
     }
 
@@ -99,7 +103,6 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         log.info("Retrieving configuration of chargingstation {}", command.getChargingStationId());
 
         if(this.isRegistered){
-            //TODO: This event does not have to be stored in the eventstore - Ingo Pak 21 nov 2013
             apply(new ConfigurationRequestedEvent(this.id));
         }
         else{

@@ -15,10 +15,7 @@
  */
 package io.motown.domain.chargingstation;
 
-import io.motown.domain.api.chargingstation.BootChargingStationCommand;
-import io.motown.domain.api.chargingstation.ChargingStationBootedEvent;
-import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
-import io.motown.domain.api.chargingstation.ChargingStationRegistrationStatus;
+import io.motown.domain.api.chargingstation.*;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;
@@ -40,9 +37,10 @@ public class BootChargingStationCommandHandlerTest {
 
     @Test
     public void testBootingChargingStationForKnownChargingStation() {
+
         fixture.given(getRegisteredChargingStation())
                 .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
-                .expectEvents(new ChargingStationBootedEvent(getChargingStationId(), getAttributes()))
+                .expectEvents(new ChargingStationBootedEvent(getChargingStationId(), getAttributes()), new ConfigurationRequestedEvent(getChargingStationId()))
                 .expectReturnValue(ChargingStationRegistrationStatus.REGISTERED);
     }
 

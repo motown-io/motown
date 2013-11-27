@@ -126,6 +126,20 @@
                                         <extraarg>true</extraarg>
                                     </extraargs>
                                 </wsdlOption>
+                                <wsdlOption>
+                                    <wsdl>src/main/webapp/WEB-INF/wsdl/ocpp_15_chargepoint.wsdl</wsdl>
+                                    <bindingFiles>
+                                        <bindingFile>src/main/webapp/WEB-INF/wsdl/XMLGregorianCalendarBinding.xml</bindingFile>
+                                    </bindingFiles>
+                                    <wsdlLocation>wsdl/ocpp_15_chargepoint.wsdl</wsdlLocation>
+                                    <packagenames>
+                                        <packagename>io.motown.ocpp.soap.chargepoint.v1_5.schema</packagename>
+                                    </packagenames>
+                                    <extraargs>
+                                        <extraarg>-exsh</extraarg>
+                                        <extraarg>true</extraarg>
+                                    </extraargs>
+                                </wsdlOption>
                             </wsdlOptions>
                         </configuration>
                         <goals>
