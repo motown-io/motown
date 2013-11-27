@@ -28,11 +28,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.xml.ws.BindingProvider;
 import java.util.HashMap;
 
-public class ChargingStationOcpp15ClientImpl implements ChargingStationOcpp15Client {
+public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Client {
 
-    private static final Logger log = LoggerFactory.getLogger(ChargingStationOcpp15ClientImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ChargingStationOcpp15SoapClient.class);
 
     @Autowired
     private DomainService domainService;
@@ -45,6 +46,10 @@ public class ChargingStationOcpp15ClientImpl implements ChargingStationOcpp15Cli
 
         GetConfigurationRequest request = new GetConfigurationRequest();
 
+        //TODO: Use and retrieve endpoint address of the chargingstation - Ingo Pak, 27 nov 2013
+        ((BindingProvider)chargePointService).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "http://localhost:8088/mockChargePointServiceSoap");
+
+        //TODO: Make the chargepoint client calls async - Ingo Pak, 27 nov 2013
         GetConfigurationResponse response =  chargePointService.getConfiguration(request, id.getId());
 
         HashMap<String, String> configurationItems = Maps.newHashMap();

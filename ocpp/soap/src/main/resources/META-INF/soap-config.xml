@@ -22,14 +22,11 @@
        xmlns:axon-amqp="http://www.axonframework.org/schema/amqp"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:rabbit="http://www.springframework.org/schema/rabbit"
-       xmlns:jaxws="http://cxf.apache.org/jaxws"
-       xmlns:soap="http://cxf.apache.org/bindings/soap"
        xsi:schemaLocation="http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
                            http://www.axonframework.org/schema/amqp http://www.axonframework.org/schema/axon-amqp.xsd
                            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-                           http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
-                           http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd http://cxf.apache.org/bindings/soap http://cxf.apache.org/schemas/configuration/soap.xsd">
+                           http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
 
     <context:property-placeholder location="classpath:config.properties, file:${io.motown.ocpp.soap.config}"
                                   ignore-resource-not-found="true"/>
@@ -38,7 +35,7 @@
 
     <context:component-scan base-package="io.motown.ocpp.soap"/>
 
-    <bean class="io.motown.ocpp.soap.chargepoint.v1_5.ChargingStationOcpp15ClientImpl"/>
+    <bean class="io.motown.ocpp.soap.chargepoint.v1_5.ChargingStationOcpp15SoapClient"/>
     <bean class="io.motown.ocpp.soap.centralsystem.v1_5.schema.ObjectFactory"/>
 
     <rabbit:connection-factory id="amqpConnection"
@@ -86,15 +83,4 @@
         </bean>
     </axon:cluster>
 
-    <!--<bean id="headerInterceptor" class="ws.interceptor.HeaderInterceptor" />-->
-    <jaxws:client id="chargePointService"
-                  serviceClass="io.motown.ocpp.soap.chargepoint.v1_5.schema.ChargePointService"
-                  address="http://localhost:8088/mockChargePointServiceSoap" >
-        <jaxws:binding>
-            <soap:soapBinding version="1.2"/>
-        </jaxws:binding>
-        <jaxws:features>
-            <wsa:addressing xmlns:wsa="http://cxf.apache.org/ws/addressing"/>
-        </jaxws:features>
-    </jaxws:client>
 </beans>
