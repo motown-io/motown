@@ -24,7 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * {@code ChargingStationBootedEvent} is the event which is published when a charging station has booted.
  */
-public class ChargingStationBootedEvent {
+public abstract class ChargingStationBootedEvent {
 
     private final ChargingStationId chargingStationId;
 

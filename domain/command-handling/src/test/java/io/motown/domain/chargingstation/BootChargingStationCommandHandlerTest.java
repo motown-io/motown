@@ -36,20 +36,28 @@ public class BootChargingStationCommandHandlerTest {
     }
 
     @Test
-    public void testBootingChargingStationForKnownChargingStation() {
-
-        fixture.given(getRegisteredChargingStation())
-                .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
-                .expectEvents(new ChargingStationBootedEvent(getChargingStationId(), getAttributes()), new ConfigurationRequestedEvent(getChargingStationId()))
-                .expectReturnValue(ChargingStationRegistrationStatus.REGISTERED);
+    public void testBootingUncreatedChargingStation() {
+        fixture.given()
+               .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
+               .expectEvents(new ChargingStationCreatedEvent(getChargingStationId()),
+                             new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()))
+               .expectReturnValue(ChargingStationRegistrationStatus.UNREGISTERED);
     }
 
     @Test
-    public void testBootingChargingStationForUnknownChargingStation() {
-        fixture.given()
-                .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
-                .expectEvents(new ChargingStationCreatedEvent(getChargingStationId()),
-                        new ChargingStationBootedEvent(getChargingStationId(), getAttributes()))
-                .expectReturnValue(ChargingStationRegistrationStatus.UNREGISTERED);
+    public void testBootingRegisteredChargingStation() {
+        fixture.given(getRegisteredChargingStation())
+               .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
+               .expectEvents(new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()),
+                             new ConfigurationRequestedEvent(getChargingStationId()))
+               .expectReturnValue(ChargingStationRegistrationStatus.REGISTERED);
+    }
+
+    @Test
+    public void testBootingConfiguredChargingStation() {
+        fixture.given(getConfiguredChargingStation())
+               .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
+               .expectEvents(new ConfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()))
+               .expectReturnValue(ChargingStationRegistrationStatus.REGISTERED);
     }
 }
