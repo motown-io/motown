@@ -21,15 +21,12 @@ import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @AggregateIdentifier
     private ChargingStationId id;
 
-    private List<Connector> connectors;
+    private int numberOfConnectors;
 
     private boolean isRegistered = false;
     private boolean isConfigured = false;
@@ -76,15 +73,15 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
             throw new RuntimeException("Chargingstation is not registered or configured");
         }
 
-        if (connectors == null || command.getConnectorId() > connectors.size()) {
-            apply(new ConnectorNotFoundEvent(this.id, command.getConnectorId()));
+        if (command.getConnectorId() > numberOfConnectors) {
+            apply(new ConnectorNotFoundEvent(id, command.getConnectorId()));
         } else {
             if (command.getConnectorId() == Connector.ALL) {
-                for (Connector connector : connectors) {
-                    apply(new UnlockConnectorRequestedEvent(this.id, connector.getConnectorId()));
+                for (int i = 1; i <= numberOfConnectors; i++) {
+                    apply(new UnlockConnectorRequestedEvent(id, i));
                 }
             } else {
-                apply(new UnlockConnectorRequestedEvent(this.id, command.getConnectorId()));
+                apply(new UnlockConnectorRequestedEvent(id, command.getConnectorId()));
             }
         }
     }
@@ -117,12 +114,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @EventHandler
     public void handle(ChargingStationConfiguredEvent event) {
-        //TODO: Interpret the Map holding the configuration items, first we need to know how the information is structured (for now use temporary hardcoded connectors so the unlocking logic keeps working) - Ingo Pak, 21 nov 2013
-        List<Connector> c = new ArrayList<>();
-        c.add(new Connector(1, "TYPE", 32));
-        c.add(new Connector(2, "TYPE", 32));
-        this.connectors = c;
-
+        numberOfConnectors = event.getConnectors().size();
         this.isConfigured = true;
     }
 
