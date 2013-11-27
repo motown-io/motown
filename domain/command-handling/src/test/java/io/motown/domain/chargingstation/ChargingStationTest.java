@@ -22,6 +22,8 @@ import org.axonframework.test.Fixtures;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collections;
+
 import static io.motown.domain.chargingstation.ChargingStationTestUtils.*;
 
 public class ChargingStationTest {
@@ -71,8 +73,22 @@ public class ChargingStationTest {
     @Test
     public void testConfigureChargingStation() {
         fixture.given(getRegisteredChargingStation())
+                .when(new ConfigureChargingStationCommand(getChargingStationId(), getConnectors(), getConfigurationItems()))
+                .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), getConnectors(), getConfigurationItems()));
+    }
+
+    @Test
+    public void testConfigureChargingStationWithoutConnectors() {
+        fixture.given(getRegisteredChargingStation())
                 .when(new ConfigureChargingStationCommand(getChargingStationId(), getConfigurationItems()))
-                .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), getConfigurationItems()));
+                .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), Collections.<Connector>emptySet(), getConfigurationItems()));
+    }
+
+    @Test
+    public void testConfigureChargingStationWithoutConfigurationItems() {
+        fixture.given(getRegisteredChargingStation())
+                .when(new ConfigureChargingStationCommand(getChargingStationId(), getConnectors()))
+                .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), getConnectors(), Collections.<String, String>emptyMap()));
     }
 
     @Test

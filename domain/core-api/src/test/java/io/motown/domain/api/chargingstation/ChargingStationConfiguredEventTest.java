@@ -17,15 +17,40 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
+import java.util.*;
+
 public class ChargingStationConfiguredEventTest {
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdAndConnectorsNull() {
-        new ChargingStationConfiguredEvent(null, null);
+    public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNullAndConnectors() {
+        new ChargingStationConfiguredEvent(null, Collections.<Connector>emptySet(), Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithConnectorsNull() {
-        new ChargingStationConfiguredEvent(new ChargingStationId("CS-001"), null);
+        new ChargingStationConfiguredEvent(new ChargingStationId("CS-001"), null, Collections.<String, String>emptyMap());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingEventWithConfigurationItemsNull() {
+        new ChargingStationConfiguredEvent(new ChargingStationId("CS-001"), Collections.<Connector>emptySet(), null);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void unsupportedOperationExceptionThrownWhenModifyingConnectors() {
+        Set<Connector> connectors = new HashSet<>();
+
+        ChargingStationConfiguredEvent command = new ChargingStationConfiguredEvent(new ChargingStationId("CS-001"), connectors, Collections.<String, String>emptyMap());
+
+        command.getConnectors().add(new Connector(1, "Type1", 32));
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void unsupportedOperationExceptionThrownWhenModifyingConfigurationItems() {
+        Map<String, String> configurationItems = new HashMap<>();
+
+        ChargingStationConfiguredEvent command = new ChargingStationConfiguredEvent(new ChargingStationId("CS-001"), Collections.<Connector>emptySet(), configurationItems);
+
+        command.getConfigurationItems().put("configItem", "configValue");
     }
 }

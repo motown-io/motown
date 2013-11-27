@@ -15,38 +15,103 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * The Configuration command holds the configuration information of a chargepoint.
+ * {@code ConfigureChargingStationCommand} is the command which is published when a charging station should be
+ * configured.
  */
 public class ConfigureChargingStationCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
+    private final Set<Connector> connectors;
+
     private final Map<String, String> configurationItems;
 
+    /**
+     * Creates a {@code ConfigureChargingStationCommand} with an identifier.
+     *
+     * @param chargingStationId the identifier of the charging station.
+     * @param connectors        the connectors with which the charging station should be configured.
+     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     */
+    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Connector> connectors) {
+        this(chargingStationId, connectors, Collections.<String, String>emptyMap());
+    }
+
+    /**
+     * Creates a {@code ConfigureChargingStationCommand} with an identifier.
+     *
+     * @param chargingStationId the identifier of the charging station.
+     * @param configurationItems the configurationItems with which the charging station should be configured.
+     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     */
     public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Map<String, String> configurationItems) {
+        this(chargingStationId, Collections.<Connector>emptySet(), configurationItems);
+    }
+
+    /**
+     * Creates a {@code ConfigureChargingStationCommand} with an identifier.
+     *
+     * @param chargingStationId the identifier of the charging station.
+     * @param connectors the connectors with which the charging station should be configured.
+     * @param configurationItems the configurationItems with which the charging station should be configured.
+     * @throws NullPointerException if {@code chargingStationId}, {@code connectors}, or {@code configurationItems} is
+     * {@code null}.
+     */
+    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Connector> connectors, Map<String, String> configurationItems) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.connectors = ImmutableSet.copyOf(checkNotNull(connectors));
         this.configurationItems = ImmutableMap.copyOf(checkNotNull(configurationItems));
     }
 
+    /**
+     * Gets the charging station identifier.
+     *
+     * @return the charging station identifier.
+     */
     public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
     }
 
+    /**
+     * Gets the connectors with which the charging station should be configured.
+     *
+     * @return an immutable {@link java.util.Set} of connectors.
+     */
+    public Set<Connector> getConnectors() {
+        return connectors;
+    }
+
+    /**
+     * Gets the configuration items with which the charging station should be configured.
+     *
+     * These configuration items are additional information provided with which the charging station should be
+     * configured but which are not required by Motown.
+     *
+     * @return an immutable {@link java.util.Map} of configuration items.
+     */
     public Map<String, String> getConfigurationItems() {
         return configurationItems;
     }
 
     @Override
     public String toString() {
-        return "ConfigureChargingStationCommand(chargingStationId=" + chargingStationId.toString() + ", configurationItems=" + configurationItems.toString() + ")";
+        return Objects.toStringHelper(this.getClass())
+                .add("chargingStationId", chargingStationId)
+                .add("connectors", connectors)
+                .add("configurationItems", configurationItems)
+                .toString();
     }
 }

@@ -17,13 +17,12 @@ package io.motown.domain.chargingstation;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import io.motown.domain.api.chargingstation.ChargingStationConfiguredEvent;
-import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.ChargingStationRegisteredEvent;
+import com.google.common.collect.ImmutableSet;
+import io.motown.domain.api.chargingstation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ChargingStationTestUtils {
     public static ChargingStationId getChargingStationId() {
@@ -46,7 +45,14 @@ public class ChargingStationTestUtils {
     public static List<Object> getConfiguredChargingStation() {
         return ImmutableList.<Object>builder()
                 .addAll(getRegisteredChargingStation())
-                .add(new ChargingStationConfiguredEvent(getChargingStationId(), getConfigurationItems()))
+                .add(new ChargingStationConfiguredEvent(getChargingStationId(), getConnectors(), getConfigurationItems()))
+                .build();
+    }
+
+    public static Set<Connector> getConnectors() {
+        return ImmutableSet.<Connector>builder()
+                .add(new Connector(1, "TYPE-1", 32))
+                .add(new Connector(2, "TYPE-1", 32))
                 .build();
     }
 
