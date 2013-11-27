@@ -73,10 +73,6 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
         apply(chargingStationBootedEvent);
 
-        if(this.isRegistered && !this.isConfigured){
-            apply(new ConfigurationRequestedEvent(this.id));
-        }
-
         return this.isRegistered ? ChargingStationRegistrationStatus.REGISTERED : ChargingStationRegistrationStatus.UNREGISTERED;
     }
 
