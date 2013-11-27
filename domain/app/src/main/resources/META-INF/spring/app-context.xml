@@ -67,6 +67,13 @@
                   value="${io.motown.domain.app.commandbus.jgroups.cluster.name}"/>
         <property name="serializer"
                   ref="serializer"/>
+        <property name="localSegment">
+            <bean class="org.axonframework.commandhandling.SimpleCommandBus">
+                <property name="handlerInterceptors">
+                    <bean class="org.axonframework.commandhandling.interceptors.LoggingInterceptor"/>
+                </property>
+            </bean>
+        </property>
     </bean>
 
     <bean id="routingKeyResolver"

@@ -20,15 +20,11 @@ import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChargingStation extends AbstractAnnotatedAggregateRoot {
-
-    private static final Logger log = LoggerFactory.getLogger(BootChargingStationCommandHandler.class);
 
     @AggregateIdentifier
     private ChargingStationId id;
@@ -44,7 +40,6 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @CommandHandler
     public ChargingStation(CreateChargingStationCommand command) {
         this();
-        log.info("Creating new chargingstation {}", command.getChargingStationId());
         apply(new ChargingStationCreatedEvent(command.getChargingStationId()));
     }
 
@@ -61,8 +56,6 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
      * @return status of the charging station after applying this command
      */
     public ChargingStationRegistrationStatus handle(BootChargingStationCommand command) {
-        log.info("Received bootnotification for chargingstation {}", command.getChargingStationId());
-
         ChargingStationBootedEvent chargingStationBootedEvent;
 
         if (isConfigured) {
@@ -98,14 +91,11 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RegisterChargingStationCommand command) {
-        log.info("Registering chargingstation {}", command.getChargingStationId());
         apply(new ChargingStationRegisteredEvent(this.id));
     }
 
     @CommandHandler
     public void handle(RequestConfigurationCommand command) {
-        log.info("Retrieving configuration of chargingstation {}", command.getChargingStationId());
-
         if(this.isRegistered){
             apply(new ConfigurationRequestedEvent(this.id));
         }
@@ -117,8 +107,6 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(ConfigureChargingStationCommand command) {
-        log.info("Received configuration for chargingstation {}", command.getChargingStationId());
-
         if(!this.isRegistered){
             //TODO: Decide what to do in this situation (respond with event or return value) - Ingo Pak 21 nov 2013
             throw new RuntimeException("Chargingstation is not registered");
@@ -136,20 +124,15 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         this.connectors = c;
 
         this.isConfigured = true;
-        log.info("Applied configuration to chargingstation {}", event.getChargingStationId());
     }
 
     @EventHandler
     public void handle(ChargingStationRegisteredEvent event) {
         this.isRegistered = true;
-
-        log.info("Registered chargingstation {}", event.getChargingStationId());
     }
 
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
         this.id = event.getChargingStationId();
-
-        log.info("Created new chargingstation {}", event.getChargingStationId());
     }
 }
