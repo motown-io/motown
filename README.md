@@ -75,7 +75,7 @@ You need to run:
 By default Motown runs the functional endpoints at:
 
  * Core domain: http:localhost:8080
- * OCPP SOAP add on, http://localhost:8083
+ * OCPP SOAP add on, http://localhost:8083 (the WSDL can be found at: [http://localhost:8083/centralSystemService?wsdl](http://localhost:8083/centralSystemService?wsdl))
  * Operator API, http://localhost:8081
 
 
