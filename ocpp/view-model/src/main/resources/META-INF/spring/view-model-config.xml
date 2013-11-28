@@ -19,6 +19,11 @@
         <property name="gatewayInterface" value="io.motown.ocpp.viewmodel.domain.DomainCommandGateway"/>
     </bean>
 
+    <bean id="configurationCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
+        <property name="commandBus" ref="commandBus"/>
+        <property name="gatewayInterface" value="io.motown.ocpp.viewmodel.configuration.ConfigurationCommandGateway"/>
+    </bean>
+
     <bean id="beanValidationInterceptor" class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor"/>
 
     <bean id="commandBus"

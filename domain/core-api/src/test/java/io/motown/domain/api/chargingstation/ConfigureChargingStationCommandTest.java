@@ -23,26 +23,12 @@ public class ConfigureChargingStationCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNullAndConnectors() {
-        new ConfigureChargingStationCommand(null, Collections.<Connector>emptySet());
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingCommandWithConnectorsNull() {
-        new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), null, Collections.<String, String>emptyMap());
+        new ConfigureChargingStationCommand(null, 0);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithConfigurationItemsNull() {
-        new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), Collections.<Connector>emptySet(), null);
-    }
-
-    @Test(expected = UnsupportedOperationException.class)
-    public void unsupportedOperationExceptionThrownWhenModifyingConnectors() {
-        Set<Connector> connectors = new HashSet<>();
-
-        ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), connectors);
-
-        command.getConnectors().add(new Connector(1, "Type1", 32));
+        new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), 0, null);
     }
 
     @Test(expected = UnsupportedOperationException.class)

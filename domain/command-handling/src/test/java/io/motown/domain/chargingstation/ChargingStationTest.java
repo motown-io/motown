@@ -66,22 +66,22 @@ public class ChargingStationTest {
     @Test
     public void testConfigureChargingStation() {
         fixture.given(getRegisteredChargingStation())
-                .when(new ConfigureChargingStationCommand(getChargingStationId(), getConnectors(), getConfigurationItems()))
-                .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), getConnectors(), getConfigurationItems()));
+                .when(new ConfigureChargingStationCommand(getChargingStationId(), getNumberOfConnectors(), getConfigurationItems()))
+                .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), getNumberOfConnectors(), getConfigurationItems()));
     }
 
     @Test
     public void testConfigureChargingStationWithoutConnectors() {
         fixture.given(getRegisteredChargingStation())
                 .when(new ConfigureChargingStationCommand(getChargingStationId(), getConfigurationItems()))
-                .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), Collections.<Connector>emptySet(), getConfigurationItems()));
+                .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), 0, getConfigurationItems()));
     }
 
     @Test
     public void testConfigureChargingStationWithoutConfigurationItems() {
         fixture.given(getRegisteredChargingStation())
-                .when(new ConfigureChargingStationCommand(getChargingStationId(), getConnectors()))
-                .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), getConnectors(), Collections.<String, String>emptyMap()));
+                .when(new ConfigureChargingStationCommand(getChargingStationId(), getNumberOfConnectors()))
+                .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), getNumberOfConnectors(), Collections.<String, String>emptyMap()));
     }
 
     @Test

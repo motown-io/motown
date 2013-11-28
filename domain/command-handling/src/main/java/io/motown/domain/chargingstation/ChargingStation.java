@@ -116,12 +116,12 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
             throw new RuntimeException("Chargingstation is not registered");
         }
 
-        apply(new ChargingStationConfiguredEvent(this.id, command.getConnectors(), command.getConfigurationItems()));
+        apply(new ChargingStationConfiguredEvent(this.id, command.getNumberOfConnectors(), command.getConfigurationItems()));
     }
 
     @EventHandler
     public void handle(ChargingStationConfiguredEvent event) {
-        numberOfConnectors = event.getConnectors().size();
+        numberOfConnectors = event.getNumberOfConnectors();
         this.isConfigured = true;
     }
 

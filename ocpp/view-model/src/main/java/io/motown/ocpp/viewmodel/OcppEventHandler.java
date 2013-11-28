@@ -77,6 +77,4 @@ public class OcppEventHandler {
         chargingStationOcpp15Client.getConfiguration(event.getChargingStationId());
     }
 
-
-
 }

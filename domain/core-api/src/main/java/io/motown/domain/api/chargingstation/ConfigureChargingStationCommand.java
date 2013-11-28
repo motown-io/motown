@@ -17,12 +17,10 @@ package io.motown.domain.api.chargingstation;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -35,7 +33,7 @@ public class ConfigureChargingStationCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final Set<Connector> connectors;
+    private final int numberOfConnectors;
 
     private final Map<String, String> configurationItems;
 
@@ -43,11 +41,11 @@ public class ConfigureChargingStationCommand {
      * Creates a {@code ConfigureChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param connectors        the connectors with which the charging station should be configured.
+     * @param numberOfConnectors the number of connectors for this charging station.
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Connector> connectors) {
-        this(chargingStationId, connectors, Collections.<String, String>emptyMap());
+    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, int numberOfConnectors) {
+        this(chargingStationId, numberOfConnectors, Collections.<String, String>emptyMap());
     }
 
     /**
@@ -58,21 +56,21 @@ public class ConfigureChargingStationCommand {
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
     public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Map<String, String> configurationItems) {
-        this(chargingStationId, Collections.<Connector>emptySet(), configurationItems);
+        this(chargingStationId, 0, configurationItems);
     }
 
     /**
      * Creates a {@code ConfigureChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param connectors the connectors with which the charging station should be configured.
+     * @param numberOfConnectors the number of connectors for this charging station.
      * @param configurationItems the configurationItems with which the charging station should be configured.
      * @throws NullPointerException if {@code chargingStationId}, {@code connectors}, or {@code configurationItems} is
      * {@code null}.
      */
-    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Connector> connectors, Map<String, String> configurationItems) {
+    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, int numberOfConnectors, Map<String, String> configurationItems) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.connectors = ImmutableSet.copyOf(checkNotNull(connectors));
+        this.numberOfConnectors = numberOfConnectors;
         this.configurationItems = ImmutableMap.copyOf(checkNotNull(configurationItems));
     }
 
@@ -86,12 +84,12 @@ public class ConfigureChargingStationCommand {
     }
 
     /**
-     * Gets the connectors with which the charging station should be configured.
+     * Gets the number of connectors with which the charging station should be configured.
      *
-     * @return an immutable {@link java.util.Set} of connectors.
+     * @return the number of connectors
      */
-    public Set<Connector> getConnectors() {
-        return connectors;
+    public int getNumberOfConnectors() {
+        return this.numberOfConnectors;
     }
 
     /**
@@ -110,7 +108,7 @@ public class ConfigureChargingStationCommand {
     public String toString() {
         return Objects.toStringHelper(this.getClass())
                 .add("chargingStationId", chargingStationId)
-                .add("connectors", connectors)
+                .add("connectors", numberOfConnectors)
                 .add("configurationItems", configurationItems)
                 .toString();
     }
