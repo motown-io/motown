@@ -57,13 +57,11 @@ public class DomainService {
 
         //Determine the result
         BootChargingStationResult result;
-        if(cs.isRegistered()){
+        if(cs.isRegistered()) {
             result = new BootChargingStationResult(ChargingStationRegistrationStatus.REGISTERED.getValue(), 60, new Date());
-        }else{
+        } else {
             result = new BootChargingStationResult(ChargingStationRegistrationStatus.UNREGISTERED.getValue(), 60, new Date());
         }
-
-
 
         // TODO: Where should the heartbeat-interval come from? - Mark van den Bergh, November 15th 2013
         return new BootChargingStationResult(ChargingStationRegistrationStatus.REGISTERED.equals(result), 60, new Date());

@@ -22,18 +22,22 @@ import io.motown.ocpp.soap.centralsystem.v1_5.schema.*;
 import io.motown.ocpp.viewmodel.ChargingStationSubscriber;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
-import org.apache.cxf.binding.soap.SoapHeader;
 import org.apache.cxf.headers.Header;
+import org.apache.cxf.helpers.CastUtils;
+import org.apache.cxf.jaxws.context.WrappedMessageContext;
+import org.apache.cxf.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
+import org.w3c.dom.Element;
 
 import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
-import java.util.ArrayList;
+import javax.xml.ws.handler.MessageContext;
 import java.util.Date;
+import java.util.List;
 
 @javax.jws.WebService(
         serviceName = "CentralSystemService",
@@ -88,6 +92,8 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
 
     @Override
     public BootNotificationResponse bootNotification(final BootNotificationRequest request, final String chargeBoxIdentity) {
+        final MessageContext messageContext = context.getMessageContext();
+
         RequestHandler<BootNotificationResponse> requestHandler = new RequestHandler<>(context.getMessageContext(), taskExecutor);
         return requestHandler.handle(
             new ResponseFactory<BootNotificationResponse>() {
@@ -97,9 +103,7 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
 
                     chargingStationSubscriber.subscribe(chargingStationId);
 
-                    //TODO: Read the 'From' ws address header that holds the ipaddress of the chargingstation - Ingo Pak, 27 nov 2013
-                    String chargingStationAddress = "";
-
+                    String chargingStationAddress = getChargingStationAddress(messageContext);
                     BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel());
 
                     BootNotificationResponse response = new BootNotificationResponse();
@@ -163,5 +167,32 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
         //FIXME implement me
         log.error("Unimplemented method [startTransaction] called.");
         throw new RuntimeException("Not yet implemented");
+    }
+
+    /**
+     * Gets the charging station address from the SOAP "From" header.
+     *
+     * @param messageContext the message context
+     * @return charging station address, or empty string if From header is empty or doesn't exist.
+     */
+    private String getChargingStationAddress(MessageContext messageContext) {
+        if (messageContext == null || !(messageContext instanceof WrappedMessageContext)) {
+            log.warn("Unable to get message context, or message context is not the right type.");
+            return "";
+        }
+
+        Message message = ((WrappedMessageContext) messageContext).getWrappedMessage();
+        List<Header> headers = CastUtils.cast((List<?>) message.get(Header.HEADER_LIST));
+
+        for (Header h : headers) {
+            Element n = (Element) h.getObject();
+
+            if (n.getLocalName().equals("From")) {
+                return n.getTextContent();
+            }
+        }
+
+        log.warn("No 'From' header found in request. Not able to determine charging station address.");
+        return "";
     }
 }
