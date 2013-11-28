@@ -24,11 +24,14 @@ import io.motown.ocpp.soap.chargepoint.v1_5.schema.GetConfigurationResponse;
 import io.motown.ocpp.soap.chargepoint.v1_5.schema.KeyValue;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import org.apache.cxf.binding.soap.Soap12;
+import org.apache.cxf.binding.soap.SoapBindingConfiguration;
+import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
+import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.xml.ws.BindingProvider;
 import java.util.HashMap;
 
 public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Client {
@@ -38,16 +41,22 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     @Autowired
     private DomainService domainService;
 
-    @Autowired
-    private ChargePointService chargePointService;
-
     public void getConfiguration(ChargingStationId id) {
         log.info("Handling ConfigurationRequestedEvent from SOAP!");
 
         GetConfigurationRequest request = new GetConfigurationRequest();
 
+        JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
+        factory.setServiceClass(ChargePointService.class);
         //TODO: Use and retrieve endpoint address of the chargingstation - Ingo Pak, 27 nov 2013
-        ((BindingProvider)chargePointService).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "http://localhost:8088/mockChargePointServiceSoap");
+        factory.setAddress("http://localhost:8088/mockChargePointServiceSoap");
+
+        SoapBindingConfiguration conf = new SoapBindingConfiguration();
+        conf.setVersion(Soap12.getInstance());
+        factory.setBindingConfig(conf);
+        factory.getFeatures().add(new WSAddressingFeature());
+
+        ChargePointService chargePointService = (ChargePointService) factory.create();
 
         //TODO: Make the chargepoint client calls async - Ingo Pak, 27 nov 2013
         GetConfigurationResponse response =  chargePointService.getConfiguration(request, id.getId());
