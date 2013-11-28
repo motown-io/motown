@@ -17,7 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 public class Connector {
 
-    public final static Integer ALL = 0;
+    public final static int ALL = 0;
 
     private int connectorId;
     private String connectorType;  // should be enum ?
@@ -29,7 +29,7 @@ public class Connector {
         this.maxAmp = maxAmp;
     }
 
-    public Integer getConnectorId() {
+    public int getConnectorId() {
         return this.connectorId;
     }
 
