@@ -64,4 +64,8 @@ public class ChargingStation {
     public void setRegistered(boolean registered) {
         isRegistered = registered;
     }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
 }

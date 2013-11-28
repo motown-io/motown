@@ -24,6 +24,7 @@ import io.motown.ocpp.soap.chargepoint.v1_5.schema.GetConfigurationResponse;
 import io.motown.ocpp.soap.chargepoint.v1_5.schema.KeyValue;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
 import org.apache.cxf.binding.soap.Soap12;
 import org.apache.cxf.binding.soap.SoapBindingConfiguration;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
@@ -49,7 +50,8 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
         factory.setServiceClass(ChargePointService.class);
         //TODO: Use and retrieve endpoint address of the chargingstation - Ingo Pak, 27 nov 2013
-        factory.setAddress("http://localhost:8088/mockChargePointServiceSoap");
+        String endPointAddress = domainService.retrieveChargingStationAddress(id); //"http://localhost:8088/mockChargePointServiceSoap"
+        factory.setAddress(endPointAddress);
 
         SoapBindingConfiguration conf = new SoapBindingConfiguration();
         conf.setVersion(Soap12.getInstance());

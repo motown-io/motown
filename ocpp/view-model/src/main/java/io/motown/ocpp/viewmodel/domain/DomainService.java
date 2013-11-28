@@ -41,11 +41,14 @@ public class DomainService {
     public BootChargingStationResult bootChargingStation(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model) {
 
         // Check if we know the chargingstation, in order to determine if it is registered or not
-        ChargingStation cs = repository.findOne(chargingStationId.getId());
-        if(cs == null){
-            cs = new ChargingStation(chargingStationId.getId(), chargingStationAddress);
-            repository.save(cs);
+        ChargingStation chargingStation = repository.findOne(chargingStationId.getId());
+        if(chargingStation == null){
+            chargingStation = new ChargingStation(chargingStationId.getId());
         }
+
+        // Keep track of the address on which we can reach the chargingstation
+        chargingStation.setIpAddress(chargingStationAddress);
+        repository.save(chargingStation);
 
         Map<String, String> attributes = Maps.newHashMap();
         attributes.put("vendor", vendor);
@@ -55,9 +58,9 @@ public class DomainService {
         BootChargingStationCommand command = new BootChargingStationCommand(chargingStationId, attributes);
         commandGateway.send(command);
 
-        //Determine the result
+        // Determine if the chargingstation is registered or not
         BootChargingStationResult result;
-        if(cs.isRegistered()) {
+        if(chargingStation.isRegistered()) {
             result = new BootChargingStationResult(ChargingStationRegistrationStatus.REGISTERED.getValue(), 60, new Date());
         } else {
             result = new BootChargingStationResult(ChargingStationRegistrationStatus.UNREGISTERED.getValue(), 60, new Date());
@@ -78,6 +81,12 @@ public class DomainService {
 
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
+    }
+
+    public String retrieveChargingStationAddress(ChargingStationId id){
+        ChargingStation chargingStation = repository.findOne(id.getId());
+
+        return chargingStation != null? chargingStation.getIpAddress() : "";
     }
 
 }
