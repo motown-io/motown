@@ -84,13 +84,6 @@ public class ChargingStationTest {
     }
 
     @Test
-    public void testAttemptToConfigureUnregisteredChargingStation() {
-        fixture.given(getCreatedChargingStation())
-               .when(new ConfigureChargingStationCommand(getChargingStationId(), getConfigurationItems()))
-               .expectException(RuntimeException.class);
-    }
-
-    @Test
     public void testRequestingToUnlockConnectorForUnregisteredChargingStation() {
         fixture.given(getConfiguredChargingStation())
                .when(new RequestUnlockConnectorCommand(getChargingStationId(), 1))

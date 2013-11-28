@@ -111,11 +111,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(ConfigureChargingStationCommand command) {
-        if (!this.isRegistered) {
-            //TODO: Decide what to do in this situation (respond with event or return value) - Ingo Pak 21 nov 2013
-            throw new RuntimeException("Chargingstation is not registered");
-        }
-
+        // TODO should we allow reconfiguring of charging stations? - Dennis Laumen, Nov 28th 2013
         apply(new ChargingStationConfiguredEvent(this.id, command.getConnectors(), command.getConfigurationItems()));
     }
 
