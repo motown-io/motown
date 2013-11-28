@@ -17,9 +17,11 @@ package io.motown.domain.api.chargingstation;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Map;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -31,7 +33,7 @@ public class ChargingStationConfiguredEvent {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final int numberOfConnectors;
+    private final Set<Connector> connectors;
 
     private final Map<String, String> configurationItems;
 
@@ -39,14 +41,14 @@ public class ChargingStationConfiguredEvent {
      * Creates a {@code ChargingStationConfiguredEvent} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param numberOfConnectors the number of connectors with which the charging station has been configured.
+     * @param connectors the connectors with which the charging station has been configured.
      * @param configurationItems the configuration items with which the charging station has been configured.
      * @throws NullPointerException if {@code chargingStationId}, {@code connectors}, or {@code configurationItems} is
      * {@code null}.
      */
-    public ChargingStationConfiguredEvent(ChargingStationId chargingStationId, int numberOfConnectors, Map<String, String> configurationItems) {
+    public ChargingStationConfiguredEvent(ChargingStationId chargingStationId, Set<Connector> connectors, Map<String, String> configurationItems) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.numberOfConnectors = numberOfConnectors;
+        this.connectors = ImmutableSet.copyOf(checkNotNull(connectors));
         this.configurationItems = ImmutableMap.copyOf(checkNotNull(configurationItems));
     }
 
@@ -62,10 +64,10 @@ public class ChargingStationConfiguredEvent {
     /**
      * Gets the connectors with which the charging station has been configured.
      *
-     * @return number of connectors.
+     * @return an immutable {@link java.util.Set} of connectors.
      */
-    public int getNumberOfConnectors() {
-        return numberOfConnectors;
+    public Set<Connector> getConnectors() {
+        return connectors;
     }
 
     /**
@@ -84,7 +86,7 @@ public class ChargingStationConfiguredEvent {
     public String toString() {
         return Objects.toStringHelper(this.getClass())
                 .add("chargingStationId", chargingStationId)
-                .add("numberOfConnectors", numberOfConnectors)
+                .add("connectors", connectors)
                 .add("configurationItems", configurationItems)
                 .toString();
     }

@@ -45,7 +45,7 @@ public class ChargingStationTestUtils {
     public static List<Object> getConfiguredChargingStation() {
         return ImmutableList.<Object>builder()
                 .addAll(getCreatedChargingStation())
-                .add(new ChargingStationConfiguredEvent(getChargingStationId(), getNumberOfConnectors(), getConfigurationItems()))
+                .add(new ChargingStationConfiguredEvent(getChargingStationId(), getConnectors(), getConfigurationItems()))
                 .build();
     }
 
@@ -53,12 +53,15 @@ public class ChargingStationTestUtils {
         return ImmutableList.<Object>builder()
                 .addAll(getCreatedChargingStation())
                 .add(new ChargingStationRegisteredEvent(getChargingStationId()))
-                .add(new ChargingStationConfiguredEvent(getChargingStationId(), getNumberOfConnectors(), getConfigurationItems()))
+                .add(new ChargingStationConfiguredEvent(getChargingStationId(), getConnectors(), getConfigurationItems()))
                 .build();
     }
 
-    public static int getNumberOfConnectors() {
-        return 2;
+    public static Set<Connector> getConnectors() {
+        return ImmutableSet.<Connector>builder()
+                .add(new Connector(1, "TYPE-1", 32))
+                .add(new Connector(2, "TYPE-1", 32))
+                .build();
     }
 
     public static Map<String, String> getConfigurationItems() {

@@ -42,7 +42,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     /**
      * Handles a BootChargingStationCommand.
-     *
+     * <p/>
      * In contrast to the other command handling methods in ChargingStation, this method is not annotated with {@link
      * org.axonframework.commandhandling.annotation.CommandHandler}. This command is handled by a dedicated command
      * handler class, {@link ChargingStationCommandHandler}, to handle creating a
@@ -68,7 +68,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     /**
      * Handles a {@link RegisterChargingStationCommand}.
-     *
+     * <p/>
      * In contrast to the other command handling methods in ChargingStation, this method is not annotated with {@link
      * org.axonframework.commandhandling.annotation.CommandHandler}. This command is handled by a dedicated command
      * handler class, {@link ChargingStationCommandHandler}, to handle creating a
@@ -111,17 +111,17 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(ConfigureChargingStationCommand command) {
-        if(!this.isRegistered){
+        if (!this.isRegistered) {
             //TODO: Decide what to do in this situation (respond with event or return value) - Ingo Pak 21 nov 2013
             throw new RuntimeException("Chargingstation is not registered");
         }
 
-        apply(new ChargingStationConfiguredEvent(this.id, command.getNumberOfConnectors(), command.getConfigurationItems()));
+        apply(new ChargingStationConfiguredEvent(this.id, command.getConnectors(), command.getConfigurationItems()));
     }
 
     @EventHandler
     public void handle(ChargingStationConfiguredEvent event) {
-        numberOfConnectors = event.getNumberOfConnectors();
+        numberOfConnectors = event.getConnectors().size();
         this.isConfigured = true;
     }
 
@@ -137,7 +137,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     /**
      * Ensures that communication with this charging station is allowed.
-     *
+     * <p/>
      * Communication with a charging station is allowed once it is registered (i.e. someone or something has allowed
      * this charging station to communicate with Motown) and configured (i.e. Motown has enough information to properly
      * handle communication with the charging station, like the number of connectors).
