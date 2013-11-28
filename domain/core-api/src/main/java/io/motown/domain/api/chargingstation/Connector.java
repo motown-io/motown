@@ -19,11 +19,11 @@ public class Connector {
 
     public final static Integer ALL = 0;
 
-    private Integer connectorId;
+    private int connectorId;
     private String connectorType;  // should be enum ?
     private int maxAmp;
 
-    public Connector(Integer connectorId, String connectorType, int maxAmp) {
+    public Connector(int connectorId, String connectorType, int maxAmp) {
         this.connectorId = connectorId;
         this.connectorType = connectorType;
         this.maxAmp = maxAmp;
@@ -40,9 +40,8 @@ public class Connector {
 
         Connector connector = (Connector) o;
 
+        if (connectorId != connector.connectorId) return false;
         if (maxAmp != connector.maxAmp) return false;
-        if (connectorId != null ? !connectorId.equals(connector.connectorId) : connector.connectorId != null)
-            return false;
         if (connectorType != null ? !connectorType.equals(connector.connectorType) : connector.connectorType != null)
             return false;
 
@@ -51,7 +50,7 @@ public class Connector {
 
     @Override
     public int hashCode() {
-        int result = connectorId != null ? connectorId.hashCode() : 0;
+        int result = connectorId;
         result = 31 * result + (connectorType != null ? connectorType.hashCode() : 0);
         result = 31 * result + maxAmp;
         return result;
