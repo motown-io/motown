@@ -24,7 +24,6 @@ import io.motown.ocpp.soap.chargepoint.v1_5.schema.GetConfigurationResponse;
 import io.motown.ocpp.soap.chargepoint.v1_5.schema.KeyValue;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
 import org.apache.cxf.binding.soap.Soap12;
 import org.apache.cxf.binding.soap.SoapBindingConfiguration;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
@@ -45,23 +44,10 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     public void getConfiguration(ChargingStationId id) {
         log.info("Handling ConfigurationRequestedEvent from SOAP!");
 
-        GetConfigurationRequest request = new GetConfigurationRequest();
-
-        JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
-        factory.setServiceClass(ChargePointService.class);
-        //TODO: Use and retrieve endpoint address of the chargingstation - Ingo Pak, 27 nov 2013
-        String endPointAddress = domainService.retrieveChargingStationAddress(id); //"http://localhost:8088/mockChargePointServiceSoap"
-        factory.setAddress(endPointAddress);
-
-        SoapBindingConfiguration conf = new SoapBindingConfiguration();
-        conf.setVersion(Soap12.getInstance());
-        factory.setBindingConfig(conf);
-        factory.getFeatures().add(new WSAddressingFeature());
-
-        ChargePointService chargePointService = (ChargePointService) factory.create();
+        ChargePointService chargePointService = this.createChargePointService(domainService.retrieveChargingStationAddress(id));
 
         //TODO: Make the chargepoint client calls async - Ingo Pak, 27 nov 2013
-        GetConfigurationResponse response =  chargePointService.getConfiguration(request, id.getId());
+        GetConfigurationResponse response =  chargePointService.getConfiguration(new GetConfigurationRequest(), id.getId());
 
         HashMap<String, String> configurationItems = Maps.newHashMap();
         for (KeyValue keyValue : response.getConfigurationKey()){
@@ -69,6 +55,20 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         }
 
         domainService.configureChargingStation(id, configurationItems);
+    }
+
+    protected ChargePointService createChargePointService(String endPointAddress){
+        JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
+        factory.setServiceClass(ChargePointService.class);
+
+        factory.setAddress(endPointAddress);
+
+        SoapBindingConfiguration conf = new SoapBindingConfiguration();
+        conf.setVersion(Soap12.getInstance());
+        factory.setBindingConfig(conf);
+        factory.getFeatures().add(new WSAddressingFeature());
+
+        return (ChargePointService) factory.create();
     }
 
 }
