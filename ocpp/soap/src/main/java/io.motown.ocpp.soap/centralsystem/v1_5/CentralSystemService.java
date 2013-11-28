@@ -22,6 +22,8 @@ import io.motown.ocpp.soap.centralsystem.v1_5.schema.*;
 import io.motown.ocpp.viewmodel.ChargingStationSubscriber;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
+import org.apache.cxf.binding.soap.SoapHeader;
+import org.apache.cxf.headers.Header;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,7 @@ import org.springframework.core.task.TaskExecutor;
 
 import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
+import java.util.ArrayList;
 import java.util.Date;
 
 @javax.jws.WebService(
@@ -94,7 +97,10 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
 
                     chargingStationSubscriber.subscribe(chargingStationId);
 
-                    BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, request.getChargePointVendor(), request.getChargePointModel());
+                    //TODO: Read the 'From' ws address header that holds the ipaddress of the chargingstation - Ingo Pak, 27 nov 2013
+                    String chargingStationAddress = "";
+
+                    BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel());
 
                     BootNotificationResponse response = new BootNotificationResponse();
                     response.setStatus(result.isAccepted() ? RegistrationStatus.ACCEPTED : RegistrationStatus.REJECTED);

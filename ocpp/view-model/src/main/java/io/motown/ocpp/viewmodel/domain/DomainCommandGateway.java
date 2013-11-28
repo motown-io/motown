@@ -25,6 +25,8 @@ interface DomainCommandGateway {
 
     ChargingStationRegistrationStatus sendAndWait(BootChargingStationCommand command, long timeout, TimeUnit unit);
 
+    void send(BootChargingStationCommand command);
+
     void send(ConfigureChargingStationCommand command);
 
 }

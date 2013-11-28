@@ -17,13 +17,15 @@ package io.motown.ocpp.viewmodel.domain;
 
 import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
+import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
+import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
-import java.util.concurrent.*;
 
 @Service
 public class DomainService {
@@ -33,23 +35,37 @@ public class DomainService {
     @Resource(name = "domainCommandGateway")
     private DomainCommandGateway commandGateway;
 
-    public BootChargingStationResult bootChargingStation(ChargingStationId chargingStationId, String vendor, String model) {
-        Connector connector = new Connector(1, "DEFAULT", 32);
-        List<Connector> connectors = new ArrayList<Connector>();
-        connectors.add(connector);
+    @Autowired
+    private ChargingStationRepository repository;
 
-        // TODO: Use Guava's collections for a more fluent interface. - Dennis Laumen, November 14th 2013
+    public BootChargingStationResult bootChargingStation(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model) {
+
+        // Check if we know the chargingstation, in order to determine if it is registered or not
+        ChargingStation cs = repository.findOne(chargingStationId.getId());
+        if(cs == null){
+            cs = new ChargingStation(chargingStationId.getId(), chargingStationAddress);
+            repository.save(cs);
+        }
+
         Map<String, String> attributes = Maps.newHashMap();
         attributes.put("vendor", vendor);
         attributes.put("model", model);
+        attributes.put("address", chargingStationAddress);
 
         BootChargingStationCommand command = new BootChargingStationCommand(chargingStationId, attributes);
+        commandGateway.send(command);
 
-        // TODO: Timeout should be configurable. - Mark van den Bergh, November 15th 2013
-        long timeout = 2000;
-        ChargingStationRegistrationStatus result = commandGateway.sendAndWait(command, timeout, TimeUnit.MILLISECONDS);
+        //Determine the result
+        BootChargingStationResult result;
+        if(cs.isRegistered()){
+            result = new BootChargingStationResult(ChargingStationRegistrationStatus.REGISTERED.getValue(), 60, new Date());
+        }else{
+            result = new BootChargingStationResult(ChargingStationRegistrationStatus.UNREGISTERED.getValue(), 60, new Date());
+        }
 
-        // TODO: Where should the interval come from? - Mark van den Bergh, November 15th 2013
+
+
+        // TODO: Where should the heartbeat-interval come from? - Mark van den Bergh, November 15th 2013
         return new BootChargingStationResult(ChargingStationRegistrationStatus.REGISTERED.equals(result), 60, new Date());
     }
 

@@ -17,6 +17,8 @@ package io.motown.ocpp.viewmodel;
 
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
+import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
+import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +32,9 @@ public class OcppEventHandler {
     @Autowired
     private ChargingStationOcpp15Client chargingStationOcpp15Client;
 
+    @Autowired
+    private ChargingStationRepository chargingStationRepository;
+
     @EventHandler
     public void handle(ChargingStationBootedEvent event) {
         log.info("ChargingStationBootedEvent");
@@ -38,6 +43,22 @@ public class OcppEventHandler {
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
         log.info("ChargingStationCreatedEvent");
+    }
+
+    @EventHandler
+    public void handle(ChargingStationRegisteredEvent event) {
+        log.info("Handling ChargingStationRegisteredEvent");
+
+        String chargingStationId = event.getChargingStationId().getId();
+        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
+
+        if(chargingStation == null){
+            chargingStation = new ChargingStation(chargingStationId);
+        }
+
+        chargingStation.setRegistered(true);
+
+        chargingStationRepository.save(chargingStation);
     }
 
     @EventHandler
@@ -55,5 +76,7 @@ public class OcppEventHandler {
         log.info("Handling ConfigurationRequestedEvent");
         chargingStationOcpp15Client.getConfiguration(event.getChargingStationId());
     }
+
+
 
 }

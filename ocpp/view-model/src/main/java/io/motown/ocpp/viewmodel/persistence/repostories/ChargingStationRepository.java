@@ -13,21 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.domain.api.chargingstation;
+package io.motown.ocpp.viewmodel.persistence.repostories;
 
-/**
- * Reflects the registration status of a charging station; is it accepted by the central system or not.
- */
-public enum ChargingStationRegistrationStatus {
-    REGISTERED(true),
-    UNREGISTERED(false);
+import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-    private final boolean value;
-    ChargingStationRegistrationStatus(boolean value){
-        this.value = value;
-    }
-
-    public boolean getValue(){
-        return value;
-    }
+public interface ChargingStationRepository extends JpaRepository<ChargingStation, String> {
 }
