@@ -68,11 +68,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestUnlockConnectorCommand command) {
-        if(!this.isRegistered || !this.isConfigured){
-            //TODO: Decide what to do in this situation (respond with event or return value) - Ingo Pak 21 nov 2013
-            throw new RuntimeException("Chargingstation is not registered or configured");
-        }
-
+        checkCommunicationAllowed();
         if (command.getConnectorId() > numberOfConnectors) {
             apply(new ConnectorNotFoundEvent(id, command.getConnectorId()));
         } else {

@@ -106,6 +106,20 @@ public class ChargingStationTest {
     }
 
     @Test
+    public void testRequestingToUnlockConnectorForUnregisteredChargingStation() {
+        fixture.given(getConfiguredChargingStation())
+                .when(new RequestUnlockConnectorCommand(getChargingStationId(), 1))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void testRequestingToUnlockConnectorForUnconfiguredChargingStation() {
+        fixture.given(getRegisteredChargingStation())
+                .when(new RequestUnlockConnectorCommand(getChargingStationId(), 1))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
     public void testRequestingToUnlockConnector() {
         fixture.given(getChargingStation())
                 .when(new RequestUnlockConnectorCommand(getChargingStationId(), 1))
