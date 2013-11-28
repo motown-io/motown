@@ -45,18 +45,6 @@ public class HeaderInterceptor extends AbstractPhaseInterceptor<Message> {
 
     @Override
     public void handleMessage(Message message) throws Fault {
-
-        // did the user indicate that the MessageID header is optional? By default we don't
-        Boolean messageIdOptional = false;
-        if(System.getProperty("ocppparam_messageidoptional") != null) {
-            messageIdOptional = Boolean.parseBoolean( System.getProperty("ocppparam_messageidoptional") );
-        }
-
-        if(!messageIdOptional) {
-            // user has not indicated messageID header is optional, so we don't have to continue in this interceptor
-            return;
-        }
-
         ArrayList<SoapHeader> headers = (ArrayList<SoapHeader>) message.get(SOAP_HEADER_KEY);
 
         // if the header doesn't exist and we have at least one header to access 'owner document' we can create and add our own MessageID header
