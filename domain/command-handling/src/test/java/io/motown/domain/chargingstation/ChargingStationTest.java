@@ -38,91 +38,91 @@ public class ChargingStationTest {
     @Test
     public void testChargePointCreation() {
         fixture.given()
-                .when(new CreateChargingStationCommand(getChargingStationId()))
-                .expectEvents(new ChargingStationCreatedEvent(getChargingStationId()));
+               .when(new CreateChargingStationCommand(getChargingStationId()))
+               .expectEvents(new ChargingStationCreatedEvent(getChargingStationId()));
     }
 
     @Test
     public void testRequestConfigurationForUnconfiguredChargingStation() {
         fixture.given(getRegisteredChargingStation())
-                .when(new RequestConfigurationCommand(getChargingStationId()))
-                .expectException(IllegalStateException.class);
+               .when(new RequestConfigurationCommand(getChargingStationId()))
+               .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRequestConfigurationForUnregisteredChargingStation() {
         fixture.given(getConfiguredChargingStation())
-                .when(new RequestConfigurationCommand(getChargingStationId()))
-                .expectException(IllegalStateException.class);
+               .when(new RequestConfigurationCommand(getChargingStationId()))
+               .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRequestConfiguration() {
         fixture.given(getChargingStation())
-                .when(new RequestConfigurationCommand(getChargingStationId()))
-                .expectEvents(new ConfigurationRequestedEvent(getChargingStationId()));
+               .when(new RequestConfigurationCommand(getChargingStationId()))
+               .expectEvents(new ConfigurationRequestedEvent(getChargingStationId()));
     }
 
     @Test
     public void testConfigureChargingStation() {
         fixture.given(getRegisteredChargingStation())
-                .when(new ConfigureChargingStationCommand(getChargingStationId(), getNumberOfConnectors(), getConfigurationItems()))
-                .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), getNumberOfConnectors(), getConfigurationItems()));
+               .when(new ConfigureChargingStationCommand(getChargingStationId(), getNumberOfConnectors(), getConfigurationItems()))
+               .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), getNumberOfConnectors(), getConfigurationItems()));
     }
 
     @Test
     public void testConfigureChargingStationWithoutConnectors() {
         fixture.given(getRegisteredChargingStation())
-                .when(new ConfigureChargingStationCommand(getChargingStationId(), getConfigurationItems()))
-                .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), 0, getConfigurationItems()));
+               .when(new ConfigureChargingStationCommand(getChargingStationId(), getConfigurationItems()))
+               .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), 0, getConfigurationItems()));
     }
 
     @Test
     public void testConfigureChargingStationWithoutConfigurationItems() {
         fixture.given(getRegisteredChargingStation())
-                .when(new ConfigureChargingStationCommand(getChargingStationId(), getNumberOfConnectors()))
-                .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), getNumberOfConnectors(), Collections.<String, String>emptyMap()));
+               .when(new ConfigureChargingStationCommand(getChargingStationId(), getNumberOfConnectors()))
+               .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), getNumberOfConnectors(), Collections.<String, String>emptyMap()));
     }
 
     @Test
     public void testAttemptToConfigureUnregisteredChargingStation() {
         fixture.given(getCreatedChargingStation())
-                .when(new ConfigureChargingStationCommand(getChargingStationId(), getConfigurationItems()))
-                .expectException(RuntimeException.class);
+               .when(new ConfigureChargingStationCommand(getChargingStationId(), getConfigurationItems()))
+               .expectException(RuntimeException.class);
     }
 
     @Test
     public void testRequestingToUnlockConnectorForUnregisteredChargingStation() {
         fixture.given(getConfiguredChargingStation())
-                .when(new RequestUnlockConnectorCommand(getChargingStationId(), 1))
-                .expectException(IllegalStateException.class);
+               .when(new RequestUnlockConnectorCommand(getChargingStationId(), 1))
+               .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRequestingToUnlockConnectorForUnconfiguredChargingStation() {
         fixture.given(getRegisteredChargingStation())
-                .when(new RequestUnlockConnectorCommand(getChargingStationId(), 1))
-                .expectException(IllegalStateException.class);
+               .when(new RequestUnlockConnectorCommand(getChargingStationId(), 1))
+               .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRequestingToUnlockConnector() {
         fixture.given(getChargingStation())
-                .when(new RequestUnlockConnectorCommand(getChargingStationId(), 1))
-                .expectEvents(new UnlockConnectorRequestedEvent(getChargingStationId(), 1));
+               .when(new RequestUnlockConnectorCommand(getChargingStationId(), 1))
+               .expectEvents(new UnlockConnectorRequestedEvent(getChargingStationId(), 1));
     }
 
     @Test
     public void testRequestingToUnlockUnknownConnector() {
         fixture.given(getChargingStation())
-                .when(new RequestUnlockConnectorCommand(getChargingStationId(), 3))
-                .expectEvents(new ConnectorNotFoundEvent(getChargingStationId(), 3));
+               .when(new RequestUnlockConnectorCommand(getChargingStationId(), 3))
+               .expectEvents(new ConnectorNotFoundEvent(getChargingStationId(), 3));
     }
 
     @Test
     public void testRequestingToUnlockAllConnectors() {
         fixture.given(getChargingStation())
-                .when(new RequestUnlockConnectorCommand(getChargingStationId(), Connector.ALL))
-                .expectEvents(new UnlockConnectorRequestedEvent(getChargingStationId(), 1), new UnlockConnectorRequestedEvent(getChargingStationId(), 2));
+               .when(new RequestUnlockConnectorCommand(getChargingStationId(), Connector.ALL))
+               .expectEvents(new UnlockConnectorRequestedEvent(getChargingStationId(), 1), new UnlockConnectorRequestedEvent(getChargingStationId(), 2));
     }
 }
