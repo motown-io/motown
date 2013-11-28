@@ -26,21 +26,33 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 
 @Component
-public class BootChargingStationCommandHandler {
+public class ChargingStationCommandHandler {
 
     private Repository<ChargingStation> repository;
 
     @CommandHandler
     public ChargingStationRegistrationStatus handle(BootChargingStationCommand command) {
+        ChargingStation chargingStation = loadOrCreateChargingStation(command.getChargingStationId());
+        return chargingStation.handle(command);
+    }
+
+    @CommandHandler
+    public void handle(RegisterChargingStationCommand command) {
+        ChargingStation chargingStation = loadOrCreateChargingStation(command.getChargingStationId());
+        chargingStation.handle(command);
+    }
+
+    private ChargingStation loadOrCreateChargingStation(ChargingStationId chargingStationId) {
         ChargingStation chargingStation;
+
         try {
-            chargingStation = repository.load(command.getChargingStationId());
+            chargingStation = repository.load(chargingStationId);
         } catch (AggregateNotFoundException e) {
-            chargingStation = new ChargingStation(new CreateChargingStationCommand(command.getChargingStationId()));
+            chargingStation = new ChargingStation(new CreateChargingStationCommand(chargingStationId));
             repository.add(chargingStation);
         }
 
-        return chargingStation.handle(command);
+        return chargingStation;
     }
 
     @Autowired

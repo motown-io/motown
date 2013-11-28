@@ -43,20 +43,6 @@ public class ChargingStationTest {
     }
 
     @Test
-    public void testChargePointRegistration() {
-        fixture.given(getCreatedChargingStation())
-                .when(new RegisterChargingStationCommand(getChargingStationId()))
-                .expectEvents(new ChargingStationRegisteredEvent(getChargingStationId()));
-    }
-
-    @Test
-    public void testAttemptToRegisterNonExistingChargePoint() {
-        fixture.given()
-                .when(new RegisterChargingStationCommand(getChargingStationId()))
-                .expectException(AggregateNotFoundException.class);
-    }
-
-    @Test
     public void testRequestConfigurationForUnconfiguredChargingStation() {
         fixture.given(getRegisteredChargingStation())
                 .when(new RequestConfigurationCommand(getChargingStationId()))

@@ -23,14 +23,14 @@ import org.junit.Test;
 
 import static io.motown.domain.chargingstation.ChargingStationTestUtils.*;
 
-public class BootChargingStationCommandHandlerTest {
+public class ChargingStationCommandHandlerTest {
 
     private FixtureConfiguration<ChargingStation> fixture;
 
     @Before
     public void setUp() throws Exception {
         fixture = Fixtures.newGivenWhenThenFixture(ChargingStation.class);
-        BootChargingStationCommandHandler commandHandler = new BootChargingStationCommandHandler();
+        ChargingStationCommandHandler commandHandler = new ChargingStationCommandHandler();
         commandHandler.setRepository(fixture.getRepository());
         fixture.registerAnnotatedCommandHandler(commandHandler);
     }
@@ -58,5 +58,26 @@ public class BootChargingStationCommandHandlerTest {
                .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
                .expectEvents(new ConfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()))
                .expectReturnValue(ChargingStationRegistrationStatus.REGISTERED);
+    }
+
+    @Test
+    public void testRegisteringExistingChargingStation() {
+        fixture.given(getCreatedChargingStation())
+               .when(new RegisterChargingStationCommand(getChargingStationId()))
+               .expectEvents(new ChargingStationRegisteredEvent(getChargingStationId()));
+    }
+
+    @Test
+    public void testRegisteringNonExistentChargingStation() {
+        fixture.given()
+               .when(new RegisterChargingStationCommand(getChargingStationId()))
+               .expectEvents(new ChargingStationCreatedEvent(getChargingStationId()), new ChargingStationRegisteredEvent(getChargingStationId()));
+    }
+
+    @Test
+    public void testRegisteringAlreadyRegisteredChargingStation() {
+        fixture.given(getRegisteredChargingStation())
+               .when(new RegisterChargingStationCommand(getChargingStationId()))
+               .expectException(IllegalStateException.class);
     }
 }

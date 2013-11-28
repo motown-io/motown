@@ -45,7 +45,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
      *
      * In contrast to the other command handling methods in ChargingStation, this method is not annotated with {@link
      * org.axonframework.commandhandling.annotation.CommandHandler}. This command is handled by a dedicated command
-     * handler class, {@link io.motown.domain.chargingstation.BootChargingStationCommandHandler}, to handle creating a
+     * handler class, {@link ChargingStationCommandHandler}, to handle creating a
      * ChargingStation instance when a {@link io.motown.domain.api.chargingstation.BootChargingStationCommand} is
      * received for a non-existent ChargingStation.
      *
@@ -66,6 +66,26 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         return this.isRegistered ? ChargingStationRegistrationStatus.REGISTERED : ChargingStationRegistrationStatus.UNREGISTERED;
     }
 
+    /**
+     * Handles a {@link RegisterChargingStationCommand}.
+     *
+     * In contrast to the other command handling methods in ChargingStation, this method is not annotated with {@link
+     * org.axonframework.commandhandling.annotation.CommandHandler}. This command is handled by a dedicated command
+     * handler class, {@link ChargingStationCommandHandler}, to handle creating a
+     * ChargingStation instance when a {@link io.motown.domain.api.chargingstation.RegisterChargingStationCommand} is
+     * received for a non-existent ChargingStation.
+     *
+     * @param command the command which needs to be applied to the ChargingStation.
+     * @return status of the charging station after applying this command
+     */
+    public void handle(RegisterChargingStationCommand command) {
+        if (isRegistered) {
+            throw new IllegalStateException("Cannot register an already registered charging station");
+        }
+
+        apply(new ChargingStationRegisteredEvent(command.getChargingStationId()));
+    }
+
     @CommandHandler
     public void handle(RequestUnlockConnectorCommand command) {
         checkCommunicationAllowed();
@@ -80,11 +100,6 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
                 apply(new UnlockConnectorRequestedEvent(id, command.getConnectorId()));
             }
         }
-    }
-
-    @CommandHandler
-    public void handle(RegisterChargingStationCommand command) {
-        apply(new ChargingStationRegisteredEvent(this.id));
     }
 
     @CommandHandler
