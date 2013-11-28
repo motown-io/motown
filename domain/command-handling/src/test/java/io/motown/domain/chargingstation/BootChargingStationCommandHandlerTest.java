@@ -54,7 +54,7 @@ public class BootChargingStationCommandHandlerTest {
 
     @Test
     public void testBootingConfiguredChargingStation() {
-        fixture.given(getConfiguredChargingStation())
+        fixture.given(getChargingStation())
                .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
                .expectEvents(new ConfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()))
                .expectReturnValue(ChargingStationRegistrationStatus.REGISTERED);

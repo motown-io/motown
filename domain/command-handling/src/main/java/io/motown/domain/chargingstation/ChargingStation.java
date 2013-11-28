@@ -93,13 +93,9 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestConfigurationCommand command) {
-        if(this.isRegistered){
-            apply(new ConfigurationRequestedEvent(this.id));
-        }
-        else{
-            //TODO: Decide what to do in this situation (respond with event or return value) - Ingo Pak 21 nov 2013
-            throw new RuntimeException("Chargingstation is not registered");
-        }
+        checkCommunicationAllowed();
+
+        apply(new ConfigurationRequestedEvent(this.id));
     }
 
     @CommandHandler
@@ -126,5 +122,20 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
         this.id = event.getChargingStationId();
+    }
+
+    /**
+     * Ensures that communication with this charging station is allowed.
+     *
+     * Communication with a charging station is allowed once it is registered (i.e. someone or something has allowed
+     * this charging station to communicate with Motown) and configured (i.e. Motown has enough information to properly
+     * handle communication with the charging station, like the number of connectors).
+     *
+     * @throws IllegalStateException if communication is not allowed with this charging station.
+     */
+    private void checkCommunicationAllowed() {
+        if (!isConfigured || !isRegistered) {
+            throw new IllegalStateException("Communication not allowed with an unregistered or unconfigured charging station");
+        }
     }
 }

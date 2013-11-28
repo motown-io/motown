@@ -44,7 +44,15 @@ public class ChargingStationTestUtils {
 
     public static List<Object> getConfiguredChargingStation() {
         return ImmutableList.<Object>builder()
-                .addAll(getRegisteredChargingStation())
+                .addAll(getCreatedChargingStation())
+                .add(new ChargingStationConfiguredEvent(getChargingStationId(), getConnectors(), getConfigurationItems()))
+                .build();
+    }
+
+    public static List<Object> getChargingStation() {
+        return ImmutableList.<Object>builder()
+                .addAll(getCreatedChargingStation())
+                .add(new ChargingStationRegisteredEvent(getChargingStationId()))
                 .add(new ChargingStationConfiguredEvent(getChargingStationId(), getConnectors(), getConfigurationItems()))
                 .build();
     }

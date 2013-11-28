@@ -20,19 +20,30 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * The command to trigger the retrieval of the ChargingStation's configuration
+ * {@code RequestConfigurationCommand} is the command which is published when a charging station's configuration should
+ * be requested from the charging station.
  */
 public class RequestConfigurationCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
+    /**
+     * Creates a {@code RequestConfigurationCommand} with an identifier.
+     *
+     * @param chargingStationId the identifier of the charging station.
+     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     */
     public RequestConfigurationCommand(ChargingStationId chargingStationId) {
         this.chargingStationId = checkNotNull(chargingStationId);
     }
 
+    /**
+     * Gets the charging station identifier.
+     *
+     * @return the charging station identifier.
+     */
     public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
     }
-
 }

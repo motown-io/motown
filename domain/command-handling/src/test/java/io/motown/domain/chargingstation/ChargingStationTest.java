@@ -57,17 +57,24 @@ public class ChargingStationTest {
     }
 
     @Test
-    public void testRetrieveChargingStationConfiguration() {
+    public void testRequestConfigurationForUnconfiguredChargingStation() {
         fixture.given(getRegisteredChargingStation())
                 .when(new RequestConfigurationCommand(getChargingStationId()))
-                .expectEvents(new ConfigurationRequestedEvent(getChargingStationId()));
+                .expectException(IllegalStateException.class);
     }
 
     @Test
-    public void testRetrieveChargingStationConfigurationForNonRegisteredChargingStation() {
-        fixture.given(getCreatedChargingStation())
+    public void testRequestConfigurationForUnregisteredChargingStation() {
+        fixture.given(getConfiguredChargingStation())
                 .when(new RequestConfigurationCommand(getChargingStationId()))
-                .expectException(RuntimeException.class);
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void testRequestConfiguration() {
+        fixture.given(getChargingStation())
+                .when(new RequestConfigurationCommand(getChargingStationId()))
+                .expectEvents(new ConfigurationRequestedEvent(getChargingStationId()));
     }
 
     @Test
@@ -100,21 +107,21 @@ public class ChargingStationTest {
 
     @Test
     public void testRequestingToUnlockConnector() {
-        fixture.given(getConfiguredChargingStation())
+        fixture.given(getChargingStation())
                 .when(new RequestUnlockConnectorCommand(getChargingStationId(), 1))
                 .expectEvents(new UnlockConnectorRequestedEvent(getChargingStationId(), 1));
     }
 
     @Test
     public void testRequestingToUnlockUnknownConnector() {
-        fixture.given(getConfiguredChargingStation())
+        fixture.given(getChargingStation())
                 .when(new RequestUnlockConnectorCommand(getChargingStationId(), 3))
                 .expectEvents(new ConnectorNotFoundEvent(getChargingStationId(), 3));
     }
 
     @Test
     public void testRequestingToUnlockAllConnectors() {
-        fixture.given(getConfiguredChargingStation())
+        fixture.given(getChargingStation())
                 .when(new RequestUnlockConnectorCommand(getChargingStationId(), Connector.ALL))
                 .expectEvents(new UnlockConnectorRequestedEvent(getChargingStationId(), 1), new UnlockConnectorRequestedEvent(getChargingStationId(), 2));
     }

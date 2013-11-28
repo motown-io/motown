@@ -18,17 +18,29 @@ package io.motown.domain.api.chargingstation;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Requests the retrieval of the Chargingstation's configuration
+ * {@code RequestConfigurationCommand} is the event which is published when a charging station's configuration should
+ * be requested from the charging station.
  */
 public class ConfigurationRequestedEvent implements CommunicationWithChargingStationRequestedEvent{
+
     private final ChargingStationId chargingStationId;
 
+    /**
+     * Creates a {@code ConfigurationRequestedEvent} with an identifier.
+     *
+     * @param chargingStationId the identifier of the charging station.
+     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     */
     public ConfigurationRequestedEvent(ChargingStationId chargingStationId) {
         this.chargingStationId = checkNotNull(chargingStationId);
     }
 
+    /**
+     * Gets the charging station identifier.
+     *
+     * @return the charging station identifier.
+     */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
     }
-
 }
