@@ -30,6 +30,16 @@ public class ChargingStation {
 
     private Date created;
 
+    private Date lastTimeBooted;
+
+    public Date getLastTimeBooted() {
+        return lastTimeBooted;
+    }
+
+    public void setLastTimeBooted(Date lastTimeBooted) {
+        this.lastTimeBooted = lastTimeBooted;
+    }
+
     private ChargingStation() {
         // Private no-arg constructor for Hibernate.
     }

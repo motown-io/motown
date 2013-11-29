@@ -51,6 +51,6 @@ public class ConfigureChargingStationCommandTest {
 
         ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), configurationItems);
 
-        command.getConfigurationItems().put("configItem", "configValue");
+        command.getSettings().put("configItem", "configValue");
     }
 }

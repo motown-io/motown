@@ -55,4 +55,10 @@ public class Connector {
         result = 31 * result + maxAmp;
         return result;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Connector(id = %d, type = %s, maxAmp = %d)", connectorId, connectorType, maxAmp);
+    }
+
 }

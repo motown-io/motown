@@ -16,6 +16,7 @@
 package io.motown.operatorapi.json.commands;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,14 +31,38 @@ public class ConfigureJsonCommandHandlerTest {
     }
 
     @Test
-    public void testHandle() {
-        String json = "['Configure',{'key':'value', 'key2':'value2'}]";
+    public void testHandleComplete() {
+        String json = "['Configure',{'connectors' : [{'connectorId' : 1, 'connectorType' : 'Type2', 'maxAmp' : 16 },{'connectorId' : 2, 'connectorType' : 'Combo', 'maxAmp' : 32}], 'settings' : {'key':'value', 'key2':'value2'}}]";
+        handler.handle("TEST_CP", json);
+    }
+
+    @Test
+    public void testHandleSettingsOnly() {
+        String json = "['Configure',{'settings' : {'key':'value', 'key2':'value2'}}]";
+        handler.handle("TEST_CP", json);
+    }
+
+    @Test
+    public void testHandleConnectorsOnly() {
+        String json = "['Configure',{'connectors' : [{'connectorId' : 1, 'connectorType' : 'Type2', 'maxAmp' : 16 },{'connectorId' : 2, 'connectorType' : 'Combo', 'maxAmp' : 32}]}]";
         handler.handle("TEST_CP", json);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testHandleNull() {
         String json = "['Configure', null]";
+        handler.handle("TEST_CP", json);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testHandleFaultyPayload() {  // connector not in a list
+        String json = "['Configure',{'connectors' : {'connectorId' : 1, 'connectorType' : 'Type2', 'maxAmp' : 16 }}]";
+        handler.handle("TEST_CP", json);
+    }
+
+    @Test(expected=JsonSyntaxException.class)
+    public void testHandleFaultyJson() {  // list instead of array
+        String json = "['Configure',{'connectors' : [{['connectorId' : 1, 'connectorType' : 'Type2', 'maxAmp' : 16 ],{'connectorId' : 2, 'connectorType' : 'Combo', 'maxAmp' : 32}]}]";
         handler.handle("TEST_CP", json);
     }
 

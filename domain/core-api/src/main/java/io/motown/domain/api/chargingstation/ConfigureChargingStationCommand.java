@@ -37,7 +37,7 @@ public class ConfigureChargingStationCommand {
 
     private final Set<Connector> connectors;
 
-    private final Map<String, String> configurationItems;
+    private final Map<String, String> settings;
 
     /**
      * Creates a {@code ConfigureChargingStationCommand} with an identifier.
@@ -54,11 +54,11 @@ public class ConfigureChargingStationCommand {
      * Creates a {@code ConfigureChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param configurationItems the configurationItems with which the charging station should be configured.
+     * @param settings the settings with which the charging station should be configured.
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Map<String, String> configurationItems) {
-        this(chargingStationId, Collections.<Connector>emptySet(), configurationItems);
+    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Map<String, String> settings) {
+        this(chargingStationId, Collections.<Connector>emptySet(), settings);
     }
 
     /**
@@ -66,14 +66,14 @@ public class ConfigureChargingStationCommand {
      *
      * @param chargingStationId the identifier of the charging station.
      * @param connectors the connectors with which the charging station should be configured.
-     * @param configurationItems the configurationItems with which the charging station should be configured.
-     * @throws NullPointerException if {@code chargingStationId}, {@code connectors}, or {@code configurationItems} is
+     * @param settings the settings with which the charging station should be configured.
+     * @throws NullPointerException if {@code chargingStationId}, {@code connectors}, or {@code settings} is
      * {@code null}.
      */
-    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Connector> connectors, Map<String, String> configurationItems) {
+    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Connector> connectors, Map<String, String> settings) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.connectors = ImmutableSet.copyOf(checkNotNull(connectors));
-        this.configurationItems = ImmutableMap.copyOf(checkNotNull(configurationItems));
+        this.settings = ImmutableMap.copyOf(checkNotNull(settings));
     }
 
     /**
@@ -102,8 +102,8 @@ public class ConfigureChargingStationCommand {
      *
      * @return an immutable {@link java.util.Map} of configuration items.
      */
-    public Map<String, String> getConfigurationItems() {
-        return configurationItems;
+    public Map<String, String> getSettings() {
+        return settings;
     }
 
     @Override
@@ -111,7 +111,7 @@ public class ConfigureChargingStationCommand {
         return Objects.toStringHelper(this.getClass())
                 .add("chargingStationId", chargingStationId)
                 .add("connectors", connectors)
-                .add("configurationItems", configurationItems)
+                .add("settings", settings)
                 .toString();
     }
 }

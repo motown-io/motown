@@ -112,7 +112,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @CommandHandler
     public void handle(ConfigureChargingStationCommand command) {
         // TODO should we allow reconfiguring of charging stations? - Dennis Laumen, Nov 28th 2013
-        apply(new ChargingStationConfiguredEvent(this.id, command.getConnectors(), command.getConfigurationItems()));
+        apply(new ChargingStationConfiguredEvent(this.id, command.getConnectors(), command.getSettings()));
     }
 
     @EventHandler

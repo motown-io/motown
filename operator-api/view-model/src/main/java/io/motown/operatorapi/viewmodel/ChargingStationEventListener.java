@@ -16,6 +16,7 @@
 package io.motown.operatorapi.viewmodel;
 
 import io.motown.domain.api.chargingstation.ChargingStationBootedEvent;
+import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -23,6 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 
 @Component
 public class ChargingStationEventListener {
@@ -32,13 +35,21 @@ public class ChargingStationEventListener {
     private ChargingStationRepository repository;
 
     @EventHandler
+    public void handle(ChargingStationCreatedEvent event) {
+        log.debug("ChargingStationCreatedEvent creates [{}] in operator api repo", event.getChargingStationId());
+        repository.save(new ChargingStation(event.getChargingStationId().getId()));
+    }
+
+    @EventHandler
     public void handle(ChargingStationBootedEvent event) {
-        log.info("ChargingStationBootedEvent for [{}] received!", event.getChargingStationId());
+        log.debug("ChargingStationBootedEvent for [{}] received!", event.getChargingStationId());
 
         ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
 
-        if (chargingStation == null) {
-            chargingStation = new ChargingStation(event.getChargingStationId().getId());
+        if (chargingStation != null) {
+            chargingStation.setLastTimeBooted(new Date());
+        } else {
+            log.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as booted", event.getChargingStationId());
         }
 
         repository.save(chargingStation);
