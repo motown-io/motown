@@ -87,6 +87,13 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
+    public AuthorizationResultStatus handle(AuthorizeCommand command) {
+        //checkCommunicationAllowed();
+        //TODO: Implement authorization process - Ingo Pak, 29 nov 2013
+        return AuthorizationResultStatus.ACCEPTED;
+    }
+
+    @CommandHandler
     public void handle(RequestUnlockConnectorCommand command) {
         checkCommunicationAllowed();
         if (command.getConnectorId() > numberOfConnectors) {

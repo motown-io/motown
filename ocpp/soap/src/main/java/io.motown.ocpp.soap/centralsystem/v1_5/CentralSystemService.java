@@ -19,9 +19,9 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.ocpp.soap.async.RequestHandler;
 import io.motown.ocpp.soap.async.ResponseFactory;
 import io.motown.ocpp.soap.centralsystem.v1_5.schema.*;
+import io.motown.ocpp.soap.centralsystem.v1_5.schema.AuthorizationStatus;
 import io.motown.ocpp.viewmodel.ChargingStationSubscriber;
-import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
+import io.motown.ocpp.viewmodel.domain.*;
 import org.apache.cxf.headers.Header;
 import org.apache.cxf.helpers.CastUtils;
 import org.apache.cxf.jaxws.context.WrappedMessageContext;
@@ -149,10 +149,47 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
     }
 
     @Override
-    public AuthorizeResponse authorize(AuthorizeRequest parameters, String chargeBoxIdentity) {
-        //FIXME implement me
-        log.error("Unimplemented method [authorize] called.");
-        throw new RuntimeException("Not yet implemented");
+    public AuthorizeResponse authorize(final AuthorizeRequest request, final String chargeBoxIdentity) {
+        final MessageContext messageContext = context.getMessageContext();
+
+        RequestHandler<AuthorizeResponse> requestHandler = new RequestHandler<>(context.getMessageContext(), taskExecutor);
+        return requestHandler.handle(
+                new ResponseFactory<AuthorizeResponse>() {
+                    @Override
+                    public AuthorizeResponse createResponse() {
+                        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
+
+                        chargingStationSubscriber.subscribe(chargingStationId);
+
+                        AuthorizationResult result = domainService.authorize(chargingStationId, request.getIdTag());
+
+                        AuthorizeResponse response = new AuthorizeResponse();
+                        IdTagInfo tagInfo = new IdTagInfo();
+                        switch(result.getStatus()){
+                            case ACCEPTED: tagInfo.setStatus(AuthorizationStatus.ACCEPTED);
+                                break;
+                            case BLOCKED: tagInfo.setStatus(AuthorizationStatus.BLOCKED);
+                                break;
+                            case EXPIRED: tagInfo.setStatus(AuthorizationStatus.EXPIRED);
+                                break;
+                            case INVALID: tagInfo.setStatus(AuthorizationStatus.INVALID);
+                                break;
+                        }
+                        response.setIdTagInfo(tagInfo);
+
+                        return response;
+                    }
+                },
+                new ResponseFactory<AuthorizeResponse>() {
+                    @Override
+                    public AuthorizeResponse createResponse() {
+                        AuthorizeResponse response = new AuthorizeResponse();
+                        IdTagInfo tagInfo = new IdTagInfo();
+                        tagInfo.setStatus(AuthorizationStatus.INVALID);
+                        return response;
+                    }
+                }
+        );
     }
 
     @Override

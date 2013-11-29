@@ -13,20 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.viewmodel.domain;
 
-import io.motown.domain.api.chargingstation.*;
+package io.motown.domain.api.chargingstation;
 
-import java.util.concurrent.TimeUnit;
-
-interface DomainCommandGateway {
-
-    ChargingStationRegistrationStatus sendAndWait(BootChargingStationCommand command, long timeout, TimeUnit unit);
-
-    void send(BootChargingStationCommand command);
-
-    void send(ConfigureChargingStationCommand command);
-
-    AuthorizationResultStatus sendAndWait(AuthorizeCommand command, long timeout, TimeUnit unit);
-
+public enum AuthorizationResultStatus {
+    ACCEPTED, BLOCKED, EXPIRED, INVALID
 }

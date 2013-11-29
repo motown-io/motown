@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class DomainService {
@@ -68,6 +69,14 @@ public class DomainService {
 
         // TODO: Where should the heartbeat-interval come from? - Mark van den Bergh, November 15th 2013
         return new BootChargingStationResult(ChargingStationRegistrationStatus.ACCEPTED.equals(result), 60, new Date());
+    }
+
+    public AuthorizationResult authorize(ChargingStationId chargingStationId, String idTag){
+        AuthorizeCommand command = new AuthorizeCommand(chargingStationId, idTag);
+        AuthorizationResultStatus resultStatus = commandGateway.sendAndWait(command, 60, TimeUnit.SECONDS);
+
+        AuthorizationResult result = new AuthorizationResult(idTag, resultStatus);
+        return result;
     }
 
     public void configureChargingStation(ChargingStationId chargingStationId, Map<String, String> configurationItems) {
