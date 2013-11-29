@@ -17,6 +17,7 @@ package io.motown.operatorapi.viewmodel;
 
 import io.motown.domain.api.chargingstation.ChargingStationBootedEvent;
 import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
+import io.motown.domain.api.chargingstation.ChargingStationRegisteredEvent;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -48,11 +49,24 @@ public class ChargingStationEventListener {
 
         if (chargingStation != null) {
             chargingStation.setLastTimeBooted(new Date());
+            repository.save(chargingStation);
         } else {
             log.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as booted", event.getChargingStationId());
         }
+    }
 
-        repository.save(chargingStation);
+    @EventHandler
+    public void handle(ChargingStationRegisteredEvent event) {
+        log.debug("ChargingStationBootedEvent for [{}] received!", event.getChargingStationId());
+
+        ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
+
+        if (chargingStation != null) {
+            chargingStation.setRegistered(true);
+            repository.save(chargingStation);
+        } else {
+            log.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as registered", event.getChargingStationId());
+        }
     }
 
     @Autowired

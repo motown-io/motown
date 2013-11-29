@@ -23,8 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-
 @Component
 public class ChargingStationCommandHandler {
 
@@ -32,23 +30,23 @@ public class ChargingStationCommandHandler {
 
     @CommandHandler
     public ChargingStationRegistrationStatus handle(BootChargingStationCommand command) {
-        ChargingStation chargingStation = loadOrCreateChargingStation(command.getChargingStationId());
+        ChargingStation chargingStation = loadOrCreateChargingStation(command.getChargingStationId(), false);
         return chargingStation.handle(command);
     }
 
     @CommandHandler
     public void handle(RegisterChargingStationCommand command) {
-        ChargingStation chargingStation = loadOrCreateChargingStation(command.getChargingStationId());
+        ChargingStation chargingStation = loadOrCreateChargingStation(command.getChargingStationId(), true);
         chargingStation.handle(command);
     }
 
-    private ChargingStation loadOrCreateChargingStation(ChargingStationId chargingStationId) {
+    private ChargingStation loadOrCreateChargingStation(ChargingStationId chargingStationId, boolean acceptToNetwork) {
         ChargingStation chargingStation;
 
         try {
             chargingStation = repository.load(chargingStationId);
         } catch (AggregateNotFoundException e) {
-            chargingStation = new ChargingStation(new CreateChargingStationCommand(chargingStationId));
+            chargingStation = new ChargingStation(new CreateChargingStationCommand(chargingStationId, acceptToNetwork));
             repository.add(chargingStation);
         }
 

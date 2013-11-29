@@ -29,29 +29,29 @@ public class ChargingStationTestUtils {
         return new ChargingStationId("CS-001");
     }
 
-    public static List<Object> getCreatedChargingStation() {
+    public static List<Object> getCreatedChargingStation(boolean defaultAccepted) {
         return ImmutableList.<Object>builder()
-                .add(new ChargingStationCreatedEvent(getChargingStationId()))
+                .add(new ChargingStationCreatedEvent(getChargingStationId(), defaultAccepted))
                 .build();
     }
 
     public static List<Object> getRegisteredChargingStation() {
         return ImmutableList.<Object>builder()
-                .addAll(getCreatedChargingStation())
+                .addAll(getCreatedChargingStation(true))
                 .add(new ChargingStationRegisteredEvent(getChargingStationId()))
                 .build();
     }
 
-    public static List<Object> getConfiguredChargingStation() {
+    public static List<Object> getConfiguredChargingStation(boolean defaultAccepted) {
         return ImmutableList.<Object>builder()
-                .addAll(getCreatedChargingStation())
+                .addAll(getCreatedChargingStation(defaultAccepted))
                 .add(new ChargingStationConfiguredEvent(getChargingStationId(), getConnectors(), getConfigurationItems()))
                 .build();
     }
 
     public static List<Object> getChargingStation() {
         return ImmutableList.<Object>builder()
-                .addAll(getCreatedChargingStation())
+                .addAll(getCreatedChargingStation(true))
                 .add(new ChargingStationRegisteredEvent(getChargingStationId()))
                 .add(new ChargingStationConfiguredEvent(getChargingStationId(), getConnectors(), getConfigurationItems()))
                 .build();

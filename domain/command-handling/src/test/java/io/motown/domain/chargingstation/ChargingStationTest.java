@@ -37,8 +37,8 @@ public class ChargingStationTest {
     @Test
     public void testChargePointCreation() {
         fixture.given()
-               .when(new CreateChargingStationCommand(getChargingStationId()))
-               .expectEvents(new ChargingStationCreatedEvent(getChargingStationId()));
+               .when(new CreateChargingStationCommand(getChargingStationId(), true))
+               .expectEvents(new ChargingStationCreatedEvent(getChargingStationId(), true));
     }
 
     @Test
@@ -50,7 +50,7 @@ public class ChargingStationTest {
 
     @Test
     public void testRequestConfigurationForUnregisteredChargingStation() {
-        fixture.given(getConfiguredChargingStation())
+        fixture.given(getConfiguredChargingStation(false))
                .when(new RequestConfigurationCommand(getChargingStationId()))
                .expectException(IllegalStateException.class);
     }
@@ -85,7 +85,7 @@ public class ChargingStationTest {
 
     @Test
     public void testRequestingToUnlockConnectorForUnregisteredChargingStation() {
-        fixture.given(getConfiguredChargingStation())
+        fixture.given(getConfiguredChargingStation(false))
                .when(new RequestUnlockConnectorCommand(getChargingStationId(), 1))
                .expectException(IllegalStateException.class);
     }

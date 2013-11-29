@@ -39,9 +39,9 @@ public class ChargingStationCommandHandlerTest {
     public void testBootingUncreatedChargingStation() {
         fixture.given()
                .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
-               .expectEvents(new ChargingStationCreatedEvent(getChargingStationId()),
+               .expectEvents(new ChargingStationCreatedEvent(getChargingStationId(), false),
                              new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()))
-               .expectReturnValue(ChargingStationRegistrationStatus.UNREGISTERED);
+               .expectReturnValue(ChargingStationRegistrationStatus.DENIED);
     }
 
     @Test
@@ -49,7 +49,7 @@ public class ChargingStationCommandHandlerTest {
         fixture.given(getRegisteredChargingStation())
                .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
                .expectEvents(new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()))
-               .expectReturnValue(ChargingStationRegistrationStatus.REGISTERED);
+               .expectReturnValue(ChargingStationRegistrationStatus.ACCEPTED);
     }
 
     @Test
@@ -57,21 +57,29 @@ public class ChargingStationCommandHandlerTest {
         fixture.given(getChargingStation())
                .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
                .expectEvents(new ConfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()))
-               .expectReturnValue(ChargingStationRegistrationStatus.REGISTERED);
+               .expectReturnValue(ChargingStationRegistrationStatus.ACCEPTED);
     }
 
     @Test
-    public void testRegisteringExistingChargingStation() {
-        fixture.given(getCreatedChargingStation())
+    public void testRegisteringExistingUnAcceptedChargingStation() {
+        fixture.given(getCreatedChargingStation(false))
                .when(new RegisterChargingStationCommand(getChargingStationId()))
                .expectEvents(new ChargingStationRegisteredEvent(getChargingStationId()));
     }
 
     @Test
+    public void testRegisteringExistingAcceptedChargingStation() {
+        fixture.given(getCreatedChargingStation(true))
+                .when(new RegisterChargingStationCommand(getChargingStationId()))
+                .expectException(IllegalStateException.class);
+    }
+
+
+    @Test
     public void testRegisteringNonExistentChargingStation() {
         fixture.given()
                .when(new RegisterChargingStationCommand(getChargingStationId()))
-               .expectEvents(new ChargingStationCreatedEvent(getChargingStationId()), new ChargingStationRegisteredEvent(getChargingStationId()));
+               .expectException(IllegalStateException.class);
     }
 
     @Test

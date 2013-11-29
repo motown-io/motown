@@ -20,6 +20,5 @@ import io.motown.domain.api.chargingstation.*;
 interface DomainCommandGateway {
     void send(RequestUnlockConnectorCommand command);
     void send(ConfigureChargingStationCommand command);
-    void sendAndWait(CreateChargingStationCommand command);
-    void send(RegisterChargingStationCommand command);
+    void sendAndWait(RegisterChargingStationCommand command);
 }

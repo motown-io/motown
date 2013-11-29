@@ -21,6 +21,6 @@ public class CreateChargingStationCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new CreateChargingStationCommand(null);
+        new CreateChargingStationCommand(null, false);
     }
 }

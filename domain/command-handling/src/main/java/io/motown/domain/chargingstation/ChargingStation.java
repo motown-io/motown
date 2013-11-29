@@ -28,7 +28,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     private int numberOfConnectors;
 
-    private boolean isRegistered = false;
+    private boolean isAccepted = false;
     private boolean isConfigured = false;
 
     protected ChargingStation() {
@@ -37,7 +37,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @CommandHandler
     public ChargingStation(CreateChargingStationCommand command) {
         this();
-        apply(new ChargingStationCreatedEvent(command.getChargingStationId()));
+        apply(new ChargingStationCreatedEvent(command.getChargingStationId(), command.isAccepted()));
     }
 
     /**
@@ -63,7 +63,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
         apply(chargingStationBootedEvent);
 
-        return this.isRegistered ? ChargingStationRegistrationStatus.REGISTERED : ChargingStationRegistrationStatus.UNREGISTERED;
+        return this.isAccepted ? ChargingStationRegistrationStatus.ACCEPTED : ChargingStationRegistrationStatus.DENIED;
     }
 
     /**
@@ -79,8 +79,8 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
      * @return status of the charging station after applying this command
      */
     public void handle(RegisterChargingStationCommand command) {
-        if (isRegistered) {
-            throw new IllegalStateException("Cannot register an already registered charging station");
+        if (isAccepted) {
+            throw new IllegalStateException("Cannot register an already accepted charging station");
         }
 
         apply(new ChargingStationRegisteredEvent(command.getChargingStationId()));
@@ -121,14 +121,15 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         this.isConfigured = true;
     }
 
-    @EventHandler
-    public void handle(ChargingStationRegisteredEvent event) {
-        this.isRegistered = true;
-    }
+//    @EventHandler
+//    public void handle(ChargingStationRegisteredEvent event) {
+//        this.isAccepted = event.isAccepted();
+//    }
 
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
         this.id = event.getChargingStationId();
+        this.isAccepted = event.isAccepted();
     }
 
     /**
@@ -141,8 +142,8 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
      * @throws IllegalStateException if communication is not allowed with this charging station.
      */
     private void checkCommunicationAllowed() {
-        if (!isConfigured || !isRegistered) {
-            throw new IllegalStateException("Communication not allowed with an unregistered or unconfigured charging station");
+        if (!isConfigured || !isAccepted) {
+            throw new IllegalStateException("Communication not allowed with an unaccepted or unconfigured charging station");
         }
     }
 }

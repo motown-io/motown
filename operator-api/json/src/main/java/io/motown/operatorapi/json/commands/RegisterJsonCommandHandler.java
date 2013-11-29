@@ -52,13 +52,13 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
 
         ChargingStation chargingStation = repository.findOne(chargingStationId);
 
-        if (chargingStation == null) {
-            commandGateway.sendAndWait(new CreateChargingStationCommand(new ChargingStationId(chargingStationId)));
-        }
+        if (chargingStation == null || !chargingStation.getRegistered()) {
+            commandGateway.sendAndWait(new RegisterChargingStationCommand(new ChargingStationId(chargingStationId)));
 
-//        if (registrationStatus == ChargingStationRegistrationStatus.UNREGISTERED) {
-        commandGateway.send(new RegisterChargingStationCommand(new ChargingStationId(chargingStationId)));
-//        }
+        } else {
+            // well, it's not allowed to register a charging station that is already registered
+            throw new IllegalStateException("It is not allowed to register a charging station that is already registered");
+        }
     }
 
     @Resource(name = "domainCommandGateway")

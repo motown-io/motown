@@ -61,13 +61,13 @@ public class DomainService {
         // Determine if the chargingstation is registered or not
         BootChargingStationResult result;
         if(chargingStation.isRegistered()) {
-            result = new BootChargingStationResult(ChargingStationRegistrationStatus.REGISTERED.getValue(), 60, new Date());
+            result = new BootChargingStationResult(ChargingStationRegistrationStatus.ACCEPTED.getValue(), 60, new Date());
         } else {
-            result = new BootChargingStationResult(ChargingStationRegistrationStatus.UNREGISTERED.getValue(), 60, new Date());
+            result = new BootChargingStationResult(ChargingStationRegistrationStatus.DENIED.getValue(), 60, new Date());
         }
 
         // TODO: Where should the heartbeat-interval come from? - Mark van den Bergh, November 15th 2013
-        return new BootChargingStationResult(ChargingStationRegistrationStatus.REGISTERED.equals(result), 60, new Date());
+        return new BootChargingStationResult(ChargingStationRegistrationStatus.ACCEPTED.equals(result), 60, new Date());
     }
 
     public void configureChargingStation(ChargingStationId chargingStationId, Map<String, String> configurationItems) {

@@ -25,12 +25,19 @@ import java.util.Date;
 public class ChargingStation {
     @Id
     private String id;
-
     private Date updated;
-
     private Date created;
-
     private Date lastTimeBooted;
+
+    public Boolean getRegistered() {
+        return isRegistered;
+    }
+
+    public void setRegistered(Boolean registered) {
+        isRegistered = registered;
+    }
+
+    private Boolean isRegistered;
 
     public Date getLastTimeBooted() {
         return lastTimeBooted;

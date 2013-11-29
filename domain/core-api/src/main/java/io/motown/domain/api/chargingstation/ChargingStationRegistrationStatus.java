@@ -19,8 +19,8 @@ package io.motown.domain.api.chargingstation;
  * Reflects the registration status of a charging station; is it accepted by the central system or not.
  */
 public enum ChargingStationRegistrationStatus {
-    REGISTERED(true),
-    UNREGISTERED(false);
+    ACCEPTED(true),
+    DENIED(false);
 
     private final boolean value;
     ChargingStationRegistrationStatus(boolean value){

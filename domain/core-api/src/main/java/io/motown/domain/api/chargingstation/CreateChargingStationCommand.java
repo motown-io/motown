@@ -27,14 +27,18 @@ public class CreateChargingStationCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
+    private final boolean accept;
     /**
      * Creates a {@code CreateChargingStationCommand} with an identifier.
      *
+     *
      * @param chargingStationId the identifier of the charging station.
+     * @param accept
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public CreateChargingStationCommand(ChargingStationId chargingStationId) {
+    public CreateChargingStationCommand(ChargingStationId chargingStationId, boolean accept) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.accept = accept;
     }
 
     /**
@@ -45,4 +49,14 @@ public class CreateChargingStationCommand {
     public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
     }
+
+    /**
+     * Gets the acceptance state for this station.
+     *
+     * @return the acceptance state.
+     */
+    public Boolean isAccepted() {
+        return accept;
+    }
+
 }

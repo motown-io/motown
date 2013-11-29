@@ -42,13 +42,7 @@ public class OcppEventHandler {
 
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
-        log.info("ChargingStationCreatedEvent");
-    }
-
-    @EventHandler
-    public void handle(ChargingStationRegisteredEvent event) {
-        log.info("Handling ChargingStationRegisteredEvent");
-
+        log.info("Handling ChargingStationCreatedEvent");
         String chargingStationId = event.getChargingStationId().getId();
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
 
@@ -56,9 +50,14 @@ public class OcppEventHandler {
             chargingStation = new ChargingStation(chargingStationId);
         }
 
-        chargingStation.setRegistered(true);
+        chargingStation.setRegistered(event.isAccepted());
 
         chargingStationRepository.save(chargingStation);
+    }
+
+    @EventHandler
+    public void handle(ChargingStationRegisteredEvent event) {
+        log.info("ChargingStationRegisteredEvent");
     }
 
     @EventHandler
