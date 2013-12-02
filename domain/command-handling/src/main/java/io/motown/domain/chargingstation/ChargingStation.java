@@ -101,14 +101,17 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
      */
     @CommandHandler
     public void handle(StartTransactionCommand command) {
-        //TODO re-enable this check
-//        checkCommunicationAllowed();
+        checkCommunicationAllowed();
 
-        System.err.println("Transaction id: " + command.getTransactionId());
         // TODO mark socket (mentioned in command) 'in transaction' - Mark van den Bergh, December 2nd 2013
         // TODO store transaction identifier so we can validate 'stop transaction' commands? - Mark van den Bergh, December 2nd 2013
 
-        apply(new TransactionStartedEvent(command.getChargingStationId(), command.getTransactionId(), command.getConnectorId(), command.getIdTag(), command.getTimestamp(), command.getMeterStart()));
+        if (command.getConnectorId() > numberOfConnectors) {
+            apply(new ConnectorNotFoundEvent(id, command.getConnectorId()));
+            return;
+        }
+
+        apply(new TransactionStartedEvent(command.getChargingStationId(), command.getTransactionId(), command.getConnectorId(), command.getIdTag(), command.getMeterStart(), command.getTimestamp()));
     }
 
     @CommandHandler

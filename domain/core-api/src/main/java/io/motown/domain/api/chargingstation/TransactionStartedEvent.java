@@ -39,6 +39,7 @@ public class TransactionStartedEvent {
     /**
      * Creates a {@code TransactionStartedEvent}.
      *
+     *
      * @param chargingStationId identifier of the charging station.
      * @param transactionId     identifier of the transaction.
      * @param connectorId       identifier of the connector on which the transaction is started.
@@ -47,7 +48,7 @@ public class TransactionStartedEvent {
      * @param timestamp         date and time the transaction has been started.
      * @throws NullPointerException if {@code chargingStationId} and/or {@code transactionId} is {@code null}.
      */
-    public TransactionStartedEvent(ChargingStationId chargingStationId, String transactionId, int connectorId, String idTag, Date timestamp, int meterStart) {
+    public TransactionStartedEvent(ChargingStationId chargingStationId, String transactionId, int connectorId, String idTag, int meterStart, Date timestamp) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = checkNotNull(transactionId);
         this.connectorId = connectorId;
