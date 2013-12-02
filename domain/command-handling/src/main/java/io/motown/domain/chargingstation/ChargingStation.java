@@ -143,6 +143,12 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         apply(new ChargingStationConfiguredEvent(this.id, command.getConnectors(), command.getSettings()));
     }
 
+    @CommandHandler
+    public void handle(RequestStopTransactionCommand command) {
+
+        apply(new StopTransactionRequestedEvent(this.id, command.getTransactionId()));
+    }
+
     @EventHandler
     public void handle(ChargingStationConfiguredEvent event) {
         numberOfConnectors = event.getConnectors().size();

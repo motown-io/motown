@@ -16,6 +16,7 @@
 package io.motown.ocpp.viewmodel;
 
 import io.motown.domain.api.chargingstation.ChargingStationConfiguredEvent;
+import io.motown.domain.api.chargingstation.StopTransactionRequestedEvent;
 import io.motown.domain.api.chargingstation.UnlockConnectorRequestedEvent;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;

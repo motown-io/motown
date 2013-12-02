@@ -16,6 +16,7 @@
 package io.motown.ocpp.viewmodel;
 
 import io.motown.domain.api.chargingstation.*;
+import io.motown.ocpp.viewmodel.domain.TransactionIdentifierTranslator;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
@@ -79,6 +80,12 @@ public class OcppEventHandler {
     public void handle(ConfigurationRequestedEvent event) {
         log.info("Handling ConfigurationRequestedEvent");
         chargingStationOcpp15Client.getConfiguration(event.getChargingStationId());
+    }
+
+    @EventHandler
+    public void handle(StopTransactionRequestedEvent event) {
+        log.info("StopTransactionRequestedEvent");
+        chargingStationOcpp15Client.stopTransaction(event.getChargingStationId(), TransactionIdentifierTranslator.toInt(event.getTransactionId()));
     }
 
 }

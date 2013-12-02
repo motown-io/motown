@@ -18,10 +18,7 @@ package io.motown.ocpp.soap.chargepoint.v1_5;
 
 import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.ocpp.soap.chargepoint.v1_5.schema.ChargePointService;
-import io.motown.ocpp.soap.chargepoint.v1_5.schema.GetConfigurationRequest;
-import io.motown.ocpp.soap.chargepoint.v1_5.schema.GetConfigurationResponse;
-import io.motown.ocpp.soap.chargepoint.v1_5.schema.KeyValue;
+import io.motown.ocpp.soap.chargepoint.v1_5.schema.*;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import org.apache.cxf.binding.soap.Soap12;
@@ -42,9 +39,9 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     private DomainService domainService;
 
     public void getConfiguration(ChargingStationId id) {
-        log.info("Handling ConfigurationRequestedEvent from SOAP!");
+        log.info("Retrieving configuration");
 
-        ChargePointService chargePointService = this.createChargePointService(domainService.retrieveChargingStationAddress(id));
+        ChargePointService chargePointService = this.createChargePointService(id);
 
         //TODO: Make the chargepoint client calls async - Ingo Pak, 27 nov 2013
         GetConfigurationResponse response =  chargePointService.getConfiguration(new GetConfigurationRequest(), id.getId());
@@ -57,11 +54,24 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         domainService.configureChargingStation(id, configurationItems);
     }
 
-    protected ChargePointService createChargePointService(String endPointAddress){
+    public void stopTransaction(ChargingStationId id, int transactionId) {
+        log.info("Stopping transaction");
+
+        ChargePointService chargePointService = this.createChargePointService(id);
+
+        //TODO: Make the chargepoint client calls async - Ingo Pak, 2 dec 2013
+        RemoteStopTransactionRequest request = new RemoteStopTransactionRequest();
+        request.setTransactionId(transactionId);
+        RemoteStopTransactionResponse response =  chargePointService.remoteStopTransaction(request, id.getId());
+
+        log.info("Stop transaction request has been {}", response.getStatus().value());
+    }
+
+    protected ChargePointService createChargePointService(ChargingStationId id){
         JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
         factory.setServiceClass(ChargePointService.class);
 
-        factory.setAddress(endPointAddress);
+        factory.setAddress(domainService.retrieveChargingStationAddress(id));
 
         SoapBindingConfiguration conf = new SoapBindingConfiguration();
         conf.setVersion(Soap12.getInstance());
