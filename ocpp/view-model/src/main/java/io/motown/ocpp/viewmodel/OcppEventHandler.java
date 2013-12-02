@@ -71,6 +71,11 @@ public class OcppEventHandler {
     }
 
     @EventHandler
+    public void handle(TransactionStartedEvent event) {
+        log.info("TransactionStartedEvent");
+    }
+
+    @EventHandler
     public void handle(ConfigurationRequestedEvent event) {
         log.info("Handling ConfigurationRequestedEvent");
         chargingStationOcpp15Client.getConfiguration(event.getChargingStationId());

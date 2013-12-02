@@ -19,6 +19,7 @@ import io.motown.domain.api.chargingstation.AuthorizationResultStatus;
 import io.motown.domain.api.chargingstation.AuthorizeCommand;
 import io.motown.domain.api.chargingstation.BootChargingStationCommand;
 import io.motown.domain.api.chargingstation.ConfigureChargingStationCommand;
+import io.motown.domain.api.chargingstation.StartTransactionCommand;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,6 +28,8 @@ interface DomainCommandGateway {
     void send(BootChargingStationCommand command);
 
     void send(ConfigureChargingStationCommand command);
+
+    void send(StartTransactionCommand command);
 
     AuthorizationResultStatus sendAndWait(AuthorizeCommand command, long timeout, TimeUnit unit);
 

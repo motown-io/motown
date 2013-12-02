@@ -200,10 +200,12 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
     }
 
     @Override
-    public StartTransactionResponse startTransaction(StartTransactionRequest parameters, String chargeBoxIdentity) {
-        //FIXME implement me
-        log.error("Unimplemented method [startTransaction] called.");
-        throw new RuntimeException("Not yet implemented");
+    public StartTransactionResponse startTransaction(final StartTransactionRequest parameters, final String chargeBoxIdentity) {
+        //TODO fault handling. - Mark van den Bergh, December 2nd 2013
+        StartTransactionResponse response = new StartTransactionResponse();
+        int transactionId = domainService.startTransaction(new ChargingStationId(chargeBoxIdentity), parameters.getConnectorId(), parameters.getIdTag(), parameters.getMeterStart(), parameters.getTimestamp());
+        response.setTransactionId(transactionId);
+        return response;
     }
 
     /**
