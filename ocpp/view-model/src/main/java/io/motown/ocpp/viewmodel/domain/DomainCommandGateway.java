@@ -15,8 +15,9 @@
  */
 package io.motown.ocpp.viewmodel.domain;
 
+import io.motown.domain.api.chargingstation.AuthorizationResultStatus;
+import io.motown.domain.api.chargingstation.AuthorizeCommand;
 import io.motown.domain.api.chargingstation.BootChargingStationCommand;
-import io.motown.domain.api.chargingstation.ChargingStationRegistrationStatus;
 import io.motown.domain.api.chargingstation.ConfigureChargingStationCommand;
 
 import java.util.concurrent.TimeUnit;
