@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class DomainService {
@@ -41,13 +40,13 @@ public class DomainService {
 
     public BootChargingStationResult bootChargingStation(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model) {
 
-        // Check if we know the chargingstation, in order to determine if it is registered or not
+        // Check if we know the charging station, in order to determine if it is registered or not
         ChargingStation chargingStation = repository.findOne(chargingStationId.getId());
-        if(chargingStation == null){
+        if(chargingStation == null) {
             chargingStation = new ChargingStation(chargingStationId.getId());
         }
 
-        // Keep track of the address on which we can reach the chargingstation
+        // Keep track of the address on which we can reach the charging station
         chargingStation.setIpAddress(chargingStationAddress);
         repository.save(chargingStation);
 
@@ -56,19 +55,10 @@ public class DomainService {
         attributes.put("model", model);
         attributes.put("address", chargingStationAddress);
 
-        BootChargingStationCommand command = new BootChargingStationCommand(chargingStationId, attributes);
-        commandGateway.send(command);
+        commandGateway.send(new BootChargingStationCommand(chargingStationId, attributes));
 
-        // Determine if the chargingstation is registered or not
-        BootChargingStationResult result;
-        if(chargingStation.isRegistered()) {
-            result = new BootChargingStationResult(ChargingStationRegistrationStatus.ACCEPTED.getValue(), 60, new Date());
-        } else {
-            result = new BootChargingStationResult(ChargingStationRegistrationStatus.DENIED.getValue(), 60, new Date());
-        }
-
-        // TODO: Where should the heartbeat-interval come from? - Mark van den Bergh, November 15th 2013
-        return new BootChargingStationResult(ChargingStationRegistrationStatus.ACCEPTED.equals(result), 60, new Date());
+        // TODO: Where should the heartbeat-interval (60) come from? - Mark van den Bergh, November 15th 2013
+        return new BootChargingStationResult(chargingStation.isRegistered(), 60, new Date());
     }
 
     public AuthorizationResult authorize(ChargingStationId chargingStationId, String idTag){
@@ -78,7 +68,7 @@ public class DomainService {
         AuthorizationResult result = new AuthorizationResult(idTag, resultStatus);
         return result;
     }
-
+    
     public void configureChargingStation(ChargingStationId chargingStationId, Map<String, String> configurationItems) {
         ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(chargingStationId, configurationItems);
         commandGateway.send(command);
@@ -92,7 +82,7 @@ public class DomainService {
         this.commandGateway = commandGateway;
     }
 
-    public String retrieveChargingStationAddress(ChargingStationId id){
+    public String retrieveChargingStationAddress(ChargingStationId id) {
         ChargingStation chargingStation = repository.findOne(id.getId());
 
         return chargingStation != null? chargingStation.getIpAddress() : "";
