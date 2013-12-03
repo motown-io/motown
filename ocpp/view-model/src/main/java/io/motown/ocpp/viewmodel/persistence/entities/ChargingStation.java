@@ -28,6 +28,8 @@ public class ChargingStation {
     private boolean isRegistered = false;
     private boolean isConfigured = false;
 
+    private int numberOfConnectors;
+
     private ChargingStation() {
         // Private no-arg constructor for Hibernate.
     }
@@ -67,5 +69,13 @@ public class ChargingStation {
 
     public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
+    }
+
+    public int getNumberOfConnectors() {
+        return numberOfConnectors;
+    }
+
+    public void setNumberOfConnectors(int numberOfConnectors) {
+        this.numberOfConnectors = numberOfConnectors;
     }
 }

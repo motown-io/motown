@@ -88,4 +88,21 @@ public class OcppEventHandler {
         chargingStationOcpp15Client.stopTransaction(event.getChargingStationId(), TransactionIdentifierTranslator.toInt(event.getTransactionId()));
     }
 
+    @EventHandler
+    public void handle(ChargingStationConfiguredEvent event) {
+        log.info("ChargingStationConfiguredEvent");
+
+        String chargingStationId = event.getChargingStationId().getId();
+        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
+
+        if(chargingStation == null) {
+            log.warn("Received a ChargingStationConfiguredEvent for unknown charging station. Creating the chargingStation.");
+            chargingStation = new ChargingStation(chargingStationId);
+        }
+
+        chargingStation.setNumberOfConnectors(event.getConnectors().size());
+
+        chargingStationRepository.save(chargingStation);
+    }
+
 }

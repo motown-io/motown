@@ -75,8 +75,7 @@ public class DomainService {
         AuthorizeCommand command = new AuthorizeCommand(chargingStationId, idTag);
         AuthorizationResultStatus resultStatus = commandGateway.sendAndWait(command, 60, TimeUnit.SECONDS);
 
-        AuthorizationResult result = new AuthorizationResult(idTag, resultStatus);
-        return result;
+        return new AuthorizationResult(idTag, resultStatus);
     }
     
     public void configureChargingStation(ChargingStationId chargingStationId, Map<String, String> configurationItems) {
@@ -87,7 +86,15 @@ public class DomainService {
     public int startTransaction(ChargingStationId chargingStationId, int connectorId, String idTag, int meterStart, Date timestamp) {
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
         if(chargingStation == null) {
-            //TODO refuse start transaction because we (the OCPP module) don't know the charging station? - Mark van den Bergh, December 2nd 2013
+            throw new IllegalStateException("Cannot start transaction for an unknown charging station.");
+        }
+
+        if(!chargingStation.isRegisteredAndConfigured()) {
+            throw new IllegalStateException("Cannot start transaction for charging station that has not been registered/configured.");
+        }
+
+        if(connectorId <= 0 || connectorId > chargingStation.getNumberOfConnectors()) {
+            throw new IllegalStateException("Cannot start transaction on a unknown connector.");
         }
 
         String transactionId = generateTransactionIdentifier(chargingStationId);

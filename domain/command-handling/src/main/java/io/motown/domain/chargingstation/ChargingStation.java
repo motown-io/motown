@@ -76,7 +76,6 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
      * received for a non-existent ChargingStation.
      *
      * @param command the command which needs to be applied to the ChargingStation.
-     * @return status of the charging station after applying this command
      */
     public void handle(RegisterChargingStationCommand command) {
         if (isAccepted) {
@@ -97,7 +96,6 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
      * Handles a {@link StartTransactionCommand}.
      *
      * @param command the command which needs to be applied to the ChargingStation.
-     * @return transaction id
      */
     @CommandHandler
     public void handle(StartTransactionCommand command) {
