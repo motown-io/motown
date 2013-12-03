@@ -105,6 +105,11 @@ public class DomainService {
         return TransactionIdentifierTranslator.toInt(transactionId);
     }
 
+    public void stopTransaction(ChargingStationId chargingStationId, int transactionId, String idTag, int meterValueStop, Date timeStamp){
+        StopTransactionCommand command = new StopTransactionCommand(chargingStationId, Integer.toString(transactionId), idTag, meterValueStop, timeStamp);
+        commandGateway.send(command);
+    }
+
     public DomainCommandGateway getCommandGateway() {
         return commandGateway;
     }

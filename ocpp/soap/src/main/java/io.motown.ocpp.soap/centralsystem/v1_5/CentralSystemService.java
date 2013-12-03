@@ -16,6 +16,7 @@
 package io.motown.ocpp.soap.centralsystem.v1_5;
 
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.StopTransactionCommand;
 import io.motown.ocpp.soap.async.RequestHandler;
 import io.motown.ocpp.soap.async.ResponseFactory;
 import io.motown.ocpp.soap.centralsystem.v1_5.schema.*;
@@ -84,10 +85,9 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
     }
 
     @Override
-    public StopTransactionResponse stopTransaction(StopTransactionRequest parameters, String chargeBoxIdentity) {
-        //FIXME implement me
-        log.error("Unimplemented method [stopTransaction] called.");
-        throw new RuntimeException("Not yet implemented");
+    public StopTransactionResponse stopTransaction(StopTransactionRequest request, String chargeBoxIdentity) {
+        domainService.stopTransaction(new ChargingStationId(chargeBoxIdentity), request.getTransactionId(), request.getIdTag(), request.getMeterStop(), request.getTimestamp());
+        return new StopTransactionResponse();
     }
 
     @Override

@@ -15,11 +15,7 @@
  */
 package io.motown.ocpp.viewmodel.domain;
 
-import io.motown.domain.api.chargingstation.AuthorizationResultStatus;
-import io.motown.domain.api.chargingstation.AuthorizeCommand;
-import io.motown.domain.api.chargingstation.BootChargingStationCommand;
-import io.motown.domain.api.chargingstation.ConfigureChargingStationCommand;
-import io.motown.domain.api.chargingstation.StartTransactionCommand;
+import io.motown.domain.api.chargingstation.*;
 
 import java.util.concurrent.TimeUnit;
 
@@ -30,6 +26,8 @@ interface DomainCommandGateway {
     void send(ConfigureChargingStationCommand command);
 
     void send(StartTransactionCommand command);
+
+    void send(StopTransactionCommand command);
 
     AuthorizationResultStatus sendAndWait(AuthorizeCommand command, long timeout, TimeUnit unit);
 

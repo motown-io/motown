@@ -113,6 +113,11 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
+    public void handle(StopTransactionCommand command){
+        apply(new TransactionStoppedEvent(command.getChargingStationId(), command.getTransactionId(), command.getIdTag(), command.getMeterStop(), command.getTimeStamp()));
+    }
+
+    @CommandHandler
     public void handle(RequestUnlockConnectorCommand command) {
         checkCommunicationAllowed();
         if (command.getConnectorId() > numberOfConnectors) {
@@ -143,7 +148,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestStopTransactionCommand command) {
-
+        //TODO: Check if transaction belongs to the specified chargingstation - Ingo Pak, 03 dec 2013
         apply(new StopTransactionRequestedEvent(this.id, command.getTransactionId()));
     }
 
