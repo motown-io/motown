@@ -40,18 +40,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         apply(new ChargingStationCreatedEvent(command.getChargingStationId(), command.isAccepted()));
     }
 
-    /**
-     * Handles a BootChargingStationCommand.
-     * <p/>
-     * In contrast to the other command handling methods in ChargingStation, this method is not annotated with {@link
-     * org.axonframework.commandhandling.annotation.CommandHandler}. This command is handled by a dedicated command
-     * handler class, {@link ChargingStationCommandHandler}, to handle creating a
-     * ChargingStation instance when a {@link io.motown.domain.api.chargingstation.BootChargingStationCommand} is
-     * received for a non-existent ChargingStation.
-     *
-     * @param command the command which needs to be applied to the ChargingStation.
-     * @return status of the charging station after applying this command
-     */
+    @CommandHandler
     public ChargingStationRegistrationStatus handle(BootChargingStationCommand command) {
         ChargingStationBootedEvent chargingStationBootedEvent;
 
@@ -66,17 +55,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         return this.isAccepted ? ChargingStationRegistrationStatus.ACCEPTED : ChargingStationRegistrationStatus.DENIED;
     }
 
-    /**
-     * Handles a {@link RegisterChargingStationCommand}.
-     * <p/>
-     * In contrast to the other command handling methods in ChargingStation, this method is not annotated with {@link
-     * org.axonframework.commandhandling.annotation.CommandHandler}. This command is handled by a dedicated command
-     * handler class, {@link ChargingStationCommandHandler}, to handle creating a
-     * ChargingStation instance when a {@link io.motown.domain.api.chargingstation.RegisterChargingStationCommand} is
-     * received for a non-existent ChargingStation.
-     *
-     * @param command the command which needs to be applied to the ChargingStation.
-     */
+    @CommandHandler
     public void handle(RegisterChargingStationCommand command) {
         if (isAccepted) {
             throw new IllegalStateException("Cannot register an already accepted charging station");

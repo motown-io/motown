@@ -16,6 +16,7 @@
 package io.motown.domain.chargingstation;
 
 import io.motown.domain.api.chargingstation.*;
+import org.axonframework.repository.AggregateNotFoundException;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;
@@ -33,6 +34,58 @@ public class ChargingStationTest {
     @Before
     public void setUp() throws Exception {
         fixture = Fixtures.newGivenWhenThenFixture(ChargingStation.class);
+    }
+
+    @Test
+    public void testBootingCreatedChargingStation() {
+        fixture.given(getCreatedChargingStation(false))
+               .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
+               .expectEvents(new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()))
+               .expectReturnValue(ChargingStationRegistrationStatus.DENIED);
+    }
+
+    @Test
+    public void testBootingRegisteredChargingStation() {
+        fixture.given(getRegisteredChargingStation())
+               .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
+               .expectEvents(new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()))
+               .expectReturnValue(ChargingStationRegistrationStatus.ACCEPTED);
+    }
+
+    @Test
+    public void testBootingConfiguredChargingStation() {
+        fixture.given(getChargingStation())
+               .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
+               .expectEvents(new ConfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()))
+               .expectReturnValue(ChargingStationRegistrationStatus.ACCEPTED);
+    }
+
+    @Test
+    public void testRegisteringUnacceptedChargingStation() {
+        fixture.given(getCreatedChargingStation(false))
+               .when(new RegisterChargingStationCommand(getChargingStationId()))
+               .expectEvents(new ChargingStationRegisteredEvent(getChargingStationId()));
+    }
+
+    @Test
+    public void testRegisteringAcceptedChargingStation() {
+        fixture.given(getCreatedChargingStation(true))
+               .when(new RegisterChargingStationCommand(getChargingStationId()))
+               .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void testRegisteringNonExistentChargingStation() {
+        fixture.given()
+               .when(new RegisterChargingStationCommand(getChargingStationId()))
+               .expectException(AggregateNotFoundException.class);
+    }
+
+    @Test
+    public void testRegisteringAlreadyRegisteredChargingStation() {
+        fixture.given(getRegisteredChargingStation())
+               .when(new RegisterChargingStationCommand(getChargingStationId()))
+               .expectException(IllegalStateException.class);
     }
 
     @Test
