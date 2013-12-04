@@ -15,20 +15,14 @@
  */
 package io.motown.operatorapi.json.commands;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ConfigureChargingStationCommand;
-import io.motown.domain.api.chargingstation.Connector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.Resource;
-import java.lang.reflect.Type;
-import java.util.*;
 
 /**
  * Json command handler for the 'Configure' command.
@@ -68,29 +62,7 @@ class ConfigureJsonCommandHandler implements JsonCommandHandler {
         }
         try {
             JsonObject payload = gson.fromJson(command.get(1), JsonObject.class);
-
-            // GSON conversion of a List of connectors
-            JsonArray jsArrayOfConnectors = payload.getAsJsonArray("connectors");
-            Type typeOfConnectorList = new TypeToken<Set<Connector>>() { }.getType();
-            Set<Connector> connectors = gson.fromJson(jsArrayOfConnectors, typeOfConnectorList);
-
-            // GSON conversion of a { key:value } json map to a map of string,string of configuration items
-            JsonObject settingsArray = payload.getAsJsonObject("settings");
-            Type typeOfHashMap = new TypeToken<Map<String, String>>() { }.getType();
-            Map<String, String> settings = gson.fromJson(settingsArray, typeOfHashMap);
-
-            ConfigureChargingStationCommand newCommand = null;
-            if (settings == null && connectors != null) {
-                newCommand = new ConfigureChargingStationCommand(new ChargingStationId(chargingStationId), connectors);
-            } else if (settings != null && connectors == null) {
-                newCommand = new ConfigureChargingStationCommand(new ChargingStationId(chargingStationId), settings);
-            } else if (settings != null && connectors != null) {
-                newCommand = new ConfigureChargingStationCommand(new ChargingStationId(chargingStationId), connectors, settings);
-            } else {
-                throw new IllegalArgumentException("Configure should at least have settings or connectors");
-            }
-
-
+            ConfigureChargingStationCommand newCommand = JsonCommandParser.parseConfigureChargingStation(new ChargingStationId(chargingStationId), payload, gson);
             commandGateway.send(newCommand);
         } catch (ClassCastException ex) {
             throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted ?");

@@ -17,6 +17,8 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -52,9 +54,16 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
 
         ChargingStation chargingStation = repository.findOne(chargingStationId);
 
-        if (chargingStation == null || !chargingStation.getRegistered()) {
+        if (chargingStation == null || !chargingStation.isAccepted()) {
             commandGateway.sendAndWait(new RegisterChargingStationCommand(new ChargingStationId(chargingStationId)));
-
+            JsonObject payload = gson.fromJson(command.get(1), JsonObject.class);
+            if (payload != null) {
+                JsonElement jsConfiguration = payload.get("configuration");
+                if (jsConfiguration != null && jsConfiguration.isJsonObject()) {
+                    ConfigureChargingStationCommand newCommand = JsonCommandParser.parseConfigureChargingStation(new ChargingStationId(chargingStationId), jsConfiguration.getAsJsonObject(), gson);
+                    commandGateway.send(newCommand);
+                }
+            }
         } else {
             // well, it's not allowed to register a charging station that is already registered
             throw new IllegalStateException("It is not allowed to register a charging station that is already registered");

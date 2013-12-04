@@ -28,16 +28,15 @@ public class ChargingStation {
     private Date updated;
     private Date created;
     private Date lastTimeBooted;
+    private Boolean accepted;
 
-    public Boolean getRegistered() {
-        return isRegistered;
+    public Boolean isAccepted() {
+        return accepted;
     }
 
-    public void setRegistered(Boolean registered) {
-        isRegistered = registered;
+    public void setAccepted(Boolean accepted) {
+        this.accepted = accepted;
     }
-
-    private Boolean isRegistered;
 
     public Date getLastTimeBooted() {
         return lastTimeBooted;

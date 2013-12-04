@@ -36,9 +36,9 @@ public class RequestStopTransactionJsonCommandHandlerTest {
         // setup mocking for JPA / spring repo.
         ChargingStationRepository repo = mock(ChargingStationRepository.class);
         ChargingStation registeredStation = mock(ChargingStation.class);
-        when(registeredStation.getRegistered()).thenReturn(true);
+        when(registeredStation.isAccepted()).thenReturn(true);
         ChargingStation unregisteredStation = mock(ChargingStation.class);
-        when(unregisteredStation.getRegistered()).thenReturn(false);
+        when(unregisteredStation.isAccepted()).thenReturn(false);
         when(repo.findOne("TEST_REGISTERED")).thenReturn(registeredStation);
         when(repo.findOne("TEST_UNREGISTERED")).thenReturn(unregisteredStation);
 

@@ -16,7 +16,6 @@
 package io.motown.operatorapi.json.commands;
 
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.junit.Before;
@@ -35,9 +34,9 @@ public class RegisterJsonCommandHandlerTest {
         // setup mocking for JPA / spring repo.
         ChargingStationRepository repo = mock(ChargingStationRepository.class);
         ChargingStation registeredStation = mock(ChargingStation.class);
-        when(registeredStation.getRegistered()).thenReturn(true);
+        when(registeredStation.isAccepted()).thenReturn(true);
         ChargingStation unregisteredStation = mock(ChargingStation.class);
-        when(unregisteredStation.getRegistered()).thenReturn(false);
+        when(unregisteredStation.isAccepted()).thenReturn(false);
         when(repo.findOne("TEST_REGISTERED")).thenReturn(registeredStation);
         when(repo.findOne("TEST_UNREGISTERED")).thenReturn(unregisteredStation);
 
@@ -56,30 +55,16 @@ public class RegisterJsonCommandHandlerTest {
         handler.handle("TEST_REGISTERED", json);
     }
 
-      //TODO
+    @Test
+    public void testHandleConfigNull() {
+        String json = "['Register',{'configuration' : null }]";
+        handler.handle("TEST_UNREGISTERED", json);
+    }
 
-      //    @Test
-//    public void testHandleConnectorsOnly() {
-//        String json = "['Configure',{'connectors' : [{'connectorId' : 1, 'connectorType' : 'Type2', 'maxAmp' : 16 },{'connectorId' : 2, 'connectorType' : 'Combo', 'maxAmp' : 32}]}]";
-//        handler.handle("TEST_CP", json);
-//    }
-//
-//    @Test(expected=IllegalArgumentException.class)
-//    public void testHandleNull() {
-//        String json = "['Configure', null]";
-//        handler.handle("TEST_CP", json);
-//    }
-//
-//    @Test(expected=IllegalArgumentException.class)
-//    public void testHandleFaultyPayload() {  // connector not in a list
-//        String json = "['Configure',{'connectors' : {'connectorId' : 1, 'connectorType' : 'Type2', 'maxAmp' : 16 }}]";
-//        handler.handle("TEST_CP", json);
-//    }
-//
-//    @Test(expected=JsonSyntaxException.class)
-//    public void testHandleFaultyJson() {  // list instead of array
-//        String json = "['Configure',{'connectors' : [{['connectorId' : 1, 'connectorType' : 'Type2', 'maxAmp' : 16 ],{'connectorId' : 2, 'connectorType' : 'Combo', 'maxAmp' : 32}]}]";
-//        handler.handle("TEST_CP", json);
-//    }
+    @Test(expected = IllegalArgumentException.class)
+    public void testHandleWithoutConfig() {
+        String json = "['Register']";
+        handler.handle("TEST_UNREGISTERED", json);
+    }
 
 }

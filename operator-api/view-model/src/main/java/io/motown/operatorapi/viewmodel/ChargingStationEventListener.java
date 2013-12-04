@@ -38,7 +38,9 @@ public class ChargingStationEventListener {
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
         log.debug("ChargingStationCreatedEvent creates [{}] in operator api repo", event.getChargingStationId());
-        repository.save(new ChargingStation(event.getChargingStationId().getId()));
+        ChargingStation station = new ChargingStation(event.getChargingStationId().getId());
+        station.setAccepted(event.isAccepted());
+        repository.save(station);
     }
 
     @EventHandler
@@ -55,19 +57,19 @@ public class ChargingStationEventListener {
         }
     }
 
-    @EventHandler
-    public void handle(ChargingStationRegisteredEvent event) {
-        log.debug("ChargingStationBootedEvent for [{}] received!", event.getChargingStationId());
-
-        ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
-
-        if (chargingStation != null) {
-            chargingStation.setRegistered(true);
-            repository.save(chargingStation);
-        } else {
-            log.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as registered", event.getChargingStationId());
-        }
-    }
+//    @EventHandler
+//    public void handle(ChargingStationRegisteredEvent event) {
+//        log.debug("ChargingStationBootedEvent for [{}] received!", event.getChargingStationId());
+//
+//        ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
+//
+//        if (chargingStation != null) {
+//            chargingStation.setAccepted(true);
+//            repository.save(chargingStation);
+//        } else {
+//            log.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as registered", event.getChargingStationId());
+//        }
+//    }
 
     @Autowired
     public void setRepository(ChargingStationRepository repository) {
