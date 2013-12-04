@@ -17,6 +17,9 @@
 
     <util:list id="jsonCommandHandlers">
         <ref bean="unlockConnectorJsonCommandHandler"/>
+        <ref bean="configureJsonCommandHandler"/>
+        <ref bean="registerJsonCommandHandler"/>
+        <ref bean="requestStopTransactionJsonCommandHandler"/>
     </util:list>
 
     <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">

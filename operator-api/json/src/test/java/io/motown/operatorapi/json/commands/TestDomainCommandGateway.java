@@ -39,4 +39,9 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
         log.debug("CreateChargingStationCommand:" + command.toString());
     }
 
+    @Override
+    public void send(RequestStopTransactionCommand command){
+        log.debug("RequestStopTransactionCommand:" + command.toString());
+    }
+
 }

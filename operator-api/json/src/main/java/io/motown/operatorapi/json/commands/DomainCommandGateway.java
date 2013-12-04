@@ -21,4 +21,5 @@ interface DomainCommandGateway {
     void send(RequestUnlockConnectorCommand command);
     void send(ConfigureChargingStationCommand command);
     void sendAndWait(RegisterChargingStationCommand command);
+    void send(RequestStopTransactionCommand command);
 }
