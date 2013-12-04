@@ -112,4 +112,32 @@ public class StartTransactionCommand {
     public Date getTimestamp() {
         return timestamp;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        StartTransactionCommand that = (StartTransactionCommand) o;
+
+        if (connectorId != that.connectorId) return false;
+        if (meterStart != that.meterStart) return false;
+        if (!chargingStationId.equals(that.chargingStationId)) return false;
+        if (idTag != null ? !idTag.equals(that.idTag) : that.idTag != null) return false;
+        if (timestamp != null ? !timestamp.equals(that.timestamp) : that.timestamp != null) return false;
+        if (!transactionId.equals(that.transactionId)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = chargingStationId.hashCode();
+        result = 31 * result + transactionId.hashCode();
+        result = 31 * result + connectorId;
+        result = 31 * result + (idTag != null ? idTag.hashCode() : 0);
+        result = 31 * result + meterStart;
+        result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
+        return result;
+    }
 }

@@ -77,4 +77,24 @@ public class BootChargingStationCommand {
     public Map<String, String> getAttributes() {
         return attributes;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BootChargingStationCommand that = (BootChargingStationCommand) o;
+
+        if (attributes != null ? !attributes.equals(that.attributes) : that.attributes != null) return false;
+        if (!chargingStationId.equals(that.chargingStationId)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = chargingStationId.hashCode();
+        result = 31 * result + (attributes != null ? attributes.hashCode() : 0);
+        return result;
+    }
 }

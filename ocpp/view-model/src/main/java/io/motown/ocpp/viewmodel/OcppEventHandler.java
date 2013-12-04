@@ -101,6 +101,7 @@ public class OcppEventHandler {
         }
 
         chargingStation.setNumberOfConnectors(event.getConnectors().size());
+        chargingStation.setConfigured(true);
 
         chargingStationRepository.save(chargingStation);
     }
