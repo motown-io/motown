@@ -20,6 +20,18 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 public class TransactionIdentifierTranslator {
 
     /**
+     * Generates a string representation of the long based OCPP1.5 transactionId.
+     * To create a unique represenation the chargingstationId, and protocol are included.
+     *
+     * @param chargingStationId the chargingstation identifier
+     * @param transactionId the long based transaction identifier
+     * @return String in the format [chargingstationId]_OCPP_[transactionId]
+     */
+    public static String toString(ChargingStationId chargingStationId, Long transactionId){
+        return String.format("%s_OCPP_%s", chargingStationId.getId(), transactionId);
+    }
+
+    /**
      * Generates a string representation of the integer based OCPP1.5 transactionId.
      * To create a unique represenation the chargingstationId, and protocol are included.
      *
@@ -39,6 +51,7 @@ public class TransactionIdentifierTranslator {
      */
     public static int toInt(String transactionIdentifier) {
         String[] split = transactionIdentifier.split("_");
+        // databases usually uses 'Long' object type to define id's, OCPP expects integer, this should not be a problem
         return Integer.parseInt(split[split.length - 1]);
     }
 

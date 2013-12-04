@@ -110,12 +110,20 @@ public class DomainService {
         commandGateway.send(command);
     }
 
-    public DomainCommandGateway getCommandGateway() {
-        return commandGateway;
-    }
-
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
+    }
+
+    public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {
+        this.chargingStationRepository = chargingStationRepository;
+    }
+
+    public void setTransactionIdentifierRepository(TransactionIdentifierRepository transactionIdentifierRepository) {
+        this.transactionIdentifierRepository = transactionIdentifierRepository;
+    }
+
+    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     public String retrieveChargingStationAddress(ChargingStationId id) {
@@ -135,7 +143,7 @@ public class DomainService {
 
         transactionIdentifierRepository.saveAndFlush(identifier); // flush to make sure the generated id is populated
 
-        return TransactionIdentifierTranslator.toString(chargingStationId, (Integer) entityManagerFactory.getPersistenceUnitUtil().getIdentifier(identifier));
+        return TransactionIdentifierTranslator.toString(chargingStationId, (Long) entityManagerFactory.getPersistenceUnitUtil().getIdentifier(identifier));
     }
 
 }

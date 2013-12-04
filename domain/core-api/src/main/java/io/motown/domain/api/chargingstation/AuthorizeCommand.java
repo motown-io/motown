@@ -58,4 +58,26 @@ public class AuthorizeCommand {
     public String getIdTag() {
         return idTag;
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AuthorizeCommand that = (AuthorizeCommand) o;
+
+        if (!chargingStationId.equals(that.chargingStationId)) return false;
+        if (!idTag.equals(that.idTag)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = chargingStationId.hashCode();
+        result = 31 * result + idTag.hashCode();
+        return result;
+    }
+
 }

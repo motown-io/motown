@@ -60,11 +60,15 @@ public class ChargingStation {
     }
 
     public boolean isRegisteredAndConfigured(){
-        return (this.isRegistered && this.isConfigured);
+        return (this.isRegistered() && this.isConfigured());
     }
 
     public void setRegistered(boolean registered) {
         isRegistered = registered;
+    }
+
+    public void setConfigured(boolean configured) {
+        this.isConfigured = configured;
     }
 
     public void setIpAddress(String ipAddress) {
@@ -78,4 +82,5 @@ public class ChargingStation {
     public void setNumberOfConnectors(int numberOfConnectors) {
         this.numberOfConnectors = numberOfConnectors;
     }
+
 }

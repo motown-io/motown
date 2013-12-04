@@ -50,6 +50,7 @@
              in very bad performance and stack traces if several requests arrive short after each other (6 seconds in between or less).
              Bug has been reported: https://issues.apache.org/jira/browse/CXF-5414 -->
         <cxf.version>2.7.0</cxf.version>
+        <mockito.version>1.9.5</mockito.version>
     </properties>
 
     <dependencyManagement>
@@ -242,6 +243,21 @@
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-tools-common</artifactId>
                 <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-aop</artifactId>
+                <version>${spring.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

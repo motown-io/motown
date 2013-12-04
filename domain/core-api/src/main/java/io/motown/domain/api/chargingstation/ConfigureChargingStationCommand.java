@@ -107,6 +107,28 @@ public class ConfigureChargingStationCommand {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConfigureChargingStationCommand that = (ConfigureChargingStationCommand) o;
+
+        if (!chargingStationId.equals(that.chargingStationId)) return false;
+        if (!connectors.equals(that.connectors)) return false;
+        if (!settings.equals(that.settings)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = chargingStationId.hashCode();
+        result = 31 * result + connectors.hashCode();
+        result = 31 * result + settings.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return Objects.toStringHelper(this.getClass())
                 .add("chargingStationId", chargingStationId)
