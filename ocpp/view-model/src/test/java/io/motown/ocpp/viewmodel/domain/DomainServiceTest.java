@@ -76,22 +76,7 @@ public class DomainServiceTest {
         BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel());
         assertFalse(bootChargingStationResult.isAccepted());
 
-        Map<String, String> attributes = Maps.newHashMap();
-        attributes.put("vendor", getVendor());
-        attributes.put("model", getModel());
-        attributes.put("address", getChargingStationAddress());
-
-        // test if the charging station is stored and in the state we expect it after a boot of an unknown charging station
-        ChargingStation cs = chargingStationRepository.findOne(getChargingStationId().getId());
-        assertEquals(cs.getId(), getChargingStationId().getId());
-        assertEquals(cs.getIpAddress(), getChargingStationAddress());
-        assertEquals(cs.getNumberOfConnectors(), 0);
-        assertFalse(cs.isConfigured());
-        assertFalse(cs.isRegistered());
-        assertFalse(cs.isRegisteredAndConfigured());
-
-
-        verify(gateway).send( new BootChargingStationCommand(getChargingStationId(), attributes) );
+        verify(gateway).send( new CreateChargingStationCommand(getChargingStationId(), false) );
     }
 
     @Test
@@ -109,6 +94,15 @@ public class DomainServiceTest {
         attributes.put("vendor", getVendor());
         attributes.put("model", getModel());
         attributes.put("address", getChargingStationAddress());
+
+        // test if the charging station is stored and in the state we expect it after a boot of an unknown charging station
+        cs = chargingStationRepository.findOne(getChargingStationId().getId());
+        assertEquals(cs.getId(), getChargingStationId().getId());
+        assertEquals(cs.getIpAddress(), getChargingStationAddress());
+        assertEquals(cs.getNumberOfConnectors(), 2);
+        assertTrue(cs.isConfigured());
+        assertTrue(cs.isRegistered());
+        assertTrue(cs.isRegisteredAndConfigured());
 
         verify(gateway).send( new BootChargingStationCommand(getChargingStationId(), attributes) );
     }

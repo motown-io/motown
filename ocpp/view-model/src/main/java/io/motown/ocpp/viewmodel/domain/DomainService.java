@@ -21,6 +21,7 @@ import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.entities.TransactionIdentifier;
 import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
 import io.motown.ocpp.viewmodel.persistence.repostories.TransactionIdentifierRepository;
+import org.axonframework.commandhandling.CommandCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,12 +49,20 @@ public class DomainService {
     @Autowired
     private EntityManagerFactory entityManagerFactory;
 
-    public BootChargingStationResult bootChargingStation(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model) {
+    public BootChargingStationResult bootChargingStation(final ChargingStationId chargingStationId, final String chargingStationAddress, final String vendor, final String model) {
 
-        // Check if we know the charging station, in order to determine if it is registered or not
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
+
         if(chargingStation == null) {
-            chargingStation = new ChargingStation(chargingStationId.getId());
+            log.debug("Not a known charging station on boot notification, we send a CreateChargingStationCommand.");
+
+            // TODO do we need a callback which sends a BootChargingStationCommand? - Mark van den Bergh, December 5th 2013
+            commandGateway.send(new CreateChargingStationCommand(chargingStationId, false));
+
+            // we didn't know the charging station when this bootNotification occurred so we reject it.
+            return new BootChargingStationResult(false, 60, new Date());
+        } else {
+            log.debug("We know this charging station, let's continue handling the boot notification.");
         }
 
         // Keep track of the address on which we can reach the charging station

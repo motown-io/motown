@@ -31,4 +31,6 @@ interface DomainCommandGateway {
 
     AuthorizationResultStatus sendAndWait(AuthorizeCommand command, long timeout, TimeUnit unit);
 
+    void send(CreateChargingStationCommand command);
+
 }

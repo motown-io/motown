@@ -16,7 +16,6 @@
 package io.motown.ocpp.soap.centralsystem.v1_5;
 
 import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.StopTransactionCommand;
 import io.motown.ocpp.soap.async.RequestHandler;
 import io.motown.ocpp.soap.async.ResponseFactory;
 import io.motown.ocpp.soap.centralsystem.v1_5.schema.*;
@@ -38,6 +37,7 @@ import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 @javax.jws.WebService(
@@ -81,7 +81,8 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
     public StatusNotificationResponse statusNotification(StatusNotificationRequest parameters, String chargeBoxIdentity) {
         //FIXME implement me
         log.error("Unimplemented method [statusNotification] called.");
-        throw new RuntimeException("Not yet implemented");
+
+        return new StatusNotificationResponse();
     }
 
     @Override
@@ -91,54 +92,38 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
     }
 
     @Override
-    public BootNotificationResponse bootNotification(final BootNotificationRequest request, final String chargeBoxIdentity) {
-        final MessageContext messageContext = context.getMessageContext();
+    public BootNotificationResponse bootNotification(BootNotificationRequest request, String chargeBoxIdentity) {
+        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
-        RequestHandler<BootNotificationResponse> requestHandler = new RequestHandler<>(context.getMessageContext(), taskExecutor);
-        return requestHandler.handle(
-            new ResponseFactory<BootNotificationResponse>() {
-                @Override
-                public BootNotificationResponse createResponse() {
-                    ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
+        chargingStationSubscriber.subscribe(chargingStationId);
 
-                    chargingStationSubscriber.subscribe(chargingStationId);
+        String chargingStationAddress = getChargingStationAddress(context.getMessageContext());
+        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel());
 
-                    String chargingStationAddress = getChargingStationAddress(messageContext);
-                    BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel());
+        BootNotificationResponse response = new BootNotificationResponse();
+        response.setStatus(result.isAccepted() ? RegistrationStatus.ACCEPTED : RegistrationStatus.REJECTED);
+        response.setHeartbeatInterval(result.getHeartbeatInterval());
+        response.setCurrentTime(result.getTimeStamp());
 
-                    BootNotificationResponse response = new BootNotificationResponse();
-                    response.setStatus(result.isAccepted() ? RegistrationStatus.ACCEPTED : RegistrationStatus.REJECTED);
-                    response.setHeartbeatInterval(result.getHeartbeatInterval());
-                    response.setCurrentTime(result.getTimeStamp());
-
-                    return response;
-                }
-            },
-            new ResponseFactory<BootNotificationResponse>() {
-                @Override
-                public BootNotificationResponse createResponse() {
-                    BootNotificationResponse response = new BootNotificationResponse();
-                    response.setHeartbeatInterval(HEARTBEAT_INTERVAL_FALLBACK);
-                    response.setStatus(RegistrationStatus.REJECTED);
-                    response.setCurrentTime(new Date());
-                    return response;
-                }
-            }
-        );
+        return response;
     }
 
     @Override
     public HeartbeatResponse heartbeat(HeartbeatRequest parameters, String chargeBoxIdentity) {
         //FIXME implement me
         log.error("Unimplemented method [heartbeat] called.");
-        throw new RuntimeException("Not yet implemented");
+
+        HeartbeatResponse response = new HeartbeatResponse();
+        response.setCurrentTime(new Date());
+        return response;
     }
 
     @Override
     public MeterValuesResponse meterValues(MeterValuesRequest parameters, String chargeBoxIdentity) {
         //FIXME implement me
         log.error("Unimplemented method [meterValues] called.");
-        throw new RuntimeException("Not yet implemented");
+
+        return new MeterValuesResponse();
     }
 
     @Override
@@ -204,6 +189,19 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
         //TODO fault handling. - Mark van den Bergh, December 2nd 2013
         StartTransactionResponse response = new StartTransactionResponse();
         int transactionId = domainService.startTransaction(new ChargingStationId(chargeBoxIdentity), parameters.getConnectorId(), parameters.getIdTag(), parameters.getMeterStart(), parameters.getTimestamp());
+        log.debug("TransactionId: " + transactionId);
+
+        IdTagInfo idTagInfo = new IdTagInfo();
+        idTagInfo.setStatus(AuthorizationStatus.ACCEPTED);
+        idTagInfo.setParentIdTag(parameters.getIdTag());
+
+        GregorianCalendar expDate = new GregorianCalendar();
+        //TODO should the expiry date be configurable? - Mark van den Bergh, December 5th 2013
+        expDate.add(GregorianCalendar.YEAR, 1);
+        idTagInfo.setExpiryDate(expDate.getTime());
+
+        response.setIdTagInfo(idTagInfo);
+
         response.setTransactionId(transactionId);
         return response;
     }

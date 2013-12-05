@@ -59,4 +59,23 @@ public class CreateChargingStationCommand {
         return accept;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CreateChargingStationCommand that = (CreateChargingStationCommand) o;
+
+        if (accept != that.accept) return false;
+        if (!chargingStationId.equals(that.chargingStationId)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = chargingStationId.hashCode();
+        result = 31 * result + (accept ? 1 : 0);
+        return result;
+    }
 }
