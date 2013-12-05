@@ -63,28 +63,28 @@ public class ChargingStationTest {
     @Test
     public void testRegisteringUnacceptedChargingStation() {
         fixture.given(getCreatedChargingStation(false))
-               .when(new RegisterChargingStationCommand(getChargingStationId()))
-               .expectEvents(new ChargingStationRegisteredEvent(getChargingStationId()));
+               .when(new AcceptChargingStationCommand(getChargingStationId()))
+               .expectEvents(new ChargingStationAcceptedEvent(getChargingStationId()));
     }
 
     @Test
     public void testRegisteringAcceptedChargingStation() {
         fixture.given(getCreatedChargingStation(true))
-               .when(new RegisterChargingStationCommand(getChargingStationId()))
+               .when(new AcceptChargingStationCommand(getChargingStationId()))
                .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRegisteringNonExistentChargingStation() {
         fixture.given()
-               .when(new RegisterChargingStationCommand(getChargingStationId()))
+               .when(new AcceptChargingStationCommand(getChargingStationId()))
                .expectException(AggregateNotFoundException.class);
     }
 
     @Test
     public void testRegisteringAlreadyRegisteredChargingStation() {
         fixture.given(getRegisteredChargingStation())
-               .when(new RegisterChargingStationCommand(getChargingStationId()))
+               .when(new AcceptChargingStationCommand(getChargingStationId()))
                .expectException(IllegalStateException.class);
     }
 
@@ -92,7 +92,8 @@ public class ChargingStationTest {
     public void testChargePointCreation() {
         fixture.given()
                .when(new CreateChargingStationCommand(getChargingStationId(), true))
-               .expectEvents(new ChargingStationCreatedEvent(getChargingStationId(), true));
+               .expectEvents(new ChargingStationCreatedEvent(getChargingStationId()),
+                       new ChargingStationAcceptedEvent(getChargingStationId()));
     }
 
     @Test

@@ -35,8 +35,13 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
     }
 
     @Override
-    public void sendAndWait(RegisterChargingStationCommand command) {
-        log.debug("RegisterChargingStationCommand:" + command.toString());
+    public void sendAndWait(CreateChargingStationCommand command) {
+        log.debug("CreateChargingStationCommand:" + command.toString());
+    }
+
+    @Override
+    public void send(AcceptChargingStationCommand command) {
+        log.debug("AcceptChargingStationCommand:" + command.toString());
     }
 
     @Override

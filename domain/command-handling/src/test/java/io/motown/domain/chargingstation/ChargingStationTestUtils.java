@@ -30,15 +30,22 @@ public class ChargingStationTestUtils {
     }
 
     public static List<Object> getCreatedChargingStation(boolean defaultAccepted) {
-        return ImmutableList.<Object>builder()
-                .add(new ChargingStationCreatedEvent(getChargingStationId(), defaultAccepted))
-                .build();
+        if (defaultAccepted) {
+            return ImmutableList.<Object>builder()
+                    .add(new ChargingStationCreatedEvent(getChargingStationId()))
+                    .add(new ChargingStationAcceptedEvent(getChargingStationId()))
+                    .build();
+        } else {
+            return ImmutableList.<Object>builder()
+                    .add(new ChargingStationCreatedEvent(getChargingStationId()))
+                    .build();
+        }
     }
 
     public static List<Object> getRegisteredChargingStation() {
         return ImmutableList.<Object>builder()
                 .addAll(getCreatedChargingStation(true))
-                .add(new ChargingStationRegisteredEvent(getChargingStationId()))
+                .add(new ChargingStationAcceptedEvent(getChargingStationId()))
                 .build();
     }
 
@@ -52,7 +59,7 @@ public class ChargingStationTestUtils {
     public static List<Object> getChargingStation() {
         return ImmutableList.<Object>builder()
                 .addAll(getCreatedChargingStation(true))
-                .add(new ChargingStationRegisteredEvent(getChargingStationId()))
+                .add(new ChargingStationAcceptedEvent(getChargingStationId()))
                 .add(new ChargingStationConfiguredEvent(getChargingStationId(), getConnectors(), getConfigurationItems()))
                 .build();
     }

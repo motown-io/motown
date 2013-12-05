@@ -21,6 +21,6 @@ public class ChargingStationCreatedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ChargingStationCreatedEvent(null, true);
+        new ChargingStationCreatedEvent(null);
     }
 }

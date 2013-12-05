@@ -20,20 +20,20 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code ChargingStationRegisteredEvent} is the event which is published when a charging station has been registered.
+ * {@code ChargingStationAcceptedEvent} is the event which is published when a charging station has been registered.
  */
-public class ChargingStationRegisteredEvent {
+public class ChargingStationAcceptedEvent {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
     /**
-     * Creates a {@code ChargingStationRegisteredEvent} with an identifier.
+     * Creates a {@code ChargingStationAcceptedEvent} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public ChargingStationRegisteredEvent(ChargingStationId chargingStationId) {
+    public ChargingStationAcceptedEvent(ChargingStationId chargingStationId) {
         this.chargingStationId = checkNotNull(chargingStationId);
     }
 

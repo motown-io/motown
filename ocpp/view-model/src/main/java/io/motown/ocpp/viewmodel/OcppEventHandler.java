@@ -50,15 +50,21 @@ public class OcppEventHandler {
         if(chargingStation == null){
             chargingStation = new ChargingStation(chargingStationId);
         }
-
-        chargingStation.setRegistered(event.isAccepted());
-
         chargingStationRepository.save(chargingStation);
     }
 
     @EventHandler
-    public void handle(ChargingStationRegisteredEvent event) {
-        log.info("ChargingStationRegisteredEvent");
+    public void handle(ChargingStationAcceptedEvent event) {
+        log.debug("ChargingStationAcceptedEvent for [{}] received!", event.getChargingStationId());
+
+        ChargingStation chargingStation = chargingStationRepository.findOne(event.getChargingStationId().getId());
+
+        if (chargingStation != null) {
+            chargingStation.setRegistered(true);
+            chargingStationRepository.save(chargingStation);
+        } else {
+            log.error("OCPP module repo COULD NOT FIND CHARGEPOINT {} and mark it as registered", event.getChargingStationId());
+        }
     }
 
     @EventHandler

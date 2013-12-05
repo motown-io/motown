@@ -53,20 +53,21 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
         }
 
         ChargingStation chargingStation = repository.findOne(chargingStationId);
-
-        if (chargingStation == null || !chargingStation.isAccepted()) {
-            commandGateway.sendAndWait(new RegisterChargingStationCommand(new ChargingStationId(chargingStationId)));
-            JsonObject payload = gson.fromJson(command.get(1), JsonObject.class);
-            if (payload != null) {
-                JsonElement jsConfiguration = payload.get("configuration");
-                if (jsConfiguration != null && jsConfiguration.isJsonObject()) {
-                    ConfigureChargingStationCommand newCommand = JsonCommandParser.parseConfigureChargingStation(new ChargingStationId(chargingStationId), jsConfiguration.getAsJsonObject(), gson);
-                    commandGateway.send(newCommand);
-                }
-            }
+        if (chargingStation == null) {
+            commandGateway.sendAndWait(new CreateChargingStationCommand(new ChargingStationId(chargingStationId), true));
+        } else if (!chargingStation.isAccepted()) {
+            commandGateway.send(new AcceptChargingStationCommand(new ChargingStationId(chargingStationId)));
         } else {
-            // well, it's not allowed to register a charging station that is already registered
-            throw new IllegalStateException("It is not allowed to register a charging station that is already registered");
+            throw new IllegalStateException("Charging station { %s } is already in accepted state, you can't register this station".format(chargingStationId));
+        }
+
+        JsonObject payload = gson.fromJson(command.get(1), JsonObject.class);
+        if (payload != null) {
+            JsonElement jsConfiguration = payload.get("configuration");
+            if (jsConfiguration != null && jsConfiguration.isJsonObject()) {
+                ConfigureChargingStationCommand newCommand = JsonCommandParser.parseConfigureChargingStation(new ChargingStationId(chargingStationId), jsConfiguration.getAsJsonObject(), gson);
+                commandGateway.send(newCommand);
+            }
         }
     }
 

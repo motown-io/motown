@@ -17,10 +17,10 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-public class ChargingStationRegisteredEventTest {
+public class ChargingStationAcceptedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ChargingStationRegisteredEvent(null);
+        new ChargingStationAcceptedEvent(null);
     }
 }

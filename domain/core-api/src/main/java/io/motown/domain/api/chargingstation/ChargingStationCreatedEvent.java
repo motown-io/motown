@@ -23,19 +23,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ChargingStationCreatedEvent {
 
     private final ChargingStationId chargingStationId;
-    private final boolean accepted;
 
     /**
      * Creates a {@code ChargingStationCreatedEvent} with an identifier.
      *
      *
+     *
      * @param chargingStationId the identifier of the charging station.
-     * @param accepted
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public ChargingStationCreatedEvent(ChargingStationId chargingStationId, boolean accepted) {
+    public ChargingStationCreatedEvent(ChargingStationId chargingStationId) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.accepted = checkNotNull(accepted);
     }
 
     /**
@@ -47,12 +45,4 @@ public class ChargingStationCreatedEvent {
         return this.chargingStationId;
     }
 
-    /**
-     * Indication if the charging station is accepted to be part of the network during registration.
-     *
-     * @return the fact if the charging station should be accepted on the network.
-     */
-    public boolean isAccepted() {
-        return accepted;
-    }
 }

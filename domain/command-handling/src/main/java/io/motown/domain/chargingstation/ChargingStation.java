@@ -37,7 +37,10 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @CommandHandler
     public ChargingStation(CreateChargingStationCommand command) {
         this();
-        apply(new ChargingStationCreatedEvent(command.getChargingStationId(), command.isAccepted()));
+        apply(new ChargingStationCreatedEvent(command.getChargingStationId()));
+        if (command.isAccepted()) {
+            apply(new ChargingStationAcceptedEvent(command.getChargingStationId()));
+        }
     }
 
     @CommandHandler
@@ -56,12 +59,12 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(RegisterChargingStationCommand command) {
+    public void handle(AcceptChargingStationCommand command) {
         if (isAccepted) {
-            throw new IllegalStateException("Cannot register an already accepted charging station");
+            throw new IllegalStateException("Cannot accept an already accepted charging station");
         }
 
-        apply(new ChargingStationRegisteredEvent(command.getChargingStationId()));
+        apply(new ChargingStationAcceptedEvent(command.getChargingStationId()));
     }
 
     @CommandHandler
@@ -137,15 +140,14 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         this.isConfigured = true;
     }
 
-//    @EventHandler
-//    public void handle(ChargingStationRegisteredEvent event) {
-//        this.isAccepted = event.isAccepted();
-//    }
+    @EventHandler
+    public void handle(ChargingStationAcceptedEvent event) {
+        this.isAccepted = true;
+    }
 
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
         this.id = event.getChargingStationId();
-        this.isAccepted = event.isAccepted();
     }
 
     /**

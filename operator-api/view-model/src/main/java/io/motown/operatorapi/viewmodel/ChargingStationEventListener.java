@@ -15,9 +15,9 @@
  */
 package io.motown.operatorapi.viewmodel;
 
+import io.motown.domain.api.chargingstation.ChargingStationAcceptedEvent;
 import io.motown.domain.api.chargingstation.ChargingStationBootedEvent;
 import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
-import io.motown.domain.api.chargingstation.ChargingStationRegisteredEvent;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -39,7 +39,6 @@ public class ChargingStationEventListener {
     public void handle(ChargingStationCreatedEvent event) {
         log.debug("ChargingStationCreatedEvent creates [{}] in operator api repo", event.getChargingStationId());
         ChargingStation station = new ChargingStation(event.getChargingStationId().getId());
-        station.setAccepted(event.isAccepted());
         repository.save(station);
     }
 
@@ -57,19 +56,19 @@ public class ChargingStationEventListener {
         }
     }
 
-//    @EventHandler
-//    public void handle(ChargingStationRegisteredEvent event) {
-//        log.debug("ChargingStationBootedEvent for [{}] received!", event.getChargingStationId());
-//
-//        ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
-//
-//        if (chargingStation != null) {
-//            chargingStation.setAccepted(true);
-//            repository.save(chargingStation);
-//        } else {
-//            log.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as registered", event.getChargingStationId());
-//        }
-//    }
+    @EventHandler
+    public void handle(ChargingStationAcceptedEvent event) {
+        log.debug("ChargingStationAcceptedEvent for [{}] received!", event.getChargingStationId());
+
+        ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
+
+        if (chargingStation != null) {
+            chargingStation.setAccepted(true);
+            repository.save(chargingStation);
+        } else {
+            log.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as accepted", event.getChargingStationId());
+        }
+    }
 
     @Autowired
     public void setRepository(ChargingStationRepository repository) {

@@ -20,19 +20,19 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code RegisterChargingStationCommand} is the command which is published when a charging station should be registered.
+ * {@code AcceptChargingStationCommand} is the command which is published when a charging station should be registered.
  */
-public class RegisterChargingStationCommand {
+public class AcceptChargingStationCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
     /**
-     * Creates a {@code RegisterChargingStationCommand} with an identifier.
+     * Creates a {@code AcceptChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public RegisterChargingStationCommand(ChargingStationId chargingStationId) {
+    public AcceptChargingStationCommand(ChargingStationId chargingStationId) {
         this.chargingStationId = checkNotNull(chargingStationId);
     }
 
