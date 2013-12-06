@@ -52,6 +52,7 @@ public class ChargingStation {
 
     public ChargingStation(String id) {
         this.id = id;
+        this.accepted = false;
     }
 
     public String getId() {

@@ -97,6 +97,13 @@ public class ChargingStationTest {
     }
 
     @Test
+    public void testChargeAcceptance() {
+        fixture.given(new ChargingStationCreatedEvent(getChargingStationId()))
+                .when(new AcceptChargingStationCommand(getChargingStationId()))
+                .expectEvents(new ChargingStationAcceptedEvent(getChargingStationId()));
+    }
+
+    @Test
     public void testRequestConfigurationForUnconfiguredChargingStation() {
         fixture.given(getRegisteredChargingStation())
                .when(new RequestConfigurationCommand(getChargingStationId()))
