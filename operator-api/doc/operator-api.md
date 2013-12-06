@@ -26,7 +26,7 @@ GET  http://host.name/charging-stations
 will return a list of charging stations as:
 
 ## Register a (new) charging station
-POST http://host.name/charging-stations/**stationid**/command 
+POST http://host.name/charging-stations/**stationid**/commands
 payload :
 
 	['Register',{

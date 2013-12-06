@@ -16,7 +16,9 @@
 package io.motown.operatorapi.json.queries;
 
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
+import io.motown.operatorapi.viewmodel.persistence.entities.Transaction;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
+import io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository;
 import org.axonframework.commandhandling.CommandBus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,10 +35,16 @@ public class OperatorApiService {
 
     private ChargingStationRepository repository;
 
+    private TransactionRepository transactionRepository;
+
     public void sendUnlockConnectorCommand(String chargingStationId, int connectorId) { }
 
     public List<ChargingStation> findAllChargingStations() {
         return repository.findAll();
+    }
+
+    public List<Transaction> findAllTransactions() {
+        return transactionRepository.findAll();
     }
 
     @Autowired
@@ -52,5 +60,10 @@ public class OperatorApiService {
     @Autowired
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
+    }
+
+    @Autowired
+    public void setTransactionRepository(TransactionRepository transactionRepository) {
+        this.transactionRepository = transactionRepository;
     }
 }

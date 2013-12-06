@@ -1,0 +1,48 @@
+<!doctype html>
+<html ng-app>
+    <head>
+        <title>Demo</title>
+        <script src="js/angular.min.js"></script>
+
+        <script src="js/chargingStationController.js"></script>
+        <script src="js/transactionController.js"></script>
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+    </head>
+    <body>
+        <h2>Charging Stations</h2>
+        <div ng-controller="ChargingStationController" ng-init="init()">
+
+            <table class="table">
+                <thead>
+                    <th>Charging Station</th>
+                    <th>Actions</th>
+                </thead>
+                <tr ng-repeat="chargingStation in chargingStations">
+                    <td>{{chargingStation.id}}</td>
+                    <td><a ng-if="!chargingStation.accepted" href="#" ng-click="registerChargingStation(chargingStation)">register</a></td>
+                </tr>
+            </table>
+        </div>
+
+        <h2>Transactions</h2>
+        <div ng-controller="TransactionController" ng-init="init()">
+            <table class="table">
+                <thead>
+                    <th>Id</th>
+                    <th>Charging Station</th>
+                    <th>Started</th>
+                    <th>Stopped</th>
+                    <th>Actions</th>
+                </thead>
+                <tr ng-repeat="transaction in transactions">
+                    <td>{{transaction.transactionId}}</td>
+                    <td>{{transaction.chargingStationId}}</td>
+                    <td>{{transaction.startedTimestamp | date:'dd/MM/yyyy hh:mm'}}</td>
+                    <td><span ng-if="transaction.stoppedTimestamp">{{transaction.startedTimestamp | date:'dd/MM/yyyy hh:mm'}}</span></td>
+                    <td><a ng-if="!transaction.stoppedTimestamp" href="#" ng-click="stopTransaction(transaction.chargingStationId, transaction.id)">stop</a></td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

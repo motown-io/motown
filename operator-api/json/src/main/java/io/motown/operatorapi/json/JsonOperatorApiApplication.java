@@ -64,5 +64,12 @@ public class JsonOperatorApiApplication implements SparkApplication {
                 return service.findAllChargingStations();
             }
         });
+        get(new JsonTransformerRoute("/transactions") {
+            @Override
+            public Object handle(Request request, Response response) {
+                response.type("application/json");
+                return service.findAllTransactions();
+            }
+        });
     }
 }
