@@ -123,6 +123,8 @@
                         <exclude>**/README</exclude>
                         <exclude>src/test/resources/**</exclude>
                         <exclude>src/main/resources/**</exclude>
+                        <exclude>src/main/webapp/css/libs/**</exclude>
+                        <exclude>src/main/webapp/js/libs/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>
