@@ -32,8 +32,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static io.motown.ocpp.viewmodel.domain.DomainServiceTestUtils.*;
-import static io.motown.ocpp.viewmodel.domain.DomainServiceTestUtils.getChargingStationAddress;
+import static io.motown.ocpp.viewmodel.domain.TestUtils.*;
+import static io.motown.ocpp.viewmodel.domain.TestUtils.getChargingStationAddress;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

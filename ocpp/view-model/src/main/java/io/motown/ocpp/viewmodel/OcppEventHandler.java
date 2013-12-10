@@ -112,4 +112,11 @@ public class OcppEventHandler {
         chargingStationRepository.save(chargingStation);
     }
 
+    public void setChargingStationOcpp15Client(ChargingStationOcpp15Client chargingStationOcpp15Client) {
+        this.chargingStationOcpp15Client = chargingStationOcpp15Client;
+    }
+
+    public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {
+        this.chargingStationRepository = chargingStationRepository;
+    }
 }

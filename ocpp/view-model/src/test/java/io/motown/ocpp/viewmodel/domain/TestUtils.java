@@ -16,12 +16,15 @@
 package io.motown.ocpp.viewmodel.domain;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.Connector;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
-public class DomainServiceTestUtils {
+public class TestUtils {
 
     public static ChargingStationId getChargingStationId() {
         return new ChargingStationId("CS-001");
@@ -53,6 +56,13 @@ public class DomainServiceTestUtils {
                 .put("io.motown.random.config.item", "true")
                 .put("io.motown.another.random.config.item", "12")
                 .put("io.motown.yet.another.one", "blue")
+                .build();
+    }
+
+    public static Set<Connector> getConnectors() {
+        return ImmutableSet.<Connector>builder()
+                .add(new Connector(1, "TYPE-1", 32))
+                .add(new Connector(2, "TYPE-1", 32))
                 .build();
     }
 
