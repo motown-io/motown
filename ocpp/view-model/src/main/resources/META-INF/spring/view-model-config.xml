@@ -11,6 +11,10 @@
                            http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
                            http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd">
 
+    <context:property-placeholder location="classpath:configViewModel.properties"
+                                  ignore-resource-not-found="true"
+                                  ignore-unresolvable="true"/>
+
     <context:component-scan base-package="io.motown.ocpp.viewmodel"/>
 
     <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
