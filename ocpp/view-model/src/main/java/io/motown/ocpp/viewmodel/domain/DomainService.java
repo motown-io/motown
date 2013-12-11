@@ -57,7 +57,13 @@ public class DomainService {
     private int authorizeTimeout;
 
     public BootChargingStationResult bootChargingStation(final ChargingStationId chargingStationId, final String chargingStationAddress, final String vendor, final String model) {
+        // In case there is no charging station address specified there is no point in continuing, since we will not be able to reach the chargingstation later on
+        if(chargingStationAddress == null || chargingStationAddress.isEmpty()) {
+            log.error("Rejecting bootnotification, no charging station address has been specified.");
+            return new BootChargingStationResult(false, heartbeatInterval, new Date());
+        }
 
+        // Check if we already know the charging station, or have to create one
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
 
         if(chargingStation == null) {
