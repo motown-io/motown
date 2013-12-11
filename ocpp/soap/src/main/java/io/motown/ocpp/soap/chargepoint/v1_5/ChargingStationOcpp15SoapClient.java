@@ -23,12 +23,15 @@ import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import org.apache.cxf.binding.soap.Soap12;
 import org.apache.cxf.binding.soap.SoapBindingConfiguration;
+import org.apache.cxf.jaxws.JaxWsClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.ws.addressing.WSAddressingFeature;
+import org.omg.CosNaming.BindingIteratorPOA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.xml.ws.BindingProvider;
 import java.util.HashMap;
 
 public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Client {
@@ -43,7 +46,6 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
         ChargePointService chargePointService = this.createChargePointService(id);
 
-        //TODO: Make the chargepoint client calls async - Ingo Pak, 27 nov 2013
         GetConfigurationResponse response =  chargePointService.getConfiguration(new GetConfigurationRequest(), id.getId());
 
         HashMap<String, String> configurationItems = Maps.newHashMap();
@@ -59,7 +61,6 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
         ChargePointService chargePointService = this.createChargePointService(id);
 
-        //TODO: Make the chargepoint client calls async - Ingo Pak, 2 dec 2013
         RemoteStopTransactionRequest request = new RemoteStopTransactionRequest();
         request.setTransactionId(transactionId);
         RemoteStopTransactionResponse response =  chargePointService.remoteStopTransaction(request, id.getId());
@@ -67,6 +68,11 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         log.info("Stop transaction request has been {}", response.getStatus().value());
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     protected ChargePointService createChargePointService(ChargingStationId id){
         JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
         factory.setServiceClass(ChargePointService.class);
@@ -77,8 +83,12 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         conf.setVersion(Soap12.getInstance());
         factory.setBindingConfig(conf);
         factory.getFeatures().add(new WSAddressingFeature());
+        ChargePointService chargePointService = (ChargePointService) factory.create();
 
-        return (ChargePointService) factory.create();
+        //Force the use of the Async transport, even for synchronous calls
+        ((BindingProvider)chargePointService).getRequestContext().put("use.async.http.conduit", Boolean.TRUE);
+
+        return chargePointService;
     }
 
 }
