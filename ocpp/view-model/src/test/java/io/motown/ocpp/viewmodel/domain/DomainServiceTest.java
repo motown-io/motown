@@ -20,6 +20,7 @@ import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
 import io.motown.ocpp.viewmodel.persistence.repostories.TransactionIdentifierRepository;
+import org.axonframework.commandhandling.CommandCallback;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +38,8 @@ import static io.motown.ocpp.viewmodel.domain.TestUtils.getChargingStationAddres
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -59,6 +62,7 @@ public class DomainServiceTest {
 
     @Before
     public void setUp() {
+
         chargingStationRepository.deleteAll();
         transactionIdentifierRepository.deleteAll();
 
@@ -76,7 +80,7 @@ public class DomainServiceTest {
         BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel());
         assertFalse(bootChargingStationResult.isAccepted());
 
-        verify(gateway).send( new CreateChargingStationCommand(getChargingStationId(), false) );
+        verify(gateway).send( eq(new CreateChargingStationCommand(getChargingStationId(), false)), any(CommandCallback.class));
     }
 
     @Test
@@ -110,7 +114,7 @@ public class DomainServiceTest {
     @Test
     public void testAuthorize() {
         domainService.authorize(getChargingStationId(), getIdTag());
-        verify(gateway).sendAndWait(new AuthorizeCommand(getChargingStationId(), getIdTag()), 60, TimeUnit.SECONDS);
+        verify(gateway).sendAndWait(new AuthorizeCommand(getChargingStationId(), getIdTag()), 0, TimeUnit.SECONDS);
     }
 
     @Test

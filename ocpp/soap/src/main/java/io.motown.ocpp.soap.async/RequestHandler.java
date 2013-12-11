@@ -19,6 +19,7 @@ import org.apache.cxf.continuations.Continuation;
 import org.apache.cxf.continuations.ContinuationProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.task.TaskExecutor;
 
 import javax.xml.ws.handler.MessageContext;
@@ -32,20 +33,18 @@ public class RequestHandler<T> {
 
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
-    //TODO make this configurable
-    /**
-     * Timeout in milliseconds for the continuation suspend functionality
-     */
-    private final int CONTINUATION_TIMEOUT = 5000;
-
     private final TaskExecutor executor;
 
     private ContinuationProvider provider;
 
-    public RequestHandler(MessageContext context, TaskExecutor executor) {
+    private int continuationTimeout;
+
+    public RequestHandler(MessageContext context, TaskExecutor executor, int continuationTimeout) {
         this.executor = checkNotNull(executor);
 
         this.provider = (ContinuationProvider) context.get(ContinuationProvider.class.getName());
+
+        this.continuationTimeout = continuationTimeout;
     }
 
     public T handle(final ResponseFactory<T> successFactory, final ResponseFactory<T> errorFactory) {
@@ -70,7 +69,7 @@ public class RequestHandler<T> {
                 continuation.setObject(futureResponse);
 
                 // suspend the transport thread so it can handle other requests
-                continuation.suspend(CONTINUATION_TIMEOUT);
+                continuation.suspend(continuationTimeout);
                 return null;
             } else {
                 FutureTask futureTask = (FutureTask) continuation.getObject();
@@ -83,12 +82,21 @@ public class RequestHandler<T> {
                         return errorFactory.createResponse();
                     }
                 } else {
-                    //TODO should the timeout decrease every time the task is not yet done? - Mark van den Bergh, November 21st 2013
-                    continuation.suspend(CONTINUATION_TIMEOUT);
+                    continuation.suspend(decreaseTimeout());
                 }
             }
         }
         // unreachable
         return null;
+    }
+
+    private int decreaseTimeout() {
+        if(continuationTimeout > 600) {
+            continuationTimeout -= 500;
+        } else {
+            // keep a certain timeout
+            continuationTimeout = 100;
+        }
+        return continuationTimeout;
     }
 }

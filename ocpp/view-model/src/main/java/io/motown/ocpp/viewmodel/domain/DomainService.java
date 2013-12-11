@@ -25,6 +25,7 @@ import org.axonframework.commandhandling.CommandCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -49,6 +50,12 @@ public class DomainService {
     @Autowired
     private EntityManagerFactory entityManagerFactory;
 
+    @Value("${io.motown.ocpp.viewmodel.heartbeat.interval}")
+    private int heartbeatInterval;
+
+    @Value("${io.motown.ocpp.viewmodel.authorize.timeout}")
+    private int authorizeTimeout;
+
     public BootChargingStationResult bootChargingStation(final ChargingStationId chargingStationId, final String chargingStationAddress, final String vendor, final String model) {
 
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
@@ -56,13 +63,23 @@ public class DomainService {
         if(chargingStation == null) {
             log.debug("Not a known charging station on boot notification, we send a CreateChargingStationCommand.");
 
-            // TODO do we need a callback which sends a BootChargingStationCommand? - Mark van den Bergh, December 5th 2013
-            commandGateway.send(new CreateChargingStationCommand(chargingStationId, false));
+            commandGateway.send(new CreateChargingStationCommand(chargingStationId, false), new CommandCallback<Object>() {
+                @Override
+                public void onSuccess(Object o) {
+                    chargingStationRepository.save(new ChargingStation(chargingStationId.getId()));
+
+                    bootChargingStation(chargingStationId, chargingStationAddress, vendor, model);
+                }
+
+                @Override
+                public void onFailure(Throwable throwable) {
+                    //TODO what do we do now? Do we still send out a BootChargingStationCommand so other components can react on it? - Mark van den Bergh, December 11th 2013
+                    log.error("CreateChargingStationCommand failed. " + throwable.getMessage());
+                }
+            });
 
             // we didn't know the charging station when this bootNotification occurred so we reject it.
-            return new BootChargingStationResult(false, 60, new Date());
-        } else {
-            log.debug("We know this charging station, let's continue handling the boot notification.");
+            return new BootChargingStationResult(false, heartbeatInterval, new Date());
         }
 
         // Keep track of the address on which we can reach the charging station
@@ -76,13 +93,13 @@ public class DomainService {
 
         commandGateway.send(new BootChargingStationCommand(chargingStationId, attributes));
 
-        // TODO: Where should the heartbeat-interval (60) come from? - Mark van den Bergh, November 15th 2013
-        return new BootChargingStationResult(chargingStation.isRegistered(), 60, new Date());
+        System.err.println("Heartbeatinterval: " + heartbeatInterval);
+        return new BootChargingStationResult(chargingStation.isRegistered(), heartbeatInterval, new Date());
     }
 
     public AuthorizationResult authorize(ChargingStationId chargingStationId, String idTag){
         AuthorizeCommand command = new AuthorizeCommand(chargingStationId, idTag);
-        AuthorizationResultStatus resultStatus = commandGateway.sendAndWait(command, 60, TimeUnit.SECONDS);
+        AuthorizationResultStatus resultStatus = commandGateway.sendAndWait(command, authorizeTimeout, TimeUnit.SECONDS);
 
         return new AuthorizationResult(idTag, resultStatus);
     }
@@ -92,6 +109,17 @@ public class DomainService {
         commandGateway.send(command);
     }
 
+    /**
+     * Generates a transaction identifier and starts a transaction by dispatching a StartTransactionCommand.
+     *
+     * @param chargingStationId      identifier of the charging station
+     * @param connectorId            connector identifier on which the transaction is started
+     * @param idTag                  the identifier which started the transaction
+     * @param meterStart             meter value in Wh for the connector at start of the transaction
+     * @param timestamp              date and time on which the transaction started
+     * @throws IllegalStateException when the charging station cannot be found, is not registered and configured, or the connectorId is unknown for this charging station
+     * @return                       transaction identifier
+     */
     public int startTransaction(ChargingStationId chargingStationId, int connectorId, String idTag, int meterStart, Date timestamp) {
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
         if(chargingStation == null) {

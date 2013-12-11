@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.task.TaskExecutor;
 import org.w3c.dom.Element;
 
@@ -50,11 +51,17 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
 
     private static final Logger log = LoggerFactory.getLogger(CentralSystemService.class);
 
-    //TODO make this configurable
+    /**
+     * Timeout in milliseconds for the continuation suspend functionality
+     */
+    @Value("${io.motown.ocpp.soap.cxf.continuation.timeout}")
+    private int CONTINUATION_TIMEOUT;
+
     /**
      * Heartbeat interval which will be returned to the client if handling the bootNotification failed
      */
-    private final int HEARTBEAT_INTERVAL_FALLBACK = 900;
+    @Value("${io.motown.ocpp.soap.heartbeat.interval.fallback}")
+    private int HEARTBEAT_INTERVAL_FALLBACK;
 
     @Autowired
     private DomainService domainService;
@@ -137,7 +144,7 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
     public AuthorizeResponse authorize(final AuthorizeRequest request, final String chargeBoxIdentity) {
         final MessageContext messageContext = context.getMessageContext();
 
-        RequestHandler<AuthorizeResponse> requestHandler = new RequestHandler<>(context.getMessageContext(), taskExecutor);
+        RequestHandler<AuthorizeResponse> requestHandler = new RequestHandler<>(context.getMessageContext(), taskExecutor, CONTINUATION_TIMEOUT);
         return requestHandler.handle(
                 new ResponseFactory<AuthorizeResponse>() {
                     @Override
@@ -186,8 +193,6 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
 
     @Override
     public StartTransactionResponse startTransaction(final StartTransactionRequest parameters, final String chargeBoxIdentity) {
-        //TODO fault handling. - Mark van den Bergh, December 2nd 2013
-        StartTransactionResponse response = new StartTransactionResponse();
         int transactionId = domainService.startTransaction(new ChargingStationId(chargeBoxIdentity), parameters.getConnectorId(), parameters.getIdTag(), parameters.getMeterStart(), parameters.getTimestamp());
         log.debug("TransactionId: " + transactionId);
 
@@ -196,12 +201,12 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
         idTagInfo.setParentIdTag(parameters.getIdTag());
 
         GregorianCalendar expDate = new GregorianCalendar();
-        //TODO should the expiry date be configurable? - Mark van den Bergh, December 5th 2013
+        //TODO expiry date should come from security service/CIR/local - Mark van den Bergh, December 10th 2013
         expDate.add(GregorianCalendar.YEAR, 1);
         idTagInfo.setExpiryDate(expDate.getTime());
 
+        StartTransactionResponse response = new StartTransactionResponse();
         response.setIdTagInfo(idTagInfo);
-
         response.setTransactionId(transactionId);
         return response;
     }

@@ -16,6 +16,7 @@
 package io.motown.ocpp.viewmodel.domain;
 
 import io.motown.domain.api.chargingstation.*;
+import org.axonframework.commandhandling.CommandCallback;
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,6 +32,6 @@ interface DomainCommandGateway {
 
     AuthorizationResultStatus sendAndWait(AuthorizeCommand command, long timeout, TimeUnit unit);
 
-    void send(CreateChargingStationCommand command);
+    void send(CreateChargingStationCommand command, CommandCallback<Object> callback);
 
 }

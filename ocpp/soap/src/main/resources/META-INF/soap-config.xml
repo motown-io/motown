@@ -29,7 +29,8 @@
                            http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
 
     <context:property-placeholder location="classpath:config.properties, file:${io.motown.ocpp.soap.config}"
-                                  ignore-resource-not-found="true"/>
+                                  ignore-resource-not-found="true"
+                                  ignore-unresolvable="true"/>
 
     <axon:annotation-config/>
 
