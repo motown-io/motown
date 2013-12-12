@@ -20,7 +20,8 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code AcceptChargingStationCommand} is the command which is published when a charging station should be registered.
+ * {@code AcceptChargingStationCommand} is the command which is published when a charging station is accepted as part of
+ * the charging infrastructure by an operator.
  */
 public class AcceptChargingStationCommand {
     @TargetAggregateIdentifier

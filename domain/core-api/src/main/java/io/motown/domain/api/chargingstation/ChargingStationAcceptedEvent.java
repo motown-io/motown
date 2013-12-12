@@ -20,7 +20,8 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code ChargingStationAcceptedEvent} is the event which is published when a charging station has been registered.
+ * {@code ChargingStationAcceptedEvent} is the event which is published when a charging station has been accepted as
+ * part of the charging infrastructure by an operator.
  */
 public class ChargingStationAcceptedEvent {
 
