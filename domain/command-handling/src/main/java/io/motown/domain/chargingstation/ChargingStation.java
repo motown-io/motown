@@ -153,7 +153,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     /**
      * Ensures that communication with this charging station is allowed.
      * <p/>
-     * Communication with a charging station is allowed once it is registered (i.e. someone or something has allowed
+     * Communication with a charging station is allowed once it is accepted (i.e. someone or something has allowed
      * this charging station to communicate with Motown) and configured (i.e. Motown has enough information to properly
      * handle communication with the charging station, like the number of connectors).
      *
