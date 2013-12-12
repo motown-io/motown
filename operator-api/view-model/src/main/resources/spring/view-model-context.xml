@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:axon="http://www.axonframework.org/schema/core"
+       xmlns:axon-amqp="http://www.axonframework.org/schema/amqp"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.axonframework.org/schema/amqp http://www.axonframework.org/schema/axon-amqp.xsd
+                           http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
+                           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
+                           http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
+                           http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
+
+    <context:property-placeholder location="classpath:config.properties, file:${io.motown.operatorapi.config}"
+                                  ignore-resource-not-found="true"/>
+
+    <context:component-scan base-package="io.motown.operatorapi.viewmodel"/>
+
+    <bean id="asyncExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean">
+        <property name="corePoolSize" value="1"/>
+        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+    </bean>
+
+    <!-- Axon -->
+
+    <axon:annotation-config/>
+
+    <axon:event-bus id="eventBus" terminal="terminal"/>
+
+    <axon-amqp:terminal id="terminal"
+                        connection-factory="amqpConnection"
+                        serializer="serializer"
+                        exchange-name="${io.motown.operatorapi.json.eventbus.amqp.rabbit.exchange.name}">
+        <axon-amqp:default-configuration />
+    </axon-amqp:terminal>
+
+    <axon:cluster id="cluster" default="true">
+        <bean class="org.axonframework.eventhandling.async.AsynchronousCluster">
+            <constructor-arg value="${io.motown.operatorapi.json.eventbus.amqp.rabbit.queue.name}"/>
+            <constructor-arg ref="asyncExecutor"/>
+            <constructor-arg>
+                <bean class="org.axonframework.eventhandling.async.FullConcurrencyPolicy"/>
+            </constructor-arg>
+        </bean>
+    </axon:cluster>
+
+    <bean id="serializer" class="org.axonframework.serializer.xml.XStreamSerializer"/>
+
+    <!-- AMQP -->
+
+    <rabbit:connection-factory id="amqpConnection"
+                               username="${io.motown.operatorapi.json.eventbus.amqp.rabbit.username}"
+                               password="${io.motown.operatorapi.json.eventbus.amqp.rabbit.password}"
+                               virtual-host="${io.motown.operatorapi.json.eventbus.amqp.rabbit.virtualhost}"
+                               host="${io.motown.operatorapi.json.eventbus.amqp.rabbit.host}"/>
+
+    <rabbit:admin id="amqpAdmin"
+                  connection-factory="amqpConnection"/>
+
+    <rabbit:queue id="queue"
+                  name="${io.motown.operatorapi.json.eventbus.amqp.rabbit.queue.name}"
+                  durable="true"/>
+
+    <rabbit:fanout-exchange id="exchange"
+                            name="${io.motown.operatorapi.json.eventbus.amqp.rabbit.exchange.name}"
+                            durable="true">
+        <rabbit:bindings>
+            <rabbit:binding queue="queue"/>
+        </rabbit:bindings>
+    </rabbit:fanout-exchange>
+
+    <!-- Spring Data JPA -->
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="io.motown.operatorapi.viewmodel.persistence"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="database" value="HSQL"/>
+                <property name="generateDdl" value="true"/>
+            </bean>
+        </property>
+    </bean>
+
+    <jpa:repositories base-package="io.motown.operatorapi.viewmodel.persistence"/>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <jdbc:embedded-database id="dataSource" type="HSQL"/>
+</beans>

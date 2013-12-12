@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:axon="http://www.axonframework.org/schema/core"
+       xmlns:axon-amqp="http://www.axonframework.org/schema/amqp"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.axonframework.org/schema/amqp http://www.axonframework.org/schema/axon-amqp-2.0.xsd
+                           http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core-2.0.xsd
+                           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+                           http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.1.xsd">
+
+    <axon:annotation-config/>
+    <context:component-scan base-package="io.motown.domain"/>
+
+    <context:property-placeholder location="classpath:config.properties, file:${io.motown.domain.app.config}"
+                                  ignore-resource-not-found="true"/>
+
+    <axon:event-bus id="eventBus"
+                    terminal="terminal"/>
+
+    <bean id="commandBus"
+          class="org.axonframework.commandhandling.distributed.DistributedCommandBus">
+        <constructor-arg ref="jgroupsConnector"/>
+
+        <!-- TODO: Add command validation in a different way, as the DistributedCommandBus does not have the handlerInterceptors property the SimpleCommandBus is having. - Ingo Pak, November 15th 2013
+        <property name="handlerInterceptors">
+            <list>
+                <bean class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor" />
+            </list>
+        </property>-->
+    </bean>
+
+    <axon:filesystem-event-store id="eventStore"
+                                 base-dir="${io.motown.domain.app.eventstore.filesystem.basedir}"/>
+
+    <axon:snapshotter id="snapshotter"
+                      event-store="eventStore"
+                      executor="taskExecutor"/>
+
+    <bean id="taskExecutor"
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize"
+                  value="${io.motown.domain.app.eventstore.snapshotter.executor.pool.size}"/>
+        <property name="maxPoolSize"
+                  value="${io.motown.domain.app.eventstore.snapshotter.executor.pool.size.max}"/>
+        <property name="waitForTasksToCompleteOnShutdown"
+                  value="true"/>
+    </bean>
+
+    <bean id="cache"
+          class="net.sf.ehcache.jcache.JCache">
+        <constructor-arg>
+            <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="serializer"
+          class="org.axonframework.serializer.xml.XStreamSerializer"/>
+
+    <bean id="jgroupsConnector"
+          class="org.axonframework.commandhandling.distributed.jgroups.JGroupsConnectorFactoryBean">
+        <property name="configuration"
+                  value="${io.motown.domain.app.commandbus.jgroups.configuration}"/>
+        <property name="clusterName"
+                  value="${io.motown.domain.app.commandbus.jgroups.cluster.name}"/>
+        <property name="serializer"
+                  ref="serializer"/>
+        <property name="localSegment">
+            <bean class="org.axonframework.commandhandling.SimpleCommandBus">
+                <property name="handlerInterceptors">
+                    <bean class="org.axonframework.commandhandling.interceptors.LoggingInterceptor"/>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="routingKeyResolver"
+          class="io.motown.domain.app.axon.MotownRoutingKeyResolver"/>
+
+    <axon-amqp:terminal id="terminal"
+                        connection-factory="amqpConnection"
+                        serializer="serializer"
+                        exchange-name="${io.motown.domain.app.eventbus.amqp.rabbit.exchange.name}"
+                        routing-key-resolver="routingKeyResolver"/>
+
+    <rabbit:connection-factory id="amqpConnection"
+                               host="${io.motown.domain.app.eventbus.amqp.rabbit.host}"
+                               username="${io.motown.domain.app.eventbus.amqp.rabbit.username}"
+                               password="${io.motown.domain.app.eventbus.amqp.rabbit.password}"
+                               virtual-host="${io.motown.domain.app.eventbus.amqp.rabbit.virtualhost}"/>
+
+    <rabbit:admin id="amqpAdmin"
+                  connection-factory="amqpConnection"/>
+
+    <rabbit:fanout-exchange id="exchange"
+                            name="${io.motown.domain.app.eventbus.amqp.rabbit.exchange.name}"
+                            durable="true"/>
+</beans>

@@ -1,0 +1,6 @@
+# Please refrain from adding environment specific ignores (e.g. operating system or development environment specific).
+# These environment specific ignores can be added to your local global gitignore file. On Linux and Mac OS X systems this
+# file can usually be found at ~/.gitignore_global.
+
+# Maven
+target/
