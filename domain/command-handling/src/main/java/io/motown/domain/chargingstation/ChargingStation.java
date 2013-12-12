@@ -44,7 +44,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public ChargingStationRegistrationStatus handle(BootChargingStationCommand command) {
+    public void handle(BootChargingStationCommand command) {
         ChargingStationBootedEvent chargingStationBootedEvent;
 
         if (isConfigured) {
@@ -54,8 +54,6 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         }
 
         apply(chargingStationBootedEvent);
-
-        return this.isAccepted ? ChargingStationRegistrationStatus.ACCEPTED : ChargingStationRegistrationStatus.DENIED;
     }
 
     @CommandHandler

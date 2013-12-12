@@ -40,24 +40,21 @@ public class ChargingStationTest {
     public void testBootingCreatedChargingStation() {
         fixture.given(getCreatedChargingStation(false))
                .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
-               .expectEvents(new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()))
-               .expectReturnValue(ChargingStationRegistrationStatus.DENIED);
+               .expectEvents(new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()));
     }
 
     @Test
     public void testBootingRegisteredChargingStation() {
         fixture.given(getRegisteredChargingStation())
                .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
-               .expectEvents(new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()))
-               .expectReturnValue(ChargingStationRegistrationStatus.ACCEPTED);
+               .expectEvents(new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()));
     }
 
     @Test
     public void testBootingConfiguredChargingStation() {
         fixture.given(getChargingStation())
                .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
-               .expectEvents(new ConfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()))
-               .expectReturnValue(ChargingStationRegistrationStatus.ACCEPTED);
+               .expectEvents(new ConfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()));
     }
 
     @Test
