@@ -99,7 +99,6 @@ public class DomainService {
 
         commandGateway.send(new BootChargingStationCommand(chargingStationId, attributes));
 
-        System.err.println("Heartbeatinterval: " + heartbeatInterval);
         return new BootChargingStationResult(chargingStation.isRegistered(), heartbeatInterval, new Date());
     }
 
