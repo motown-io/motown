@@ -77,7 +77,7 @@ public class DomainServiceTest {
 
     @Test
     public void testBootUnknownChargingStation() {
-        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel());
+        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel(), getProtocol());
         assertFalse(bootChargingStationResult.isAccepted());
 
         verify(gateway).send( eq(new CreateChargingStationCommand(getChargingStationId(), false)), any(CommandCallback.class));
@@ -91,7 +91,7 @@ public class DomainServiceTest {
         cs.setConfigured(true);
         chargingStationRepository.save(cs);
 
-        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel());
+        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel(), getProtocol());
         assertTrue(bootChargingStationResult.isAccepted());
 
         Map<String, String> attributes = Maps.newHashMap();
@@ -108,7 +108,7 @@ public class DomainServiceTest {
         assertTrue(cs.isRegistered());
         assertTrue(cs.isRegisteredAndConfigured());
 
-        verify(gateway).send( new BootChargingStationCommand(getChargingStationId(), attributes) );
+        verify(gateway).send( new BootChargingStationCommand(getChargingStationId(), getProtocol(), attributes) );
     }
 
     @Test

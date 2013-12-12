@@ -63,7 +63,8 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
         RemoteStopTransactionRequest request = new RemoteStopTransactionRequest();
         request.setTransactionId(transactionId);
-        RemoteStopTransactionResponse response =  chargePointService.remoteStopTransaction(request, id.getId());
+        RemoteStopTransactionResponse response;
+        response =  chargePointService.remoteStopTransaction(request, id.getId());
 
         log.info("Stop transaction request has been {}", response.getStatus().value());
     }

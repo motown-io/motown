@@ -16,16 +16,23 @@
 package io.motown.ocpp.viewmodel;
 
 import io.motown.domain.api.chargingstation.ChargingStationConfiguredEvent;
+import io.motown.domain.api.chargingstation.ConfigurationRequestedEvent;
 import io.motown.domain.api.chargingstation.StopTransactionRequestedEvent;
 import io.motown.domain.api.chargingstation.UnlockConnectorRequestedEvent;
+import io.motown.ocpp.viewmodel.domain.TransactionIdentifierTranslator;
+import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class OcppRequestHandler {
     private static final Logger log = LoggerFactory.getLogger(io.motown.ocpp.viewmodel.OcppRequestHandler.class);
+
+    @Autowired
+    private ChargingStationOcpp15Client chargingStationOcpp15Client;
 
     @EventHandler
     public void handle(UnlockConnectorRequestedEvent event) {
@@ -35,5 +42,21 @@ public class OcppRequestHandler {
     @EventHandler
     public void handle(ChargingStationConfiguredEvent event) {
         log.info("ChargingStationConfiguredEvent");
+    }
+
+    @EventHandler
+    public void handle(ConfigurationRequestedEvent event) {
+        log.info("Handling ConfigurationRequestedEvent");
+        chargingStationOcpp15Client.getConfiguration(event.getChargingStationId());
+    }
+
+    @EventHandler
+    public void handle(StopTransactionRequestedEvent event) {
+        log.info("StopTransactionRequestedEvent");
+        chargingStationOcpp15Client.stopTransaction(event.getChargingStationId(), TransactionIdentifierTranslator.toInt(event.getTransactionId()));
+    }
+
+    public void setChargingStationOcpp15Client(ChargingStationOcpp15Client chargingStationOcpp15Client) {
+        this.chargingStationOcpp15Client = chargingStationOcpp15Client;
     }
 }

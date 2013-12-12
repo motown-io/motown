@@ -29,6 +29,10 @@ public class ChargingStationTestUtils {
         return new ChargingStationId("CS-001");
     }
 
+    public static String getProtocol() {
+        return "protocol";
+    }
+
     public static List<Object> getCreatedChargingStation(boolean defaultAccepted) {
         if (defaultAccepted) {
             return ImmutableList.<Object>builder()
@@ -59,6 +63,7 @@ public class ChargingStationTestUtils {
     public static List<Object> getChargingStation() {
         return ImmutableList.<Object>builder()
                 .addAll(getCreatedChargingStation(true))
+                .add(new ConfiguredChargingStationBootedEvent(getChargingStationId(), getProtocol(), getAttributes()))
                 .add(new ChargingStationAcceptedEvent(getChargingStationId()))
                 .add(new ChargingStationConfiguredEvent(getChargingStationId(), getConnectors(), getConfigurationItems()))
                 .build();

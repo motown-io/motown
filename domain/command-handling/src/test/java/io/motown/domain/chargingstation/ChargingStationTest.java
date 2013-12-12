@@ -39,22 +39,22 @@ public class ChargingStationTest {
     @Test
     public void testBootingCreatedChargingStation() {
         fixture.given(getCreatedChargingStation(false))
-               .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
-               .expectEvents(new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()));
+               .when(new BootChargingStationCommand(getChargingStationId(), getProtocol(), getAttributes()))
+               .expectEvents(new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getProtocol(), getAttributes()));
     }
 
     @Test
     public void testBootingRegisteredChargingStation() {
         fixture.given(getRegisteredChargingStation())
-               .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
-               .expectEvents(new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()));
+               .when(new BootChargingStationCommand(getChargingStationId(), getProtocol(), getAttributes()))
+               .expectEvents(new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getProtocol(), getAttributes()));
     }
 
     @Test
     public void testBootingConfiguredChargingStation() {
         fixture.given(getChargingStation())
-               .when(new BootChargingStationCommand(getChargingStationId(), getAttributes()))
-               .expectEvents(new ConfiguredChargingStationBootedEvent(getChargingStationId(), getAttributes()));
+               .when(new BootChargingStationCommand(getChargingStationId(), getProtocol(), getAttributes()))
+               .expectEvents(new ConfiguredChargingStationBootedEvent(getChargingStationId(), getProtocol(), getAttributes()));
     }
 
     @Test
@@ -118,7 +118,7 @@ public class ChargingStationTest {
     public void testRequestConfiguration() {
         fixture.given(getChargingStation())
                .when(new RequestConfigurationCommand(getChargingStationId()))
-               .expectEvents(new ConfigurationRequestedEvent(getChargingStationId()));
+               .expectEvents(new ConfigurationRequestedEvent(getChargingStationId(), getProtocol()));
     }
 
     @Test
@@ -180,7 +180,7 @@ public class ChargingStationTest {
     public void testRequestingToUnlockConnector() {
         fixture.given(getChargingStation())
                .when(new RequestUnlockConnectorCommand(getChargingStationId(), 1))
-               .expectEvents(new UnlockConnectorRequestedEvent(getChargingStationId(), 1));
+               .expectEvents(new UnlockConnectorRequestedEvent(getChargingStationId(), getProtocol(), 1));
     }
 
     @Test
@@ -201,6 +201,6 @@ public class ChargingStationTest {
     public void testRequestingToUnlockAllConnectors() {
         fixture.given(getChargingStation())
                .when(new RequestUnlockConnectorCommand(getChargingStationId(), Connector.ALL))
-               .expectEvents(new UnlockConnectorRequestedEvent(getChargingStationId(), 1), new UnlockConnectorRequestedEvent(getChargingStationId(), 2));
+               .expectEvents(new UnlockConnectorRequestedEvent(getChargingStationId(), getProtocol(), 1), new UnlockConnectorRequestedEvent(getChargingStationId(), getProtocol(), 2));
     }
 }

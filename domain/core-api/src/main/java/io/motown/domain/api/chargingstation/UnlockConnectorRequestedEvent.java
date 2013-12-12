@@ -17,16 +17,25 @@ package io.motown.domain.api.chargingstation;
 
 public class UnlockConnectorRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
     private final ChargingStationId chargingStationId;
+
+    private final String protocol;
+
     private final Integer connectorId;
 
-    public UnlockConnectorRequestedEvent(ChargingStationId chargingStationId, Integer connectorId) {
+    public UnlockConnectorRequestedEvent(ChargingStationId chargingStationId, String protocol, Integer connectorId) {
         this.chargingStationId = chargingStationId;
+        this.protocol = protocol;
         this.connectorId = connectorId;
     }
 
     @Override
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
+    }
+
+    @Override
+    public String getProtocol() {
+        return protocol;
     }
 
     public Integer getConnectorId() {

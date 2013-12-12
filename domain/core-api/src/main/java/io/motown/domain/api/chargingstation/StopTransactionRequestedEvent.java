@@ -20,9 +20,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * {@code StopTransactionRequestedEvent} is the event which is published when a request has been made to stop the transaction.
  */
-public class StopTransactionRequestedEvent {
+public class StopTransactionRequestedEvent implements CommunicationWithChargingStationRequestedEvent{
 
     private final ChargingStationId chargingStationId;
+
+    private final String protocol;
 
     private final String transactionId;
 
@@ -30,11 +32,13 @@ public class StopTransactionRequestedEvent {
      * Creates a {@code StopTransactionRequestedEvent} with an identifier and a transaction identifier.
      *
      * @param chargingStationId the identifier of the charging station.
+     * @param protocol          protocol identifier.
      * @param transactionId     the identifier of the transaction.
-     * @throws NullPointerException if {@code chargingStationId} or {@code transactionId} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} or {@code transactionId} is {@code null}.
      */
-    public StopTransactionRequestedEvent(ChargingStationId chargingStationId, String transactionId) {
+    public StopTransactionRequestedEvent(ChargingStationId chargingStationId, String protocol, String transactionId) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.protocol = checkNotNull(protocol);
         this.transactionId = checkNotNull(transactionId);
     }
 
@@ -43,8 +47,19 @@ public class StopTransactionRequestedEvent {
      *
      * @return the charging station identifier.
      */
+    @Override
     public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
+    }
+
+    /**
+     * Gets the protocol identifier.
+     *
+     * @return the protocol identifier.
+     */
+    @Override
+    public String getProtocol() {
+        return this.protocol;
     }
 
     /**

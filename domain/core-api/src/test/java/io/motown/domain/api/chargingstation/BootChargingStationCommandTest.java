@@ -24,12 +24,12 @@ public class BootChargingStationCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingChargingStationWithChargingStationIdNull() {
-        new BootChargingStationCommand(null);
+        new BootChargingStationCommand(null, "protocol");
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingChargingStationWithChargingStationIdNullAndAttributes() {
-        new BootChargingStationCommand(null, new HashMap<String, String>());
+        new BootChargingStationCommand(null, "protocol", new HashMap<String, String>());
     }
 
     @Test(expected = NullPointerException.class)
@@ -43,7 +43,7 @@ public class BootChargingStationCommandTest {
         attributes.put("vendor", "VENDOR");
         attributes.put("model", "MODEL");
 
-        BootChargingStationCommand command = new BootChargingStationCommand(new ChargingStationId("CS-001"), attributes);
+        BootChargingStationCommand command = new BootChargingStationCommand(new ChargingStationId("CS-001"), "protocol", attributes);
 
         command.getAttributes().put("vendor", "ANOTHER_VENDOR");
     }

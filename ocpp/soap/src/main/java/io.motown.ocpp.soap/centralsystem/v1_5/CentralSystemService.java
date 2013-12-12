@@ -20,7 +20,6 @@ import io.motown.ocpp.soap.async.RequestHandler;
 import io.motown.ocpp.soap.async.ResponseFactory;
 import io.motown.ocpp.soap.centralsystem.v1_5.schema.*;
 import io.motown.ocpp.soap.centralsystem.v1_5.schema.AuthorizationStatus;
-import io.motown.ocpp.viewmodel.ChargingStationSubscriber;
 import io.motown.ocpp.viewmodel.domain.*;
 import org.apache.cxf.headers.Header;
 import org.apache.cxf.helpers.CastUtils;
@@ -29,7 +28,6 @@ import org.apache.cxf.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.task.TaskExecutor;
 import org.w3c.dom.Element;
@@ -63,6 +61,9 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
     @Value("${io.motown.ocpp.soap.heartbeat.interval.fallback}")
     private int HEARTBEAT_INTERVAL_FALLBACK;
 
+    @Value("${io.motown.ocpp.soap.protocol.identifier}")
+    private String PROTOCOL;
+
     @Autowired
     private DomainService domainService;
 
@@ -71,11 +72,6 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
 
     @Resource
     private WebServiceContext context;
-
-    // not using @Resource(name = "axonAmqpChargingStationSubscriber") for this bean as it causes startup issues on Glassfish. JNDI lookups vs Spring.
-    @Autowired
-    @Qualifier("axonAmqpChargingStationSubscriber")
-    private ChargingStationSubscriber chargingStationSubscriber;
 
     @Override
     public DataTransferResponse dataTransfer(DataTransferRequest parameters, String chargeBoxIdentity) {
@@ -102,10 +98,8 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
     public BootNotificationResponse bootNotification(BootNotificationRequest request, String chargeBoxIdentity) {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
-        chargingStationSubscriber.subscribe(chargingStationId);
-
         String chargingStationAddress = getChargingStationAddress(context.getMessageContext());
-        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel());
+        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel(), PROTOCOL);
 
         BootNotificationResponse response = new BootNotificationResponse();
         response.setStatus(result.isAccepted() ? RegistrationStatus.ACCEPTED : RegistrationStatus.REJECTED);
@@ -150,8 +144,6 @@ public class CentralSystemService implements io.motown.ocpp.soap.centralsystem.v
                     @Override
                     public AuthorizeResponse createResponse() {
                         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
-
-                        chargingStationSubscriber.subscribe(chargingStationId);
 
                         AuthorizationResult result = domainService.authorize(chargingStationId, request.getIdTag());
 

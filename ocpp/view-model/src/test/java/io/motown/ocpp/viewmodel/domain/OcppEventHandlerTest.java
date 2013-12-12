@@ -17,7 +17,6 @@ package io.motown.ocpp.viewmodel.domain;
 
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.OcppEventHandler;
-import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
 import org.junit.Before;
@@ -31,8 +30,6 @@ import static io.motown.ocpp.viewmodel.domain.TestUtils.*;
 import static junit.framework.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 @ContextConfiguration("classpath:ocpp-view-model-test-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -43,16 +40,11 @@ public class OcppEventHandlerTest {
     @Autowired
     private ChargingStationRepository chargingStationRepository;
 
-    ChargingStationOcpp15Client client;
-
     @Before
     public void setUp() {
         chargingStationRepository.deleteAll();
 
         eventHandler = new OcppEventHandler();
-
-        client = mock(ChargingStationOcpp15Client.class);
-        eventHandler.setChargingStationOcpp15Client(client);
 
         eventHandler.setChargingStationRepository(chargingStationRepository);
     }
@@ -83,22 +75,6 @@ public class OcppEventHandlerTest {
     public void testUnknownChargingStationAcceptedEvent() {
         // no exception expected on unknown charging station
         eventHandler.handle(new ChargingStationAcceptedEvent(getChargingStationId()));
-    }
-
-    @Test
-    public void testConfigurationRequestedEvent() {
-        eventHandler.handle(new ConfigurationRequestedEvent(getChargingStationId()));
-
-        verify(client).getConfiguration(getChargingStationId());
-    }
-
-    @Test
-    public void testStopTransactionRequestedEvent() {
-        int transactionId = 1;
-
-        eventHandler.handle(new StopTransactionRequestedEvent(getChargingStationId(), TransactionIdentifierTranslator.toString(getChargingStationId(), transactionId)));
-
-        verify(client).stopTransaction(getChargingStationId(), transactionId);
     }
 
     @Test

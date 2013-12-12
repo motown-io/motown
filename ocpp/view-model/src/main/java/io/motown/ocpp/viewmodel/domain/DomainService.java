@@ -56,7 +56,7 @@ public class DomainService {
     @Value("${io.motown.ocpp.viewmodel.authorize.timeout}")
     private int authorizeTimeout;
 
-    public BootChargingStationResult bootChargingStation(final ChargingStationId chargingStationId, final String chargingStationAddress, final String vendor, final String model) {
+    public BootChargingStationResult bootChargingStation(final ChargingStationId chargingStationId, final String chargingStationAddress, final String vendor, final String model, final String protocol) {
         // In case there is no charging station address specified there is no point in continuing, since we will not be able to reach the chargingstation later on
         if(chargingStationAddress == null || chargingStationAddress.isEmpty()) {
             log.error("Rejecting bootnotification, no charging station address has been specified.");
@@ -74,7 +74,7 @@ public class DomainService {
                 public void onSuccess(Object o) {
                     chargingStationRepository.save(new ChargingStation(chargingStationId.getId()));
 
-                    bootChargingStation(chargingStationId, chargingStationAddress, vendor, model);
+                    bootChargingStation(chargingStationId, chargingStationAddress, vendor, model, protocol);
                 }
 
                 @Override
@@ -97,7 +97,7 @@ public class DomainService {
         attributes.put("model", model);
         attributes.put("address", chargingStationAddress);
 
-        commandGateway.send(new BootChargingStationCommand(chargingStationId, attributes));
+        commandGateway.send(new BootChargingStationCommand(chargingStationId, protocol, attributes));
 
         return new BootChargingStationResult(chargingStation.isRegistered(), heartbeatInterval, new Date());
     }

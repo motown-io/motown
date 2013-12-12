@@ -31,9 +31,6 @@ public class OcppEventHandler {
     private static final Logger log = LoggerFactory.getLogger(io.motown.ocpp.viewmodel.OcppEventHandler.class);
 
     @Autowired
-    private ChargingStationOcpp15Client chargingStationOcpp15Client;
-
-    @Autowired
     private ChargingStationRepository chargingStationRepository;
 
     @EventHandler
@@ -83,18 +80,6 @@ public class OcppEventHandler {
     }
 
     @EventHandler
-    public void handle(ConfigurationRequestedEvent event) {
-        log.info("Handling ConfigurationRequestedEvent");
-        chargingStationOcpp15Client.getConfiguration(event.getChargingStationId());
-    }
-
-    @EventHandler
-    public void handle(StopTransactionRequestedEvent event) {
-        log.info("StopTransactionRequestedEvent");
-        chargingStationOcpp15Client.stopTransaction(event.getChargingStationId(), TransactionIdentifierTranslator.toInt(event.getTransactionId()));
-    }
-
-    @EventHandler
     public void handle(ChargingStationConfiguredEvent event) {
         log.info("ChargingStationConfiguredEvent");
 
@@ -110,10 +95,6 @@ public class OcppEventHandler {
         chargingStation.setConfigured(true);
 
         chargingStationRepository.save(chargingStation);
-    }
-
-    public void setChargingStationOcpp15Client(ChargingStationOcpp15Client chargingStationOcpp15Client) {
-        this.chargingStationOcpp15Client = chargingStationOcpp15Client;
     }
 
     public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {

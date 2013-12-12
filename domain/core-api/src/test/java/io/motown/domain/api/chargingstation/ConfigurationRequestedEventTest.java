@@ -21,6 +21,12 @@ public class ConfigurationRequestedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ConfigurationRequestedEvent(null);
+        new ConfigurationRequestedEvent(null, "protocol");
     }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingEventWithProtocolNull() {
+        new ConfigurationRequestedEvent(new ChargingStationId("id"), null);
+    }
+
 }

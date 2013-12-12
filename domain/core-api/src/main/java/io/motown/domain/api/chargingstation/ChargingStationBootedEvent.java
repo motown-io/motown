@@ -28,19 +28,23 @@ public abstract class ChargingStationBootedEvent {
 
     private final ChargingStationId chargingStationId;
 
+    private final String protocol;
+
     private final Map<String, String> attributes;
 
     /**
      * Creates a {@code ChargingStationBootedEvent} with an identifier and a {@link java.util.Map} of attributes.
      *
      * @param chargingStationId the identifier of the charging station.
+     * @param protocol protocol identifier.
      * @param attributes        a {@link java.util.Map} of attributes. These attributes are additional information provided by
      *                          the charging station when it booted but which are not required by Motown. Because
      *                          {@link java.util.Map} implementations are potentially mutable a defensive copy is made.
-     * @throws NullPointerException if {@code chargingStationId} or {@code attributes} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId} or {@protocol} or {@code attributes} is {@code null}.
      */
-    public ChargingStationBootedEvent(ChargingStationId chargingStationId, Map<String, String> attributes) {
+    public ChargingStationBootedEvent(ChargingStationId chargingStationId, String protocol, Map<String, String> attributes) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.protocol = checkNotNull(protocol);
         this.attributes = ImmutableMap.copyOf(checkNotNull(attributes));
     }
 
@@ -51,6 +55,15 @@ public abstract class ChargingStationBootedEvent {
      */
     public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
+    }
+
+    /**
+     * Gets the protocol identifier.
+     *
+     * @return the protocol identifier.
+     */
+    public String getProtocol() {
+        return protocol;
     }
 
     /**

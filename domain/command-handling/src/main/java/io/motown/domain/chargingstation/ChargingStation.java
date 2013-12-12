@@ -26,6 +26,8 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @AggregateIdentifier
     private ChargingStationId id;
 
+    private String protocol;
+
     private int numberOfConnectors;
 
     private boolean isAccepted = false;
@@ -48,9 +50,9 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         ChargingStationBootedEvent chargingStationBootedEvent;
 
         if (isConfigured) {
-            chargingStationBootedEvent = new ConfiguredChargingStationBootedEvent(command.getChargingStationId(), command.getAttributes());
+            chargingStationBootedEvent = new ConfiguredChargingStationBootedEvent(command.getChargingStationId(), command.getProtocol(), command.getAttributes());
         } else {
-            chargingStationBootedEvent = new UnconfiguredChargingStationBootedEvent(command.getChargingStationId(), command.getAttributes());
+            chargingStationBootedEvent = new UnconfiguredChargingStationBootedEvent(command.getChargingStationId(), command.getProtocol(), command.getAttributes());
         }
 
         apply(chargingStationBootedEvent);
@@ -105,10 +107,10 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         } else {
             if (command.getConnectorId() == Connector.ALL) {
                 for (int i = 1; i <= numberOfConnectors; i++) {
-                    apply(new UnlockConnectorRequestedEvent(id, i));
+                    apply(new UnlockConnectorRequestedEvent(id, protocol, i));
                 }
             } else {
-                apply(new UnlockConnectorRequestedEvent(id, command.getConnectorId()));
+                apply(new UnlockConnectorRequestedEvent(id, protocol, command.getConnectorId()));
             }
         }
     }
@@ -117,7 +119,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     public void handle(RequestConfigurationCommand command) {
         checkCommunicationAllowed();
 
-        apply(new ConfigurationRequestedEvent(this.id));
+        apply(new ConfigurationRequestedEvent(this.id, this.protocol));
     }
 
     @CommandHandler
@@ -129,7 +131,12 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @CommandHandler
     public void handle(RequestStopTransactionCommand command) {
         //TODO: Check if transaction belongs to the specified chargingstation - Ingo Pak, 03 dec 2013
-        apply(new StopTransactionRequestedEvent(this.id, command.getTransactionId()));
+        apply(new StopTransactionRequestedEvent(this.id, this.protocol, command.getTransactionId()));
+    }
+
+    @EventHandler
+    public void handle(ChargingStationBootedEvent event) {
+        this.protocol = event.getProtocol();
     }
 
     @EventHandler

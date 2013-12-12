@@ -25,14 +25,18 @@ public class ConfigurationRequestedEvent implements CommunicationWithChargingSta
 
     private final ChargingStationId chargingStationId;
 
+    private final String protocol;
+
     /**
      * Creates a {@code ConfigurationRequestedEvent} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @param protocol protocol identifier.
+     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} is {@code null}.
      */
-    public ConfigurationRequestedEvent(ChargingStationId chargingStationId) {
+    public ConfigurationRequestedEvent(ChargingStationId chargingStationId, String protocol) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.protocol = checkNotNull(protocol);
     }
 
     /**
@@ -40,7 +44,18 @@ public class ConfigurationRequestedEvent implements CommunicationWithChargingSta
      *
      * @return the charging station identifier.
      */
+    @Override
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
+    }
+
+    /**
+     * Gets the protocol identifier.
+     *
+     * @return the protocol identifier.
+     */
+    @Override
+    public String getProtocol() {
+        return protocol;
     }
 }

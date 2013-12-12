@@ -24,12 +24,12 @@ public class ConfiguredChargingStationBootedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNullAndAttributes() {
-        new ConfiguredChargingStationBootedEvent(null, new HashMap<String, String>());
+        new ConfiguredChargingStationBootedEvent(null, "protocol", new HashMap<String, String>());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdAndAttributesNull() {
-        new ConfiguredChargingStationBootedEvent(new ChargingStationId("CS-001"), null);
+        new ConfiguredChargingStationBootedEvent(new ChargingStationId("CS-001"), "protocol", null);
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -38,7 +38,7 @@ public class ConfiguredChargingStationBootedEventTest {
         attributes.put("vendor", "VENDOR");
         attributes.put("model", "MODEL");
 
-        ConfiguredChargingStationBootedEvent command = new ConfiguredChargingStationBootedEvent(new ChargingStationId("CS-001"), attributes);
+        ConfiguredChargingStationBootedEvent command = new ConfiguredChargingStationBootedEvent(new ChargingStationId("CS-001"), "protocol", attributes);
 
         command.getAttributes().put("vendor", "ANOTHER_VENDOR");
     }

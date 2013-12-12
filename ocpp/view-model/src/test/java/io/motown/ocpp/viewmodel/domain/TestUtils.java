@@ -30,6 +30,10 @@ public class TestUtils {
         return new ChargingStationId("CS-001");
     }
 
+    public static String getProtocol() {
+        return "ocpp15soap";
+    }
+
     public static String getRandomString() {
         return UUID.randomUUID().toString();
     }

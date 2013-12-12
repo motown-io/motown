@@ -52,17 +52,22 @@
                   name="${io.motown.ocpp.soap.eventbus.amqp.rabbit.queue.name}"
                   durable="true"/>
 
+    <rabbit:queue id="ocppRequestsQueue"
+                  name="${io.motown.ocpp.soap.eventbus.amqp.rabbit.ocpp.queue.name}"
+                  exclusive="false"/>
+
     <rabbit:direct-exchange id="ocppExchange"
                             name="${io.motown.ocpp.soap.eventbus.amqp.rabbit.exchange.events.ocpp.name}"
-                            durable="true"/>
+                            durable="true">
+        <rabbit:bindings>
+            <rabbit:binding queue="ocppRequestsQueue" key="${io.motown.ocpp.soap.eventbus.amqp.rabbit.routing.key.base}.${io.motown.ocpp.soap.protocol.identifier}"/>
+            <rabbit:binding exchange="eventsExchange"/>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
 
     <rabbit:fanout-exchange id="eventsExchange"
                             name="${io.motown.ocpp.soap.eventbus.amqp.rabbit.exchange.events.name}"
                             durable="true">
-        <rabbit:bindings>
-            <rabbit:binding queue="queue"/>
-            <rabbit:binding exchange="ocppExchange"/>
-        </rabbit:bindings>
     </rabbit:fanout-exchange>
 
     <axon:event-bus id="eventBus" terminal="terminal"/>
@@ -71,17 +76,33 @@
                         connection-factory="amqpConnection"
                         serializer="serializer"
                         exchange-name="${io.motown.ocpp.soap.eventbus.amqp.rabbit.exchange.events.name}">
-        <axon-amqp:default-configuration/>
+        <axon-amqp:default-configuration exclusive="true"/>
     </axon-amqp:terminal>
 
-    <axon:cluster id="cluster" default="true">
-        <bean class="org.axonframework.eventhandling.async.AsynchronousCluster">
-            <constructor-arg value="${io.motown.ocpp.soap.eventbus.amqp.rabbit.queue.name}"/>
-            <constructor-arg ref="asyncExecutor"/>
-            <constructor-arg>
-                <bean class="org.axonframework.eventhandling.async.FullConcurrencyPolicy"/>
-            </constructor-arg>
-        </bean>
+    <axon:jpa-event-store id="eventStore" />
+
+    <axon:cluster id="eventCluster" default="true">
+        <axon:selectors>
+            <axon:class-name-matches pattern="io.motown.ocpp.viewmodel.OcppEventHandler"/>
+        </axon:selectors>
+        <axon:replay-config event-store="eventStore"/>
+        <axon:meta-data>
+            <entry key="AMQP.Config">
+                <axon-amqp:configuration queue-name="${io.motown.ocpp.soap.eventbus.amqp.rabbit.queue.name}"/>
+            </entry>
+        </axon:meta-data>
+    </axon:cluster>
+
+    <axon:cluster id="ocppRequestCluster">
+        <axon:selectors>
+            <axon:class-name-matches pattern="io.motown.ocpp.viewmodel.OcppRequestHandler"/>
+        </axon:selectors>
+        <axon:meta-data>
+            <entry key="AMQP.Config">
+                <axon-amqp:configuration queue-name="${io.motown.ocpp.soap.eventbus.amqp.rabbit.ocpp.queue.name}"
+                                         exclusive="false"/>
+            </entry>
+        </axon:meta-data>
     </axon:cluster>
 
 </beans>

@@ -30,16 +30,20 @@ public class BootChargingStationCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
+    private final String protocol;
+
     private final Map<String, String> attributes;
 
     /**
      * Creates a {@code BootChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @param protocol protocol identifier.
+     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} is {@code null}.
      */
-    public BootChargingStationCommand(ChargingStationId chargingStationId) {
+    public BootChargingStationCommand(ChargingStationId chargingStationId, String protocol) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.protocol = checkNotNull(protocol);
         this.attributes = ImmutableMap.of();
     }
 
@@ -50,10 +54,11 @@ public class BootChargingStationCommand {
      * @param attributes        a {@link java.util.Map} of attributes. These attributes are additional information provided by
      *                          the charging station when it booted but which are not required by Motown. Because
      *                          {@link java.util.Map} implementations are potentially mutable a defensive copy is made.
-     * @throws NullPointerException if {@code chargingStationId} or {@code attributes} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} or {@code attributes} is {@code null}.
      */
-    public BootChargingStationCommand(ChargingStationId chargingStationId, Map<String, String> attributes) {
+    public BootChargingStationCommand(ChargingStationId chargingStationId, String protocol, Map<String, String> attributes) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.protocol = checkNotNull(protocol);
         this.attributes = ImmutableMap.copyOf(checkNotNull(attributes));
     }
 
@@ -64,6 +69,15 @@ public class BootChargingStationCommand {
      */
     public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
+    }
+
+    /**
+     * Gets the protocol identifier.
+     *
+     * @return the protocol identifier.
+     */
+    public String getProtocol() {
+        return protocol;
     }
 
     /**
@@ -87,6 +101,7 @@ public class BootChargingStationCommand {
 
         if (attributes != null ? !attributes.equals(that.attributes) : that.attributes != null) return false;
         if (!chargingStationId.equals(that.chargingStationId)) return false;
+        if (!protocol.equals(that.protocol)) return false;
 
         return true;
     }
@@ -94,6 +109,7 @@ public class BootChargingStationCommand {
     @Override
     public int hashCode() {
         int result = chargingStationId.hashCode();
+        result = 31 * result + protocol.hashCode();
         result = 31 * result + (attributes != null ? attributes.hashCode() : 0);
         return result;
     }
