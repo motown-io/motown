@@ -24,6 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * the charging infrastructure by an operator.
  */
 public final class AcceptChargingStationCommand {
+
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
