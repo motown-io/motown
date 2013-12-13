@@ -40,9 +40,13 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     public ChargingStation(CreateChargingStationCommand command) {
         this();
         apply(new ChargingStationCreatedEvent(command.getChargingStationId()));
-        if (command.isAccepted()) {
-            apply(new ChargingStationAcceptedEvent(command.getChargingStationId()));
-        }
+    }
+
+    @CommandHandler
+    public ChargingStation(CreateAndAcceptChargingStationCommand command) {
+        this();
+        apply(new ChargingStationCreatedEvent(command.getChargingStationId()));
+        apply(new ChargingStationAcceptedEvent(command.getChargingStationId()));
     }
 
     @CommandHandler

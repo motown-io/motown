@@ -20,20 +20,21 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code CreateChargingStationCommand} is the command which is published when a charging station should be created.
+ * {@code CreateAndAcceptChargingStationCommand} is the command which is published when a charging station should be
+ * created and simultaneously is accepted as part of the charging infrastructure by an operator.
  */
-public final class CreateChargingStationCommand {
+public final class CreateAndAcceptChargingStationCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
     /**
-     * Creates a {@code CreateChargingStationCommand} with an identifier.
+     * Creates a {@code CreateAndAcceptChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public CreateChargingStationCommand(ChargingStationId chargingStationId) {
+    public CreateAndAcceptChargingStationCommand(ChargingStationId chargingStationId) {
         this.chargingStationId = checkNotNull(chargingStationId);
     }
 
@@ -51,7 +52,7 @@ public final class CreateChargingStationCommand {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        CreateChargingStationCommand that = (CreateChargingStationCommand) o;
+        CreateAndAcceptChargingStationCommand that = (CreateAndAcceptChargingStationCommand) o;
 
         if (!chargingStationId.equals(that.chargingStationId)) return false;
 

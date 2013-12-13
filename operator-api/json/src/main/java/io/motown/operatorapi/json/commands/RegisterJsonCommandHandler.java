@@ -54,7 +54,7 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
 
         ChargingStation chargingStation = repository.findOne(chargingStationId);
         if (chargingStation == null) {
-            commandGateway.sendAndWait(new CreateChargingStationCommand(new ChargingStationId(chargingStationId), true));
+            commandGateway.send(new CreateAndAcceptChargingStationCommand(new ChargingStationId(chargingStationId)));
         } else if (!chargingStation.isAccepted()) {
             commandGateway.send(new AcceptChargingStationCommand(new ChargingStationId(chargingStationId)));
         } else {

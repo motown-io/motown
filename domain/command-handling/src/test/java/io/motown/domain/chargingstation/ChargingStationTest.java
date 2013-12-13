@@ -88,9 +88,16 @@ public class ChargingStationTest {
     @Test
     public void testChargePointCreation() {
         fixture.given()
-               .when(new CreateChargingStationCommand(getChargingStationId(), true))
+               .when(new CreateChargingStationCommand(getChargingStationId()))
+               .expectEvents(new ChargingStationCreatedEvent(getChargingStationId()));
+    }
+
+    @Test
+    public void testCreatingAndAcceptingChargingStation() {
+        fixture.given()
+               .when(new CreateAndAcceptChargingStationCommand(getChargingStationId()))
                .expectEvents(new ChargingStationCreatedEvent(getChargingStationId()),
-                       new ChargingStationAcceptedEvent(getChargingStationId()));
+                             new ChargingStationAcceptedEvent(getChargingStationId()));
     }
 
     @Test

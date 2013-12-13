@@ -80,7 +80,7 @@ public class DomainServiceTest {
         BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel(), getProtocol());
         assertFalse(bootChargingStationResult.isAccepted());
 
-        verify(gateway).send( eq(new CreateChargingStationCommand(getChargingStationId(), false)), any(CommandCallback.class));
+        verify(gateway).send( eq(new CreateChargingStationCommand(getChargingStationId())), any(CommandCallback.class));
     }
 
     @Test

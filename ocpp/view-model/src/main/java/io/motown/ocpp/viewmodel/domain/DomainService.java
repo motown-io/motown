@@ -69,7 +69,7 @@ public class DomainService {
         if(chargingStation == null) {
             log.debug("Not a known charging station on boot notification, we send a CreateChargingStationCommand.");
 
-            commandGateway.send(new CreateChargingStationCommand(chargingStationId, false), new CommandCallback<Object>() {
+            commandGateway.send(new CreateChargingStationCommand(chargingStationId), new CommandCallback<Object>() {
                 @Override
                 public void onSuccess(Object o) {
                     chargingStationRepository.save(new ChargingStation(chargingStationId.getId()));
