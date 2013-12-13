@@ -15,7 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
-public class UnlockConnectorRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
+public final class UnlockConnectorRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
     private final ChargingStationId chargingStationId;
 
     private final String protocol;

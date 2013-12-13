@@ -15,7 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
-public class Connector {
+public final class Connector {
 
     public final static int ALL = 0;
 

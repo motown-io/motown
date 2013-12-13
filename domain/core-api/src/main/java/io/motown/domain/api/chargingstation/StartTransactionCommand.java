@@ -24,7 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * {@code StartTransactionCommand} is the command which is published when a charging station has started a transaction.
  */
-public class StartTransactionCommand {
+public final class StartTransactionCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;

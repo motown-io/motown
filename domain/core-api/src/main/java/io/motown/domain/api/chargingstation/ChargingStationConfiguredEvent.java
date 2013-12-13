@@ -28,7 +28,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * {@code ChargingStationConfiguredEvent} is the event which is published when a charging station has been configured.
  */
-public class ChargingStationConfiguredEvent {
+public final class ChargingStationConfiguredEvent {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;

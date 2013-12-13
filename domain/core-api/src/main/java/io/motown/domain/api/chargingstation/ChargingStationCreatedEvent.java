@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * {@code ChargingStationCreatedEvent} is the event which is published when a charging station has been created.
  */
-public class ChargingStationCreatedEvent {
+public final class ChargingStationCreatedEvent {
 
     private final ChargingStationId chargingStationId;
 

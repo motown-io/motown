@@ -25,7 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * {@code BootChargingStationCommand} is the command which is published when a charging station has booted.
  */
-public class BootChargingStationCommand {
+public final class BootChargingStationCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;

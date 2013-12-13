@@ -21,7 +21,7 @@ import java.util.Date;
 /**
  *   Event that signals that the transaction has stopped.
  */
-public class TransactionStoppedEvent {
+public final class TransactionStoppedEvent {
     private final ChargingStationId chargingStationId;
     private final String transactionId;
     private final String idTag;

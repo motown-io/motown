@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * {@code AcceptChargingStationCommand} is the command which is published when a charging station is accepted as part of
  * the charging infrastructure by an operator.
  */
-public class AcceptChargingStationCommand {
+public final class AcceptChargingStationCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 

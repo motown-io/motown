@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * {@code ChargingStationAcceptedEvent} is the event which is published when a charging station has been accepted as
  * part of the charging infrastructure by an operator.
  */
-public class ChargingStationAcceptedEvent {
+public final class ChargingStationAcceptedEvent {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;

@@ -20,7 +20,7 @@ import java.io.Serializable;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class ChargingStationId implements Serializable {
+public final class ChargingStationId implements Serializable {
 
     private static final long serialVersionUID = 2404131746394766605L;
 

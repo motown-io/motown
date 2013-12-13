@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * {@code RequestStopTransactionCommand} is the command which is published when a transaction has to be
  * stopped remotely.
  */
-public class RequestStopTransactionCommand {
+public final class RequestStopTransactionCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;

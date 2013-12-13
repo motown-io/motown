@@ -17,7 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-public class RequestUnlockConnectorCommand {
+public final class RequestUnlockConnectorCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;

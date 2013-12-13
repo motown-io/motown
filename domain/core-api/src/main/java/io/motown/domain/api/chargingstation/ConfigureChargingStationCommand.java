@@ -30,7 +30,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * {@code ConfigureChargingStationCommand} is the command which is published when a charging station should be
  * configured.
  */
-public class ConfigureChargingStationCommand {
+public final class ConfigureChargingStationCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;

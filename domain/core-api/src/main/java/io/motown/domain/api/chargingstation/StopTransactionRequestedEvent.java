@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * {@code StopTransactionRequestedEvent} is the event which is published when a request has been made to stop the transaction.
  */
-public class StopTransactionRequestedEvent implements CommunicationWithChargingStationRequestedEvent{
+public final class StopTransactionRequestedEvent implements CommunicationWithChargingStationRequestedEvent{
 
     private final ChargingStationId chargingStationId;
 

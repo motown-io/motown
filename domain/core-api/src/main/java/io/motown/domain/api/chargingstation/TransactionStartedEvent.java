@@ -22,7 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * {@code TransactionStartedEvent} is the event which is published when a transaction has started.
  */
-public class TransactionStartedEvent {
+public final class TransactionStartedEvent {
 
     private final ChargingStationId chargingStationId;
 

@@ -24,7 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * {@code StopTransactionCommand} is the command which is published when a transaction is stopped.
  */
-public class StopTransactionCommand {
+public final class StopTransactionCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;

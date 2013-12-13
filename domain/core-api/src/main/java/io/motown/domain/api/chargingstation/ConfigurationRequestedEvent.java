@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * {@code RequestConfigurationCommand} is the event which is published when a charging station's configuration should
  * be requested from the charging station.
  */
-public class ConfigurationRequestedEvent implements CommunicationWithChargingStationRequestedEvent{
+public final class ConfigurationRequestedEvent implements CommunicationWithChargingStationRequestedEvent{
 
     private final ChargingStationId chargingStationId;
 

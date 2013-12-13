@@ -17,7 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 /**
  */
-public class ConnectorNotFoundEvent {
+public final class ConnectorNotFoundEvent {
     private final ChargingStationId chargingStationId;
     private final Integer connectorId;
 

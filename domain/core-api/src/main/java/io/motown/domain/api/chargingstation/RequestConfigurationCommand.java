@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * {@code RequestConfigurationCommand} is the command which is published when a charging station's configuration should
  * be requested from the charging station.
  */
-public class RequestConfigurationCommand {
+public final class RequestConfigurationCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
