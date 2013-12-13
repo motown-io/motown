@@ -42,9 +42,7 @@ public final class BootChargingStationCommand {
      * @throws NullPointerException if {@code chargingStationId} or {@code protocol} is {@code null}.
      */
     public BootChargingStationCommand(ChargingStationId chargingStationId, String protocol) {
-        this.chargingStationId = checkNotNull(chargingStationId);
-        this.protocol = checkNotNull(protocol);
-        this.attributes = ImmutableMap.of();
+        this(chargingStationId, protocol, ImmutableMap.<String, String>of());
     }
 
     /**
