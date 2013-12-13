@@ -28,11 +28,11 @@
     <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
 
     <!-- Interceptor that adds the messageId if not present, as CXF requires the WS-Addressing messageId header to be present, while according to the spec this is only requierd when using the replyTo or faultTo WSA headers -->
-    <bean id="headerInterceptor" class="io.motown.ocpp.soap.interceptor.MessageIdHeaderInterceptor" />
+    <bean id="headerInterceptor" class="io.motown.ocpp.v15.soap.interceptor.MessageIdHeaderInterceptor" />
 
-    <bean id="replyToInterceptor" class="io.motown.ocpp.soap.interceptor.ReplyToHeaderInInterceptor" />
+    <bean id="replyToInterceptor" class="io.motown.ocpp.v15.soap.interceptor.ReplyToHeaderInInterceptor" />
 
-    <bean id="centralSystemService" class="io.motown.ocpp.soap.centralsystem.v1_5.CentralSystemService" />
+    <bean id="centralSystemService" class="io.motown.ocpp.v15.soap.centralsystem.CentralSystemService" />
 
     <jaxws:endpoint implementor="#centralSystemService"
                     address="/centralSystemService">

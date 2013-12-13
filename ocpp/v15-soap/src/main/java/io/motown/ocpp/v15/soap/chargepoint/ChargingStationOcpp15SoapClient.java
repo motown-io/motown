@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package io.motown.ocpp.soap.chargepoint.v1_5;
+package io.motown.ocpp.v15.soap.chargepoint;
 
 import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.ocpp.soap.chargepoint.v1_5.schema.*;
+import io.motown.ocpp.v15.soap.chargepoint.schema.*;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import org.apache.cxf.binding.soap.Soap12;
 import org.apache.cxf.binding.soap.SoapBindingConfiguration;
-import org.apache.cxf.jaxws.JaxWsClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.ws.addressing.WSAddressingFeature;
-import org.omg.CosNaming.BindingIteratorPOA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

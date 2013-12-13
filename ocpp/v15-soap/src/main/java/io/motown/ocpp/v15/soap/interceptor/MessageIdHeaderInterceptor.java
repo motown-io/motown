@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.motown.ocpp.soap.interceptor;
+package io.motown.ocpp.v15.soap.interceptor;
 
 import com.sun.org.apache.xerces.internal.dom.*;
 import org.apache.cxf.binding.soap.SoapHeader;

@@ -28,7 +28,7 @@
     </parent>
 
     <groupId>io.motown.ocpp</groupId>
-    <artifactId>ocpp-soap-1.5</artifactId>
+    <artifactId>ocpp-v15-soap</artifactId>
     <packaging>war</packaging>
 
     <properties>
@@ -123,7 +123,7 @@
                                     </bindingFiles>
                                     <wsdlLocation>wsdl/ocpp_15_centralsystem.wsdl</wsdlLocation>
                                     <packagenames>
-                                        <packagename>io.motown.ocpp.soap.centralsystem.v1_5.schema</packagename>
+                                        <packagename>io.motown.ocpp.v15.soap.centralsystem.schema</packagename>
                                     </packagenames>
                                     <extraargs>
                                         <extraarg>-exsh</extraarg>
@@ -137,7 +137,7 @@
                                     </bindingFiles>
                                     <wsdlLocation>wsdl/ocpp_15_chargepoint.wsdl</wsdlLocation>
                                     <packagenames>
-                                        <packagename>io.motown.ocpp.soap.chargepoint.v1_5.schema</packagename>
+                                        <packagename>io.motown.ocpp.v15.soap.chargepoint.schema</packagename>
                                     </packagenames>
                                     <extraargs>
                                         <extraarg>-exsh</extraarg>

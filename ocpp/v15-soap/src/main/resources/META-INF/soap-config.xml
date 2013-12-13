@@ -28,45 +28,45 @@
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                            http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
 
-    <context:property-placeholder location="classpath:config.properties, file:${io.motown.ocpp.soap.config}"
+    <context:property-placeholder location="classpath:config.properties, file:${io.motown.ocpp.v15.soap.config}"
                                   ignore-resource-not-found="true"
                                   ignore-unresolvable="true"/>
 
     <axon:annotation-config/>
 
-    <context:component-scan base-package="io.motown.ocpp.soap"/>
+    <context:component-scan base-package="io.motown.ocpp.v15.soap"/>
 
-    <bean class="io.motown.ocpp.soap.chargepoint.v1_5.ChargingStationOcpp15SoapClient"/>
-    <bean class="io.motown.ocpp.soap.centralsystem.v1_5.schema.ObjectFactory"/>
+    <bean class="io.motown.ocpp.v15.soap.chargepoint.ChargingStationOcpp15SoapClient"/>
+    <bean class="io.motown.ocpp.v15.soap.centralsystem.schema.ObjectFactory"/>
 
     <rabbit:connection-factory id="amqpConnection"
-                               username="${io.motown.ocpp.soap.eventbus.amqp.rabbit.username}"
-                               password="${io.motown.ocpp.soap.eventbus.amqp.rabbit.password}"
-                               virtual-host="${io.motown.ocpp.soap.eventbus.amqp.rabbit.virtualhost}"
-                               host="${io.motown.ocpp.soap.eventbus.amqp.rabbit.host}"/>
+                               username="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.username}"
+                               password="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.password}"
+                               virtual-host="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.virtualhost}"
+                               host="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.host}"/>
 
     <rabbit:admin id="amqpAdmin"
                   connection-factory="amqpConnection"/>
 
     <rabbit:queue id="queue"
-                  name="${io.motown.ocpp.soap.eventbus.amqp.rabbit.queue.name}"
+                  name="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.queue.name}"
                   durable="true"/>
 
     <rabbit:queue id="ocppRequestsQueue"
-                  name="${io.motown.ocpp.soap.eventbus.amqp.rabbit.ocpp.queue.name}"
+                  name="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.ocpp.queue.name}"
                   exclusive="false"/>
 
     <rabbit:direct-exchange id="ocppExchange"
-                            name="${io.motown.ocpp.soap.eventbus.amqp.rabbit.exchange.events.ocpp.name}"
+                            name="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.exchange.events.ocpp.name}"
                             durable="true">
         <rabbit:bindings>
-            <rabbit:binding queue="ocppRequestsQueue" key="${io.motown.ocpp.soap.eventbus.amqp.rabbit.routing.key.base}.${io.motown.ocpp.soap.protocol.identifier}"/>
+            <rabbit:binding queue="ocppRequestsQueue" key="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.routing.key.base}.${io.motown.ocpp.v15.soap.protocol.identifier}"/>
             <rabbit:binding exchange="eventsExchange"/>
         </rabbit:bindings>
     </rabbit:direct-exchange>
 
     <rabbit:fanout-exchange id="eventsExchange"
-                            name="${io.motown.ocpp.soap.eventbus.amqp.rabbit.exchange.events.name}"
+                            name="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.exchange.events.name}"
                             durable="true">
     </rabbit:fanout-exchange>
 
@@ -75,7 +75,7 @@
     <axon-amqp:terminal id="terminal"
                         connection-factory="amqpConnection"
                         serializer="serializer"
-                        exchange-name="${io.motown.ocpp.soap.eventbus.amqp.rabbit.exchange.events.name}">
+                        exchange-name="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.exchange.events.name}">
         <axon-amqp:default-configuration exclusive="true"/>
     </axon-amqp:terminal>
 
@@ -88,7 +88,7 @@
         <axon:replay-config event-store="eventStore"/>
         <axon:meta-data>
             <entry key="AMQP.Config">
-                <axon-amqp:configuration queue-name="${io.motown.ocpp.soap.eventbus.amqp.rabbit.queue.name}"/>
+                <axon-amqp:configuration queue-name="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.queue.name}"/>
             </entry>
         </axon:meta-data>
     </axon:cluster>
@@ -99,7 +99,7 @@
         </axon:selectors>
         <axon:meta-data>
             <entry key="AMQP.Config">
-                <axon-amqp:configuration queue-name="${io.motown.ocpp.soap.eventbus.amqp.rabbit.ocpp.queue.name}"
+                <axon-amqp:configuration queue-name="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.ocpp.queue.name}"
                                          exclusive="false"/>
             </entry>
         </axon:meta-data>
