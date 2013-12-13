@@ -28,7 +28,7 @@
     </parent>
 
     <groupId>io.motown.ocpp</groupId>
-    <artifactId>ocpp-soap</artifactId>
+    <artifactId>ocpp-soap-1.5</artifactId>
     <packaging>war</packaging>
 
     <properties>
