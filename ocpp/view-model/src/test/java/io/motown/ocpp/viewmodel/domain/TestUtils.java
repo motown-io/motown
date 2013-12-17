@@ -19,6 +19,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.Connector;
+import io.motown.domain.api.chargingstation.IdentifyingToken;
+import io.motown.domain.api.chargingstation.TextualToken;
 
 import java.util.Map;
 import java.util.Set;
@@ -31,11 +33,15 @@ public class TestUtils {
     }
 
     public static String getProtocol() {
-        return "ocpp15soap";
+        return "OCPPS15";
     }
 
     public static String getRandomString() {
         return UUID.randomUUID().toString();
+    }
+
+    public static IdentifyingToken getIdentifyingToken() {
+        return new TextualToken("ID-TAG");
     }
 
     public static String getIdTag() {

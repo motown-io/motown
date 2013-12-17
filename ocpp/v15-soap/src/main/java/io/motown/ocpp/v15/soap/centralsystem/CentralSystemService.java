@@ -16,6 +16,7 @@
 package io.motown.ocpp.v15.soap.centralsystem;
 
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.TextualToken;
 import io.motown.ocpp.v15.soap.async.RequestHandler;
 import io.motown.ocpp.v15.soap.async.ResponseFactory;
 import io.motown.ocpp.v15.soap.centralsystem.schema.*;
@@ -185,15 +186,15 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
 
     @Override
     public StartTransactionResponse startTransaction(final StartTransactionRequest parameters, final String chargeBoxIdentity) {
-        int transactionId = domainService.startTransaction(new ChargingStationId(chargeBoxIdentity), parameters.getConnectorId(), parameters.getIdTag(), parameters.getMeterStart(), parameters.getTimestamp());
+        int transactionId = domainService.startTransaction(new ChargingStationId(chargeBoxIdentity), parameters.getConnectorId(), new TextualToken(parameters.getIdTag()), parameters.getMeterStart(), parameters.getTimestamp());
         log.debug("TransactionId: " + transactionId);
 
+        // TODO locally store identifications, so we can use these in the response. - Dennis Laumen, December 16th 2013
         IdTagInfo idTagInfo = new IdTagInfo();
         idTagInfo.setStatus(AuthorizationStatus.ACCEPTED);
         idTagInfo.setParentIdTag(parameters.getIdTag());
 
         GregorianCalendar expDate = new GregorianCalendar();
-        //TODO expiry date should come from security service/CIR/local - Mark van den Bergh, December 10th 2013
         expDate.add(GregorianCalendar.YEAR, 1);
         idTagInfo.setExpiryDate(expDate.getTime());
 

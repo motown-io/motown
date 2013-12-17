@@ -125,14 +125,14 @@ public class DomainServiceTest {
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionUnknownChargingStation() {
-        domainService.startTransaction(new ChargingStationId(getRandomString()), 1, getIdTag(), 0, new Date());
+        domainService.startTransaction(new ChargingStationId(getRandomString()), 1, getIdentifyingToken(), 0, new Date());
     }
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionUnregisteredChargingStation() {
         chargingStationRepository.save(new ChargingStation(getChargingStationId().getId()));
 
-        domainService.startTransaction(getChargingStationId(), 1, getIdTag(), 0, new Date());
+        domainService.startTransaction(getChargingStationId(), 1, getIdentifyingToken(), 0, new Date());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -141,7 +141,7 @@ public class DomainServiceTest {
         cs.setRegistered(true);
         chargingStationRepository.save(cs);
 
-        domainService.startTransaction(getChargingStationId(), 1, getIdTag(), 0, new Date());
+        domainService.startTransaction(getChargingStationId(), 1, getIdentifyingToken(), 0, new Date());
     }
 
     @Test
@@ -153,10 +153,15 @@ public class DomainServiceTest {
         chargingStationRepository.save(cs);
 
         Date now = new Date();
-        int ocppTransactionId = domainService.startTransaction(getChargingStationId(), 1, getIdTag(), 0, now);
+        int ocppTransactionId = domainService.startTransaction(getChargingStationId(), 1, getIdentifyingToken(), 0, now);
         assertTrue(ocppTransactionId > 0);
 
-        verify(gateway).send(new StartTransactionCommand(getChargingStationId(), TransactionIdentifierTranslator.toString(getChargingStationId(), ocppTransactionId), 1, getIdTag(), 0, now));
+        /* TODO this test is dependent on the identical protocol identifier being used in the test subject. We should
+         * inject the protocol identifier so we properly test and configure this. - Dennis Laumen, December 16th 2013
+         */
+        TransactionId transactionId = new NumberedTransactionId(getChargingStationId(), "OCPPS15", ocppTransactionId);
+
+        verify(gateway).send(new StartTransactionCommand(getChargingStationId(), transactionId, 1, getIdentifyingToken(), 0, now));
     }
 
 }

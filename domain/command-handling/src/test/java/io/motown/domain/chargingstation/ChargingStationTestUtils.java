@@ -33,6 +33,14 @@ public class ChargingStationTestUtils {
         return "protocol";
     }
 
+    public static NumberedTransactionId getNumberedTransactionId() {
+        return new NumberedTransactionId(getChargingStationId(), getProtocol(), 123);
+    }
+
+    public static TextualToken getTextualToken() {
+        return new TextualToken("12345AB");
+    }
+
     public static List<Object> getCreatedChargingStation(boolean defaultAccepted) {
         if (defaultAccepted) {
             return ImmutableList.<Object>builder()

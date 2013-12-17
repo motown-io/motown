@@ -17,6 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import java.util.Date;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -26,86 +27,92 @@ public final class TransactionStartedEvent {
 
     private final ChargingStationId chargingStationId;
 
-    private final String idTag;
-
-    private final int meterStart;
-
-    private final String transactionId;
+    private final TransactionId transactionId;
 
     private final int connectorId;
+
+    private final IdentifyingToken identifyingToken;
+
+    private final int meterStart;
 
     private final Date timestamp;
 
     /**
      * Creates a {@code TransactionStartedEvent}.
      *
+     * In contrast to most of the other classes and methods in the Core API the {@code transactionId} and
+     * {@code identifyingToken} are possibly mutable. Some default, immutable implementations of these interfaces are
+     * provided but the mutability of these parameters can't be guaranteed.
      *
-     * @param chargingStationId identifier of the charging station.
-     * @param transactionId     identifier of the transaction.
-     * @param connectorId       identifier of the connector on which the transaction is started.
-     * @param idTag             identifier of the person that started the transaction.
-     * @param meterStart        meter value in Wh for the connector at the start of the transaction.
-     * @param timestamp         date and time the transaction has been started.
-     * @throws NullPointerException if {@code chargingStationId} and/or {@code transactionId} is {@code null}.
+     * @param chargingStationId the charging station's identifier.
+     * @param transactionId     the transaction's identifier.
+     * @param connectorId       the connector's identifier or position.
+     * @param identifyingToken  the token which started the transaction.
+     * @param meterStart        meter value in Wh for the connector when the transaction started.
+     * @param timestamp         the time at which the transaction started.
+     * @throws NullPointerException if {@code chargingStationId}, {@code transactionId}, {@code identifyingToken} or
+     * {@code timestamp} is {@code null}.
+     * @throws IllegalArgumentException if {@code connectorId} is negative.
      */
-    public TransactionStartedEvent(ChargingStationId chargingStationId, String transactionId, int connectorId, String idTag, int meterStart, Date timestamp) {
+    public TransactionStartedEvent(ChargingStationId chargingStationId, TransactionId transactionId, int connectorId, IdentifyingToken identifyingToken, int meterStart, Date timestamp) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = checkNotNull(transactionId);
+        checkArgument(connectorId > 0);
         this.connectorId = connectorId;
-        this.idTag = idTag;
-        this.timestamp = timestamp;
+        this.identifyingToken = checkNotNull(identifyingToken);
         this.meterStart = meterStart;
+        this.timestamp = new Date(checkNotNull(timestamp).getTime());
     }
 
     /**
-     * Gets the charging station identifier.
+     * Gets the charging station's identifier.
      *
-     * @return the charging station identifier.
+     * @return the charging station's identifier.
      */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
     }
 
     /**
-     * Gets the id tag.
+     * Gets the transaction's identifier.
      *
-     * @return the id tag.
+     * @return the transaction's identifier
      */
-    public String getIdTag() {
-        return idTag;
-    }
-
-    /**
-     * Gets the transaction id.
-     *
-     * @return the transaction id.
-     */
-    public String getTransactionId() {
+    public TransactionId getTransactionId() {
         return transactionId;
     }
 
     /**
-     * Gets the connector identifier.
+     * Gets the connector's identifier or position.
      *
-     * @return the connector identifier.
+     * @return the connector's identifier or position.
      */
     public int getConnectorId() {
         return connectorId;
     }
 
     /**
-     * Gets the meter start value.
+     * Gets the token which started the transaction.
      *
-     * @return the meter start value.
+     * @return the token.
+     */
+    public IdentifyingToken getIdentifyingToken() {
+        return identifyingToken;
+    }
+
+    /**
+     * Gets the meter value when the transaction started.
+     *
+     * @return the meter value when the transaction started.
      */
     public int getMeterStart() {
         return meterStart;
     }
 
     /**
-     * Gets the timestamp.
+     * Gets the time at which the transaction started.
      *
-     * @return the timestamp.
+     * @return the time at which the transaction started.
      */
     public Date getTimestamp() {
         return timestamp;

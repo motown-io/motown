@@ -131,14 +131,12 @@ public class ChargingStationTest {
     @Test
     public void testStartTransaction() {
         Date now = new Date();
-        String transactionId = "transactionId1";
         int connectorId = 1;
-        String idTag = "idTag";
         int meterStart = 0;
 
         fixture.given(getChargingStation())
-                .when(new StartTransactionCommand(getChargingStationId(), transactionId, connectorId, idTag, meterStart, now))
-                .expectEvents(new TransactionStartedEvent(getChargingStationId(), transactionId, connectorId, idTag, meterStart, now));
+               .when(new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), connectorId, getTextualToken(), meterStart, now))
+               .expectEvents(new TransactionStartedEvent(getChargingStationId(), getNumberedTransactionId(), connectorId, getTextualToken(), meterStart, now));
     }
 
     @Test
@@ -179,8 +177,8 @@ public class ChargingStationTest {
     @Test
     public void testRequestingToStartTransactionForUnconfiguredChargingStation() {
         fixture.given(getRegisteredChargingStation())
-                .when(new StartTransactionCommand(getChargingStationId(), "", 1, "", 0, new Date()))
-                .expectException(IllegalStateException.class);
+               .when(new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), 1, getTextualToken(), 0, new Date()))
+               .expectException(IllegalStateException.class);
     }
 
     @Test
@@ -200,7 +198,7 @@ public class ChargingStationTest {
     @Test
     public void testStartTransactionOnUnknownConnector() {
         fixture.given(getChargingStation())
-               .when(new StartTransactionCommand(getChargingStationId(), "", 3, "", 0, new Date()))
+               .when(new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), 3, getTextualToken(), 0, new Date()))
                .expectEvents(new ConnectorNotFoundEvent(getChargingStationId(), 3));
     }
 

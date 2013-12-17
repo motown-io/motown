@@ -125,7 +125,7 @@ public class DomainService {
      * @throws IllegalStateException when the charging station cannot be found, is not registered and configured, or the connectorId is unknown for this charging station
      * @return                       transaction identifier
      */
-    public int startTransaction(ChargingStationId chargingStationId, int connectorId, String idTag, int meterStart, Date timestamp) {
+    public int startTransaction(ChargingStationId chargingStationId, int connectorId, IdentifyingToken idTag, int meterStart, Date timestamp) {
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
         if(chargingStation == null) {
             throw new IllegalStateException("Cannot start transaction for an unknown charging station.");
@@ -139,12 +139,12 @@ public class DomainService {
             throw new IllegalStateException("Cannot start transaction on a unknown connector.");
         }
 
-        String transactionId = generateTransactionIdentifier(chargingStationId);
+        NumberedTransactionId transactionId = generateTransactionIdentifier(chargingStationId);
 
         StartTransactionCommand command = new StartTransactionCommand(chargingStationId, transactionId, connectorId, idTag, meterStart, timestamp);
         commandGateway.send(command);
 
-        return TransactionIdentifierTranslator.toInt(transactionId);
+        return transactionId.getNumber();
     }
 
     public void stopTransaction(ChargingStationId chargingStationId, int transactionId, String idTag, int meterValueStop, Date timeStamp){
@@ -180,12 +180,16 @@ public class DomainService {
      * @param chargingStationId charging station identifier to use when generating a transaction identifier.
      * @return transaction identifier based on the charging station, module and auto-incremented number.
      */
-    private String generateTransactionIdentifier(ChargingStationId chargingStationId) {
-        TransactionIdentifier identifier = new TransactionIdentifier();
+    private NumberedTransactionId generateTransactionIdentifier(ChargingStationId chargingStationId) {
+        TransactionIdentifier transactionIdentifier = new TransactionIdentifier();
 
-        transactionIdentifierRepository.saveAndFlush(identifier); // flush to make sure the generated id is populated
+        transactionIdentifierRepository.saveAndFlush(transactionIdentifier); // flush to make sure the generated id is populated
 
-        return TransactionIdentifierTranslator.toString(chargingStationId, (Long) entityManagerFactory.getPersistenceUnitUtil().getIdentifier(identifier));
+        /* TODO JPA's identity generator creates longs, while OCPP and Motown supports ints. Where should we translate
+         * between these and how should we handle error cases? - Dennis Laumen, December 16th 2013
+         */
+        Long identifier = (Long) entityManagerFactory.getPersistenceUnitUtil().getIdentifier(transactionIdentifier);
+        return new NumberedTransactionId(chargingStationId, "OCPPS15", identifier.intValue());
     }
 
 }
