@@ -15,33 +15,7 @@
  */
 package io.motown.ocpp.viewmodel.domain;
 
-import io.motown.domain.api.chargingstation.ChargingStationId;
-
 public class TransactionIdentifierTranslator {
-
-    /**
-     * Generates a string representation of the long based OCPP1.5 transactionId.
-     * To create a unique represenation the chargingstationId, and protocol are included.
-     *
-     * @param chargingStationId the chargingstation identifier
-     * @param transactionId the long based transaction identifier
-     * @return String in the format [chargingstationId]_OCPP_[transactionId]
-     */
-    public static String toString(ChargingStationId chargingStationId, Long transactionId){
-        return String.format("%s_OCPP_%s", chargingStationId.getId(), transactionId);
-    }
-
-    /**
-     * Generates a string representation of the integer based OCPP1.5 transactionId.
-     * To create a unique represenation the chargingstationId, and protocol are included.
-     *
-     * @param chargingStationId the chargingstation identifier
-     * @param transactionId the int based transaction identifier
-     * @return String in the format [chargingstationId]_OCPP_[transactionId]
-     */
-    public static String toString(ChargingStationId chargingStationId, int transactionId){
-        return String.format("%s_OCPP_%s", chargingStationId.getId(), transactionId);
-    }
 
     /**
      * Extracts the OCPP transaction identifier (integer) from the generated transaction identifier.

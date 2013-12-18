@@ -15,8 +15,7 @@
  */
 package io.motown.ocpp.v15.soap.centralsystem;
 
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.TextualToken;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.v15.soap.async.RequestHandler;
 import io.motown.ocpp.v15.soap.async.ResponseFactory;
 import io.motown.ocpp.v15.soap.centralsystem.schema.*;
@@ -91,7 +90,11 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
 
     @Override
     public StopTransactionResponse stopTransaction(StopTransactionRequest request, String chargeBoxIdentity) {
-        domainService.stopTransaction(new ChargingStationId(chargeBoxIdentity), request.getTransactionId(), request.getIdTag(), request.getMeterStop(), request.getTimestamp());
+        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
+        TransactionId transactionId = new NumberedTransactionId(chargingStationId, "ocpps15", request.getTransactionId());
+        IdentifyingToken identifyingToken = new TextualToken(request.getIdTag());
+
+        domainService.stopTransaction(chargingStationId, transactionId, identifyingToken, request.getMeterStop(), request.getTimestamp());
         return new StopTransactionResponse();
     }
 

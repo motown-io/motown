@@ -147,8 +147,8 @@ public class DomainService {
         return transactionId.getNumber();
     }
 
-    public void stopTransaction(ChargingStationId chargingStationId, int transactionId, String idTag, int meterValueStop, Date timeStamp){
-        StopTransactionCommand command = new StopTransactionCommand(chargingStationId, TransactionIdentifierTranslator.toString(chargingStationId, transactionId), idTag, meterValueStop, timeStamp);
+    public void stopTransaction(ChargingStationId chargingStationId, TransactionId transactionId, IdentifyingToken idTag, int meterValueStop, Date timeStamp){
+        StopTransactionCommand command = new StopTransactionCommand(chargingStationId, transactionId, idTag, meterValueStop, timeStamp);
         commandGateway.send(command);
     }
 

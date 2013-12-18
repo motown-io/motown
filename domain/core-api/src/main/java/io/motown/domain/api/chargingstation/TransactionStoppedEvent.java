@@ -15,52 +15,93 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Date;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- *   Event that signals that the transaction has stopped.
+ * {@code TransactionStoppedEvent} is the event which is published when a charging station has stopped a transaction.
  */
 public final class TransactionStoppedEvent {
+
+    @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
-    private final String transactionId;
-    private final String idTag;
-    private final int meterValueStop;
+
+    private final TransactionId transactionId;
+
+    private final IdentifyingToken identifyingToken;
+
+    private final int meterStop;
+
     private final Date timestamp;
 
     /**
-     * Creates a {@code TransactionStoppedEvent}
+     * Creates a {@code TransactionStoppedEvent}.
+     * <p/>
+     * In contrast to most of the other classes and methods in the Core API the {@code transactionId} and
+     * {@code identifyingToken} are possibly mutable. Some default, immutable implementations of these interfaces are
+     * provided but the mutability of these parameters can't be guaranteed.
      *
-     * @param chargingStationId
-     * @param transactionId
-     * @param idTag
-     * @param meterValueStop
-     * @param timestamp
+     * @param chargingStationId the charging station's identifier.
+     * @param transactionId     the transaction's identifier.
+     * @param connectorId       the connector's identifier or position.
+     * @param identifyingToken  the token which stopped the transaction.
+     * @param meterStart        meter value in Wh for the connector when the transaction stopped.
+     * @param timestamp         the time at which the transaction stopped.
+     * @throws NullPointerException if {@code chargingStationId}, {@code transactionId}, {@code identifyingToken} or
+     *                              {@code timestamp} is {@code null}.
      */
-    public TransactionStoppedEvent(ChargingStationId chargingStationId, String transactionId, String idTag, int meterValueStop, Date timestamp) {
-        this.chargingStationId = chargingStationId;
-        this.transactionId = transactionId;
-        this.idTag = idTag;
-        this.meterValueStop = meterValueStop;
-        this.timestamp = timestamp;
+    public TransactionStoppedEvent(ChargingStationId chargingStationId, TransactionId transactionId, IdentifyingToken identifyingToken, int meterStop, Date timestamp) {
+        this.chargingStationId = checkNotNull(chargingStationId);
+        this.transactionId = checkNotNull(transactionId);
+        this.identifyingToken = checkNotNull(identifyingToken);
+        this.meterStop = meterStop;
+        this.timestamp = new Date(checkNotNull(timestamp).getTime());
     }
 
+    /**
+     * Gets the charging station's identifier.
+     *
+     * @return the charging station's identifier.
+     */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
     }
 
-    public String getTransactionId() {
+    /**
+     * Gets the transaction's identifier.
+     *
+     * @return the transaction's identifier
+     */
+    public TransactionId getTransactionId() {
         return transactionId;
     }
 
-    public String getIdTag() {
-        return idTag;
+    /**
+     * Gets the token which started the transaction.
+     *
+     * @return the token.
+     */
+    public IdentifyingToken getIdTag() {
+        return identifyingToken;
     }
 
-    public int getMeterValueStop() {
-        return meterValueStop;
+    /**
+     * Gets the meter value when the transaction stopped.
+     *
+     * @return the meter value when the transaction stopped.
+     */
+    public int getMeterStop() {
+        return meterStop;
     }
 
+    /**
+     * Gets the time at which the transaction started.
+     *
+     * @return the time at which the transaction started.
+     */
     public Date getTimestamp() {
         return timestamp;
     }

@@ -17,10 +17,7 @@ package io.motown.ocpp.viewmodel.domain;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.Connector;
-import io.motown.domain.api.chargingstation.IdentifyingToken;
-import io.motown.domain.api.chargingstation.TextualToken;
+import io.motown.domain.api.chargingstation.*;
 
 import java.util.Map;
 import java.util.Set;
@@ -46,6 +43,10 @@ public class TestUtils {
 
     public static String getIdTag() {
         return "ID-TAG";
+    }
+
+    public static NumberedTransactionId getNumberedTransactionId() {
+        return new NumberedTransactionId(getChargingStationId(), getProtocol(), 123);
     }
 
     public static String getChargingStationAddress() {

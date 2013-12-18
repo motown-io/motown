@@ -90,13 +90,13 @@ public class ChargingStationEventListener {
     public void handle(TransactionStoppedEvent event) {
         log.debug("TransactionStoppedEvent for [{}] received!", event.getChargingStationId());
 
-        List<Transaction> transactions = transactionRepository.findByTransactionId(event.getTransactionId());
+        List<Transaction> transactions = transactionRepository.findByTransactionId(event.getTransactionId().getId());
 
         if(transactions.isEmpty() || transactions.size() > 1) {
             log.error("cannot find unique transaction with transaction id {}", event.getTransactionId());
         } else {
             Transaction transaction = transactions.get(0);
-            transaction.setMeterStop(event.getMeterValueStop());
+            transaction.setMeterStop(event.getMeterStop());
             transaction.setStoppedTimestamp(event.getTimestamp());
             transactionRepository.save(transaction);
         }
