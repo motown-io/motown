@@ -34,11 +34,6 @@ public class OcppEventHandler {
     private ChargingStationRepository chargingStationRepository;
 
     @EventHandler
-    public void handle(ChargingStationBootedEvent event) {
-        log.info("ChargingStationBootedEvent");
-    }
-
-    @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
         log.info("Handling ChargingStationCreatedEvent");
         String chargingStationId = event.getChargingStationId().getId();
@@ -62,21 +57,6 @@ public class OcppEventHandler {
         } else {
             log.error("OCPP module repo COULD NOT FIND CHARGEPOINT {} and mark it as registered", event.getChargingStationId());
         }
-    }
-
-    @EventHandler
-    public void handle(ConnectorNotFoundEvent event) {
-        log.info("ConnectorNotFoundEvent");
-    }
-
-    @EventHandler
-    public void handle(UnlockConnectorRequestedEvent event) {
-        log.info("UnlockConnectorRequestedEvent");
-    }
-
-    @EventHandler
-    public void handle(TransactionStartedEvent event) {
-        log.info("TransactionStartedEvent");
     }
 
     @EventHandler

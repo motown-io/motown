@@ -67,5 +67,18 @@ public class OcppRequestHandlerTest {
         verify(client).stopTransaction(getChargingStationId(), transactionId);
     }
 
+    @Test
+    public void testRequestSoftResetChargingStationEvent() {
+        requestHandler.handle(new SoftResetChargingStationRequestedEvent(getChargingStationId(), getProtocol()));
+
+        verify(client).softReset(getChargingStationId());
+    }
+
+    @Test
+    public void testRequestHardResetChargingStationEvent() {
+        requestHandler.handle(new HardResetChargingStationRequestedEvent(getChargingStationId(), getProtocol()));
+
+        verify(client).hardReset(getChargingStationId());
+    }
 
 }

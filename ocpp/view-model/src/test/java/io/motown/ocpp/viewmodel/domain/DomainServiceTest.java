@@ -85,7 +85,7 @@ public class DomainServiceTest {
 
     @Test
     public void testBootKnownChargingStation() {
-        ChargingStation cs = new ChargingStation(getChargingStationId().getId());
+        ChargingStation cs = new ChargingStation(getChargingStationId().getId(), getChargingStationAddress());
         cs.setRegistered(true);
         cs.setNumberOfConnectors(2);
         cs.setConfigured(true);
@@ -107,6 +107,7 @@ public class DomainServiceTest {
         assertTrue(cs.isConfigured());
         assertTrue(cs.isRegistered());
         assertTrue(cs.isRegisteredAndConfigured());
+        assertEquals(cs.getIpAddress(), getChargingStationAddress());
 
         verify(gateway).send( new BootChargingStationCommand(getChargingStationId(), getProtocol(), attributes) );
     }

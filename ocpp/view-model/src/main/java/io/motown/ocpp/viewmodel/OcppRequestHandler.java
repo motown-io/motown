@@ -32,16 +32,6 @@ public class OcppRequestHandler {
     private ChargingStationOcpp15Client chargingStationOcpp15Client;
 
     @EventHandler
-    public void handle(UnlockConnectorRequestedEvent event) {
-        log.info("UnlockConnectorRequestedEvent");
-    }
-
-    @EventHandler
-    public void handle(ChargingStationConfiguredEvent event) {
-        log.info("ChargingStationConfiguredEvent");
-    }
-
-    @EventHandler
     public void handle(ConfigurationRequestedEvent event) {
         log.info("Handling ConfigurationRequestedEvent");
         chargingStationOcpp15Client.getConfiguration(event.getChargingStationId());
