@@ -14,7 +14,7 @@
     <axon:annotation-config/>
     <context:component-scan base-package="io.motown.domain"/>
 
-    <context:property-placeholder location="classpath:config.properties, classpath:hsqldb.database.properties"
+    <context:property-placeholder location="classpath:config.properties, file:${io.motown.domain.app.config}"
                                   ignore-resource-not-found="true"/>
 
     <axon:event-bus id="eventBus"
