@@ -208,4 +208,18 @@ public class ChargingStationTest {
                .when(new RequestUnlockConnectorCommand(getChargingStationId(), Connector.ALL))
                .expectEvents(new UnlockConnectorRequestedEvent(getChargingStationId(), getProtocol(), 1), new UnlockConnectorRequestedEvent(getChargingStationId(), getProtocol(), 2));
     }
+
+    @Test
+    public void testRequestSoftResetChargingStation() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new RequestSoftResetChargingStationCommand(getChargingStationId()))
+                .expectEvents(new SoftResetChargingStationRequestedEvent(getChargingStationId(), getProtocol()));
+    }
+
+    @Test
+    public void testRequestHardResetChargingStation() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new RequestHardResetChargingStationCommand(getChargingStationId()))
+                .expectEvents(new HardResetChargingStationRequestedEvent(getChargingStationId(), getProtocol()));
+    }
 }

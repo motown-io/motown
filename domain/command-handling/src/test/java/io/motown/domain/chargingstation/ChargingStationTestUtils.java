@@ -44,6 +44,7 @@ public class ChargingStationTestUtils {
     public static List<Object> getCreatedChargingStation(boolean defaultAccepted) {
         if (defaultAccepted) {
             return ImmutableList.<Object>builder()
+                    .add(new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getProtocol(), getAttributes()))
                     .add(new ChargingStationCreatedEvent(getChargingStationId()))
                     .add(new ChargingStationAcceptedEvent(getChargingStationId()))
                     .build();
