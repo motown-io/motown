@@ -37,7 +37,11 @@
                 </thead>
                 <tr ng-repeat="chargingStation in chargingStations">
                     <td>{{chargingStation.id}}</td>
-                    <td><a ng-if="!chargingStation.accepted" href="#" ng-click="registerChargingStation(chargingStation)">register</a></td>
+                    <td>
+                        <button class="btn btn-default" ng-if="!chargingStation.accepted" href="#" ng-click="registerChargingStation(chargingStation)">[ register ]</button>
+                        <button class="btn btn-default" ng-if="chargingStation.accepted" href="#" ng-click="resetChargingStation(chargingStation, 'soft')">[ soft reset ]</button>
+                        <button class="btn btn-default" ng-if="chargingStation.accepted" href="#" ng-click="resetChargingStation(chargingStation, 'hard')">[ hard reset ]</button>
+                    </td>
                 </tr>
             </table>
         </div>

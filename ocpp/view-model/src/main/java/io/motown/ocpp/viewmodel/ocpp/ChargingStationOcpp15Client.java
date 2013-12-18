@@ -23,4 +23,9 @@ public interface ChargingStationOcpp15Client {
     void getConfiguration(ChargingStationId id);
 
     void stopTransaction(ChargingStationId id, int transactionId);
+
+    void softReset(ChargingStationId id);
+
+    void hardReset(ChargingStationId id);
+
 }

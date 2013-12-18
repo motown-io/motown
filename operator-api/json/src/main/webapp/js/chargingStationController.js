@@ -36,8 +36,8 @@ function ChargingStationController($scope, $http, $timeout) {
                 'Accept': '*/*' // if this is not specified our request will fail
             }
         }).success(function(response) {
-                $scope.chargingStations = response;
-            });
+            $scope.chargingStations = response;
+        });
     };
 
     $scope.registerChargingStation = function(chargingStation) {
@@ -74,4 +74,28 @@ function ChargingStationController($scope, $http, $timeout) {
             cs.accepted = true;
         });
     };
+
+    $scope.resetChargingStation = function(chargingStation, type) {
+        var resetType = 'soft';
+
+        if (type == 'hard') {
+            resetType = 'hard';
+        }
+
+        $http({
+            url: 'charging-stations/' + chargingStation.id + '/commands',
+            dataType: 'json',
+            method: 'POST',
+            data: ['ResetChargingStation',{
+                'type': resetType
+            }],
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            }
+        }).success(function(response) {
+            console.log('reset requested');
+        });
+    };
+
 }

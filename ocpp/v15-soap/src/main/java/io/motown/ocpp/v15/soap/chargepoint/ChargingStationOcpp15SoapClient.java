@@ -67,6 +67,28 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         log.info("Stop transaction request has been {}", response.getStatus().value());
     }
 
+    @Override
+    public void softReset(ChargingStationId id) {
+        log.info("Requesting soft reset");
+
+        this.reset(id, ResetType.SOFT);
+    }
+
+    @Override
+    public void hardReset(ChargingStationId id) {
+        log.info("Requesting hard reset");
+
+        this.reset(id, ResetType.HARD);
+    }
+
+    private void reset(ChargingStationId id, ResetType type) {
+        ChargePointService chargePointService = this.createChargePointService(id);
+
+        ResetRequest request = new ResetRequest();
+        request.setType(type);
+        chargePointService.reset(request, id.getId());
+    }
+
     /**
      *
      * @param id

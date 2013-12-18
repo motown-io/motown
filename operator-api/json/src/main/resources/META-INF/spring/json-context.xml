@@ -20,6 +20,7 @@
         <ref bean="configureJsonCommandHandler"/>
         <ref bean="registerJsonCommandHandler"/>
         <ref bean="requestStopTransactionJsonCommandHandler"/>
+        <ref bean="requestResetChargingStationJsonCommandHandler"/>
     </util:list>
 
     <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">

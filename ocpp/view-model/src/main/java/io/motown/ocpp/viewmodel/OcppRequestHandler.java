@@ -15,10 +15,7 @@
  */
 package io.motown.ocpp.viewmodel;
 
-import io.motown.domain.api.chargingstation.ChargingStationConfiguredEvent;
-import io.motown.domain.api.chargingstation.ConfigurationRequestedEvent;
-import io.motown.domain.api.chargingstation.StopTransactionRequestedEvent;
-import io.motown.domain.api.chargingstation.UnlockConnectorRequestedEvent;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.domain.TransactionIdentifierTranslator;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -54,6 +51,18 @@ public class OcppRequestHandler {
     public void handle(StopTransactionRequestedEvent event) {
         log.info("StopTransactionRequestedEvent");
         chargingStationOcpp15Client.stopTransaction(event.getChargingStationId(), TransactionIdentifierTranslator.toInt(event.getTransactionId()));
+    }
+
+    @EventHandler
+    public void handle(SoftResetChargingStationRequestedEvent event) {
+        log.info("SoftResetChargingStationRequestedEvent");
+        chargingStationOcpp15Client.softReset(event.getChargingStationId());
+    }
+
+    @EventHandler
+    public void handle(HardResetChargingStationRequestedEvent event) {
+        log.info("HardResetChargingStationRequestedEvent");
+        chargingStationOcpp15Client.hardReset(event.getChargingStationId());
     }
 
     public void setChargingStationOcpp15Client(ChargingStationOcpp15Client chargingStationOcpp15Client) {
