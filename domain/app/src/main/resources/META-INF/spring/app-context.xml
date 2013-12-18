@@ -4,17 +4,17 @@
        xmlns:axon="http://www.axonframework.org/schema/core"
        xmlns:axon-amqp="http://www.axonframework.org/schema/amqp"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit" xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.axonframework.org/schema/amqp http://www.axonframework.org/schema/axon-amqp-2.0.xsd
                            http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core-2.0.xsd
                            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
-                           http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.1.xsd">
+                           http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.1.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <axon:annotation-config/>
     <context:component-scan base-package="io.motown.domain"/>
 
-    <context:property-placeholder location="classpath:config.properties, file:${io.motown.domain.app.config}"
+    <context:property-placeholder location="classpath:config.properties, classpath:hsqldb.database.properties"
                                   ignore-resource-not-found="true"/>
 
     <axon:event-bus id="eventBus"
@@ -32,8 +32,49 @@
         </property>-->
     </bean>
 
-    <axon:filesystem-event-store id="eventStore"
-                                 base-dir="${io.motown.domain.app.eventstore.filesystem.basedir}"/>
+    <!-- Begin configuration of JPA EventStore -->
+
+    <axon:jpa-event-store id="eventStore"
+                          data-source="dataSource" />
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName"
+                  value="${jdbc.driverclass}" />
+        <property name="url"
+                  value="${jdbc.url}" />
+        <property name="username"
+                  value="${jdbc.username}" />
+        <property name="password"
+                  value="${jdbc.password}" />
+    </bean>
+
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource"
+                  ref="dataSource"/>
+        <property name="packagesToScan"
+                  value="org.axonframework.eventstore.jpa"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="database"
+                          value="HSQL"/>
+                <property name="generateDdl"
+                          value="true"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="commandTransactionManager"
+          class="org.axonframework.unitofwork.SpringTransactionManager">
+        <constructor-arg >
+            <bean class="org.springframework.orm.jpa.JpaTransactionManager">
+                <property name="entityManagerFactory"
+                          ref="entityManagerFactory"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <!-- End configuration of JPA EventStore -->
 
     <axon:snapshotter id="snapshotter"
                       event-store="eventStore"
@@ -69,6 +110,7 @@
                   ref="serializer"/>
         <property name="localSegment">
             <bean class="org.axonframework.commandhandling.SimpleCommandBus">
+                <property name="transactionManager" ref="commandTransactionManager"/>
                 <property name="handlerInterceptors">
                     <bean class="org.axonframework.commandhandling.interceptors.LoggingInterceptor"/>
                 </property>

@@ -51,6 +51,7 @@
              Bug has been reported: https://issues.apache.org/jira/browse/CXF-5414 -->
         <cxf.version>2.7.0</cxf.version>
         <mockito.version>1.9.5</mockito.version>
+        <commons-dbcp.version>1.4</commons-dbcp.version>
     </properties>
 
     <dependencyManagement>
@@ -228,6 +229,11 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
                 <version>${servlet-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-dbcp</groupId>
+                <artifactId>commons-dbcp</artifactId>
+                <version>${commons-dbcp.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
