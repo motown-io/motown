@@ -19,6 +19,7 @@
         <ref bean="unlockConnectorJsonCommandHandler"/>
         <ref bean="configureJsonCommandHandler"/>
         <ref bean="registerJsonCommandHandler"/>
+        <ref bean="requestStartTransactionJsonCommandHandler"/>
         <ref bean="requestStopTransactionJsonCommandHandler"/>
         <ref bean="requestResetChargingStationJsonCommandHandler"/>
     </util:list>

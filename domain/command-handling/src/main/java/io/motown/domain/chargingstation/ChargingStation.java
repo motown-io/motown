@@ -133,6 +133,11 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
+    public void handle(RequestStartTransactionCommand command) {
+        apply(new StartTransactionRequestedEvent(this.id, this.protocol, command.getIdentifyingToken(), command.getConnectorId()));
+    }
+
+    @CommandHandler
     public void handle(RequestStopTransactionCommand command) {
         //TODO: Check if transaction belongs to the specified chargingstation - Ingo Pak, 03 dec 2013
         apply(new StopTransactionRequestedEvent(this.id, this.protocol, command.getTransactionId()));

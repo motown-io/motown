@@ -18,6 +18,7 @@ package io.motown.ocpp.v15.soap.chargepoint;
 
 import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.IdentifyingToken;
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import io.motown.ocpp.viewmodel.domain.DomainService;
@@ -54,6 +55,22 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         domainService.configureChargingStation(id, configurationItems);
     }
 
+    @Override
+    public void startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, int connectorId) {
+        log.info("Starting transaction");
+
+        ChargePointService chargePointService = this.createChargePointService(id);
+
+        RemoteStartTransactionRequest request = new RemoteStartTransactionRequest();
+        request.setIdTag(identifyingToken.getToken());
+        request.setConnectorId(connectorId);
+
+        RemoteStartTransactionResponse response = chargePointService.remoteStartTransaction(request, id.getId());
+
+        log.info("Start transaction request has been {}", response.getStatus().value());
+    }
+
+    @Override
     public void stopTransaction(ChargingStationId id, int transactionId) {
         log.info("Stopping transaction");
 

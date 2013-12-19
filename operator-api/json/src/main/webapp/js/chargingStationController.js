@@ -98,4 +98,22 @@ function ChargingStationController($scope, $http, $timeout) {
         });
     };
 
+    $scope.startTransaction = function(chargingStation) {
+        $http({
+            url: 'charging-stations/' + chargingStation.id + '/commands',
+            dataType: 'json',
+            method: 'POST',
+            data: ['RequestStartTransaction',{
+                'connectorId': 1,
+                'identifyingToken': 'TOKEN'
+            }],
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            }
+        }).success(function(response) {
+            console.log('start transaction requested');
+        });
+    }
+
 }

@@ -22,6 +22,7 @@ interface DomainCommandGateway {
     void send(ConfigureChargingStationCommand command);
     void send(CreateAndAcceptChargingStationCommand command);
     void send(AcceptChargingStationCommand command);
+    void send(RequestStartTransactionCommand command);
     void send(RequestStopTransactionCommand command);
     void send(RequestSoftResetChargingStationCommand command);
     void send(RequestHardResetChargingStationCommand command);

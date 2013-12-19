@@ -17,10 +17,13 @@
 package io.motown.ocpp.viewmodel.ocpp;
 
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.IdentifyingToken;
 
 public interface ChargingStationOcpp15Client {
 
     void getConfiguration(ChargingStationId id);
+
+    void startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, int connectorId);
 
     void stopTransaction(ChargingStationId id, int transactionId);
 
