@@ -15,11 +15,11 @@
  */
 package io.motown.ocpp.viewmodel;
 
-import io.motown.domain.api.chargingstation.*;
-import io.motown.ocpp.viewmodel.domain.TransactionIdentifierTranslator;
-import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
-import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
+import io.motown.domain.api.chargingstation.ChargingStationAcceptedEvent;
+import io.motown.domain.api.chargingstation.ChargingStationConfiguredEvent;
+import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
+import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +39,7 @@ public class OcppEventHandler {
         String chargingStationId = event.getChargingStationId().getId();
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
 
-        if(chargingStation == null){
+        if (chargingStation == null) {
             chargingStation = new ChargingStation(chargingStationId);
         }
         chargingStationRepository.save(chargingStation);
@@ -66,7 +66,7 @@ public class OcppEventHandler {
         String chargingStationId = event.getChargingStationId().getId();
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
 
-        if(chargingStation == null) {
+        if (chargingStation == null) {
             log.warn("Received a ChargingStationConfiguredEvent for unknown charging station. Creating the chargingStation.");
             chargingStation = new ChargingStation(chargingStationId);
         }

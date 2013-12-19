@@ -27,8 +27,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static io.motown.ocpp.viewmodel.domain.TestUtils.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ContextConfiguration("classpath:ocpp-view-model-test-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -60,9 +59,16 @@ public class OcppRequestHandlerTest {
 
     @Test
     public void testStopTransactionRequestedEvent() {
-        requestHandler.handle(new StopTransactionRequestedEvent(getChargingStationId(), getProtocol(), getNumberedTransactionId().getId()));
+        requestHandler.handle(new StopTransactionRequestedEvent(getChargingStationId(), getProtocol(), getNumberedTransactionId()));
 
         verify(client).stopTransaction(getChargingStationId(), getNumberedTransactionId().getNumber());
+    }
+
+    @Test
+    public void noTransactionStoppedIfTransactionIdIsIncorrectType() {
+        requestHandler.handle(new StopTransactionRequestedEvent(getChargingStationId(), getProtocol(), new UuidTransactionId()));
+
+        verifyZeroInteractions(client);
     }
 
     @Test

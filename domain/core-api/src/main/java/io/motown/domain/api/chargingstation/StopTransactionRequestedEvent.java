@@ -15,37 +15,40 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code StopTransactionRequestedEvent} is the event which is published when a request has been made to stop the transaction.
+ * {@code StopTransactionRequestedEvent} is the event which is published when a request has been made to stop the
+ * transaction.
  */
-public final class StopTransactionRequestedEvent implements CommunicationWithChargingStationRequestedEvent{
+public final class StopTransactionRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
 
     private final ChargingStationId chargingStationId;
 
     private final String protocol;
 
-    private final String transactionId;
+    private final TransactionId transactionId;
 
     /**
      * Creates a {@code StopTransactionRequestedEvent} with an identifier and a transaction identifier.
      *
-     * @param chargingStationId the identifier of the charging station.
-     * @param protocol          protocol identifier.
-     * @param transactionId     the identifier of the transaction.
-     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} or {@code transactionId} is {@code null}.
+     * @param chargingStationId the charging station's identifier.
+     * @param protocol          the protocol identifier.
+     * @param transactionId     the transaction's identifier.
+     * @throws NullPointerException     if {@code chargingStationId} or {@code protocol} or {@code transactionId} is {@code null}.
+     * @throws IllegalArgumentException if {@code protocol} is empty.
      */
-    public StopTransactionRequestedEvent(ChargingStationId chargingStationId, String protocol, String transactionId) {
+    public StopTransactionRequestedEvent(ChargingStationId chargingStationId, String protocol, TransactionId transactionId) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.protocol = checkNotNull(protocol);
+        checkNotNull(protocol);
+        checkArgument(!protocol.isEmpty());
+        this.protocol = protocol;
         this.transactionId = checkNotNull(transactionId);
     }
 
     /**
-     * Gets the charging station identifier.
-     *
-     * @return the charging station identifier.
+     * {@inheritDoc}
      */
     @Override
     public ChargingStationId getChargingStationId() {
@@ -53,9 +56,7 @@ public final class StopTransactionRequestedEvent implements CommunicationWithCha
     }
 
     /**
-     * Gets the protocol identifier.
-     *
-     * @return the protocol identifier.
+     * {@inheritDoc}
      */
     @Override
     public String getProtocol() {
@@ -63,11 +64,11 @@ public final class StopTransactionRequestedEvent implements CommunicationWithCha
     }
 
     /**
-     * Gets the transaction identifier.
+     * Gets the transaction's identifier.
      *
-     * @return an immutable {@link java.util.Map} of attributes.
+     * @return the transaction's identifier
      */
-    public String getTransactionId() {
+    public TransactionId getTransactionId() {
         return transactionId;
     }
 }

@@ -16,7 +16,6 @@
 package io.motown.ocpp.viewmodel;
 
 import io.motown.domain.api.chargingstation.*;
-import io.motown.ocpp.viewmodel.domain.TransactionIdentifierTranslator;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
@@ -40,7 +39,13 @@ public class OcppRequestHandler {
     @EventHandler
     public void handle(StopTransactionRequestedEvent event) {
         log.info("StopTransactionRequestedEvent");
-        chargingStationOcpp15Client.stopTransaction(event.getChargingStationId(), TransactionIdentifierTranslator.toInt(event.getTransactionId()));
+
+        if (event.getTransactionId() instanceof NumberedTransactionId) {
+            NumberedTransactionId transactionId = (NumberedTransactionId) event.getTransactionId();
+            chargingStationOcpp15Client.stopTransaction(event.getChargingStationId(), transactionId.getNumber());
+        } else {
+            log.warn("StopTransactionRequestedEvent does not contain a NumberedTransactionId. Event: {}", event);
+        }
     }
 
     @EventHandler

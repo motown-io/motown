@@ -28,16 +28,16 @@ public final class RequestStopTransactionCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final String transactionId;
+    private final TransactionId transactionId;
 
     /**
      * Creates a {@code RequestStopTransactionCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param transactionId the unique transaction identifier.
+     * @param transactionId     the unique transaction identifier.
      * @throws NullPointerException if {@code chargingStationId} or {@code transactionId} is {@code null}.
      */
-    public RequestStopTransactionCommand(ChargingStationId chargingStationId, String transactionId) {
+    public RequestStopTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = checkNotNull(transactionId);
     }
@@ -56,7 +56,7 @@ public final class RequestStopTransactionCommand {
      *
      * @return the transaction id.
      */
-    public String getTransactionId() {
+    public TransactionId getTransactionId() {
         return transactionId;
     }
 }

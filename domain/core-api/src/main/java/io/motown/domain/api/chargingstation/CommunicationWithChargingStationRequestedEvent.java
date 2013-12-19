@@ -17,8 +17,17 @@ package io.motown.domain.api.chargingstation;
 
 public interface CommunicationWithChargingStationRequestedEvent {
 
+    /**
+     * Gets the charging station's identifier.
+     *
+     * @return the charging station's identifier.
+     */
     ChargingStationId getChargingStationId();
 
+    /**
+     * Gets the protocol identifier.
+     *
+     * @return the protocol identifier.
+     */
     String getProtocol();
-
 }
