@@ -17,11 +17,11 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code RequestStartTransactionCommand} is the command which is published when a transaction has to be
- * started remotely.
+ * {@code RequestStartTransactionCommand} is the command which is published when a transaction should be started.
  */
 public final class RequestStartTransactionCommand {
 
@@ -43,6 +43,7 @@ public final class RequestStartTransactionCommand {
     public RequestStartTransactionCommand(ChargingStationId chargingStationId, IdentifyingToken identifyingToken, int connectorId) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.identifyingToken = checkNotNull(identifyingToken);
+        checkArgument(connectorId > 0);
         this.connectorId = connectorId;
     }
 
@@ -52,7 +53,7 @@ public final class RequestStartTransactionCommand {
      * @return the charging station identifier.
      */
     public ChargingStationId getChargingStationId() {
-        return this.chargingStationId;
+        return chargingStationId;
     }
 
     /**

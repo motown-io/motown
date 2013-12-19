@@ -15,12 +15,13 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * {@code StartTransactionRequestedEvent} is the event which is published when a request has been made to start a transaction.
  */
-public final class StartTransactionRequestedEvent implements CommunicationWithChargingStationRequestedEvent{
+public final class StartTransactionRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
 
     private final ChargingStationId chargingStationId;
 
@@ -33,37 +34,35 @@ public final class StartTransactionRequestedEvent implements CommunicationWithCh
     /**
      * Creates a {@code StartTransactionRequestedEvent} with an identifier, a protocol and a connector identifier.
      *
-     *
-     * @param chargingStationId the identifier of the charging station.
-     * @param protocol          protocol identifier.
+     * @param chargingStationId the charging station's identifier.
+     * @param protocol          the protocol identifier.
      * @param identifyingToken  the token that should start the transaction.
-     *@param connectorId        the identifier of the connector.  @throws NullPointerException if {@code chargingStationId} or {@code protocol} or {@code identifyingToken} is {@code null}.
+     * @param connectorId       the identifier of the connector.  @throws NullPointerException if {@code chargingStationId} or {@code protocol} or {@code identifyingToken} is {@code null}.
      */
     public StartTransactionRequestedEvent(ChargingStationId chargingStationId, String protocol, IdentifyingToken identifyingToken, int connectorId) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.protocol = checkNotNull(protocol);
+        checkNotNull(protocol);
+        checkArgument(!protocol.isEmpty());
+        this.protocol = protocol;
         this.identifyingToken = checkNotNull(identifyingToken);
+        checkArgument(connectorId > 0);
         this.connectorId = connectorId;
     }
 
     /**
-     * Gets the charging station identifier.
-     *
-     * @return the charging station identifier.
+     * {@inheritDoc}
      */
     @Override
     public ChargingStationId getChargingStationId() {
-        return this.chargingStationId;
+        return chargingStationId;
     }
 
     /**
-     * Gets the protocol identifier.
-     *
-     * @return the protocol identifier.
+     * {@inheritDoc}
      */
     @Override
     public String getProtocol() {
-        return this.protocol;
+        return protocol;
     }
 
     /**

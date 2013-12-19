@@ -20,8 +20,7 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code RequestStopTransactionCommand} is the command which is published when a transaction has to be
- * stopped remotely.
+ * {@code RequestStopTransactionCommand} is the command which is published when a transaction should be stopped.
  */
 public final class RequestStopTransactionCommand {
 
