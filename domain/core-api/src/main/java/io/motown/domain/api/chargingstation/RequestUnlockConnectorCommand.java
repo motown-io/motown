@@ -17,6 +17,8 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public final class RequestUnlockConnectorCommand {
 
     @TargetAggregateIdentifier
@@ -24,8 +26,8 @@ public final class RequestUnlockConnectorCommand {
     private final Integer connectorId;
 
     public RequestUnlockConnectorCommand(ChargingStationId chargingStationId, Integer connectorId) {
-        this.chargingStationId = chargingStationId;
-        this.connectorId = connectorId;
+        this.chargingStationId = checkNotNull(chargingStationId);
+        this.connectorId = checkNotNull(connectorId);
     }
 
     public ChargingStationId getChargingStationId() {

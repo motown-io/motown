@@ -66,6 +66,12 @@ public class OcppRequestHandler {
         chargingStationOcpp15Client.startTransaction(event.getChargingStationId(), event.getIdentifyingToken(), event.getConnectorId());
     }
 
+    @EventHandler
+    public void handle(UnlockConnectorRequestedEvent event) {
+        log.info("UnlockConnectorRequestedEvent");
+        chargingStationOcpp15Client.unlockConnector(event.getChargingStationId(), event.getConnectorId());
+    }
+
     public void setChargingStationOcpp15Client(ChargingStationOcpp15Client chargingStationOcpp15Client) {
         this.chargingStationOcpp15Client = chargingStationOcpp15Client;
     }

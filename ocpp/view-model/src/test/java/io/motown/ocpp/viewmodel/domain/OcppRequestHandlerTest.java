@@ -85,4 +85,18 @@ public class OcppRequestHandlerTest {
         verify(client).hardReset(getChargingStationId());
     }
 
+    @Test
+    public void testStartTransactionRequestedEvent() {
+        requestHandler.handle(new StartTransactionRequestedEvent(getChargingStationId(), getProtocol(), getIdentifyingToken(), 1));
+
+        verify(client).startTransaction(getChargingStationId(), getIdentifyingToken(), 1);
+    }
+
+    @Test
+    public void testUnlockConnectorRequestedEvent() {
+        requestHandler.handle(new UnlockConnectorRequestedEvent(getChargingStationId(), getProtocol(), 1));
+
+        verify(client).unlockConnector(getChargingStationId(), 1);
+    }
+
 }

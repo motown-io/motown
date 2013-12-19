@@ -41,7 +41,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     private DomainService domainService;
 
     public void getConfiguration(ChargingStationId id) {
-        log.info("Retrieving configuration");
+        log.info("Retrieving configuration of charging station {}", id);
 
         ChargePointService chargePointService = this.createChargePointService(id);
 
@@ -72,7 +72,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
     @Override
     public void stopTransaction(ChargingStationId id, int transactionId) {
-        log.info("Stopping transaction");
+        log.debug("Stopping transaction {} on charging station {}", transactionId, id);
 
         ChargePointService chargePointService = this.createChargePointService(id);
 
@@ -81,21 +81,32 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         RemoteStopTransactionResponse response;
         response =  chargePointService.remoteStopTransaction(request, id.getId());
 
-        log.info("Stop transaction request has been {}", response.getStatus().value());
+        log.info("Stop transaction {} on charging station {} has been {}", transactionId, id, response.getStatus().value());
     }
 
     @Override
     public void softReset(ChargingStationId id) {
-        log.info("Requesting soft reset");
+        log.info("Requesting soft reset on charging station {}", id);
 
         this.reset(id, ResetType.SOFT);
     }
 
     @Override
     public void hardReset(ChargingStationId id) {
-        log.info("Requesting hard reset");
+        log.info("Requesting hard reset on charging station {}", id);
 
         this.reset(id, ResetType.HARD);
+    }
+
+    @Override
+    public void unlockConnector(ChargingStationId id, int connectorId) {
+        log.debug("Unlocking of connector {} on charging station {}", connectorId, id);
+        ChargePointService chargePointService = this.createChargePointService(id);
+
+        UnlockConnectorRequest request = new UnlockConnectorRequest();
+        request.setConnectorId(connectorId);
+        UnlockConnectorResponse response = chargePointService.unlockConnector(request, id.getId());
+        log.info("Unlocking of connector {} on charging station {} has been {}", connectorId, id, response.getStatus().value());
     }
 
     private void reset(ChargingStationId id, ResetType type) {
@@ -111,7 +122,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
      * @param id
      * @return
      */
-    protected ChargePointService createChargePointService(ChargingStationId id){
+    protected ChargePointService createChargePointService(ChargingStationId id) {
         JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
         factory.setServiceClass(ChargePointService.class);
 

@@ -13,24 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.motown.domain.api.chargingstation;
 
-package io.motown.ocpp.viewmodel.ocpp;
+import org.junit.Test;
 
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.IdentifyingToken;
+import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
 
-public interface ChargingStationOcpp15Client {
+public class RequestUnlockConnectorCommandTest {
 
-    void getConfiguration(ChargingStationId id);
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
+        new RequestUnlockConnectorCommand(null, 1);
+    }
 
-    void startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, int connectorId);
-
-    void stopTransaction(ChargingStationId id, int transactionId);
-
-    void softReset(ChargingStationId id);
-
-    void hardReset(ChargingStationId id);
-
-    void unlockConnector(ChargingStationId id, int connectorId);
-
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithConnectorIdNull() {
+        new RequestUnlockConnectorCommand(getChargingStationId(), null);
+    }
 }
