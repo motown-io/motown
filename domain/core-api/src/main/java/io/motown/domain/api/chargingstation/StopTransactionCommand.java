@@ -48,7 +48,7 @@ public final class StopTransactionCommand {
      * @param chargingStationId the charging station's identifier.
      * @param transactionId     the transaction's identifier.
      * @param identifyingToken  the token which stopped the transaction.
-     * @param meterStart        meter value in Wh for the connector when the transaction stopped.
+     * @param meterStop         meter value in Wh for the connector when the transaction stopped.
      * @param timestamp         the time at which the transaction stopped.
      * @throws NullPointerException if {@code chargingStationId}, {@code transactionId}, {@code identifyingToken} or
      * {@code timestamp} is {@code null}.
@@ -104,5 +104,31 @@ public final class StopTransactionCommand {
      */
     public Date getTimestamp() {
         return timestamp;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        StopTransactionCommand that = (StopTransactionCommand) o;
+
+        if (meterStop != that.meterStop) return false;
+        if (!chargingStationId.equals(that.chargingStationId)) return false;
+        if (!identifyingToken.equals(that.identifyingToken)) return false;
+        if (!timestamp.equals(that.timestamp)) return false;
+        if (!transactionId.equals(that.transactionId)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = chargingStationId.hashCode();
+        result = 31 * result + transactionId.hashCode();
+        result = 31 * result + identifyingToken.hashCode();
+        result = 31 * result + meterStop;
+        result = 31 * result + timestamp.hashCode();
+        return result;
     }
 }

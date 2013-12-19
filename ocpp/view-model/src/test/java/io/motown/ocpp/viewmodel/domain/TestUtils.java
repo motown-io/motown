@@ -18,12 +18,22 @@ package io.motown.ocpp.viewmodel.domain;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.chargingstation.*;
+import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 public class TestUtils {
+
+    public static ChargingStation getRegisteredAndConfiguredChargingStation() {
+        ChargingStation cs = new ChargingStation(getChargingStationId().getId(), getChargingStationAddress());
+        cs.setRegistered(true);
+        cs.setNumberOfConnectors(getConnectors().size());
+        cs.setConfigured(true);
+
+        return cs;
+    }
 
     public static ChargingStationId getChargingStationId() {
         return new ChargingStationId("CS-001");
@@ -75,6 +85,10 @@ public class TestUtils {
                 .add(new Connector(1, "TYPE-1", 32))
                 .add(new Connector(2, "TYPE-1", 32))
                 .build();
+    }
+
+    public static int getConnectorId() {
+        return 1;
     }
 
 

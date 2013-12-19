@@ -55,4 +55,8 @@ public class ConfigurationHandler {
                 .build();
     }
 
+    public void setCommandGateway(ConfigurationCommandGateway commandGateway) {
+        this.commandGateway = commandGateway;
+    }
+
 }
