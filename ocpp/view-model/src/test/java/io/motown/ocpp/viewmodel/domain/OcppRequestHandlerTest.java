@@ -93,13 +93,6 @@ public class OcppRequestHandlerTest {
     }
 
     @Test
-    public void testStartTransactionRequestedEvent() {
-        requestHandler.handle(new StartTransactionRequestedEvent(getChargingStationId(), getProtocol(), getIdentifyingToken(), 1));
-
-        verify(client).startTransaction(getChargingStationId(), getIdentifyingToken(), 1);
-    }
-
-    @Test
     public void testUnlockConnectorRequestedEvent() {
         requestHandler.handle(new UnlockConnectorRequestedEvent(getChargingStationId(), getProtocol(), 1));
 
