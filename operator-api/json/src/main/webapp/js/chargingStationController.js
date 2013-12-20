@@ -114,6 +114,30 @@ function ChargingStationController($scope, $http, $timeout) {
         }).success(function(response) {
             console.log('start transaction requested');
         });
+    };
+
+    $scope.changeAvailability = function(chargingStation, type) {
+        var availabilityType = 'operative';
+
+        if (type == 'inoperative') {
+            availabilityType = 'inoperative';
+        }
+
+        $http({
+            url: 'charging-stations/' + chargingStation.id + '/commands',
+            dataType: 'json',
+            method: 'POST',
+            data: ['ChangeAvailability',{
+                'connectorId': 1,
+                'availability': availabilityType
+            }],
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            }
+        }).success(function(response) {
+            console.log('change availability requested');
+        });
     }
 
 }

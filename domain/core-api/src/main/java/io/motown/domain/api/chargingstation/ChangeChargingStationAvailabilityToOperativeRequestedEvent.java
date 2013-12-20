@@ -15,27 +15,34 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code SoftResetChargingStationRequestedEvent} is the event which is published when a request has been made to soft reset a charging station.
+ * {@code ChangeChargingStationAvailabilityToOperativeRequestedEvent} is the event which is published when a request has been made to
+ * change the availability of a charging station to operative.
  */
-public final class SoftResetChargingStationRequestedEvent implements ResetChargingStationRequestedEvent {
+public final class ChangeChargingStationAvailabilityToOperativeRequestedEvent implements ChangeAvailabilityChargingStationRequestedEvent {
 
     private final ChargingStationId chargingStationId;
 
     private final String protocol;
 
+    private final int connectorId;
+
     /**
-     * Creates a {@code SoftResetChargingStationRequestedEvent} with an identifier and a protocol.
+     * Creates a {@code ChangeChargingStationAvailabilityToOperativeRequestedEvent} with an identifier, a protocol and connector identifier.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param protocol          protocol identifier.
+     * @param connectorId       the identifier of the connector.
      * @throws NullPointerException if {@code chargingStationId} or {@code protocol} is {@code null}.
      */
-    public SoftResetChargingStationRequestedEvent(ChargingStationId chargingStationId, String protocol) {
+    public ChangeChargingStationAvailabilityToOperativeRequestedEvent(ChargingStationId chargingStationId, String protocol, int connectorId) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.protocol = checkNotNull(protocol);
+        checkArgument(connectorId > 0);
+        this.connectorId = connectorId;
     }
 
     /**
@@ -58,4 +65,13 @@ public final class SoftResetChargingStationRequestedEvent implements ResetChargi
         return protocol;
     }
 
+    /**
+     * Gets the connector id.
+     *
+     * @return the connector id.
+     */
+    @Override
+    public int getConnectorId() {
+        return connectorId;
+    }
 }

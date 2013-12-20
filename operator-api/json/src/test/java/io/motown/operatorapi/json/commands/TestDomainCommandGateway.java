@@ -64,4 +64,14 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
         log.debug("RequestSoftResetChargingStationCommand: " + command.toString());
     }
 
+    @Override
+    public void send(RequestChangeChargingStationAvailabilityToInoperativeCommand command) {
+        log.debug("RequestChangeChargingStationAvailabilityToInoperativeCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestChangeChargingStationAvailabilityToOperativeCommand command) {
+        log.debug("RequestChangeChargingStationAvailabilityToOperativeCommand: " + command.toString());
+    }
+
 }

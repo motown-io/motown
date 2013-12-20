@@ -99,4 +99,18 @@ public class OcppRequestHandlerTest {
         verify(client).unlockConnector(getChargingStationId(), 1);
     }
 
+    @Test
+    public void testChangeChargingStationAvailabilityToInoperativeRequested() {
+        requestHandler.handle(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(getChargingStationId(), getProtocol(), getConnectorId()));
+
+        verify(client).changeAvailabilityToInoperative(getChargingStationId(), getConnectorId());
+    }
+
+    @Test
+    public void testChangeChargingStationAvailabilityToOperativeRequested() {
+        requestHandler.handle(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(getChargingStationId(), getProtocol(), getConnectorId()));
+
+        verify(client).changeAvailabilityToOperative(getChargingStationId(), getConnectorId());
+    }
+
 }

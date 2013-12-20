@@ -158,6 +158,16 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         apply(new HardResetChargingStationRequestedEvent(this.id, this.protocol));
     }
 
+    @CommandHandler
+    public void handle(RequestChangeChargingStationAvailabilityToInoperativeCommand command) {
+        apply(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(this.id, this.protocol, command.getConnectorId()));
+    }
+
+    @CommandHandler
+    public void handle(RequestChangeChargingStationAvailabilityToOperativeCommand command) {
+        apply(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(this.id, this.protocol, command.getConnectorId()));
+    }
+
     @EventHandler
     public void handle(ChargingStationBootedEvent event) {
         this.protocol = event.getProtocol();

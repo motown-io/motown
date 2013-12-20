@@ -229,4 +229,18 @@ public class ChargingStationTest {
                 .when(new RequestHardResetChargingStationCommand(getChargingStationId()))
                 .expectEvents(new HardResetChargingStationRequestedEvent(getChargingStationId(), getProtocol()));
     }
+
+    @Test
+    public void testRequestChangeChargingStationAvailabilityToInoperative() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new RequestChangeChargingStationAvailabilityToInoperativeCommand(getChargingStationId(), getConnectorId()))
+                .expectEvents(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(getChargingStationId(), getProtocol(), getConnectorId()));
+    }
+
+    @Test
+    public void testRequestChangeChargingStationAvailabilityToOperative() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new RequestChangeChargingStationAvailabilityToOperativeCommand(getChargingStationId(), getConnectorId()))
+                .expectEvents(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(getChargingStationId(), getProtocol(), getConnectorId()));
+    }
 }

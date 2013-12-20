@@ -43,7 +43,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     public void getConfiguration(ChargingStationId id) {
         log.info("Retrieving configuration of charging station {}", id);
 
-        ChargePointService chargePointService = this.createChargePointService(id);
+        ChargePointService chargePointService = this.createChargingStationService(id);
 
         GetConfigurationResponse response =  chargePointService.getConfiguration(new GetConfigurationRequest(), id.getId());
 
@@ -59,7 +59,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     public void startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, int connectorId) {
         log.info("Starting transaction");
 
-        ChargePointService chargePointService = this.createChargePointService(id);
+        ChargePointService chargePointService = this.createChargingStationService(id);
 
         RemoteStartTransactionRequest request = new RemoteStartTransactionRequest();
         request.setIdTag(identifyingToken.getToken());
@@ -74,7 +74,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     public void stopTransaction(ChargingStationId id, int transactionId) {
         log.debug("Stopping transaction {} on charging station {}", transactionId, id);
 
-        ChargePointService chargePointService = this.createChargePointService(id);
+        ChargePointService chargePointService = this.createChargingStationService(id);
 
         RemoteStopTransactionRequest request = new RemoteStopTransactionRequest();
         request.setTransactionId(transactionId);
@@ -88,20 +88,20 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     public void softReset(ChargingStationId id) {
         log.info("Requesting soft reset on charging station {}", id);
 
-        this.reset(id, ResetType.SOFT);
+        reset(id, ResetType.SOFT);
     }
 
     @Override
     public void hardReset(ChargingStationId id) {
         log.info("Requesting hard reset on charging station {}", id);
 
-        this.reset(id, ResetType.HARD);
+        reset(id, ResetType.HARD);
     }
 
     @Override
     public void unlockConnector(ChargingStationId id, int connectorId) {
         log.debug("Unlocking of connector {} on charging station {}", connectorId, id);
-        ChargePointService chargePointService = this.createChargePointService(id);
+        ChargePointService chargePointService = this.createChargingStationService(id);
 
         UnlockConnectorRequest request = new UnlockConnectorRequest();
         request.setConnectorId(connectorId);
@@ -109,20 +109,44 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         log.info("Unlocking of connector {} on charging station {} has been {}", connectorId, id, response.getStatus().value());
     }
 
+    @Override
+    public void changeAvailabilityToInoperative(ChargingStationId id, int connectorId) {
+        log.debug("Changing availability of connector {} on charging station {} to inoperative", connectorId, id);
+
+        changeAvailability(id, connectorId, AvailabilityType.INOPERATIVE);
+    }
+
+    @Override
+    public void changeAvailabilityToOperative(ChargingStationId id, int connectorId) {
+        log.debug("Changing availability of connector {} on charging station {} to operative", connectorId, id);
+
+        changeAvailability(id, connectorId, AvailabilityType.OPERATIVE);
+    }
+
     private void reset(ChargingStationId id, ResetType type) {
-        ChargePointService chargePointService = this.createChargePointService(id);
+        ChargePointService chargePointService = this.createChargingStationService(id);
 
         ResetRequest request = new ResetRequest();
         request.setType(type);
         chargePointService.reset(request, id.getId());
     }
 
+    private void changeAvailability(ChargingStationId id, int connectorId, AvailabilityType type) {
+        ChargePointService chargePointService = this.createChargingStationService(id);
+
+        ChangeAvailabilityRequest request = new ChangeAvailabilityRequest();
+        request.setConnectorId(connectorId);
+        request.setType(type);
+        chargePointService.changeAvailability(request, id.getId());
+    }
+
     /**
+     * Creates a charging station web service proxy based on the address that has been stored for this charging station identifier.
      *
-     * @param id
-     * @return
+     * @param id charging station identifier
+     * @return charging station web service proxy
      */
-    protected ChargePointService createChargePointService(ChargingStationId id) {
+    protected ChargePointService createChargingStationService(ChargingStationId id) {
         JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
         factory.setServiceClass(ChargePointService.class);
 

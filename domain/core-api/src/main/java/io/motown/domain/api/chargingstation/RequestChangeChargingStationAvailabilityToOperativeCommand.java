@@ -15,27 +15,33 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
+
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code SoftResetChargingStationRequestedEvent} is the event which is published when a request has been made to soft reset a charging station.
+ * {@code RequestChangeChargingStationAvailabilityToOperativeCommand} is the command which is published when a change availability to operative
+ * of a charging station is requested.
  */
-public final class SoftResetChargingStationRequestedEvent implements ResetChargingStationRequestedEvent {
+public final class RequestChangeChargingStationAvailabilityToOperativeCommand {
 
+    @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final String protocol;
+    private final int connectorId;
 
     /**
-     * Creates a {@code SoftResetChargingStationRequestedEvent} with an identifier and a protocol.
+     * Creates a {@code RequestChangeChargingStationAvailabilityToOperativeCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param protocol          protocol identifier.
-     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} is {@code null}.
+     * @param connectorId       the identifier of the connector.
+     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public SoftResetChargingStationRequestedEvent(ChargingStationId chargingStationId, String protocol) {
+    public RequestChangeChargingStationAvailabilityToOperativeCommand(ChargingStationId chargingStationId, int connectorId) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.protocol = checkNotNull(protocol);
+        checkArgument(connectorId > 0);
+        this.connectorId = connectorId;
     }
 
     /**
@@ -43,19 +49,16 @@ public final class SoftResetChargingStationRequestedEvent implements ResetChargi
      *
      * @return the charging station identifier.
      */
-    @Override
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
     }
 
     /**
-     * Gets the protocol identifier.
+     * Gets the connector id.
      *
-     * @return the protocol identifier.
+     * @return the connector id.
      */
-    @Override
-    public String getProtocol() {
-        return protocol;
+    public int getConnectorId() {
+        return connectorId;
     }
-
 }

@@ -100,4 +100,8 @@ public class ChargingStationTestUtils {
                 .put("model", "MODEL001")
                 .build();
     }
+
+    public static int getConnectorId() {
+        return 1;
+    }
 }

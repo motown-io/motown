@@ -33,4 +33,8 @@ public interface ChargingStationOcpp15Client {
 
     void unlockConnector(ChargingStationId id, int connectorId);
 
+    void changeAvailabilityToInoperative(ChargingStationId id, int connectorId);
+
+    void changeAvailabilityToOperative(ChargingStationId id, int connectorId);
+
 }

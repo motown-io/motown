@@ -27,7 +27,7 @@ public final class HardResetChargingStationRequestedEvent implements ResetChargi
     private final String protocol;
 
     /**
-     * Creates a {@code HardResetChargingStationRequestedEvent} with an identifier and a transaction identifier.
+     * Creates a {@code HardResetChargingStationRequestedEvent} with an identifier and a protocol.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param protocol          protocol identifier.
