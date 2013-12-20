@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * {@code HardResetChargingStationRequestedEvent} is the event which is published when a request has been made to hard reset a charging station.
  */
-public final class HardResetChargingStationRequestedEvent implements CommunicationWithChargingStationRequestedEvent{
+public final class HardResetChargingStationRequestedEvent implements ResetChargingStationRequestedEvent {
 
     private final ChargingStationId chargingStationId;
 

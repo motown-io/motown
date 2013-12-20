@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * {@code SoftResetChargingStationRequestedEvent} is the event which is published when a request has been made to soft reset a charging station.
  */
-public final class SoftResetChargingStationRequestedEvent implements CommunicationWithChargingStationRequestedEvent{
+public final class SoftResetChargingStationRequestedEvent implements ResetChargingStationRequestedEvent {
 
     private final ChargingStationId chargingStationId;
 
