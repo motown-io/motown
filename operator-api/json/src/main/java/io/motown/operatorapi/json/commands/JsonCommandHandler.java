@@ -15,9 +15,11 @@
  */
 package io.motown.operatorapi.json.commands;
 
+import com.google.gson.JsonObject;
+
 public interface JsonCommandHandler {
 
     String getCommandName();
 
-    void handle(String chargingStationId, String command);
+    void handle(String chargingStationId, JsonObject commandObject);
 }

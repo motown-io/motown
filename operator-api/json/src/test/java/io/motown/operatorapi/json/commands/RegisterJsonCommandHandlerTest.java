@@ -15,7 +15,9 @@
  */
 package io.motown.operatorapi.json.commands;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.junit.Before;
@@ -24,11 +26,15 @@ import static org.mockito.Mockito.*;
 
 public class RegisterJsonCommandHandlerTest {
 
+    private Gson gson;
+
     private RegisterJsonCommandHandler handler = new RegisterJsonCommandHandler();
 
     @Before
     public void setUp() {
-        handler.setGson(new GsonBuilder().create());
+        gson = new GsonBuilder().create();
+
+        handler.setGson(gson);
         handler.setCommandGateway(new TestDomainCommandGateway());
 
         // setup mocking for JPA / spring repo.
@@ -45,26 +51,19 @@ public class RegisterJsonCommandHandlerTest {
 
     @Test
     public void testHandleComplete() {
-        String json = "['Register',{'configuration' : {'connectors' : [{'connectorId' : 1, 'connectorType' : 'Type2', 'maxAmp' : 16 },{'connectorId' : 2, 'connectorType' : 'Combo', 'maxAmp' : 32}], 'settings' : {'key':'value', 'key2':'value2'}}}]";
-        handler.handle("TEST_UNREGISTERED", json);
+        JsonObject commandObject = gson.fromJson("{'configuration' : {'connectors' : [{'connectorId' : 1, 'connectorType' : 'Type2', 'maxAmp' : 16 },{'connectorId' : 2, 'connectorType' : 'Combo', 'maxAmp' : 32}], 'settings' : {'key':'value', 'key2':'value2'}}}", JsonObject.class);
+        handler.handle("TEST_UNREGISTERED", commandObject);
     }
 
     @Test(expected=IllegalStateException.class)
     public void testHandleCompleteUnRegistered() {
-        String json = "['Register',{'configuration' : {'connectors' : [{'connectorId' : 1, 'connectorType' : 'Type2', 'maxAmp' : 16 },{'connectorId' : 2, 'connectorType' : 'Combo', 'maxAmp' : 32}], 'settings' : {'key':'value', 'key2':'value2'}}}]";
-        handler.handle("TEST_REGISTERED", json);
+        JsonObject commandObject = gson.fromJson("{'configuration' : {'connectors' : [{'connectorId' : 1, 'connectorType' : 'Type2', 'maxAmp' : 16 },{'connectorId' : 2, 'connectorType' : 'Combo', 'maxAmp' : 32}], 'settings' : {'key':'value', 'key2':'value2'}}}", JsonObject.class);
+        handler.handle("TEST_REGISTERED", commandObject);
     }
 
     @Test
     public void testHandleConfigNull() {
-        String json = "['Register',{'configuration' : null }]";
-        handler.handle("TEST_UNREGISTERED", json);
+        JsonObject commandObject = gson.fromJson("{'configuration' : null }", JsonObject.class);
+        handler.handle("TEST_UNREGISTERED", commandObject);
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testHandleWithoutConfig() {
-        String json = "['Register']";
-        handler.handle("TEST_UNREGISTERED", json);
-    }
-
 }

@@ -43,15 +43,7 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
     }
 
     @Override
-    public void handle(String chargingStationId, String jsonCommand) {
-        JsonArray command = gson.fromJson(jsonCommand, JsonArray.class);
-        if (command != null && command.size() != 2) {
-            throw new IllegalArgumentException("The given JSON command is not well formed");
-        }
-        if (!COMMAND_NAME.equals(command.get(0).getAsString())) {
-            throw new IllegalArgumentException("The given JSON command is not supported by this command handler.");
-        }
-
+    public void handle(String chargingStationId, JsonObject commandObject) {
         ChargingStation chargingStation = repository.findOne(chargingStationId);
         if (chargingStation == null) {
             commandGateway.send(new CreateAndAcceptChargingStationCommand(new ChargingStationId(chargingStationId)));
@@ -61,9 +53,8 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
             throw new IllegalStateException("Charging station { %s } is already in accepted state, you can't register this station".format(chargingStationId));
         }
 
-        JsonObject payload = gson.fromJson(command.get(1), JsonObject.class);
-        if (payload != null) {
-            JsonElement jsConfiguration = payload.get("configuration");
+        if (commandObject != null) {
+            JsonElement jsConfiguration = commandObject.get("configuration");
             if (jsConfiguration != null && jsConfiguration.isJsonObject()) {
                 ConfigureChargingStationCommand newCommand = JsonCommandParser.parseConfigureChargingStation(new ChargingStationId(chargingStationId), jsConfiguration.getAsJsonObject(), gson);
                 commandGateway.send(newCommand);

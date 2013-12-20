@@ -17,29 +17,49 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 @Service
 public class JsonCommandService {
+
+    private static final int COMMAND_ARRAY_SIZE = 2;
+
+    private static final int COMMAND_NAME_INDEX = 0;
+
+    private static final int COMMAND_PAYLOAD_INDEX = 1;
 
     private Gson gson;
 
     private List<JsonCommandHandler> jsonCommandHandlers;
 
     public void handleCommand(String chargingStationId, String jsonCommand) {
-        String commandName = parseCommandName(jsonCommand);
+        JsonArray commandAsArray = gson.fromJson(jsonCommand, JsonArray.class);
+
+        checkArgument(commandAsArray.size() != COMMAND_ARRAY_SIZE, "API command must be a JSON array with two elements");
+
+        String commandName = commandAsArray.get(COMMAND_NAME_INDEX).getAsString();
+        JsonObject commandPayloadAsObject = commandAsArray.get(COMMAND_PAYLOAD_INDEX).getAsJsonObject();
+
         JsonCommandHandler commandHandler = getCommandHandler(commandName);
 
-        commandHandler.handle(chargingStationId, jsonCommand);
+        commandHandler.handle(chargingStationId, commandPayloadAsObject);
     }
 
     private String parseCommandName(String jsonCommand) {
         JsonArray command = gson.fromJson(jsonCommand, JsonArray.class);
         return command.get(0).getAsString();
+    }
+
+    private JsonObject parseCommandObject(String jsonCommand) {
+        JsonArray command = gson.fromJson(jsonCommand, JsonArray.class);
+        return command.get(COMMAND_PAYLOAD_INDEX).getAsJsonObject();
     }
 
     private JsonCommandHandler getCommandHandler(String commandName) {

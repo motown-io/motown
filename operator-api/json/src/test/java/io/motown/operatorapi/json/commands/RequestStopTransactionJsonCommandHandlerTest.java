@@ -15,7 +15,9 @@
  */
 package io.motown.operatorapi.json.commands;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.junit.Before;
@@ -26,11 +28,14 @@ import static org.mockito.Mockito.when;
 
 public class RequestStopTransactionJsonCommandHandlerTest {
 
+    private Gson gson;
+
     private RequestStopTransactionJsonCommandHandler handler = new RequestStopTransactionJsonCommandHandler();
 
     @Before
     public void setUp() {
-        handler.setGson(new GsonBuilder().create());
+        gson = new GsonBuilder().create();
+
         handler.setCommandGateway(new TestDomainCommandGateway());
 
         // setup mocking for JPA / spring repo.
@@ -47,8 +52,8 @@ public class RequestStopTransactionJsonCommandHandlerTest {
 
     @Test
     public void testHandleStopTransactionOnRegisteredStation() {
-        String json = "['RequestStopTransaction',{'transactionId' : 123}]";
-        handler.handle("TEST_REGISTERED", json);
+        JsonObject commandObject = gson.fromJson("{'transactionId' : 123}", JsonObject.class);
+        handler.handle("TEST_REGISTERED", commandObject);
     }
 
     //TODO: Add more tests scenarios when the RequestStopTransactionJsonCommandHandler is more final - Ingo Pak, 04 dec 2013

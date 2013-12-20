@@ -35,7 +35,6 @@ class RequestStopTransactionJsonCommandHandler implements JsonCommandHandler {
 
     private DomainCommandGateway commandGateway;
 
-    private Gson gson;
     private ChargingStationRepository repository;
 
     @Override
@@ -44,18 +43,10 @@ class RequestStopTransactionJsonCommandHandler implements JsonCommandHandler {
     }
 
     @Override
-    public void handle(String chargingStationId, String jsonCommand) {
-        JsonArray command = gson.fromJson(jsonCommand, JsonArray.class);
-        if (command != null && command.size() != 2) {
-            throw new IllegalArgumentException("The given JSON command is not well formed");
-        }
-        if (!COMMAND_NAME.equals(command.get(0).getAsString())) {
-            throw new IllegalArgumentException("The given JSON command is not supported by this command handler.");
-        }
+    public void handle(String chargingStationId, JsonObject commandObject) {
         try {
             //TODO: Add additional checks(?) - Ingo Pak, 04 dec 2013
-            JsonObject payload = gson.fromJson(command.get(1), JsonObject.class);
-            int transactionId = payload.get("transactionId").getAsInt();
+            int transactionId = commandObject.get("transactionId").getAsInt();
 
             // TODO configure protocol identifier - Dennis Laumen, December 19th 2013
             ChargingStationId chargingStation = new ChargingStationId(chargingStationId);
@@ -69,11 +60,6 @@ class RequestStopTransactionJsonCommandHandler implements JsonCommandHandler {
     @Resource(name = "domainCommandGateway")
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
-    }
-
-    @Autowired
-    public void setGson(Gson gson) {
-        this.gson = gson;
     }
 
     @Autowired

@@ -45,37 +45,29 @@ class ConfigureJsonCommandHandler implements JsonCommandHandler {
      * Configure a charging stations in such a way that it able to operate in the network.
      *
      * @param chargingStationId unique identifier of the charging station
-     * @param jsonCommand expects a string like:
+     * @param commandObject expects a string like:
      * "['Configure',{'connectors' : [{'connectorId' : 1, 'connectorType' : 'Combo', 'maxAmp' : 32 },
      * {'connectorId' : 2, 'connectorType' : 'Type2', 'maxAmp' : 16}],
      * 'settings' : {'key':'value', 'key2':'value2'}}]";
      *
      */
     @Override
-    public void handle(String chargingStationId, String jsonCommand) {
-        JsonArray command = gson.fromJson(jsonCommand, JsonArray.class);
-        if (command != null && command.size() != 2) {
-            throw new IllegalArgumentException("The given JSON command is not well formed");
-        }
-        if (!COMMAND_NAME.equals(command.get(0).getAsString())) {
-            throw new IllegalArgumentException("The given JSON command is not supported by this command handler.");
-        }
+    public void handle(String chargingStationId, JsonObject commandObject) {
         try {
-            JsonObject payload = gson.fromJson(command.get(1), JsonObject.class);
-            ConfigureChargingStationCommand newCommand = JsonCommandParser.parseConfigureChargingStation(new ChargingStationId(chargingStationId), payload, gson);
+            ConfigureChargingStationCommand newCommand = JsonCommandParser.parseConfigureChargingStation(new ChargingStationId(chargingStationId), commandObject, gson);
             commandGateway.send(newCommand);
         } catch (ClassCastException ex) {
             throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted ?");
         }
     }
 
-    @Resource(name = "domainCommandGateway")
-    public void setCommandGateway(DomainCommandGateway commandGateway) {
-        this.commandGateway = commandGateway;
-    }
-
     @Autowired
     public void setGson(Gson gson) {
         this.gson = gson;
+    }
+
+    @Resource(name = "domainCommandGateway")
+    public void setCommandGateway(DomainCommandGateway commandGateway) {
+        this.commandGateway = commandGateway;
     }
 }
