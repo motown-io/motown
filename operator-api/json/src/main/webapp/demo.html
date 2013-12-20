@@ -33,10 +33,12 @@
             <table class="table">
                 <thead>
                     <th>Charging Station</th>
+                    <th>Last contact</th>
                     <th>Actions</th>
                 </thead>
                 <tr ng-repeat="chargingStation in chargingStations">
                     <td>{{chargingStation.id}}</td>
+                    <td>{{chargingStation.lastContact | date:'dd/MM/yyyy hh:mm'}}</td>
                     <td>
                         <div ng-if="!chargingStation.accepted" >
                             <button class="btn btn-default" href="#" ng-click="registerChargingStation(chargingStation)">register</button>

@@ -115,8 +115,7 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
 
     @Override
     public HeartbeatResponse heartbeat(HeartbeatRequest parameters, String chargeBoxIdentity) {
-        //FIXME implement me
-        log.error("Unimplemented method [heartbeat] called.");
+        domainService.heartbeat(new ChargingStationId(chargeBoxIdentity));
 
         HeartbeatResponse response = new HeartbeatResponse();
         response.setCurrentTime(new Date());

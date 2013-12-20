@@ -58,6 +58,13 @@ public class ChargingStationTest {
     }
 
     @Test
+    public void testHeartbeat() {
+        fixture.given(getChargingStation())
+                .when(new HeartbeatCommand(getChargingStationId()))
+                .expectEvents(new ChargingStationSentHeartbeatEvent(getChargingStationId()));
+    }
+
+    @Test
     public void testRegisteringUnacceptedChargingStation() {
         fixture.given(getCreatedChargingStation(false))
                .when(new AcceptChargingStationCommand(getChargingStationId()))

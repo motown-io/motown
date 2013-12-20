@@ -122,6 +122,13 @@ public class DomainServiceTest {
     }
 
     @Test
+    public void testHeartbeat() {
+        domainService.heartbeat(getChargingStationId());
+
+        verify(gateway).send( new HeartbeatCommand(getChargingStationId()) );
+    }
+
+    @Test
     public void testAuthorize() {
         AuthorizationResult result = domainService.authorize(getChargingStationId(), getIdTag());
         verify(gateway).sendAndWait(new AuthorizeCommand(getChargingStationId(), getIdTag()), 0, TimeUnit.SECONDS);

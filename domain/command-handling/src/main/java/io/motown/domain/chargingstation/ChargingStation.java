@@ -63,6 +63,11 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
+    public void handle(HeartbeatCommand command) {
+        apply(new ChargingStationSentHeartbeatEvent(command.getChargingStationId()));
+    }
+
+    @CommandHandler
     public void handle(AcceptChargingStationCommand command) {
         if (isAccepted) {
             throw new IllegalStateException("Cannot accept an already accepted charging station");

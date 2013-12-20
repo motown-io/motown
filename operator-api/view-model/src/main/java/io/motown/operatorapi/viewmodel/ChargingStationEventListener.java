@@ -53,9 +53,19 @@ public class ChargingStationEventListener {
 
         if (chargingStation != null) {
             chargingStation.setLastTimeBooted(new Date());
+            chargingStation.setLastContact(new Date());
             repository.save(chargingStation);
         } else {
             log.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as booted", event.getChargingStationId());
+        }
+    }
+
+    @EventHandler
+    public void handle(ChargingStationSentHeartbeatEvent event) {
+        log.debug("ChargingStationSentHeartbeatEvent for [{}] received!", event.getChargingStationId());
+
+        if (!updateLastContactChargingStation(event.getChargingStationId())) {
+            log.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark last contact", event.getChargingStationId());
         }
     }
 
@@ -80,8 +90,7 @@ public class ChargingStationEventListener {
         Transaction transaction = new Transaction(event.getChargingStationId().getId(), event.getTransactionId().getId(), event.getConnectorId(), event.getIdentifyingToken().getToken(), event.getMeterStart(), event.getTimestamp());
         transactionRepository.save(transaction);
 
-        ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
-        if (chargingStation != null) {
+        if (!updateLastContactChargingStation(event.getChargingStationId())) {
             log.warn("registered transaction (start) in operator api repo for unknown chargepoint {}", event.getChargingStationId());
         }
     }
@@ -100,6 +109,24 @@ public class ChargingStationEventListener {
             transaction.setStoppedTimestamp(event.getTimestamp());
             transactionRepository.save(transaction);
         }
+
+        updateLastContactChargingStation(event.getChargingStationId());
+    }
+
+    /**
+     * Updates the last contact field of the charging station if it can be found in the repository. Returns true if
+     * the update has been performed, false if the charging station cannot be found.
+     *
+     * @param id charging station identifier.
+     * @return true if the field has been updated, false if the charging station cannot be found.
+     */
+    private boolean updateLastContactChargingStation(ChargingStationId id) {
+        ChargingStation chargingStation = repository.findOne(id.getId());
+        if (chargingStation != null) {
+            chargingStation.setLastContact(new Date());
+            repository.save(chargingStation);
+        }
+        return chargingStation != null;
     }
 
     @Autowired

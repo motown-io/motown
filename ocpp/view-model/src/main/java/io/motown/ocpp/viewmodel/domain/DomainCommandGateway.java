@@ -24,6 +24,8 @@ interface DomainCommandGateway {
 
     void send(BootChargingStationCommand command);
 
+    void send(HeartbeatCommand command);
+
     void send(ConfigureChargingStationCommand command);
 
     void send(StartTransactionCommand command);

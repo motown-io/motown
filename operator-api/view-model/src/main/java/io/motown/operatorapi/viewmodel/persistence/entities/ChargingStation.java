@@ -28,6 +28,7 @@ public class ChargingStation {
     private Date updated;
     private Date created;
     private Date lastTimeBooted;
+    private Date lastContact;
     private Boolean accepted;
 
     public Boolean isAccepted() {
@@ -44,6 +45,14 @@ public class ChargingStation {
 
     public void setLastTimeBooted(Date lastTimeBooted) {
         this.lastTimeBooted = lastTimeBooted;
+    }
+
+    public Date getLastContact() {
+        return lastContact;
+    }
+
+    public void setLastContact(Date lastContact) {
+        this.lastContact = lastContact;
     }
 
     private ChargingStation() {

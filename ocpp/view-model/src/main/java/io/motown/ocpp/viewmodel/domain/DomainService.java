@@ -102,6 +102,10 @@ public class DomainService {
         return new BootChargingStationResult(chargingStation.isRegistered(), heartbeatInterval, new Date());
     }
 
+    public void heartbeat(ChargingStationId chargingStationId) {
+        commandGateway.send(new HeartbeatCommand(chargingStationId));
+    }
+
     public AuthorizationResult authorize(ChargingStationId chargingStationId, String idTag){
         AuthorizeCommand command = new AuthorizeCommand(chargingStationId, idTag);
         AuthorizationResultStatus resultStatus = commandGateway.sendAndWait(command, authorizeTimeout, TimeUnit.SECONDS);
