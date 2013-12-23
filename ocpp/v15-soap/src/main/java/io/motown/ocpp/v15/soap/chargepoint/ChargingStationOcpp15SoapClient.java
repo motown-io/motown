@@ -72,7 +72,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
     @Override
     public void stopTransaction(ChargingStationId id, int transactionId) {
-        log.debug("Stopping transaction {} on charging station {}", transactionId, id);
+        log.debug("Stopping transaction {} on {}", transactionId, id);
 
         ChargePointService chargePointService = this.createChargingStationService(id);
 
@@ -81,44 +81,46 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         RemoteStopTransactionResponse response;
         response =  chargePointService.remoteStopTransaction(request, id.getId());
 
-        log.info("Stop transaction {} on charging station {} has been {}", transactionId, id, response.getStatus().value());
+        log.info("Stop transaction {} on {} has been {}", transactionId, id, response.getStatus().value());
     }
 
     @Override
     public void softReset(ChargingStationId id) {
-        log.info("Requesting soft reset on charging station {}", id);
+        log.info("Requesting soft reset on {}", id);
 
         reset(id, ResetType.SOFT);
     }
 
     @Override
     public void hardReset(ChargingStationId id) {
-        log.info("Requesting hard reset on charging station {}", id);
+        log.info("Requesting hard reset on {}", id);
 
         reset(id, ResetType.HARD);
     }
 
     @Override
     public void unlockConnector(ChargingStationId id, int connectorId) {
-        log.debug("Unlocking of connector {} on charging station {}", connectorId, id);
+        log.debug("Unlocking of connector {} on {}", connectorId, id);
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         UnlockConnectorRequest request = new UnlockConnectorRequest();
         request.setConnectorId(connectorId);
         UnlockConnectorResponse response = chargePointService.unlockConnector(request, id.getId());
-        log.info("Unlocking of connector {} on charging station {} has been {}", connectorId, id, response.getStatus().value());
+        String responseStatus = (response.getStatus() != null) ? response.getStatus().value() : "Undetermined";
+
+        log.info("Unlocking of connector {} on {} has been {}", connectorId, id, responseStatus);
     }
 
     @Override
     public void changeAvailabilityToInoperative(ChargingStationId id, int connectorId) {
-        log.debug("Changing availability of connector {} on charging station {} to inoperative", connectorId, id);
+        log.debug("Changing availability of connector {} on {} to inoperative", connectorId, id);
 
         changeAvailability(id, connectorId, AvailabilityType.INOPERATIVE);
     }
 
     @Override
     public void changeAvailabilityToOperative(ChargingStationId id, int connectorId) {
-        log.debug("Changing availability of connector {} on charging station {} to operative", connectorId, id);
+        log.debug("Changing availability of connector {} on {} to operative", connectorId, id);
 
         changeAvailability(id, connectorId, AvailabilityType.OPERATIVE);
     }
