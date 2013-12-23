@@ -22,8 +22,10 @@ import org.axonframework.test.Fixtures;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import static io.motown.domain.chargingstation.ChargingStationTestUtils.*;
 
@@ -62,6 +64,34 @@ public class ChargingStationTest {
         fixture.given(getChargingStation())
                 .when(new HeartbeatCommand(getChargingStationId()))
                 .expectEvents(new ChargingStationSentHeartbeatEvent(getChargingStationId()));
+    }
+
+    @Test
+    public void testMultipleMeterValues() {
+        List<MeterValue> meterValues = getMeterValues();
+
+        fixture.given(getChargingStation())
+                .when(new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), getConnectorId(), meterValues))
+                .expectEvents(new ChargingStationSentMeterValuesEvent(getChargingStationId(), getNumberedTransactionId(), getConnectorId(), meterValues));
+    }
+
+    @Test
+    public void testNoMeterValues() {
+        List<MeterValue> meterValues = null;
+
+        fixture.given(getChargingStation())
+                .when(new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), getConnectorId(), meterValues))
+                .expectEvents(new ChargingStationSentMeterValuesEvent(getChargingStationId(), getNumberedTransactionId(), getConnectorId(), meterValues));
+    }
+
+    @Test
+    public void testMeterValuesNoTransaction() {
+        List<MeterValue> meterValues = getMeterValues();
+        TransactionId transactionId = null;
+
+        fixture.given(getChargingStation())
+                .when(new ProcessMeterValueCommand(getChargingStationId(), transactionId, getConnectorId(), meterValues))
+                .expectEvents(new ChargingStationSentMeterValuesEvent(getChargingStationId(), transactionId, getConnectorId(), meterValues));
     }
 
     @Test
@@ -104,7 +134,7 @@ public class ChargingStationTest {
         fixture.given()
                .when(new CreateAndAcceptChargingStationCommand(getChargingStationId()))
                .expectEvents(new ChargingStationCreatedEvent(getChargingStationId()),
-                             new ChargingStationAcceptedEvent(getChargingStationId()));
+                       new ChargingStationAcceptedEvent(getChargingStationId()));
     }
 
     @Test

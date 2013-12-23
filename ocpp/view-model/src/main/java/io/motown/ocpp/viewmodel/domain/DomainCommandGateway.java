@@ -36,4 +36,6 @@ interface DomainCommandGateway {
 
     void send(CreateChargingStationCommand command, CommandCallback<Object> callback);
 
+    void send(ProcessMeterValueCommand command);
+
 }

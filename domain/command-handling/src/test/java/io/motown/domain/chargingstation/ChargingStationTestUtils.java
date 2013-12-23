@@ -19,10 +19,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.chargingstation.*;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.DateTimeUtils;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ChargingStationTestUtils {
     public static ChargingStationId getChargingStationId() {
@@ -99,6 +99,13 @@ public class ChargingStationTestUtils {
                 .put("vendor", "VENDOR001")
                 .put("model", "MODEL001")
                 .build();
+    }
+
+    public static List<MeterValue> getMeterValues() {
+        List<MeterValue> meterValues = new ArrayList<>();
+        meterValues.add(new MeterValue(new Date(DateTimeUtils.currentTimeMillis() - (5 * DateTimeConstants.MILLIS_PER_MINUTE)), "100"));
+        meterValues.add(new MeterValue(new Date(DateTimeUtils.currentTimeMillis() - (2 * DateTimeConstants.MILLIS_PER_MINUTE)), "105"));
+        return meterValues;
     }
 
     public static int getConnectorId() {

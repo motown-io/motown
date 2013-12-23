@@ -168,6 +168,11 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         apply(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(this.id, this.protocol, command.getConnectorId()));
     }
 
+    @CommandHandler
+    public void handle(ProcessMeterValueCommand command) {
+        apply(new ChargingStationSentMeterValuesEvent(this.id, command.getTransactionId(), command.getConnectorId(), command.getMeterValueList()));
+    }
+
     @EventHandler
     public void handle(ChargingStationBootedEvent event) {
         this.protocol = event.getProtocol();

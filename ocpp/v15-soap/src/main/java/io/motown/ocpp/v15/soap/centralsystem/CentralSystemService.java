@@ -16,6 +16,7 @@
 package io.motown.ocpp.v15.soap.centralsystem;
 
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.MeterValue;
 import io.motown.ocpp.v15.soap.async.RequestHandler;
 import io.motown.ocpp.v15.soap.async.ResponseFactory;
 import io.motown.ocpp.v15.soap.centralsystem.schema.*;
@@ -35,6 +36,7 @@ import org.w3c.dom.Element;
 import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -123,9 +125,16 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
     }
 
     @Override
-    public MeterValuesResponse meterValues(MeterValuesRequest parameters, String chargeBoxIdentity) {
-        //FIXME implement me
-        log.error("Unimplemented method [meterValues] called.");
+    public MeterValuesResponse meterValues(MeterValuesRequest request, String chargeBoxIdentity) {
+        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
+        TransactionId transactionId = new NumberedTransactionId(chargingStationId, "ocpps15", request.getTransactionId());
+
+        List<MeterValue> meterValues = new ArrayList<>();
+        for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue mv : request.getValues()){
+            meterValues.add(new MeterValue(mv.getTimestamp(), mv.getValue().toString()));
+        }
+
+        domainService.meterValues(chargingStationId, transactionId, request.getConnectorId(), meterValues);
 
         return new MeterValuesResponse();
     }

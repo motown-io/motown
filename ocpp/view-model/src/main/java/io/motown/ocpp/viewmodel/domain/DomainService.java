@@ -106,6 +106,10 @@ public class DomainService {
         commandGateway.send(new HeartbeatCommand(chargingStationId));
     }
 
+    public void meterValues(ChargingStationId chargingStationId, TransactionId transactionId, int connectorId, List<MeterValue> meterValues){
+        commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, connectorId, meterValues));
+    }
+
     public AuthorizationResult authorize(ChargingStationId chargingStationId, String idTag){
         AuthorizeCommand command = new AuthorizeCommand(chargingStationId, idTag);
         AuthorizationResultStatus resultStatus = commandGateway.sendAndWait(command, authorizeTimeout, TimeUnit.SECONDS);
