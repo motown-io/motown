@@ -273,4 +273,13 @@ public class ChargingStationTest {
                 .when(new RequestChangeChargingStationAvailabilityToOperativeCommand(getChargingStationId(), getConnectorId()))
                 .expectEvents(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(getChargingStationId(), getProtocol(), getConnectorId()));
     }
+
+    @Test
+    public void testDataTransfer() {
+        String messageId = "updateChargeSchema";
+        String data = "{'schema' : [{'offset':'2013-07-19T12:47:11.5959704Z', 'power':0.0}, {'offset':'2013-07-19T12:52:11.5959704Z'}]}";
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new DataTransferCommand(getChargingStationId(), getVendorId(), messageId, data))
+                .expectEvents(new DataTransferEvent(getChargingStationId(), getProtocol(), getVendorId(), messageId, data));
+    }
 }

@@ -134,6 +134,25 @@ function ChargingStationController($scope, $http, $timeout) {
             });
     };
 
+    $scope.dataTransfer = function(chargingStation, vendorId, messageId, data) {
+        $http({
+            url: 'charging-stations/' + chargingStation.id + '/commands',
+            dataType: 'json',
+            method: 'POST',
+            data: ['DataTransfer',{
+                'vendorId': vendorId,
+                'messageId': messageId,
+                'data': data
+            }],
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            }
+        }).success(function(response) {
+                console.log('data transfer requested');
+            });
+    };
+
     $scope.changeAvailability = function(chargingStation, type) {
         var availabilityType = 'operative';
 

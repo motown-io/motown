@@ -125,6 +125,21 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         changeAvailability(id, connectorId, AvailabilityType.OPERATIVE);
     }
 
+    @Override
+    public void dataTransfer(ChargingStationId id, String vendorId, String messageId, String data) {
+        log.debug("Data transfer to {}", data, id);
+        ChargePointService chargePointService = this.createChargingStationService(id);
+
+        DataTransferRequest request = new DataTransferRequest();
+        request.setVendorId(vendorId);
+        request.setMessageId(messageId);
+        request.setData(data);
+
+        DataTransferResponse response = chargePointService.dataTransfer(request, id.getId());
+        String responseStatus = (response.getStatus() != null) ? response.getStatus().value() : "Undetermined";
+        log.info("Data transfer to {} was {}", id, responseStatus);
+    }
+
     private void reset(ChargingStationId id, ResetType type) {
         ChargePointService chargePointService = this.createChargingStationService(id);
 

@@ -15,25 +15,20 @@
  */
 package io.motown.domain.api.chargingstation;
 
-public class CoreApiTestUtils {
+import org.junit.Test;
 
-    public static ChargingStationId getChargingStationId() {
-        return new ChargingStationId("CS-001");
+import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
+import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getVendorId;
+
+public class DataTransferCommandTest {
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
+        new DataTransferCommand(null, getVendorId(), null, null);
     }
 
-    public static String getProtocol() {
-        return "protocol";
-    }
-
-    public static NumberedTransactionId getNumberedTransactionId() {
-        return new NumberedTransactionId(getChargingStationId(), getProtocol(), 123);
-    }
-
-    public static TextualToken getTextualToken() {
-        return new TextualToken("12345AB");
-    }
-
-    public static String getVendorId() {
-        return "Alfen";
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithVendorIdNull() {
+        new DataTransferCommand(getChargingStationId(), null, null, null);
     }
 }

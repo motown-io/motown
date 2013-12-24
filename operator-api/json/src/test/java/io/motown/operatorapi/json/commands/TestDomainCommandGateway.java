@@ -74,4 +74,9 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
         log.debug("RequestChangeChargingStationAvailabilityToOperativeCommand: " + command.toString());
     }
 
+    @Override
+    public void send(DataTransferCommand command) {
+        log.debug("DataTransferCommand: " + command.toString());
+    }
+
 }

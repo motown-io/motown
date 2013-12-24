@@ -28,4 +28,5 @@ interface DomainCommandGateway {
     void send(RequestHardResetChargingStationCommand command);
     void send(RequestChangeChargingStationAvailabilityToInoperativeCommand command);
     void send(RequestChangeChargingStationAvailabilityToOperativeCommand command);
+    void send(DataTransferCommand command);
 }

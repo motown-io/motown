@@ -84,6 +84,12 @@ public class OcppRequestHandler {
         chargingStationOcpp15Client.changeAvailabilityToOperative(event.getChargingStationId(), event.getConnectorId());
     }
 
+    @EventHandler
+    public void handle(DataTransferEvent event) {
+        log.info("DataTransferEvent");
+        chargingStationOcpp15Client.dataTransfer(event.getChargingStationId(), event.getVendorId(), event.getMessageId(), event.getData());
+    }
+
     public void setChargingStationOcpp15Client(ChargingStationOcpp15Client chargingStationOcpp15Client) {
         this.chargingStationOcpp15Client = chargingStationOcpp15Client;
     }

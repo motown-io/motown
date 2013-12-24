@@ -37,4 +37,6 @@ public interface ChargingStationOcpp15Client {
 
     void changeAvailabilityToOperative(ChargingStationId id, int connectorId);
 
+    void dataTransfer(ChargingStationId id, String vendorId, String messageId, String data);
+
 }

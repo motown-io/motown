@@ -111,4 +111,8 @@ public class ChargingStationTestUtils {
     public static int getConnectorId() {
         return 1;
     }
+
+    public static String getVendorId() {
+        return "Alfen";
+    }
 }
