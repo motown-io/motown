@@ -18,10 +18,9 @@ package io.motown.operatorapi.json.commands;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import io.motown.domain.api.chargingstation.ChangeConfigurationCommand;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.DataTransferCommand;
-import io.motown.domain.api.chargingstation.RequestChangeChargingStationAvailabilityToInoperativeCommand;
-import io.motown.domain.api.chargingstation.RequestChangeChargingStationAvailabilityToOperativeCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +29,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component
-class DataTransferJsonCommandHandler implements JsonCommandHandler {
+class ChangeConfigurationJsonCommandHandler implements JsonCommandHandler {
 
-    private static final String COMMAND_NAME = "DataTransfer";
+    private static final String COMMAND_NAME = "ChangeConfiguration";
 
     private DomainCommandGateway commandGateway;
 
@@ -60,14 +59,13 @@ class DataTransferJsonCommandHandler implements JsonCommandHandler {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
                 JsonObject payload = gson.fromJson(command.get(1), JsonObject.class);
-                String vendorId = payload.get("vendorId").getAsString();
-                String messageId = payload.get("messageId").getAsString();
-                String data = payload.get("data").getAsString();
+                String key = payload.get("key").getAsString();
+                String value = payload.get("value").getAsString();
 
-                commandGateway.send(new DataTransferCommand(new ChargingStationId(chargingStationId), vendorId, messageId, data));
+                commandGateway.send(new ChangeConfigurationCommand(new ChargingStationId(chargingStationId), key, value));
             }
         } catch (ClassCastException ex) {
-            throw new IllegalArgumentException("Data transfer command not able to parse the payload, is your json correctly formatted?");
+            throw new IllegalArgumentException("Change configuration command not able to parse the payload, is your json correctly formatted?");
         }
 
     }

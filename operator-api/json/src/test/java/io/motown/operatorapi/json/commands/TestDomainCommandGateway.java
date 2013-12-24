@@ -79,4 +79,9 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
         log.debug("DataTransferCommand: " + command.toString());
     }
 
+    @Override
+    public void send(ChangeConfigurationCommand command) {
+        log.debug("ChangeConfigurationCommand: " + command.toString());
+    }
+
 }

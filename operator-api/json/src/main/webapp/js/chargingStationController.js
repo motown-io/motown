@@ -153,6 +153,24 @@ function ChargingStationController($scope, $http, $timeout) {
             });
     };
 
+    $scope.changeConfiguration = function(chargingStation, key, value) {
+        $http({
+            url: 'charging-stations/' + chargingStation.id + '/commands',
+            dataType: 'json',
+            method: 'POST',
+            data: ['ChangeConfiguration',{
+                'key': key,
+                'value': value
+            }],
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            }
+        }).success(function(response) {
+                console.log('change configuration requested');
+            });
+    };
+
     $scope.changeAvailability = function(chargingStation, type) {
         var availabilityType = 'operative';
 
