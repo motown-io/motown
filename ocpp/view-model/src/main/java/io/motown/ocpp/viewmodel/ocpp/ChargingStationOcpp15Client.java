@@ -39,4 +39,6 @@ public interface ChargingStationOcpp15Client {
 
     void dataTransfer(ChargingStationId id, String vendorId, String messageId, String data);
 
+    void changeConfiguration(ChargingStationId id, String key, String value);
+
 }

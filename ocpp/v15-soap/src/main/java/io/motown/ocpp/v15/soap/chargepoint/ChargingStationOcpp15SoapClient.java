@@ -127,7 +127,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
     @Override
     public void dataTransfer(ChargingStationId id, String vendorId, String messageId, String data) {
-        log.debug("Data transfer to {}", data, id);
+        log.debug("Data transfer to {}", id);
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         DataTransferRequest request = new DataTransferRequest();
@@ -138,6 +138,20 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         DataTransferResponse response = chargePointService.dataTransfer(request, id.getId());
         String responseStatus = (response.getStatus() != null) ? response.getStatus().value() : "Undetermined";
         log.info("Data transfer to {} was {}", id, responseStatus);
+    }
+
+    @Override
+    public void changeConfiguration(ChargingStationId id, String key, String value) {
+        log.debug("Change configuration of {}", id);
+        ChargePointService chargePointService = this.createChargingStationService(id);
+
+        ChangeConfigurationRequest request = new ChangeConfigurationRequest();
+        request.setKey(key);
+        request.setValue(value);
+
+        ChangeConfigurationResponse response = chargePointService.changeConfiguration(request, id.getId());
+        String responseStatus = (response.getStatus() != null) ? response.getStatus().value() : "Undetermined";
+        log.info("Configuration change of {} on {} has been {}", key, id, responseStatus);
     }
 
     private void reset(ChargingStationId id, ResetType type) {
