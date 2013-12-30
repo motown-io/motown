@@ -19,6 +19,8 @@ package io.motown.ocpp.viewmodel.ocpp;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.IdentifyingToken;
 
+import java.util.Date;
+
 public interface ChargingStationOcpp15Client {
 
     void getConfiguration(ChargingStationId id);
@@ -40,5 +42,7 @@ public interface ChargingStationOcpp15Client {
     void dataTransfer(ChargingStationId id, String vendorId, String messageId, String data);
 
     void changeConfiguration(ChargingStationId id, String key, String value);
+
+    String getDiagnostics(ChargingStationId id, String uploadLocation, Integer numRetries, Integer retryInterval, Date periodStartTime, Date periodStopTime);
 
 }

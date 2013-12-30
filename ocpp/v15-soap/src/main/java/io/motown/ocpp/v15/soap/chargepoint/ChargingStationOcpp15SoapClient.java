@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.xml.ws.BindingProvider;
+import java.util.Date;
 import java.util.HashMap;
 
 public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Client {
@@ -152,6 +153,21 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         ChangeConfigurationResponse response = chargePointService.changeConfiguration(request, id.getId());
         String responseStatus = (response.getStatus() != null) ? response.getStatus().value() : "Undetermined";
         log.info("Configuration change of {} on {} has been {}", key, id, responseStatus);
+    }
+
+    @Override
+    public String getDiagnostics(ChargingStationId id, String uploadLocation, Integer numRetries, Integer retryInterval, Date periodStartTime, Date periodStopTime) {
+        ChargePointService chargePointService = this.createChargingStationService(id);
+
+        GetDiagnosticsRequest request = new GetDiagnosticsRequest();
+        request.setLocation(uploadLocation);
+        request.setRetries(numRetries);
+        request.setRetryInterval(retryInterval);
+        request.setStartTime(periodStartTime);
+        request.setStopTime(periodStopTime);
+
+        GetDiagnosticsResponse response = chargePointService.getDiagnostics(request, id.getId());
+        return response.getFileName();
     }
 
     private void reset(ChargingStationId id, ResetType type) {

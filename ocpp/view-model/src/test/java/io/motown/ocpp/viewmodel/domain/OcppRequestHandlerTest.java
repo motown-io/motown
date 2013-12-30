@@ -45,6 +45,7 @@ public class OcppRequestHandlerTest {
         chargingStationRepository.deleteAll();
 
         requestHandler = new OcppRequestHandler();
+        requestHandler.domainService = mock(DomainService.class);
 
         client = mock(ChargingStationOcpp15Client.class);
         requestHandler.setChargingStationOcpp15Client(client);
@@ -111,6 +112,14 @@ public class OcppRequestHandlerTest {
         requestHandler.handle(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(getChargingStationId(), getProtocol(), getConnectorId()));
 
         verify(client).changeAvailabilityToOperative(getChargingStationId(), getConnectorId());
+    }
+
+    @Test
+    public void testDiagnosticsRequestedEvent() {
+        String uploadLocation = "ftp://abc.com/xyz";
+        requestHandler.handle(new DiagnosticsRequestedEvent(getChargingStationId(), getProtocol(), uploadLocation));
+
+        verify(client).getDiagnostics(getChargingStationId(), uploadLocation, null, null, null, null);
     }
 
 }

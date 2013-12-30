@@ -119,7 +119,7 @@
                                 <wsdlOption>
                                     <wsdl>src/main/webapp/WEB-INF/wsdl/ocpp_15_centralsystem.wsdl</wsdl>
                                     <bindingFiles>
-                                        <bindingFile>src/main/webapp/WEB-INF/wsdl/XMLGregorianCalendarBinding.xml</bindingFile>
+                                        <bindingFile>src/main/webapp/WEB-INF/wsdl/CentralSystemXMLGregorianCalendarBinding.xml</bindingFile>
                                     </bindingFiles>
                                     <wsdlLocation>wsdl/ocpp_15_centralsystem.wsdl</wsdlLocation>
                                     <packagenames>
@@ -133,7 +133,7 @@
                                 <wsdlOption>
                                     <wsdl>src/main/webapp/WEB-INF/wsdl/ocpp_15_chargepoint.wsdl</wsdl>
                                     <bindingFiles>
-                                        <bindingFile>src/main/webapp/WEB-INF/wsdl/XMLGregorianCalendarBinding.xml</bindingFile>
+                                        <bindingFile>src/main/webapp/WEB-INF/wsdl/ChargePointXMLGregorianCalendarBinding.xml</bindingFile>
                                     </bindingFiles>
                                     <wsdlLocation>wsdl/ocpp_15_chargepoint.wsdl</wsdlLocation>
                                     <packagenames>

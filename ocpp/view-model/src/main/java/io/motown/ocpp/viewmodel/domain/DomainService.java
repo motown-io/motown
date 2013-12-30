@@ -110,6 +110,10 @@ public class DomainService {
         commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, connectorId, meterValues));
     }
 
+    public void diagnosticsFileNameReceived(ChargingStationId chargingStationId, String diagnosticsFileName){
+        commandGateway.send(new DiagnosticsFileNameReceivedCommand(chargingStationId, diagnosticsFileName));
+    }
+
     public AuthorizationResult authorize(ChargingStationId chargingStationId, String idTag){
         AuthorizeCommand command = new AuthorizeCommand(chargingStationId, idTag);
         AuthorizationResultStatus resultStatus = commandGateway.sendAndWait(command, authorizeTimeout, TimeUnit.SECONDS);

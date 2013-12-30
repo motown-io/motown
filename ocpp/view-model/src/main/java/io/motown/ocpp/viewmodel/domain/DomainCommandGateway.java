@@ -38,4 +38,6 @@ interface DomainCommandGateway {
 
     void send(ProcessMeterValueCommand command);
 
+    void send(DiagnosticsFileNameReceivedCommand command);
+
 }

@@ -16,6 +16,7 @@
 package io.motown.ocpp.viewmodel;
 
 import io.motown.domain.api.chargingstation.*;
+import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
@@ -26,6 +27,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class OcppRequestHandler {
     private static final Logger log = LoggerFactory.getLogger(io.motown.ocpp.viewmodel.OcppRequestHandler.class);
+
+    @Autowired
+    public DomainService domainService;
 
     @Autowired
     private ChargingStationOcpp15Client chargingStationOcpp15Client;
@@ -94,6 +98,14 @@ public class OcppRequestHandler {
     public void handle(ChangeConfigurationEvent event) {
         log.info("ChangeConfigurationEvent");
         chargingStationOcpp15Client.changeConfiguration(event.getChargingStationId(), event.getKey(), event.getValue());
+    }
+
+    @EventHandler
+    public void handle(DiagnosticsRequestedEvent event) {
+        log.info("DiagnosticsRequestedEvent");
+        String diagnosticsFilename = chargingStationOcpp15Client.getDiagnostics(event.getChargingStationId(), event.getUploadLocation(), event.getNumRetries(), event.getRetryInterval(), event.getPeriodStartTime(), event.getPeriodStopTime());
+
+        domainService.diagnosticsFileNameReceived(event.getChargingStationId(), diagnosticsFilename);
     }
 
     public void setChargingStationOcpp15Client(ChargingStationOcpp15Client chargingStationOcpp15Client) {

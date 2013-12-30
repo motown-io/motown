@@ -183,6 +183,21 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         apply(new ChangeConfigurationEvent(this.id, this.protocol, command.getKey(), command.getValue()));
     }
 
+    @CommandHandler
+    public void handle(RequestDiagnosticsCommand command) {
+        apply(new DiagnosticsRequestedEvent(this.id, this.protocol, command.getUploadLocation(), command.getNumRetries(), command.getRetryInterval(), command.getPeriodStartTime(), command.getPeriodEndTime()));
+    }
+
+    @CommandHandler
+    public void handle(DiagnosticsFileNameReceivedCommand command){
+        String diagnosticsFileName = command.getDiagnosticsFileName();
+        if(diagnosticsFileName == null || diagnosticsFileName.isEmpty()) {
+            apply(new DiagnosticsFileNameReceivedEvent(this.id, diagnosticsFileName));
+        } else {
+            apply(new NoDiagnosticsInformationAvailableEvent(this.id));
+        }
+    }
+
     @EventHandler
     public void handle(ChargingStationBootedEvent event) {
         this.protocol = event.getProtocol();
