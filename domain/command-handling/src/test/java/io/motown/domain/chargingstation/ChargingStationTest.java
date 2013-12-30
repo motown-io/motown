@@ -305,4 +305,11 @@ public class ChargingStationTest {
                 .when(new UpdateDiagnosticsUploadStatusCommand(getChargingStationId(), true))
                 .expectEvents(new DiagnosticsUploadStatusUpdatedEvent(getChargingStationId(), true));
     }
+
+    @Test
+    public void testFirmwareStatusUpdate() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new UpdateFirmwareStatusCommand(getChargingStationId(), FirmwareStatus.DOWNLOAD_FAILED))
+                .expectEvents(new FirmwareStatusUpdatedEvent(getChargingStationId(), FirmwareStatus.DOWNLOAD_FAILED));
+    }
 }

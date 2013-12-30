@@ -131,6 +131,12 @@ public class DomainService {
         commandGateway.send(command);
     }
 
+    public void firmwareStatusUpdate(ChargingStationId chargingStationId, FirmwareStatus firmwareStatus) {
+
+        UpdateFirmwareStatusCommand command = new UpdateFirmwareStatusCommand(chargingStationId, firmwareStatus);
+        commandGateway.send(command);
+    }
+
     /**
      * Generates a transaction identifier and starts a transaction by dispatching a StartTransactionCommand.
      *

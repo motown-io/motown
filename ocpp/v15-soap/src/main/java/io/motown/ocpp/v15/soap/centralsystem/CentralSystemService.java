@@ -21,6 +21,7 @@ import io.motown.ocpp.v15.soap.async.RequestHandler;
 import io.motown.ocpp.v15.soap.async.ResponseFactory;
 import io.motown.ocpp.v15.soap.centralsystem.schema.*;
 import io.motown.ocpp.v15.soap.centralsystem.schema.AuthorizationStatus;
+import io.motown.ocpp.v15.soap.centralsystem.schema.FirmwareStatus;
 import io.motown.ocpp.viewmodel.domain.*;
 import org.apache.cxf.headers.Header;
 import org.apache.cxf.helpers.CastUtils;
@@ -192,10 +193,29 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
     }
 
     @Override
-    public FirmwareStatusNotificationResponse firmwareStatusNotification(FirmwareStatusNotificationRequest parameters, String chargeBoxIdentity) {
-        //FIXME implement me
-        log.error("Unimplemented method [firmwareStatusNotification] called.");
-        throw new RuntimeException("Not yet implemented");
+    public FirmwareStatusNotificationResponse firmwareStatusNotification(FirmwareStatusNotificationRequest request, String chargeBoxIdentity) {
+        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
+        FirmwareStatus status = request.getStatus();
+
+        io.motown.domain.api.chargingstation.FirmwareStatus firmwareStatus;
+
+        if(FirmwareStatus.INSTALLED.equals(status)) {
+            firmwareStatus = io.motown.domain.api.chargingstation.FirmwareStatus.INSTALLED;
+
+        } else if(FirmwareStatus.DOWNLOADED.equals(status)) {
+            firmwareStatus = io.motown.domain.api.chargingstation.FirmwareStatus.DOWNLOADED;
+
+        } else if(FirmwareStatus.INSTALLATION_FAILED.equals(status)) {
+            firmwareStatus = io.motown.domain.api.chargingstation.FirmwareStatus.INSTALLATION_FAILED;
+
+        } else {
+            firmwareStatus = io.motown.domain.api.chargingstation.FirmwareStatus.DOWNLOAD_FAILED;
+
+        }
+
+        domainService.firmwareStatusUpdate(chargingStationId, firmwareStatus);
+
+        return new FirmwareStatusNotificationResponse();
     }
 
     @Override
