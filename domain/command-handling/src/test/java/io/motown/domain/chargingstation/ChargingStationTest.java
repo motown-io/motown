@@ -298,4 +298,11 @@ public class ChargingStationTest {
                 .when(new DiagnosticsFileNameReceivedCommand(getChargingStationId(), diagnosticsFileName))
                 .expectEvents(new DiagnosticsFileNameReceivedEvent(getChargingStationId(), diagnosticsFileName));
     }
+
+    @Test
+    public void testDiagnosticsStatusUpdate() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new UpdateDiagnosticsUploadStatusCommand(getChargingStationId(), true))
+                .expectEvents(new DiagnosticsUploadStatusUpdatedEvent(getChargingStationId(), true));
+    }
 }

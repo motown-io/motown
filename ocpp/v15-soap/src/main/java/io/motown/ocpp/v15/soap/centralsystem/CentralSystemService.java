@@ -140,10 +140,13 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
     }
 
     @Override
-    public DiagnosticsStatusNotificationResponse diagnosticsStatusNotification(DiagnosticsStatusNotificationRequest parameters, String chargeBoxIdentity) {
-        //FIXME implement me
-        log.error("Unimplemented method [diagnosticsStatusNotification] called.");
-        throw new RuntimeException("Not yet implemented");
+    public DiagnosticsStatusNotificationResponse diagnosticsStatusNotification(DiagnosticsStatusNotificationRequest request, String chargeBoxIdentity) {
+        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
+        DiagnosticsStatus diagnosticsStatus = request.getStatus();
+
+        domainService.diagnosticsUploadStatusUpdate(chargingStationId, DiagnosticsStatus.UPLOADED.equals(diagnosticsStatus));
+
+        return new DiagnosticsStatusNotificationResponse();
     }
 
     @Override

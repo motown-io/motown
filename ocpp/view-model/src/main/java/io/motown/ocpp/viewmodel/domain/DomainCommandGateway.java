@@ -40,4 +40,5 @@ interface DomainCommandGateway {
 
     void send(DiagnosticsFileNameReceivedCommand command);
 
+    void send(UpdateDiagnosticsUploadStatusCommand command);
 }

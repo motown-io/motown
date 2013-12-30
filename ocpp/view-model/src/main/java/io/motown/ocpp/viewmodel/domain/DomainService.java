@@ -126,6 +126,11 @@ public class DomainService {
         commandGateway.send(command);
     }
 
+    public void diagnosticsUploadStatusUpdate(ChargingStationId chargingStationId, boolean diagnosticsUploaded) {
+        UpdateDiagnosticsUploadStatusCommand command = new UpdateDiagnosticsUploadStatusCommand(chargingStationId, diagnosticsUploaded);
+        commandGateway.send(command);
+    }
+
     /**
      * Generates a transaction identifier and starts a transaction by dispatching a StartTransactionCommand.
      *

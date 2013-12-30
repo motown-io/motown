@@ -198,6 +198,11 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         }
     }
 
+    @CommandHandler
+    public void handle(UpdateDiagnosticsUploadStatusCommand command) {
+        apply(new DiagnosticsUploadStatusUpdatedEvent(command.getChargingStationId(), command.isUploaded()));
+    }
+
     @EventHandler
     public void handle(ChargingStationBootedEvent event) {
         this.protocol = event.getProtocol();
