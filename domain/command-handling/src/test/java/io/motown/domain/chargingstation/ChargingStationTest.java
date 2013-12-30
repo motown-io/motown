@@ -282,4 +282,20 @@ public class ChargingStationTest {
                 .when(new DataTransferCommand(getChargingStationId(), getVendorId(), messageId, data))
                 .expectEvents(new DataTransferEvent(getChargingStationId(), getProtocol(), getVendorId(), messageId, data));
     }
+
+    @Test
+    public void testGetDiagnostics() {
+        String targetLocation = "ftp://abc.com/";
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new RequestDiagnosticsCommand(getChargingStationId(), targetLocation, null, null, null, null))
+                .expectEvents(new DiagnosticsRequestedEvent(getChargingStationId(), getProtocol(), targetLocation));
+    }
+
+    @Test
+    public void testGetDiagnosticsFileNameReceived() {
+        String diagnosticsFileName = "diagnostics.zip";
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new DiagnosticsFileNameReceivedCommand(getChargingStationId(), diagnosticsFileName))
+                .expectEvents(new DiagnosticsFileNameReceivedEvent(getChargingStationId(), diagnosticsFileName));
+    }
 }
