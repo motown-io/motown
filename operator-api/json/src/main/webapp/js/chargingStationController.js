@@ -171,6 +171,23 @@ function ChargingStationController($scope, $http, $timeout) {
             });
     };
 
+    $scope.getDiagnostics = function(chargingStation, targetLocation) {
+        $http({
+            url: 'charging-stations/' + chargingStation.id + '/commands',
+            dataType: 'json',
+            method: 'POST',
+            data: ['GetDiagnostics',{
+                'targetLocation': targetLocation
+            }],
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            }
+        }).success(function(response) {
+                console.log('diagnostics requested');
+            });
+    }
+
     $scope.changeAvailability = function(chargingStation, type) {
         var availabilityType = 'operative';
 

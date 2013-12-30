@@ -25,6 +25,7 @@
         <ref bean="requestChangeChargingStationAvailabilityJsonCommandHandler"/>
         <ref bean="dataTransferJsonCommandHandler"/>
         <ref bean="changeConfigurationJsonCommandHandler"/>
+        <ref bean="getDiagnosticsJsonCommandHandler"/>
     </util:list>
 
     <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">

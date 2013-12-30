@@ -30,4 +30,5 @@ interface DomainCommandGateway {
     void send(RequestChangeChargingStationAvailabilityToOperativeCommand command);
     void send(DataTransferCommand command);
     void send(ChangeConfigurationCommand command);
+    void send(RequestDiagnosticsCommand command);
 }
