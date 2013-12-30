@@ -26,6 +26,7 @@
         <ref bean="dataTransferJsonCommandHandler"/>
         <ref bean="changeConfigurationJsonCommandHandler"/>
         <ref bean="getDiagnosticsJsonCommandHandler"/>
+        <ref bean="clearCacheJsonCommandHandler"/>
     </util:list>
 
     <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">

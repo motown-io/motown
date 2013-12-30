@@ -45,4 +45,6 @@ public interface ChargingStationOcpp15Client {
 
     String getDiagnostics(ChargingStationId id, String uploadLocation, Integer numRetries, Integer retryInterval, Date periodStartTime, Date periodStopTime);
 
+    void clearCache(ChargingStationId id);
+
 }

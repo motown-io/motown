@@ -312,4 +312,11 @@ public class ChargingStationTest {
                 .when(new UpdateFirmwareStatusCommand(getChargingStationId(), FirmwareStatus.DOWNLOAD_FAILED))
                 .expectEvents(new FirmwareStatusUpdatedEvent(getChargingStationId(), FirmwareStatus.DOWNLOAD_FAILED));
     }
+
+    @Test
+    public void testClearCache() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new RequestClearCacheCommand(getChargingStationId()))
+                .expectEvents(new ClearCacheRequestedEvent(getChargingStationId(), getProtocol()));
+    }
 }

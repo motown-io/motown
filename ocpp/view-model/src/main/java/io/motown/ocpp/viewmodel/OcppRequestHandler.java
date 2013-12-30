@@ -108,6 +108,12 @@ public class OcppRequestHandler {
         domainService.diagnosticsFileNameReceived(event.getChargingStationId(), diagnosticsFilename);
     }
 
+    @EventHandler
+    public void handle(ClearCacheRequestedEvent event) {
+        log.info("ClearCacheRequestedEvent");
+        chargingStationOcpp15Client.clearCache(event.getChargingStationId());
+    }
+
     public void setChargingStationOcpp15Client(ChargingStationOcpp15Client chargingStationOcpp15Client) {
         this.chargingStationOcpp15Client = chargingStationOcpp15Client;
     }

@@ -170,6 +170,17 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         return response.getFileName();
     }
 
+    @Override
+    public void clearCache(ChargingStationId id) {
+        ChargePointService chargePointService = this.createChargingStationService(id);
+
+        ClearCacheRequest request = new ClearCacheRequest();
+        ClearCacheResponse response = chargePointService.clearCache(request, id.getId());
+
+        //TODO: Decide on wether to communicate back the response status (applies to all methods in this class where no async response is sent by the Charging Station) - Ingo Pak, 30 Dec 2013
+        log.info("Clear cache on {} has been {}", id.getId(), response.getStatus().value());
+    }
+
     private void reset(ChargingStationId id, ResetType type) {
         ChargePointService chargePointService = this.createChargingStationService(id);
 
