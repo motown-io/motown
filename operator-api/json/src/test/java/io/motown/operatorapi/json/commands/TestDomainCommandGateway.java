@@ -84,4 +84,14 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
         log.debug("ChangeConfigurationCommand: " + command.toString());
     }
 
+    @Override
+    public void send(RequestDiagnosticsCommand command) {
+        log.debug("RequestDiagnosticsCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestClearCacheCommand command) {
+        log.debug("ClearCacheCommand: " + command.toString());
+    }
+
 }
