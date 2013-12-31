@@ -177,8 +177,29 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         ClearCacheRequest request = new ClearCacheRequest();
         ClearCacheResponse response = chargePointService.clearCache(request, id.getId());
 
-        //TODO: Decide on wether to communicate back the response status (applies to all methods in this class where no async response is sent by the Charging Station) - Ingo Pak, 30 Dec 2013
+        //TODO: Decide on whether to communicate back the response status (applies to all methods in this class where no async response is sent by the Charging Station) - Ingo Pak, 30 Dec 2013
         log.info("Clear cache on {} has been {}", id.getId(), response.getStatus().value());
+    }
+
+    @Override
+    public void updateFirmware(ChargingStationId id, String downloadLocation, Date retrieveDate, Integer numRetries, Integer retryInterval) {
+        ChargePointService chargePointService = this.createChargingStationService(id);
+
+        UpdateFirmwareRequest request = new UpdateFirmwareRequest();
+        request.setLocation(downloadLocation);
+        request.setRetrieveDate(retrieveDate);
+        request.setRetries(numRetries);
+        request.setRetryInterval(retryInterval);
+
+        try {
+            chargePointService.updateFirmware(request, id.getId());
+
+            //The charging station will respond with an async 'firmware status update' message
+            log.info("Update firmware on {} has been requested", id.getId());
+        }
+        catch(Exception e) {
+            log.error("Unable to request update firmware for {}", id, e);
+        }
     }
 
     private void reset(ChargingStationId id, ResetType type) {

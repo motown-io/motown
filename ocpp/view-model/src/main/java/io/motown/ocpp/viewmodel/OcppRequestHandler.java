@@ -23,6 +23,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import java.util.Map;
 
 @Component
 public class OcppRequestHandler {
@@ -112,6 +115,23 @@ public class OcppRequestHandler {
     public void handle(ClearCacheRequestedEvent event) {
         log.info("ClearCacheRequestedEvent");
         chargingStationOcpp15Client.clearCache(event.getChargingStationId());
+    }
+
+    @EventHandler
+    public void handle(FirmwareUpdateRequestedEvent event) {
+        log.info("FirmwareUpdateRequestedEvent");
+        Map<String,String> attributes = event.getAttributes();
+
+        String attrNumRetries = null;
+        String attrRetryInterval = null;
+        if(attributes != null){
+            attrNumRetries = attributes.get("NUM_RETRIES");
+            attrRetryInterval = attributes.get("RETRY_INTERVAL");
+        }
+        Integer numRetries = (!StringUtils.isEmpty(attrNumRetries))? Integer.parseInt(attrNumRetries): null;
+        Integer retryInterval = (!StringUtils.isEmpty(attrRetryInterval))? Integer.parseInt(attrRetryInterval): null;
+
+        chargingStationOcpp15Client.updateFirmware(event.getChargingStationId(), event.getUpdateLocation(), event.getRetrieveDate(), numRetries, retryInterval);
     }
 
     public void setChargingStationOcpp15Client(ChargingStationOcpp15Client chargingStationOcpp15Client) {

@@ -94,4 +94,8 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
         log.debug("ClearCacheCommand: " + command.toString());
     }
 
+    @Override
+    public void send(RequestFirmwareUpdateCommand command) {
+        log.debug("RequestFirmwareUpdateCommand: " + command.toString());
+    }
 }

@@ -204,6 +204,24 @@ function ChargingStationController($scope, $http, $timeout) {
             });
     }
 
+    $scope.updateFirmware = function(chargingStation, location, retrieveDate) {
+        $http({
+            url: 'charging-stations/' + chargingStation.id + '/commands',
+            dataType: 'json',
+            method: 'POST',
+            data: ['UpdateFirmware',{
+                'location': location,
+                'retrieveDate': retrieveDate
+            }],
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            }
+        }).success(function(response) {
+                console.log('clear cache requested');
+            });
+    }
+
     $scope.changeAvailability = function(chargingStation, type) {
         var availabilityType = 'operative';
 

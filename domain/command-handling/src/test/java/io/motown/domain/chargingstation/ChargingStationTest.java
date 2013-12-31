@@ -319,4 +319,14 @@ public class ChargingStationTest {
                 .when(new RequestClearCacheCommand(getChargingStationId()))
                 .expectEvents(new ClearCacheRequestedEvent(getChargingStationId(), getProtocol()));
     }
+
+    @Test
+    public void testRequestFirmwareUpdate() {
+        String updateLocation = "https://somewhere.nl";
+        Date retrieveDate = new Date();
+
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new RequestFirmwareUpdateCommand(getChargingStationId(), updateLocation, retrieveDate, null))
+                .expectEvents(new FirmwareUpdateRequestedEvent(getChargingStationId(), getProtocol(), updateLocation, retrieveDate, null));
+    }
 }

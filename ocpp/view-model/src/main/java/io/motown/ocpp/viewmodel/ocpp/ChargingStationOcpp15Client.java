@@ -47,4 +47,5 @@ public interface ChargingStationOcpp15Client {
 
     void clearCache(ChargingStationId id);
 
+    void updateFirmware(ChargingStationId id, String downloadLocation, Date retrieveDate, Integer numRetries, Integer retryInterval);
 }

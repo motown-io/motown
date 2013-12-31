@@ -32,4 +32,5 @@ interface DomainCommandGateway {
     void send(ChangeConfigurationCommand command);
     void send(RequestDiagnosticsCommand command);
     void send(RequestClearCacheCommand command);
+    void send(RequestFirmwareUpdateCommand command);
 }
