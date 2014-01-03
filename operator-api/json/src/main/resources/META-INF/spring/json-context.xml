@@ -28,6 +28,8 @@
         <ref bean="getDiagnosticsJsonCommandHandler"/>
         <ref bean="clearCacheJsonCommandHandler"/>
         <ref bean="updateFirmwareJsonCommandHandler"/>
+        <ref bean="getAuthorisationListVersionJsonCommandHandler"/>
+        <ref bean="sendAuthorisationListJsonCommandHandler"/>
     </util:list>
 
     <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">

@@ -134,6 +134,22 @@ public class OcppRequestHandler {
         chargingStationOcpp15Client.updateFirmware(event.getChargingStationId(), event.getUpdateLocation(), event.getRetrieveDate(), numRetries, retryInterval);
     }
 
+    @EventHandler
+    public void handle(AuthorisationListVersionRequestedEvent event) {
+        log.info("AuthorisationListVersionRequestedEvent");
+
+        int currentVersion = chargingStationOcpp15Client.getAuthorisationListVersion(event.getChargingStationId());
+
+        domainService.authorisationListVersionReceived(event.getChargingStationId(), currentVersion);
+    }
+
+    @EventHandler
+    public void handle(SendAuthorisationListRequestedEvent event) {
+        log.info("SendAuthorisationListRequestedEvent");
+
+        chargingStationOcpp15Client.sendAuthorisationList(event.getChargingStationId(), event.getAuthorisationListHash(), event.getAuthorisationListVersion(), event.getAuthorisationList(), event.getUpdateType());
+    }
+
     public void setChargingStationOcpp15Client(ChargingStationOcpp15Client chargingStationOcpp15Client) {
         this.chargingStationOcpp15Client = chargingStationOcpp15Client;
     }

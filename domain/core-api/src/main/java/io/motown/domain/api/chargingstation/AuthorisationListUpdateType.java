@@ -15,23 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
-/**
- * The identifying token used to start or stop a charging transaction (e.g. an RFID tag or unique mobile app
- * identifier).
- * <p/>
- * It is advised make implementing classes immutable to ensure a consistent experience when using these implementations
- * in combination with other API classes.
- */
-public interface IdentifyingToken {
-
-    enum AuthenticationStatus { ACCEPTED, BLOCKED, EXPIRED, INVALID, CONCURRENT_TX, DELETED };
-
-    /**
-     * Gets a unique textual representation of the token.
-     *
-     * @return the unique textual representation of the token.
-     */
-    String getToken();
-
-    AuthenticationStatus getAuthenticationStatus();
+public enum AuthorisationListUpdateType {
+    FULL,
+    DIFFERENTIAL
 }

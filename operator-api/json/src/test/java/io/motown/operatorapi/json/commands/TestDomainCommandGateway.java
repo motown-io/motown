@@ -98,4 +98,16 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
     public void send(RequestFirmwareUpdateCommand command) {
         log.debug("RequestFirmwareUpdateCommand: " + command.toString());
     }
+
+    @Override
+    public void send(RequestAuthorisationListVersionCommand command) {
+        log.debug("RequestAuthorisationListVersionCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(SendAuthorisationListCommand command) {
+        log.debug("SendAuthorisationListCommand: " + command.toString());
+    }
+
+
 }

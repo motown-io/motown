@@ -43,4 +43,6 @@ interface DomainCommandGateway {
     void send(UpdateDiagnosticsUploadStatusCommand command);
 
     void send(UpdateFirmwareStatusCommand command);
+
+    void send(AuthorisationListVersionReceivedCommand command);
 }

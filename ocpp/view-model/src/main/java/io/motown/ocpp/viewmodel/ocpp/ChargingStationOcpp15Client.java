@@ -16,10 +16,12 @@
 
 package io.motown.ocpp.viewmodel.ocpp;
 
+import io.motown.domain.api.chargingstation.AuthorisationListUpdateType;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.IdentifyingToken;
 
 import java.util.Date;
+import java.util.List;
 
 public interface ChargingStationOcpp15Client {
 
@@ -48,4 +50,8 @@ public interface ChargingStationOcpp15Client {
     void clearCache(ChargingStationId id);
 
     void updateFirmware(ChargingStationId id, String downloadLocation, Date retrieveDate, Integer numRetries, Integer retryInterval);
+
+    int getAuthorisationListVersion(ChargingStationId id);
+
+    void sendAuthorisationList(ChargingStationId id, String hash, int listVersion, List<IdentifyingToken> identifyingTokens, AuthorisationListUpdateType updateType);
 }

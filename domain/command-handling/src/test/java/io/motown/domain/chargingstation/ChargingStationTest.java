@@ -329,4 +329,19 @@ public class ChargingStationTest {
                 .when(new RequestFirmwareUpdateCommand(getChargingStationId(), updateLocation, retrieveDate, null))
                 .expectEvents(new FirmwareUpdateRequestedEvent(getChargingStationId(), getProtocol(), updateLocation, retrieveDate, null));
     }
+
+    @Test
+    public void testGetAuthorisationListVersionRequest() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new RequestAuthorisationListVersionCommand(getChargingStationId()))
+                .expectEvents(new AuthorisationListVersionRequestedEvent(getChargingStationId(), getProtocol()));
+    }
+
+    @Test
+    public void testGetAuthorisationListVersionReceived() {
+        int version = 1;
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new AuthorisationListVersionReceivedCommand(getChargingStationId(), version))
+                .expectEvents(new AuthorisationListVersionReceivedEvent(getChargingStationId(), version));
+    }
 }

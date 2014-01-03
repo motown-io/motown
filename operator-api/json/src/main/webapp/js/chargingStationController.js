@@ -222,6 +222,38 @@ function ChargingStationController($scope, $http, $timeout) {
             });
     }
 
+    $scope.getAuthorisationListVersion = function(chargingStation) {
+        $http({
+            url: 'charging-stations/' + chargingStation.id + '/commands',
+            dataType: 'json',
+            method: 'POST',
+            data: ['GetAuthorisationListVersion',{
+            }],
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            }
+        }).success(function(response) {
+                console.log('clear cache requested');
+            });
+    }
+
+    $scope.sendAuthorisationList = function(chargingStation) {
+        $http({
+            url: 'charging-stations/' + chargingStation.id + '/commands',
+            dataType: 'json',
+            method: 'POST',
+            data: ['SendAuthorisationList',{
+            }],
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            }
+        }).success(function(response) {
+                console.log('clear cache requested');
+            });
+    }
+
     $scope.changeAvailability = function(chargingStation, type) {
         var availabilityType = 'operative';
 

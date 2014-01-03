@@ -17,6 +17,7 @@
 package io.motown.ocpp.v15.soap.chargepoint;
 
 import com.google.common.collect.Maps;
+import io.motown.domain.api.chargingstation.AuthorisationListUpdateType;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.IdentifyingToken;
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
@@ -33,6 +34,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.xml.ws.BindingProvider;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+
+import static io.motown.domain.api.chargingstation.IdentifyingToken.AuthenticationStatus;
 
 public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Client {
 
@@ -200,6 +204,60 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         catch(Exception e) {
             log.error("Unable to request update firmware for {}", id, e);
         }
+    }
+
+    @Override
+    public int getAuthorisationListVersion(ChargingStationId id) {
+        ChargePointService chargePointService = this.createChargingStationService(id);
+
+        GetLocalListVersionResponse response = chargePointService.getLocalListVersion(new GetLocalListVersionRequest(), id.getId());
+        int currentWhitelistVersion = response.getListVersion();
+
+        log.info("At the moment {} has authorisationlist version {}", id.getId(), currentWhitelistVersion);
+        return currentWhitelistVersion;
+    }
+
+    @Override
+    public void sendAuthorisationList(ChargingStationId id, String hash, int listVersion, List<IdentifyingToken> identifyingTokens, AuthorisationListUpdateType updateType) {
+        ChargePointService chargePointService = this.createChargingStationService(id);
+
+        SendLocalListRequest request = new SendLocalListRequest();
+        request.setHash(hash);
+        request.setListVersion(listVersion);
+
+        //Translate the update type to the OCPP specific type
+        switch(updateType) {
+            case DIFFERENTIAL: request.setUpdateType(UpdateType.DIFFERENTIAL); break;
+            case FULL: request.setUpdateType(UpdateType.FULL); break;
+        }
+
+        //Translate the authorisation information to the OCPP specific info
+        List<AuthorisationData> authorisationList = request.getLocalAuthorisationList();
+        for (IdentifyingToken identifyingToken : identifyingTokens) {
+            AuthorisationData authData = new AuthorisationData();
+            authData.setIdTag(identifyingToken.getToken());
+
+            //The OCPP spec describes that the IdTagInfo should not be present in case the charging station has to remove the entry from the list
+            AuthenticationStatus status = identifyingToken.getAuthenticationStatus();
+            if(status!= null && !AuthenticationStatus.DELETED.equals(status)) {
+                IdTagInfo info = new IdTagInfo();
+                switch(identifyingToken.getAuthenticationStatus()){
+                    case ACCEPTED: info.setStatus(AuthorizationStatus.ACCEPTED); break;
+                    case BLOCKED: info.setStatus(AuthorizationStatus.BLOCKED); break;
+                    case EXPIRED: info.setStatus(AuthorizationStatus.EXPIRED); break;
+                    case INVALID: info.setStatus(AuthorizationStatus.INVALID); break;
+                    case CONCURRENT_TX: info.setStatus(AuthorizationStatus.CONCURRENT_TX); break;
+                }
+                authData.setIdTagInfo(info);
+            }
+
+            authorisationList.add(authData);
+        }
+
+        //TODO: Make ALL calls towards the chargingstation more robust (now can result in message processing loop of death), decide on how to achieve this; either by try catching here to force ACK, or not letting Rabbit reschedule upon exception - Ingo Pak, 03 Jan 2014
+        SendLocalListResponse response = chargePointService.sendLocalList(request, id.getId());
+        String responseStatus = (response.getStatus() != null? response.getStatus().value(): "Undetermined");
+        log.info("Update of local authorisation list on {} has been {}", id, responseStatus);
     }
 
     private void reset(ChargingStationId id, ResetType type) {

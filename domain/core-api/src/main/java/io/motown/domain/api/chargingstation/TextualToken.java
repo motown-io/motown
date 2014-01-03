@@ -25,6 +25,8 @@ public final class TextualToken implements IdentifyingToken {
 
     private final String token;
 
+    private AuthenticationStatus authenticationStatus = null;
+
     /**
      * Create a {@code TextualToken} with a {@String} based token.
      *
@@ -40,11 +42,33 @@ public final class TextualToken implements IdentifyingToken {
     }
 
     /**
+     * Create a {@code TextualToken} with a {@String} based token.
+     *
+     * @param token  the token.
+     * @param status the authentication status
+     * @throws NullPointerException     if {@token} is null.
+     * @throws IllegalArgumentException if {@token} is empty.
+     */
+    public TextualToken(String token, AuthenticationStatus status) {
+        this(token);
+
+        this.authenticationStatus = status;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public String getToken() {
         return token;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public AuthenticationStatus getAuthenticationStatus() {
+        return authenticationStatus;
     }
 
     /**
@@ -57,6 +81,7 @@ public final class TextualToken implements IdentifyingToken {
 
         TextualToken that = (TextualToken) o;
 
+        if (authenticationStatus != that.authenticationStatus) return false;
         if (!token.equals(that.token)) return false;
 
         return true;
@@ -67,6 +92,8 @@ public final class TextualToken implements IdentifyingToken {
      */
     @Override
     public int hashCode() {
-        return token.hashCode();
+        int result = token.hashCode();
+        result = 31 * result + (authenticationStatus != null ? authenticationStatus.hashCode() : 0);
+        return result;
     }
 }

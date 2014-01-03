@@ -106,12 +106,16 @@ public class DomainService {
         commandGateway.send(new HeartbeatCommand(chargingStationId));
     }
 
-    public void meterValues(ChargingStationId chargingStationId, TransactionId transactionId, int connectorId, List<MeterValue> meterValues){
+    public void meterValues(ChargingStationId chargingStationId, TransactionId transactionId, int connectorId, List<MeterValue> meterValues) {
         commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, connectorId, meterValues));
     }
 
-    public void diagnosticsFileNameReceived(ChargingStationId chargingStationId, String diagnosticsFileName){
+    public void diagnosticsFileNameReceived(ChargingStationId chargingStationId, String diagnosticsFileName) {
         commandGateway.send(new DiagnosticsFileNameReceivedCommand(chargingStationId, diagnosticsFileName));
+    }
+
+    public void authorisationListVersionReceived(ChargingStationId chargingStationId, int currentVersion) {
+        commandGateway.send(new AuthorisationListVersionReceivedCommand(chargingStationId, currentVersion));
     }
 
     public AuthorizationResult authorize(ChargingStationId chargingStationId, String idTag){
