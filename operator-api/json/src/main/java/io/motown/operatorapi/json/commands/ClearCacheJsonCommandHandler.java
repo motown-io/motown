@@ -15,12 +15,9 @@
  */
 package io.motown.operatorapi.json.commands;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestClearCacheCommand;
-import io.motown.domain.api.chargingstation.RequestDiagnosticsCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +32,6 @@ class ClearCacheJsonCommandHandler implements JsonCommandHandler {
 
     private DomainCommandGateway commandGateway;
 
-    private Gson gson;
     private ChargingStationRepository repository;
 
     @Override
@@ -44,17 +40,7 @@ class ClearCacheJsonCommandHandler implements JsonCommandHandler {
     }
 
     @Override
-    public void handle(String chargingStationId, String jsonCommand) {
-        JsonArray command = gson.fromJson(jsonCommand, JsonArray.class);
-
-        if (command != null && command.size() != 2) {
-            throw new IllegalArgumentException("The given JSON command is not well formed");
-        }
-
-        if (!COMMAND_NAME.equals(command.get(0).getAsString())) {
-            throw new IllegalArgumentException("The given JSON command is not supported by this command handler.");
-        }
-
+    public void handle(String chargingStationId, JsonObject commandObject) {
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
@@ -69,11 +55,6 @@ class ClearCacheJsonCommandHandler implements JsonCommandHandler {
     @Resource(name = "domainCommandGateway")
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
-    }
-
-    @Autowired
-    public void setGson(Gson gson) {
-        this.gson = gson;
     }
 
     @Autowired

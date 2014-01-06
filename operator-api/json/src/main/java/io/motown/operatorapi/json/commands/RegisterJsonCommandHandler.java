@@ -16,7 +16,6 @@
 package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.*;

@@ -15,13 +15,9 @@
  */
 package io.motown.operatorapi.json.commands;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.DataTransferCommand;
-import io.motown.domain.api.chargingstation.RequestChangeChargingStationAvailabilityToInoperativeCommand;
-import io.motown.domain.api.chargingstation.RequestChangeChargingStationAvailabilityToOperativeCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +32,6 @@ class DataTransferJsonCommandHandler implements JsonCommandHandler {
 
     private DomainCommandGateway commandGateway;
 
-    private Gson gson;
     private ChargingStationRepository repository;
 
     @Override
@@ -45,24 +40,13 @@ class DataTransferJsonCommandHandler implements JsonCommandHandler {
     }
 
     @Override
-    public void handle(String chargingStationId, String jsonCommand) {
-        JsonArray command = gson.fromJson(jsonCommand, JsonArray.class);
-
-        if (command != null && command.size() != 2) {
-            throw new IllegalArgumentException("The given JSON command is not well formed");
-        }
-
-        if (!COMMAND_NAME.equals(command.get(0).getAsString())) {
-            throw new IllegalArgumentException("The given JSON command is not supported by this command handler.");
-        }
-
+    public void handle(String chargingStationId, JsonObject commandObject) {
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
-                JsonObject payload = gson.fromJson(command.get(1), JsonObject.class);
-                String vendorId = payload.get("vendorId").getAsString();
-                String messageId = payload.get("messageId").getAsString();
-                String data = payload.get("data").getAsString();
+                String vendorId = commandObject.get("vendorId").getAsString();
+                String messageId = commandObject.get("messageId").getAsString();
+                String data = commandObject.get("data").getAsString();
 
                 commandGateway.send(new DataTransferCommand(new ChargingStationId(chargingStationId), vendorId, messageId, data));
             }
@@ -75,11 +59,6 @@ class DataTransferJsonCommandHandler implements JsonCommandHandler {
     @Resource(name = "domainCommandGateway")
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
-    }
-
-    @Autowired
-    public void setGson(Gson gson) {
-        this.gson = gson;
     }
 
     @Autowired

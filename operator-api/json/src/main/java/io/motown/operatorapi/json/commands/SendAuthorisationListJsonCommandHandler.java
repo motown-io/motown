@@ -16,16 +16,11 @@
 package io.motown.operatorapi.json.commands;
 
 import com.google.common.collect.Lists;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import javax.persistence.metamodel.IdentifiableType;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -35,22 +30,13 @@ class SendAuthorisationListJsonCommandHandler implements JsonCommandHandler {
 
     private DomainCommandGateway commandGateway;
 
-    private Gson gson;
-
     @Override
     public String getCommandName() {
         return COMMAND_NAME;
     }
 
     @Override
-    public void handle(String chargingStationId, String jsonCommand) {
-        JsonArray command = gson.fromJson(jsonCommand, JsonArray.class);
-        if (command != null && command.size() != 2) {
-            throw new IllegalArgumentException("The given JSON command is not well formed");
-        }
-        if (!COMMAND_NAME.equals(command.get(0).getAsString())) {
-            throw new IllegalArgumentException("The given JSON command is not supported by this command handler.");
-        }
+    public void handle(String chargingStationId, JsonObject commandObject) {
         try {
             //TODO: hardcoded this data for now, as it is to be determined where this 'list' will be stored - Ingo Pak, 03 Jan 2014
             List<IdentifyingToken> authorisationList = Lists.newArrayList();
@@ -64,10 +50,5 @@ class SendAuthorisationListJsonCommandHandler implements JsonCommandHandler {
     @Resource(name = "domainCommandGateway")
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
-    }
-
-    @Autowired
-    public void setGson(Gson gson) {
-        this.gson = gson;
     }
 }
