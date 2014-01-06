@@ -13,13 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.operatorapi.json.commands;
+package io.motown.operatorapi.viewmodel.model;
 
-import com.google.gson.JsonObject;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-public interface JsonCommandHandler {
+public class RequestStopTransactionApiCommand {
 
-    String getCommandName();
+    private String id;
 
-    void handle(String chargingStationId, JsonObject commandObject);
+    public RequestStopTransactionApiCommand(String id) {
+        checkNotNull(id);
+        checkArgument(!id.isEmpty());
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
 }

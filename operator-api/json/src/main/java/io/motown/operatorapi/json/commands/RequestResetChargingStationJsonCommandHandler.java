@@ -35,7 +35,6 @@ class RequestResetChargingStationJsonCommandHandler implements JsonCommandHandle
 
     private DomainCommandGateway commandGateway;
 
-    private Gson gson;
     private ChargingStationRepository repository;
 
     @Override
@@ -44,19 +43,11 @@ class RequestResetChargingStationJsonCommandHandler implements JsonCommandHandle
     }
 
     @Override
-    public void handle(String chargingStationId, String jsonCommand) {
-        JsonArray command = gson.fromJson(jsonCommand, JsonArray.class);
-        if (command != null && command.size() != 2) {
-            throw new IllegalArgumentException("The given JSON command is not well formed");
-        }
-        if (!COMMAND_NAME.equals(command.get(0).getAsString())) {
-            throw new IllegalArgumentException("The given JSON command is not supported by this command handler.");
-        }
+    public void handle(String chargingStationId, JsonObject commandObject) {
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
-                JsonObject payload = gson.fromJson(command.get(1), JsonObject.class);
-                String resetType = payload.get("type").getAsString();
+                String resetType = commandObject.get("type").getAsString();
 
                 if("hard".equalsIgnoreCase(resetType)) {
                     commandGateway.send(new RequestHardResetChargingStationCommand(new ChargingStationId(chargingStationId)));
@@ -73,11 +64,6 @@ class RequestResetChargingStationJsonCommandHandler implements JsonCommandHandle
     @Resource(name = "domainCommandGateway")
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
-    }
-
-    @Autowired
-    public void setGson(Gson gson) {
-        this.gson = gson;
     }
 
     @Autowired

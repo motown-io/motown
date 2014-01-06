@@ -16,12 +16,12 @@
 package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.NumberedTransactionId;
 import io.motown.domain.api.chargingstation.RequestStopTransactionCommand;
 import io.motown.domain.api.chargingstation.TransactionId;
+import io.motown.operatorapi.viewmodel.model.RequestStopTransactionApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,8 +35,9 @@ class RequestStopTransactionJsonCommandHandler implements JsonCommandHandler {
 
     private DomainCommandGateway commandGateway;
 
-    private Gson gson;
     private ChargingStationRepository repository;
+
+    private Gson gson;
 
     @Override
     public String getCommandName() {
@@ -44,23 +45,15 @@ class RequestStopTransactionJsonCommandHandler implements JsonCommandHandler {
     }
 
     @Override
-    public void handle(String chargingStationId, String jsonCommand) {
-        JsonArray command = gson.fromJson(jsonCommand, JsonArray.class);
-        if (command != null && command.size() != 2) {
-            throw new IllegalArgumentException("The given JSON command is not well formed");
-        }
-        if (!COMMAND_NAME.equals(command.get(0).getAsString())) {
-            throw new IllegalArgumentException("The given JSON command is not supported by this command handler.");
-        }
+    public void handle(String chargingStationId, JsonObject commandObject) {
         try {
-            //TODO: Add additional checks(?) - Ingo Pak, 04 dec 2013
-            JsonObject payload = gson.fromJson(command.get(1), JsonObject.class);
-            int transactionId = payload.get("transactionId").getAsInt();
+            RequestStopTransactionApiCommand command = gson.fromJson(commandObject, RequestStopTransactionApiCommand.class);
 
-            // TODO configure protocol identifier - Dennis Laumen, December 19th 2013
             ChargingStationId chargingStation = new ChargingStationId(chargingStationId);
-            TransactionId transaction = new NumberedTransactionId(chargingStation, "ocpps15", transactionId);
-            commandGateway.send(new RequestStopTransactionCommand(chargingStation, transaction));
+            // TODO configure protocol identifier - Dennis Laumen, December 19th 2013
+            // TODO assuming a NumberedTransactionId, needs to be fixed - Dennis Laumen, December 20th 2013
+            TransactionId transactionId = new NumberedTransactionId(chargingStation, "ocpps15", Integer.parseInt(command.getId()));
+            commandGateway.send(new RequestStopTransactionCommand(chargingStation, transactionId));
         } catch (ClassCastException ex) {
             throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted ?");
         }

@@ -35,7 +35,6 @@ class RequestStartTransactionJsonCommandHandler implements JsonCommandHandler {
 
     private DomainCommandGateway commandGateway;
 
-    private Gson gson;
     private ChargingStationRepository repository;
 
     @Override
@@ -44,23 +43,12 @@ class RequestStartTransactionJsonCommandHandler implements JsonCommandHandler {
     }
 
     @Override
-    public void handle(String chargingStationId, String jsonCommand) {
-        JsonArray command = gson.fromJson(jsonCommand, JsonArray.class);
-
-        if (command != null && command.size() != 2) {
-            throw new IllegalArgumentException("The given JSON command is not well formed");
-        }
-
-        if (!COMMAND_NAME.equals(command.get(0).getAsString())) {
-            throw new IllegalArgumentException("The given JSON command is not supported by this command handler.");
-        }
-
+    public void handle(String chargingStationId, JsonObject commandObject) {
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
-                JsonObject payload = gson.fromJson(command.get(1), JsonObject.class);
-                int connectorId = payload.get("connectorId").getAsInt();
-                String token = payload.get("identifyingToken").getAsString();
+                int connectorId = commandObject.get("connectorId").getAsInt();
+                String token = commandObject.get("identifyingToken").getAsString();
                 TextualToken identifyingToken = new TextualToken(token);
 
                 commandGateway.send(new RequestStartTransactionCommand(new ChargingStationId(chargingStationId), identifyingToken, connectorId));
@@ -75,11 +63,6 @@ class RequestStartTransactionJsonCommandHandler implements JsonCommandHandler {
     @Resource(name = "domainCommandGateway")
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
-    }
-
-    @Autowired
-    public void setGson(Gson gson) {
-        this.gson = gson;
     }
 
     @Autowired

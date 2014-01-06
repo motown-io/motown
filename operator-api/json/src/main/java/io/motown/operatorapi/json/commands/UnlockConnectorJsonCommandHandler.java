@@ -34,23 +34,14 @@ class UnlockConnectorJsonCommandHandler implements JsonCommandHandler {
 
     private DomainCommandGateway commandGateway;
 
-    private Gson gson;
-
     @Override
     public String getCommandName() {
         return COMMAND_NAME;
     }
 
     @Override
-    public void handle(String chargingStationId, String jsonCommand) {
-        JsonArray command = gson.fromJson(jsonCommand, JsonArray.class);
-
-        if (!COMMAND_NAME.equals(command.get(0).getAsString())) {
-            throw new IllegalArgumentException("The given JSON command is not supported by this command handler.");
-        }
-
-        JsonObject payload = command.get(1).getAsJsonObject();
-        int connectorId = payload.get(CONNECTOR_ID_FIELD).getAsInt();
+    public void handle(String chargingStationId, JsonObject commandObject) {
+        int connectorId = commandObject.get(CONNECTOR_ID_FIELD).getAsInt();
 
         commandGateway.send(new RequestUnlockConnectorCommand(new ChargingStationId(chargingStationId), connectorId));
     }
@@ -58,10 +49,5 @@ class UnlockConnectorJsonCommandHandler implements JsonCommandHandler {
     @Resource(name = "domainCommandGateway")
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
-    }
-
-    @Autowired
-    public void setGson(Gson gson) {
-        this.gson = gson;
     }
 }
