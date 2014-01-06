@@ -42,7 +42,7 @@ public class JsonCommandService {
     public void handleCommand(String chargingStationId, String jsonCommand) {
         JsonArray commandAsArray = gson.fromJson(jsonCommand, JsonArray.class);
 
-        checkArgument(commandAsArray.size() != COMMAND_ARRAY_SIZE, "API command must be a JSON array with two elements");
+        checkArgument(commandAsArray.size() == COMMAND_ARRAY_SIZE, "API command must be a JSON array with two elements");
 
         String commandName = commandAsArray.get(COMMAND_NAME_INDEX).getAsString();
         JsonObject commandPayloadAsObject = commandAsArray.get(COMMAND_PAYLOAD_INDEX).getAsJsonObject();

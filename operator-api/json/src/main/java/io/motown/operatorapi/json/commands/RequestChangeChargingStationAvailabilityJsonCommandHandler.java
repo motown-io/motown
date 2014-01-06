@@ -33,7 +33,6 @@ class RequestChangeChargingStationAvailabilityJsonCommandHandler implements Json
 
     private DomainCommandGateway commandGateway;
 
-    private Gson gson;
     private ChargingStationRepository repository;
 
     @Override
@@ -42,23 +41,12 @@ class RequestChangeChargingStationAvailabilityJsonCommandHandler implements Json
     }
 
     @Override
-    public void handle(String chargingStationId, String jsonCommand) {
-        JsonArray command = gson.fromJson(jsonCommand, JsonArray.class);
-
-        if (command != null && command.size() != 2) {
-            throw new IllegalArgumentException("The given JSON command is not well formed");
-        }
-
-        if (!COMMAND_NAME.equals(command.get(0).getAsString())) {
-            throw new IllegalArgumentException("The given JSON command is not supported by this command handler.");
-        }
-
+    public void handle(String chargingStationId, JsonObject commandObject) {
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
-                JsonObject payload = gson.fromJson(command.get(1), JsonObject.class);
-                String availability = payload.get("availability").getAsString();
-                int connectorId = payload.get("connectorId").getAsInt();
+                String availability = commandObject.get("availability").getAsString();
+                int connectorId = commandObject.get("connectorId").getAsInt();
 
                 if("inoperative".equalsIgnoreCase(availability)) {
                     commandGateway.send(new RequestChangeChargingStationAvailabilityToInoperativeCommand(new ChargingStationId(chargingStationId), connectorId));
@@ -69,17 +57,11 @@ class RequestChangeChargingStationAvailabilityJsonCommandHandler implements Json
         } catch (ClassCastException ex) {
             throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted?");
         }
-
     }
 
     @Resource(name = "domainCommandGateway")
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
-    }
-
-    @Autowired
-    public void setGson(Gson gson) {
-        this.gson = gson;
     }
 
     @Autowired
