@@ -25,11 +25,20 @@ import java.util.Date;
 public class ChargingStation {
     @Id
     private String id;
+    private String protocol;
     private Date updated;
     private Date created;
     private Date lastTimeBooted;
     private Date lastContact;
     private Boolean accepted;
+
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
 
     public Boolean isAccepted() {
         return accepted;

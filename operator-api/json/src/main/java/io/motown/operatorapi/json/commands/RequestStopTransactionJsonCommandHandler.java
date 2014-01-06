@@ -22,6 +22,7 @@ import io.motown.domain.api.chargingstation.NumberedTransactionId;
 import io.motown.domain.api.chargingstation.RequestStopTransactionCommand;
 import io.motown.domain.api.chargingstation.TransactionId;
 import io.motown.operatorapi.viewmodel.model.RequestStopTransactionApiCommand;
+import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -49,11 +50,11 @@ class RequestStopTransactionJsonCommandHandler implements JsonCommandHandler {
         try {
             RequestStopTransactionApiCommand command = gson.fromJson(commandObject, RequestStopTransactionApiCommand.class);
 
-            ChargingStationId chargingStation = new ChargingStationId(chargingStationId);
-            // TODO configure protocol identifier - Dennis Laumen, December 19th 2013
+            ChargingStation chargingStation = repository.findOne(chargingStationId);
+            ChargingStationId chargingStationIdObject = new ChargingStationId(chargingStationId);
             // TODO assuming a NumberedTransactionId, needs to be fixed - Dennis Laumen, December 20th 2013
-            TransactionId transactionId = new NumberedTransactionId(chargingStation, "ocpps15", Integer.parseInt(command.getId()));
-            commandGateway.send(new RequestStopTransactionCommand(chargingStation, transactionId));
+            TransactionId transactionId = new NumberedTransactionId(chargingStationIdObject, chargingStation.getProtocol(), Integer.parseInt(command.getId()));
+            commandGateway.send(new RequestStopTransactionCommand(chargingStationIdObject, transactionId));
         } catch (ClassCastException ex) {
             throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted ?");
         }

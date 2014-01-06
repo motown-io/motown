@@ -24,7 +24,7 @@ public class StopTransactionRequestedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new StopTransactionRequestedEvent(null, "ocpps15", getNumberedTransactionId());
+        new StopTransactionRequestedEvent(null, "OCPPS15", getNumberedTransactionId());
     }
 
     @Test(expected = NullPointerException.class)
@@ -39,6 +39,6 @@ public class StopTransactionRequestedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTransactionId() {
-        new StopTransactionRequestedEvent(getChargingStationId(), "ocpps15", null);
+        new StopTransactionRequestedEvent(getChargingStationId(), "OCPPS15", null);
     }
 }

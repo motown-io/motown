@@ -18,14 +18,13 @@ package io.motown.domain.api.chargingstation;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getNumberedTransactionId;
 import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getTextualToken;
 
 public class StartTransactionRequestedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new StartTransactionRequestedEvent(null, "ocpps15", getTextualToken(), 1);
+        new StartTransactionRequestedEvent(null, "OCPPS15", getTextualToken(), 1);
     }
 
     @Test(expected = NullPointerException.class)
@@ -40,16 +39,16 @@ public class StartTransactionRequestedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullIdentifyingToken() {
-        new StartTransactionRequestedEvent(getChargingStationId(), "ocpps15", null, 1);
+        new StartTransactionRequestedEvent(getChargingStationId(), "OCPPS15", null, 1);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithNegativeConnectorId() {
-        new StartTransactionRequestedEvent(getChargingStationId(), "ocpps15", getTextualToken(), Integer.MIN_VALUE);
+        new StartTransactionRequestedEvent(getChargingStationId(), "OCPPS15", getTextualToken(), Integer.MIN_VALUE);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithZeroConnectorId() {
-        new StartTransactionRequestedEvent(getChargingStationId(), "ocpps15", getTextualToken(), 0);
+        new StartTransactionRequestedEvent(getChargingStationId(), "OCPPS15", getTextualToken(), 0);
     }
 }

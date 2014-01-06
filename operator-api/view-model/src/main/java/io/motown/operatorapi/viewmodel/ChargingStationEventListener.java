@@ -52,6 +52,7 @@ public class ChargingStationEventListener {
         ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
 
         if (chargingStation != null) {
+            chargingStation.setProtocol(event.getProtocol());
             chargingStation.setLastTimeBooted(new Date());
             chargingStation.setLastContact(new Date());
             repository.save(chargingStation);

@@ -138,10 +138,11 @@ public class DomainService {
      * @param idTag                  the identifier which started the transaction
      * @param meterStart             meter value in Wh for the connector at start of the transaction
      * @param timestamp              date and time on which the transaction started
+     * @param protocolIdentifier     identifier of the protocol that starts the transaction
      * @throws IllegalStateException when the charging station cannot be found, is not registered and configured, or the connectorId is unknown for this charging station
      * @return                       transaction identifier
      */
-    public int startTransaction(ChargingStationId chargingStationId, int connectorId, IdentifyingToken idTag, int meterStart, Date timestamp) {
+    public int startTransaction(ChargingStationId chargingStationId, int connectorId, IdentifyingToken idTag, int meterStart, Date timestamp, String protocolIdentifier) {
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
         if(chargingStation == null) {
             throw new IllegalStateException("Cannot start transaction for an unknown charging station.");
@@ -155,7 +156,7 @@ public class DomainService {
             throw new IllegalStateException("Cannot start transaction on a unknown connector.");
         }
 
-        NumberedTransactionId transactionId = generateTransactionIdentifier(chargingStationId);
+        NumberedTransactionId transactionId = generateTransactionIdentifier(chargingStationId, protocolIdentifier);
 
         StartTransactionCommand command = new StartTransactionCommand(chargingStationId, transactionId, connectorId, idTag, meterStart, timestamp);
         commandGateway.send(command);
@@ -194,9 +195,10 @@ public class DomainService {
      * Generates a transaction identifier based on the charging station, the module (OCPP) and a auto-incremented number.
      *
      * @param chargingStationId charging station identifier to use when generating a transaction identifier.
+     * @param protocolIdentifier identifier of the protocol, used when generating a transaction identifier.
      * @return transaction identifier based on the charging station, module and auto-incremented number.
      */
-    private NumberedTransactionId generateTransactionIdentifier(ChargingStationId chargingStationId) {
+    private NumberedTransactionId generateTransactionIdentifier(ChargingStationId chargingStationId, String protocolIdentifier) {
         TransactionIdentifier transactionIdentifier = new TransactionIdentifier();
 
         transactionIdentifierRepository.saveAndFlush(transactionIdentifier); // flush to make sure the generated id is populated
@@ -205,7 +207,7 @@ public class DomainService {
          * between these and how should we handle error cases? - Dennis Laumen, December 16th 2013
          */
         Long identifier = (Long) entityManagerFactory.getPersistenceUnitUtil().getIdentifier(transactionIdentifier);
-        return new NumberedTransactionId(chargingStationId, "OCPPS15", identifier.intValue());
+        return new NumberedTransactionId(chargingStationId, protocolIdentifier, identifier.intValue());
     }
 
 }

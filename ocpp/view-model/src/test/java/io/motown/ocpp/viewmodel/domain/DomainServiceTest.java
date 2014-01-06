@@ -142,14 +142,14 @@ public class DomainServiceTest {
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionUnknownChargingStation() {
-        domainService.startTransaction(new ChargingStationId(getRandomString()), 1, getIdentifyingToken(), 0, new Date());
+        domainService.startTransaction(new ChargingStationId(getRandomString()), 1, getIdentifyingToken(), 0, new Date(), getProtocol());
     }
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionUnregisteredChargingStation() {
         chargingStationRepository.save(new ChargingStation(getChargingStationId().getId()));
 
-        domainService.startTransaction(getChargingStationId(), 1, getIdentifyingToken(), 0, new Date());
+        domainService.startTransaction(getChargingStationId(), 1, getIdentifyingToken(), 0, new Date(), getProtocol());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -158,21 +158,21 @@ public class DomainServiceTest {
         cs.setRegistered(true);
         chargingStationRepository.save(cs);
 
-        domainService.startTransaction(getChargingStationId(), 1, getIdentifyingToken(), 0, new Date());
+        domainService.startTransaction(getChargingStationId(), 1, getIdentifyingToken(), 0, new Date(), getProtocol());
     }
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionInvalidConnector() {
         chargingStationRepository.save(getRegisteredAndConfiguredChargingStation());
 
-        domainService.startTransaction(getChargingStationId(), 0, getIdentifyingToken(), 0, new Date());
+        domainService.startTransaction(getChargingStationId(), 0, getIdentifyingToken(), 0, new Date(), getProtocol());
     }
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionUnknownConnector() {
         chargingStationRepository.save(getRegisteredAndConfiguredChargingStation());
 
-        domainService.startTransaction(getChargingStationId(), getConnectors().size() + 1, getIdentifyingToken(), 0, new Date());
+        domainService.startTransaction(getChargingStationId(), getConnectors().size() + 1, getIdentifyingToken(), 0, new Date(), getProtocol());
     }
 
     @Test
@@ -180,7 +180,7 @@ public class DomainServiceTest {
         chargingStationRepository.save(getRegisteredAndConfiguredChargingStation());
 
         Date now = new Date();
-        int ocppTransactionId = domainService.startTransaction(getChargingStationId(), 1, getIdentifyingToken(), 0, now);
+        int ocppTransactionId = domainService.startTransaction(getChargingStationId(), 1, getIdentifyingToken(), 0, now, getProtocol());
         assertTrue(ocppTransactionId > 0);
 
         /* TODO this test is dependent on the identical protocol identifier being used in the test subject. We should

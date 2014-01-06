@@ -52,6 +52,8 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
 
     private static final Logger log = LoggerFactory.getLogger(CentralSystemService.class);
 
+    private static final String PROTOCOL_IDENTIFIER = "OCPPS15";
+
     /**
      * Timeout in milliseconds for the continuation suspend functionality
      */
@@ -94,7 +96,7 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
     @Override
     public StopTransactionResponse stopTransaction(StopTransactionRequest request, String chargeBoxIdentity) {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
-        TransactionId transactionId = new NumberedTransactionId(chargingStationId, "ocpps15", request.getTransactionId());
+        TransactionId transactionId = new NumberedTransactionId(chargingStationId, PROTOCOL_IDENTIFIER, request.getTransactionId());
         IdentifyingToken identifyingToken = new TextualToken(request.getIdTag());
 
         domainService.stopTransaction(chargingStationId, transactionId, identifyingToken, request.getMeterStop(), request.getTimestamp());
@@ -128,7 +130,7 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
     @Override
     public MeterValuesResponse meterValues(MeterValuesRequest request, String chargeBoxIdentity) {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
-        TransactionId transactionId = new NumberedTransactionId(chargingStationId, "ocpps15", request.getTransactionId());
+        TransactionId transactionId = new NumberedTransactionId(chargingStationId, PROTOCOL_IDENTIFIER, request.getTransactionId());
 
         List<MeterValue> meterValues = new ArrayList<>();
         for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue mv : request.getValues()){
@@ -220,7 +222,7 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
 
     @Override
     public StartTransactionResponse startTransaction(final StartTransactionRequest parameters, final String chargeBoxIdentity) {
-        int transactionId = domainService.startTransaction(new ChargingStationId(chargeBoxIdentity), parameters.getConnectorId(), new TextualToken(parameters.getIdTag()), parameters.getMeterStart(), parameters.getTimestamp());
+        int transactionId = domainService.startTransaction(new ChargingStationId(chargeBoxIdentity), parameters.getConnectorId(), new TextualToken(parameters.getIdTag()), parameters.getMeterStart(), parameters.getTimestamp(), PROTOCOL_IDENTIFIER);
         log.debug("TransactionId: " + transactionId);
 
         // TODO locally store identifications, so we can use these in the response. - Dennis Laumen, December 16th 2013

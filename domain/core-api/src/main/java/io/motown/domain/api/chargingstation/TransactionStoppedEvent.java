@@ -46,9 +46,8 @@ public final class TransactionStoppedEvent {
      *
      * @param chargingStationId the charging station's identifier.
      * @param transactionId     the transaction's identifier.
-     * @param connectorId       the connector's identifier or position.
      * @param identifyingToken  the token which stopped the transaction.
-     * @param meterStart        meter value in Wh for the connector when the transaction stopped.
+     * @param meterStop         meter value in Wh for the connector when the transaction stopped.
      * @param timestamp         the time at which the transaction stopped.
      * @throws NullPointerException if {@code chargingStationId}, {@code transactionId}, {@code identifyingToken} or
      *                              {@code timestamp} is {@code null}.
