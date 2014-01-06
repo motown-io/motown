@@ -69,20 +69,9 @@ public class DomainService {
         if(chargingStation == null) {
             log.debug("Not a known charging station on boot notification, we send a CreateChargingStationCommand.");
 
-            commandGateway.send(new CreateChargingStationCommand(chargingStationId), new CommandCallback<Object>() {
-                @Override
-                public void onSuccess(Object o) {
-                    chargingStationRepository.save(new ChargingStation(chargingStationId.getId()));
-
-                    bootChargingStation(chargingStationId, chargingStationAddress, vendor, model, protocol);
-                }
-
-                @Override
-                public void onFailure(Throwable throwable) {
-                    //TODO what do we do now? Do we still send out a BootChargingStationCommand so other components can react on it? - Mark van den Bergh, December 11th 2013
-                    log.error("CreateChargingStationCommand failed. " + throwable.getMessage());
-                }
-            });
+            commandGateway.send(new CreateChargingStationCommand(chargingStationId), new CreateChargingStationCommandCallback(
+                    chargingStationId, chargingStationAddress, vendor, model, protocol, chargingStationRepository, this
+            ));
 
             // we didn't know the charging station when this bootNotification occurred so we reject it.
             return new BootChargingStationResult(false, heartbeatInterval, new Date());

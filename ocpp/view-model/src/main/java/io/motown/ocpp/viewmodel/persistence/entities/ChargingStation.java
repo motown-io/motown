@@ -83,4 +83,29 @@ public class ChargingStation {
         this.numberOfConnectors = numberOfConnectors;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ChargingStation that = (ChargingStation) o;
+
+        if (isConfigured != that.isConfigured) return false;
+        if (isRegistered != that.isRegistered) return false;
+        if (numberOfConnectors != that.numberOfConnectors) return false;
+        if (!id.equals(that.id)) return false;
+        if (ipAddress != null ? !ipAddress.equals(that.ipAddress) : that.ipAddress != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + (ipAddress != null ? ipAddress.hashCode() : 0);
+        result = 31 * result + (isRegistered ? 1 : 0);
+        result = 31 * result + (isConfigured ? 1 : 0);
+        result = 31 * result + numberOfConnectors;
+        return result;
+    }
 }
