@@ -46,7 +46,7 @@ function TransactionController($scope, $http, $timeout) {
             dataType: 'json',
             method: 'POST',
             data: ['RequestStopTransaction',{
-                'transactionId': id
+                'id': id
             }],
             headers: {
                 'Content-Type': 'application/json',
