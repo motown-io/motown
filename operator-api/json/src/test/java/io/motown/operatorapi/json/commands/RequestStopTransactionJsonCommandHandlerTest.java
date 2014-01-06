@@ -46,6 +46,7 @@ public class RequestStopTransactionJsonCommandHandlerTest {
         // setup mocking for JPA / spring repo.
         ChargingStationRepository repo = mock(ChargingStationRepository.class);
         ChargingStation registeredStation = mock(ChargingStation.class);
+        when(registeredStation.getProtocol()).thenReturn("OCPPS15");
         when(registeredStation.isAccepted()).thenReturn(true);
         ChargingStation unregisteredStation = mock(ChargingStation.class);
         when(unregisteredStation.isAccepted()).thenReturn(false);
@@ -57,7 +58,7 @@ public class RequestStopTransactionJsonCommandHandlerTest {
 
     @Test
     public void testHandleStopTransactionOnRegisteredStation() {
-        JsonObject commandObject = gson.fromJson("{'transactionId' : 123}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{'id' : 123}", JsonObject.class);
         handler.handle("TEST_REGISTERED", commandObject);
     }
 

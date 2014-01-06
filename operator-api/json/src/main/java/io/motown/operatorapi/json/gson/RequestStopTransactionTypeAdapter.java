@@ -22,7 +22,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class RequestStopTransactionTypeAdapter extends CommandTypeAdapter<RequestStopTransactionApiCommand> {
 
-    private static final String TRANSACTION_ID_FIELD = "transactionId";
+    private static final String TRANSACTION_ID_FIELD = "id";
 
     @Override
     public RequestStopTransactionApiCommand deserialize(JsonObject commandObject, JsonDeserializationContext context) throws JsonParseException {
