@@ -39,4 +39,5 @@ public class MotownRoutingKeyResolver implements RoutingKeyResolver {
             return this.routingKeyResolver.resolveRoutingKey(eventMessage);
         }
     }
+
 }
