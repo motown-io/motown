@@ -238,12 +238,15 @@ function ChargingStationController($scope, $http, $timeout) {
             });
     };
 
-    $scope.sendAuthorisationList = function(chargingStation) {
+    $scope.sendAuthorisationList = function(chargingStation, listVersion, updateType, items) {
         $http({
             url: 'charging-stations/' + chargingStation.id + '/commands',
             dataType: 'json',
             method: 'POST',
             data: ['SendAuthorisationList',{
+                'listVersion': listVersion,
+                'updateType': updateType,
+                'items': items
             }],
             headers: {
                 'Content-Type': 'application/json',

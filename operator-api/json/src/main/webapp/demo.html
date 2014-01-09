@@ -56,7 +56,7 @@
                             <button class="btn btn-default" href="#" ng-click="clearCache(chargingStation)">clear cache</button>
                             <button class="btn btn-default" href="#" ng-click="updateFirmware(chargingStation, 'http://somewhere.xyz', '2014-01-01 21:00:00')">firmware update</button>
                             <button class="btn btn-default" href="#" ng-click="getAuthorisationListVersion(chargingStation)">authorisation list version</button>
-                            <button class="btn btn-default" href="#" ng-click="sendAuthorisationList(chargingStation)">send authorisation list</button>
+                            <button class="btn btn-default" href="#" ng-click="sendAuthorisationList(chargingStation, 1, 'FULL', [{'token': 'token1', 'status': 'ACCEPTED'}, {'token': 'token2', 'status': 'BLOCKED'}, {'token': 'token3', 'status': 'EXPIRED'}])">send authorisation list</button>
                             <button class="btn btn-default" href="#" ng-click="reserveNow(chargingStation, 1, 'token')">reserve now</button>
                         </div>
                     </td>

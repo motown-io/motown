@@ -16,6 +16,8 @@
 package io.motown.operatorapi.json.commands;
 
 import com.google.common.collect.Lists;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.*;
 import org.springframework.stereotype.Component;
@@ -38,10 +40,20 @@ class SendAuthorisationListJsonCommandHandler implements JsonCommandHandler {
     @Override
     public void handle(String chargingStationId, JsonObject commandObject) {
         try {
-            //TODO: hardcoded this data for now, as it is to be determined where this 'list' will be stored - Ingo Pak, 03 Jan 2014
             List<IdentifyingToken> authorisationList = Lists.newArrayList();
-            authorisationList.add(new TextualToken("ToKeN123", IdentifyingToken.AuthenticationStatus.ACCEPTED));
-            commandGateway.send(new SendAuthorisationListCommand(new ChargingStationId(chargingStationId), authorisationList, 2, null, AuthorisationListUpdateType.FULL));
+
+            JsonArray items = commandObject.get("items").getAsJsonArray();
+            for(JsonElement item:items) {
+                String token = item.getAsJsonObject().get("token").getAsString();
+                IdentifyingToken.AuthenticationStatus status = IdentifyingToken.AuthenticationStatus.valueOf(item.getAsJsonObject().get("status").getAsString());
+
+                authorisationList.add(new TextualToken(token, status));
+            }
+
+            int listVersion = commandObject.get("listVersion").getAsInt();
+            AuthorisationListUpdateType updateType = AuthorisationListUpdateType.valueOf(commandObject.get("updateType").getAsString());
+
+            commandGateway.send(new SendAuthorisationListCommand(new ChargingStationId(chargingStationId), authorisationList, listVersion, null, updateType));
         } catch (ClassCastException ex) {
             throw new IllegalArgumentException("SendAuthorisationList command not able to parse the payload, is your json correctly formatted ?");
         }
