@@ -190,10 +190,7 @@ public class DomainServiceTest {
         int ocppTransactionId = domainService.startTransaction(getChargingStationId(), 1, getIdentifyingToken(), 0, now, getProtocol());
         assertTrue(ocppTransactionId > 0);
 
-        /* TODO this test is dependent on the identical protocol identifier being used in the test subject. We should
-         * inject the protocol identifier so we properly test and configure this. - Dennis Laumen, December 16th 2013
-         */
-        TransactionId transactionId = new NumberedTransactionId(getChargingStationId(), "OCPPS15", ocppTransactionId);
+        TransactionId transactionId = new NumberedTransactionId(getChargingStationId(), getProtocol(), ocppTransactionId);
 
         verify(gateway).send(new StartTransactionCommand(getChargingStationId(), transactionId, 1, getIdentifyingToken(), 0, now));
     }
@@ -201,7 +198,7 @@ public class DomainServiceTest {
     @Test
     public void testStopTransaction() {
         int ocppTransactionId = 0;
-        TransactionId transactionId = new NumberedTransactionId(getChargingStationId(), "OCPPS15", ocppTransactionId);
+        TransactionId transactionId = new NumberedTransactionId(getChargingStationId(), getProtocol(), ocppTransactionId);
         int meterStopValue = 1;
         Date now = new Date();
 
