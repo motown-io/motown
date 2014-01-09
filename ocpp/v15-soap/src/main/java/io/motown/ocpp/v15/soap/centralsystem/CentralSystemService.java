@@ -90,10 +90,11 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
     }
 
     @Override
-    public StatusNotificationResponse statusNotification(StatusNotificationRequest parameters, String chargeBoxIdentity) {
-        //FIXME implement me
-        log.error("Unimplemented method [statusNotification] called.");
+    public StatusNotificationResponse statusNotification(StatusNotificationRequest request, String chargeBoxIdentity) {
+        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
+        String errorCode = request.getErrorCode() != null? request.getErrorCode().value() : null;
+        domainService.statusNotification(chargingStationId, request.getConnectorId(), errorCode, request.getStatus().value(), request.getInfo(), request.getTimestamp(), request.getVendorId(), request.getVendorErrorCode());
         return new StatusNotificationResponse();
     }
 

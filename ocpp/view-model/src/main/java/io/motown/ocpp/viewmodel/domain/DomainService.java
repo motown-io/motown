@@ -138,6 +138,29 @@ public class DomainService {
         commandGateway.send(command);
     }
 
+    public void statusNotification(ChargingStationId chargingStationId, int connectorId, String errorCode, String status, String info, Date timeStamp, String vendorId, String vendorErrorCode) {
+        ChargingStationComponent component;
+        String componentId = null;
+
+        if(connectorId == 0){
+            component = ChargingStationComponent.CHARGING_STATION;
+        }
+        else{
+            component = ChargingStationComponent.CONNECTOR;
+            componentId = Integer.toString(connectorId);
+        }
+
+        //TODO: Fix these magic key values? - Ingo Pak, 09 Jan 2014
+        Map<String, String> attributes = Maps.newHashMap();
+        attributes.put("ERROR_CODE", errorCode);
+        attributes.put("INFO", info);
+        attributes.put("VENDOR_ID", vendorId);
+        attributes.put("VENDOR_ERROR_CODE", vendorErrorCode);
+
+        StatusNotificationCommand command = new StatusNotificationCommand(chargingStationId, component, componentId, ComponentStatus.fromValue(status), timeStamp, attributes);
+        commandGateway.send(command);
+    }
+
     /**
      * Generates a transaction identifier and starts a transaction by dispatching a StartTransactionCommand.
      *

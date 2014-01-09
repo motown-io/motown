@@ -50,4 +50,5 @@ interface DomainCommandGateway {
 
     void send(ReservationStatusChangedCommand command);
 
+    void send(StatusNotificationCommand command);
 }

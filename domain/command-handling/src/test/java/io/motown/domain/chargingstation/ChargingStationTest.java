@@ -22,7 +22,6 @@ import org.axonframework.test.Fixtures;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -374,5 +373,14 @@ public class ChargingStationTest {
         fixture.given(getConfiguredChargingStation(true))
                 .when(new IncomingDataTransferCommand(getChargingStationId(), getVendorId(), messageId, dataToTransfer))
                 .expectEvents(new IncomingDataTransferReceivedEvent(getChargingStationId(), getVendorId(), messageId, dataToTransfer));
+    }
+
+    @Test
+    public void testStatusNotification() {
+        String componentId = "1";
+        Date timeStamp = new Date();
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new StatusNotificationCommand(getChargingStationId(), ChargingStationComponent.CONNECTOR, componentId, ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap()))
+                .expectEvents(new StatusNotificationReceivedEvent(getChargingStationId(), ChargingStationComponent.CONNECTOR, componentId, ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap()));
     }
 }
