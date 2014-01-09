@@ -79,10 +79,14 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
     private WebServiceContext context;
 
     @Override
-    public DataTransferResponse dataTransfer(DataTransferRequest parameters, String chargeBoxIdentity) {
-        //FIXME implement me
-        log.error("Unimplemented method [dataTransfer] called.");
-        throw new RuntimeException("Not yet implemented");
+    public DataTransferResponse dataTransfer(DataTransferRequest request, String chargeBoxIdentity) {
+        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
+
+        domainService.dataTransfer(chargingStationId, request.getData(), request.getVendorId(), request.getMessageId());
+
+        DataTransferResponse response = new DataTransferResponse();
+        response.setStatus(DataTransferStatus.ACCEPTED);
+        return response;
     }
 
     @Override

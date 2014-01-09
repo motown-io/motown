@@ -366,4 +366,13 @@ public class ChargingStationTest {
                 .when(new ReservationStatusChangedCommand(getChargingStationId(), getReservationId(), getReservationStatus()))
                 .expectEvents(new ReservationStatusChangedEvent(getChargingStationId(), getReservationId(), getReservationStatus()));
     }
+
+    @Test
+    public void testIncomingDataTransfer() {
+        String messageId = "MessageId";
+        String dataToTransfer = "Data to transfer";
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new IncomingDataTransferCommand(getChargingStationId(), getVendorId(), messageId, dataToTransfer))
+                .expectEvents(new IncomingDataTransferReceivedEvent(getChargingStationId(), getVendorId(), messageId, dataToTransfer));
+    }
 }

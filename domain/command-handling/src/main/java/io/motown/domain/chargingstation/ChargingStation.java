@@ -248,6 +248,11 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         apply(new ReservationStatusChangedEvent(command.getChargingStationId(), command.getReservationId(), command.getNewStatus()));
     }
 
+    @CommandHandler
+    public void handle(IncomingDataTransferCommand command) {
+        apply(new IncomingDataTransferReceivedEvent(command.getChargingStationId(), command.getVendorId(), command.getMessageId(), command.getData()));
+    }
+
     @EventHandler
     public void handle(ChargingStationBootedEvent event) {
         this.protocol = event.getProtocol();

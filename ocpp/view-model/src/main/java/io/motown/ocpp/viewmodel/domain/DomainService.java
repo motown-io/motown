@@ -95,6 +95,10 @@ public class DomainService {
         return new BootChargingStationResult(chargingStation.isRegistered(), heartbeatInterval, new Date());
     }
 
+    public void dataTransfer(ChargingStationId chargingStationId, String data, String vendorId, String messageId) {
+        commandGateway.send(new IncomingDataTransferCommand(chargingStationId, vendorId, messageId, data));
+    }
+
     public void heartbeat(ChargingStationId chargingStationId) {
         commandGateway.send(new HeartbeatCommand(chargingStationId));
     }

@@ -46,6 +46,8 @@ interface DomainCommandGateway {
 
     void send(AuthorisationListVersionReceivedCommand command);
 
+    void send(IncomingDataTransferCommand command);
+
     void send(ReservationStatusChangedCommand command);
 
 }
