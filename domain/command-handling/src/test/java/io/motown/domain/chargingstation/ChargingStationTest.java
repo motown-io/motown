@@ -344,4 +344,26 @@ public class ChargingStationTest {
                 .when(new AuthorisationListVersionReceivedCommand(getChargingStationId(), version))
                 .expectEvents(new AuthorisationListVersionReceivedEvent(getChargingStationId(), version));
     }
+
+    @Test
+    public void testRequestReserveNow() {
+        Date expiryDate = new Date();
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new RequestReserveNowCommand(getChargingStationId(), getConnectorId(), getTextualToken(), expiryDate, getTextualToken()))
+                .expectEvents(new ReserveNowRequestedEvent(getChargingStationId(), getProtocol(), getConnectorId(), getTextualToken(), expiryDate, getTextualToken()));
+    }
+
+    @Test
+    public void testRequestCancelReservation() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new RequestCancelReservationCommand(getChargingStationId(), getReservationId()))
+                .expectEvents(new CancelReservationRequestedEvent(getChargingStationId(), getProtocol(), getReservationId()));
+    }
+
+    @Test
+    public void testReservationStatusChanged() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new ReservationStatusChangedCommand(getChargingStationId(), getReservationId(), getReservationStatus()))
+                .expectEvents(new ReservationStatusChangedEvent(getChargingStationId(), getReservationId(), getReservationStatus()));
+    }
 }

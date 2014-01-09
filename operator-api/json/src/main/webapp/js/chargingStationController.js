@@ -33,7 +33,7 @@ function ChargingStationController($scope, $http, $timeout) {
             data: '',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': '*/*' // if this is not specified our request will fail
+                'Accept': '*/*'
             }
         }).success(function(response) {
             $scope.chargingStations = response;
@@ -67,7 +67,7 @@ function ChargingStationController($scope, $http, $timeout) {
             }],
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': '*/*' // if this is not specified our request will fail
+                'Accept': '*/*'
             }
         }).success(function(response) {
             console.log('registered');
@@ -186,7 +186,7 @@ function ChargingStationController($scope, $http, $timeout) {
         }).success(function(response) {
                 console.log('diagnostics requested');
             });
-    }
+    };
 
     $scope.clearCache = function(chargingStation) {
         $http({
@@ -202,7 +202,7 @@ function ChargingStationController($scope, $http, $timeout) {
         }).success(function(response) {
                 console.log('clear cache requested');
             });
-    }
+    };
 
     $scope.updateFirmware = function(chargingStation, location, retrieveDate) {
         $http({
@@ -220,7 +220,7 @@ function ChargingStationController($scope, $http, $timeout) {
         }).success(function(response) {
                 console.log('clear cache requested');
             });
-    }
+    };
 
     $scope.getAuthorisationListVersion = function(chargingStation) {
         $http({
@@ -236,7 +236,7 @@ function ChargingStationController($scope, $http, $timeout) {
         }).success(function(response) {
                 console.log('clear cache requested');
             });
-    }
+    };
 
     $scope.sendAuthorisationList = function(chargingStation) {
         $http({
@@ -252,7 +252,7 @@ function ChargingStationController($scope, $http, $timeout) {
         }).success(function(response) {
                 console.log('clear cache requested');
             });
-    }
+    };
 
     $scope.changeAvailability = function(chargingStation, type) {
         var availabilityType = 'operative';
@@ -276,6 +276,25 @@ function ChargingStationController($scope, $http, $timeout) {
         }).success(function(response) {
             console.log('change availability requested');
         });
-    }
+    };
+
+    $scope.reserveNow = function(chargingStation, connectorId, identifyingToken) {
+        $http({
+            url: 'charging-stations/' + chargingStation.id + '/commands',
+            dataType: 'json',
+            method: 'POST',
+            data: ['RequestReserveNow',{
+                'connectorId': connectorId,
+                'identifyingToken': identifyingToken,
+                'expiryDate': new Date()
+            }],
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            }
+        }).success(function(response) {
+            console.log('change availability requested');
+        });
+    };
 
 }

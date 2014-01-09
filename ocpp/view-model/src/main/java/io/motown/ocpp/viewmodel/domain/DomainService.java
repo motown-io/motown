@@ -18,10 +18,11 @@ package io.motown.ocpp.viewmodel.domain;
 import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
+import io.motown.ocpp.viewmodel.persistence.entities.ReservationIdentifier;
 import io.motown.ocpp.viewmodel.persistence.entities.TransactionIdentifier;
 import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
+import io.motown.ocpp.viewmodel.persistence.repostories.ReservationIdentifierRepository;
 import io.motown.ocpp.viewmodel.persistence.repostories.TransactionIdentifierRepository;
-import org.axonframework.commandhandling.CommandCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,9 @@ public class DomainService {
 
     @Autowired
     private TransactionIdentifierRepository transactionIdentifierRepository;
+
+    @Autowired
+    private ReservationIdentifierRepository reservationIdentifierRepository;
 
     @Autowired
     private EntityManagerFactory entityManagerFactory;
@@ -169,6 +173,10 @@ public class DomainService {
         commandGateway.send(command);
     }
 
+    public void reservationStatusChanged(ChargingStationId chargingStationId, ReservationId reservationId, ReservationStatus newStatus) {
+        commandGateway.send(new ReservationStatusChangedCommand(chargingStationId, reservationId, newStatus));
+    }
+
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
@@ -181,6 +189,10 @@ public class DomainService {
         this.transactionIdentifierRepository = transactionIdentifierRepository;
     }
 
+    public void setReservationIdentifierRepository(ReservationIdentifierRepository reservationIdentifierRepository) {
+        this.reservationIdentifierRepository = reservationIdentifierRepository;
+    }
+
     public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }
@@ -189,6 +201,25 @@ public class DomainService {
         ChargingStation chargingStation = chargingStationRepository.findOne(id.getId());
 
         return chargingStation != null? chargingStation.getIpAddress() : "";
+    }
+
+    /**
+     * Generates a reservation identifier based on the charging station, the module (OCPP) and a auto-incremented number.
+     *
+     * @param chargingStationId charging station identifier to use when generating a reservation identifier.
+     * @param protocolIdentifier identifier of the protocol, used when generating a reservation identifier.
+     * @return reservation identifier based on the charging station, module and auto-incremented number.
+     */
+    public NumberedReservationId generateReservationIdentifier(ChargingStationId chargingStationId, String protocolIdentifier) {
+        ReservationIdentifier reservationIdentifier = new ReservationIdentifier();
+
+        reservationIdentifierRepository.saveAndFlush(reservationIdentifier);
+
+        /* TODO JPA's identity generator creates longs, while OCPP and Motown supports ints. Where should we translate
+         * between these and how should we handle error cases? - Mark van den Bergh, Januari 7th 2013
+         */
+        Long identifier = (Long) entityManagerFactory.getPersistenceUnitUtil().getIdentifier(reservationIdentifier);
+        return new NumberedReservationId(chargingStationId, protocolIdentifier, identifier.intValue());
     }
 
     /**

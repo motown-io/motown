@@ -19,6 +19,7 @@ import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
+import io.motown.ocpp.viewmodel.persistence.repostories.ReservationIdentifierRepository;
 import io.motown.ocpp.viewmodel.persistence.repostories.TransactionIdentifierRepository;
 import org.axonframework.commandhandling.CommandCallback;
 import org.junit.Before;
@@ -35,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 
 import static io.motown.ocpp.viewmodel.domain.TestUtils.*;
 import static io.motown.ocpp.viewmodel.domain.TestUtils.getChargingStationAddress;
+import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -58,6 +60,9 @@ public class DomainServiceTest {
     private TransactionIdentifierRepository transactionIdentifierRepository;
 
     @Autowired
+    private ReservationIdentifierRepository reservationIdentifierRepository;
+
+    @Autowired
     private EntityManagerFactory entityManagerFactory;
 
     @Before
@@ -65,10 +70,12 @@ public class DomainServiceTest {
 
         chargingStationRepository.deleteAll();
         transactionIdentifierRepository.deleteAll();
+        reservationIdentifierRepository.deleteAll();
 
         domainService = new DomainService();
         domainService.setChargingStationRepository(chargingStationRepository);
         domainService.setTransactionIdentifierRepository(transactionIdentifierRepository);
+        domainService.setReservationIdentifierRepository(reservationIdentifierRepository);
         domainService.setEntityManagerFactory(entityManagerFactory);
 
         gateway = mock(DomainCommandGateway.class);
@@ -212,6 +219,21 @@ public class DomainServiceTest {
 
         address = domainService.retrieveChargingStationAddress(getChargingStationId());
         assertEquals(address, getChargingStationAddress());
+    }
+
+    @Test
+    public void testGenerateReservationIdentifier() {
+        NumberedReservationId numberedReservationId = domainService.generateReservationIdentifier(getChargingStationId(), getProtocol());
+
+        assertNotNull(numberedReservationId.getId());
+        assertNotNull(numberedReservationId.getNumber());
+    }
+
+    @Test
+    public void testReservationStatusChanged() {
+        domainService.reservationStatusChanged(getChargingStationId(), getReservationId(), getReservationStatus());
+
+        verify(gateway).send(new ReservationStatusChangedCommand(getChargingStationId(), getReservationId(), getReservationStatus()));
     }
 
 }

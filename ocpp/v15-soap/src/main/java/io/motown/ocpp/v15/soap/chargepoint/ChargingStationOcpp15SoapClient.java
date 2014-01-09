@@ -17,9 +17,7 @@
 package io.motown.ocpp.v15.soap.chargepoint;
 
 import com.google.common.collect.Maps;
-import io.motown.domain.api.chargingstation.AuthorisationListUpdateType;
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.IdentifyingToken;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import io.motown.ocpp.viewmodel.domain.DomainService;
@@ -258,6 +256,41 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         SendLocalListResponse response = chargePointService.sendLocalList(request, id.getId());
         String responseStatus = (response.getStatus() != null? response.getStatus().value(): "Undetermined");
         log.info("Update of local authorisation list on {} has been {}", id, responseStatus);
+    }
+
+    @Override
+    public io.motown.domain.api.chargingstation.ReservationStatus reserveNow(ChargingStationId id, int connectorId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken, int reservationId) {
+        ChargePointService chargePointService = this.createChargingStationService(id);
+
+        ReserveNowRequest request = new ReserveNowRequest();
+        request.setConnectorId(connectorId);
+        request.setExpiryDate(expiryDate);
+        request.setIdTag(identifyingToken.getToken());
+        request.setParentIdTag(parentIdentifyingToken!=null?parentIdentifyingToken.getToken():null);
+        request.setReservationId(reservationId);
+
+        io.motown.ocpp.v15.soap.chargepoint.schema.ReservationStatus responseStatus = chargePointService.reserveNow(request, id.getId()).getStatus();
+        io.motown.domain.api.chargingstation.ReservationStatus result = null;
+
+        switch (responseStatus) {
+            case ACCEPTED:
+                result = io.motown.domain.api.chargingstation.ReservationStatus.ACCEPTED;
+                break;
+            case FAULTED:
+                result = io.motown.domain.api.chargingstation.ReservationStatus.FAULTED;
+                break;
+            case OCCUPIED:
+                result = io.motown.domain.api.chargingstation.ReservationStatus.OCCUPIED;
+                break;
+            case REJECTED:
+                result = io.motown.domain.api.chargingstation.ReservationStatus.REJECTED;
+                break;
+            case UNAVAILABLE:
+                result = io.motown.domain.api.chargingstation.ReservationStatus.UNAVAILABLE;
+                break;
+        }
+
+        return result;
     }
 
     private void reset(ChargingStationId id, ResetType type) {

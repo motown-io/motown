@@ -38,6 +38,7 @@
         <ref bean="updateFirmwareJsonCommandHandler"/>
         <ref bean="getAuthorisationListVersionJsonCommandHandler"/>
         <ref bean="sendAuthorisationListJsonCommandHandler"/>
+        <ref bean="requestReserveNowJsonCommandHandler"/>
     </util:list>
 
     <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">

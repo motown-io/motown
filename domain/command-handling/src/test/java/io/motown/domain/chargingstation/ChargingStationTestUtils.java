@@ -115,4 +115,17 @@ public class ChargingStationTestUtils {
     public static String getVendorId() {
         return "Alfen";
     }
+
+    public static int getReservationNumber() {
+        return 1;
+    }
+
+    public static ReservationId getReservationId() {
+        return new NumberedReservationId(getChargingStationId(), getProtocol(), getReservationNumber());
+    }
+
+    public static ReservationStatus getReservationStatus() {
+        return ReservationStatus.OCCUPIED;
+    }
+
 }

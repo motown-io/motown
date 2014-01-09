@@ -35,4 +35,5 @@ interface DomainCommandGateway {
     void send(RequestFirmwareUpdateCommand command);
     void send(RequestAuthorisationListVersionCommand command);
     void send(SendAuthorisationListCommand command);
+    void send(RequestReserveNowCommand command);
 }

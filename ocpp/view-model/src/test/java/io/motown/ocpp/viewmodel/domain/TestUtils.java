@@ -20,9 +20,7 @@ import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class TestUtils {
 
@@ -91,5 +89,73 @@ public class TestUtils {
         return 1;
     }
 
+    public static int getReservationNumber() {
+        return 1;
+    }
 
+    public static ReservationId getReservationId() {
+        return new NumberedReservationId(getChargingStationId(), getProtocol(), getReservationNumber());
+    }
+
+    public static String getMessageId() {
+        return "messageId";
+    }
+
+    public static String getData() {
+        return "data";
+    }
+
+    public static String getConfigurationKey() {
+        return "configKey";
+    }
+
+    public static String getConfigurationValue() {
+        return "configValue";
+    }
+
+    public static String getFirmwareUpdateLocation() {
+        return "ftp://test";
+    }
+
+    public static Map<String, String> getUpdateFirmwareAttributes(String numberOfRetries, String retryInterval) {
+        return ImmutableMap.<String, String>builder()
+                .put("NUM_RETRIES", numberOfRetries)
+                .put("RETRY_INTERVAL", retryInterval)
+                .build();
+    }
+
+    public static Integer getNumberOfRetries() {
+        return 3;
+    }
+
+    public static Integer getRetryInterval() {
+        return 20;
+    }
+
+    public static Integer getListVersion() {
+        return 1;
+    }
+
+    public static List<IdentifyingToken> getAuthorizationList() {
+        List<IdentifyingToken> list = new ArrayList<>();
+        list.add(new TextualToken("1"));
+        list.add(new TextualToken("2"));
+        return list;
+    }
+
+    public static Integer getAuthorizationListVersion() {
+        return 1;
+    }
+
+    public static String getAuthorizationListHash() {
+        return "hash";
+    }
+
+    public static AuthorisationListUpdateType getAuthorisationListUpdateType() {
+        return AuthorisationListUpdateType.DIFFERENTIAL;
+    }
+
+    public static ReservationStatus getReservationStatus() {
+        return ReservationStatus.UNAVAILABLE;
+    }
 }

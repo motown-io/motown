@@ -26,6 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Date;
+
 import static io.motown.ocpp.viewmodel.domain.TestUtils.*;
 import static org.mockito.Mockito.*;
 
@@ -46,6 +48,7 @@ public class OcppRequestHandlerTest {
 
         requestHandler = new OcppRequestHandler();
         requestHandler.domainService = mock(DomainService.class);
+        when(requestHandler.domainService.generateReservationIdentifier(any(ChargingStationId.class), any(String.class))).thenReturn(new NumberedReservationId(getChargingStationId(), getProtocol(), 1));
 
         client = mock(ChargingStationOcpp15Client.class);
         requestHandler.setChargingStationOcpp15Client(client);
@@ -120,6 +123,62 @@ public class OcppRequestHandlerTest {
         requestHandler.handle(new DiagnosticsRequestedEvent(getChargingStationId(), getProtocol(), uploadLocation));
 
         verify(client).getDiagnostics(getChargingStationId(), uploadLocation, null, null, null, null);
+    }
+
+    @Test
+    public void testReserveNowRequestedEvent() {
+        Date expiryDate = new Date();
+        requestHandler.handle(new ReserveNowRequestedEvent(getChargingStationId(), getProtocol(), getConnectorId(), getIdentifyingToken(), expiryDate, null));
+
+        verify(client).reserveNow(getChargingStationId(), getConnectorId(), getIdentifyingToken(), expiryDate, null, getReservationNumber());
+    }
+
+    @Test
+    public void testDataTransferEvent() {
+        requestHandler.handle(new DataTransferEvent(getChargingStationId(), getProtocol(), getVendor(), getMessageId(), getData()));
+
+        verify(client).dataTransfer(getChargingStationId(), getVendor(), getMessageId(), getData());
+    }
+
+    @Test
+    public void testChangeConfigurationEvent() {
+        requestHandler.handle(new ChangeConfigurationEvent(getChargingStationId(), getProtocol(), getConfigurationKey(), getConfigurationValue()));
+
+        verify(client).changeConfiguration(getChargingStationId(), getConfigurationKey(), getConfigurationValue());
+    }
+
+    @Test
+    public void testClearCacheRequestedEvent() {
+        requestHandler.handle(new ClearCacheRequestedEvent(getChargingStationId(), getProtocol()));
+
+        verify(client).clearCache(getChargingStationId());
+    }
+
+    @Test
+    public void testFirmwareUpdateRequestedEvent() {
+        Date retrievedDate = new Date();
+        requestHandler.handle(new FirmwareUpdateRequestedEvent(getChargingStationId(), getProtocol(), getFirmwareUpdateLocation(), retrievedDate, null));
+
+        verify(client).updateFirmware(getChargingStationId(), getFirmwareUpdateLocation(), retrievedDate, null, null);
+
+        requestHandler.handle(new FirmwareUpdateRequestedEvent(getChargingStationId(), getProtocol(), getFirmwareUpdateLocation(), retrievedDate, getUpdateFirmwareAttributes(getNumberOfRetries().toString().toString(), getRetryInterval().toString())));
+
+        verify(client).updateFirmware(getChargingStationId(), getFirmwareUpdateLocation(), retrievedDate, getNumberOfRetries(), getRetryInterval());
+    }
+
+    @Test
+    public void testAuthorisationListVersionRequestedEvent() {
+        when(client.getAuthorisationListVersion(getChargingStationId())).thenReturn(getListVersion());
+        requestHandler.handle(new AuthorisationListVersionRequestedEvent(getChargingStationId(), getProtocol()));
+
+        verify(requestHandler.domainService).authorisationListVersionReceived(getChargingStationId(), getListVersion());
+    }
+
+    @Test
+    public void testSendAuthorisationListRequestedEvent() {
+        requestHandler.handle(new SendAuthorisationListRequestedEvent(getChargingStationId(), getProtocol(), getAuthorizationList(), getAuthorizationListVersion(), getAuthorizationListHash(), getAuthorisationListUpdateType()));
+
+        verify(client).sendAuthorisationList(getChargingStationId(), getAuthorizationListHash(), getAuthorizationListVersion(), getAuthorizationList(), getAuthorisationListUpdateType());
     }
 
 }

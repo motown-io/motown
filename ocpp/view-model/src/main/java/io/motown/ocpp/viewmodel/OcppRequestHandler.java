@@ -124,7 +124,7 @@ public class OcppRequestHandler {
 
         String attrNumRetries = null;
         String attrRetryInterval = null;
-        if(attributes != null){
+        if(attributes != null) {
             attrNumRetries = attributes.get("NUM_RETRIES");
             attrRetryInterval = attributes.get("RETRY_INTERVAL");
         }
@@ -148,6 +148,17 @@ public class OcppRequestHandler {
         log.info("SendAuthorisationListRequestedEvent");
 
         chargingStationOcpp15Client.sendAuthorisationList(event.getChargingStationId(), event.getAuthorisationListHash(), event.getAuthorisationListVersion(), event.getAuthorisationList(), event.getUpdateType());
+    }
+
+    @EventHandler
+    public void handle(ReserveNowRequestedEvent event) {
+        log.info("ReserveNowRequestedEvent");
+
+        NumberedReservationId reservationIdentifier = domainService.generateReservationIdentifier(event.getChargingStationId(), event.getProtocol());
+
+        ReservationStatus resultStatus = chargingStationOcpp15Client.reserveNow(event.getChargingStationId(), event.getConnectorId(), event.getIdentifyingToken(), event.getExpiryDate(), event.getParentIdentifyingToken(), reservationIdentifier.getNumber());
+
+        domainService.reservationStatusChanged(event.getChargingStationId(), reservationIdentifier, resultStatus);
     }
 
     public void setChargingStationOcpp15Client(ChargingStationOcpp15Client chargingStationOcpp15Client) {

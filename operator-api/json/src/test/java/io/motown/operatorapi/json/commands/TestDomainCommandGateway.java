@@ -109,5 +109,9 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
         log.debug("SendAuthorisationListCommand: " + command.toString());
     }
 
+    @Override
+    public void send(RequestReserveNowCommand command) {
+        log.debug("RequestReserveNowCommand: " + command.toString());
+    }
 
 }
