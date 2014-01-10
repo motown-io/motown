@@ -29,7 +29,7 @@ public final class RequestReserveNowCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
-    private final int connectorId;
+    private final ConnectorId connectorId;
     private final IdentifyingToken identifyingToken;
     private final Date expiryDate;
     private final IdentifyingToken parentIdentifyingToken;
@@ -42,9 +42,9 @@ public final class RequestReserveNowCommand {
      * @param parentIdentifyingToken
      * @throws NullPointerException if {@code chargingStationId}, {@code identifyingToken} or {@code expiryDate} is {@code null}.
      */
-    public RequestReserveNowCommand(ChargingStationId chargingStationId, int connectorId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken) {
+    public RequestReserveNowCommand(ChargingStationId chargingStationId, ConnectorId connectorId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.connectorId = connectorId;
+        this.connectorId = checkNotNull(connectorId);
         this.identifyingToken = checkNotNull(identifyingToken);
         this.expiryDate = checkNotNull(expiryDate);
         this.parentIdentifyingToken = parentIdentifyingToken;
@@ -59,7 +59,7 @@ public final class RequestReserveNowCommand {
         return chargingStationId;
     }
 
-    public int getConnectorId() {
+    public ConnectorId getConnectorId() {
         return connectorId;
     }
 

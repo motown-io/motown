@@ -31,7 +31,7 @@ public final class ProcessMeterValueCommand {
     private final ChargingStationId chargingStationId;
 
     private TransactionId transactionId;
-    private int connectorId;
+    private ConnectorId connectorId;
 
     private List<MeterValue> meterValueList;
 
@@ -42,11 +42,10 @@ public final class ProcessMeterValueCommand {
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      * @throws IllegalArgumentException if {@code connectorId} is negative.
      */
-    public ProcessMeterValueCommand(ChargingStationId chargingStationId, TransactionId transactionId, int connectorId, List<MeterValue> meterValueList) {
+    public ProcessMeterValueCommand(ChargingStationId chargingStationId, TransactionId transactionId, ConnectorId connectorId, List<MeterValue> meterValueList) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = transactionId;
-        checkArgument(connectorId >= 0);
-        this.connectorId = connectorId;
+        this.connectorId = checkNotNull(connectorId);
         this.meterValueList = meterValueList;
     }
 
@@ -81,7 +80,7 @@ public final class ProcessMeterValueCommand {
      *
      * @return the connector identifier
      */
-    public int getConnectorId() {
+    public ConnectorId getConnectorId() {
         return connectorId;
     }
 
@@ -92,12 +91,10 @@ public final class ProcessMeterValueCommand {
 
         ProcessMeterValueCommand that = (ProcessMeterValueCommand) o;
 
-        if (connectorId != that.connectorId) return false;
         if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (meterValueList != null ? !meterValueList.equals(that.meterValueList) : that.meterValueList != null)
-            return false;
-        if (transactionId != null ? !transactionId.equals(that.transactionId) : that.transactionId != null)
-            return false;
+        if (!connectorId.equals(that.connectorId)) return false;
+        if (!meterValueList.equals(that.meterValueList)) return false;
+        if (!transactionId.equals(that.transactionId)) return false;
 
         return true;
     }
@@ -105,9 +102,9 @@ public final class ProcessMeterValueCommand {
     @Override
     public int hashCode() {
         int result = chargingStationId.hashCode();
-        result = 31 * result + (transactionId != null ? transactionId.hashCode() : 0);
-        result = 31 * result + connectorId;
-        result = 31 * result + (meterValueList != null ? meterValueList.hashCode() : 0);
+        result = 31 * result + transactionId.hashCode();
+        result = 31 * result + connectorId.hashCode();
+        result = 31 * result + meterValueList.hashCode();
         return result;
     }
 }

@@ -24,11 +24,11 @@ public class ChargingStationSentMeterValuesEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ChargingStationSentMeterValuesEvent(null, getNumberedTransactionId(), 1, null);
+        new ChargingStationSentMeterValuesEvent(null, getNumberedTransactionId(), new ConnectorId(1), null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void nullPointerExceptionThrownWhenCreatingEventWithNegativeConnectorId() {
-        new ChargingStationSentMeterValuesEvent(getChargingStationId(), getNumberedTransactionId(), -1, null);
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingEventWithNullConnectorId() {
+        new ChargingStationSentMeterValuesEvent(getChargingStationId(), getNumberedTransactionId(), null, null);
     }
 }

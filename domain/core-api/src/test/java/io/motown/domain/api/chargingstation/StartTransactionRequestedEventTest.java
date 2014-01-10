@@ -24,31 +24,26 @@ public class StartTransactionRequestedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new StartTransactionRequestedEvent(null, "OCPPS15", getTextualToken(), 1);
+        new StartTransactionRequestedEvent(null, "OCPPS15", getTextualToken(), new ConnectorId(1));
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullProtocol() {
-        new StartTransactionRequestedEvent(getChargingStationId(), null, getTextualToken(), 1);
+        new StartTransactionRequestedEvent(getChargingStationId(), null, getTextualToken(), new ConnectorId(1));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithEmptyProtocol() {
-        new StartTransactionRequestedEvent(getChargingStationId(), "", getTextualToken(), 1);
+        new StartTransactionRequestedEvent(getChargingStationId(), "", getTextualToken(), new ConnectorId(1));
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullIdentifyingToken() {
-        new StartTransactionRequestedEvent(getChargingStationId(), "OCPPS15", null, 1);
+        new StartTransactionRequestedEvent(getChargingStationId(), "OCPPS15", null, new ConnectorId(1));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void illegalArgumentExceptionThrownWhenCreatingWithNegativeConnectorId() {
-        new StartTransactionRequestedEvent(getChargingStationId(), "OCPPS15", getTextualToken(), Integer.MIN_VALUE);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void illegalArgumentExceptionThrownWhenCreatingWithZeroConnectorId() {
-        new StartTransactionRequestedEvent(getChargingStationId(), "OCPPS15", getTextualToken(), 0);
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingWithConnectorIdNull() {
+        new StartTransactionRequestedEvent(getChargingStationId(), "OCPPS15", getTextualToken(), null);
     }
 }

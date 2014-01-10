@@ -16,7 +16,6 @@
 package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -32,7 +31,7 @@ public class RegisterJsonCommandHandlerTest {
 
     @Before
     public void setUp() {
-        gson = new GsonBuilder().create();
+        gson = OperatorApiJsonTestUtils.getGson();
 
         handler.setGson(gson);
         handler.setCommandGateway(new TestDomainCommandGateway());

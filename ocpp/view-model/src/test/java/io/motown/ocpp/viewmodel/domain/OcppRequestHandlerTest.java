@@ -98,9 +98,9 @@ public class OcppRequestHandlerTest {
 
     @Test
     public void testUnlockConnectorRequestedEvent() {
-        requestHandler.handle(new UnlockConnectorRequestedEvent(getChargingStationId(), getProtocol(), 1));
+        requestHandler.handle(new UnlockConnectorRequestedEvent(getChargingStationId(), getProtocol(), getConnectorId()));
 
-        verify(client).unlockConnector(getChargingStationId(), 1);
+        verify(client).unlockConnector(getChargingStationId(), getConnectorId());
     }
 
     @Test

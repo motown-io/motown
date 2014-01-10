@@ -29,7 +29,7 @@ public final class TransactionStartedEvent {
 
     private final TransactionId transactionId;
 
-    private final int connectorId;
+    private final ConnectorId connectorId;
 
     private final IdentifyingToken identifyingToken;
 
@@ -54,11 +54,10 @@ public final class TransactionStartedEvent {
      * {@code timestamp} is {@code null}.
      * @throws IllegalArgumentException if {@code connectorId} is negative.
      */
-    public TransactionStartedEvent(ChargingStationId chargingStationId, TransactionId transactionId, int connectorId, IdentifyingToken identifyingToken, int meterStart, Date timestamp) {
+    public TransactionStartedEvent(ChargingStationId chargingStationId, TransactionId transactionId, ConnectorId connectorId, IdentifyingToken identifyingToken, int meterStart, Date timestamp) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = checkNotNull(transactionId);
-        checkArgument(connectorId > 0);
-        this.connectorId = connectorId;
+        this.connectorId = checkNotNull(connectorId);
         this.identifyingToken = checkNotNull(identifyingToken);
         this.meterStart = meterStart;
         this.timestamp = new Date(checkNotNull(timestamp).getTime());
@@ -87,7 +86,7 @@ public final class TransactionStartedEvent {
      *
      * @return the connector's identifier or position.
      */
-    public int getConnectorId() {
+    public ConnectorId getConnectorId() {
         return connectorId;
     }
 

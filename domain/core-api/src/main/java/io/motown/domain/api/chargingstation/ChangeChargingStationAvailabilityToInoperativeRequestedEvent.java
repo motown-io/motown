@@ -28,7 +28,7 @@ public final class ChangeChargingStationAvailabilityToInoperativeRequestedEvent 
 
     private final String protocol;
 
-    private final int connectorId;
+    private final ConnectorId connectorId;
 
     /**
      * Creates a {@code SoftResetChargingStationRequestedEvent} with an identifier, a protocol and connector identifier.
@@ -38,11 +38,10 @@ public final class ChangeChargingStationAvailabilityToInoperativeRequestedEvent 
      * @param connectorId       the identifier of the connector.
      * @throws NullPointerException if {@code chargingStationId} or {@code protocol} is {@code null}.
      */
-    public ChangeChargingStationAvailabilityToInoperativeRequestedEvent(ChargingStationId chargingStationId, String protocol, int connectorId) {
+    public ChangeChargingStationAvailabilityToInoperativeRequestedEvent(ChargingStationId chargingStationId, String protocol, ConnectorId connectorId) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.protocol = checkNotNull(protocol);
-        checkArgument(connectorId > 0);
-        this.connectorId = connectorId;
+        this.connectorId = checkNotNull(connectorId);
     }
 
     /**
@@ -71,7 +70,7 @@ public final class ChangeChargingStationAvailabilityToInoperativeRequestedEvent 
      * @return the connector id.
      */
     @Override
-    public int getConnectorId() {
+    public ConnectorId getConnectorId() {
         return connectorId;
     }
 }

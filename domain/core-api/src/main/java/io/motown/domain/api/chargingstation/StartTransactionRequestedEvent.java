@@ -29,7 +29,7 @@ public final class StartTransactionRequestedEvent implements CommunicationWithCh
 
     private final IdentifyingToken identifyingToken;
 
-    private final int connectorId;
+    private final ConnectorId connectorId;
 
     /**
      * Creates a {@code StartTransactionRequestedEvent} with an identifier, a protocol and a connector identifier.
@@ -39,14 +39,13 @@ public final class StartTransactionRequestedEvent implements CommunicationWithCh
      * @param identifyingToken  the token that should start the transaction.
      * @param connectorId       the identifier of the connector.  @throws NullPointerException if {@code chargingStationId} or {@code protocol} or {@code identifyingToken} is {@code null}.
      */
-    public StartTransactionRequestedEvent(ChargingStationId chargingStationId, String protocol, IdentifyingToken identifyingToken, int connectorId) {
+    public StartTransactionRequestedEvent(ChargingStationId chargingStationId, String protocol, IdentifyingToken identifyingToken, ConnectorId connectorId) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());
         this.protocol = protocol;
         this.identifyingToken = checkNotNull(identifyingToken);
-        checkArgument(connectorId > 0);
-        this.connectorId = connectorId;
+        this.connectorId = checkNotNull(connectorId);
     }
 
     /**
@@ -79,7 +78,7 @@ public final class StartTransactionRequestedEvent implements CommunicationWithCh
      *
      * @return the connector identifier.
      */
-    public int getConnectorId() {
+    public ConnectorId getConnectorId() {
         return connectorId;
     }
 }

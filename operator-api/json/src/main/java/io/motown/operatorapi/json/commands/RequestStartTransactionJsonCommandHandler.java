@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.ConnectorId;
 import io.motown.domain.api.chargingstation.RequestStartTransactionCommand;
 import io.motown.domain.api.chargingstation.TextualToken;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
@@ -45,7 +46,7 @@ class RequestStartTransactionJsonCommandHandler implements JsonCommandHandler {
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
-                int connectorId = commandObject.get("connectorId").getAsInt();
+                ConnectorId connectorId = new ConnectorId(commandObject.get("connectorId").getAsInt());
                 String token = commandObject.get("identifyingToken").getAsString();
                 TextualToken identifyingToken = new TextualToken(token);
 

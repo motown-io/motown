@@ -15,8 +15,12 @@
  */
 package io.motown.operatorapi.viewmodel.persistence.entities;
 
+import io.motown.domain.api.chargingstation.ConnectorId;
+
 import javax.persistence.*;
 import java.util.Date;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @Entity
 public class Transaction {
@@ -37,7 +41,7 @@ public class Transaction {
 
     private int meterStop;
 
-    private int connectorId;
+    private ConnectorId connectorId;
 
     private Date startedTimestamp;
 
@@ -52,9 +56,9 @@ public class Transaction {
         this.transactionId = transactionId;
     }
 
-    public Transaction(String chargingStationId, String transactionId, int connectorId, String idTag, int meterStart, Date startedTimestamp) {
+    public Transaction(String chargingStationId, String transactionId, ConnectorId connectorId, String idTag, int meterStart, Date startedTimestamp) {
         this(chargingStationId, transactionId);
-        this.connectorId = connectorId;
+        this.connectorId = checkNotNull(connectorId);
         this.idTag = idTag;
         this.meterStart = meterStart;
         this.startedTimestamp = startedTimestamp;
@@ -100,11 +104,11 @@ public class Transaction {
         this.meterStop = meterStop;
     }
 
-    public int getConnectorId() {
+    public ConnectorId getConnectorId() {
         return connectorId;
     }
 
-    public void setConnectorId(int connectorId) {
+    public void setConnectorId(ConnectorId connectorId) {
         this.connectorId = connectorId;
     }
 

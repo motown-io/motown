@@ -16,7 +16,6 @@
 package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import org.junit.Before;
@@ -30,7 +29,7 @@ public class ConfigureJsonCommandHandlerTest {
 
     @Before
     public void setUp() {
-        gson = new GsonBuilder().create();
+        gson = OperatorApiJsonTestUtils.getGson();
 
         handler.setGson(gson);
         handler.setCommandGateway(new TestDomainCommandGateway());

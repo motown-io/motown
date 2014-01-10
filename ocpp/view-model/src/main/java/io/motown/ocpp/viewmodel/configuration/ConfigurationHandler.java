@@ -18,6 +18,7 @@ package io.motown.ocpp.viewmodel.configuration;
 import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.chargingstation.ConfigureChargingStationCommand;
 import io.motown.domain.api.chargingstation.Connector;
+import io.motown.domain.api.chargingstation.ConnectorId;
 import io.motown.domain.api.chargingstation.UnconfiguredChargingStationBootedEvent;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
@@ -50,8 +51,8 @@ public class ConfigurationHandler {
     public Set<Connector> getConnectors(String vendor, String model) {
         // TODO implement
         return ImmutableSet.<Connector>builder()
-                .add(new Connector(1, "TYPE-1", 32))
-                .add(new Connector(2, "TYPE-1", 32))
+                .add(new Connector(new ConnectorId(1), "TYPE-1", 32))
+                .add(new Connector(new ConnectorId(2), "TYPE-1", 32))
                 .build();
     }
 

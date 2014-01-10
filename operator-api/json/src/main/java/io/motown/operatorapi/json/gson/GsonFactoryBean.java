@@ -25,7 +25,7 @@ public class GsonFactoryBean implements FactoryBean<Gson> {
 
     private String dateFormat;
 
-    private Set<CommandTypeAdapter<?>> typeAdapters;
+    private Set<TypeAdapter<?>> typeAdapters;
 
     @Override
     public Gson getObject() throws Exception {
@@ -35,7 +35,7 @@ public class GsonFactoryBean implements FactoryBean<Gson> {
             builder.setDateFormat(dateFormat);
         }
 
-        for (CommandTypeAdapter<?> typeAdapter : typeAdapters) {
+        for (TypeAdapter<?> typeAdapter : typeAdapters) {
             builder.registerTypeAdapter(typeAdapter.getAdaptedType(), typeAdapter);
         }
 
@@ -56,7 +56,7 @@ public class GsonFactoryBean implements FactoryBean<Gson> {
         this.dateFormat = dateFormat;
     }
 
-    public void setTypeAdapters(Set<CommandTypeAdapter<?>> typeAdapters) {
+    public void setTypeAdapters(Set<TypeAdapter<?>> typeAdapters) {
         this.typeAdapters = typeAdapters;
     }
 }

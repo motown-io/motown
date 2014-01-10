@@ -42,7 +42,7 @@ public class ConfigureChargingStationCommandTest {
 
         ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), connectors);
 
-        command.getConnectors().add(new Connector(1, "Type1", 32));
+        command.getConnectors().add(new Connector(new ConnectorId(1), "Type1", 32));
     }
 
     @Test(expected = UnsupportedOperationException.class)

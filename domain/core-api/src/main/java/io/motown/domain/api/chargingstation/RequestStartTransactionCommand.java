@@ -30,7 +30,7 @@ public final class RequestStartTransactionCommand {
 
     private final IdentifyingToken identifyingToken;
 
-    private final int connectorId;
+    private final ConnectorId connectorId;
 
     /**
      * Creates a {@code RequestStopTransactionCommand} with an identifier and a identifying token.
@@ -40,11 +40,10 @@ public final class RequestStartTransactionCommand {
      * @param connectorId       the identifier of the connector.
      * @throws NullPointerException if {@code chargingStationId} or {@code identifyingToken} is {@code null}.
      */
-    public RequestStartTransactionCommand(ChargingStationId chargingStationId, IdentifyingToken identifyingToken, int connectorId) {
+    public RequestStartTransactionCommand(ChargingStationId chargingStationId, IdentifyingToken identifyingToken, ConnectorId connectorId) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.identifyingToken = checkNotNull(identifyingToken);
-        checkArgument(connectorId > 0);
-        this.connectorId = connectorId;
+        this.connectorId = checkNotNull(connectorId);
     }
 
     /**
@@ -70,7 +69,7 @@ public final class RequestStartTransactionCommand {
      *
      * @return the connector id.
      */
-    public int getConnectorId() {
+    public ConnectorId getConnectorId() {
         return connectorId;
     }
 }

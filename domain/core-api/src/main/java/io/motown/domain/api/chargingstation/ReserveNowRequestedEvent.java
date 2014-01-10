@@ -25,7 +25,7 @@ public final class ReserveNowRequestedEvent implements CommunicationWithCharging
 
     private final String protocol;
 
-    private final int connectorId;
+    private final ConnectorId connectorId;
 
     private final IdentifyingToken identifyingToken;
 
@@ -33,10 +33,10 @@ public final class ReserveNowRequestedEvent implements CommunicationWithCharging
 
     private final IdentifyingToken parentIdentifyingToken;
 
-    public ReserveNowRequestedEvent(ChargingStationId chargingStationId, String protocol, int connectorId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken) {
+    public ReserveNowRequestedEvent(ChargingStationId chargingStationId, String protocol, ConnectorId connectorId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.protocol = checkNotNull(protocol);
-        this.connectorId = connectorId;
+        this.connectorId = checkNotNull(connectorId);
         this.identifyingToken = checkNotNull(identifyingToken);
         this.expiryDate = checkNotNull(expiryDate);
         this.parentIdentifyingToken = parentIdentifyingToken;
@@ -52,7 +52,7 @@ public final class ReserveNowRequestedEvent implements CommunicationWithCharging
         return protocol;
     }
 
-    public int getConnectorId() {
+    public ConnectorId getConnectorId() {
         return connectorId;
     }
 

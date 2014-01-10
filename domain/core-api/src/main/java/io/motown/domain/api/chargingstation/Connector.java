@@ -17,20 +17,20 @@ package io.motown.domain.api.chargingstation;
 
 public final class Connector {
 
-    public final static int ALL = 0;
+    public final static ConnectorId ALL = new ConnectorId(0);
 
-    private int connectorId;
+    private ConnectorId connectorId;
     private String connectorType;  // should be enum ?
     private int maxAmp;
 
-    public Connector(int connectorId, String connectorType, int maxAmp) {
+    public Connector(ConnectorId connectorId, String connectorType, int maxAmp) {
         this.connectorId = connectorId;
         this.connectorType = connectorType;
         this.maxAmp = maxAmp;
     }
 
-    public int getConnectorId() {
-        return this.connectorId;
+    public ConnectorId getConnectorId() {
+        return connectorId;
     }
 
     @Override
@@ -40,25 +40,24 @@ public final class Connector {
 
         Connector connector = (Connector) o;
 
-        if (connectorId != connector.connectorId) return false;
         if (maxAmp != connector.maxAmp) return false;
-        if (connectorType != null ? !connectorType.equals(connector.connectorType) : connector.connectorType != null)
-            return false;
+        if (!connectorId.equals(connector.connectorId)) return false;
+        if (!connectorType.equals(connector.connectorType)) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = connectorId;
-        result = 31 * result + (connectorType != null ? connectorType.hashCode() : 0);
+        int result = connectorId.hashCode();
+        result = 31 * result + connectorType.hashCode();
         result = 31 * result + maxAmp;
         return result;
     }
 
     @Override
     public String toString() {
-        return String.format("Connector(id = %d, type = %s, maxAmp = %d)", connectorId, connectorType, maxAmp);
+        return String.format("Connector(id = %d, type = %s, maxAmp = %d)", connectorId.getId(), connectorType, maxAmp);
     }
 
 }

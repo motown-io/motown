@@ -23,7 +23,7 @@ public class RequestUnlockConnectorCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new RequestUnlockConnectorCommand(null, 1);
+        new RequestUnlockConnectorCommand(null, new ConnectorId(1));
     }
 
     @Test(expected = NullPointerException.class)

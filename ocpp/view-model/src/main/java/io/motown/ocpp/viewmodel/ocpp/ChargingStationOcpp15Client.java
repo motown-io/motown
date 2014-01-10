@@ -18,6 +18,7 @@ package io.motown.ocpp.viewmodel.ocpp;
 
 import io.motown.domain.api.chargingstation.AuthorisationListUpdateType;
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.ConnectorId;
 import io.motown.domain.api.chargingstation.IdentifyingToken;
 import io.motown.domain.api.chargingstation.ReservationStatus;
 
@@ -28,7 +29,7 @@ public interface ChargingStationOcpp15Client {
 
     void getConfiguration(ChargingStationId id);
 
-    void startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, int connectorId);
+    void startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, ConnectorId connectorId);
 
     void stopTransaction(ChargingStationId id, int transactionId);
 
@@ -36,11 +37,11 @@ public interface ChargingStationOcpp15Client {
 
     void hardReset(ChargingStationId id);
 
-    void unlockConnector(ChargingStationId id, int connectorId);
+    void unlockConnector(ChargingStationId id, ConnectorId connectorId);
 
-    void changeAvailabilityToInoperative(ChargingStationId id, int connectorId);
+    void changeAvailabilityToInoperative(ChargingStationId id, ConnectorId connectorId);
 
-    void changeAvailabilityToOperative(ChargingStationId id, int connectorId);
+    void changeAvailabilityToOperative(ChargingStationId id, ConnectorId connectorId);
 
     void dataTransfer(ChargingStationId id, String vendorId, String messageId, String data);
 
@@ -56,5 +57,5 @@ public interface ChargingStationOcpp15Client {
 
     void sendAuthorisationList(ChargingStationId id, String hash, int listVersion, List<IdentifyingToken> identifyingTokens, AuthorisationListUpdateType updateType);
 
-    ReservationStatus reserveNow(ChargingStationId id, int connectorId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken, int reservationId);
+    ReservationStatus reserveNow(ChargingStationId id, ConnectorId connectorId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken, int reservationId);
 }

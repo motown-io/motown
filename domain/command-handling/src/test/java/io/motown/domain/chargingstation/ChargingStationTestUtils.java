@@ -80,8 +80,8 @@ public class ChargingStationTestUtils {
 
     public static Set<Connector> getConnectors() {
         return ImmutableSet.<Connector>builder()
-                .add(new Connector(1, "TYPE-1", 32))
-                .add(new Connector(2, "TYPE-1", 32))
+                .add(new Connector(new ConnectorId(1), "TYPE-1", 32))
+                .add(new Connector(new ConnectorId(2), "TYPE-1", 32))
                 .build();
     }
 
@@ -108,8 +108,8 @@ public class ChargingStationTestUtils {
         return meterValues;
     }
 
-    public static int getConnectorId() {
-        return 1;
+    public static ConnectorId getConnectorId() {
+        return new ConnectorId(1);
     }
 
     public static String getVendorId() {

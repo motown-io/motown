@@ -16,10 +16,7 @@
 package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import io.motown.operatorapi.json.gson.RequestStopTransactionTypeAdapter;
-import io.motown.operatorapi.viewmodel.model.RequestStopTransactionApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.junit.Before;
@@ -36,9 +33,7 @@ public class RequestStopTransactionJsonCommandHandlerTest {
 
     @Before
     public void setUp() {
-        gson = new GsonBuilder()
-                .registerTypeAdapter(RequestStopTransactionApiCommand.class, new RequestStopTransactionTypeAdapter())
-                .create();
+        gson = OperatorApiJsonTestUtils.getGson();
 
         handler.setGson(gson);
         handler.setCommandGateway(new TestDomainCommandGateway());

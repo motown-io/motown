@@ -42,6 +42,6 @@ public interface ChangeAvailabilityChargingStationRequestedEvent extends Communi
      *
      * @return the connector id.
      */
-    public int getConnectorId();
+    public ConnectorId getConnectorId();
 
 }

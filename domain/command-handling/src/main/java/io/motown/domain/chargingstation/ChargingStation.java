@@ -95,7 +95,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         // TODO mark socket (mentioned in command) 'in transaction' - Mark van den Bergh, December 2nd 2013
         // TODO store transaction identifier so we can validate 'stop transaction' commands? - Mark van den Bergh, December 2nd 2013
 
-        if (command.getConnectorId() > numberOfConnectors) {
+        if (command.getConnectorId().getId() > numberOfConnectors) {
             apply(new ConnectorNotFoundEvent(id, command.getConnectorId()));
             return;
         }
@@ -111,12 +111,12 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @CommandHandler
     public void handle(RequestUnlockConnectorCommand command) {
         checkCommunicationAllowed();
-        if (command.getConnectorId() > numberOfConnectors) {
+        if (command.getConnectorId().getId() > numberOfConnectors) {
             apply(new ConnectorNotFoundEvent(id, command.getConnectorId()));
         } else {
             if (command.getConnectorId() == Connector.ALL) {
                 for (int i = 1; i <= numberOfConnectors; i++) {
-                    apply(new UnlockConnectorRequestedEvent(id, protocol, i));
+                    apply(new UnlockConnectorRequestedEvent(id, protocol, new ConnectorId(i)));
                 }
             } else {
                 apply(new UnlockConnectorRequestedEvent(id, protocol, command.getConnectorId()));

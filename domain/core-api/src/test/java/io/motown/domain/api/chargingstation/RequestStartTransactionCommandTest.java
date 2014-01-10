@@ -18,28 +18,17 @@ package io.motown.domain.api.chargingstation;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getNumberedTransactionId;
 import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getTextualToken;
 
 public class RequestStartTransactionCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new RequestStartTransactionCommand(null, getTextualToken(), 1);
+        new RequestStartTransactionCommand(null, getTextualToken(), new ConnectorId(1));
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTransactionId() {
-        new RequestStartTransactionCommand(getChargingStationId(), null, 1);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void illegalArgumentExceptionThrownWhenCreatingWithNegativeConnectorId() {
-        new RequestStartTransactionCommand(getChargingStationId(), getTextualToken(), Integer.MIN_VALUE);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void illegalArgumentExceptionThrownWhenCreatingWithZeroConnectorId() {
-        new RequestStartTransactionCommand(getChargingStationId(), getTextualToken(), 0);
+        new RequestStartTransactionCommand(getChargingStationId(), null, new ConnectorId(1));
     }
 }

@@ -24,11 +24,11 @@ public class ProcessMeterValuesCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new ProcessMeterValueCommand(null, getNumberedTransactionId(), 1, null);
+        new ProcessMeterValueCommand(null, getNumberedTransactionId(), new ConnectorId(1), null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void illegalArgumentExceptionThrownWhenCreatingCommandWithNegativeConnectorId() {
-        new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), -1, null);
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithConnectorIdNull() {
+        new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), null, null);
     }
 }

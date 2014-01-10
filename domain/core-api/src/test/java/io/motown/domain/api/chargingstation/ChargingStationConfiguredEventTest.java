@@ -42,7 +42,7 @@ public class ChargingStationConfiguredEventTest {
 
         ChargingStationConfiguredEvent command = new ChargingStationConfiguredEvent(new ChargingStationId("CS-001"), connectors, Collections.<String, String>emptyMap());
 
-        command.getConnectors().add(new Connector(1, "Type1", 32));
+        command.getConnectors().add(new Connector(new ConnectorId(1), "Type1", 32));
     }
 
     @Test(expected = UnsupportedOperationException.class)

@@ -103,7 +103,7 @@ public class DomainService {
         commandGateway.send(new HeartbeatCommand(chargingStationId));
     }
 
-    public void meterValues(ChargingStationId chargingStationId, TransactionId transactionId, int connectorId, List<MeterValue> meterValues) {
+    public void meterValues(ChargingStationId chargingStationId, TransactionId transactionId, ConnectorId connectorId, List<MeterValue> meterValues) {
         commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, connectorId, meterValues));
     }
 
@@ -138,16 +138,16 @@ public class DomainService {
         commandGateway.send(command);
     }
 
-    public void statusNotification(ChargingStationId chargingStationId, int connectorId, String errorCode, String status, String info, Date timeStamp, String vendorId, String vendorErrorCode) {
+    public void statusNotification(ChargingStationId chargingStationId, ConnectorId connectorId, String errorCode, String status, String info, Date timeStamp, String vendorId, String vendorErrorCode) {
         ChargingStationComponent component;
         String componentId = null;
 
-        if(connectorId == 0){
+        if(connectorId.getId() == 0){
             component = ChargingStationComponent.CHARGING_STATION;
         }
         else{
             component = ChargingStationComponent.CONNECTOR;
-            componentId = Integer.toString(connectorId);
+            componentId = Integer.toString(connectorId.getId());
         }
 
         //TODO: Fix these magic key values? - Ingo Pak, 09 Jan 2014
@@ -173,7 +173,7 @@ public class DomainService {
      * @throws IllegalStateException when the charging station cannot be found, is not registered and configured, or the connectorId is unknown for this charging station
      * @return                       transaction identifier
      */
-    public int startTransaction(ChargingStationId chargingStationId, int connectorId, IdentifyingToken idTag, int meterStart, Date timestamp, String protocolIdentifier) {
+    public int startTransaction(ChargingStationId chargingStationId, ConnectorId connectorId, IdentifyingToken idTag, int meterStart, Date timestamp, String protocolIdentifier) {
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
         if(chargingStation == null) {
             throw new IllegalStateException("Cannot start transaction for an unknown charging station.");
@@ -183,7 +183,7 @@ public class DomainService {
             throw new IllegalStateException("Cannot start transaction for charging station that has not been registered/configured.");
         }
 
-        if(connectorId <= 0 || connectorId > chargingStation.getNumberOfConnectors()) {
+        if(connectorId.getId() > chargingStation.getNumberOfConnectors()) {
             throw new IllegalStateException("Cannot start transaction on a unknown connector.");
         }
 

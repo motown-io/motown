@@ -32,7 +32,7 @@ public final class StartTransactionCommand {
 
     private final TransactionId transactionId;
 
-    private final int connectorId;
+    private final ConnectorId connectorId;
 
     private final IdentifyingToken identifyingToken;
 
@@ -57,11 +57,10 @@ public final class StartTransactionCommand {
      * {@code timestamp} is {@code null}.
      * @throws IllegalArgumentException if {@code connectorId} is negative.
      */
-    public StartTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId, int connectorId, IdentifyingToken identifyingToken, int meterStart, Date timestamp) {
+    public StartTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId, ConnectorId connectorId, IdentifyingToken identifyingToken, int meterStart, Date timestamp) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = checkNotNull(transactionId);
-        checkArgument(connectorId > 0);
-        this.connectorId = connectorId;
+        this.connectorId = checkNotNull(connectorId);
         this.identifyingToken = checkNotNull(identifyingToken);
         this.meterStart = meterStart;
         this.timestamp = new Date(checkNotNull(timestamp).getTime());
@@ -90,7 +89,7 @@ public final class StartTransactionCommand {
      *
      * @return the connector's identifier or position.
      */
-    public int getConnectorId() {
+    public ConnectorId getConnectorId() {
         return connectorId;
     }
 
@@ -128,9 +127,9 @@ public final class StartTransactionCommand {
 
         StartTransactionCommand that = (StartTransactionCommand) o;
 
-        if (connectorId != that.connectorId) return false;
         if (meterStart != that.meterStart) return false;
         if (!chargingStationId.equals(that.chargingStationId)) return false;
+        if (!connectorId.equals(that.connectorId)) return false;
         if (!identifyingToken.equals(that.identifyingToken)) return false;
         if (!timestamp.equals(that.timestamp)) return false;
         if (!transactionId.equals(that.transactionId)) return false;
@@ -142,7 +141,7 @@ public final class StartTransactionCommand {
     public int hashCode() {
         int result = chargingStationId.hashCode();
         result = 31 * result + transactionId.hashCode();
-        result = 31 * result + connectorId;
+        result = 31 * result + connectorId.hashCode();
         result = 31 * result + identifyingToken.hashCode();
         result = 31 * result + meterStart;
         result = 31 * result + timestamp.hashCode();

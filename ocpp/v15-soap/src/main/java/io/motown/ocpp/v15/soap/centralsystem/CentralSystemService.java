@@ -94,7 +94,7 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
         String errorCode = request.getErrorCode() != null? request.getErrorCode().value() : null;
-        domainService.statusNotification(chargingStationId, request.getConnectorId(), errorCode, request.getStatus().value(), request.getInfo(), request.getTimestamp(), request.getVendorId(), request.getVendorErrorCode());
+        domainService.statusNotification(chargingStationId, new ConnectorId(request.getConnectorId()), errorCode, request.getStatus().value(), request.getInfo(), request.getTimestamp(), request.getVendorId(), request.getVendorErrorCode());
         return new StatusNotificationResponse();
     }
 
@@ -142,7 +142,7 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
             meterValues.add(new MeterValue(mv.getTimestamp(), mv.getValue().toString()));
         }
 
-        domainService.meterValues(chargingStationId, transactionId, request.getConnectorId(), meterValues);
+        domainService.meterValues(chargingStationId, transactionId, new ConnectorId(request.getConnectorId()), meterValues);
 
         return new MeterValuesResponse();
     }
@@ -227,7 +227,7 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
 
     @Override
     public StartTransactionResponse startTransaction(final StartTransactionRequest parameters, final String chargeBoxIdentity) {
-        int transactionId = domainService.startTransaction(new ChargingStationId(chargeBoxIdentity), parameters.getConnectorId(), new TextualToken(parameters.getIdTag()), parameters.getMeterStart(), parameters.getTimestamp(), PROTOCOL_IDENTIFIER);
+        int transactionId = domainService.startTransaction(new ChargingStationId(chargeBoxIdentity), new ConnectorId(parameters.getConnectorId()), new TextualToken(parameters.getIdTag()), parameters.getMeterStart(), parameters.getTimestamp(), PROTOCOL);
         log.debug("TransactionId: " + transactionId);
 
         // TODO locally store identifications, so we can use these in the response. - Dennis Laumen, December 16th 2013

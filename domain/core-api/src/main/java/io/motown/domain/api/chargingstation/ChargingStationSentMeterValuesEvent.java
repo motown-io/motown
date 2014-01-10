@@ -32,7 +32,7 @@ public final class ChargingStationSentMeterValuesEvent {
     private final ChargingStationId chargingStationId;
 
     private TransactionId transactionId;
-    private int connectorId;
+    private ConnectorId connectorId;
 
     private List<MeterValue> meterValueList;
 
@@ -42,11 +42,10 @@ public final class ChargingStationSentMeterValuesEvent {
      * @param chargingStationId the identifier of the charging station.
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public ChargingStationSentMeterValuesEvent(ChargingStationId chargingStationId, TransactionId transactionId, int connectorId, List<MeterValue> meterValueList) {
+    public ChargingStationSentMeterValuesEvent(ChargingStationId chargingStationId, TransactionId transactionId, ConnectorId connectorId, List<MeterValue> meterValueList) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = transactionId;
-        checkArgument(connectorId >= 0);
-        this.connectorId = connectorId;
+        this.connectorId = checkNotNull(connectorId);
         this.meterValueList = meterValueList;
     }
 
@@ -67,7 +66,7 @@ public final class ChargingStationSentMeterValuesEvent {
     /**
      * @return the connector identifier.
      */
-    public int getConnectorId() {
+    public ConnectorId getConnectorId() {
         return connectorId;
     }
 

@@ -167,7 +167,7 @@ public class ChargingStationTest {
     @Test
     public void testStartTransaction() {
         Date now = new Date();
-        int connectorId = 1;
+        ConnectorId connectorId = new ConnectorId(1);
         int meterStart = 0;
 
         fixture.given(getChargingStation())
@@ -199,50 +199,51 @@ public class ChargingStationTest {
     @Test
     public void testRequestingToUnlockConnectorForUnregisteredChargingStation() {
         fixture.given(getConfiguredChargingStation(false))
-               .when(new RequestUnlockConnectorCommand(getChargingStationId(), 1))
+               .when(new RequestUnlockConnectorCommand(getChargingStationId(), getConnectorId()))
                .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRequestingToUnlockConnectorForUnconfiguredChargingStation() {
         fixture.given(getRegisteredChargingStation())
-               .when(new RequestUnlockConnectorCommand(getChargingStationId(), 1))
+               .when(new RequestUnlockConnectorCommand(getChargingStationId(), getConnectorId()))
                .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRequestingToStartTransactionForUnconfiguredChargingStation() {
         fixture.given(getRegisteredChargingStation())
-               .when(new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), 1, getTextualToken(), 0, new Date()))
+               .when(new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), getConnectorId(), getTextualToken(), 0, new Date()))
                .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRequestingToUnlockConnector() {
         fixture.given(getChargingStation())
-               .when(new RequestUnlockConnectorCommand(getChargingStationId(), 1))
-               .expectEvents(new UnlockConnectorRequestedEvent(getChargingStationId(), getProtocol(), 1));
+               .when(new RequestUnlockConnectorCommand(getChargingStationId(), getConnectorId()))
+               .expectEvents(new UnlockConnectorRequestedEvent(getChargingStationId(), getProtocol(), getConnectorId()));
     }
 
     @Test
     public void testRequestingToUnlockUnknownConnector() {
         fixture.given(getChargingStation())
-               .when(new RequestUnlockConnectorCommand(getChargingStationId(), 3))
-               .expectEvents(new ConnectorNotFoundEvent(getChargingStationId(), 3));
+               .when(new RequestUnlockConnectorCommand(getChargingStationId(), new ConnectorId(3)))
+               .expectEvents(new ConnectorNotFoundEvent(getChargingStationId(), new ConnectorId(3)));
     }
 
     @Test
     public void testStartTransactionOnUnknownConnector() {
         fixture.given(getChargingStation())
-               .when(new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), 3, getTextualToken(), 0, new Date()))
-               .expectEvents(new ConnectorNotFoundEvent(getChargingStationId(), 3));
+               .when(new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), new ConnectorId(3), getTextualToken(), 0, new Date()))
+               .expectEvents(new ConnectorNotFoundEvent(getChargingStationId(), new ConnectorId(3)));
     }
 
     @Test
     public void testRequestingToUnlockAllConnectors() {
         fixture.given(getChargingStation())
                .when(new RequestUnlockConnectorCommand(getChargingStationId(), Connector.ALL))
-               .expectEvents(new UnlockConnectorRequestedEvent(getChargingStationId(), getProtocol(), 1), new UnlockConnectorRequestedEvent(getChargingStationId(), getProtocol(), 2));
+               .expectEvents(new UnlockConnectorRequestedEvent(getChargingStationId(), getProtocol(), new ConnectorId(1)),
+                             new UnlockConnectorRequestedEvent(getChargingStationId(), getProtocol(), new ConnectorId(2)));
     }
 
     @Test

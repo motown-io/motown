@@ -15,6 +15,7 @@
  */
 package io.motown.operatorapi.json.queries;
 
+import io.motown.domain.api.chargingstation.ConnectorId;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.entities.Transaction;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -37,7 +38,7 @@ public class OperatorApiService {
 
     private TransactionRepository transactionRepository;
 
-    public void sendUnlockConnectorCommand(String chargingStationId, int connectorId) { }
+    public void sendUnlockConnectorCommand(String chargingStationId, ConnectorId connectorId) { }
 
     public List<ChargingStation> findAllChargingStations() {
         return repository.findAll();

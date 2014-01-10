@@ -29,7 +29,7 @@ public final class RequestChangeChargingStationAvailabilityToOperativeCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final int connectorId;
+    private final ConnectorId connectorId;
 
     /**
      * Creates a {@code RequestChangeChargingStationAvailabilityToOperativeCommand} with an identifier.
@@ -38,10 +38,9 @@ public final class RequestChangeChargingStationAvailabilityToOperativeCommand {
      * @param connectorId       the identifier of the connector.
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public RequestChangeChargingStationAvailabilityToOperativeCommand(ChargingStationId chargingStationId, int connectorId) {
+    public RequestChangeChargingStationAvailabilityToOperativeCommand(ChargingStationId chargingStationId, ConnectorId connectorId) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        checkArgument(connectorId > 0);
-        this.connectorId = connectorId;
+        this.connectorId = checkNotNull(connectorId);
     }
 
     /**
@@ -58,7 +57,7 @@ public final class RequestChangeChargingStationAvailabilityToOperativeCommand {
      *
      * @return the connector id.
      */
-    public int getConnectorId() {
+    public ConnectorId getConnectorId() {
         return connectorId;
     }
 }

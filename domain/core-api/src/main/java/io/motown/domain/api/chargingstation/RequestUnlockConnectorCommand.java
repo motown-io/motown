@@ -23,9 +23,9 @@ public final class RequestUnlockConnectorCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
-    private final Integer connectorId;
+    private final ConnectorId connectorId;
 
-    public RequestUnlockConnectorCommand(ChargingStationId chargingStationId, Integer connectorId) {
+    public RequestUnlockConnectorCommand(ChargingStationId chargingStationId, ConnectorId connectorId) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.connectorId = checkNotNull(connectorId);
     }
@@ -34,7 +34,7 @@ public final class RequestUnlockConnectorCommand {
         return chargingStationId;
     }
 
-    public Integer getConnectorId() {
+    public ConnectorId getConnectorId() {
         return connectorId;
     }
 }

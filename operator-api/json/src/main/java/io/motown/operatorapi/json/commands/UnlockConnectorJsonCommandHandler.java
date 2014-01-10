@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.ConnectorId;
 import io.motown.domain.api.chargingstation.RequestUnlockConnectorCommand;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +39,7 @@ class UnlockConnectorJsonCommandHandler implements JsonCommandHandler {
 
     @Override
     public void handle(String chargingStationId, JsonObject commandObject) {
-        int connectorId = commandObject.get(CONNECTOR_ID_FIELD).getAsInt();
+        ConnectorId connectorId = new ConnectorId(commandObject.get(CONNECTOR_ID_FIELD).getAsInt());
 
         commandGateway.send(new RequestUnlockConnectorCommand(new ChargingStationId(chargingStationId), connectorId));
     }

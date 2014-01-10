@@ -19,6 +19,7 @@
         <property name="typeAdapters">
             <set>
                 <bean class="io.motown.operatorapi.json.gson.RequestStopTransactionTypeAdapter"/>
+                <bean class="io.motown.operatorapi.json.gson.ConnectorIdTypeAdapter"/>
             </set>
         </property>
     </bean>

@@ -17,12 +17,11 @@ package io.motown.operatorapi.json.gson;
 
 import com.google.gson.*;
 
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-public abstract class CommandTypeAdapter<C> implements JsonDeserializer<C> {
+public abstract class CommandTypeAdapter<C> implements TypeAdapter<C> {
 
     @Override
     public C deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

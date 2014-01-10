@@ -59,14 +59,14 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     }
 
     @Override
-    public void startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, int connectorId) {
+    public void startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, ConnectorId connectorId) {
         log.info("Starting transaction");
 
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         RemoteStartTransactionRequest request = new RemoteStartTransactionRequest();
         request.setIdTag(identifyingToken.getToken());
-        request.setConnectorId(connectorId);
+        request.setConnectorId(connectorId.getId());
 
         RemoteStartTransactionResponse response = chargePointService.remoteStartTransaction(request, id.getId());
 
@@ -102,12 +102,12 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     }
 
     @Override
-    public void unlockConnector(ChargingStationId id, int connectorId) {
+    public void unlockConnector(ChargingStationId id, ConnectorId connectorId) {
         log.debug("Unlocking of connector {} on {}", connectorId, id);
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         UnlockConnectorRequest request = new UnlockConnectorRequest();
-        request.setConnectorId(connectorId);
+        request.setConnectorId(connectorId.getId());
         UnlockConnectorResponse response = chargePointService.unlockConnector(request, id.getId());
         String responseStatus = (response.getStatus() != null) ? response.getStatus().value() : "Undetermined";
 
@@ -115,14 +115,14 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     }
 
     @Override
-    public void changeAvailabilityToInoperative(ChargingStationId id, int connectorId) {
+    public void changeAvailabilityToInoperative(ChargingStationId id, ConnectorId connectorId) {
         log.debug("Changing availability of connector {} on {} to inoperative", connectorId, id);
 
         changeAvailability(id, connectorId, AvailabilityType.INOPERATIVE);
     }
 
     @Override
-    public void changeAvailabilityToOperative(ChargingStationId id, int connectorId) {
+    public void changeAvailabilityToOperative(ChargingStationId id, ConnectorId connectorId) {
         log.debug("Changing availability of connector {} on {} to operative", connectorId, id);
 
         changeAvailability(id, connectorId, AvailabilityType.OPERATIVE);
@@ -259,11 +259,11 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     }
 
     @Override
-    public io.motown.domain.api.chargingstation.ReservationStatus reserveNow(ChargingStationId id, int connectorId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken, int reservationId) {
+    public io.motown.domain.api.chargingstation.ReservationStatus reserveNow(ChargingStationId id, ConnectorId connectorId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken, int reservationId) {
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         ReserveNowRequest request = new ReserveNowRequest();
-        request.setConnectorId(connectorId);
+        request.setConnectorId(connectorId.getId());
         request.setExpiryDate(expiryDate);
         request.setIdTag(identifyingToken.getToken());
         request.setParentIdTag(parentIdentifyingToken!=null?parentIdentifyingToken.getToken():null);
@@ -301,11 +301,11 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         chargePointService.reset(request, id.getId());
     }
 
-    private void changeAvailability(ChargingStationId id, int connectorId, AvailabilityType type) {
+    private void changeAvailability(ChargingStationId id, ConnectorId connectorId, AvailabilityType type) {
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         ChangeAvailabilityRequest request = new ChangeAvailabilityRequest();
-        request.setConnectorId(connectorId);
+        request.setConnectorId(connectorId.getId());
         request.setType(type);
         chargePointService.changeAvailability(request, id.getId());
     }

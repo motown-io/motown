@@ -44,7 +44,7 @@ class RequestChangeChargingStationAvailabilityJsonCommandHandler implements Json
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
                 String availability = commandObject.get("availability").getAsString();
-                int connectorId = commandObject.get("connectorId").getAsInt();
+                ConnectorId connectorId = new ConnectorId(commandObject.get("connectorId").getAsInt());
 
                 if("inoperative".equalsIgnoreCase(availability)) {
                     commandGateway.send(new RequestChangeChargingStationAvailabilityToInoperativeCommand(new ChargingStationId(chargingStationId), connectorId));

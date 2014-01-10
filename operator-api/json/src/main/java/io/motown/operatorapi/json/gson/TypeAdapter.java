@@ -13,24 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.domain.api.chargingstation;
+package io.motown.operatorapi.json.gson;
 
-/**
- */
-public final class ConnectorNotFoundEvent {
-    private final ChargingStationId chargingStationId;
-    private final ConnectorId connectorId;
+import com.google.gson.JsonDeserializer;
 
-    public ConnectorNotFoundEvent(ChargingStationId chargingStationId, ConnectorId connectorId) {
-        this.chargingStationId = chargingStationId;
-        this.connectorId = connectorId;
-    }
+public interface TypeAdapter<T> extends JsonDeserializer<T> {
 
-    public ChargingStationId getChargingStationId() {
-        return chargingStationId;
-    }
+    Class<?> getAdaptedType();
 
-    public ConnectorId getConnectorId() {
-        return connectorId;
-    }
 }
