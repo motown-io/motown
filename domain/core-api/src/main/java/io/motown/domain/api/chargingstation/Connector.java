@@ -57,7 +57,7 @@ public final class Connector {
 
     @Override
     public String toString() {
-        return String.format("Connector(id = %d, type = %s, maxAmp = %d)", connectorId.getId(), connectorType, maxAmp);
+        return String.format("Connector(id = %s, type = %s, maxAmp = %d)", connectorId.getId(), connectorType, maxAmp);
     }
 
 }

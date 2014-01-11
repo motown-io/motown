@@ -20,9 +20,10 @@ import io.motown.domain.api.chargingstation.MeterValue;
 import io.motown.ocpp.v15.soap.async.RequestHandler;
 import io.motown.ocpp.v15.soap.async.ResponseFactory;
 import io.motown.ocpp.v15.soap.centralsystem.schema.*;
-import io.motown.ocpp.v15.soap.centralsystem.schema.AuthorizationStatus;
 import io.motown.ocpp.v15.soap.centralsystem.schema.FirmwareStatus;
-import io.motown.ocpp.viewmodel.domain.*;
+import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
+import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
+import io.motown.ocpp.viewmodel.domain.DomainService;
 import org.apache.cxf.headers.Header;
 import org.apache.cxf.helpers.CastUtils;
 import org.apache.cxf.jaxws.context.WrappedMessageContext;
@@ -92,9 +93,11 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
     @Override
     public StatusNotificationResponse statusNotification(StatusNotificationRequest request, String chargeBoxIdentity) {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
+        ConnectorId connectorId = new ConnectorId(request.getConnectorId());
+        ComponentStatus componentStatus = ComponentStatus.fromValue(request.getStatus().value());
+        String errorCode = request.getErrorCode() != null ? request.getErrorCode().value() : null;
 
-        String errorCode = request.getErrorCode() != null? request.getErrorCode().value() : null;
-        domainService.statusNotification(chargingStationId, new ConnectorId(request.getConnectorId()), errorCode, request.getStatus().value(), request.getInfo(), request.getTimestamp(), request.getVendorId(), request.getVendorErrorCode());
+        domainService.statusNotification(chargingStationId, connectorId, errorCode, componentStatus, request.getInfo(), request.getTimestamp(), request.getVendorId(), request.getVendorErrorCode());
         return new StatusNotificationResponse();
     }
 
@@ -138,7 +141,7 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
         TransactionId transactionId = new NumberedTransactionId(chargingStationId, PROTOCOL_IDENTIFIER, request.getTransactionId());
 
         List<MeterValue> meterValues = new ArrayList<>();
-        for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue mv : request.getValues()){
+        for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue mv : request.getValues()) {
             meterValues.add(new MeterValue(mv.getTimestamp(), mv.getValue().toString()));
         }
 
@@ -172,14 +175,18 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
 
                         AuthorizeResponse response = new AuthorizeResponse();
                         IdTagInfo tagInfo = new IdTagInfo();
-                        switch(result.getStatus()){
-                            case ACCEPTED: tagInfo.setStatus(AuthorizationStatus.ACCEPTED);
+                        switch (result.getStatus()) {
+                            case ACCEPTED:
+                                tagInfo.setStatus(AuthorizationStatus.ACCEPTED);
                                 break;
-                            case BLOCKED: tagInfo.setStatus(AuthorizationStatus.BLOCKED);
+                            case BLOCKED:
+                                tagInfo.setStatus(AuthorizationStatus.BLOCKED);
                                 break;
-                            case EXPIRED: tagInfo.setStatus(AuthorizationStatus.EXPIRED);
+                            case EXPIRED:
+                                tagInfo.setStatus(AuthorizationStatus.EXPIRED);
                                 break;
-                            case INVALID: tagInfo.setStatus(AuthorizationStatus.INVALID);
+                            case INVALID:
+                                tagInfo.setStatus(AuthorizationStatus.INVALID);
                                 break;
                         }
                         response.setIdTagInfo(tagInfo);
@@ -206,13 +213,13 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
 
         io.motown.domain.api.chargingstation.FirmwareStatus firmwareStatus;
 
-        if(FirmwareStatus.INSTALLED.equals(status)) {
+        if (FirmwareStatus.INSTALLED.equals(status)) {
             firmwareStatus = io.motown.domain.api.chargingstation.FirmwareStatus.INSTALLED;
 
-        } else if(FirmwareStatus.DOWNLOADED.equals(status)) {
+        } else if (FirmwareStatus.DOWNLOADED.equals(status)) {
             firmwareStatus = io.motown.domain.api.chargingstation.FirmwareStatus.DOWNLOADED;
 
-        } else if(FirmwareStatus.INSTALLATION_FAILED.equals(status)) {
+        } else if (FirmwareStatus.INSTALLATION_FAILED.equals(status)) {
             firmwareStatus = io.motown.domain.api.chargingstation.FirmwareStatus.INSTALLATION_FAILED;
 
         } else {

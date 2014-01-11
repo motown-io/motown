@@ -15,15 +15,18 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import static com.google.common.base.Objects.toStringHelper;
+import com.google.common.base.Objects;
+
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * The unique identifier of a connector.
  */
-public final class ConnectorId {
+public final class ConnectorId implements ComponentId {
 
-    final int id;
+    private final int numberedId;
+
+    private final String id;
 
     /**
      * Creates a connector identifier.
@@ -33,18 +36,31 @@ public final class ConnectorId {
      */
     public ConnectorId(int id) {
         checkArgument(id >= 0);
-        this.id = id;
+        this.numberedId = id;
+        this.id = Integer.toString(id);
     }
 
     /**
-     * Gets a connector's unique identifier.
+     * Gets the connector's unique identifier.
      *
      * @return the unique identifier.
      */
-    public int getId() {
+    public String getId() {
         return id;
     }
 
+    /**
+     * Gets the connector's unique identifier as a number.
+     *
+     * @return the unique identifier as a number.
+     */
+    public int getNumberedId() {
+        return numberedId;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -52,19 +68,25 @@ public final class ConnectorId {
 
         ConnectorId that = (ConnectorId) o;
 
-        if (id != that.id) return false;
+        if (!id.equals(that.id)) return false;
 
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
-        return id;
+        return id.hashCode();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
-        return toStringHelper(this)
+        return Objects.toStringHelper(this)
                 .add("id", id)
                 .toString();
     }

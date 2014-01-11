@@ -16,23 +16,39 @@
 package io.motown.domain.api.chargingstation;
 
 /**
- * {@code ChargingStationComponent} holds the different components a charging station can consist of.
+ * The components of a charging station.
  */
 public enum ChargingStationComponent {
-    CHARGING_STATION("ChargingStation"),
+    /**
+     * The connector of a charging station.
+     * <p/>
+     * A connector is an independently operated and managed electrical outlet on an EVSE. This corresponds to a single
+     * physical outlet.
+     */
     CONNECTOR("Connector"),
+
+    /**
+     * The EVSE of a charging station.
+     * <p/>
+     * EVSE stands for Electrical Vehicle Supply Equipment. It is the logical unit in a Charge Point that supplies
+     * electric energy via a connector for recharging. An EVSE can have one or multiple connector(s).
+     */
     EVSE("EVSE");
 
     private String value;
 
+    /**
+     * Creates a {@code ChargingStationComponent} with the textual representation of this value.
+     *
+     * @param value the textual representation of this value.
+     */
     private ChargingStationComponent(String value) {
         this.value = value;
     }
 
-    public boolean equalsValue(String otherComponentValue){
-        return (otherComponentValue == null)? false: value.equals(otherComponentValue);
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return value;

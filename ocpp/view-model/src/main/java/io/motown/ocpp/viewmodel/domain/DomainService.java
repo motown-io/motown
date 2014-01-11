@@ -31,13 +31,21 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
 public class DomainService {
 
     private static final Logger log = LoggerFactory.getLogger(DomainService.class);
+    public static final int CHARGING_STATION_CONNECTOR_ID = 0;
+    public static final String ERROR_CODE_KEY = "ERROR_CODE";
+    public static final String INFO_KEY = "INFO";
+    public static final String VENDOR_ID_KEY = "VENDOR_ID";
+    public static final String VENDOR_ERROR_CODE_KEY = "VENDOR_ERROR_CODE";
 
     @Resource(name = "domainCommandGateway")
     private DomainCommandGateway commandGateway;
@@ -138,26 +146,23 @@ public class DomainService {
         commandGateway.send(command);
     }
 
-    public void statusNotification(ChargingStationId chargingStationId, ConnectorId connectorId, String errorCode, String status, String info, Date timeStamp, String vendorId, String vendorErrorCode) {
-        ChargingStationComponent component;
-        String componentId = null;
-
-        if(connectorId.getId() == 0){
-            component = ChargingStationComponent.CHARGING_STATION;
-        }
-        else{
-            component = ChargingStationComponent.CONNECTOR;
-            componentId = Integer.toString(connectorId.getId());
-        }
-
+    public void statusNotification(ChargingStationId chargingStationId, ConnectorId connectorId, String errorCode, ComponentStatus status, String info, Date timeStamp, String vendorId, String vendorErrorCode) {
         //TODO: Fix these magic key values? - Ingo Pak, 09 Jan 2014
-        Map<String, String> attributes = Maps.newHashMap();
-        attributes.put("ERROR_CODE", errorCode);
-        attributes.put("INFO", info);
-        attributes.put("VENDOR_ID", vendorId);
-        attributes.put("VENDOR_ERROR_CODE", vendorErrorCode);
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put(ERROR_CODE_KEY, errorCode);
+        attributes.put(INFO_KEY, info);
+        attributes.put(VENDOR_ID_KEY, vendorId);
+        attributes.put(VENDOR_ERROR_CODE_KEY, vendorErrorCode);
 
-        StatusNotificationCommand command = new StatusNotificationCommand(chargingStationId, component, componentId, ComponentStatus.fromValue(status), timeStamp, attributes);
+        StatusNotificationCommand command;
+
+        if (connectorId.getNumberedId() == CHARGING_STATION_CONNECTOR_ID) {
+            command = new ChargingStationStatusNotificationCommand(chargingStationId, status, timeStamp, attributes);
+        } else {
+            ChargingStationComponent component = ChargingStationComponent.CONNECTOR;
+            command = new ComponentStatusNotificationCommand(chargingStationId, component, connectorId, status, timeStamp, attributes);
+        }
+
         commandGateway.send(command);
     }
 
@@ -183,7 +188,7 @@ public class DomainService {
             throw new IllegalStateException("Cannot start transaction for charging station that has not been registered/configured.");
         }
 
-        if(connectorId.getId() > chargingStation.getNumberOfConnectors()) {
+        if (connectorId.getNumberedId() > chargingStation.getNumberOfConnectors()) {
             throw new IllegalStateException("Cannot start transaction on a unknown connector.");
         }
 
@@ -267,5 +272,4 @@ public class DomainService {
         Long identifier = (Long) entityManagerFactory.getPersistenceUnitUtil().getIdentifier(transactionIdentifier);
         return new NumberedTransactionId(chargingStationId, protocolIdentifier, identifier.intValue());
     }
-
 }

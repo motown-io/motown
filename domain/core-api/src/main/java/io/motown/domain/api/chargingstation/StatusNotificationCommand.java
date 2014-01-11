@@ -20,49 +20,36 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import java.util.Date;
 import java.util.Map;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code StatusNotificationCommand} is the command which is published when a charging station sends a status notice
- * for any of it's internal components.
+ * {@code StatusNotificationCommand} is the command which is published when a charging station notifies Motown about
+ * some status. Concrete implementations of this class will determine what the status is referring to.
  */
-public final class StatusNotificationCommand {
+public abstract class StatusNotificationCommand {
 
     @TargetAggregateIdentifier
-    private final ChargingStationId chargingStationId;
+    protected final ChargingStationId chargingStationId;
 
-    private final ChargingStationComponent component;
+    protected final ComponentStatus status;
 
-    private final String componentId;
+    protected final Date timestamp;
 
-    private final ComponentStatus status;
-
-    private final Date timeStamp;
-
-    private final Map<String, String> attributes;
+    protected final Map<String, String> attributes;
 
     /**
      * Creates a {@code StatusNotificationCommand}.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param component         the component type
-     * @param componentId       the component identifier which should be supplied if the component is not the whole chargingsation
      * @param status            the status of the component
-     * @param timeStamp         the optional date and time
-     * @param attributes        optional set of attributes
-     * @throws NullPointerException if {@code chargingStationId}, {@code component}, {@code status} or {@code attributes} is {@code null}.
+     * @param timestamp         the date and time
+     * @param attributes        optional attributes
+     * @throws NullPointerException if {@code chargingStationId}, {@code status}, {@code timestamp} or {@code attributes} is {@code null}.
      */
-    public StatusNotificationCommand(ChargingStationId chargingStationId, ChargingStationComponent component, String componentId, ComponentStatus status, Date timeStamp, Map<String, String> attributes) {
+    public StatusNotificationCommand(ChargingStationId chargingStationId, ComponentStatus status, Date timestamp, Map<String, String> attributes) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.component = checkNotNull(component);
-
-        if(!ChargingStationComponent.CHARGING_STATION.equals(component)) {
-            checkNotNull(componentId);
-        }
-        this.componentId = componentId;
         this.status = checkNotNull(status);
-        this.timeStamp = timeStamp;
+        this.timestamp = checkNotNull(timestamp);
         this.attributes = checkNotNull(attributes);
     }
 
@@ -75,22 +62,29 @@ public final class StatusNotificationCommand {
         return chargingStationId;
     }
 
-    public ChargingStationComponent getComponent() {
-        return component;
-    }
-
-    public String getComponentId() {
-        return componentId;
-    }
-
+    /**
+     * Gets the status.
+     *
+     * @return the status.
+     */
     public ComponentStatus getStatus() {
         return status;
     }
 
-    public Date getTimeStamp() {
-        return timeStamp;
+    /**
+     * Gets the timestamp at which the status notification occurred.
+     *
+     * @return the timestamp at which the status notification occurred.
+     */
+    public Date getTimestamp() {
+        return timestamp;
     }
 
+    /**
+     * Gets the optional attributes.
+     *
+     * @return the optional attributes.
+     */
     public Map<String, String> getAttributes() {
         return attributes;
     }

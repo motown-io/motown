@@ -23,21 +23,17 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code StatusNotificationReceivedEvent} is the command which is published when a status notice from a
- * charging station has been received.
+ * {@code StatusNotificationReceivedEvent} is the event which is published when a charging station has notified Motown
+ * about some status. Concrete implementations of this class will determine what the status is referring to.
  */
-public final class StatusNotificationReceivedEvent {
+public abstract class StatusNotificationReceivedEvent {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final ChargingStationComponent component;
-
-    private final String componentId;
-
     private final ComponentStatus status;
 
-    private final Date timeStamp;
+    private final Date timestamp;
 
     private final Map<String, String> attributes;
 
@@ -45,24 +41,16 @@ public final class StatusNotificationReceivedEvent {
      * Creates a {@code StatusNotificationReceivedEvent}.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param component         the component type
-     * @param componentId       the component identifier which should be supplied if the component is not the whole chargingsation
      * @param status            the status of the component
-     * @param timeStamp         the optional date and time
+     * @param timestamp         the date and time
      * @param attributes        optional attributes
-     * @throws NullPointerException if {@code chargingStationId}, {@code component}, {@code status} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId}, {@code component}, {@code componentId}, {@code timestamp}, {@code status} or {@code attributes} is {@code null}.
      */
-    public StatusNotificationReceivedEvent(ChargingStationId chargingStationId, ChargingStationComponent component, String componentId, ComponentStatus status, Date timeStamp, Map<String, String> attributes) {
+    public StatusNotificationReceivedEvent(ChargingStationId chargingStationId, ComponentStatus status, Date timestamp, Map<String, String> attributes) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.component = checkNotNull(component);
-
-        if(!ChargingStationComponent.CHARGING_STATION.equals(component)) {
-            checkNotNull(componentId);
-        }
-        this.componentId = componentId;
         this.status = checkNotNull(status);
-        this.timeStamp = timeStamp;
-        this.attributes = attributes;
+        this.timestamp = checkNotNull(timestamp);
+        this.attributes = checkNotNull(attributes);
     }
 
     /**
@@ -74,22 +62,29 @@ public final class StatusNotificationReceivedEvent {
         return chargingStationId;
     }
 
-    public ChargingStationComponent getComponent() {
-        return component;
-    }
-
-    public String getComponentId() {
-        return componentId;
-    }
-
+    /**
+     * Gets the status.
+     *
+     * @return the status.
+     */
     public ComponentStatus getStatus() {
         return status;
     }
 
-    public Date getTimeStamp() {
-        return timeStamp;
+    /**
+     * Gets the timestamp at which the status notification occurred.
+     *
+     * @return the timestamp at which the status notification occurred.
+     */
+    public Date getTimestamp() {
+        return timestamp;
     }
 
+    /**
+     * Gets the optional attributes.
+     *
+     * @return the optional attributes.
+     */
     public Map<String, String> getAttributes() {
         return attributes;
     }

@@ -95,7 +95,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         // TODO mark socket (mentioned in command) 'in transaction' - Mark van den Bergh, December 2nd 2013
         // TODO store transaction identifier so we can validate 'stop transaction' commands? - Mark van den Bergh, December 2nd 2013
 
-        if (command.getConnectorId().getId() > numberOfConnectors) {
+        if (command.getConnectorId().getNumberedId() > numberOfConnectors) {
             apply(new ConnectorNotFoundEvent(id, command.getConnectorId()));
             return;
         }
@@ -104,14 +104,14 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(StopTransactionCommand command){
+    public void handle(StopTransactionCommand command) {
         apply(new TransactionStoppedEvent(command.getChargingStationId(), command.getTransactionId(), command.getIdTag(), command.getMeterStop(), command.getTimestamp()));
     }
 
     @CommandHandler
     public void handle(RequestUnlockConnectorCommand command) {
         checkCommunicationAllowed();
-        if (command.getConnectorId().getId() > numberOfConnectors) {
+        if (command.getConnectorId().getNumberedId() > numberOfConnectors) {
             apply(new ConnectorNotFoundEvent(id, command.getConnectorId()));
         } else {
             if (command.getConnectorId() == Connector.ALL) {
@@ -189,9 +189,9 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(DiagnosticsFileNameReceivedCommand command){
+    public void handle(DiagnosticsFileNameReceivedCommand command) {
         String diagnosticsFileName = command.getDiagnosticsFileName();
-        if(diagnosticsFileName == null || diagnosticsFileName.isEmpty()) {
+        if (diagnosticsFileName == null || diagnosticsFileName.isEmpty()) {
             apply(new NoDiagnosticsInformationAvailableEvent(this.id));
         } else {
             apply(new DiagnosticsFileNameReceivedEvent(this.id, diagnosticsFileName));
@@ -254,8 +254,13 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(StatusNotificationCommand command) {
-        apply(new StatusNotificationReceivedEvent(command.getChargingStationId(), command.getComponent(), command.getComponentId(), command.getStatus(), command.getTimeStamp(), command.getAttributes()));
+    public void handle(ComponentStatusNotificationCommand command) {
+        apply(new ComponentStatusNotificationReceivedEvent(command.getChargingStationId(), command.getComponent(), command.getComponentId(), command.getStatus(), command.getTimestamp(), command.getAttributes()));
+    }
+
+    @CommandHandler
+    public void handle(ChargingStationStatusNotificationCommand command) {
+        apply(new ChargingStationStatusNotificationReceivedEvent(command.getChargingStationId(), command.getStatus(), command.getTimestamp(), command.getAttributes()));
     }
 
     @EventHandler

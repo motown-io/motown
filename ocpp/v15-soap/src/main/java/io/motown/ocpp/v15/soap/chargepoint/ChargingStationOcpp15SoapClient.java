@@ -17,10 +17,13 @@
 package io.motown.ocpp.v15.soap.chargepoint;
 
 import com.google.common.collect.Maps;
-import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.AuthorisationListUpdateType;
+import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.ConnectorId;
+import io.motown.domain.api.chargingstation.IdentifyingToken;
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
-import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import org.apache.cxf.binding.soap.Soap12;
 import org.apache.cxf.binding.soap.SoapBindingConfiguration;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
@@ -48,10 +51,10 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
         ChargePointService chargePointService = this.createChargingStationService(id);
 
-        GetConfigurationResponse response =  chargePointService.getConfiguration(new GetConfigurationRequest(), id.getId());
+        GetConfigurationResponse response = chargePointService.getConfiguration(new GetConfigurationRequest(), id.getId());
 
         HashMap<String, String> configurationItems = Maps.newHashMap();
-        for (KeyValue keyValue : response.getConfigurationKey()){
+        for (KeyValue keyValue : response.getConfigurationKey()) {
             configurationItems.put(keyValue.getKey(), keyValue.getValue());
         }
 
@@ -66,7 +69,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
         RemoteStartTransactionRequest request = new RemoteStartTransactionRequest();
         request.setIdTag(identifyingToken.getToken());
-        request.setConnectorId(connectorId.getId());
+        request.setConnectorId(connectorId.getNumberedId());
 
         RemoteStartTransactionResponse response = chargePointService.remoteStartTransaction(request, id.getId());
 
@@ -82,7 +85,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         RemoteStopTransactionRequest request = new RemoteStopTransactionRequest();
         request.setTransactionId(transactionId);
         RemoteStopTransactionResponse response;
-        response =  chargePointService.remoteStopTransaction(request, id.getId());
+        response = chargePointService.remoteStopTransaction(request, id.getId());
 
         log.info("Stop transaction {} on {} has been {}", transactionId, id, response.getStatus().value());
     }
@@ -107,7 +110,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         UnlockConnectorRequest request = new UnlockConnectorRequest();
-        request.setConnectorId(connectorId.getId());
+        request.setConnectorId(connectorId.getNumberedId());
         UnlockConnectorResponse response = chargePointService.unlockConnector(request, id.getId());
         String responseStatus = (response.getStatus() != null) ? response.getStatus().value() : "Undetermined";
 
@@ -198,8 +201,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
             //The charging station will respond with an async 'firmware status update' message
             log.info("Update firmware on {} has been requested", id.getId());
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to request update firmware for {}", id, e);
         }
     }
@@ -224,9 +226,13 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         request.setListVersion(listVersion);
 
         //Translate the update type to the OCPP specific type
-        switch(updateType) {
-            case DIFFERENTIAL: request.setUpdateType(UpdateType.DIFFERENTIAL); break;
-            case FULL: request.setUpdateType(UpdateType.FULL); break;
+        switch (updateType) {
+            case DIFFERENTIAL:
+                request.setUpdateType(UpdateType.DIFFERENTIAL);
+                break;
+            case FULL:
+                request.setUpdateType(UpdateType.FULL);
+                break;
         }
 
         //Translate the authorisation information to the OCPP specific info
@@ -237,14 +243,24 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
             //The OCPP spec describes that the IdTagInfo should not be present in case the charging station has to remove the entry from the list
             AuthenticationStatus status = identifyingToken.getAuthenticationStatus();
-            if(status!= null && !AuthenticationStatus.DELETED.equals(status)) {
+            if (status != null && !AuthenticationStatus.DELETED.equals(status)) {
                 IdTagInfo info = new IdTagInfo();
-                switch(identifyingToken.getAuthenticationStatus()){
-                    case ACCEPTED: info.setStatus(AuthorizationStatus.ACCEPTED); break;
-                    case BLOCKED: info.setStatus(AuthorizationStatus.BLOCKED); break;
-                    case EXPIRED: info.setStatus(AuthorizationStatus.EXPIRED); break;
-                    case INVALID: info.setStatus(AuthorizationStatus.INVALID); break;
-                    case CONCURRENT_TX: info.setStatus(AuthorizationStatus.CONCURRENT_TX); break;
+                switch (identifyingToken.getAuthenticationStatus()) {
+                    case ACCEPTED:
+                        info.setStatus(AuthorizationStatus.ACCEPTED);
+                        break;
+                    case BLOCKED:
+                        info.setStatus(AuthorizationStatus.BLOCKED);
+                        break;
+                    case EXPIRED:
+                        info.setStatus(AuthorizationStatus.EXPIRED);
+                        break;
+                    case INVALID:
+                        info.setStatus(AuthorizationStatus.INVALID);
+                        break;
+                    case CONCURRENT_TX:
+                        info.setStatus(AuthorizationStatus.CONCURRENT_TX);
+                        break;
                 }
                 authData.setIdTagInfo(info);
             }
@@ -254,7 +270,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
         //TODO: Make ALL calls towards the chargingstation more robust (now can result in message processing loop of death), decide on how to achieve this; either by try catching here to force ACK, or not letting Rabbit reschedule upon exception - Ingo Pak, 03 Jan 2014
         SendLocalListResponse response = chargePointService.sendLocalList(request, id.getId());
-        String responseStatus = (response.getStatus() != null? response.getStatus().value(): "Undetermined");
+        String responseStatus = (response.getStatus() != null ? response.getStatus().value() : "Undetermined");
         log.info("Update of local authorisation list on {} has been {}", id, responseStatus);
     }
 
@@ -263,10 +279,10 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         ReserveNowRequest request = new ReserveNowRequest();
-        request.setConnectorId(connectorId.getId());
+        request.setConnectorId(connectorId.getNumberedId());
         request.setExpiryDate(expiryDate);
         request.setIdTag(identifyingToken.getToken());
-        request.setParentIdTag(parentIdentifyingToken!=null?parentIdentifyingToken.getToken():null);
+        request.setParentIdTag(parentIdentifyingToken != null ? parentIdentifyingToken.getToken() : null);
         request.setReservationId(reservationId);
 
         io.motown.ocpp.v15.soap.chargepoint.schema.ReservationStatus responseStatus = chargePointService.reserveNow(request, id.getId()).getStatus();
@@ -305,7 +321,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         ChangeAvailabilityRequest request = new ChangeAvailabilityRequest();
-        request.setConnectorId(connectorId.getId());
+        request.setConnectorId(connectorId.getNumberedId());
         request.setType(type);
         chargePointService.changeAvailability(request, id.getId());
     }
@@ -329,7 +345,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         ChargePointService chargePointService = (ChargePointService) factory.create();
 
         //Force the use of the Async transport, even for synchronous calls
-        ((BindingProvider)chargePointService).getRequestContext().put("use.async.http.conduit", Boolean.TRUE);
+        ((BindingProvider) chargePointService).getRequestContext().put("use.async.http.conduit", Boolean.TRUE);
 
         return chargePointService;
     }
