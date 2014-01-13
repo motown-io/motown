@@ -53,4 +53,24 @@ public class MeterValue {
     public String getValue() {
         return value;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MeterValue that = (MeterValue) o;
+
+        if (!timestamp.equals(that.timestamp)) return false;
+        if (!value.equals(that.value)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = timestamp.hashCode();
+        result = 31 * result + value.hashCode();
+        return result;
+    }
 }

@@ -104,7 +104,7 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
     @Override
     public StopTransactionResponse stopTransaction(StopTransactionRequest request, String chargeBoxIdentity) {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
-        TransactionId transactionId = new NumberedTransactionId(chargingStationId, PROTOCOL_IDENTIFIER, request.getTransactionId());
+        NumberedTransactionId transactionId = new NumberedTransactionId(chargingStationId, PROTOCOL_IDENTIFIER, request.getTransactionId());
         IdentifyingToken identifyingToken = new TextualToken(request.getIdTag());
 
         List<MeterValue> meterValues = new ArrayList<>();

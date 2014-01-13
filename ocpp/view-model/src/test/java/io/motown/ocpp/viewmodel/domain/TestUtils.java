@@ -196,4 +196,21 @@ public class TestUtils {
     public static List<MeterValue> getEmptyMeterValuesList() {
         return new ArrayList<MeterValue>();
     }
+
+    public static List<MeterValue> getMeterValuesList() {
+        List<MeterValue> values = new ArrayList<>();
+
+        for (int hour = 1; hour < 12; hour++) {
+            // make sure dates can be compared to other instances of this list
+            Calendar c = new GregorianCalendar();
+            c.set(Calendar.HOUR_OF_DAY, hour);
+            c.set(Calendar.MINUTE, 0);
+            c.set(Calendar.SECOND, 0);
+            c.set(Calendar.MILLISECOND, 0);
+            Date date = c.getTime();
+
+            values.add(new MeterValue(date, "10"));
+        }
+        return values;
+    }
 }

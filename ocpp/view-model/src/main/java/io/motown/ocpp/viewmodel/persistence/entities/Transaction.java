@@ -13,10 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.viewmodel.persistence.repostories;
+package io.motown.ocpp.viewmodel.persistence.entities;
 
-import io.motown.ocpp.viewmodel.persistence.entities.TransactionIdentifier;
-import org.springframework.data.jpa.repository.JpaRepository;
+import io.motown.domain.api.chargingstation.ConnectorId;
 
-public interface TransactionIdentifierRepository extends JpaRepository<TransactionIdentifier, String> {
+import javax.persistence.*;
+
+@Entity
+public class Transaction {
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String connectorId;
+
+    public Long getId() {
+        return id;
+    }
+
+    public ConnectorId getConnectorId() {
+        return new ConnectorId(Integer.valueOf(connectorId));
+    }
+
+    public void setConnectorId(ConnectorId connectorId) {
+        this.connectorId = connectorId.getId();
+    }
+
 }

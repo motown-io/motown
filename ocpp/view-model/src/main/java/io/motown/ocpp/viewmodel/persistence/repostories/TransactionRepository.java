@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.viewmodel.persistence.entities;
+package io.motown.ocpp.viewmodel.persistence.repostories;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import io.motown.ocpp.viewmodel.persistence.entities.Transaction;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Entity
-public class TransactionIdentifier {
+public interface TransactionRepository extends JpaRepository<Transaction, String> {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    public Transaction findTransactionById(Long id);
 
 }

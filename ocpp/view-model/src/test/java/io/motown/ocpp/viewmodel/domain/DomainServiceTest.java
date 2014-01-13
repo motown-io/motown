@@ -20,7 +20,7 @@ import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
 import io.motown.ocpp.viewmodel.persistence.repostories.ReservationIdentifierRepository;
-import io.motown.ocpp.viewmodel.persistence.repostories.TransactionIdentifierRepository;
+import io.motown.ocpp.viewmodel.persistence.repostories.TransactionRepository;
 import org.axonframework.commandhandling.CommandCallback;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,7 +57,7 @@ public class DomainServiceTest {
     private ChargingStationRepository chargingStationRepository;
 
     @Autowired
-    private TransactionIdentifierRepository transactionIdentifierRepository;
+    private TransactionRepository transactionRepository;
 
     @Autowired
     private ReservationIdentifierRepository reservationIdentifierRepository;
@@ -69,12 +69,12 @@ public class DomainServiceTest {
     public void setUp() {
 
         chargingStationRepository.deleteAll();
-        transactionIdentifierRepository.deleteAll();
+        transactionRepository.deleteAll();
         reservationIdentifierRepository.deleteAll();
 
         domainService = new DomainService();
         domainService.setChargingStationRepository(chargingStationRepository);
-        domainService.setTransactionIdentifierRepository(transactionIdentifierRepository);
+        domainService.setTransactionRepository(transactionRepository);
         domainService.setReservationIdentifierRepository(reservationIdentifierRepository);
         domainService.setEntityManagerFactory(entityManagerFactory);
 
@@ -217,13 +217,36 @@ public class DomainServiceTest {
     @Test
     public void testStopTransaction() {
         int ocppTransactionId = 0;
-        TransactionId transactionId = new NumberedTransactionId(getChargingStationId(), getProtocol(), ocppTransactionId);
+        NumberedTransactionId transactionId = new NumberedTransactionId(getChargingStationId(), getProtocol(), ocppTransactionId);
         int meterStopValue = 1;
         Date now = new Date();
 
         domainService.stopTransaction(getChargingStationId(), transactionId, getIdentifyingToken(), meterStopValue, now, getEmptyMeterValuesList());
 
         verify(gateway).send(new StopTransactionCommand(getChargingStationId(), transactionId, getIdentifyingToken(), meterStopValue, now));
+    }
+
+    /**
+     * Stopping a transaction with meter values should trigger a 'ProcessMeterValueCommand' besides the 'StopTransactionCommand'.
+     */
+    @Test
+    public void testStopTransactionWithMeterValues() {
+        chargingStationRepository.save(getRegisteredAndConfiguredChargingStation());
+
+        // registers a transaction in the transactionRepository
+        Date startTransactionDate = new Date();
+        int ocppTransactionId = domainService.startTransaction(getChargingStationId(), getConnectorId(), getIdentifyingToken(), 0, startTransactionDate, getReservationId(), getProtocol());
+
+
+        NumberedTransactionId transactionId = new NumberedTransactionId(getChargingStationId(), getProtocol(), ocppTransactionId);
+        int meterStopValue = 1;
+        Date stopTransactionDate = new Date();
+
+        domainService.stopTransaction(getChargingStationId(), transactionId, getIdentifyingToken(), meterStopValue, stopTransactionDate, getMeterValuesList());
+
+        verify(gateway).send(new StopTransactionCommand(getChargingStationId(), transactionId, getIdentifyingToken(), meterStopValue, stopTransactionDate));
+        // stored transaction should provide the connector id that's needed to process the meter values
+        verify(gateway).send(new ProcessMeterValueCommand(getChargingStationId(), transactionId, getConnectorId(), getMeterValuesList()));
     }
 
     @Test

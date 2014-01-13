@@ -20,10 +20,10 @@ import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.chargingstation.RequestStatus;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.entities.ReservationIdentifier;
-import io.motown.ocpp.viewmodel.persistence.entities.TransactionIdentifier;
+import io.motown.ocpp.viewmodel.persistence.entities.Transaction;
 import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
 import io.motown.ocpp.viewmodel.persistence.repostories.ReservationIdentifierRepository;
-import io.motown.ocpp.viewmodel.persistence.repostories.TransactionIdentifierRepository;
+import io.motown.ocpp.viewmodel.persistence.repostories.TransactionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +55,7 @@ public class DomainService {
     private ChargingStationRepository chargingStationRepository;
 
     @Autowired
-    private TransactionIdentifierRepository transactionIdentifierRepository;
+    private TransactionRepository transactionRepository;
 
     @Autowired
     private ReservationIdentifierRepository reservationIdentifierRepository;
@@ -200,7 +200,8 @@ public class DomainService {
             throw new IllegalStateException("Cannot start transaction on a unknown connector.");
         }
 
-        NumberedTransactionId transactionId = generateTransactionIdentifier(chargingStationId, protocolIdentifier);
+        Transaction transaction = createTransaction(chargingStationId, protocolIdentifier, connectorId);
+        NumberedTransactionId transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, transaction.getId().intValue());
 
         Map<String, String> attributes = Maps.newHashMap();
         if (reservationId != null) {
@@ -214,12 +215,14 @@ public class DomainService {
         return transactionId.getNumber();
     }
 
-    public void stopTransaction(ChargingStationId chargingStationId, TransactionId transactionId, IdentifyingToken idTag, int meterValueStop, Date timeStamp, List<MeterValue> meterValues){
+    public void stopTransaction(ChargingStationId chargingStationId, NumberedTransactionId transactionId, IdentifyingToken idTag, int meterValueStop, Date timeStamp, List<MeterValue> meterValues){
         StopTransactionCommand command = new StopTransactionCommand(chargingStationId, transactionId, idTag, meterValueStop, timeStamp);
         commandGateway.send(command);
 
-        //TODO stopTransactionRequest does not contain a connector id... store the transaction in ocpp module so we can retrieve the connector id for this action
-        commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, new ConnectorId(0), meterValues));
+        if (meterValues != null && meterValues.size() > 0) {
+            Transaction transaction = transactionRepository.findTransactionById((long) transactionId.getNumber());
+            commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, transaction.getConnectorId(), meterValues));
+        }
     }
 
     public void reservationStatusChanged(ChargingStationId chargingStationId, ReservationId reservationId, ReservationStatus newStatus) {
@@ -278,8 +281,8 @@ public class DomainService {
         this.chargingStationRepository = chargingStationRepository;
     }
 
-    public void setTransactionIdentifierRepository(TransactionIdentifierRepository transactionIdentifierRepository) {
-        this.transactionIdentifierRepository = transactionIdentifierRepository;
+    public void setTransactionRepository(TransactionRepository transactionRepository) {
+        this.transactionRepository = transactionRepository;
     }
 
     public void setReservationIdentifierRepository(ReservationIdentifierRepository reservationIdentifierRepository) {
@@ -316,21 +319,21 @@ public class DomainService {
     }
 
     /**
-     * Generates a transaction identifier based on the charging station, the module (OCPP) and a auto-incremented number.
+     * Creates a transaction based on the charging station and protocol identifier. The connector identifier is
+     * stored for later usage.
      *
-     * @param chargingStationId charging station identifier to use when generating a transaction identifier.
+     * @param chargingStationId  charging station identifier to use when generating a transaction identifier.
      * @param protocolIdentifier identifier of the protocol, used when generating a transaction identifier.
-     * @return transaction identifier based on the charging station, module and auto-incremented number.
+     * @param connectorId        connector identifier that's stored in the transaction
+     * @return                   transaction
      */
-    private NumberedTransactionId generateTransactionIdentifier(ChargingStationId chargingStationId, String protocolIdentifier) {
-        TransactionIdentifier transactionIdentifier = new TransactionIdentifier();
+    private Transaction createTransaction(ChargingStationId chargingStationId, String protocolIdentifier, ConnectorId connectorId) {
+        Transaction transaction = new Transaction();
+        transaction.setConnectorId(connectorId);
 
-        transactionIdentifierRepository.saveAndFlush(transactionIdentifier); // flush to make sure the generated id is populated
+        transactionRepository.saveAndFlush(transaction); // flush to make sure the generated id is populated
 
-        /* TODO JPA's identity generator creates longs, while OCPP and Motown supports ints. Where should we translate
-         * between these and how should we handle error cases? - Dennis Laumen, December 16th 2013
-         */
-        Long identifier = (Long) entityManagerFactory.getPersistenceUnitUtil().getIdentifier(transactionIdentifier);
-        return new NumberedTransactionId(chargingStationId, protocolIdentifier, identifier.intValue());
+        return transaction;
     }
+
 }
