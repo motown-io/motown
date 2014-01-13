@@ -15,41 +15,19 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * {@code ClearCacheStatusChangedEvent} is the event that gets fired upon receipt of the resulting status of the
  * clear cache request that has been sent to the charging station.
  */
-public final class ClearCacheStatusChangedEvent {
-
-    private final ChargingStationId chargingStationId;
-
-    private final RequestStatus status;
-
+public final class ClearCacheStatusChangedEvent extends StatusChangedEvent{
     /**
-     * Creates a {@code ClearCacheStatusChangedEvent} with an identifier and new status.
+     * Creates a {@code StatusChangedEvent} with an identifier and new status.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param status the resulting status of the request
+     * @param status            the resulting status of the request
      * @throws NullPointerException if {@code chargingStationId} or {@code status} is {@code null}.
      */
     public ClearCacheStatusChangedEvent(ChargingStationId chargingStationId, RequestStatus status) {
-        this.chargingStationId = checkNotNull(chargingStationId);
-        this.status = checkNotNull(status);
+        super(chargingStationId, status);
     }
-
-    /**
-     * Gets the charging station identifier.
-     *
-     * @return the charging station identifier.
-     */
-    public ChargingStationId getChargingStationId() {
-        return chargingStationId;
-    }
-
-    public RequestStatus getStatus() {
-        return status;
-    }
-
 }

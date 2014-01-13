@@ -16,10 +16,10 @@
 package io.motown.domain.api.chargingstation;
 
 /**
- * {@code ClearCacheStatusChangedCommand} is the command which is published to inform about the resulting status of the
- * clear cache request that has been sent to the charging station.
+ * {@code StopTransactionStatusChangedCommand} is the command which is published to inform about the resulting status of the
+ * stop transaction request that has been sent to the charging station.
  */
-public final class ClearCacheStatusChangedCommand extends StatusChangedCommand {
+public final class StopTransactionStatusChangedCommand extends StatusChangedCommand {
 
     /**
      * Creates a {@code StatusChangedCommand} with an identifier and new status.
@@ -28,7 +28,7 @@ public final class ClearCacheStatusChangedCommand extends StatusChangedCommand {
      * @param status            the resulting status of the request
      * @throws NullPointerException if {@code chargingStationId} or {@code status} is {@code null}.
      */
-    public ClearCacheStatusChangedCommand(ChargingStationId chargingStationId, RequestStatus status) {
+    public StopTransactionStatusChangedCommand(ChargingStationId chargingStationId, RequestStatus status) {
         super(chargingStationId, status);
     }
 }

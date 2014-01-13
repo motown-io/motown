@@ -226,10 +226,49 @@ public class DomainService {
         commandGateway.send(new ReservationStatusChangedCommand(chargingStationId, reservationId, newStatus));
     }
 
+    public void stopTransactionStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
+        commandGateway.send(new StopTransactionStatusChangedCommand(chargingStationId, requestStatus));
+    }
+
+    public void softResetStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
+        commandGateway.send(new SoftResetStatusChangedCommand(chargingStationId, requestStatus));
+    }
+
+    public void hardResetStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
+        commandGateway.send(new HardResetStatusChangedCommand(chargingStationId, requestStatus));
+    }
+
+    public void startTransactionStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
+        commandGateway.send(new StartTransactionStatusChangedCommand(chargingStationId, requestStatus));
+    }
+
+    public void unlockConnectorStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
+        commandGateway.send(new UnlockConnectorStatusChangedCommand(chargingStationId, requestStatus));
+    }
+
+    public void changeAvailabilityToOperativeStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
+        commandGateway.send(new ChangeAvailabilityToOperativeStatusChangedCommand(chargingStationId, requestStatus));
+    }
+
+    public void changeAvailabilityToInoperativeStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
+        commandGateway.send(new ChangeAvailabilityToInoperativeStatusChangedCommand(chargingStationId, requestStatus));
+    }
+
+    public void dateTransferStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
+        commandGateway.send(new DataTransferStatusChangedCommand(chargingStationId, requestStatus));
+    }
+
+    public void changeConfigurationStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
+        commandGateway.send(new ChangeConfigurationStatusChangedCommand(chargingStationId, requestStatus));
+    }
+
     public void clearCacheStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
         commandGateway.send(new ClearCacheStatusChangedCommand(chargingStationId, requestStatus));
     }
 
+    public void sendAuthorisationListStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
+        commandGateway.send(new SendAuthorisationListStatusChangedCommand(chargingStationId, requestStatus));
+    }
 
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;

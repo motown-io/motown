@@ -16,19 +16,19 @@
 package io.motown.domain.api.chargingstation;
 
 /**
- * {@code ClearCacheStatusChangedCommand} is the command which is published to inform about the resulting status of the
- * clear cache request that has been sent to the charging station.
+ * {@code UnlockConnectorStatusChangedEvent} is the event that is published to inform about the resulting status of the
+ * unlock connector request that has been sent to the charging station.
  */
-public final class ClearCacheStatusChangedCommand extends StatusChangedCommand {
+public final class UnlockConnectorStatusChangedEvent extends StatusChangedEvent{
 
     /**
-     * Creates a {@code StatusChangedCommand} with an identifier and new status.
+     * Creates a {@code StatusChangedEvent} with an identifier and new status.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param status            the resulting status of the request
      * @throws NullPointerException if {@code chargingStationId} or {@code status} is {@code null}.
      */
-    public ClearCacheStatusChangedCommand(ChargingStationId chargingStationId, RequestStatus status) {
+    public UnlockConnectorStatusChangedEvent(ChargingStationId chargingStationId, RequestStatus status) {
         super(chargingStationId, status);
     }
 }

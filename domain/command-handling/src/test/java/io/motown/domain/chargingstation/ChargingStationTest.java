@@ -406,9 +406,79 @@ public class ChargingStationTest {
     }
 
     @Test
-    public void testClearCacheRequestStatusNotification() {
+    public void testClearCacheRequestStatusChanged() {
         fixture.given(getConfiguredChargingStation(true))
                 .when(new ClearCacheStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
                 .expectEvents(new ClearCacheStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+    }
+
+    @Test
+    public void testChangeAvailabilityToInoperativeStatusChanged() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new ChangeAvailabilityToInoperativeStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
+                .expectEvents(new ChangeAvailabilityToInoperativeStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+    }
+
+    @Test
+    public void testChangeAvailabilityToOperativeStatusChanged() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new ChangeAvailabilityToOperativeStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
+                .expectEvents(new ChangeAvailabilityToOperativeStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+    }
+
+    @Test
+    public void testChangeConfigurationStatusChanged() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new ChangeConfigurationStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
+                .expectEvents(new ChangeConfigurationStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+    }
+
+    @Test
+    public void testDataTransferStatusChanged() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new DataTransferStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
+                .expectEvents(new DataTransferStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+    }
+
+    @Test
+    public void testHardResetStatusChanged() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new HardResetStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
+                .expectEvents(new HardResetStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+    }
+
+    @Test
+    public void testSendAuthorisationListStatusChanged() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new SendAuthorisationListStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
+                .expectEvents(new SendAuthorisationListStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+    }
+
+    @Test
+    public void testSoftResetStatusChanged() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new SoftResetStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
+                .expectEvents(new SoftResetStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+    }
+
+    @Test
+    public void testStartTransactionStatusChangedCommand() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new StartTransactionStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
+                .expectEvents(new StartTransactionStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+    }
+
+    @Test
+    public void testStopTransactionStatusChanged() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new StopTransactionStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
+                .expectEvents(new StopTransactionStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+    }
+
+    @Test
+    public void testUnlockConnectorStatusChanged() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new UnlockConnectorStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
+                .expectEvents(new UnlockConnectorStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
     }
 }

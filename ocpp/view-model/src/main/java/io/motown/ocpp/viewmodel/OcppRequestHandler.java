@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -41,7 +42,9 @@ public class OcppRequestHandler {
     @EventHandler
     public void handle(ConfigurationRequestedEvent event) {
         log.info("Handling ConfigurationRequestedEvent");
-        chargingStationOcpp15Client.getConfiguration(event.getChargingStationId());
+        HashMap<String, String> configurationItems = chargingStationOcpp15Client.getConfiguration(event.getChargingStationId());
+
+        domainService.configureChargingStation(event.getChargingStationId(), configurationItems);
     }
 
     @EventHandler
@@ -50,7 +53,9 @@ public class OcppRequestHandler {
 
         if (event.getTransactionId() instanceof NumberedTransactionId) {
             NumberedTransactionId transactionId = (NumberedTransactionId) event.getTransactionId();
-            chargingStationOcpp15Client.stopTransaction(event.getChargingStationId(), transactionId.getNumber());
+            RequestStatus requestStatus = chargingStationOcpp15Client.stopTransaction(event.getChargingStationId(), transactionId.getNumber());
+
+            domainService.stopTransactionStatusChanged(event.getChargingStationId(), requestStatus);
         } else {
             log.warn("StopTransactionRequestedEvent does not contain a NumberedTransactionId. Event: {}", event);
         }
@@ -59,49 +64,65 @@ public class OcppRequestHandler {
     @EventHandler
     public void handle(SoftResetChargingStationRequestedEvent event) {
         log.info("SoftResetChargingStationRequestedEvent");
-        chargingStationOcpp15Client.softReset(event.getChargingStationId());
+        RequestStatus requestStatus = chargingStationOcpp15Client.softReset(event.getChargingStationId());
+
+        domainService.softResetStatusChanged(event.getChargingStationId(), requestStatus);
     }
 
     @EventHandler
     public void handle(HardResetChargingStationRequestedEvent event) {
         log.info("HardResetChargingStationRequestedEvent");
-        chargingStationOcpp15Client.hardReset(event.getChargingStationId());
+        RequestStatus requestStatus = chargingStationOcpp15Client.hardReset(event.getChargingStationId());
+
+        domainService.hardResetStatusChanged(event.getChargingStationId(), requestStatus);
     }
 
     @EventHandler
     public void handle(StartTransactionRequestedEvent event) {
         log.info("StartTransactionRequestedEvent");
-        chargingStationOcpp15Client.startTransaction(event.getChargingStationId(), event.getIdentifyingToken(), event.getConnectorId());
+        RequestStatus requestStatus =  chargingStationOcpp15Client.startTransaction(event.getChargingStationId(), event.getIdentifyingToken(), event.getConnectorId());
+
+        domainService.startTransactionStatusChanged(event.getChargingStationId(), requestStatus);
     }
 
     @EventHandler
     public void handle(UnlockConnectorRequestedEvent event) {
         log.info("UnlockConnectorRequestedEvent");
-        chargingStationOcpp15Client.unlockConnector(event.getChargingStationId(), event.getConnectorId());
+        RequestStatus requestStatus = chargingStationOcpp15Client.unlockConnector(event.getChargingStationId(), event.getConnectorId());
+
+        domainService.unlockConnectorStatusChanged(event.getChargingStationId(), requestStatus);
     }
 
     @EventHandler
     public void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event) {
         log.info("ChangeChargingStationAvailabilityToInoperativeRequestedEvent");
-        chargingStationOcpp15Client.changeAvailabilityToInoperative(event.getChargingStationId(), event.getConnectorId());
+        RequestStatus requestStatus = chargingStationOcpp15Client.changeAvailabilityToInoperative(event.getChargingStationId(), event.getConnectorId());
+
+        domainService.changeAvailabilityToInoperativeStatusChanged(event.getChargingStationId(), requestStatus);
     }
 
     @EventHandler
     public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event) {
         log.info("ChangeChargingStationAvailabilityToOperativeRequestedEvent");
-        chargingStationOcpp15Client.changeAvailabilityToOperative(event.getChargingStationId(), event.getConnectorId());
+        RequestStatus requestStatus = chargingStationOcpp15Client.changeAvailabilityToOperative(event.getChargingStationId(), event.getConnectorId());
+
+        domainService.changeAvailabilityToOperativeStatusChanged(event.getChargingStationId(), requestStatus);
     }
 
     @EventHandler
     public void handle(DataTransferEvent event) {
         log.info("DataTransferEvent");
-        chargingStationOcpp15Client.dataTransfer(event.getChargingStationId(), event.getVendorId(), event.getMessageId(), event.getData());
+        RequestStatus requestStatus = chargingStationOcpp15Client.dataTransfer(event.getChargingStationId(), event.getVendorId(), event.getMessageId(), event.getData());
+
+        domainService.dateTransferStatusChanged(event.getChargingStationId(), requestStatus);
     }
 
     @EventHandler
     public void handle(ChangeConfigurationEvent event) {
         log.info("ChangeConfigurationEvent");
-        chargingStationOcpp15Client.changeConfiguration(event.getChargingStationId(), event.getKey(), event.getValue());
+        RequestStatus requestStatus = chargingStationOcpp15Client.changeConfiguration(event.getChargingStationId(), event.getKey(), event.getValue());
+
+        domainService.changeConfigurationStatusChanged(event.getChargingStationId(), requestStatus);
     }
 
     @EventHandler
@@ -150,7 +171,9 @@ public class OcppRequestHandler {
     public void handle(SendAuthorisationListRequestedEvent event) {
         log.info("SendAuthorisationListRequestedEvent");
 
-        chargingStationOcpp15Client.sendAuthorisationList(event.getChargingStationId(), event.getAuthorisationListHash(), event.getAuthorisationListVersion(), event.getAuthorisationList(), event.getUpdateType());
+        RequestStatus requestStatus = chargingStationOcpp15Client.sendAuthorisationList(event.getChargingStationId(), event.getAuthorisationListHash(), event.getAuthorisationListVersion(), event.getAuthorisationList(), event.getUpdateType());
+
+        domainService.sendAuthorisationListStatusChanged(event.getChargingStationId(), requestStatus);
     }
 
     @EventHandler

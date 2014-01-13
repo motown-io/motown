@@ -53,4 +53,25 @@ interface DomainCommandGateway {
     void send(StatusNotificationCommand command);
 
     void send(ClearCacheStatusChangedCommand command);
+
+    void send(StopTransactionStatusChangedCommand command);
+
+    void send(SoftResetStatusChangedCommand command);
+
+    void send(HardResetStatusChangedCommand command);
+
+    void send(StartTransactionStatusChangedCommand command);
+
+    void send(UnlockConnectorStatusChangedCommand command);
+
+    void send(ChangeAvailabilityToOperativeStatusChangedCommand command);
+
+    void send(ChangeAvailabilityToInoperativeStatusChangedCommand command);
+
+    void send(DataTransferStatusChangedCommand command);
+
+    void send(ChangeConfigurationStatusChangedCommand command);
+
+    void send(SendAuthorisationListStatusChangedCommand command);
 }
+

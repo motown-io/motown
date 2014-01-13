@@ -24,29 +24,30 @@ import io.motown.domain.api.chargingstation.ReservationStatus;
 import io.motown.domain.api.chargingstation.RequestStatus;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public interface ChargingStationOcpp15Client {
 
-    void getConfiguration(ChargingStationId id);
+    HashMap<String, String> getConfiguration(ChargingStationId id);
 
-    void startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, ConnectorId connectorId);
+    RequestStatus startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, ConnectorId connectorId);
 
-    void stopTransaction(ChargingStationId id, int transactionId);
+    RequestStatus stopTransaction(ChargingStationId id, int transactionId);
 
-    void softReset(ChargingStationId id);
+    RequestStatus softReset(ChargingStationId id);
 
-    void hardReset(ChargingStationId id);
+    RequestStatus hardReset(ChargingStationId id);
 
-    void unlockConnector(ChargingStationId id, ConnectorId connectorId);
+    RequestStatus unlockConnector(ChargingStationId id, ConnectorId connectorId);
 
-    void changeAvailabilityToInoperative(ChargingStationId id, ConnectorId connectorId);
+    RequestStatus changeAvailabilityToInoperative(ChargingStationId id, ConnectorId connectorId);
 
-    void changeAvailabilityToOperative(ChargingStationId id, ConnectorId connectorId);
+    RequestStatus changeAvailabilityToOperative(ChargingStationId id, ConnectorId connectorId);
 
-    void dataTransfer(ChargingStationId id, String vendorId, String messageId, String data);
+    RequestStatus dataTransfer(ChargingStationId id, String vendorId, String messageId, String data);
 
-    void changeConfiguration(ChargingStationId id, String key, String value);
+    RequestStatus changeConfiguration(ChargingStationId id, String key, String value);
 
     String getDiagnostics(ChargingStationId id, String uploadLocation, Integer numRetries, Integer retryInterval, Date periodStartTime, Date periodStopTime);
 
@@ -56,7 +57,7 @@ public interface ChargingStationOcpp15Client {
 
     int getAuthorisationListVersion(ChargingStationId id);
 
-    void sendAuthorisationList(ChargingStationId id, String hash, int listVersion, List<IdentifyingToken> identifyingTokens, AuthorisationListUpdateType updateType);
+    RequestStatus sendAuthorisationList(ChargingStationId id, String hash, int listVersion, List<IdentifyingToken> identifyingTokens, AuthorisationListUpdateType updateType);
 
     ReservationStatus reserveNow(ChargingStationId id, ConnectorId connectorId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken, int reservationId);
 }

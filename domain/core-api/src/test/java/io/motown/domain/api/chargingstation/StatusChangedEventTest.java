@@ -19,15 +19,15 @@ import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
 
-public class ClearCacheStatusChangedCommandTest {
+public class StatusChangedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new ClearCacheStatusChangedCommand(null, RequestStatus.SUCCESS);
+        new StatusChangedEvent(null, RequestStatus.SUCCESS);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithoutStatus() {
-        new ClearCacheStatusChangedCommand(getChargingStationId(), null);
+        new StatusChangedEvent(getChargingStationId(), null);
     }
 }

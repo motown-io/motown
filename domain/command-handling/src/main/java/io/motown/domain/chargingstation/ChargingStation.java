@@ -268,6 +268,56 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         apply(new ChargingStationStatusNotificationReceivedEvent(command.getChargingStationId(), command.getStatus(), command.getTimestamp(), command.getAttributes()));
     }
 
+    @CommandHandler
+    public void handle(ChangeAvailabilityToInoperativeStatusChangedCommand command) {
+        apply(new ChangeAvailabilityToInoperativeStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
+    }
+
+    @CommandHandler
+    public void handle(ChangeAvailabilityToOperativeStatusChangedCommand command) {
+        apply(new ChangeAvailabilityToOperativeStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
+    }
+
+    @CommandHandler
+    public void handle(ChangeConfigurationStatusChangedCommand command) {
+        apply(new ChangeConfigurationStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
+    }
+
+    @CommandHandler
+    public void handle(DataTransferStatusChangedCommand command) {
+        apply(new DataTransferStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
+    }
+
+    @CommandHandler
+    public void handle(HardResetStatusChangedCommand command) {
+        apply(new HardResetStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
+    }
+
+    @CommandHandler
+    public void handle(SendAuthorisationListStatusChangedCommand command) {
+        apply(new SendAuthorisationListStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
+    }
+
+    @CommandHandler
+    public void handle(SoftResetStatusChangedCommand command) {
+        apply(new SoftResetStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
+    }
+
+    @CommandHandler
+    public void handle(StartTransactionStatusChangedCommand command) {
+        apply(new StartTransactionStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
+    }
+
+    @CommandHandler
+    public void handle(StopTransactionStatusChangedCommand command) {
+        apply(new StopTransactionStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
+    }
+
+    @CommandHandler
+    public void handle(UnlockConnectorStatusChangedCommand command) {
+        apply(new UnlockConnectorStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
+    }
+
     @EventHandler
     public void handle(ChargingStationBootedEvent event) {
         this.protocol = event.getProtocol();
