@@ -17,6 +17,7 @@ package io.motown.ocpp.viewmodel.domain;
 
 import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.RequestStatus;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.entities.ReservationIdentifier;
 import io.motown.ocpp.viewmodel.persistence.entities.TransactionIdentifier;
@@ -147,7 +148,7 @@ public class DomainService {
     }
 
     public void statusNotification(ChargingStationId chargingStationId, ConnectorId connectorId, String errorCode, ComponentStatus status, String info, Date timeStamp, String vendorId, String vendorErrorCode) {
-        //TODO: Fix these magic key values? - Ingo Pak, 09 Jan 2014
+        //TODO: The attributes map can contain protocol specific key values, how to know what keys to expect on receiving end - Ingo Pak, 09 Jan 2014
         Map<String, String> attributes = new HashMap<>();
         attributes.put(ERROR_CODE_KEY, errorCode);
         attributes.put(INFO_KEY, info);
@@ -208,6 +209,11 @@ public class DomainService {
     public void reservationStatusChanged(ChargingStationId chargingStationId, ReservationId reservationId, ReservationStatus newStatus) {
         commandGateway.send(new ReservationStatusChangedCommand(chargingStationId, reservationId, newStatus));
     }
+
+    public void clearCacheStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
+        commandGateway.send(new ClearCacheStatusChangedCommand(chargingStationId, requestStatus));
+    }
+
 
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;

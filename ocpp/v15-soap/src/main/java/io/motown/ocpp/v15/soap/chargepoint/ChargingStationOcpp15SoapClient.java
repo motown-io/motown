@@ -21,9 +21,10 @@ import io.motown.domain.api.chargingstation.AuthorisationListUpdateType;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ConnectorId;
 import io.motown.domain.api.chargingstation.IdentifyingToken;
+import io.motown.domain.api.chargingstation.RequestStatus;
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
-import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
+import io.motown.ocpp.viewmodel.domain.DomainService;
 import org.apache.cxf.binding.soap.Soap12;
 import org.apache.cxf.binding.soap.SoapBindingConfiguration;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
@@ -176,14 +177,30 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     }
 
     @Override
-    public void clearCache(ChargingStationId id) {
+    public RequestStatus clearCache(ChargingStationId id) {
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         ClearCacheRequest request = new ClearCacheRequest();
-        ClearCacheResponse response = chargePointService.clearCache(request, id.getId());
 
-        //TODO: Decide on whether to communicate back the response status (applies to all methods in this class where no async response is sent by the Charging Station) - Ingo Pak, 30 Dec 2013
-        log.info("Clear cache on {} has been {}", id.getId(), response.getStatus().value());
+        RequestStatus requestStatus;
+        try{
+            ClearCacheResponse response = chargePointService.clearCache(request, id.getId());
+
+            if (ClearCacheStatus.ACCEPTED.equals(response.getStatus())) {
+                log.info("Clear cache on {} has been accepted", id.getId());
+                requestStatus = RequestStatus.SUCCESS;
+            }
+            else {
+                log.warn("Clear cache on {} has been rejected", id.getId());
+                requestStatus = RequestStatus.FAILURE;
+            }
+        } catch(Exception e){
+            log.error("Clear cache on {} has failed", id.getId(), e);
+            requestStatus = RequestStatus.FAILURE;
+        }
+
+        return requestStatus;
+
     }
 
     @Override

@@ -21,6 +21,7 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ConnectorId;
 import io.motown.domain.api.chargingstation.IdentifyingToken;
 import io.motown.domain.api.chargingstation.ReservationStatus;
+import io.motown.domain.api.chargingstation.RequestStatus;
 
 import java.util.Date;
 import java.util.List;
@@ -49,7 +50,7 @@ public interface ChargingStationOcpp15Client {
 
     String getDiagnostics(ChargingStationId id, String uploadLocation, Integer numRetries, Integer retryInterval, Date periodStartTime, Date periodStopTime);
 
-    void clearCache(ChargingStationId id);
+    RequestStatus clearCache(ChargingStationId id);
 
     void updateFirmware(ChargingStationId id, String downloadLocation, Date retrieveDate, Integer numRetries, Integer retryInterval);
 

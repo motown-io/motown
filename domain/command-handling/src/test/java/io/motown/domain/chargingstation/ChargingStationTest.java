@@ -394,4 +394,10 @@ public class ChargingStationTest {
                 .expectEvents(new ComponentStatusNotificationReceivedEvent(getChargingStationId(), ChargingStationComponent.CONNECTOR, getConnectorId(), ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap()));
     }
 
+    @Test
+    public void testClearCacheRequestStatusNotification() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new ClearCacheStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
+                .expectEvents(new ClearCacheStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+    }
 }
