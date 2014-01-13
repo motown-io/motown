@@ -38,8 +38,6 @@ public class OperatorApiService {
 
     private TransactionRepository transactionRepository;
 
-    public void sendUnlockConnectorCommand(String chargingStationId, ConnectorId connectorId) { }
-
     public List<ChargingStation> findAllChargingStations() {
         return repository.findAll();
     }
