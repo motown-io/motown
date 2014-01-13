@@ -22,9 +22,11 @@ import io.motown.operatorapi.json.gson.ConnectorIdTypeAdapter;
 
 public class OperatorApiJsonTestUtils {
 
+    public static final String ISO8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
     public static Gson getGson() {
         return new GsonBuilder().
-                setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").
+                setDateFormat(ISO8601_DATE_FORMAT).
                 registerTypeAdapter(ConnectorId.class, new ConnectorIdTypeAdapter()).
                 create();
     }
