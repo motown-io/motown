@@ -17,6 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -42,7 +43,7 @@ public final class ChargingStationSentMeterValuesEvent {
      * @param chargingStationId the identifier of the charging station.
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public ChargingStationSentMeterValuesEvent(ChargingStationId chargingStationId, TransactionId transactionId, ConnectorId connectorId, List<MeterValue> meterValueList) {
+    public ChargingStationSentMeterValuesEvent(ChargingStationId chargingStationId, @Nullable TransactionId transactionId, ConnectorId connectorId, @Nullable List<MeterValue> meterValueList) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = transactionId;
         this.connectorId = checkNotNull(connectorId);
@@ -59,6 +60,7 @@ public final class ChargingStationSentMeterValuesEvent {
     /**
      * @return the transaction identifier.
      */
+    @Nullable
     public TransactionId getTransactionId() {
         return transactionId;
     }
@@ -73,6 +75,7 @@ public final class ChargingStationSentMeterValuesEvent {
     /**
      * @return the list of metervalues.
      */
+    @Nullable
     public List<MeterValue> getMeterValueList() {
         return meterValueList;
     }

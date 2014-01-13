@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import javax.annotation.Nullable;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -42,7 +44,7 @@ public final class DataTransferEvent implements CommunicationWithChargingStation
      * @param data              the free format data to send to the charging station.
      * @throws NullPointerException if {@code chargingStationId} or {@code protocol} or {@code vendorId} is {@code null}.
      */
-    public DataTransferEvent(ChargingStationId chargingStationId, String protocol, String vendorId, String messageId, String data) {
+    public DataTransferEvent(ChargingStationId chargingStationId, String protocol, String vendorId, @Nullable String messageId, @Nullable String data) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());
@@ -78,6 +80,7 @@ public final class DataTransferEvent implements CommunicationWithChargingStation
     /**
      * @return the optional additional message identifier
      */
+    @Nullable
     public String getMessageId() {
         return messageId;
     }
@@ -85,6 +88,7 @@ public final class DataTransferEvent implements CommunicationWithChargingStation
     /**
      * @return the free format data
      */
+    @Nullable
     public String getData() {
         return data;
     }

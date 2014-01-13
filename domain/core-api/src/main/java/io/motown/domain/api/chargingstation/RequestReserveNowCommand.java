@@ -17,6 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import javax.annotation.Nullable;
 import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -42,7 +43,7 @@ public final class RequestReserveNowCommand {
      * @param parentIdentifyingToken
      * @throws NullPointerException if {@code chargingStationId}, {@code identifyingToken} or {@code expiryDate} is {@code null}.
      */
-    public RequestReserveNowCommand(ChargingStationId chargingStationId, ConnectorId connectorId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken) {
+    public RequestReserveNowCommand(ChargingStationId chargingStationId, ConnectorId connectorId, IdentifyingToken identifyingToken, Date expiryDate, @Nullable IdentifyingToken parentIdentifyingToken) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.connectorId = checkNotNull(connectorId);
         this.identifyingToken = checkNotNull(identifyingToken);
@@ -71,6 +72,7 @@ public final class RequestReserveNowCommand {
         return expiryDate;
     }
 
+    @Nullable
     public IdentifyingToken getParentIdentifyingToken() {
         return parentIdentifyingToken;
     }

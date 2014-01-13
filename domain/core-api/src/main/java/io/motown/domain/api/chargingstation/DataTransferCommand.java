@@ -17,6 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -46,7 +47,7 @@ public final class DataTransferCommand {
      * @param data the data to transfer
      * @throws NullPointerException if {@code chargingStationId} or {@code vendorId} is {@code null}.
      */
-    public DataTransferCommand(ChargingStationId chargingStationId, String vendorId, String messageId, String data) {
+    public DataTransferCommand(ChargingStationId chargingStationId, String vendorId, @Nullable String messageId, @Nullable String data) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.vendorId = checkNotNull(vendorId);
         this.messageId = messageId;
@@ -70,6 +71,7 @@ public final class DataTransferCommand {
     /**
      * @return the additional message identifier.
      */
+    @Nullable
     public String getMessageId() {
         return messageId;
     }
@@ -77,6 +79,7 @@ public final class DataTransferCommand {
     /**
      * @return the data.
      */
+    @Nullable
     public String getData() {
         return data;
     }

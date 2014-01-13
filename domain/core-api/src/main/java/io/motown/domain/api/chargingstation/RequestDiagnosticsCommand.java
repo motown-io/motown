@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import javax.annotation.Nullable;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Date;
@@ -54,7 +55,7 @@ public final class RequestDiagnosticsCommand {
      *
      * * @throws NullPointerException if {@code chargingStationId}, or {@code uploadLocation} is {@code null}.
      */
-    public RequestDiagnosticsCommand(ChargingStationId chargingStationId, String uploadLocation, Integer numRetries, Integer retryInterval, Date periodStartTime, Date periodEndTime) {
+    public RequestDiagnosticsCommand(ChargingStationId chargingStationId, String uploadLocation, @Nullable Integer numRetries, @Nullable Integer retryInterval, @Nullable Date periodStartTime, @Nullable Date periodEndTime) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.uploadLocation = checkNotNull(uploadLocation);
         this.numRetries = numRetries;
@@ -83,6 +84,7 @@ public final class RequestDiagnosticsCommand {
     /**
      * @return the optional number of retries to perform in case the upload fails
      */
+    @Nullable
     public Integer getNumRetries() {
         return numRetries;
     }
@@ -90,6 +92,7 @@ public final class RequestDiagnosticsCommand {
     /**
      * @return the optional amount of time in seconds to wait before performing a retry
      */
+    @Nullable
     public Integer getRetryInterval() {
         return retryInterval;
     }
@@ -97,6 +100,7 @@ public final class RequestDiagnosticsCommand {
     /**
      * @return the optional date and time of the oldest logging information to include in the diagnostics report
      */
+    @Nullable
     public Date getPeriodStartTime() {
         return periodStartTime;
     }
@@ -104,6 +108,7 @@ public final class RequestDiagnosticsCommand {
     /**
      * @return the optional date and time of the latest logging information to include in the diagnostics report
      */
+    @Nullable
     public Date getPeriodEndTime() {
         return periodEndTime;
     }

@@ -13,26 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@ParametersAreNonnullByDefault
 package io.motown.domain.api.chargingstation;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-/**
- */
-public final class ConnectorNotFoundEvent {
-    private final ChargingStationId chargingStationId;
-    private final ConnectorId connectorId;
-
-    public ConnectorNotFoundEvent(ChargingStationId chargingStationId, ConnectorId connectorId) {
-        this.chargingStationId = checkNotNull(chargingStationId);
-        this.connectorId = checkNotNull(connectorId);
-    }
-
-    public ChargingStationId getChargingStationId() {
-        return chargingStationId;
-    }
-
-    public ConnectorId getConnectorId() {
-        return connectorId;
-    }
-}
+import javax.annotation.ParametersAreNonnullByDefault;

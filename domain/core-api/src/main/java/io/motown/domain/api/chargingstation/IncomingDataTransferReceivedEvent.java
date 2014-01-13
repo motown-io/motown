@@ -17,6 +17,8 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import javax.annotation.Nullable;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -42,7 +44,7 @@ public final class IncomingDataTransferReceivedEvent {
      * @param data the data to transfer
      * @throws NullPointerException if {@code chargingStationId} or {@code vendorId} is {@code null}.
      */
-    public IncomingDataTransferReceivedEvent(ChargingStationId chargingStationId, String vendorId, String messageId, String data) {
+    public IncomingDataTransferReceivedEvent(ChargingStationId chargingStationId, String vendorId, @Nullable String messageId, @Nullable String data) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.vendorId = checkNotNull(vendorId);
         this.messageId = messageId;
@@ -66,6 +68,7 @@ public final class IncomingDataTransferReceivedEvent {
     /**
      * @return the additional message identifier.
      */
+    @Nullable
     public String getMessageId() {
         return messageId;
     }
@@ -73,6 +76,7 @@ public final class IncomingDataTransferReceivedEvent {
     /**
      * @return the data.
      */
+    @Nullable
     public String getData() {
         return data;
     }

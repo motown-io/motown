@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public final class Connector {
 
     public final static ConnectorId ALL = new ConnectorId(0);
@@ -24,8 +26,8 @@ public final class Connector {
     private int maxAmp;
 
     public Connector(ConnectorId connectorId, String connectorType, int maxAmp) {
-        this.connectorId = connectorId;
-        this.connectorType = connectorType;
+        this.connectorId = checkNotNull(connectorId);
+        this.connectorType = checkNotNull(connectorType);
         this.maxAmp = maxAmp;
     }
 

@@ -17,6 +17,8 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import javax.annotation.Nullable;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -38,7 +40,7 @@ public final class DiagnosticsFileNameReceivedCommand {
      * @param diagnosticsFileName the filename the charging station will be using to send over the diagnostics
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public DiagnosticsFileNameReceivedCommand(ChargingStationId chargingStationId, String diagnosticsFileName) {
+    public DiagnosticsFileNameReceivedCommand(ChargingStationId chargingStationId, @Nullable String diagnosticsFileName) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.diagnosticsFileName = diagnosticsFileName;
     }
@@ -55,6 +57,7 @@ public final class DiagnosticsFileNameReceivedCommand {
     /**
      * @return the diagnostics file name
      */
+    @Nullable
     public String getDiagnosticsFileName() {
         return diagnosticsFileName;
     }

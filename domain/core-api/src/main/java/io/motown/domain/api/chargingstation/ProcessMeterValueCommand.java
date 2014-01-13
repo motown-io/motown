@@ -17,6 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -42,7 +43,7 @@ public final class ProcessMeterValueCommand {
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      * @throws IllegalArgumentException if {@code connectorId} is negative.
      */
-    public ProcessMeterValueCommand(ChargingStationId chargingStationId, TransactionId transactionId, ConnectorId connectorId, List<MeterValue> meterValueList) {
+    public ProcessMeterValueCommand(ChargingStationId chargingStationId, @Nullable TransactionId transactionId, ConnectorId connectorId, @Nullable List<MeterValue> meterValueList) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = transactionId;
         this.connectorId = checkNotNull(connectorId);
@@ -63,6 +64,7 @@ public final class ProcessMeterValueCommand {
      *
      * @return the transaction identifier
      */
+    @Nullable
     public TransactionId getTransactionId() {
         return transactionId;
     }
@@ -71,6 +73,7 @@ public final class ProcessMeterValueCommand {
      * Gets the listing of meter values
      * @return
      */
+    @Nullable
     public List<MeterValue> getMeterValueList() {
         return meterValueList;
     }

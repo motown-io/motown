@@ -17,6 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import javax.annotation.Nullable;
 import java.util.Date;
 import java.util.Map;
 
@@ -48,7 +49,7 @@ public final class RequestFirmwareUpdateCommand {
      * @throws NullPointerException if {@code chargingStationId}, {@code updateLocation} or {@code retrieveDate} is {@code null}.
      * @throws IllegalArgumentException if {@code updateLocation} is empty.
      */
-    public RequestFirmwareUpdateCommand(ChargingStationId chargingStationId, String updateLocation, Date retrieveDate, Map<String, String> attributes) {
+    public RequestFirmwareUpdateCommand(ChargingStationId chargingStationId, String updateLocation, Date retrieveDate, @Nullable Map<String, String> attributes) {
         this.chargingStationId = checkNotNull(chargingStationId);
 
         checkNotNull(updateLocation);
@@ -84,6 +85,7 @@ public final class RequestFirmwareUpdateCommand {
     /**
      * @return the optional attributes
      */
+    @Nullable
     public Map<String, String> getAttributes() {
         return attributes;
     }

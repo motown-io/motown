@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public final class UnlockConnectorRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
 
     private final ChargingStationId chargingStationId;
@@ -24,9 +26,9 @@ public final class UnlockConnectorRequestedEvent implements CommunicationWithCha
     private final ConnectorId connectorId;
 
     public UnlockConnectorRequestedEvent(ChargingStationId chargingStationId, String protocol, ConnectorId connectorId) {
-        this.chargingStationId = chargingStationId;
-        this.protocol = protocol;
-        this.connectorId = connectorId;
+        this.chargingStationId = checkNotNull(chargingStationId);
+        this.protocol = checkNotNull(protocol);
+        this.connectorId = checkNotNull(connectorId);
     }
 
     @Override

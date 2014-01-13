@@ -17,6 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -48,7 +49,7 @@ public final class SendAuthorisationListCommand {
      * @param updateType
      * @throws NullPointerException if {@code chargingStationId} or {@code updateType} is {@code null}.
      */
-    public SendAuthorisationListCommand(ChargingStationId chargingStationId, List<IdentifyingToken> authorisationList, int authorisationListVersion, String authorisationListHash, AuthorisationListUpdateType updateType) {
+    public SendAuthorisationListCommand(ChargingStationId chargingStationId, @Nullable List<IdentifyingToken> authorisationList, int authorisationListVersion, @Nullable String authorisationListHash, AuthorisationListUpdateType updateType) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.authorisationList = authorisationList;
         this.authorisationListVersion = authorisationListVersion;
@@ -65,6 +66,7 @@ public final class SendAuthorisationListCommand {
         return chargingStationId;
     }
 
+    @Nullable
     public List<IdentifyingToken> getAuthorisationList() {
         return authorisationList;
     }
@@ -73,6 +75,7 @@ public final class SendAuthorisationListCommand {
         return authorisationListVersion;
     }
 
+    @Nullable
     public String getAuthorisationListHash() {
         return authorisationListHash;
     }

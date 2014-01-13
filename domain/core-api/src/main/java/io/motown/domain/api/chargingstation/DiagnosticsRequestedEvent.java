@@ -17,6 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import javax.annotation.Nullable;
 import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -72,7 +73,7 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
      *
      * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, or {@code uploadLocation} is {@code null}.
      */
-    public DiagnosticsRequestedEvent(ChargingStationId chargingStationId, String protocol, String uploadLocation, Integer numRetries, Integer retryInterval, Date periodStartTime, Date periodStopTime) {
+    public DiagnosticsRequestedEvent(ChargingStationId chargingStationId, String protocol, String uploadLocation, @Nullable Integer numRetries, @Nullable Integer retryInterval, @Nullable Date periodStartTime, @Nullable Date periodStopTime) {
         this(chargingStationId, protocol, uploadLocation);
 
         this.numRetries = numRetries;
@@ -108,6 +109,7 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
     /**
      * @return the optional number of retries to perform in case the upload fails
      */
+    @Nullable
     public Integer getNumRetries() {
         return numRetries;
     }
@@ -115,6 +117,7 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
     /**
      * @return the optional amount of time in seconds to wait before performing a retry
      */
+    @Nullable
     public Integer getRetryInterval() {
         return retryInterval;
     }
@@ -122,6 +125,7 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
     /**
      * @return the optional date and time of the oldest logging information to include in the diagnostics report
      */
+    @Nullable
     public Date getPeriodStartTime() {
         return periodStartTime;
     }
@@ -129,6 +133,7 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
     /**
      * @return the optional date and time of the latest logging information to include in the diagnostics report
      */
+    @Nullable
     public Date getPeriodStopTime() {
         return periodStopTime;
     }
