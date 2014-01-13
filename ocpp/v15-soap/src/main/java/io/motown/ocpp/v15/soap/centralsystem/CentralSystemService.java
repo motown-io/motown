@@ -94,7 +94,7 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
     public StatusNotificationResponse statusNotification(StatusNotificationRequest request, String chargeBoxIdentity) {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
         ConnectorId connectorId = new ConnectorId(request.getConnectorId());
-        ComponentStatus componentStatus = ComponentStatus.fromValue(request.getStatus().value());
+        ComponentStatus componentStatus = getComponentStatusFromChargePointStatus(request.getStatus());
         String errorCode = request.getErrorCode() != null ? request.getErrorCode().value() : null;
 
         domainService.statusNotification(chargingStationId, connectorId, errorCode, componentStatus, request.getInfo(), request.getTimestamp(), request.getVendorId(), request.getVendorErrorCode());
@@ -277,5 +277,21 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
 
         log.warn("No 'From' header found in request. Not able to determine charging station address.");
         return "";
+    }
+
+    /**
+     * Gets the {@code ComponentStatus} from a given {@code ChargePointStatus}.
+     *
+     * @param status the {@code ChargePointStatus}.
+     * @return the {@code ComponentStatus}.
+     */
+    private ComponentStatus getComponentStatusFromChargePointStatus(ChargePointStatus status) {
+        String value = status.value();
+
+        if ("Unavailable".equalsIgnoreCase(value)) {
+            value = "Inoperative";
+        }
+
+        return ComponentStatus.fromValue(value);
     }
 }

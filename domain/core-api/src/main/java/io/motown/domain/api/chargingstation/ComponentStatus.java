@@ -15,17 +15,41 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * {@code ComponentStatus} holds the different statuses a charging station component can reside in.
+ * The statuses of a charging station component.
  */
 public enum ComponentStatus {
+    /**
+     * Unknown (e.g. not yet determined).
+     */
     UNKNOWN("Unknown"),
+
+    /**
+     * Available for use, as none of the other states are applicable. This is the default, and non-active state.
+     */
     AVAILABLE("Available"),
+
+    /**
+     * In use, physically or logically connected. This is an "active" state.
+     */
     OCCUPIED("Occupied"),
+
+    /**
+     * Not available because a specific or aggregate reservation is in effect.
+     */
     RESERVED("Reserved"),
+
+    /**
+     * Not available because it has been set to out-of-service.
+     */
     INOPERATIVE("Inoperative"),
-    FAULTED("Faulted"),
-    UNAVAILABLE("Unavailable");
+
+    /**
+     * Unable to operate due to a fault condition.
+     */
+    FAULTED("Faulted");
 
     private String value;
 
@@ -33,28 +57,37 @@ public enum ComponentStatus {
         this.value = value;
     }
 
-    public boolean equalsValue(String otherComponentValue){
-        return (otherComponentValue == null)? false: value.equals(otherComponentValue);
-    }
-
+    /**
+     * Gets a {@code ComponentStatus} from a {@code String} value.
+     *
+     * @param value a {@code String} value representing one of the statuses.
+     * @return the {@code ComponentStatus}.
+     * @throws NullPointerException     if value is null.
+     * @throws IllegalArgumentException if value is not one of the known statuses.
+     */
     public static ComponentStatus fromValue(String value) {
-        if(AVAILABLE.equalsValue(value)) {
-            return AVAILABLE;
-        } else if(OCCUPIED.equalsValue(value)) {
-            return OCCUPIED;
-        } else if(RESERVED.equalsValue(value)) {
-            return RESERVED;
-        } else if(INOPERATIVE.equalsValue(value)) {
-            return INOPERATIVE;
-        } else if(FAULTED.equalsValue(value)) {
-            return FAULTED;
-        } else if(UNAVAILABLE.equalsValue(value)) {
-            return UNAVAILABLE;
-        }
+        checkNotNull(value);
 
-        return UNKNOWN;
+        if (value.equalsIgnoreCase(UNKNOWN.value)) {
+            return UNKNOWN;
+        } else if (value.equalsIgnoreCase(AVAILABLE.value)) {
+            return AVAILABLE;
+        } else if (value.equalsIgnoreCase(OCCUPIED.value)) {
+            return OCCUPIED;
+        } else if (value.equalsIgnoreCase(RESERVED.value)) {
+            return RESERVED;
+        } else if (value.equalsIgnoreCase(INOPERATIVE.value)) {
+            return INOPERATIVE;
+        } else if (value.equalsIgnoreCase(FAULTED.value)) {
+            return FAULTED;
+        } else {
+            throw new IllegalArgumentException("Component status value must be one of the known statuses");
+        }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return value;
