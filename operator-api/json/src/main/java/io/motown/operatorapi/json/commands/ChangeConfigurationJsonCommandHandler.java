@@ -15,9 +15,11 @@
  */
 package io.motown.operatorapi.json.commands;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ChangeConfigurationCommand;
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.operatorapi.viewmodel.model.ChangeConfigurationApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,8 @@ class ChangeConfigurationJsonCommandHandler implements JsonCommandHandler {
 
     private ChargingStationRepository repository;
 
+    private Gson gson;
+
     @Override
     public String getCommandName() {
         return COMMAND_NAME;
@@ -44,10 +48,9 @@ class ChangeConfigurationJsonCommandHandler implements JsonCommandHandler {
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
-                String key = commandObject.get("key").getAsString();
-                String value = commandObject.get("value").getAsString();
+                ChangeConfigurationApiCommand command = gson.fromJson(commandObject, ChangeConfigurationApiCommand.class);
 
-                commandGateway.send(new ChangeConfigurationCommand(new ChargingStationId(chargingStationId), key, value));
+                commandGateway.send(new ChangeConfigurationCommand(new ChargingStationId(chargingStationId), command.getKey(), command.getValue()));
             }
         } catch (ClassCastException ex) {
             throw new IllegalArgumentException("Change configuration command not able to parse the payload, is your json correctly formatted?");
@@ -64,4 +67,10 @@ class ChangeConfigurationJsonCommandHandler implements JsonCommandHandler {
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
     }
+
+    @Autowired
+    public void setGson(Gson gson) {
+        this.gson = gson;
+    }
+
 }
