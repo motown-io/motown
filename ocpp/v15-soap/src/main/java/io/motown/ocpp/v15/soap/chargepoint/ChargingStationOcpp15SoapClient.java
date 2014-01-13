@@ -48,7 +48,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     private DomainService domainService;
 
     public void getConfiguration(ChargingStationId id) {
-        log.info("Retrieving configuration of charging station {}", id);
+        log.info("Retrieving configuration for {}", id);
 
         ChargePointService chargePointService = this.createChargingStationService(id);
 
@@ -64,7 +64,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
     @Override
     public void startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, ConnectorId connectorId) {
-        log.info("Starting transaction");
+        log.info("Requesting remote start transaction on {}", id);
 
         ChargePointService chargePointService = this.createChargingStationService(id);
 
@@ -74,7 +74,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
         RemoteStartTransactionResponse response = chargePointService.remoteStartTransaction(request, id.getId());
 
-        log.info("Start transaction request has been {}", response.getStatus().value());
+        log.info("Remote start transaction request has been {}", response.getStatus().value());
     }
 
     @Override
@@ -86,6 +86,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         RemoteStopTransactionRequest request = new RemoteStopTransactionRequest();
         request.setTransactionId(transactionId);
         RemoteStopTransactionResponse response;
+
         response = chargePointService.remoteStopTransaction(request, id.getId());
 
         log.info("Stop transaction {} on {} has been {}", transactionId, id, response.getStatus().value());
@@ -112,6 +113,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
         UnlockConnectorRequest request = new UnlockConnectorRequest();
         request.setConnectorId(connectorId.getNumberedId());
+
         UnlockConnectorResponse response = chargePointService.unlockConnector(request, id.getId());
         String responseStatus = (response.getStatus() != null) ? response.getStatus().value() : "Undetermined";
 
@@ -143,6 +145,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         request.setData(data);
 
         DataTransferResponse response = chargePointService.dataTransfer(request, id.getId());
+
         String responseStatus = (response.getStatus() != null) ? response.getStatus().value() : "Undetermined";
         log.info("Data transfer to {} was {}", id, responseStatus);
     }
@@ -183,24 +186,17 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         ClearCacheRequest request = new ClearCacheRequest();
 
         RequestStatus requestStatus;
-        try{
-            ClearCacheResponse response = chargePointService.clearCache(request, id.getId());
+        ClearCacheResponse response = chargePointService.clearCache(request, id.getId());
 
-            if (ClearCacheStatus.ACCEPTED.equals(response.getStatus())) {
-                log.info("Clear cache on {} has been accepted", id.getId());
-                requestStatus = RequestStatus.SUCCESS;
-            }
-            else {
-                log.warn("Clear cache on {} has been rejected", id.getId());
-                requestStatus = RequestStatus.FAILURE;
-            }
-        } catch(Exception e){
-            log.error("Clear cache on {} has failed", id.getId(), e);
+        if (ClearCacheStatus.ACCEPTED.equals(response.getStatus())) {
+            log.info("Clear cache on {} has been accepted", id.getId());
+            requestStatus = RequestStatus.SUCCESS;
+        } else {
+            log.warn("Clear cache on {} has been rejected", id.getId());
             requestStatus = RequestStatus.FAILURE;
         }
 
         return requestStatus;
-
     }
 
     @Override
@@ -213,14 +209,10 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         request.setRetries(numRetries);
         request.setRetryInterval(retryInterval);
 
-        try {
-            chargePointService.updateFirmware(request, id.getId());
+        chargePointService.updateFirmware(request, id.getId());
 
-            //The charging station will respond with an async 'firmware status update' message
-            log.info("Update firmware on {} has been requested", id.getId());
-        } catch (Exception e) {
-            log.error("Unable to request update firmware for {}", id, e);
-        }
+        //The charging station will respond with an async 'firmware status update' message
+        log.info("Update firmware on {} has been requested", id.getId());
     }
 
     @Override
