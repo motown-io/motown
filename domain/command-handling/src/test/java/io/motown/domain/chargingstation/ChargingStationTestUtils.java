@@ -128,4 +128,8 @@ public class ChargingStationTestUtils {
         return ReservationStatus.OCCUPIED;
     }
 
+    public static Map<String, String> getEmptyAttributesMap() {
+        return ImmutableMap.<String, String>of();
+    }
+
 }

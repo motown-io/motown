@@ -15,9 +15,11 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import java.util.Date;
+import com.google.common.collect.ImmutableMap;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import java.util.Date;
+import java.util.Map;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -37,6 +39,8 @@ public final class TransactionStartedEvent {
 
     private final Date timestamp;
 
+    private final Map<String, String> attributes;
+
     /**
      * Creates a {@code TransactionStartedEvent}.
      *
@@ -50,17 +54,22 @@ public final class TransactionStartedEvent {
      * @param identifyingToken  the token which started the transaction.
      * @param meterStart        meter value in Wh for the connector when the transaction started.
      * @param timestamp         the time at which the transaction started.
-     * @throws NullPointerException if {@code chargingStationId}, {@code transactionId}, {@code identifyingToken} or
-     * {@code timestamp} is {@code null}.
+     * @param attributes        a {@link java.util.Map} of attributes. These attributes are additional information provided by
+     *                          the charging station when it started the transaction but which are not required by Motown. Because
+     *                          {@link java.util.Map} implementations are potentially mutable a defensive copy is made.
+     * @throws NullPointerException if {@code chargingStationId}, {@code transactionId}, {@code identifyingToken},
+     * {@code timestamp} or {@code attributes} is {@code null}.
      * @throws IllegalArgumentException if {@code connectorId} is negative.
      */
-    public TransactionStartedEvent(ChargingStationId chargingStationId, TransactionId transactionId, ConnectorId connectorId, IdentifyingToken identifyingToken, int meterStart, Date timestamp) {
+    public TransactionStartedEvent(ChargingStationId chargingStationId, TransactionId transactionId, ConnectorId connectorId, IdentifyingToken identifyingToken,
+                                   int meterStart, Date timestamp, Map<String, String> attributes) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = checkNotNull(transactionId);
         this.connectorId = checkNotNull(connectorId);
         this.identifyingToken = checkNotNull(identifyingToken);
         this.meterStart = meterStart;
         this.timestamp = new Date(checkNotNull(timestamp).getTime());
+        this.attributes = ImmutableMap.copyOf(checkNotNull(attributes));
     }
 
     /**
@@ -115,5 +124,17 @@ public final class TransactionStartedEvent {
      */
     public Date getTimestamp() {
         return timestamp;
+    }
+
+    /**
+     * Gets the attributes associated with the start of the transaction.
+     * <p/>
+     * These attributes are additional information provided by the charging station when it started the transaction
+     * but which are not required by Motown.
+     *
+     * @return an immutable {@link java.util.Map} of attributes.
+     */
+    public Map<String, String> getAttributes() {
+        return attributes;
     }
 }

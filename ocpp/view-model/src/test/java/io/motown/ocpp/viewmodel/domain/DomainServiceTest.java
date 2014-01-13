@@ -84,7 +84,7 @@ public class DomainServiceTest {
 
     @Test
     public void testBootUnknownChargingStation() {
-        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel(), getProtocol());
+        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel(), getProtocol(), getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
         assertFalse(bootChargingStationResult.isAccepted());
 
         verify(gateway).send( eq(new CreateChargingStationCommand(getChargingStationId())), any(CommandCallback.class));
@@ -92,10 +92,10 @@ public class DomainServiceTest {
 
     @Test
     public void testBootNullAndEmptyChargingStationAddress() {
-        BootChargingStationResult result = domainService.bootChargingStation(getChargingStationId(), null, getVendor(), getModel(), getProtocol());
+        BootChargingStationResult result = domainService.bootChargingStation(getChargingStationId(), null, getVendor(), getModel(), getProtocol(), getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
         assertFalse(result.isAccepted());
 
-        result = domainService.bootChargingStation(getChargingStationId(), "", getVendor(), getModel(), getProtocol());
+        result = domainService.bootChargingStation(getChargingStationId(), "", getVendor(), getModel(), getProtocol(), getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
         assertFalse(result.isAccepted());
     }
 
@@ -107,13 +107,19 @@ public class DomainServiceTest {
         cs.setConfigured(true);
         chargingStationRepository.save(cs);
 
-        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel(), getProtocol());
+        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel(), getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber(), getProtocol());
         assertTrue(bootChargingStationResult.isAccepted());
 
         Map<String, String> attributes = Maps.newHashMap();
         attributes.put("vendor", getVendor());
         attributes.put("model", getModel());
         attributes.put("address", getChargingStationAddress());
+        attributes.put("chargingStationSerialNumber", getChargingStationSerialNumber());
+        attributes.put("firmwareVersion", getFirmwareVersion());
+        attributes.put("iccid", getIccid());
+        attributes.put("imsi", getImsi());
+        attributes.put("meterType", getMeterType());
+        attributes.put("meterSerialNumber", getMeterSerialNumber());
 
         // test if the charging station is stored and in the state we expect it after a boot of an unknown charging station
         cs = chargingStationRepository.findOne(getChargingStationId().getId());
@@ -149,14 +155,14 @@ public class DomainServiceTest {
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionUnknownChargingStation() {
-        domainService.startTransaction(new ChargingStationId(getRandomString()), new ConnectorId(1), getIdentifyingToken(), 0, new Date(), getProtocol());
+        domainService.startTransaction(new ChargingStationId(getRandomString()), new ConnectorId(1), getIdentifyingToken(), 0, new Date(), getReservationId(), getProtocol());
     }
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionUnregisteredChargingStation() {
         chargingStationRepository.save(new ChargingStation(getChargingStationId().getId()));
 
-        domainService.startTransaction(getChargingStationId(), new ConnectorId(1), getIdentifyingToken(), 0, new Date(), getProtocol());
+        domainService.startTransaction(getChargingStationId(), new ConnectorId(1), getIdentifyingToken(), 0, new Date(), getReservationId(), getProtocol());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -165,21 +171,34 @@ public class DomainServiceTest {
         cs.setRegistered(true);
         chargingStationRepository.save(cs);
 
-        domainService.startTransaction(getChargingStationId(), new ConnectorId(1), getIdentifyingToken(), 0, new Date(), getProtocol());
+        domainService.startTransaction(getChargingStationId(), new ConnectorId(1), getIdentifyingToken(), 0, new Date(), getReservationId(), getProtocol());
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testStartTransactionNullConnector() {
+    @Test(expected = IllegalStateException.class)
+    public void testStartTransactionInvalidConnector() {
         chargingStationRepository.save(getRegisteredAndConfiguredChargingStation());
 
-        domainService.startTransaction(getChargingStationId(), null, getIdentifyingToken(), 0, new Date(), getProtocol());
+        domainService.startTransaction(getChargingStationId(), new ConnectorId(999), getIdentifyingToken(), 0, new Date(), getReservationId(), getProtocol());
     }
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionUnknownConnector() {
         chargingStationRepository.save(getRegisteredAndConfiguredChargingStation());
 
-        domainService.startTransaction(getChargingStationId(), new ConnectorId(getConnectors().size() + 1), getIdentifyingToken(), 0, new Date(), getProtocol());
+        domainService.startTransaction(getChargingStationId(), new ConnectorId(getConnectors().size() + 1), getIdentifyingToken(), 0, new Date(), getReservationId(), getProtocol());
+    }
+
+    @Test
+    public void testStartTransactionEmptyAttributesChargingStation() {
+        chargingStationRepository.save(getRegisteredAndConfiguredChargingStation());
+
+        Date now = new Date();
+        int ocppTransactionId = domainService.startTransaction(getChargingStationId(), new ConnectorId(1), getIdentifyingToken(), 0, now, null, getProtocol());
+        assertTrue(ocppTransactionId > 0);
+
+        TransactionId transactionId = new NumberedTransactionId(getChargingStationId(), getProtocol(), ocppTransactionId);
+
+        verify(gateway).send(new StartTransactionCommand(getChargingStationId(), transactionId, new ConnectorId(1), getIdentifyingToken(), 0, now, getEmptyAttributesMap()));
     }
 
     @Test
@@ -187,12 +206,12 @@ public class DomainServiceTest {
         chargingStationRepository.save(getRegisteredAndConfiguredChargingStation());
 
         Date now = new Date();
-        int ocppTransactionId = domainService.startTransaction(getChargingStationId(), new ConnectorId(1), getIdentifyingToken(), 0, now, getProtocol());
+        int ocppTransactionId = domainService.startTransaction(getChargingStationId(), new ConnectorId(1), getIdentifyingToken(), 0, now, getReservationId(), getProtocol());
         assertTrue(ocppTransactionId > 0);
 
         TransactionId transactionId = new NumberedTransactionId(getChargingStationId(), getProtocol(), ocppTransactionId);
 
-        verify(gateway).send(new StartTransactionCommand(getChargingStationId(), transactionId, new ConnectorId(1), getIdentifyingToken(), 0, now));
+        verify(gateway).send(new StartTransactionCommand(getChargingStationId(), transactionId, new ConnectorId(1), getIdentifyingToken(), 0, now, getStartTransactionAttributesMap(getReservationNumber())));
     }
 
     @Test
@@ -202,7 +221,7 @@ public class DomainServiceTest {
         int meterStopValue = 1;
         Date now = new Date();
 
-        domainService.stopTransaction(getChargingStationId(), transactionId, getIdentifyingToken(), meterStopValue, now);
+        domainService.stopTransaction(getChargingStationId(), transactionId, getIdentifyingToken(), meterStopValue, now, getEmptyMeterValuesList());
 
         verify(gateway).send(new StopTransactionCommand(getChargingStationId(), transactionId, getIdentifyingToken(), meterStopValue, now));
     }

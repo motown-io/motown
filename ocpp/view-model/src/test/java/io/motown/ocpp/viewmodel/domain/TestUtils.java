@@ -158,4 +158,42 @@ public class TestUtils {
     public static ReservationStatus getReservationStatus() {
         return ReservationStatus.UNAVAILABLE;
     }
+
+    public static String getChargingStationSerialNumber() {
+        return "serialNumber";
+    }
+
+    public static String getFirmwareVersion() {
+        return "firmwareVersion";
+    }
+
+    public static String getIccid() {
+        return "iccid";
+    }
+
+    public static String getImsi() {
+        return "imsi";
+    }
+
+    public static String getMeterType() {
+        return "meterType";
+    }
+
+    public static String getMeterSerialNumber() {
+        return "meterSerialNumber";
+    }
+
+    public static Map<String, String> getEmptyAttributesMap() {
+        return ImmutableMap.<String, String>of();
+    }
+
+    public static Map<String, String> getStartTransactionAttributesMap(int reservationId) {
+        return ImmutableMap.<String, String>builder()
+                .put("reservationId", new NumberedReservationId(getChargingStationId(), getProtocol(), reservationId).getId())
+                .build();
+    }
+
+    public static List<MeterValue> getEmptyMeterValuesList() {
+        return new ArrayList<MeterValue>();
+    }
 }

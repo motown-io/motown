@@ -107,7 +107,15 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
         TransactionId transactionId = new NumberedTransactionId(chargingStationId, PROTOCOL_IDENTIFIER, request.getTransactionId());
         IdentifyingToken identifyingToken = new TextualToken(request.getIdTag());
 
-        domainService.stopTransaction(chargingStationId, transactionId, identifyingToken, request.getMeterStop(), request.getTimestamp());
+        List<MeterValue> meterValues = new ArrayList<>();
+        List<TransactionData> transactionData = request.getTransactionData();
+        for (TransactionData data : transactionData) {
+            for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue mv : data.getValues()){
+                meterValues.add(new MeterValue(mv.getTimestamp(), mv.getValue().toString()));
+            }
+        }
+
+        domainService.stopTransaction(chargingStationId, transactionId, identifyingToken, request.getMeterStop(), request.getTimestamp(), meterValues);
         return new StopTransactionResponse();
     }
 
@@ -116,7 +124,8 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
         String chargingStationAddress = getChargingStationAddress(context.getMessageContext());
-        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel(), PROTOCOL);
+        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel(),
+                request.getChargePointSerialNumber(), request.getFirmwareVersion(), request.getIccid(), request.getImsi(), request.getMeterType(), request.getMeterSerialNumber(), PROTOCOL);
 
         BootNotificationResponse response = new BootNotificationResponse();
         response.setStatus(result.isAccepted() ? RegistrationStatus.ACCEPTED : RegistrationStatus.REJECTED);
@@ -234,8 +243,15 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
 
     @Override
     public StartTransactionResponse startTransaction(final StartTransactionRequest parameters, final String chargeBoxIdentity) {
-        int transactionId = domainService.startTransaction(new ChargingStationId(chargeBoxIdentity), new ConnectorId(parameters.getConnectorId()), new TextualToken(parameters.getIdTag()), parameters.getMeterStart(), parameters.getTimestamp(), PROTOCOL);
-        log.debug("TransactionId: " + transactionId);
+        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
+
+        ReservationId reservationId = null;
+        if (parameters.getReservationId() != null) {
+            reservationId = new NumberedReservationId(chargingStationId, PROTOCOL_IDENTIFIER, parameters.getReservationId());
+        }
+
+        int transactionId = domainService.startTransaction(chargingStationId, new ConnectorId(parameters.getConnectorId()), new TextualToken(parameters.getIdTag()),
+                parameters.getMeterStart(), parameters.getTimestamp(), reservationId, PROTOCOL_IDENTIFIER);
 
         // TODO locally store identifications, so we can use these in the response. - Dennis Laumen, December 16th 2013
         IdTagInfo idTagInfo = new IdTagInfo();

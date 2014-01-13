@@ -69,8 +69,9 @@ public class DomainService {
     @Value("${io.motown.ocpp.viewmodel.authorize.timeout}")
     private int authorizeTimeout;
 
-    public BootChargingStationResult bootChargingStation(final ChargingStationId chargingStationId, final String chargingStationAddress, final String vendor, final String model, final String protocol) {
-        // In case there is no charging station address specified there is no point in continuing, since we will not be able to reach the chargingstation later on
+    public BootChargingStationResult bootChargingStation(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model, String chargingStationSerialNumber,
+                                                         String firmwareVersion, String iccid, String imsi, String meterType, String meterSerialNumber, String protocol) {
+        // In case there is no charging station address specified there is no point in continuing, since we will not be able to reach the charging station later on
         if(chargingStationAddress == null || chargingStationAddress.isEmpty()) {
             log.error("Rejecting bootnotification, no charging station address has been specified.");
             return new BootChargingStationResult(false, heartbeatInterval, new Date());
@@ -83,8 +84,8 @@ public class DomainService {
             log.debug("Not a known charging station on boot notification, we send a CreateChargingStationCommand.");
 
             commandGateway.send(new CreateChargingStationCommand(chargingStationId), new CreateChargingStationCommandCallback(
-                    chargingStationId, chargingStationAddress, vendor, model, protocol, chargingStationRepository, this
-            ));
+                    chargingStationId, chargingStationAddress, vendor, model, chargingStationSerialNumber, firmwareVersion, iccid,
+                    imsi, meterType, meterSerialNumber, protocol, chargingStationRepository, this));
 
             // we didn't know the charging station when this bootNotification occurred so we reject it.
             return new BootChargingStationResult(false, heartbeatInterval, new Date());
@@ -94,10 +95,17 @@ public class DomainService {
         chargingStation.setIpAddress(chargingStationAddress);
         chargingStationRepository.save(chargingStation);
 
+        //TODO: Fix these magic key values? - Mark van den Bergh, 10 Jan 2014
         Map<String, String> attributes = Maps.newHashMap();
         attributes.put("vendor", vendor);
         attributes.put("model", model);
         attributes.put("address", chargingStationAddress);
+        attributes.put("chargingStationSerialNumber", chargingStationSerialNumber);
+        attributes.put("firmwareVersion", firmwareVersion);
+        attributes.put("iccid", iccid);
+        attributes.put("imsi", imsi);
+        attributes.put("meterType", meterType);
+        attributes.put("meterSerialNumber", meterSerialNumber);
 
         commandGateway.send(new BootChargingStationCommand(chargingStationId, protocol, attributes));
 
@@ -142,7 +150,6 @@ public class DomainService {
     }
 
     public void firmwareStatusUpdate(ChargingStationId chargingStationId, FirmwareStatus firmwareStatus) {
-
         UpdateFirmwareStatusCommand command = new UpdateFirmwareStatusCommand(chargingStationId, firmwareStatus);
         commandGateway.send(command);
     }
@@ -175,11 +182,11 @@ public class DomainService {
      * @param idTag                  the identifier which started the transaction
      * @param meterStart             meter value in Wh for the connector at start of the transaction
      * @param timestamp              date and time on which the transaction started
-     * @param protocolIdentifier     identifier of the protocol that starts the transaction
-     * @throws IllegalStateException when the charging station cannot be found, is not registered and configured, or the connectorId is unknown for this charging station
+     * @param reservationId          optional identifier of the reservation that terminates as a result of this transaction
+     * @param protocolIdentifier     identifier of the protocol that starts the transaction  @throws IllegalStateException when the charging station cannot be found, is not registered and configured, or the connectorId is unknown for this charging station
      * @return                       transaction identifier
      */
-    public int startTransaction(ChargingStationId chargingStationId, ConnectorId connectorId, IdentifyingToken idTag, int meterStart, Date timestamp, String protocolIdentifier) {
+    public int startTransaction(ChargingStationId chargingStationId, ConnectorId connectorId, IdentifyingToken idTag, int meterStart, Date timestamp, ReservationId reservationId, String protocolIdentifier) {
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
         if(chargingStation == null) {
             throw new IllegalStateException("Cannot start transaction for an unknown charging station.");
@@ -195,15 +202,24 @@ public class DomainService {
 
         NumberedTransactionId transactionId = generateTransactionIdentifier(chargingStationId, protocolIdentifier);
 
-        StartTransactionCommand command = new StartTransactionCommand(chargingStationId, transactionId, connectorId, idTag, meterStart, timestamp);
+        Map<String, String> attributes = Maps.newHashMap();
+        if (reservationId != null) {
+            //TODO: Fix this magic key value? - Mark van den Bergh, 10 Jan 2014
+            attributes.put("reservationId", reservationId.getId());
+        }
+
+        StartTransactionCommand command = new StartTransactionCommand(chargingStationId, transactionId, connectorId, idTag, meterStart, timestamp, attributes);
         commandGateway.send(command);
 
         return transactionId.getNumber();
     }
 
-    public void stopTransaction(ChargingStationId chargingStationId, TransactionId transactionId, IdentifyingToken idTag, int meterValueStop, Date timeStamp){
+    public void stopTransaction(ChargingStationId chargingStationId, TransactionId transactionId, IdentifyingToken idTag, int meterValueStop, Date timeStamp, List<MeterValue> meterValues){
         StopTransactionCommand command = new StopTransactionCommand(chargingStationId, transactionId, idTag, meterValueStop, timeStamp);
         commandGateway.send(command);
+
+        //TODO stopTransactionRequest does not contain a connector id... store the transaction in ocpp module so we can retrieve the connector id for this action
+        commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, new ConnectorId(0), meterValues));
     }
 
     public void reservationStatusChanged(ChargingStationId chargingStationId, ReservationId reservationId, ReservationStatus newStatus) {

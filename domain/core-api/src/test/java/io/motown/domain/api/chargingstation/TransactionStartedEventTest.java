@@ -19,29 +19,32 @@ import org.junit.Test;
 
 import java.util.Date;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getNumberedTransactionId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getTextualToken;
+import static io.motown.domain.api.chargingstation.CoreApiTestUtils.*;
 
 public class TransactionStartedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new TransactionStartedEvent(null, getNumberedTransactionId(), new ConnectorId(1), getTextualToken(), 1, new Date());
+        new TransactionStartedEvent(null, getNumberedTransactionId(), new ConnectorId(1), getTextualToken(), 1, new Date(), getEmptyAttributesMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTransactionId() {
-        new TransactionStartedEvent(getChargingStationId(), null, new ConnectorId(1), getTextualToken(), 1, new Date());
+        new TransactionStartedEvent(getChargingStationId(), null, new ConnectorId(1), getTextualToken(), 1, new Date(), getEmptyAttributesMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullIdentifyingToken() {
-        new TransactionStartedEvent(getChargingStationId(), getNumberedTransactionId(), new ConnectorId(1), null, 1, new Date());
+        new TransactionStartedEvent(getChargingStationId(), getNumberedTransactionId(), new ConnectorId(1), null, 1, new Date(), getEmptyAttributesMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTimestamp() {
-        new TransactionStartedEvent(getChargingStationId(), getNumberedTransactionId(), new ConnectorId(1), getTextualToken(), 1, null);
+        new TransactionStartedEvent(getChargingStationId(), getNumberedTransactionId(), new ConnectorId(1), getTextualToken(), 1, null, getEmptyAttributesMap());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingWithNullAttributes() {
+        new TransactionStartedEvent(getChargingStationId(), getNumberedTransactionId(), new ConnectorId(1), getTextualToken(), 1, new Date(), null);
     }
 }

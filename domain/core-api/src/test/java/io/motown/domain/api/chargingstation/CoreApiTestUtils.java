@@ -15,6 +15,10 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import com.google.common.collect.ImmutableMap;
+
+import java.util.Map;
+
 public class CoreApiTestUtils {
 
     public static ChargingStationId getChargingStationId() {
@@ -35,5 +39,9 @@ public class CoreApiTestUtils {
 
     public static String getVendorId() {
         return "Alfen";
+    }
+
+    public static Map<String, String> getEmptyAttributesMap() {
+        return ImmutableMap.<String, String>of();
     }
 }

@@ -33,12 +33,25 @@ public class CreateChargingStationCommandCallback implements CommandCallback<Obj
     private String protocol;
     private ChargingStationRepository chargingStationRepository;
     private DomainService domainService;
+    private String chargePointSerialNumber;
+    private String firmwareVersion;
+    private String iccid;
+    private String imsi;
+    private String meterType;
+    private String meterSerialNumber;
 
-    public CreateChargingStationCommandCallback(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model, String protocol, ChargingStationRepository chargingStationRepository, DomainService domainService) {
+    public CreateChargingStationCommandCallback(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model, String chargePointSerialNumber, String firmwareVersion, String iccid, String imsi, String meterType, String meterSerialNumber, String protocol,
+                                                ChargingStationRepository chargingStationRepository, DomainService domainService) {
         this.chargingStationId = chargingStationId;
         this.chargingStationAddress = chargingStationAddress;
         this.vendor = vendor;
         this.model = model;
+        this.chargePointSerialNumber = chargePointSerialNumber;
+        this.firmwareVersion = firmwareVersion;
+        this.iccid = iccid;
+        this.imsi = imsi;
+        this.meterType = meterType;
+        this.meterSerialNumber = meterSerialNumber;
         this.protocol = protocol;
         this.chargingStationRepository = chargingStationRepository;
         this.domainService = domainService;
@@ -48,7 +61,7 @@ public class CreateChargingStationCommandCallback implements CommandCallback<Obj
     public void onSuccess(Object o) {
         chargingStationRepository.save(new ChargingStation(chargingStationId.getId()));
 
-        domainService.bootChargingStation(chargingStationId, chargingStationAddress, vendor, model, protocol);
+        domainService.bootChargingStation(chargingStationId, chargingStationAddress, vendor, model, protocol, chargePointSerialNumber, firmwareVersion, iccid, imsi, meterType, meterSerialNumber);
     }
 
     @Override
