@@ -13,20 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.operatorapi.json.commands;
+package io.motown.operatorapi.viewmodel.model;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import io.motown.domain.api.chargingstation.ConnectorId;
-import io.motown.operatorapi.json.gson.ConnectorIdTypeAdapter;
-
-public class OperatorApiJsonTestUtils {
-
-    public static Gson getGson() {
-        return new GsonBuilder().
-                setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").
-                registerTypeAdapter(ConnectorId.class, new ConnectorIdTypeAdapter()).
-                create();
-    }
-
+public interface ApiCommand {
 }

@@ -15,20 +15,18 @@
  */
 package io.motown.operatorapi.viewmodel.model;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-public class RequestStopTransactionApiCommand {
+public class RequestStopTransactionApiCommand implements ApiCommand {
 
     private String id;
 
-    public RequestStopTransactionApiCommand(String id) {
-        checkNotNull(id);
-        checkArgument(!id.isEmpty());
-        this.id = id;
+    public RequestStopTransactionApiCommand() {
     }
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
