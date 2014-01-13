@@ -50,14 +50,14 @@ public final class SendAuthorisationListRequestedEvent implements CommunicationW
      * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code updateType} is {@code null}.
      * @throws IllegalArgumentException if {@code protocol} is empty.
      */
-    public SendAuthorisationListRequestedEvent(ChargingStationId chargingStationId, String protocol, @Nullable List<IdentifyingToken> authorisationList, int authorisationListVersion, @Nullable String authorisationListHash, @Nullable AuthorisationListUpdateType updateType) {
+    public SendAuthorisationListRequestedEvent(ChargingStationId chargingStationId, String protocol, List<IdentifyingToken> authorisationList, int authorisationListVersion, String authorisationListHash, AuthorisationListUpdateType updateType) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());
         this.protocol = protocol;
-        this.authorisationList = authorisationList;
-        this.authorisationListVersion = authorisationListVersion;
-        this.authorisationListHash = authorisationListHash;
+        this.authorisationList = checkNotNull(authorisationList);
+        this.authorisationListVersion = checkNotNull(authorisationListVersion);
+        this.authorisationListHash = checkNotNull(authorisationListHash);
         this.updateType = checkNotNull(updateType);
     }
 
@@ -80,7 +80,6 @@ public final class SendAuthorisationListRequestedEvent implements CommunicationW
     /**
      * @return the authorisation list that is to be applied
      */
-    @Nullable
     public List<IdentifyingToken> getAuthorisationList() {
         return authorisationList;
     }
@@ -88,7 +87,6 @@ public final class SendAuthorisationListRequestedEvent implements CommunicationW
     /**
      * @return the list of IdentifyingTokens to be updated/added
      */
-    @Nullable
     public AuthorisationListUpdateType getUpdateType() {
         return updateType;
     }
@@ -103,7 +101,6 @@ public final class SendAuthorisationListRequestedEvent implements CommunicationW
     /**
      * @return the optional hash calculated over the elements in the list
      */
-    @Nullable
     public String getAuthorisationListHash() {
         return authorisationListHash;
     }

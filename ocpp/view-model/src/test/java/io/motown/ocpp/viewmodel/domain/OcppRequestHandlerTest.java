@@ -27,6 +27,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.motown.ocpp.viewmodel.domain.TestUtils.*;
 import static org.mockito.Mockito.*;
@@ -157,7 +159,8 @@ public class OcppRequestHandlerTest {
     @Test
     public void testFirmwareUpdateRequestedEvent() {
         Date retrievedDate = new Date();
-        requestHandler.handle(new FirmwareUpdateRequestedEvent(getChargingStationId(), getProtocol(), getFirmwareUpdateLocation(), retrievedDate, null));
+        Map<String, String> attributes = new HashMap<>();
+        requestHandler.handle(new FirmwareUpdateRequestedEvent(getChargingStationId(), getProtocol(), getFirmwareUpdateLocation(), retrievedDate, attributes));
 
         verify(client).updateFirmware(getChargingStationId(), getFirmwareUpdateLocation(), retrievedDate, null, null);
 

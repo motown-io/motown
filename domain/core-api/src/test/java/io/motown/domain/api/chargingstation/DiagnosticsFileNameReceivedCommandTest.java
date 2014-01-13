@@ -26,4 +26,8 @@ public class DiagnosticsFileNameReceivedCommandTest {
         new DiagnosticsFileNameReceivedCommand(null, "diagnostics.zip");
     }
 
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingWithDiagnosticsFileNameNull() {
+        new DiagnosticsFileNameReceivedCommand(getChargingStationId(), null);
+    }
 }

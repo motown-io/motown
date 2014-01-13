@@ -53,7 +53,8 @@ class SendAuthorisationListJsonCommandHandler implements JsonCommandHandler {
             int listVersion = commandObject.get("listVersion").getAsInt();
             AuthorisationListUpdateType updateType = AuthorisationListUpdateType.valueOf(commandObject.get("updateType").getAsString());
 
-            commandGateway.send(new SendAuthorisationListCommand(new ChargingStationId(chargingStationId), authorisationList, listVersion, null, updateType));
+            // TODO enable usage of hash in API - Dennis Laumen, January 13th 2014
+            commandGateway.send(new SendAuthorisationListCommand(new ChargingStationId(chargingStationId), authorisationList, listVersion, "", updateType));
         } catch (ClassCastException ex) {
             throw new IllegalArgumentException("SendAuthorisationList command not able to parse the payload, is your json correctly formatted ?");
         }

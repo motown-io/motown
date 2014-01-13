@@ -44,14 +44,16 @@ public final class DataTransferEvent implements CommunicationWithChargingStation
      * @param data              the free format data to send to the charging station.
      * @throws NullPointerException if {@code chargingStationId} or {@code protocol} or {@code vendorId} is {@code null}.
      */
-    public DataTransferEvent(ChargingStationId chargingStationId, String protocol, String vendorId, @Nullable String messageId, @Nullable String data) {
+    public DataTransferEvent(ChargingStationId chargingStationId, String protocol, String vendorId, String messageId, String data) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());
         this.protocol = protocol;
-        this.vendorId = checkNotNull(vendorId);
-        this.messageId = messageId;
-        this.data = data;
+        checkNotNull(vendorId);
+        checkArgument(!vendorId.isEmpty());
+        this.vendorId = vendorId;
+        this.messageId = checkNotNull(messageId);
+        this.data = checkNotNull(data);
     }
 
     /**
@@ -80,7 +82,6 @@ public final class DataTransferEvent implements CommunicationWithChargingStation
     /**
      * @return the optional additional message identifier
      */
-    @Nullable
     public String getMessageId() {
         return messageId;
     }
@@ -88,7 +89,6 @@ public final class DataTransferEvent implements CommunicationWithChargingStation
     /**
      * @return the free format data
      */
-    @Nullable
     public String getData() {
         return data;
     }

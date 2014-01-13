@@ -27,6 +27,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
 
 @Component
 class UpdateFirmwareJsonCommandHandler implements JsonCommandHandler {
@@ -54,7 +55,7 @@ class UpdateFirmwareJsonCommandHandler implements JsonCommandHandler {
                 DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
                 Date retrieveDate = formatter.parseDateTime(retrieveDateString).toDate();
 
-                commandGateway.send(new RequestFirmwareUpdateCommand(new ChargingStationId(chargingStationId), downloadLocation, retrieveDate, null));
+                commandGateway.send(new RequestFirmwareUpdateCommand(new ChargingStationId(chargingStationId), downloadLocation, retrieveDate, new HashMap<String, String>()));
             }
         } catch (ClassCastException ex) {
             throw new IllegalArgumentException("Change configuration command not able to parse the payload, is your json correctly formatted?");

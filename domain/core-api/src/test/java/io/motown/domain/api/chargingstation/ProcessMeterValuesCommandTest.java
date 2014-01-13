@@ -17,6 +17,8 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
 import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getNumberedTransactionId;
 
@@ -24,11 +26,16 @@ public class ProcessMeterValuesCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new ProcessMeterValueCommand(null, getNumberedTransactionId(), new ConnectorId(1), null);
+        new ProcessMeterValueCommand(null, getNumberedTransactionId(), new ConnectorId(1), new ArrayList<MeterValue>());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithConnectorIdNull() {
-        new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), null, null);
+        new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), null, new ArrayList<MeterValue>());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithMeterValuesNull() {
+        new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), new ConnectorId(1), null);
     }
 }

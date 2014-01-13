@@ -37,12 +37,13 @@ public final class DiagnosticsFileNameReceivedCommand {
      * Creates a {@code DiagnosticsFileNameReceivedCommand} with an identifier and a diagnostics file name.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param diagnosticsFileName the filename the charging station will be using to send over the diagnostics
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @param diagnosticsFileName the filename the charging station will be using to send over the diagnostics (empty if
+     *                            no file is being sent).
+     * @throws NullPointerException if {@code chargingStationId} or {@code diagnosticsFileName} is {@code null}.
      */
-    public DiagnosticsFileNameReceivedCommand(ChargingStationId chargingStationId, @Nullable String diagnosticsFileName) {
+    public DiagnosticsFileNameReceivedCommand(ChargingStationId chargingStationId, String diagnosticsFileName) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.diagnosticsFileName = diagnosticsFileName;
+        this.diagnosticsFileName = checkNotNull(diagnosticsFileName);
     }
 
     /**
@@ -57,7 +58,6 @@ public final class DiagnosticsFileNameReceivedCommand {
     /**
      * @return the diagnostics file name
      */
-    @Nullable
     public String getDiagnosticsFileName() {
         return diagnosticsFileName;
     }

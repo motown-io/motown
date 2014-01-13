@@ -43,11 +43,11 @@ public final class ChargingStationSentMeterValuesEvent {
      * @param chargingStationId the identifier of the charging station.
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public ChargingStationSentMeterValuesEvent(ChargingStationId chargingStationId, @Nullable TransactionId transactionId, ConnectorId connectorId, @Nullable List<MeterValue> meterValueList) {
+    public ChargingStationSentMeterValuesEvent(ChargingStationId chargingStationId, @Nullable TransactionId transactionId, ConnectorId connectorId, List<MeterValue> meterValueList) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = transactionId;
         this.connectorId = checkNotNull(connectorId);
-        this.meterValueList = meterValueList;
+        this.meterValueList = checkNotNull(meterValueList);
     }
 
     /**
@@ -75,7 +75,6 @@ public final class ChargingStationSentMeterValuesEvent {
     /**
      * @return the list of metervalues.
      */
-    @Nullable
     public List<MeterValue> getMeterValueList() {
         return meterValueList;
     }

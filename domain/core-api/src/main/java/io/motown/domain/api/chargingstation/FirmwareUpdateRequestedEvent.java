@@ -49,7 +49,7 @@ public final class FirmwareUpdateRequestedEvent implements CommunicationWithChar
      * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code updateLocation} or {@code retrieveDate} is {@code null}.
      * @throws IllegalArgumentException if {@code updateLocation} is empty.
      */
-    public FirmwareUpdateRequestedEvent(ChargingStationId chargingStationId, String protocol, String updateLocation, Date retrieveDate, @Nullable Map<String, String> attributes) {
+    public FirmwareUpdateRequestedEvent(ChargingStationId chargingStationId, String protocol, String updateLocation, Date retrieveDate, Map<String, String> attributes) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.protocol = checkNotNull(protocol);
 
@@ -57,7 +57,7 @@ public final class FirmwareUpdateRequestedEvent implements CommunicationWithChar
         checkArgument(!updateLocation.isEmpty());
         this.updateLocation = updateLocation;
         this.retrieveDate = checkNotNull(retrieveDate);
-        this.attributes = attributes;
+        this.attributes = checkNotNull(attributes);
     }
 
     /**
@@ -93,7 +93,6 @@ public final class FirmwareUpdateRequestedEvent implements CommunicationWithChar
     /**
      * @return the optional attributes
      */
-    @Nullable
     public Map<String, String> getAttributes() {
         return attributes;
     }

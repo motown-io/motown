@@ -26,17 +26,32 @@ import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getProtocol;
 public class SendAuthorisationListEventTest {
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
+    public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
         new SendAuthorisationListRequestedEvent(null, getProtocol(), new ArrayList<IdentifyingToken>(), 1, null, AuthorisationListUpdateType.FULL);
     }
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingCommandWithProtocolNull() {
+    public void nullPointerExceptionThrownWhenCreatingEventWithProtocolNull() {
         new SendAuthorisationListRequestedEvent(getChargingStationId(), null, new ArrayList<IdentifyingToken>(), 1, null, AuthorisationListUpdateType.FULL);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalArgumentExceptionThrownWhenCreatingEventWithProtocolEmpty() {
+        new SendAuthorisationListRequestedEvent(getChargingStationId(), "", new ArrayList<IdentifyingToken>(), 1, null, AuthorisationListUpdateType.FULL);
+    }
+
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingCommandWithUpdateTypeNull() {
+    public void nullPointerExceptionThrownWhenCreatingEventWithTokensNull() {
+        new SendAuthorisationListRequestedEvent(getChargingStationId(), getProtocol(), null, 1, "", AuthorisationListUpdateType.FULL);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingEventWithHashNull() {
+        new SendAuthorisationListRequestedEvent(getChargingStationId(), getProtocol(), new ArrayList<IdentifyingToken>(), 1, null, AuthorisationListUpdateType.FULL);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingEventWithUpdateTypeNull() {
         new SendAuthorisationListRequestedEvent(getChargingStationId(), getProtocol(), new ArrayList<IdentifyingToken>(), 1, null, null);
     }
 }

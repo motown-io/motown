@@ -19,6 +19,7 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import javax.annotation.Nullable;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -41,15 +42,19 @@ public final class IncomingDataTransferCommand {
      *
      * @param chargingStationId the identifier of the charging station.
      * @param vendorId the charging station vendor.
-     * @param messageId optional additional identification field
-     * @param data the data to transfer
-     * @throws NullPointerException if {@code chargingStationId} or {@code vendorId} is {@code null}.
+     * @param messageId optional additional identification field (empty if no value).
+     * @param data the data to transfer (empty if no value).
+     * @throws NullPointerException if {@code chargingStationId}, {@code vendorId}, {@code messageId}, {@code data} is
+     *                              {@code null}.
+     * @throws IllegalArgumentException if {@code vendorId} is empty.
      */
-    public IncomingDataTransferCommand(ChargingStationId chargingStationId, String vendorId, @Nullable String messageId, @Nullable String data) {
+    public IncomingDataTransferCommand(ChargingStationId chargingStationId, String vendorId, String messageId, String data) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        checkNotNull(vendorId);
+        checkArgument(!vendorId.isEmpty());
         this.vendorId = checkNotNull(vendorId);
-        this.messageId = messageId;
-        this.data = data;
+        this.messageId = checkNotNull(messageId);
+        this.data = checkNotNull(data);
     }
 
     /**
@@ -69,7 +74,6 @@ public final class IncomingDataTransferCommand {
     /**
      * @return the additional message identifier.
      */
-    @Nullable
     public String getMessageId() {
         return messageId;
     }
@@ -77,7 +81,6 @@ public final class IncomingDataTransferCommand {
     /**
      * @return the data.
      */
-    @Nullable
     public String getData() {
         return data;
     }

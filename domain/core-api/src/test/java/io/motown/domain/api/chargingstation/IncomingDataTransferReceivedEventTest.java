@@ -26,7 +26,7 @@ public class IncomingDataTransferReceivedEventTest {
     private final String dataToTransfer = "Data to transfer";
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
+    public void nullPointerExceptionThrownWhenChargingStationIdNull() {
         new IncomingDataTransferReceivedEvent(null, getVendorId(), messageId, dataToTransfer);
     }
 
@@ -35,4 +35,18 @@ public class IncomingDataTransferReceivedEventTest {
         new IncomingDataTransferReceivedEvent(getChargingStationId(), null, messageId, dataToTransfer);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalArgumentExceptionThrownWhenVendorIdEmpty() {
+        new IncomingDataTransferReceivedEvent(getChargingStationId(), "", messageId, dataToTransfer);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenMessageIdNull() {
+        new IncomingDataTransferReceivedEvent(getChargingStationId(), getVendorId(), null, dataToTransfer);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenDataNull() {
+        new IncomingDataTransferReceivedEvent(getChargingStationId(), getVendorId(), messageId, null);
+    }
 }

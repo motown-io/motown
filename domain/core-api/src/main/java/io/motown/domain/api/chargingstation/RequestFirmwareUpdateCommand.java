@@ -46,17 +46,18 @@ public final class RequestFirmwareUpdateCommand {
      * @param updateLocation    the location to download the firmware update from
      * @param retrieveDate      the moment the charging station should start retrieving the firmware update from the updatelocation
      * @param attributes        optional attributes like retry settings
-     * @throws NullPointerException if {@code chargingStationId}, {@code updateLocation} or {@code retrieveDate} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId}, {@code updateLocation}, {@code retrieveDate} or
+     *                              {@code attributes} is {@code null}.
      * @throws IllegalArgumentException if {@code updateLocation} is empty.
      */
-    public RequestFirmwareUpdateCommand(ChargingStationId chargingStationId, String updateLocation, Date retrieveDate, @Nullable Map<String, String> attributes) {
+    public RequestFirmwareUpdateCommand(ChargingStationId chargingStationId, String updateLocation, Date retrieveDate, Map<String, String> attributes) {
         this.chargingStationId = checkNotNull(chargingStationId);
 
         checkNotNull(updateLocation);
         checkArgument(!updateLocation.isEmpty());
         this.updateLocation = updateLocation;
         this.retrieveDate = checkNotNull(retrieveDate);
-        this.attributes = attributes;
+        this.attributes = checkNotNull(attributes);
     }
 
     /**
@@ -85,7 +86,6 @@ public final class RequestFirmwareUpdateCommand {
     /**
      * @return the optional attributes
      */
-    @Nullable
     public Map<String, String> getAttributes() {
         return attributes;
     }

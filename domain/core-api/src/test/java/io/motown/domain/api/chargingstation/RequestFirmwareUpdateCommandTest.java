@@ -44,4 +44,8 @@ public class RequestFirmwareUpdateCommandTest {
         new RequestFirmwareUpdateCommand(getChargingStationId(), "https://somewhere.nl", null, new HashMap());
     }
 
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingWithNullAttributes() {
+        new RequestFirmwareUpdateCommand(getChargingStationId(), "https://somewhere.nl", new Date(), null);
+    }
 }

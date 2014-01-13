@@ -24,11 +24,27 @@ public class DataTransferCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new DataTransferCommand(null, getVendorId(), null, null);
+        new DataTransferCommand(null, getVendorId(), "", "");
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithVendorIdNull() {
-        new DataTransferCommand(getChargingStationId(), null, null, null);
+        new DataTransferCommand(getChargingStationId(), null, "", "");
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalArgumentExceptionThrownWhenCreatingCommandWithVendorIdEmpty() {
+        new DataTransferCommand(getChargingStationId(), "", "", "");
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithMessageIdNull() {
+        new DataTransferCommand(getChargingStationId(), getVendorId(), null, "");
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithDataNull() {
+        new DataTransferCommand(getChargingStationId(), getVendorId(), "", null);
+    }
+
 }

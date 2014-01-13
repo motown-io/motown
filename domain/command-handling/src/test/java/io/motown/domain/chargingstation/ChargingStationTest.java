@@ -22,9 +22,7 @@ import org.axonframework.test.Fixtures;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static io.motown.domain.chargingstation.ChargingStationTestUtils.*;
 
@@ -76,7 +74,7 @@ public class ChargingStationTest {
 
     @Test
     public void testNoMeterValues() {
-        List<MeterValue> meterValues = null;
+        List<MeterValue> meterValues = new ArrayList<>();
 
         fixture.given(getChargingStation())
                 .when(new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), getConnectorId(), meterValues))
@@ -335,10 +333,11 @@ public class ChargingStationTest {
     public void testRequestFirmwareUpdate() {
         String updateLocation = "https://somewhere.nl";
         Date retrieveDate = new Date();
+        Map<String, String> attributes = new HashMap<>();
 
         fixture.given(getConfiguredChargingStation(true))
-                .when(new RequestFirmwareUpdateCommand(getChargingStationId(), updateLocation, retrieveDate, null))
-                .expectEvents(new FirmwareUpdateRequestedEvent(getChargingStationId(), getProtocol(), updateLocation, retrieveDate, null));
+                .when(new RequestFirmwareUpdateCommand(getChargingStationId(), updateLocation, retrieveDate, attributes))
+                .expectEvents(new FirmwareUpdateRequestedEvent(getChargingStationId(), getProtocol(), updateLocation, retrieveDate, attributes));
     }
 
     @Test

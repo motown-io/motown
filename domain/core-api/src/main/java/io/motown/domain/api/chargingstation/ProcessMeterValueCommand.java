@@ -43,11 +43,11 @@ public final class ProcessMeterValueCommand {
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      * @throws IllegalArgumentException if {@code connectorId} is negative.
      */
-    public ProcessMeterValueCommand(ChargingStationId chargingStationId, @Nullable TransactionId transactionId, ConnectorId connectorId, @Nullable List<MeterValue> meterValueList) {
+    public ProcessMeterValueCommand(ChargingStationId chargingStationId, @Nullable TransactionId transactionId, ConnectorId connectorId, List<MeterValue> meterValueList) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = transactionId;
         this.connectorId = checkNotNull(connectorId);
-        this.meterValueList = meterValueList;
+        this.meterValueList = checkNotNull(meterValueList);
     }
 
     /**
@@ -73,7 +73,6 @@ public final class ProcessMeterValueCommand {
      * Gets the listing of meter values
      * @return
      */
-    @Nullable
     public List<MeterValue> getMeterValueList() {
         return meterValueList;
     }

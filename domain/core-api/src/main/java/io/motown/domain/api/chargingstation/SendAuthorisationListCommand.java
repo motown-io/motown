@@ -47,13 +47,13 @@ public final class SendAuthorisationListCommand {
      * @param authorisationListVersion
      * @param authorisationListHash
      * @param updateType
-     * @throws NullPointerException if {@code chargingStationId} or {@code updateType} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId}, {@code authorisationList}, {@code authorisationListHash} or {@code updateType} is {@code null}.
      */
-    public SendAuthorisationListCommand(ChargingStationId chargingStationId, @Nullable List<IdentifyingToken> authorisationList, int authorisationListVersion, @Nullable String authorisationListHash, AuthorisationListUpdateType updateType) {
+    public SendAuthorisationListCommand(ChargingStationId chargingStationId, List<IdentifyingToken> authorisationList, int authorisationListVersion, String authorisationListHash, AuthorisationListUpdateType updateType) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.authorisationList = authorisationList;
+        this.authorisationList = checkNotNull(authorisationList);
         this.authorisationListVersion = authorisationListVersion;
-        this.authorisationListHash = authorisationListHash;
+        this.authorisationListHash = checkNotNull(authorisationListHash);
         this.updateType = checkNotNull(updateType);
     }
 
@@ -66,7 +66,6 @@ public final class SendAuthorisationListCommand {
         return chargingStationId;
     }
 
-    @Nullable
     public List<IdentifyingToken> getAuthorisationList() {
         return authorisationList;
     }
@@ -75,7 +74,6 @@ public final class SendAuthorisationListCommand {
         return authorisationListVersion;
     }
 
-    @Nullable
     public String getAuthorisationListHash() {
         return authorisationListHash;
     }
