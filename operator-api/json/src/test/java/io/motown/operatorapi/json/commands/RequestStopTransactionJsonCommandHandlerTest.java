@@ -17,13 +17,8 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
-import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class RequestStopTransactionJsonCommandHandlerTest {
 
@@ -37,18 +32,7 @@ public class RequestStopTransactionJsonCommandHandlerTest {
 
         handler.setGson(gson);
         handler.setCommandGateway(new TestDomainCommandGateway());
-
-        // setup mocking for JPA / spring repo.
-        ChargingStationRepository repo = mock(ChargingStationRepository.class);
-        ChargingStation registeredStation = mock(ChargingStation.class);
-        when(registeredStation.getProtocol()).thenReturn("OCPPS15");
-        when(registeredStation.isAccepted()).thenReturn(true);
-        ChargingStation unregisteredStation = mock(ChargingStation.class);
-        when(unregisteredStation.isAccepted()).thenReturn(false);
-        when(repo.findOne("TEST_REGISTERED")).thenReturn(registeredStation);
-        when(repo.findOne("TEST_UNREGISTERED")).thenReturn(unregisteredStation);
-
-        handler.setRepository(repo);
+        handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
     }
 
     @Test

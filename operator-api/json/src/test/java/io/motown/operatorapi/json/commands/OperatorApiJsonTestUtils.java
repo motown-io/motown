@@ -19,6 +19,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.motown.domain.api.chargingstation.ConnectorId;
 import io.motown.operatorapi.json.gson.ConnectorIdTypeAdapter;
+import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
+import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class OperatorApiJsonTestUtils {
 
@@ -31,4 +36,15 @@ public class OperatorApiJsonTestUtils {
                 create();
     }
 
+    public static ChargingStationRepository getMockChargingStationRepository() {
+        ChargingStationRepository repo = mock(ChargingStationRepository.class);
+        ChargingStation registeredStation = mock(ChargingStation.class);
+        when(registeredStation.getProtocol()).thenReturn("OCPPS15");
+        when(registeredStation.isAccepted()).thenReturn(true);
+        ChargingStation unregisteredStation = mock(ChargingStation.class);
+        when(unregisteredStation.isAccepted()).thenReturn(false);
+        when(repo.findOne("TEST_REGISTERED")).thenReturn(registeredStation);
+        when(repo.findOne("TEST_UNREGISTERED")).thenReturn(unregisteredStation);
+        return repo;
+    }
 }
