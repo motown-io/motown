@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import com.google.common.collect.ImmutableMap;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import javax.annotation.Nullable;
@@ -57,7 +58,7 @@ public final class RequestFirmwareUpdateCommand {
         checkArgument(!updateLocation.isEmpty());
         this.updateLocation = updateLocation;
         this.retrieveDate = checkNotNull(retrieveDate);
-        this.attributes = checkNotNull(attributes);
+        this.attributes = ImmutableMap.copyOf(checkNotNull(attributes));
     }
 
     /**

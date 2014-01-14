@@ -52,7 +52,7 @@ public final class BootChargingStationCommand {
      * @param attributes        a {@link java.util.Map} of attributes. These attributes are additional information provided by
      *                          the charging station when it booted but which are not required by Motown. Because
      *                          {@link java.util.Map} implementations are potentially mutable a defensive copy is made.
-     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} or {@code attributes} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} or {@code attributes} or any of the attributes keys or values is {@code null}.
      */
     public BootChargingStationCommand(ChargingStationId chargingStationId, String protocol, Map<String, String> attributes) {
         this.chargingStationId = checkNotNull(chargingStationId);

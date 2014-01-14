@@ -43,10 +43,22 @@ public class DomainService {
 
     private static final Logger log = LoggerFactory.getLogger(DomainService.class);
     public static final int CHARGING_STATION_CONNECTOR_ID = 0;
-    public static final String ERROR_CODE_KEY = "ERROR_CODE";
-    public static final String INFO_KEY = "INFO";
-    public static final String VENDOR_ID_KEY = "VENDOR_ID";
-    public static final String VENDOR_ERROR_CODE_KEY = "VENDOR_ERROR_CODE";
+    public static final String ERROR_CODE_KEY = "errorCode";
+    public static final String INFO_KEY = "info";
+    public static final String VENDOR_ID_KEY = "vendorId";
+    public static final String VENDOR_ERROR_CODE_KEY = "vendorErrorCode";
+
+    public static final String VENDOR_KEY = "vendor";
+    public static final String MODEL_KEY = "model";
+    public static final String ADDRESS_KEY = "address";
+    public static final String CHARGING_STATION_SERIALNUMBER_KEY = "chargingStationSerialNumber";
+    public static final String FIRMWARE_VERSION_KEY = "firmwareVersion";
+    public static final String ICCID_KEY = "iccid";
+    public static final String IMSI_KEY = "imsi";
+    public static final String METER_TYPE_KEY = "meterType";
+    public static final String METER_SERIALNUMBER_KEY = "meterSerialNumber";
+
+    public static final String RESERVATION_ID_KEY = "reservationId";
 
     @Resource(name = "domainCommandGateway")
     private DomainCommandGateway commandGateway;
@@ -97,15 +109,33 @@ public class DomainService {
 
         //TODO: Fix these magic key values? - Mark van den Bergh, 10 Jan 2014
         Map<String, String> attributes = Maps.newHashMap();
-        attributes.put("vendor", vendor);
-        attributes.put("model", model);
-        attributes.put("address", chargingStationAddress);
-        attributes.put("chargingStationSerialNumber", chargingStationSerialNumber);
-        attributes.put("firmwareVersion", firmwareVersion);
-        attributes.put("iccid", iccid);
-        attributes.put("imsi", imsi);
-        attributes.put("meterType", meterType);
-        attributes.put("meterSerialNumber", meterSerialNumber);
+        if (vendor != null) {
+            attributes.put(VENDOR_KEY, vendor);
+        }
+        if (model != null) {
+            attributes.put(MODEL_KEY, model);
+        }
+        if (chargingStationAddress != null) {
+            attributes.put(ADDRESS_KEY, chargingStationAddress);
+        }
+        if (chargingStationSerialNumber != null) {
+            attributes.put(CHARGING_STATION_SERIALNUMBER_KEY, chargingStationSerialNumber);
+        }
+        if (firmwareVersion != null) {
+            attributes.put(FIRMWARE_VERSION_KEY, firmwareVersion);
+        }
+        if (iccid != null) {
+            attributes.put(ICCID_KEY, iccid);
+        }
+        if (imsi != null) {
+            attributes.put(IMSI_KEY, imsi);
+        }
+        if (meterType != null) {
+            attributes.put(METER_TYPE_KEY, meterType);
+        }
+        if (meterSerialNumber != null) {
+            attributes.put(METER_SERIALNUMBER_KEY, meterSerialNumber);
+        }
 
         commandGateway.send(new BootChargingStationCommand(chargingStationId, protocol, attributes));
 
@@ -157,10 +187,18 @@ public class DomainService {
     public void statusNotification(ChargingStationId chargingStationId, ConnectorId connectorId, String errorCode, ComponentStatus status, String info, Date timeStamp, String vendorId, String vendorErrorCode) {
         //TODO: The attributes map can contain protocol specific key values, how to know what keys to expect on receiving end - Ingo Pak, 09 Jan 2014
         Map<String, String> attributes = new HashMap<>();
-        attributes.put(ERROR_CODE_KEY, errorCode);
-        attributes.put(INFO_KEY, info);
-        attributes.put(VENDOR_ID_KEY, vendorId);
-        attributes.put(VENDOR_ERROR_CODE_KEY, vendorErrorCode);
+        if (errorCode != null) {
+            attributes.put(ERROR_CODE_KEY, errorCode);
+        }
+        if (info != null) {
+            attributes.put(INFO_KEY, info);
+        }
+        if (vendorId != null) {
+            attributes.put(VENDOR_ID_KEY, vendorId);
+        }
+        if (vendorErrorCode != null) {
+            attributes.put(VENDOR_ERROR_CODE_KEY, vendorErrorCode);
+        }
 
         StatusNotificationCommand command;
 
@@ -206,7 +244,7 @@ public class DomainService {
         Map<String, String> attributes = Maps.newHashMap();
         if (reservationId != null) {
             //TODO: Fix this magic key value? - Mark van den Bergh, 10 Jan 2014
-            attributes.put("reservationId", reservationId.getId());
+            attributes.put(RESERVATION_ID_KEY, reservationId.getId());
         }
 
         StartTransactionCommand command = new StartTransactionCommand(chargingStationId, transactionId, connectorId, idTag, meterStart, timestamp, attributes);
