@@ -41,6 +41,8 @@ public class Transaction {
 
     private int meterStop;
 
+    @Embedded
+    @AttributeOverride( name="id", column=@Column(name = "connectorId") )
     private ConnectorId connectorId;
 
     private Date startedTimestamp;
