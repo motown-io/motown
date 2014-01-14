@@ -18,7 +18,6 @@
         <property name="dateFormat" value="yyyy-MM-dd'T'HH:mm:ss'Z'"/>
         <property name="typeAdapters">
             <set>
-                <bean class="io.motown.operatorapi.json.gson.RequestStopTransactionTypeAdapter"/>
                 <bean class="io.motown.operatorapi.json.gson.ConnectorIdTypeAdapter"/>
             </set>
         </property>
