@@ -15,31 +15,31 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
-
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code AuthorizeCommand} is the command which is published when a charging station wants to authorize the
- * identification that wants to start a transaction.
+ * {@code AuthorizationRequestedEvent} is the event which is published when a request has been made to
+ * authorize a identification.
  */
-public final class AuthorizeCommand {
+public final class AuthorizationRequestedEvent {
 
-    @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
     private final String idTag;
 
     /**
-     * Creates a {@code AuthorizeCommand}.
+     * Creates a {@code AuthorizationRequestedEvent} with an identifier and a idTag.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param idTag the identifier that needs to be authorized.
+     * @param idTag             identification which should be authorized.
      * @throws NullPointerException if {@code chargingStationId} or {@code idTag} is {@code null}.
+     * @throws IllegalArgumentException if {@code idTag} is empty.
      */
-    public AuthorizeCommand(ChargingStationId chargingStationId, String idTag) {
+    public AuthorizationRequestedEvent(ChargingStationId chargingStationId, String idTag) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.idTag = checkNotNull(idTag);
+        checkArgument(!idTag.isEmpty());
     }
 
     /**
@@ -52,33 +52,11 @@ public final class AuthorizeCommand {
     }
 
     /**
-     * Gets the identifier that needs to be authorized.
+     * Gets the identification.
      *
-     * @return the identifier that needs to be authorized.
+     * @return the identification
      */
     public String getIdTag() {
         return idTag;
     }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        AuthorizeCommand that = (AuthorizeCommand) o;
-
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (!idTag.equals(that.idTag)) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + idTag.hashCode();
-        return result;
-    }
-
 }
