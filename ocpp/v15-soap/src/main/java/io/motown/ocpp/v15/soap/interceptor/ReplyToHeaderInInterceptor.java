@@ -33,10 +33,13 @@ public class ReplyToHeaderInInterceptor extends AbstractSoapInterceptor {
     @Override
     public void handleMessage(SoapMessage message) throws Fault {
         AddressingProperties ap = ContextUtils.retrieveMAPs(message, true, false);
-        EndpointReferenceType epr = new EndpointReferenceType();
-        AttributedURIType aut = new AttributedURIType();
-        aut.setValue("http://www.w3.org/2005/08/addressing/anonymous");
-        epr.setAddress(aut);
-        ap.setReplyTo(epr);
+
+        if (ap != null) {
+            EndpointReferenceType epr = new EndpointReferenceType();
+            AttributedURIType aut = new AttributedURIType();
+            aut.setValue("http://www.w3.org/2005/08/addressing/anonymous");
+            epr.setAddress(aut);
+            ap.setReplyTo(epr);
+        }
     }
 }
