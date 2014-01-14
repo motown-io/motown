@@ -40,7 +40,7 @@ public class CreateChargingStationCommandCallback implements CommandCallback<Obj
     private String meterType;
     private String meterSerialNumber;
 
-    public CreateChargingStationCommandCallback(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model, String chargePointSerialNumber, String firmwareVersion, String iccid, String imsi, String meterType, String meterSerialNumber, String protocol,
+    public CreateChargingStationCommandCallback(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model, String protocol, String chargePointSerialNumber, String firmwareVersion, String iccid, String imsi, String meterType, String meterSerialNumber,
                                                 ChargingStationRepository chargingStationRepository, DomainService domainService) {
         this.chargingStationId = chargingStationId;
         this.chargingStationAddress = chargingStationAddress;

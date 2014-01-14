@@ -124,8 +124,8 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
         String chargingStationAddress = getChargingStationAddress(context.getMessageContext());
-        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel(),
-                request.getChargePointSerialNumber(), request.getFirmwareVersion(), request.getIccid(), request.getImsi(), request.getMeterType(), request.getMeterSerialNumber(), PROTOCOL);
+        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel(), PROTOCOL,
+                request.getChargePointSerialNumber(), request.getFirmwareVersion(), request.getIccid(), request.getImsi(), request.getMeterType(), request.getMeterSerialNumber());
 
         BootNotificationResponse response = new BootNotificationResponse();
         response.setStatus(result.isAccepted() ? RegistrationStatus.ACCEPTED : RegistrationStatus.REJECTED);

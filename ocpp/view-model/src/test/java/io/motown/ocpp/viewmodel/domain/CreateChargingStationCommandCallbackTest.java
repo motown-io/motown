@@ -47,7 +47,7 @@ public class CreateChargingStationCommandCallbackTest {
         DomainCommandGateway gateway = mock(DomainCommandGateway.class);
         domainService.setCommandGateway(gateway);
 
-        createChargingStationCommandCallback = new CreateChargingStationCommandCallback(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel(), getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber(), getProtocol(), chargingStationRepository, domainService);
+        createChargingStationCommandCallback = new CreateChargingStationCommandCallback(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel(), getProtocol(), getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber(), chargingStationRepository, domainService);
     }
 
     @Test

@@ -81,8 +81,9 @@ public class DomainService {
     @Value("${io.motown.ocpp.viewmodel.authorize.timeout}")
     private int authorizeTimeout;
 
-    public BootChargingStationResult bootChargingStation(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model, String chargingStationSerialNumber,
-                                                         String firmwareVersion, String iccid, String imsi, String meterType, String meterSerialNumber, String protocol) {
+    public BootChargingStationResult bootChargingStation(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model,
+                                                         String protocol, String chargingStationSerialNumber, String firmwareVersion, String iccid,
+                                                         String imsi, String meterType, String meterSerialNumber) {
         // In case there is no charging station address specified there is no point in continuing, since we will not be able to reach the charging station later on
         if(chargingStationAddress == null || chargingStationAddress.isEmpty()) {
             log.error("Rejecting bootnotification, no charging station address has been specified.");
@@ -96,8 +97,8 @@ public class DomainService {
             log.debug("Not a known charging station on boot notification, we send a CreateChargingStationCommand.");
 
             commandGateway.send(new CreateChargingStationCommand(chargingStationId), new CreateChargingStationCommandCallback(
-                    chargingStationId, chargingStationAddress, vendor, model, chargingStationSerialNumber, firmwareVersion, iccid,
-                    imsi, meterType, meterSerialNumber, protocol, chargingStationRepository, this));
+                    chargingStationId, chargingStationAddress, vendor, model, protocol, chargingStationSerialNumber, firmwareVersion, iccid,
+                    imsi, meterType, meterSerialNumber, chargingStationRepository, this));
 
             // we didn't know the charging station when this bootNotification occurred so we reject it.
             return new BootChargingStationResult(false, heartbeatInterval, new Date());

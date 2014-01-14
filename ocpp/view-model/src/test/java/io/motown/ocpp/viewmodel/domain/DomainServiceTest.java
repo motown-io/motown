@@ -107,7 +107,7 @@ public class DomainServiceTest {
         cs.setConfigured(true);
         chargingStationRepository.save(cs);
 
-        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel(), getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber(), getProtocol());
+        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel(), getProtocol(), getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
         assertTrue(bootChargingStationResult.isAccepted());
 
         Map<String, String> attributes = Maps.newHashMap();
