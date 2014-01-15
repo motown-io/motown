@@ -17,7 +17,6 @@ package io.motown.ocpp.viewmodel.domain;
 
 import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
-import io.motown.domain.api.chargingstation.RequestStatus;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.entities.ReservationIdentifier;
 import io.motown.ocpp.viewmodel.persistence.entities.Transaction;
@@ -85,7 +84,7 @@ public class DomainService {
                                                          String protocol, String chargingStationSerialNumber, String firmwareVersion, String iccid,
                                                          String imsi, String meterType, String meterSerialNumber) {
         // In case there is no charging station address specified there is no point in continuing, since we will not be able to reach the charging station later on
-        if(chargingStationAddress == null || chargingStationAddress.isEmpty()) {
+        if (chargingStationAddress == null || chargingStationAddress.isEmpty()) {
             log.error("Rejecting bootnotification, no charging station address has been specified.");
             return new BootChargingStationResult(false, heartbeatInterval, new Date());
         }
@@ -93,7 +92,7 @@ public class DomainService {
         // Check if we already know the charging station, or have to create one
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
 
-        if(chargingStation == null) {
+        if (chargingStation == null) {
             log.debug("Not a known charging station on boot notification, we send a CreateChargingStationCommand.");
 
             commandGateway.send(new CreateChargingStationCommand(chargingStationId), new CreateChargingStationCommandCallback(
@@ -163,13 +162,13 @@ public class DomainService {
         commandGateway.send(new AuthorisationListVersionReceivedCommand(chargingStationId, currentVersion));
     }
 
-    public AuthorizationResult authorize(ChargingStationId chargingStationId, String idTag){
-        AuthorizeCommand command = new AuthorizeCommand(chargingStationId, idTag);
+    public AuthorizationResult authorize(ChargingStationId chargingStationId, String idTag) {
+        AuthorizeCommand command = new AuthorizeCommand(chargingStationId, new TextualToken(idTag));
         AuthorizationResultStatus resultStatus = commandGateway.sendAndWait(command, authorizeTimeout, TimeUnit.SECONDS);
 
         return new AuthorizationResult(idTag, resultStatus);
     }
-    
+
     public void configureChargingStation(ChargingStationId chargingStationId, Map<String, String> configurationItems) {
         ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(chargingStationId, configurationItems);
         commandGateway.send(command);
@@ -216,22 +215,22 @@ public class DomainService {
     /**
      * Generates a transaction identifier and starts a transaction by dispatching a StartTransactionCommand.
      *
-     * @param chargingStationId      identifier of the charging station
-     * @param connectorId            connector identifier on which the transaction is started
-     * @param idTag                  the identifier which started the transaction
-     * @param meterStart             meter value in Wh for the connector at start of the transaction
-     * @param timestamp              date and time on which the transaction started
-     * @param reservationId          optional identifier of the reservation that terminates as a result of this transaction
-     * @param protocolIdentifier     identifier of the protocol that starts the transaction  @throws IllegalStateException when the charging station cannot be found, is not registered and configured, or the connectorId is unknown for this charging station
-     * @return                       transaction identifier
+     * @param chargingStationId  identifier of the charging station
+     * @param connectorId        connector identifier on which the transaction is started
+     * @param idTag              the identifier which started the transaction
+     * @param meterStart         meter value in Wh for the connector at start of the transaction
+     * @param timestamp          date and time on which the transaction started
+     * @param reservationId      optional identifier of the reservation that terminates as a result of this transaction
+     * @param protocolIdentifier identifier of the protocol that starts the transaction  @throws IllegalStateException when the charging station cannot be found, is not registered and configured, or the connectorId is unknown for this charging station
+     * @return transaction identifier
      */
     public int startTransaction(ChargingStationId chargingStationId, ConnectorId connectorId, IdentifyingToken idTag, int meterStart, Date timestamp, ReservationId reservationId, String protocolIdentifier) {
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
-        if(chargingStation == null) {
+        if (chargingStation == null) {
             throw new IllegalStateException("Cannot start transaction for an unknown charging station.");
         }
 
-        if(!chargingStation.isRegisteredAndConfigured()) {
+        if (!chargingStation.isRegisteredAndConfigured()) {
             throw new IllegalStateException("Cannot start transaction for charging station that has not been registered/configured.");
         }
 
@@ -254,7 +253,7 @@ public class DomainService {
         return transactionId.getNumber();
     }
 
-    public void stopTransaction(ChargingStationId chargingStationId, NumberedTransactionId transactionId, IdentifyingToken idTag, int meterValueStop, Date timeStamp, List<MeterValue> meterValues){
+    public void stopTransaction(ChargingStationId chargingStationId, NumberedTransactionId transactionId, IdentifyingToken idTag, int meterValueStop, Date timeStamp, List<MeterValue> meterValues) {
         StopTransactionCommand command = new StopTransactionCommand(chargingStationId, transactionId, idTag, meterValueStop, timeStamp);
         commandGateway.send(command);
 
@@ -335,13 +334,13 @@ public class DomainService {
     public String retrieveChargingStationAddress(ChargingStationId id) {
         ChargingStation chargingStation = chargingStationRepository.findOne(id.getId());
 
-        return chargingStation != null? chargingStation.getIpAddress() : "";
+        return chargingStation != null ? chargingStation.getIpAddress() : "";
     }
 
     /**
      * Generates a reservation identifier based on the charging station, the module (OCPP) and a auto-incremented number.
      *
-     * @param chargingStationId charging station identifier to use when generating a reservation identifier.
+     * @param chargingStationId  charging station identifier to use when generating a reservation identifier.
      * @param protocolIdentifier identifier of the protocol, used when generating a reservation identifier.
      * @return reservation identifier based on the charging station, module and auto-incremented number.
      */
@@ -364,7 +363,7 @@ public class DomainService {
      * @param chargingStationId  charging station identifier to use when generating a transaction identifier.
      * @param protocolIdentifier identifier of the protocol, used when generating a transaction identifier.
      * @param connectorId        connector identifier that's stored in the transaction
-     * @return                   transaction
+     * @return transaction
      */
     private Transaction createTransaction(ChargingStationId chargingStationId, String protocolIdentifier, ConnectorId connectorId) {
         Transaction transaction = new Transaction();

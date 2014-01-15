@@ -15,7 +15,6 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -26,20 +25,18 @@ public final class AuthorizationRequestedEvent {
 
     private final ChargingStationId chargingStationId;
 
-    private final String idTag;
+    private final IdentifyingToken identifyingToken;
 
     /**
-     * Creates a {@code AuthorizationRequestedEvent} with an identifier and a idTag.
+     * Creates a {@code AuthorizationRequestedEvent} with an identifier and a identifyingToken.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param idTag             identification which should be authorized.
-     * @throws NullPointerException if {@code chargingStationId} or {@code idTag} is {@code null}.
-     * @throws IllegalArgumentException if {@code idTag} is empty.
+     * @param identifyingToken  identification which should be authorized.
+     * @throws NullPointerException if {@code chargingStationId} or {@code identifyingToken} is {@code null}.
      */
-    public AuthorizationRequestedEvent(ChargingStationId chargingStationId, String idTag) {
+    public AuthorizationRequestedEvent(ChargingStationId chargingStationId, IdentifyingToken identifyingToken) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.idTag = checkNotNull(idTag);
-        checkArgument(!idTag.isEmpty());
+        this.identifyingToken = checkNotNull(identifyingToken);
     }
 
     /**
@@ -48,7 +45,7 @@ public final class AuthorizationRequestedEvent {
      * @return the charging station identifier.
      */
     public ChargingStationId getChargingStationId() {
-        return this.chargingStationId;
+        return chargingStationId;
     }
 
     /**
@@ -56,7 +53,7 @@ public final class AuthorizationRequestedEvent {
      *
      * @return the identification
      */
-    public String getIdTag() {
-        return idTag;
+    public IdentifyingToken getIdentifyingToken() {
+        return identifyingToken;
     }
 }

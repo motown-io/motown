@@ -35,11 +35,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static io.motown.ocpp.viewmodel.domain.TestUtils.*;
-import static io.motown.ocpp.viewmodel.domain.TestUtils.getChargingStationAddress;
 import static junit.framework.Assert.assertNotNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -87,7 +84,7 @@ public class DomainServiceTest {
         BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel(), getProtocol(), getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
         assertFalse(bootChargingStationResult.isAccepted());
 
-        verify(gateway).send( eq(new CreateChargingStationCommand(getChargingStationId())), any(CommandCallback.class));
+        verify(gateway).send(eq(new CreateChargingStationCommand(getChargingStationId())), any(CommandCallback.class));
     }
 
     @Test
@@ -131,26 +128,26 @@ public class DomainServiceTest {
         assertTrue(cs.isRegisteredAndConfigured());
         assertEquals(cs.getIpAddress(), getChargingStationAddress());
 
-        verify(gateway).send( new BootChargingStationCommand(getChargingStationId(), getProtocol(), attributes) );
+        verify(gateway).send(new BootChargingStationCommand(getChargingStationId(), getProtocol(), attributes));
     }
 
     @Test
     public void testHeartbeat() {
         domainService.heartbeat(getChargingStationId());
 
-        verify(gateway).send( new HeartbeatCommand(getChargingStationId()) );
+        verify(gateway).send(new HeartbeatCommand(getChargingStationId()));
     }
 
     @Test
     public void testAuthorize() {
         AuthorizationResult result = domainService.authorize(getChargingStationId(), getIdTag());
-        verify(gateway).sendAndWait(new AuthorizeCommand(getChargingStationId(), getIdTag()), 0, TimeUnit.SECONDS);
+        verify(gateway).sendAndWait(new AuthorizeCommand(getChargingStationId(), getIdentifyingToken()), 0, TimeUnit.SECONDS);
     }
 
     @Test
     public void testConfigureChargingStation() {
         domainService.configureChargingStation(getChargingStationId(), getConfigurationItems());
-        verify(gateway).send( new ConfigureChargingStationCommand(getChargingStationId(), getConfigurationItems()) );
+        verify(gateway).send(new ConfigureChargingStationCommand(getChargingStationId(), getConfigurationItems()));
     }
 
     @Test(expected = IllegalStateException.class)

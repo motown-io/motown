@@ -28,18 +28,18 @@ public final class AuthorizeCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final String idTag;
+    private final IdentifyingToken identifyingToken;
 
     /**
      * Creates a {@code AuthorizeCommand}.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param idTag the identifier that needs to be authorized.
-     * @throws NullPointerException if {@code chargingStationId} or {@code idTag} is {@code null}.
+     * @param IdentifyingToken  the identifier that needs to be authorized.
+     * @throws NullPointerException if {@code chargingStationId} or {@code identifyingToken} is {@code null}.
      */
-    public AuthorizeCommand(ChargingStationId chargingStationId, String idTag) {
+    public AuthorizeCommand(ChargingStationId chargingStationId, IdentifyingToken identifyingToken) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.idTag = checkNotNull(idTag);
+        this.identifyingToken = checkNotNull(identifyingToken);
     }
 
     /**
@@ -56,10 +56,9 @@ public final class AuthorizeCommand {
      *
      * @return the identifier that needs to be authorized.
      */
-    public String getIdTag() {
-        return idTag;
+    public IdentifyingToken getIdentifyingToken() {
+        return identifyingToken;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -69,7 +68,7 @@ public final class AuthorizeCommand {
         AuthorizeCommand that = (AuthorizeCommand) o;
 
         if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (!idTag.equals(that.idTag)) return false;
+        if (!identifyingToken.equals(that.identifyingToken)) return false;
 
         return true;
     }
@@ -77,8 +76,7 @@ public final class AuthorizeCommand {
     @Override
     public int hashCode() {
         int result = chargingStationId.hashCode();
-        result = 31 * result + idTag.hashCode();
+        result = 31 * result + identifyingToken.hashCode();
         return result;
     }
-
 }

@@ -16,10 +16,15 @@
 package io.motown.domain.app.axon;
 
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.TextualToken;
 
 public class DomainAppTestUtils {
 
     public static ChargingStationId getChargingStationId() {
         return new ChargingStationId("CS-001");
+    }
+
+    public static TextualToken getTextualToken() {
+        return new TextualToken("12345AB");
     }
 }

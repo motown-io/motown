@@ -25,6 +25,7 @@ import org.junit.Test;
 import java.util.Collections;
 
 import static io.motown.domain.app.axon.DomainAppTestUtils.getChargingStationId;
+import static io.motown.domain.app.axon.DomainAppTestUtils.getTextualToken;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -32,7 +33,7 @@ public class CorrelationCommandHandlerInterceptorTest {
 
     @Test
     public void verifyCorrelationUnitOfWorkListenerIsRegistered() throws Throwable {
-        CommandMessage command = new GenericCommandMessage<>(new AuthorizeCommand(getChargingStationId(), "1"))
+        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(getChargingStationId(), getTextualToken()))
                 .withMetaData(Collections.singletonMap("correlationId", "12345"));
         UnitOfWork unitOfWork = mock(UnitOfWork.class);
         InterceptorChain chain = mock(InterceptorChain.class);
@@ -44,7 +45,7 @@ public class CorrelationCommandHandlerInterceptorTest {
 
     @Test
     public void verifyCorrelationUnitOfWorkListenerIsNotRegistered() throws Throwable {
-        CommandMessage command = new GenericCommandMessage<>(new AuthorizeCommand(getChargingStationId(), "1"));
+        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(getChargingStationId(), getTextualToken()));
         UnitOfWork unitOfWork = mock(UnitOfWork.class);
         InterceptorChain chain = mock(InterceptorChain.class);
 
@@ -55,7 +56,7 @@ public class CorrelationCommandHandlerInterceptorTest {
 
     @Test
     public void verifyInterceptorChainIsProceeded() throws Throwable {
-        CommandMessage command = new GenericCommandMessage<>(new AuthorizeCommand(getChargingStationId(), "1"))
+        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(getChargingStationId(), getTextualToken()))
                 .withMetaData(Collections.singletonMap("correlationId", "12345"));
         UnitOfWork unitOfWork = mock(UnitOfWork.class);
         InterceptorChain chain = mock(InterceptorChain.class);

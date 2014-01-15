@@ -480,4 +480,12 @@ public class ChargingStationTest {
                 .when(new UnlockConnectorStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
                 .expectEvents(new UnlockConnectorStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
     }
+
+    @Test
+    public void testAuthorize() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new AuthorizeCommand(getChargingStationId(), getTextualToken()))
+                .expectEvents(new AuthorizationRequestedEvent(getChargingStationId(), getTextualToken()))
+                .expectReturnValue(AuthorizationResultStatus.ACCEPTED);
+    }
 }
