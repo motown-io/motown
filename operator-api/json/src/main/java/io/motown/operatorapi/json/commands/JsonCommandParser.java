@@ -15,15 +15,14 @@
  */
 package io.motown.operatorapi.json.commands;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ConfigureChargingStationCommand;
 import io.motown.domain.api.chargingstation.Connector;
+import io.motown.operatorapi.viewmodel.model.ConfigureChargingStationApiCommand;
 
-import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,21 +35,23 @@ public class JsonCommandParser {
     /**
      * Parse given JSON and give a ConfigureChargingStationCommand
      *
-     * @param chargingStationId  id of the charging station
-     * @param payload configuration json object (the inner structure of configuration
-     * @param gson gson parser in use
+     * @param chargingStationId id of the charging station
+     * @param payload           configuration json object (the inner structure of configuration
+     * @param gson              gson parser in use
      * @return The command to be sent for configuration of a charging station.
      * @throws IllegalArgumentException when there is no valid configuration of at least connectors or settings found
      */
     public static ConfigureChargingStationCommand parseConfigureChargingStation(ChargingStationId chargingStationId, JsonObject payload, Gson gson) {
-        JsonArray jsArrayOfConnectors = payload.getAsJsonArray("connectors");
-        Type typeOfConnectorList = new TypeToken<Set<Connector>>() { }.getType();
-        Set<Connector> connectors = gson.fromJson(jsArrayOfConnectors, typeOfConnectorList);
+        ConfigureChargingStationApiCommand command;
 
-        // GSON conversion of a { key:value } json map to a map of string,string of configuration items
-        JsonObject settingsArray = payload.getAsJsonObject("settings");
-        Type typeOfHashMap = new TypeToken<Map<String, String>>() { }.getType();
-        Map<String, String> settings = gson.fromJson(settingsArray, typeOfHashMap);
+        try {
+            command = gson.fromJson(payload, ConfigureChargingStationApiCommand.class);
+        } catch (JsonSyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
+
+        Map<String, String> settings = command.getSettings();
+        Set<Connector> connectors = command.getConnectors();
 
         if (settings == null && connectors != null) {
             return new ConfigureChargingStationCommand(chargingStationId, connectors);
