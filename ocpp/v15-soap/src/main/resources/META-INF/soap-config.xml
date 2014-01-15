@@ -99,8 +99,12 @@
         </axon:selectors>
         <axon:meta-data>
             <entry key="AMQP.Config">
+                <!--
+                TODO: Apply some sort of retry mechanism upon failures. For now acknowledge is set to none, which results in auto-ack behaviour (even upon exceptions) to avoid never ending processing loop on exceptions
+                -->
                 <axon-amqp:configuration queue-name="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.ocpp.queue.name}"
-                                         exclusive="false"/>
+                                         exclusive="false"
+                                         acknowledge="none"/>
             </entry>
         </axon:meta-data>
     </axon:cluster>
