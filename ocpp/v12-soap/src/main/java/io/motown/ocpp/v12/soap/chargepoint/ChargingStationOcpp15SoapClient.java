@@ -33,7 +33,6 @@ import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.xml.ws.BindingProvider;
 import java.util.Date;
@@ -42,7 +41,6 @@ import java.util.List;
 
 import static io.motown.domain.api.chargingstation.IdentifyingToken.AuthenticationStatus;
 
-@Component
 public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Client {
 
     private static final Logger log = LoggerFactory.getLogger(ChargingStationOcpp15SoapClient.class);

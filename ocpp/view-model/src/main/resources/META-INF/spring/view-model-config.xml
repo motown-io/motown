@@ -17,7 +17,13 @@
                                   ignore-resource-not-found="true"
                                   ignore-unresolvable="true"/>
 
-    <context:component-scan base-package="io.motown.ocpp.viewmodel"/>
+    <context:component-scan base-package="io.motown.ocpp.viewmodel">
+        <!--
+         The specific OCPP RequestHandlers are excluded here, as the one to use is configured on application level for specific OCPP version handling
+         TODO: Decide if this is the way to go, or move RequestHandlers to the specific OCPP application layer
+        -->
+        <context:exclude-filter type="regex" expression="io\.motown\.ocpp\.viewmodel\.Ocpp.*RequestHandler"/>
+    </context:component-scan>
 
     <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
         <property name="commandBus" ref="commandBus"/>

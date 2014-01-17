@@ -30,8 +30,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class OcppRequestHandler {
-    private static final Logger log = LoggerFactory.getLogger(io.motown.ocpp.viewmodel.OcppRequestHandler.class);
+public class Ocpp15RequestHandler {
+    private static final Logger log = LoggerFactory.getLogger(io.motown.ocpp.viewmodel.Ocpp15RequestHandler.class);
 
     @Autowired
     public DomainService domainService;

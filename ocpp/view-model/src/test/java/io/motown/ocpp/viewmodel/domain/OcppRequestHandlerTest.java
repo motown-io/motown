@@ -16,7 +16,7 @@
 package io.motown.ocpp.viewmodel.domain;
 
 import io.motown.domain.api.chargingstation.*;
-import io.motown.ocpp.viewmodel.OcppRequestHandler;
+import io.motown.ocpp.viewmodel.Ocpp15RequestHandler;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
 import org.junit.Before;
@@ -37,7 +37,7 @@ import static org.mockito.Mockito.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class OcppRequestHandlerTest {
 
-    private OcppRequestHandler requestHandler;
+    private Ocpp15RequestHandler requestHandler;
 
     @Autowired
     private ChargingStationRepository chargingStationRepository;
@@ -48,7 +48,7 @@ public class OcppRequestHandlerTest {
     public void setUp() {
         chargingStationRepository.deleteAll();
 
-        requestHandler = new OcppRequestHandler();
+        requestHandler = new Ocpp15RequestHandler();
         requestHandler.domainService = mock(DomainService.class);
         when(requestHandler.domainService.generateReservationIdentifier(any(ChargingStationId.class), any(String.class))).thenReturn(new NumberedReservationId(getChargingStationId(), getProtocol(), 1));
 
