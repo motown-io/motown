@@ -341,18 +341,18 @@ public class ChargingStationTest {
     }
 
     @Test
-    public void testGetAuthorisationListVersionRequest() {
+    public void testGetAuthorizationListVersionRequest() {
         fixture.given(getConfiguredChargingStation(true))
-                .when(new RequestAuthorisationListVersionCommand(getChargingStationId()))
-                .expectEvents(new AuthorisationListVersionRequestedEvent(getChargingStationId(), getProtocol()));
+                .when(new RequestAuthorizationListVersionCommand(getChargingStationId()))
+                .expectEvents(new AuthorizationListVersionRequestedEvent(getChargingStationId(), getProtocol()));
     }
 
     @Test
-    public void testGetAuthorisationListVersionReceived() {
+    public void testGetAuthorizationListVersionReceived() {
         int version = 1;
         fixture.given(getConfiguredChargingStation(true))
-                .when(new AuthorisationListVersionReceivedCommand(getChargingStationId(), version))
-                .expectEvents(new AuthorisationListVersionReceivedEvent(getChargingStationId(), version));
+                .when(new AuthorizationListVersionReceivedCommand(getChargingStationId(), version))
+                .expectEvents(new AuthorizationListVersionReceivedEvent(getChargingStationId(), version));
     }
 
     @Test
@@ -447,10 +447,10 @@ public class ChargingStationTest {
     }
 
     @Test
-    public void testSendAuthorisationListStatusChanged() {
+    public void testSendAuthorizationListStatusChanged() {
         fixture.given(getConfiguredChargingStation(true))
-                .when(new SendAuthorisationListStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
-                .expectEvents(new SendAuthorisationListStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+                .when(new SendAuthorizationListStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
+                .expectEvents(new SendAuthorizationListStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
     }
 
     @Test

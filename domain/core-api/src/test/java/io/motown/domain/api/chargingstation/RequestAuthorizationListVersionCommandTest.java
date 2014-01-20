@@ -15,7 +15,12 @@
  */
 package io.motown.domain.api.chargingstation;
 
-public enum AuthorisationListUpdateType {
-    FULL,
-    DIFFERENTIAL
+import org.junit.Test;
+
+public class RequestAuthorizationListVersionCommandTest {
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
+        new RequestAuthorizationListVersionCommand(null);
+    }
 }

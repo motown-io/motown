@@ -33,7 +33,7 @@ interface DomainCommandGateway {
     void send(RequestDiagnosticsCommand command);
     void send(RequestClearCacheCommand command);
     void send(RequestFirmwareUpdateCommand command);
-    void send(RequestAuthorisationListVersionCommand command);
-    void send(SendAuthorisationListCommand command);
+    void send(RequestAuthorizationListVersionCommand command);
+    void send(SendAuthorizationListCommand command);
     void send(RequestReserveNowCommand command);
 }

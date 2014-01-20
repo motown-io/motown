@@ -16,12 +16,8 @@
 
 package io.motown.ocpp.viewmodel.ocpp;
 
-import io.motown.domain.api.chargingstation.AuthorisationListUpdateType;
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.ConnectorId;
-import io.motown.domain.api.chargingstation.IdentifyingToken;
-import io.motown.domain.api.chargingstation.ReservationStatus;
-import io.motown.domain.api.chargingstation.RequestStatus;
+import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.AuthorizationListUpdateType;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -55,9 +51,9 @@ public interface ChargingStationOcpp15Client {
 
     void updateFirmware(ChargingStationId id, String downloadLocation, Date retrieveDate, Integer numRetries, Integer retryInterval);
 
-    int getAuthorisationListVersion(ChargingStationId id);
+    int getAuthorizationListVersion(ChargingStationId id);
 
-    RequestStatus sendAuthorisationList(ChargingStationId id, String hash, int listVersion, List<IdentifyingToken> identifyingTokens, AuthorisationListUpdateType updateType);
+    RequestStatus sendAuthorizationList(ChargingStationId id, String hash, int listVersion, List<IdentifyingToken> identifyingTokens, AuthorizationListUpdateType updateType);
 
     ReservationStatus reserveNow(ChargingStationId id, ConnectorId connectorId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken, int reservationId);
 }

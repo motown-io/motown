@@ -36,8 +36,8 @@
         <ref bean="getDiagnosticsJsonCommandHandler"/>
         <ref bean="clearCacheJsonCommandHandler"/>
         <ref bean="updateFirmwareJsonCommandHandler"/>
-        <ref bean="getAuthorisationListVersionJsonCommandHandler"/>
-        <ref bean="sendAuthorisationListJsonCommandHandler"/>
+        <ref bean="getAuthorizationListVersionJsonCommandHandler"/>
+        <ref bean="sendAuthorizationListJsonCommandHandler"/>
         <ref bean="requestReserveNowJsonCommandHandler"/>
     </util:list>
 

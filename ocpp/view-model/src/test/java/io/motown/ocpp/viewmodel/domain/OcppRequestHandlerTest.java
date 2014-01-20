@@ -170,18 +170,18 @@ public class OcppRequestHandlerTest {
     }
 
     @Test
-    public void testAuthorisationListVersionRequestedEvent() {
-        when(client.getAuthorisationListVersion(getChargingStationId())).thenReturn(getListVersion());
-        requestHandler.handle(new AuthorisationListVersionRequestedEvent(getChargingStationId(), getProtocol()));
+    public void testAuthorizationListVersionRequestedEvent() {
+        when(client.getAuthorizationListVersion(getChargingStationId())).thenReturn(getListVersion());
+        requestHandler.handle(new AuthorizationListVersionRequestedEvent(getChargingStationId(), getProtocol()));
 
-        verify(requestHandler.domainService).authorisationListVersionReceived(getChargingStationId(), getListVersion());
+        verify(requestHandler.domainService).authorizationListVersionReceived(getChargingStationId(), getListVersion());
     }
 
     @Test
-    public void testSendAuthorisationListRequestedEvent() {
-        requestHandler.handle(new SendAuthorisationListRequestedEvent(getChargingStationId(), getProtocol(), getAuthorizationList(), getAuthorizationListVersion(), getAuthorizationListHash(), getAuthorisationListUpdateType()));
+    public void testSendAuthorizationListRequestedEvent() {
+        requestHandler.handle(new SendAuthorizationListRequestedEvent(getChargingStationId(), getProtocol(), getAuthorizationList(), getAuthorizationListVersion(), getAuthorizationListHash(), getAuthorizationListUpdateType()));
 
-        verify(client).sendAuthorisationList(getChargingStationId(), getAuthorizationListHash(), getAuthorizationListVersion(), getAuthorizationList(), getAuthorisationListUpdateType());
+        verify(client).sendAuthorizationList(getChargingStationId(), getAuthorizationListHash(), getAuthorizationListVersion(), getAuthorizationList(), getAuthorizationListUpdateType());
     }
 
 }

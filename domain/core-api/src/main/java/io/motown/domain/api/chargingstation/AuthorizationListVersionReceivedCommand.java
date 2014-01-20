@@ -20,22 +20,27 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code RequestAuthorisationListVersionCommand} is the command which is published when the version of the charging
- * stations local authorisation list is requested.
+ * {@code AuthorizationListVersionReceivedCommand} is the command which is published when the version of the charging
+ * stations local authorization list is received.
  */
-public final class RequestAuthorisationListVersionCommand {
+public final class AuthorizationListVersionReceivedCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
+    private final int version;
+
     /**
-     * Creates a {@code RequestAuthorisationListVersionCommand} with an identifier.
+     * Creates a {@code AuthorizationListVersionReceivedCommand} with an identifier and the current authorization
+     * list version.
      *
      * @param chargingStationId the identifier of the charging station.
+     * @param version           the current version of the authorization list on the charging station
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public RequestAuthorisationListVersionCommand(ChargingStationId chargingStationId) {
+    public AuthorizationListVersionReceivedCommand(ChargingStationId chargingStationId, int version) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.version = version;
     }
 
     /**
@@ -45,5 +50,12 @@ public final class RequestAuthorisationListVersionCommand {
      */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
+    }
+
+    /**
+     * @return the current version of the authorization list on the charging station
+     */
+    public int getVersion() {
+        return version;
     }
 }

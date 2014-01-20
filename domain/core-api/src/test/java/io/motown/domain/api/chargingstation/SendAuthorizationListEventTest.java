@@ -23,35 +23,35 @@ import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingS
 import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getProtocol;
 
 
-public class SendAuthorisationListEventTest {
+public class SendAuthorizationListEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new SendAuthorisationListRequestedEvent(null, getProtocol(), new ArrayList<IdentifyingToken>(), 1, null, AuthorisationListUpdateType.FULL);
+        new SendAuthorizationListRequestedEvent(null, getProtocol(), new ArrayList<IdentifyingToken>(), 1, null, AuthorizationListUpdateType.FULL);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithProtocolNull() {
-        new SendAuthorisationListRequestedEvent(getChargingStationId(), null, new ArrayList<IdentifyingToken>(), 1, null, AuthorisationListUpdateType.FULL);
+        new SendAuthorizationListRequestedEvent(getChargingStationId(), null, new ArrayList<IdentifyingToken>(), 1, null, AuthorizationListUpdateType.FULL);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingEventWithProtocolEmpty() {
-        new SendAuthorisationListRequestedEvent(getChargingStationId(), "", new ArrayList<IdentifyingToken>(), 1, null, AuthorisationListUpdateType.FULL);
+        new SendAuthorizationListRequestedEvent(getChargingStationId(), "", new ArrayList<IdentifyingToken>(), 1, null, AuthorizationListUpdateType.FULL);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithTokensNull() {
-        new SendAuthorisationListRequestedEvent(getChargingStationId(), getProtocol(), null, 1, "", AuthorisationListUpdateType.FULL);
+        new SendAuthorizationListRequestedEvent(getChargingStationId(), getProtocol(), null, 1, "", AuthorizationListUpdateType.FULL);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithHashNull() {
-        new SendAuthorisationListRequestedEvent(getChargingStationId(), getProtocol(), new ArrayList<IdentifyingToken>(), 1, null, AuthorisationListUpdateType.FULL);
+        new SendAuthorizationListRequestedEvent(getChargingStationId(), getProtocol(), new ArrayList<IdentifyingToken>(), 1, null, AuthorizationListUpdateType.FULL);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithUpdateTypeNull() {
-        new SendAuthorisationListRequestedEvent(getChargingStationId(), getProtocol(), new ArrayList<IdentifyingToken>(), 1, null, null);
+        new SendAuthorizationListRequestedEvent(getChargingStationId(), getProtocol(), new ArrayList<IdentifyingToken>(), 1, null, null);
     }
 }

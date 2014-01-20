@@ -15,49 +15,48 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code SendAuthorisationListRequestedEvent} is the event which is published when a new authorisation list (or update
+ * {@code SendAuthorizationListRequestedEvent} is the event which is published when a new authorization list (or update
  * of the list) should be synchronised towards the charging station.
  */
-public final class SendAuthorisationListRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
+public final class SendAuthorizationListRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
 
     private final ChargingStationId chargingStationId;
 
     private final String protocol;
 
-    private final List<IdentifyingToken> authorisationList;
+    private final List<IdentifyingToken> authorizationList;
 
-    private final int authorisationListVersion;
+    private final int authorizationListVersion;
 
-    private final String authorisationListHash;
+    private final String authorizationListHash;
 
-    private final AuthorisationListUpdateType updateType;
+    private final AuthorizationListUpdateType updateType;
 
     /**
-     * Creates a {@code SendAuthorisationListRequestedEvent}.
+     * Creates a {@code SendAuthorizationListRequestedEvent}.
      * @param chargingStationId         the charging station identifier
      * @param protocol                  the protocol identifier
-     * @param authorisationList         the list of IdentifyingTokens to be updated/added
-     * @param authorisationListVersion  the authorisation list version identifier
-     * @param authorisationListHash     the optional hash calculated over the elements in the list
+     * @param authorizationList         the list of IdentifyingTokens to be updated/added
+     * @param authorizationListVersion  the authorization list version identifier
+     * @param authorizationListHash     the optional hash calculated over the elements in the list
      * @param updateType                the update type
      * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code updateType} is {@code null}.
      * @throws IllegalArgumentException if {@code protocol} is empty.
      */
-    public SendAuthorisationListRequestedEvent(ChargingStationId chargingStationId, String protocol, List<IdentifyingToken> authorisationList, int authorisationListVersion, String authorisationListHash, AuthorisationListUpdateType updateType) {
+    public SendAuthorizationListRequestedEvent(ChargingStationId chargingStationId, String protocol, List<IdentifyingToken> authorizationList, int authorizationListVersion, String authorizationListHash, AuthorizationListUpdateType updateType) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());
         this.protocol = protocol;
-        this.authorisationList = checkNotNull(authorisationList);
-        this.authorisationListVersion = checkNotNull(authorisationListVersion);
-        this.authorisationListHash = checkNotNull(authorisationListHash);
+        this.authorizationList = checkNotNull(authorizationList);
+        this.authorizationListVersion = checkNotNull(authorizationListVersion);
+        this.authorizationListHash = checkNotNull(authorizationListHash);
         this.updateType = checkNotNull(updateType);
     }
 
@@ -78,30 +77,30 @@ public final class SendAuthorisationListRequestedEvent implements CommunicationW
     }
 
     /**
-     * @return the authorisation list that is to be applied
+     * @return the authorization list that is to be applied
      */
-    public List<IdentifyingToken> getAuthorisationList() {
-        return authorisationList;
+    public List<IdentifyingToken> getAuthorizationList() {
+        return authorizationList;
     }
 
     /**
      * @return the list of IdentifyingTokens to be updated/added
      */
-    public AuthorisationListUpdateType getUpdateType() {
+    public AuthorizationListUpdateType getUpdateType() {
         return updateType;
     }
 
     /**
-     * @return the authorisation list version identifier
+     * @return the authorization list version identifier
      */
-    public int getAuthorisationListVersion() {
-        return authorisationListVersion;
+    public int getAuthorizationListVersion() {
+        return authorizationListVersion;
     }
 
     /**
      * @return the optional hash calculated over the elements in the list
      */
-    public String getAuthorisationListHash() {
-        return authorisationListHash;
+    public String getAuthorizationListHash() {
+        return authorizationListHash;
     }
 }

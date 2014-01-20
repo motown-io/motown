@@ -17,12 +17,8 @@
 package io.motown.ocpp.v15.soap.chargepoint;
 
 import com.google.common.collect.Maps;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
-import io.motown.domain.api.chargingstation.AuthorisationListUpdateType;
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.ConnectorId;
-import io.motown.domain.api.chargingstation.IdentifyingToken;
-import io.motown.domain.api.chargingstation.RequestStatus;
+import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.AuthorizationListUpdateType;
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import io.motown.ocpp.viewmodel.domain.DomainService;
@@ -249,18 +245,18 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     }
 
     @Override
-    public int getAuthorisationListVersion(ChargingStationId id) {
+    public int getAuthorizationListVersion(ChargingStationId id) {
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         GetLocalListVersionResponse response = chargePointService.getLocalListVersion(new GetLocalListVersionRequest(), id.getId());
         int currentWhitelistVersion = response.getListVersion();
 
-        log.info("At the moment {} has authorisationlist version {}", id.getId(), currentWhitelistVersion);
+        log.info("At the moment {} has authorizationlist version {}", id.getId(), currentWhitelistVersion);
         return currentWhitelistVersion;
     }
 
     @Override
-    public RequestStatus sendAuthorisationList(ChargingStationId id, String hash, int listVersion, List<IdentifyingToken> identifyingTokens, AuthorisationListUpdateType updateType) {
+    public RequestStatus sendAuthorizationList(ChargingStationId id, String hash, int listVersion, List<IdentifyingToken> identifyingTokens, AuthorizationListUpdateType updateType) {
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         SendLocalListRequest request = new SendLocalListRequest();
@@ -277,8 +273,8 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
                 break;
         }
 
-        //Translate the authorisation information to the OCPP specific info
-        List<AuthorisationData> authorisationList = request.getLocalAuthorisationList();
+        //Translate the authorization information to the OCPP specific info
+        List<AuthorisationData> authorizationList = request.getLocalAuthorisationList();
         for (IdentifyingToken identifyingToken : identifyingTokens) {
             AuthorisationData authData = new AuthorisationData();
             authData.setIdTag(identifyingToken.getToken());
@@ -307,18 +303,18 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
                 authData.setIdTagInfo(info);
             }
 
-            authorisationList.add(authData);
+            authorizationList.add(authData);
         }
 
         //TODO: Make ALL calls towards the chargingstation more robust (now can result in message processing loop of death), decide on how to achieve this; either by try catching here to force ACK, or not letting Rabbit reschedule upon exception - Ingo Pak, 03 Jan 2014
         SendLocalListResponse response = chargePointService.sendLocalList(request, id.getId());
 
         if (UpdateStatus.ACCEPTED.equals(response.getStatus())) {
-            log.info("Update of local authorisation list on {} has been accepted", id);
+            log.info("Update of local authorization list on {} has been accepted", id);
             return RequestStatus.SUCCESS;
         } else {
             String responseStatus = (response.getStatus() != null ? response.getStatus().value() : "-unknown status-");
-            log.warn("Update of local authorisation list on {} has failed due to {}", id, responseStatus);
+            log.warn("Update of local authorization list on {} has failed due to {}", id, responseStatus);
             return RequestStatus.FAILURE;
         }
     }

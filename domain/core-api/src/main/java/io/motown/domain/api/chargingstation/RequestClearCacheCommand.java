@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * {@code RequestClearCacheCommand} is the command which is published when a clearing of the charginstations
- * authorisation cache is requested.
+ * authorization cache is requested.
  */
 public final class RequestClearCacheCommand {
 

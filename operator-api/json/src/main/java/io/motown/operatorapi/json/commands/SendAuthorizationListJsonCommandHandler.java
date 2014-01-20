@@ -26,9 +26,9 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Component
-class SendAuthorisationListJsonCommandHandler implements JsonCommandHandler {
+class SendAuthorizationListJsonCommandHandler implements JsonCommandHandler {
 
-    private static final String COMMAND_NAME = "SendAuthorisationList";
+    private static final String COMMAND_NAME = "SendAuthorizationList";
 
     private DomainCommandGateway commandGateway;
 
@@ -40,23 +40,23 @@ class SendAuthorisationListJsonCommandHandler implements JsonCommandHandler {
     @Override
     public void handle(String chargingStationId, JsonObject commandObject) {
         try {
-            List<IdentifyingToken> authorisationList = Lists.newArrayList();
+            List<IdentifyingToken> authorizationList = Lists.newArrayList();
 
             JsonArray items = commandObject.get("items").getAsJsonArray();
             for(JsonElement item:items) {
                 String token = item.getAsJsonObject().get("token").getAsString();
                 IdentifyingToken.AuthenticationStatus status = IdentifyingToken.AuthenticationStatus.valueOf(item.getAsJsonObject().get("status").getAsString());
 
-                authorisationList.add(new TextualToken(token, status));
+                authorizationList.add(new TextualToken(token, status));
             }
 
             int listVersion = commandObject.get("listVersion").getAsInt();
-            AuthorisationListUpdateType updateType = AuthorisationListUpdateType.valueOf(commandObject.get("updateType").getAsString());
+            AuthorizationListUpdateType updateType = AuthorizationListUpdateType.valueOf(commandObject.get("updateType").getAsString());
 
             // TODO enable usage of hash in API - Dennis Laumen, January 13th 2014
-            commandGateway.send(new SendAuthorisationListCommand(new ChargingStationId(chargingStationId), authorisationList, listVersion, "", updateType));
+            commandGateway.send(new SendAuthorizationListCommand(new ChargingStationId(chargingStationId), authorizationList, listVersion, "", updateType));
         } catch (ClassCastException ex) {
-            throw new IllegalArgumentException("SendAuthorisationList command not able to parse the payload, is your json correctly formatted ?");
+            throw new IllegalArgumentException("SendAuthorizationList command not able to parse the payload, is your json correctly formatted ?");
         }
     }
 

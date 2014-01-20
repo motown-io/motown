@@ -19,28 +19,27 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getTextualToken;
 
 
-public class SendAuthorisationListCommandTest {
+public class SendAuthorizationListCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new SendAuthorisationListCommand(null, new ArrayList<IdentifyingToken>(), 1, "", AuthorisationListUpdateType.FULL);
+        new SendAuthorizationListCommand(null, new ArrayList<IdentifyingToken>(), 1, "", AuthorizationListUpdateType.FULL);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithTokensNull() {
-        new SendAuthorisationListCommand(getChargingStationId(), null, 1, "", AuthorisationListUpdateType.FULL);
+        new SendAuthorizationListCommand(getChargingStationId(), null, 1, "", AuthorizationListUpdateType.FULL);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithHashNull() {
-        new SendAuthorisationListCommand(getChargingStationId(), new ArrayList<IdentifyingToken>(), 1, null, AuthorisationListUpdateType.FULL);
+        new SendAuthorizationListCommand(getChargingStationId(), new ArrayList<IdentifyingToken>(), 1, null, AuthorizationListUpdateType.FULL);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithUpdateTypeNull() {
-        new SendAuthorisationListCommand(getChargingStationId(), new ArrayList<IdentifyingToken>(), 1, "", null);
+        new SendAuthorizationListCommand(getChargingStationId(), new ArrayList<IdentifyingToken>(), 1, "", null);
     }
 }

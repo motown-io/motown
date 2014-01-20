@@ -15,32 +15,28 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code AuthorisationListVersionReceivedCommand} is the command which is published when the version of the charging
- * stations local authorisation list is received.
+ * {@code AuthorizationListVersionRequestedEvent} is the event which is published when a request has been made to
+ * retrieve the version of the charging stations authorization list.
  */
-public final class AuthorisationListVersionReceivedCommand {
+public final class AuthorizationListVersionRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
 
-    @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final int version;
+    private final String protocol;
 
     /**
-     * Creates a {@code AuthorisationListVersionReceivedCommand} with an identifier and the current authorisation
-     * list version.
+     * Creates a {@code AuthorizationListVersionRequestedEvent} with an identifier and a protocol.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param version           the current version of the authorisation list on the charging station
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @param protocol          protocol identifier.
+     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} is {@code null}.
      */
-    public AuthorisationListVersionReceivedCommand(ChargingStationId chargingStationId, int version) {
+    public AuthorizationListVersionRequestedEvent(ChargingStationId chargingStationId, String protocol) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.version = version;
+        this.protocol = checkNotNull(protocol);
     }
 
     /**
@@ -48,14 +44,19 @@ public final class AuthorisationListVersionReceivedCommand {
      *
      * @return the charging station identifier.
      */
+    @Override
     public ChargingStationId getChargingStationId() {
-        return chargingStationId;
+        return this.chargingStationId;
     }
 
     /**
-     * @return the current version of the authorisation list on the charging station
+     * Gets the protocol identifier.
+     *
+     * @return the protocol identifier.
      */
-    public int getVersion() {
-        return version;
+    @Override
+    public String getProtocol() {
+        return this.protocol;
     }
+
 }

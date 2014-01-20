@@ -16,19 +16,18 @@
 package io.motown.domain.api.chargingstation;
 
 /**
- * {@code SendAuthorisationListStatusChangedEvent} is the event which is published to inform about the resulting status of the
+ * {@code SendAuthorizationListStatusChangedCommand} is the command which is published to inform about the resulting status of the
  * send authorization request that has been sent to the charging station.
  */
-public final class SendAuthorisationListStatusChangedEvent extends StatusChangedEvent{
-
+public final class SendAuthorizationListStatusChangedCommand extends StatusChangedCommand {
     /**
-     * Creates a {@code StatusChangedEvent} with an identifier and new status.
+     * Creates a {@code StatusChangedCommand} with an identifier and new status.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param status            the resulting status of the request
      * @throws NullPointerException if {@code chargingStationId} or {@code status} is {@code null}.
      */
-    public SendAuthorisationListStatusChangedEvent(ChargingStationId chargingStationId, RequestStatus status) {
+    public SendAuthorizationListStatusChangedCommand(ChargingStationId chargingStationId, RequestStatus status) {
         super(chargingStationId, status);
     }
 }

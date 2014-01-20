@@ -15,28 +15,27 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code AuthorisationListVersionReceivedEvent} is the event which is published when the authorisation list version
- * has been received from the charging station.
+ * {@code RequestAuthorizationListVersionCommand} is the command which is published when the version of the charging
+ * stations local authorization list is requested.
  */
-public final class AuthorisationListVersionReceivedEvent {
+public final class RequestAuthorizationListVersionCommand {
 
+    @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final int version;
-
     /**
-     * Creates a {@code AuthorisationListVersionReceivedEvent} with an identifier and a version.
+     * Creates a {@code RequestAuthorizationListVersionCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param version           the current version of the authorisation list on the charging station
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public AuthorisationListVersionReceivedEvent(ChargingStationId chargingStationId, int version) {
+    public RequestAuthorizationListVersionCommand(ChargingStationId chargingStationId) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.version = version;
     }
 
     /**
@@ -45,13 +44,6 @@ public final class AuthorisationListVersionReceivedEvent {
      * @return the charging station identifier.
      */
     public ChargingStationId getChargingStationId() {
-        return this.chargingStationId;
-    }
-
-    /**
-     * @return the current version of the authorisation list on the charging station
-     */
-    public int getVersion() {
-        return version;
+        return chargingStationId;
     }
 }

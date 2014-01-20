@@ -18,25 +18,25 @@ package io.motown.domain.api.chargingstation;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code AuthorisationListVersionRequestedEvent} is the event which is published when a request has been made to
- * retrieve the version of the charging stations authorisation list.
+ * {@code AuthorizationListVersionReceivedEvent} is the event which is published when the authorization list version
+ * has been received from the charging station.
  */
-public final class AuthorisationListVersionRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
+public final class AuthorizationListVersionReceivedEvent {
 
     private final ChargingStationId chargingStationId;
 
-    private final String protocol;
+    private final int version;
 
     /**
-     * Creates a {@code AuthorisationListVersionRequestedEvent} with an identifier and a protocol.
+     * Creates a {@code AuthorizationListVersionReceivedEvent} with an identifier and a version.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param protocol          protocol identifier.
-     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} is {@code null}.
+     * @param version           the current version of the authorization list on the charging station
+     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public AuthorisationListVersionRequestedEvent(ChargingStationId chargingStationId, String protocol) {
+    public AuthorizationListVersionReceivedEvent(ChargingStationId chargingStationId, int version) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.protocol = checkNotNull(protocol);
+        this.version = version;
     }
 
     /**
@@ -44,19 +44,14 @@ public final class AuthorisationListVersionRequestedEvent implements Communicati
      *
      * @return the charging station identifier.
      */
-    @Override
     public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
     }
 
     /**
-     * Gets the protocol identifier.
-     *
-     * @return the protocol identifier.
+     * @return the current version of the authorization list on the charging station
      */
-    @Override
-    public String getProtocol() {
-        return this.protocol;
+    public int getVersion() {
+        return version;
     }
-
 }

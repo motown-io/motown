@@ -100,13 +100,13 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
     }
 
     @Override
-    public void send(RequestAuthorisationListVersionCommand command) {
-        log.debug("RequestAuthorisationListVersionCommand: " + command.toString());
+    public void send(RequestAuthorizationListVersionCommand command) {
+        log.debug("RequestAuthorizationListVersionCommand: " + command.toString());
     }
 
     @Override
-    public void send(SendAuthorisationListCommand command) {
-        log.debug("SendAuthorisationListCommand: " + command.toString());
+    public void send(SendAuthorizationListCommand command) {
+        log.debug("SendAuthorizationListCommand: " + command.toString());
     }
 
     @Override

@@ -18,10 +18,10 @@ package io.motown.domain.api.chargingstation;
 import org.junit.Test;
 
 
-public class AuthorisationListVersionReceivedEventTest {
+public class AuthorizationListVersionReceivedCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new AuthorisationListVersionReceivedEvent(null, 1);
+        new AuthorizationListVersionReceivedCommand(null, 1);
     }
 }

@@ -158,8 +158,8 @@ public class DomainService {
         commandGateway.send(new DiagnosticsFileNameReceivedCommand(chargingStationId, diagnosticsFileName));
     }
 
-    public void authorisationListVersionReceived(ChargingStationId chargingStationId, int currentVersion) {
-        commandGateway.send(new AuthorisationListVersionReceivedCommand(chargingStationId, currentVersion));
+    public void authorizationListVersionReceived(ChargingStationId chargingStationId, int currentVersion) {
+        commandGateway.send(new AuthorizationListVersionReceivedCommand(chargingStationId, currentVersion));
     }
 
     public AuthorizationResult authorize(ChargingStationId chargingStationId, String idTag) {
@@ -307,8 +307,8 @@ public class DomainService {
         commandGateway.send(new ClearCacheStatusChangedCommand(chargingStationId, requestStatus));
     }
 
-    public void sendAuthorisationListStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new SendAuthorisationListStatusChangedCommand(chargingStationId, requestStatus));
+    public void sendAuthorizationListStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
+        commandGateway.send(new SendAuthorizationListStatusChangedCommand(chargingStationId, requestStatus));
     }
 
     public void setCommandGateway(DomainCommandGateway commandGateway) {

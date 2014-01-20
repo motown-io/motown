@@ -17,7 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.RequestAuthorisationListVersionCommand;
+import io.motown.domain.api.chargingstation.RequestAuthorizationListVersionCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +26,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component
-class GetAuthorisationListVersionJsonCommandHandler implements JsonCommandHandler {
+class GetAuthorizationListVersionJsonCommandHandler implements JsonCommandHandler {
 
-    private static final String COMMAND_NAME = "GetAuthorisationListVersion";
+    private static final String COMMAND_NAME = "GetAuthorizationListVersion";
 
     private DomainCommandGateway commandGateway;
 
@@ -44,10 +44,10 @@ class GetAuthorisationListVersionJsonCommandHandler implements JsonCommandHandle
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
-                commandGateway.send(new RequestAuthorisationListVersionCommand(new ChargingStationId(chargingStationId)));
+                commandGateway.send(new RequestAuthorizationListVersionCommand(new ChargingStationId(chargingStationId)));
             }
         } catch (ClassCastException ex) {
-            throw new IllegalArgumentException("GetAuthorisationListVersion command not able to parse the payload, is your json correctly formatted?");
+            throw new IllegalArgumentException("GetAuthorizationListVersion command not able to parse the payload, is your json correctly formatted?");
         }
 
     }

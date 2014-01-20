@@ -225,18 +225,18 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(RequestAuthorisationListVersionCommand command) {
-        apply(new AuthorisationListVersionRequestedEvent(command.getChargingStationId(), this.protocol));
+    public void handle(RequestAuthorizationListVersionCommand command) {
+        apply(new AuthorizationListVersionRequestedEvent(command.getChargingStationId(), this.protocol));
     }
 
     @CommandHandler
-    public void handle(AuthorisationListVersionReceivedCommand command) {
-        apply(new AuthorisationListVersionReceivedEvent(command.getChargingStationId(), command.getVersion()));
+    public void handle(AuthorizationListVersionReceivedCommand command) {
+        apply(new AuthorizationListVersionReceivedEvent(command.getChargingStationId(), command.getVersion()));
     }
 
     @CommandHandler
-    public void handle(SendAuthorisationListCommand command) {
-        apply(new SendAuthorisationListRequestedEvent(command.getChargingStationId(), this.protocol, command.getAuthorisationList(), command.getAuthorisationListVersion(), command.getAuthorisationListHash(), command.getUpdateType()));
+    public void handle(SendAuthorizationListCommand command) {
+        apply(new SendAuthorizationListRequestedEvent(command.getChargingStationId(), this.protocol, command.getAuthorizationList(), command.getAuthorizationListVersion(), command.getAuthorizationListHash(), command.getUpdateType()));
     }
 
     @CommandHandler
@@ -295,8 +295,8 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(SendAuthorisationListStatusChangedCommand command) {
-        apply(new SendAuthorisationListStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
+    public void handle(SendAuthorizationListStatusChangedCommand command) {
+        apply(new SendAuthorizationListStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
     }
 
     @CommandHandler

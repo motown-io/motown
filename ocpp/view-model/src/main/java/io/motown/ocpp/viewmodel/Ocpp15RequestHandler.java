@@ -159,21 +159,21 @@ public class Ocpp15RequestHandler {
     }
 
     @EventHandler
-    public void handle(AuthorisationListVersionRequestedEvent event) {
-        log.info("AuthorisationListVersionRequestedEvent");
+    public void handle(AuthorizationListVersionRequestedEvent event) {
+        log.info("AuthorizationListVersionRequestedEvent");
 
-        int currentVersion = chargingStationOcpp15Client.getAuthorisationListVersion(event.getChargingStationId());
+        int currentVersion = chargingStationOcpp15Client.getAuthorizationListVersion(event.getChargingStationId());
 
-        domainService.authorisationListVersionReceived(event.getChargingStationId(), currentVersion);
+        domainService.authorizationListVersionReceived(event.getChargingStationId(), currentVersion);
     }
 
     @EventHandler
-    public void handle(SendAuthorisationListRequestedEvent event) {
-        log.info("SendAuthorisationListRequestedEvent");
+    public void handle(SendAuthorizationListRequestedEvent event) {
+        log.info("SendAuthorizationListRequestedEvent");
 
-        RequestStatus requestStatus = chargingStationOcpp15Client.sendAuthorisationList(event.getChargingStationId(), event.getAuthorisationListHash(), event.getAuthorisationListVersion(), event.getAuthorisationList(), event.getUpdateType());
+        RequestStatus requestStatus = chargingStationOcpp15Client.sendAuthorizationList(event.getChargingStationId(), event.getAuthorizationListHash(), event.getAuthorizationListVersion(), event.getAuthorizationList(), event.getUpdateType());
 
-        domainService.sendAuthorisationListStatusChanged(event.getChargingStationId(), requestStatus);
+        domainService.sendAuthorizationListStatusChanged(event.getChargingStationId(), requestStatus);
     }
 
     @EventHandler

@@ -151,8 +151,8 @@ public class TestUtils {
         return "hash";
     }
 
-    public static AuthorisationListUpdateType getAuthorisationListUpdateType() {
-        return AuthorisationListUpdateType.DIFFERENTIAL;
+    public static AuthorizationListUpdateType getAuthorizationListUpdateType() {
+        return AuthorizationListUpdateType.DIFFERENTIAL;
     }
 
     public static ReservationStatus getReservationStatus() {

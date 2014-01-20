@@ -222,12 +222,12 @@ function ChargingStationController($scope, $http, $timeout) {
             });
     };
 
-    $scope.getAuthorisationListVersion = function(chargingStation) {
+    $scope.getAuthorizationListVersion = function(chargingStation) {
         $http({
             url: 'charging-stations/' + chargingStation.id + '/commands',
             dataType: 'json',
             method: 'POST',
-            data: ['GetAuthorisationListVersion',{
+            data: ['GetAuthorizationListVersion',{
             }],
             headers: {
                 'Content-Type': 'application/json',
@@ -238,12 +238,12 @@ function ChargingStationController($scope, $http, $timeout) {
             });
     };
 
-    $scope.sendAuthorisationList = function(chargingStation, listVersion, updateType, items) {
+    $scope.sendAuthorizationList = function(chargingStation, listVersion, updateType, items) {
         $http({
             url: 'charging-stations/' + chargingStation.id + '/commands',
             dataType: 'json',
             method: 'POST',
-            data: ['SendAuthorisationList',{
+            data: ['SendAuthorizationList',{
                 'listVersion': listVersion,
                 'updateType': updateType,
                 'items': items

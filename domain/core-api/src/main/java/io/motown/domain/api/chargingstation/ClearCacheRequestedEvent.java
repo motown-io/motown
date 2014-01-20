@@ -18,7 +18,7 @@ package io.motown.domain.api.chargingstation;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code ClearCacheRequestedEvent} is the event which is published when a request has been made clear the authorisation
+ * {@code ClearCacheRequestedEvent} is the event which is published when a request has been made clear the authorization
  * cache on the charging station.
  */
 public final class ClearCacheRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
