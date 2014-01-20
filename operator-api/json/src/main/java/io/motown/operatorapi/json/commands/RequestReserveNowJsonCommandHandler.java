@@ -15,8 +15,12 @@
  */
 package io.motown.operatorapi.json.commands;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.RequestReserveNowCommand;
+import io.motown.domain.api.chargingstation.TextualToken;
+import io.motown.operatorapi.viewmodel.model.RequestReserveNowApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.joda.time.format.DateTimeFormat;
@@ -36,6 +40,8 @@ class RequestReserveNowJsonCommandHandler implements JsonCommandHandler {
 
     private ChargingStationRepository repository;
 
+    private Gson gson;
+
     @Override
     public String getCommandName() {
         return COMMAND_NAME;
@@ -46,15 +52,14 @@ class RequestReserveNowJsonCommandHandler implements JsonCommandHandler {
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
-                ConnectorId connectorId = new ConnectorId(commandObject.get("connectorId").getAsInt());
-                String token = commandObject.get("identifyingToken").getAsString();
-                TextualToken identifyingToken = new TextualToken(token);
+                RequestReserveNowApiCommand command = gson.fromJson(commandObject, RequestReserveNowApiCommand.class);
 
-                String expiryDateString = commandObject.get("expiryDate").getAsString();
+                TextualToken identifyingToken = new TextualToken(command.getIdentifyingToken());
+
                 DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-                Date expiryDate = formatter.parseDateTime(expiryDateString).toDate();
+                Date expiryDate = formatter.parseDateTime(command.getExpiryDate()).toDate();
 
-                commandGateway.send(new RequestReserveNowCommand(new ChargingStationId(chargingStationId), connectorId, identifyingToken, expiryDate, null));
+                commandGateway.send(new RequestReserveNowCommand(new ChargingStationId(chargingStationId), command.getConnectorId(), identifyingToken, expiryDate, null));
             } else {
                 throw new IllegalStateException("It is not possible to request a reservation on a charging station that is not registered");
             }
@@ -71,5 +76,10 @@ class RequestReserveNowJsonCommandHandler implements JsonCommandHandler {
     @Autowired
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
+    }
+
+    @Autowired
+    public void setGson(Gson gson) {
+        this.gson = gson;
     }
 }

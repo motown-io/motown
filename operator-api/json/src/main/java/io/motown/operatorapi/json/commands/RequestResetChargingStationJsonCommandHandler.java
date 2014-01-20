@@ -15,10 +15,12 @@
  */
 package io.motown.operatorapi.json.commands;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestHardResetChargingStationCommand;
 import io.motown.domain.api.chargingstation.RequestSoftResetChargingStationCommand;
+import io.motown.operatorapi.viewmodel.model.RequestResetChargingStationApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,8 @@ class RequestResetChargingStationJsonCommandHandler implements JsonCommandHandle
 
     private ChargingStationRepository repository;
 
+    private Gson gson;
+
     @Override
     public String getCommandName() {
         return COMMAND_NAME;
@@ -45,9 +49,9 @@ class RequestResetChargingStationJsonCommandHandler implements JsonCommandHandle
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
-                String resetType = commandObject.get("type").getAsString();
+                RequestResetChargingStationApiCommand command = gson.fromJson(commandObject, RequestResetChargingStationApiCommand.class);
 
-                if("hard".equalsIgnoreCase(resetType)) {
+                if("hard".equalsIgnoreCase(command.getType())) {
                     commandGateway.send(new RequestHardResetChargingStationCommand(new ChargingStationId(chargingStationId)));
                 } else {
                     commandGateway.send(new RequestSoftResetChargingStationCommand(new ChargingStationId(chargingStationId)));
@@ -67,5 +71,10 @@ class RequestResetChargingStationJsonCommandHandler implements JsonCommandHandle
     @Autowired
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
+    }
+
+    @Autowired
+    public void setGson(Gson gson) {
+        this.gson = gson;
     }
 }

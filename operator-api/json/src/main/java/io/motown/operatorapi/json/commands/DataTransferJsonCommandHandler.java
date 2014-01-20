@@ -15,9 +15,11 @@
  */
 package io.motown.operatorapi.json.commands;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.DataTransferCommand;
+import io.motown.operatorapi.viewmodel.model.DataTransferApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,8 @@ class DataTransferJsonCommandHandler implements JsonCommandHandler {
 
     private ChargingStationRepository repository;
 
+    private Gson gson;
+
     @Override
     public String getCommandName() {
         return COMMAND_NAME;
@@ -44,11 +48,9 @@ class DataTransferJsonCommandHandler implements JsonCommandHandler {
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
-                String vendorId = commandObject.get("vendorId").getAsString();
-                String messageId = commandObject.get("messageId").getAsString();
-                String data = commandObject.get("data").getAsString();
+                DataTransferApiCommand command = gson.fromJson(commandObject, DataTransferApiCommand.class);
 
-                commandGateway.send(new DataTransferCommand(new ChargingStationId(chargingStationId), vendorId, messageId, data));
+                commandGateway.send(new DataTransferCommand(new ChargingStationId(chargingStationId), command.getVendorId(), command.getMessageId(), command.getData()));
             }
         } catch (ClassCastException ex) {
             throw new IllegalArgumentException("Data transfer command not able to parse the payload, is your json correctly formatted?");
@@ -64,5 +66,10 @@ class DataTransferJsonCommandHandler implements JsonCommandHandler {
     @Autowired
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
+    }
+
+    @Autowired
+    public void setGson(Gson gson) {
+        this.gson = gson;
     }
 }

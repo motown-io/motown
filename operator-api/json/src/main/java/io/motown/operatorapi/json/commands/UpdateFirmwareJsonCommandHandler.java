@@ -15,9 +15,11 @@
  */
 package io.motown.operatorapi.json.commands;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestFirmwareUpdateCommand;
+import io.motown.operatorapi.viewmodel.model.UpdateFirmwareApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.joda.time.format.DateTimeFormat;
@@ -38,6 +40,8 @@ class UpdateFirmwareJsonCommandHandler implements JsonCommandHandler {
 
     private ChargingStationRepository repository;
 
+    private Gson gson;
+
     @Override
     public String getCommandName() {
         return COMMAND_NAME;
@@ -48,14 +52,12 @@ class UpdateFirmwareJsonCommandHandler implements JsonCommandHandler {
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
-                String downloadLocation = commandObject.get("location").getAsString();
-                String retrieveDateString = commandObject.get("retrieveDate").getAsString();
-
+                UpdateFirmwareApiCommand command = gson.fromJson(commandObject, UpdateFirmwareApiCommand.class);
 
                 DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-                Date retrieveDate = formatter.parseDateTime(retrieveDateString).toDate();
+                Date retrieveDate = formatter.parseDateTime(command.getRetrieveDate()).toDate();
 
-                commandGateway.send(new RequestFirmwareUpdateCommand(new ChargingStationId(chargingStationId), downloadLocation, retrieveDate, new HashMap<String, String>()));
+                commandGateway.send(new RequestFirmwareUpdateCommand(new ChargingStationId(chargingStationId), command.getLocation(), retrieveDate, new HashMap<String, String>()));
             }
         } catch (ClassCastException ex) {
             throw new IllegalArgumentException("Change configuration command not able to parse the payload, is your json correctly formatted?");
@@ -71,5 +73,10 @@ class UpdateFirmwareJsonCommandHandler implements JsonCommandHandler {
     @Autowired
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
+    }
+
+    @Autowired
+    public void setGson(Gson gson) {
+        this.gson = gson;
     }
 }

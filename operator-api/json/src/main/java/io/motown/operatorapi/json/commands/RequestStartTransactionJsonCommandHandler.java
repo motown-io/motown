@@ -15,11 +15,13 @@
  */
 package io.motown.operatorapi.json.commands;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ConnectorId;
 import io.motown.domain.api.chargingstation.RequestStartTransactionCommand;
 import io.motown.domain.api.chargingstation.TextualToken;
+import io.motown.operatorapi.viewmodel.model.RequestStartTransactionApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,8 @@ class RequestStartTransactionJsonCommandHandler implements JsonCommandHandler {
 
     private ChargingStationRepository repository;
 
+    private Gson gson;
+
     @Override
     public String getCommandName() {
         return COMMAND_NAME;
@@ -46,11 +50,10 @@ class RequestStartTransactionJsonCommandHandler implements JsonCommandHandler {
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
-                ConnectorId connectorId = new ConnectorId(commandObject.get("connectorId").getAsInt());
-                String token = commandObject.get("identifyingToken").getAsString();
-                TextualToken identifyingToken = new TextualToken(token);
+                RequestStartTransactionApiCommand command = gson.fromJson(commandObject, RequestStartTransactionApiCommand.class);
+                TextualToken identifyingToken = new TextualToken(command.getIdentifyingToken());
 
-                commandGateway.send(new RequestStartTransactionCommand(new ChargingStationId(chargingStationId), identifyingToken, connectorId));
+                commandGateway.send(new RequestStartTransactionCommand(new ChargingStationId(chargingStationId), identifyingToken, command.getConnectorId()));
             } else {
                 throw new IllegalStateException("It is not possible to request a start transaction on a charging station that is not registered");
             }
@@ -67,5 +70,10 @@ class RequestStartTransactionJsonCommandHandler implements JsonCommandHandler {
     @Autowired
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
+    }
+
+    @Autowired
+    public void setGson(Gson gson) {
+        this.gson = gson;
     }
 }

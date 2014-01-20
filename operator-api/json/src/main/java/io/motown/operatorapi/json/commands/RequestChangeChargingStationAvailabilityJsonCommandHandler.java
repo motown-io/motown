@@ -15,8 +15,12 @@
  */
 package io.motown.operatorapi.json.commands;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.RequestChangeChargingStationAvailabilityToInoperativeCommand;
+import io.motown.domain.api.chargingstation.RequestChangeChargingStationAvailabilityToOperativeCommand;
+import io.motown.operatorapi.viewmodel.model.RequestChangeChargingStationAvailabilityApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +37,8 @@ class RequestChangeChargingStationAvailabilityJsonCommandHandler implements Json
 
     private ChargingStationRepository repository;
 
+    private Gson gson;
+
     @Override
     public String getCommandName() {
         return COMMAND_NAME;
@@ -43,13 +49,12 @@ class RequestChangeChargingStationAvailabilityJsonCommandHandler implements Json
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
-                String availability = commandObject.get("availability").getAsString();
-                ConnectorId connectorId = new ConnectorId(commandObject.get("connectorId").getAsInt());
+                RequestChangeChargingStationAvailabilityApiCommand command = gson.fromJson(commandObject, RequestChangeChargingStationAvailabilityApiCommand.class);
 
-                if("inoperative".equalsIgnoreCase(availability)) {
-                    commandGateway.send(new RequestChangeChargingStationAvailabilityToInoperativeCommand(new ChargingStationId(chargingStationId), connectorId));
+                if ("inoperative".equalsIgnoreCase(command.getAvailability())) {
+                    commandGateway.send(new RequestChangeChargingStationAvailabilityToInoperativeCommand(new ChargingStationId(chargingStationId), command.getConnectorId()));
                 } else {
-                    commandGateway.send(new RequestChangeChargingStationAvailabilityToOperativeCommand(new ChargingStationId(chargingStationId), connectorId));
+                    commandGateway.send(new RequestChangeChargingStationAvailabilityToOperativeCommand(new ChargingStationId(chargingStationId), command.getConnectorId()));
                 }
             }
         } catch (ClassCastException ex) {
@@ -65,5 +70,10 @@ class RequestChangeChargingStationAvailabilityJsonCommandHandler implements Json
     @Autowired
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
+    }
+
+    @Autowired
+    public void setGson(Gson gson) {
+        this.gson = gson;
     }
 }

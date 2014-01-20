@@ -15,10 +15,13 @@
  */
 package io.motown.operatorapi.json.commands;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ConnectorId;
 import io.motown.domain.api.chargingstation.RequestUnlockConnectorCommand;
+import io.motown.operatorapi.viewmodel.model.UnlockConnectorApiCommand;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -32,6 +35,8 @@ class UnlockConnectorJsonCommandHandler implements JsonCommandHandler {
 
     private DomainCommandGateway commandGateway;
 
+    private Gson gson;
+
     @Override
     public String getCommandName() {
         return COMMAND_NAME;
@@ -39,13 +44,18 @@ class UnlockConnectorJsonCommandHandler implements JsonCommandHandler {
 
     @Override
     public void handle(String chargingStationId, JsonObject commandObject) {
-        ConnectorId connectorId = new ConnectorId(commandObject.get(CONNECTOR_ID_FIELD).getAsInt());
+        UnlockConnectorApiCommand command = gson.fromJson(commandObject, UnlockConnectorApiCommand.class);
 
-        commandGateway.send(new RequestUnlockConnectorCommand(new ChargingStationId(chargingStationId), connectorId));
+        commandGateway.send(new RequestUnlockConnectorCommand(new ChargingStationId(chargingStationId), command.getConnectorId()));
     }
 
     @Resource(name = "domainCommandGateway")
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
+    }
+
+    @Autowired
+    public void setGson(Gson gson) {
+        this.gson = gson;
     }
 }
