@@ -15,9 +15,11 @@
  */
 package io.motown.operatorapi.json.commands;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.RequestAuthorizationListVersionCommand;
+import io.motown.domain.api.chargingstation.RequestDiagnosticsCommand;
+import io.motown.operatorapi.viewmodel.model.GetDiagnosticsApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +28,15 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component
-class GetAuthorizationListVersionJsonCommandHandler implements JsonCommandHandler {
+class RequestDiagnosticsJsonCommandHandler implements JsonCommandHandler {
 
-    private static final String COMMAND_NAME = "GetAuthorizationListVersion";
+    private static final String COMMAND_NAME = "GetDiagnostics";
 
     private DomainCommandGateway commandGateway;
 
     private ChargingStationRepository repository;
+
+    private Gson gson;
 
     @Override
     public String getCommandName() {
@@ -44,10 +48,12 @@ class GetAuthorizationListVersionJsonCommandHandler implements JsonCommandHandle
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
-                commandGateway.send(new RequestAuthorizationListVersionCommand(new ChargingStationId(chargingStationId)));
+                GetDiagnosticsApiCommand command = gson.fromJson(commandObject, GetDiagnosticsApiCommand.class);
+
+                commandGateway.send(new RequestDiagnosticsCommand(new ChargingStationId(chargingStationId), command.getTargetLocation(), null, null, null, null));
             }
         } catch (ClassCastException ex) {
-            throw new IllegalArgumentException("GetAuthorizationListVersion command not able to parse the payload, is your json correctly formatted?");
+            throw new IllegalArgumentException("Data transfer command not able to parse the payload, is your json correctly formatted?");
         }
 
     }
@@ -60,5 +66,10 @@ class GetAuthorizationListVersionJsonCommandHandler implements JsonCommandHandle
     @Autowired
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
+    }
+
+    @Autowired
+    public void setGson(Gson gson) {
+        this.gson = gson;
     }
 }

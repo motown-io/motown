@@ -33,10 +33,10 @@
         <ref bean="requestChangeChargingStationAvailabilityJsonCommandHandler"/>
         <ref bean="dataTransferJsonCommandHandler"/>
         <ref bean="changeConfigurationJsonCommandHandler"/>
-        <ref bean="getDiagnosticsJsonCommandHandler"/>
+        <ref bean="requestDiagnosticsJsonCommandHandler"/>
         <ref bean="clearCacheJsonCommandHandler"/>
         <ref bean="updateFirmwareJsonCommandHandler"/>
-        <ref bean="getAuthorizationListVersionJsonCommandHandler"/>
+        <ref bean="requestAuthorizationListVersionJsonCommandHandler"/>
         <ref bean="sendAuthorizationListJsonCommandHandler"/>
         <ref bean="requestReserveNowJsonCommandHandler"/>
     </util:list>
