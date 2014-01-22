@@ -485,7 +485,6 @@ public class ChargingStationTest {
     public void testAuthorize() {
         fixture.given(getConfiguredChargingStation(true))
                 .when(new AuthorizeCommand(getChargingStationId(), getTextualToken()))
-                .expectEvents(new AuthorizationRequestedEvent(getChargingStationId(), getTextualToken()))
-                .expectReturnValue(AuthorizationResultStatus.ACCEPTED);
+                .expectEvents(new AuthorizationRequestedEvent(getChargingStationId(), getTextualToken()));
     }
 }

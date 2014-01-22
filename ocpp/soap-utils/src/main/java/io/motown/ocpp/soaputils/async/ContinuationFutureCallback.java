@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.v12.soap.async;
+package io.motown.ocpp.soaputils.async;
 
-public interface ResponseFactory<T> {
-    T createResponse();
+import org.apache.cxf.continuations.Continuation;
+
+public interface ContinuationFutureCallback {
+
+    public void setContinuation(Continuation continuation);
+
 }

@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.v15.soap.async;
+package io.motown.identificationauthorization.pluginapi;
 
-public interface ResponseFactory<T> {
-    T createResponse();
+import io.motown.domain.api.chargingstation.IdentifyingToken;
+
+public interface AuthenticationProvider {
+
+    public boolean isValid(IdentifyingToken identification);
+
 }

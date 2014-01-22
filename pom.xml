@@ -13,14 +13,19 @@
         <module>domain/app</module>
         <module>domain/command-handling</module>
         <module>domain/core-api</module>
+        <module>domain/utils</module>
         <module>ocpp/v12-soap</module>
         <module>ocpp/v15-soap</module>
         <module>ocpp/view-model</module>
         <module>ocpp/websocket-json</module>
+        <module>ocpp/soap-utils</module>
         <module>operator-api/json</module>
         <module>operator-api/view-model</module>
         <module>operator-ui/view-model</module>
         <module>operator-ui/web</module>
+        <module>identification-authorization/app</module>
+        <module>identification-authorization/plugin-api</module>
+        <module>identification-authorization/cir-plugin</module>
     </modules>
 
     <properties>

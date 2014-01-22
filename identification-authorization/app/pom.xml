@@ -16,7 +16,8 @@
     limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -27,8 +28,14 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <groupId>io.motown.ocpp</groupId>
-    <artifactId>ocpp-view-model</artifactId>
+    <groupId>io.motown.identification-authorization</groupId>
+    <artifactId>identification-authorization-app</artifactId>
+    <packaging>war</packaging>
+
+    <properties>
+        <jetty.port>8082</jetty.port>
+        <jetty.scanIntervalSeconds>10</jetty.scanIntervalSeconds>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -37,8 +44,13 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.motown.domain</groupId>
-            <artifactId>domain-utils</artifactId>
+            <groupId>io.motown.identification-authorization</groupId>
+            <artifactId>identification-authorization-plugin-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.motown.identification-authorization</groupId>
+            <artifactId>identification-authorization-cir-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -108,6 +120,14 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jgroups</groupId>
+            <artifactId>jgroups</artifactId>
         </dependency>
     </dependencies>
 

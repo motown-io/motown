@@ -23,6 +23,7 @@ import io.motown.ocpp.viewmodel.persistence.entities.Transaction;
 import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
 import io.motown.ocpp.viewmodel.persistence.repostories.ReservationIdentifierRepository;
 import io.motown.ocpp.viewmodel.persistence.repostories.TransactionRepository;
+import org.axonframework.commandhandling.gateway.EventWaitingGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class DomainService {
@@ -79,6 +79,9 @@ public class DomainService {
 
     @Value("${io.motown.ocpp.viewmodel.authorize.timeout}")
     private int authorizeTimeout;
+
+    @Autowired
+    private EventWaitingGateway eventWaitingGateway;
 
     public BootChargingStationResult bootChargingStation(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model,
                                                          String protocol, String chargingStationSerialNumber, String firmwareVersion, String iccid,
@@ -162,11 +165,8 @@ public class DomainService {
         commandGateway.send(new AuthorizationListVersionReceivedCommand(chargingStationId, currentVersion));
     }
 
-    public AuthorizationResult authorize(ChargingStationId chargingStationId, String idTag) {
-        AuthorizeCommand command = new AuthorizeCommand(chargingStationId, new TextualToken(idTag));
-        AuthorizationResultStatus resultStatus = commandGateway.sendAndWait(command, authorizeTimeout, TimeUnit.SECONDS);
-
-        return new AuthorizationResult(idTag, resultStatus);
+    public void authorize(ChargingStationId chargingStationId, String idTag, FutureEventCallback future) {
+        eventWaitingGateway.sendAndWaitForEvent(new AuthorizeCommand(chargingStationId, new TextualToken(idTag)), future);
     }
 
     public void configureChargingStation(ChargingStationId chargingStationId, Map<String, String> configurationItems) {

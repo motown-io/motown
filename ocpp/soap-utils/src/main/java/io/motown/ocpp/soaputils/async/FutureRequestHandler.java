@@ -13,72 +13,75 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.v12.soap.async;
+package io.motown.ocpp.soaputils.async;
 
 import org.apache.cxf.continuations.Continuation;
 import org.apache.cxf.continuations.ContinuationProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.task.TaskExecutor;
 
 import javax.xml.ws.handler.MessageContext;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
+import java.util.concurrent.Future;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+public class FutureRequestHandler<T, X> {
 
-public class RequestHandler<T> {
-
-    private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
-
-    private final TaskExecutor executor;
+    private static final Logger log = LoggerFactory.getLogger(FutureRequestHandler.class);
 
     private ContinuationProvider provider;
 
     private int continuationTimeout;
 
-    public RequestHandler(MessageContext context, TaskExecutor executor, int continuationTimeout) {
-        this.executor = checkNotNull(executor);
-
+    public FutureRequestHandler(MessageContext context, int continuationTimeout) {
         this.provider = (ContinuationProvider) context.get(ContinuationProvider.class.getName());
 
         this.continuationTimeout = continuationTimeout;
     }
 
-    public T handle(final ResponseFactory<T> successFactory, final ResponseFactory<T> errorFactory) {
+    public T handle(Future<X> future, CallInitiator initiator, FutureResponseFactory<T, X> successFactory, ResponseFactory<T> errorFactory) {
         final Continuation continuation = provider.getContinuation();
 
         if (continuation == null) {
-            log.warn("Failed to get continuation, falling back to synchronous request handling. Make sure async-supported is set to true on the CXF servlet (web.xml)");
-            return successFactory.createResponse();
+            log.error("Failed to get continuation, falling back to synchronous request handling. Make sure async-supported is set to true on the CXF servlet (web.xml)");
+            try {
+                successFactory.createResponse(future.get());
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+                errorFactory.createResponse();
+            }
+        }
+
+        if (future instanceof ContinuationFutureCallback) {
+            ((ContinuationFutureCallback) future).setContinuation(continuation);
         }
 
         synchronized (continuation) {
             if(continuation.isNew()) {
-                FutureTask futureResponse = new FutureTask<>(new Callable<T>() {
-                    @Override
-                    public T call() throws Exception {
-                        T response = successFactory.createResponse();
-                        continuation.resume();
-                        return response;
-                    }
-                });
-                executor.execute(futureResponse);
-                continuation.setObject(futureResponse);
 
-                // suspend the transport thread so it can handle other requests
-                continuation.suspend(continuationTimeout);
-                return null;
-            } else {
-                FutureTask futureTask = (FutureTask) continuation.getObject();
-                if(futureTask.isDone()) {
+                // initiate the call for which the 'future' is going to wait
+                initiator.initiateCall();
+
+                continuation.setObject(future);
+                if (future.isDone()) {
                     try {
-                        return (T) futureTask.get();
+                        return successFactory.createResponse(future.get());
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
-
-                        return errorFactory.createResponse();
+                        errorFactory.createResponse();
+                    }
+                } else {
+                    // suspend the transport thread so it can handle other requests
+                    continuation.suspend(continuationTimeout);
+                    return null;
+                }
+            } else {
+                Future<X> futureC = (Future<X>) continuation.getObject();
+                if (futureC.isDone()) {
+                    try {
+                        return successFactory.createResponse(futureC.get());
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                        errorFactory.createResponse();
                     }
                 } else {
                     continuation.suspend(decreaseTimeout());

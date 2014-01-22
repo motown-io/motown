@@ -77,11 +77,8 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public AuthorizationResultStatus handle(AuthorizeCommand command) {
-        //TODO: Implement authorization process - Ingo Pak, 29 nov 2013
-        //TODO: Implement authorization process - Ingo Pak, 29 nov 2013
+    public void handle(AuthorizeCommand command) {
         apply(new AuthorizationRequestedEvent(command.getChargingStationId(), command.getIdentifyingToken()));
-        return AuthorizationResultStatus.ACCEPTED;
     }
 
     /**
@@ -317,6 +314,16 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @CommandHandler
     public void handle(UnlockConnectorStatusChangedCommand command) {
         apply(new UnlockConnectorStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
+    }
+
+    @CommandHandler
+    public void handle(GrantAuthorizationCommand command) {
+        apply(new AuthorizationResultEvent(command.getChargingStationId(), command.getIdentifyingToken(), AuthorizationResultStatus.ACCEPTED));
+    }
+
+    @CommandHandler
+    public void handle(DenyAuthorizationCommand command) {
+        apply(new AuthorizationResultEvent(command.getChargingStationId(), command.getIdentifyingToken(), AuthorizationResultStatus.INVALID));
     }
 
     @EventHandler

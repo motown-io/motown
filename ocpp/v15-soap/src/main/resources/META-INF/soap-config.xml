@@ -56,6 +56,15 @@
                   name="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.ocpp.queue.name}"
                   exclusive="false"/>
 
+
+    <rabbit:fanout-exchange id="eventsExchange"
+                            name="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.exchange.events.name}"
+                            durable="true">
+        <rabbit:bindings>
+            <rabbit:binding queue="queue"/>
+        </rabbit:bindings>
+    </rabbit:fanout-exchange>
+
     <rabbit:direct-exchange id="ocppExchange"
                             name="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.exchange.events.ocpp.name}"
                             durable="true">
@@ -65,12 +74,12 @@
         </rabbit:bindings>
     </rabbit:direct-exchange>
 
-    <rabbit:fanout-exchange id="eventsExchange"
-                            name="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.exchange.events.name}"
-                            durable="true">
-    </rabbit:fanout-exchange>
-
     <axon:event-bus id="eventBus" terminal="terminal"/>
+
+    <bean class="org.axonframework.commandhandling.gateway.EventWaitingGateway">
+        <property name="commandBus" ref="commandBus"/>
+        <property name="eventBus" ref="eventBus"/>
+    </bean>
 
     <axon-amqp:terminal id="terminal"
                         connection-factory="amqpConnection"
