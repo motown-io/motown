@@ -59,4 +59,24 @@ public final class GrantAuthorizationCommand {
     public IdentifyingToken getIdentifyingToken() {
         return identifyingToken;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GrantAuthorizationCommand that = (GrantAuthorizationCommand) o;
+
+        if (!chargingStationId.equals(that.chargingStationId)) return false;
+        if (!identifyingToken.equals(that.identifyingToken)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = chargingStationId.hashCode();
+        result = 31 * result + identifyingToken.hashCode();
+        return result;
+    }
 }

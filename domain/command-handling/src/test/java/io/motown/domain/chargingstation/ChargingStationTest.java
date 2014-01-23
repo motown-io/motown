@@ -309,6 +309,14 @@ public class ChargingStationTest {
     }
 
     @Test
+    public void testGetDiagnosticsEmptyFileNameReceived() {
+        String diagnosticsFileName = "";
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new DiagnosticsFileNameReceivedCommand(getChargingStationId(), diagnosticsFileName))
+                .expectEvents(new NoDiagnosticsInformationAvailableEvent(getChargingStationId()));
+    }
+
+    @Test
     public void testDiagnosticsStatusUpdate() {
         fixture.given(getConfiguredChargingStation(true))
                 .when(new UpdateDiagnosticsUploadStatusCommand(getChargingStationId(), true))
@@ -426,6 +434,15 @@ public class ChargingStationTest {
     }
 
     @Test
+    public void testChangeConfiguration() {
+        String configKey = "heartbeatInterval";
+        String configValue = "800";
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new ChangeConfigurationCommand(getChargingStationId(), configKey, configValue))
+                .expectEvents(new ChangeConfigurationEvent(getChargingStationId(), getProtocol(), configKey, configValue));
+    }
+
+    @Test
     public void testChangeConfigurationStatusChanged() {
         fixture.given(getConfiguredChargingStation(true))
                 .when(new ChangeConfigurationStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
@@ -487,4 +504,19 @@ public class ChargingStationTest {
                 .when(new AuthorizeCommand(getChargingStationId(), getTextualToken()))
                 .expectEvents(new AuthorizationRequestedEvent(getChargingStationId(), getTextualToken()));
     }
+
+    @Test
+    public void testGrantAuthorization() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new GrantAuthorizationCommand(getChargingStationId(), getTextualToken()))
+                .expectEvents(new AuthorizationResultEvent(getChargingStationId(), getTextualToken(), AuthorizationResultStatus.ACCEPTED));
+    }
+
+    @Test
+    public void testDenyAuthorization() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new DenyAuthorizationCommand(getChargingStationId(), getTextualToken()))
+                .expectEvents(new AuthorizationResultEvent(getChargingStationId(), getTextualToken(), AuthorizationResultStatus.INVALID));
+    }
+
 }
