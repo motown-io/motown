@@ -189,7 +189,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @CommandHandler
     public void handle(DiagnosticsFileNameReceivedCommand command) {
         String diagnosticsFileName = command.getDiagnosticsFileName();
-        if (diagnosticsFileName == null || diagnosticsFileName.isEmpty()) {
+        if (diagnosticsFileName.isEmpty()) {
             apply(new NoDiagnosticsInformationAvailableEvent(this.id));
         } else {
             apply(new DiagnosticsFileNameReceivedEvent(this.id, diagnosticsFileName));
