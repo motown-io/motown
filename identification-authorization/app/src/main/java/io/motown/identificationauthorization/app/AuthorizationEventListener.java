@@ -66,4 +66,11 @@ public class AuthorizationEventListener {
         commandGateway.send(commandMessage);
     }
 
+    public void setService(IdentificationAuthorizationService service) {
+        this.service = service;
+    }
+
+    public void setCommandGateway(AuthorizationCommandGateway commandGateway) {
+        this.commandGateway = commandGateway;
+    }
 }
