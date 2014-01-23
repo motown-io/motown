@@ -47,6 +47,10 @@ public class CirAuthentication implements AuthenticationProvider {
 
     public void setEndpoint(String endpoint) {
         this.endpoint = endpoint;
+
+        if(cirService != null) {
+            ((BindingProvider)cirService).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpoint);
+        }
     }
 
     /**
@@ -99,7 +103,7 @@ public class CirAuthentication implements AuthenticationProvider {
      *
      * @return holder containing a web service header containing username and password.
      */
-    Holder<WebServiceHeader> getHolder() {
+    private Holder<WebServiceHeader> getHolder() {
         WebServiceHeader header = new WebServiceHeader();
 
         header.setUsername(username);
@@ -117,6 +121,10 @@ public class CirAuthentication implements AuthenticationProvider {
             cirService = ws;
         }
         return cirService;
+    }
+
+    public void setCirService(ServiceSoap service) {
+        this.cirService = service;
     }
 
 }
