@@ -15,10 +15,7 @@
  */
 package io.motown.identificationauthorization.cirplugin;
 
-import io.motown.identificationauthorization.cirplugin.cir.schema.ArrayOfCard;
-import io.motown.identificationauthorization.cirplugin.cir.schema.InquireResult;
-import io.motown.identificationauthorization.cirplugin.cir.schema.ServiceSoap;
-import io.motown.identificationauthorization.cirplugin.cir.schema.WebServiceHeader;
+import io.motown.identificationauthorization.cirplugin.cir.schema.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -95,5 +92,23 @@ public class CirAuthenticationTest {
         assertFalse(cirAuthentication.isValid(getIdentifyingToken()));
     }
 
+    @Test
+    public void testWebServiceException() {
+        when(serviceSoap.inquire(any(ArrayOfCard.class), any(Holder.class))).thenThrow(new RuntimeException("Exception in WebService call"));
+
+        assertFalse(cirAuthentication.isValid(getIdentifyingToken()));
+    }
+
+    @Test
+    public void testUnreachableWebService() {
+        CirAuthentication cirAuthentication = new CirAuthentication();
+        cirAuthentication.setCirService(new Service().getServiceSoap());
+        cirAuthentication.setEndpoint("http://localhost");
+        assertFalse(cirAuthentication.isValid(getIdentifyingToken()));
+
+        // also test if cir service hasn't been set yet
+        cirAuthentication.setCirService(null);
+        assertFalse(cirAuthentication.isValid(getIdentifyingToken()));
+    }
 
 }
