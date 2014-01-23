@@ -16,10 +16,11 @@
 package io.motown.operatorapi.viewmodel.model;
 
 import io.motown.domain.api.chargingstation.ConnectorId;
+import io.motown.domain.api.chargingstation.TextualToken;
 
 public class RequestReserveNowApiCommand implements ApiCommand {
     private ConnectorId connectorId;
-    private String identifyingToken;
+    private TextualToken identifyingToken;
     private String expiryDate;
 
     public RequestReserveNowApiCommand() {
@@ -33,11 +34,11 @@ public class RequestReserveNowApiCommand implements ApiCommand {
         this.connectorId = connectorId;
     }
 
-    public String getIdentifyingToken() {
+    public TextualToken getIdentifyingToken() {
         return identifyingToken;
     }
 
-    public void setIdentifyingToken(String identifyingToken) {
+    public void setIdentifyingToken(TextualToken identifyingToken) {
         this.identifyingToken = identifyingToken;
     }
 

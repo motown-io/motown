@@ -18,9 +18,7 @@ package io.motown.operatorapi.json.commands;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.ConnectorId;
 import io.motown.domain.api.chargingstation.RequestStartTransactionCommand;
-import io.motown.domain.api.chargingstation.TextualToken;
 import io.motown.operatorapi.viewmodel.model.RequestStartTransactionApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -51,9 +49,8 @@ class RequestStartTransactionJsonCommandHandler implements JsonCommandHandler {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
                 RequestStartTransactionApiCommand command = gson.fromJson(commandObject, RequestStartTransactionApiCommand.class);
-                TextualToken identifyingToken = new TextualToken(command.getIdentifyingToken());
 
-                commandGateway.send(new RequestStartTransactionCommand(new ChargingStationId(chargingStationId), identifyingToken, command.getConnectorId()));
+                commandGateway.send(new RequestStartTransactionCommand(new ChargingStationId(chargingStationId), command.getIdentifyingToken(), command.getConnectorId()));
             } else {
                 throw new IllegalStateException("It is not possible to request a start transaction on a charging station that is not registered");
             }

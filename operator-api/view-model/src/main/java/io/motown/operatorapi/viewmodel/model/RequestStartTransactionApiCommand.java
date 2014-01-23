@@ -16,10 +16,11 @@
 package io.motown.operatorapi.viewmodel.model;
 
 import io.motown.domain.api.chargingstation.ConnectorId;
+import io.motown.domain.api.chargingstation.TextualToken;
 
 public class RequestStartTransactionApiCommand implements ApiCommand {
     private ConnectorId connectorId;
-    private String identifyingToken;
+    private TextualToken identifyingToken;
 
     public RequestStartTransactionApiCommand() {
     }
@@ -32,11 +33,11 @@ public class RequestStartTransactionApiCommand implements ApiCommand {
         this.connectorId = connectorId;
     }
 
-    public String getIdentifyingToken() {
+    public TextualToken getIdentifyingToken() {
         return identifyingToken;
     }
 
-    public void setIdentifyingToken(String identifyingToken) {
+    public void setIdentifyingToken(TextualToken identifyingToken) {
         this.identifyingToken = identifyingToken;
     }
 }

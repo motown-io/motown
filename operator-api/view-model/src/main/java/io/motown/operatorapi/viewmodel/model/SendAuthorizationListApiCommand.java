@@ -15,22 +15,24 @@
  */
 package io.motown.operatorapi.viewmodel.model;
 
+import io.motown.domain.api.chargingstation.TextualToken;
+
 import java.util.Set;
 
 public class SendAuthorizationListApiCommand implements ApiCommand {
 
-    private Set<Token> items;
+    private Set<TextualToken> items;
     private Integer listVersion;
     private String updateType;
 
     public SendAuthorizationListApiCommand() {
     }
 
-    public Set<Token> getItems() {
+    public Set<TextualToken> getItems() {
         return items;
     }
 
-    public void setItems(Set<Token> items) {
+    public void setItems(Set<TextualToken> items) {
         this.items = items;
     }
 
@@ -50,27 +52,4 @@ public class SendAuthorizationListApiCommand implements ApiCommand {
         this.updateType = updateType;
     }
 
-    public class Token {
-        private String token;
-        private String status;
-
-        public Token() {
-        }
-
-        public String getToken() {
-            return token;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-
-        public String getStatus() {
-            return status;
-        }
-
-        public void setStatus(String status) {
-            this.status = status;
-        }
-    }
 }

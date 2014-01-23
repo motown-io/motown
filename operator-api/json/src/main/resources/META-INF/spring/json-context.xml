@@ -4,11 +4,10 @@
        xmlns:axon="http://www.axonframework.org/schema/core"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:util="http://www.springframework.org/schema/util"
-       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
        xsi:schemaLocation="http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
                            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <context:component-scan base-package="io.motown.operatorapi.json"/>
 
@@ -19,6 +18,7 @@
         <property name="typeAdapters">
             <set>
                 <bean class="io.motown.operatorapi.json.gson.ConnectorIdTypeAdapter"/>
+                <bean class="io.motown.operatorapi.json.gson.TextualTokenTypeAdapter"/>
             </set>
         </property>
     </bean>

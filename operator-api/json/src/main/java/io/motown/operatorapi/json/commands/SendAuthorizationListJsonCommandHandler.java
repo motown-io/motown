@@ -17,17 +17,17 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.AuthorizationListUpdateType;
+import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.IdentifyingToken;
+import io.motown.domain.api.chargingstation.SendAuthorizationListCommand;
 import io.motown.operatorapi.viewmodel.model.SendAuthorizationListApiCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Set;
 
 @Component
 class SendAuthorizationListJsonCommandHandler implements JsonCommandHandler {
@@ -50,13 +50,7 @@ class SendAuthorizationListJsonCommandHandler implements JsonCommandHandler {
 
             SendAuthorizationListApiCommand command = gson.fromJson(commandObject, SendAuthorizationListApiCommand.class);
 
-            Set<SendAuthorizationListApiCommand.Token> items = command.getItems();
-            for(SendAuthorizationListApiCommand.Token item:items) {
-                String token = item.getToken();
-                IdentifyingToken.AuthenticationStatus status = IdentifyingToken.AuthenticationStatus.valueOf(item.getStatus());
-
-                authorizationList.add(new TextualToken(token, status));
-            }
+            authorizationList.addAll(command.getItems());
 
             AuthorizationListUpdateType updateType = AuthorizationListUpdateType.valueOf(command.getUpdateType());
 
