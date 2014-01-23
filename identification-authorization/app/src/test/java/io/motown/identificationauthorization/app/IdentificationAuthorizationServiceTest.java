@@ -60,7 +60,8 @@ public class IdentificationAuthorizationServiceTest {
         verify(secondProvider, never()).isValid(getValidIdentifyingToken());
     }
 
-    @Test void testIsValidSecondProvider() {
+    @Test
+    public void testIsValidSecondProvider() {
         assertTrue(service.isValid(getValidIdentifyingTokenSecondAuthorizationProvider()));
 
         verify(firstProvider).isValid(getInvalidIdentifyingToken());
