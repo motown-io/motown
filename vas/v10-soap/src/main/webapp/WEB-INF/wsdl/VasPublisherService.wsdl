@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright Logica 2010
+
+All rights reserved. This document is protected by international copyright law and may not be reprinted,
+reproduced, copied or utilised in whole or in part by any means including electronic, mechanical,
+or other means without the prior written consent of Logica. 
+
+
+Whilst reasonable care has been taken by Logica to ensure the information contained herein is
+reasonably accurate, Logica shall not, under any circumstances be liable for any loss or damage
+(direct or consequential) suffered by any party as a result of the contents of this publication or
+the reliance of any party thereon or any inaccuracy or omission therein. The information in this
+document is therefore provided on an "as is" basis without warranty and is subject to change
+without further notice and cannot be construed as a commitment by Logica. 
+
+
+The products mentioned in this document are identified by the names, trademarks, service marks and
+logos of their respective companies or organisations and may not be used in any advertising or publicity
+or in any other way whatsoever without the prior written consent of those companies or organisations
+and Logica.
+-->
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+				 xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+				 xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+				 xmlns:s="http://www.w3.org/2001/XMLSchema"
+				 xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+				 xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+         xmlns:tns="urn://Vas/Cs/2010/12/"
+			   targetNamespace="urn://Vas/Cs/2010/12/"
+			   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+         xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+	       xmlns:wsa="http://www.w3.org/2005/08/addressing"
+	       xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+	       xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+
+  <wsp:Policy wsu:Id="ServicePolicy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <wsaw:UsingAddressing />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="urn://Vas/Cs/2010/12/">
+      <s:include schemaLocation="VasTypes.xsd" />
+      
+      <s:complexType name="UnsubscribeRequest">
+        <s:annotation>
+          <s:documentation>
+            Message sent by VAS to request CiMS to stop the specific subscription to status change information.
+          </s:documentation>
+        </s:annotation>
+        <s:sequence>
+          <s:element name="subscriptionId" type="tns:SubscriptionIdentity" minOccurs="1" maxOccurs="1">
+            <s:annotation>
+              <s:documentation>
+                Unique ID of subscription that is to be unsubscribed.
+              </s:documentation>
+            </s:annotation>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+
+      <s:complexType name="UnsubscribeResponse">
+        <s:annotation>
+          <s:documentation>
+            Response sent by CiMS to confirm or reject an UnsubscribeRequest.
+          </s:documentation>
+        </s:annotation>
+        <s:sequence>
+          <s:element name="status" type="tns:SubscribeStatus" minOccurs="1" maxOccurs="1">
+            <s:annotation>
+              <s:documentation>
+                Status indicating success or failure of unsubscribe request.
+              </s:documentation>
+            </s:annotation>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+
+      <s:complexType name="GetChargePointInfoRequest">
+        <s:annotation>
+          <s:documentation>
+            Message sent by VAS to request CiMS to send static information, including current status, of all charge points.
+          </s:documentation>
+        </s:annotation>
+      </s:complexType>
+
+      <s:complexType name="GetChargePointInfoResponse">
+        <s:annotation>
+          <s:documentation>
+            Response sent by CiMS to return static information, including current status, of all charge points.
+          </s:documentation>
+        </s:annotation>
+        <s:sequence>
+          <s:element name="chargePoints" type="tns:ChargePoint" minOccurs="0" maxOccurs="unbounded">
+            <s:annotation>
+              <s:documentation>
+                List of static information of charge points, including their actual status.
+              </s:documentation>
+            </s:annotation>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+
+      <s:complexType name="SubscribeRequest">
+        <s:annotation>
+          <s:documentation>
+            Message sent by VAS to request CiMS to start sending status changes every time they occur.
+          </s:documentation>
+        </s:annotation>
+        <s:sequence>
+          <s:element name="deliveryAddress" type="tns:DeliveryAddress" minOccurs="1" maxOccurs="1">
+            <s:annotation>
+              <s:documentation>
+                The address at which to receive the notifications which are being subscribed to.
+              </s:documentation>
+            </s:annotation>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+
+      <s:complexType name="SubscribeResponse">
+        <s:annotation>
+          <s:documentation>
+            Response from CiMS to confirm or reject subscription to status changes.
+          </s:documentation>
+        </s:annotation>
+        <s:sequence>
+          <s:element name="subscriptionId" type="tns:SubscriptionIdentity" minOccurs="0" maxOccurs="1">
+            <s:annotation>
+              <s:documentation>
+                Unique ID for this subscription.
+              </s:documentation>
+            </s:annotation>
+          </s:element>
+          <s:element name="status" type="tns:SubscribeStatus" minOccurs="1" maxOccurs="1">
+            <s:annotation>
+              <s:documentation>
+                Status indicating success or failure of subscription.
+              </s:documentation>
+            </s:annotation>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+
+      <s:element name="subscriberIdentity" type="tns:SubscriberIdentity" />
+      <s:element name="unsubscribeRequest" type="tns:UnsubscribeRequest" />
+      <s:element name="unsubscribeResponse" type="tns:UnsubscribeResponse" />
+      <s:element name="getChargePointInfoRequest" type="tns:GetChargePointInfoRequest" />
+      <s:element name="getChargePointInfoResponse" type="tns:GetChargePointInfoResponse" />
+      <s:element name="subscribeRequest" type="tns:SubscribeRequest" />
+      <s:element name="subscribeResponse" type="tns:SubscribeResponse" />
+    </s:schema>
+  </wsdl:types>
+
+  <wsdl:message name="PublisherHeader">
+    <wsdl:part name="SubscriberIdentity" element="tns:subscriberIdentity" />
+  </wsdl:message>
+
+  <wsdl:message name="UnsubscribeInput">
+    <wsdl:part name="parameters" element="tns:unsubscribeRequest" />
+  </wsdl:message>
+
+  <wsdl:message name="UnsubscribeOutput">
+    <wsdl:part name="parameters" element="tns:unsubscribeResponse" />
+  </wsdl:message>
+
+  <wsdl:message name="GetChargePointInfoInput">
+    <wsdl:part name="parameters" element="tns:getChargePointInfoRequest" />
+  </wsdl:message>
+
+  <wsdl:message name="GetChargePointInfoOutput">
+    <wsdl:part name="parameters" element="tns:getChargePointInfoResponse" />
+  </wsdl:message>
+
+  <wsdl:message name="SubscribeInput">
+    <wsdl:part name="parameters" element="tns:subscribeRequest" />
+  </wsdl:message>
+
+  <wsdl:message name="SubscribeOutput">
+    <wsdl:part name="parameters" element="tns:subscribeResponse" />
+  </wsdl:message>
+
+  <wsdl:portType name="VasPublisherService">
+    
+    <wsdl:operation name="Unsubscribe">
+      <wsdl:input message="tns:UnsubscribeInput" wsaw:Action="/Unsubscribe" />
+      <wsdl:output message="tns:UnsubscribeOutput" />
+    </wsdl:operation>
+
+    <wsdl:operation name="GetChargePointInfo">
+      <wsdl:input message="tns:GetChargePointInfoInput" wsaw:Action="/GetChargePointInfo"/>
+      <wsdl:output message="tns:GetChargePointInfoOutput" />
+    </wsdl:operation>
+
+    <wsdl:operation name="Subscribe">
+      <wsdl:input message="tns:SubscribeInput" wsaw:Action="/Subscribe" />
+      <wsdl:output message="tns:SubscribeOutput" />
+    </wsdl:operation>
+  
+  </wsdl:portType>
+
+  <wsdl:binding name="VasPublisherServiceSoap" type="tns:VasPublisherService">
+    
+    <wsp:PolicyReference URI="#ServicePolicy" />
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+
+    <wsdl:operation name="Unsubscribe">
+      <soap12:operation soapAction="/Unsubscribe" style="document"/>
+      <wsdl:input>
+        <soap12:header use="literal" message="tns:PublisherHeader" part="SubscriberIdentity"/>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="GetChargePointInfo">
+      <soap12:operation soapAction="/GetChargePointInfo" style="document"/>
+      <wsdl:input>
+        <soap12:header use="literal" message="tns:PublisherHeader" part="SubscriberIdentity"/>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="Subscribe">
+      <soap12:operation soapAction="/Subscribe" style="document"/>
+      <wsdl:input>
+        <soap12:header use="literal" message="tns:PublisherHeader" part="SubscriberIdentity"/>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+  </wsdl:binding>
+
+  <wsdl:service name="VasPublisherService">
+    <wsdl:documentation>The Publisher Service for VAS.</wsdl:documentation>
+    <wsdl:port name="VasPublisherServiceSoap12" binding="tns:VasPublisherServiceSoap">
+      <soap12:address location="http://www.ev-services.net/Infra/WebServices/VasService.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
