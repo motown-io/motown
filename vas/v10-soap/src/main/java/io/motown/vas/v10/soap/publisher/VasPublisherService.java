@@ -91,11 +91,12 @@ public class VasPublisherService implements io.motown.vas.v10.soap.schema.VasPub
 
         //TODO: Right now we return info on all chargingstations known in the system (might have to exclude certain chargingstation 'pools') - Ingo Pak, 24 Jan 2014
         GetChargePointInfoResponse response = new GetChargePointInfoResponse();
-        List<ChargePoint> chargePoints = response.getChargePoints();
-        for (ChargingStation chargingStation : chargingStationRepository.findAll()) {
-            chargePoints.add(vasConversionService.getVasRepresentation(chargingStation));
+        if (subscriptionRepository.findBySubscriberIdentity(subscriberIdentity).size() > 0) {
+            List<ChargePoint> chargePoints = response.getChargePoints();
+            for (ChargingStation chargingStation : chargingStationRepository.findAll()) {
+                chargePoints.add(vasConversionService.getVasRepresentation(chargingStation));
+            }
         }
-
         return response;
     }
 
@@ -107,11 +108,10 @@ public class VasPublisherService implements io.motown.vas.v10.soap.schema.VasPub
         try {
             Subscription subscription = subscriptionRepository.findBySubscriptionId(parameters.getSubscriptionId());
 
-            if(subscription != null){
+            if (subscription != null) {
                 subscriptionRepository.delete(subscription);
                 unsubscribeResponse.setStatus(SubscribeStatus.ACCEPTED);
-            }
-            else{
+            } else {
                 unsubscribeResponse.setStatus(SubscribeStatus.DUPLICATE_IGNORED);
             }
         } catch (Exception e) {
