@@ -15,11 +15,11 @@
  */
 package io.motown.operatorapi.viewmodel.model;
 
-public class GetDiagnosticsApiCommand implements ApiCommand {
+public class RequestDiagnosticsApiCommand implements ApiCommand {
 
     private String targetLocation;
 
-    public GetDiagnosticsApiCommand() {
+    public RequestDiagnosticsApiCommand() {
     }
 
     public String getTargetLocation() {

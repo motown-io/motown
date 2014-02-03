@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestDiagnosticsCommand;
-import io.motown.operatorapi.viewmodel.model.GetDiagnosticsApiCommand;
+import io.motown.operatorapi.viewmodel.model.RequestDiagnosticsApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ class RequestDiagnosticsJsonCommandHandler implements JsonCommandHandler {
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
-                GetDiagnosticsApiCommand command = gson.fromJson(commandObject, GetDiagnosticsApiCommand.class);
+                RequestDiagnosticsApiCommand command = gson.fromJson(commandObject, RequestDiagnosticsApiCommand.class);
 
                 commandGateway.send(new RequestDiagnosticsCommand(new ChargingStationId(chargingStationId), command.getTargetLocation(), null, null, null, null));
             }
