@@ -61,7 +61,7 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
 
     @Override
     public void send(RequestHardResetChargingStationCommand command) {
-        log.debug("RequestSoftResetChargingStationCommand: " + command.toString());
+        log.debug("RequestHardResetChargingStationCommand: " + command.toString());
     }
 
     @Override
