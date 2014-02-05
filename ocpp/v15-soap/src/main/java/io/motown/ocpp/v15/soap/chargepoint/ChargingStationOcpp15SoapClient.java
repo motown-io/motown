@@ -18,10 +18,9 @@ package io.motown.ocpp.v15.soap.chargepoint;
 
 import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
-import io.motown.domain.api.chargingstation.AuthorizationListUpdateType;
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
-import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import org.apache.cxf.binding.soap.Soap12;
 import org.apache.cxf.binding.soap.SoapBindingConfiguration;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;

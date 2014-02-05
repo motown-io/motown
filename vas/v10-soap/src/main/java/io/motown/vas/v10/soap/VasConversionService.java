@@ -16,7 +16,6 @@
 package io.motown.vas.v10.soap;
 
 import io.motown.vas.v10.soap.schema.*;
-import io.motown.vas.v10.soap.schema.ChargingMode;
 import io.motown.vas.viewmodel.ChargeMode;
 import io.motown.vas.viewmodel.State;
 import io.motown.vas.viewmodel.VasChargingCapability;

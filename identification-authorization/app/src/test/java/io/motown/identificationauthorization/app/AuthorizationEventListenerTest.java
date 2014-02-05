@@ -29,9 +29,7 @@ import java.util.Collections;
 import static io.motown.identificationauthorization.app.TestUtils.*;
 import static org.axonframework.commandhandling.GenericCommandMessage.asCommandMessage;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class AuthorizationEventListenerTest {
 

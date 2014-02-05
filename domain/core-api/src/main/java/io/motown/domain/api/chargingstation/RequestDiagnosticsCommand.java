@@ -15,12 +15,10 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import javax.annotation.Nullable;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import javax.annotation.Nullable;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

@@ -15,18 +15,6 @@
  */
 package io.motown.vas.viewmodel.configuration;
 
-import io.motown.domain.api.chargingstation.ConfigureChargingStationCommand;
-import io.motown.domain.api.chargingstation.UnconfiguredChargingStationBootedEvent;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static io.motown.vas.viewmodel.domain.TestUtils.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
 public class ConfigurationHandlerTest {
 
 //    private ConfigurationHandler handler;

@@ -22,7 +22,6 @@ import io.motown.vas.viewmodel.VasChargingCapability;
 import io.motown.vas.viewmodel.VasConnectorType;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 
 @Entity

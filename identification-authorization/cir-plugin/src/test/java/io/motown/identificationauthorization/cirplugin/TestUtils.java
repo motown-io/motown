@@ -20,9 +20,6 @@ import io.motown.domain.api.chargingstation.TextualToken;
 import io.motown.identificationauthorization.cirplugin.cir.schema.ArrayOfCard;
 import io.motown.identificationauthorization.cirplugin.cir.schema.Card;
 import io.motown.identificationauthorization.cirplugin.cir.schema.InquireResult;
-import io.motown.identificationauthorization.cirplugin.cir.schema.WebServiceHeader;
-
-import javax.xml.ws.Holder;
 
 public class TestUtils {
 

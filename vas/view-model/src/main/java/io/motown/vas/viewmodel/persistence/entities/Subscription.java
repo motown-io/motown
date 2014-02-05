@@ -16,7 +16,6 @@
 package io.motown.vas.viewmodel.persistence.entities;
 
 import javax.persistence.*;
-import javax.persistence.GenerationType;
 import java.util.UUID;
 
 @Entity

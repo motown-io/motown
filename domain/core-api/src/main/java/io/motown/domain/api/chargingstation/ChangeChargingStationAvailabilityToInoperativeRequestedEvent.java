@@ -15,7 +15,6 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**

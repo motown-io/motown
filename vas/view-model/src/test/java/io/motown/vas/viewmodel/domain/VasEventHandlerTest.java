@@ -15,7 +15,7 @@
  */
 package io.motown.vas.viewmodel.domain;
 
-import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
 import io.motown.vas.viewmodel.VasEventHandler;
 import io.motown.vas.viewmodel.persistence.entities.ChargingStation;
 import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository;
@@ -26,10 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static io.motown.vas.viewmodel.domain.TestUtils.*;
-import static junit.framework.Assert.*;
+import static io.motown.vas.viewmodel.domain.TestUtils.getChargingStationId;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @ContextConfiguration("classpath:vas-view-model-test-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)

@@ -17,7 +17,6 @@
 package io.motown.ocpp.viewmodel.ocpp;
 
 import io.motown.domain.api.chargingstation.*;
-import io.motown.domain.api.chargingstation.AuthorizationListUpdateType;
 
 import java.util.Date;
 import java.util.HashMap;
