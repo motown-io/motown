@@ -39,7 +39,7 @@ public enum CdrChargePointType {
 
     public static CdrChargePointType fromValue(Integer v) {
         for (CdrChargePointType c : values()) {
-            if (c.value == v) {
+            if (c.value.equals(v)) {
                 return c;
             }
         }
