@@ -15,6 +15,7 @@
  */
 package io.motown.vas.v10.soap;
 
+import com.sun.istack.Nullable;
 import io.motown.vas.v10.soap.schema.*;
 import io.motown.vas.viewmodel.ChargeMode;
 import io.motown.vas.viewmodel.State;
@@ -172,7 +173,18 @@ public class VasConversionService {
         return "Unknown";
     }
 
+    /**
+     * Maps the {@code io.motown.vas.viewmodel.ChargeMode} to a ChargingMode. If chargeMode is null, 'unspecified' will
+     * be returned.
+     *
+     * @param chargeMode charge mode.
+     * @return charging mode (ChargingMode.UNSPECIFIED is chargeMode is null).
+     */
     public ChargingMode getVasChargingMode(ChargeMode chargeMode) {
+        if (chargeMode == null) {
+            return ChargingMode.UNSPECIFIED;
+        }
+
         switch (chargeMode){
             case MODE1:
                 return ChargingMode.IEC_61851_MODE_1;
