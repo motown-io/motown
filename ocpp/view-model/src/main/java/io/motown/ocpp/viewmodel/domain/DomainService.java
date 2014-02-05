@@ -118,9 +118,6 @@ public class DomainService {
         if (model != null) {
             attributes.put(MODEL_KEY, model);
         }
-        if (chargingStationAddress != null) {
-            attributes.put(ADDRESS_KEY, chargingStationAddress);
-        }
         if (chargingStationSerialNumber != null) {
             attributes.put(CHARGING_STATION_SERIALNUMBER_KEY, chargingStationSerialNumber);
         }
