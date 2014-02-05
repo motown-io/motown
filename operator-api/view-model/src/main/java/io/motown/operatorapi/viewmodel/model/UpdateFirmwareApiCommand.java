@@ -15,9 +15,11 @@
  */
 package io.motown.operatorapi.viewmodel.model;
 
+import java.util.Date;
+
 public class UpdateFirmwareApiCommand implements ApiCommand {
     private String location;
-    private String retrieveDate;
+    private Date retrieveDate;
 
     public UpdateFirmwareApiCommand() {
     }
@@ -30,11 +32,11 @@ public class UpdateFirmwareApiCommand implements ApiCommand {
         this.location = location;
     }
 
-    public String getRetrieveDate() {
+    public Date getRetrieveDate() {
         return retrieveDate;
     }
 
-    public void setRetrieveDate(String retrieveDate) {
+    public void setRetrieveDate(Date retrieveDate) {
         this.retrieveDate = retrieveDate;
     }
 }

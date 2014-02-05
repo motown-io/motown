@@ -22,13 +22,10 @@ import io.motown.domain.api.chargingstation.RequestReserveNowCommand;
 import io.motown.operatorapi.viewmodel.model.RequestReserveNowApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.Date;
 
 @Component
 class RequestReserveNowJsonCommandHandler implements JsonCommandHandler {
@@ -53,10 +50,7 @@ class RequestReserveNowJsonCommandHandler implements JsonCommandHandler {
             if (chargingStation != null && chargingStation.isAccepted()) {
                 RequestReserveNowApiCommand command = gson.fromJson(commandObject, RequestReserveNowApiCommand.class);
 
-                DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-                Date expiryDate = formatter.parseDateTime(command.getExpiryDate()).toDate();
-
-                commandGateway.send(new RequestReserveNowCommand(new ChargingStationId(chargingStationId), command.getConnectorId(), command.getIdentifyingToken(), expiryDate, null));
+                commandGateway.send(new RequestReserveNowCommand(new ChargingStationId(chargingStationId), command.getConnectorId(), command.getIdentifyingToken(), command.getExpiryDate(), null));
             } else {
                 throw new IllegalStateException("It is not possible to request a reservation on a charging station that is not registered");
             }

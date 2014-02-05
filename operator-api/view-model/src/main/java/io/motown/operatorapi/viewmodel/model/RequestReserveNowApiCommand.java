@@ -18,10 +18,12 @@ package io.motown.operatorapi.viewmodel.model;
 import io.motown.domain.api.chargingstation.ConnectorId;
 import io.motown.domain.api.chargingstation.TextualToken;
 
+import java.util.Date;
+
 public class RequestReserveNowApiCommand implements ApiCommand {
     private ConnectorId connectorId;
     private TextualToken identifyingToken;
-    private String expiryDate;
+    private Date expiryDate;
 
     public RequestReserveNowApiCommand() {
     }
@@ -42,11 +44,11 @@ public class RequestReserveNowApiCommand implements ApiCommand {
         this.identifyingToken = identifyingToken;
     }
 
-    public String getExpiryDate() {
+    public Date getExpiryDate() {
         return expiryDate;
     }
 
-    public void setExpiryDate(String expiryDate) {
+    public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
     }
 }

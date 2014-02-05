@@ -22,13 +22,10 @@ import io.motown.domain.api.chargingstation.RequestFirmwareUpdateCommand;
 import io.motown.operatorapi.viewmodel.model.UpdateFirmwareApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.HashMap;
 
 @Component
@@ -54,10 +51,7 @@ class UpdateFirmwareJsonCommandHandler implements JsonCommandHandler {
             if (chargingStation != null && chargingStation.isAccepted()) {
                 UpdateFirmwareApiCommand command = gson.fromJson(commandObject, UpdateFirmwareApiCommand.class);
 
-                DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-                Date retrieveDate = formatter.parseDateTime(command.getRetrieveDate()).toDate();
-
-                commandGateway.send(new RequestFirmwareUpdateCommand(new ChargingStationId(chargingStationId), command.getLocation(), retrieveDate, new HashMap<String, String>()));
+                commandGateway.send(new RequestFirmwareUpdateCommand(new ChargingStationId(chargingStationId), command.getLocation(), command.getRetrieveDate(), new HashMap<String, String>()));
             }
         } catch (ClassCastException ex) {
             throw new IllegalArgumentException("Change configuration command not able to parse the payload, is your json correctly formatted?");

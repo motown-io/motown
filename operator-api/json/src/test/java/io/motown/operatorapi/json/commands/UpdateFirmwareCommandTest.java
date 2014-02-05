@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,11 +35,11 @@ public class UpdateFirmwareCommandTest {
 
     @Test
     public void testUpdateFirmwareCommand() {
-        JsonObject commandObject = gson.fromJson("{location:'DEURNE',retrieveDate:'2014-02-03 12:00:00'}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{location:'DEURNE',retrieveDate:'2014-02-03T12:00:00Z'}", JsonObject.class);
         handler.handle("TEST_REGISTERED", commandObject);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = JsonSyntaxException.class)
     public void testInvalidUpdateCommandInvalidDate() {
         JsonObject commandObject = gson.fromJson("{location:'DEURNE',retrieveDate:'2014-02-03'}", JsonObject.class);
         handler.handle("TEST_REGISTERED", commandObject);
@@ -46,7 +47,7 @@ public class UpdateFirmwareCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void testInvalidUpdateCommandInvalidLocation() {
-        JsonObject commandObject = gson.fromJson("{loc:'DEURNE',retrieveDate:'2014-02-03 12:00:00'}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{loc:'DEURNE',retrieveDate:'2014-02-03T12:00:00Z'}", JsonObject.class);
         handler.handle("TEST_REGISTERED", commandObject);
     }
 }
