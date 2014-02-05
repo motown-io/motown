@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -74,28 +76,20 @@ public final class NumberedReservationId implements ReservationId {
         return String.format("%s_%s_%s", chargingStationId.getId(), protocol, number);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        NumberedReservationId that = (NumberedReservationId) o;
-
-        if (number != that.number) return false;
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (!protocol.equals(that.protocol)) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(chargingStationId, protocol, number);
     }
 
     @Override
-    public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + protocol.hashCode();
-        result = 31 * result + number;
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final NumberedReservationId other = (NumberedReservationId) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.protocol, other.protocol) && Objects.equals(this.number, other.number);
     }
 }

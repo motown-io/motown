@@ -16,6 +16,7 @@
 package io.motown.domain.api.chargingstation;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -41,22 +42,19 @@ public final class Evse {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Evse evse = (Evse) o;
-
-        if (!connectors.equals(evse.connectors)) return false;
-        if (!evseId.equals(evse.evseId)) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(evseId, connectors);
     }
 
     @Override
-    public int hashCode() {
-        int result = evseId.hashCode();
-        result = 31 * result + connectors.hashCode();
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final Evse other = (Evse) obj;
+        return Objects.equals(this.evseId, other.evseId) && Objects.equals(this.connectors, other.connectors);
     }
 }

@@ -20,6 +20,7 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -45,7 +46,7 @@ public final class StartTransactionCommand {
 
     /**
      * Creates a {@code StartTransactionCommand}.
-     *
+     * <p/>
      * In contrast to most of the other classes and methods in the Core API the {@code transactionId} and
      * {@code identifyingToken} are possibly mutable. Some default, immutable implementations of these interfaces are
      * provided but the mutability of these parameters can't be guaranteed.
@@ -56,8 +57,8 @@ public final class StartTransactionCommand {
      * @param identifyingToken  the token which started the transaction.
      * @param meterStart        meter value in Wh for the evse when the transaction started.
      * @param timestamp         the time at which the transaction started.
-     * @throws NullPointerException if {@code chargingStationId}, {@code transactionId}, {@code evseId}, {@code identifyingToken} or
-     * {@code timestamp} is {@code null}.
+     * @throws NullPointerException     if {@code chargingStationId}, {@code transactionId}, {@code evseId}, {@code identifyingToken} or
+     *                                  {@code timestamp} is {@code null}.
      * @throws IllegalArgumentException if {@code evseId} is negative.
      */
     public StartTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId, EvseId evseId, IdentifyingToken identifyingToken, int meterStart, Date timestamp) {
@@ -67,7 +68,7 @@ public final class StartTransactionCommand {
 
     /**
      * Creates a {@code StartTransactionCommand}.
-     *
+     * <p/>
      * In contrast to most of the other classes and methods in the Core API the {@code transactionId} and
      * {@code identifyingToken} are possibly mutable. Some default, immutable implementations of these interfaces are
      * provided but the mutability of these parameters can't be guaranteed.
@@ -81,8 +82,8 @@ public final class StartTransactionCommand {
      * @param attributes        a {@link java.util.Map} of attributes. These attributes are additional information provided by
      *                          the charging station when it booted but which are not required by Motown. Because
      *                          {@link java.util.Map} implementations are potentially mutable a defensive copy is made.
-     * @throws NullPointerException if {@code chargingStationId}, {@code transactionId}, {@code evseId}, {@code identifyingToken},
-     * {@code timestamp} or {@code attributes} is {@code null}.
+     * @throws NullPointerException     if {@code chargingStationId}, {@code transactionId}, {@code evseId}, {@code identifyingToken},
+     *                                  {@code timestamp} or {@code attributes} is {@code null}.
      * @throws IllegalArgumentException if {@code evseId} is negative.
      */
     public StartTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId, EvseId evseId, IdentifyingToken identifyingToken, int meterStart, Date timestamp, Map<String, String> attributes) {
@@ -151,7 +152,7 @@ public final class StartTransactionCommand {
 
     /**
      * Gets the attributes associated with the start of the transaction.
-     *
+     * <p/>
      * These attributes are additional information provided by the charging station when it started the transaction
      * but which are not required by Motown.
      *
@@ -162,32 +163,19 @@ public final class StartTransactionCommand {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        StartTransactionCommand that = (StartTransactionCommand) o;
-
-        if (attributes != null ? !attributes.equals(that.attributes) : that.attributes != null) return false;
-        if (meterStart != that.meterStart) return false;
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (!evseId.equals(that.evseId)) return false;
-        if (!identifyingToken.equals(that.identifyingToken)) return false;
-        if (!timestamp.equals(that.timestamp)) return false;
-        if (!transactionId.equals(that.transactionId)) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(chargingStationId, transactionId, evseId, identifyingToken, meterStart, timestamp, attributes);
     }
 
     @Override
-    public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + (attributes != null ? attributes.hashCode() : 0);
-        result = 31 * result + transactionId.hashCode();
-        result = 31 * result + evseId.hashCode();
-        result = 31 * result + identifyingToken.hashCode();
-        result = 31 * result + meterStart;
-        result = 31 * result + timestamp.hashCode();
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final StartTransactionCommand other = (StartTransactionCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.transactionId, other.transactionId) && Objects.equals(this.evseId, other.evseId) && Objects.equals(this.identifyingToken, other.identifyingToken) && Objects.equals(this.meterStart, other.meterStart) && Objects.equals(this.timestamp, other.timestamp) && Objects.equals(this.attributes, other.attributes);
     }
 }

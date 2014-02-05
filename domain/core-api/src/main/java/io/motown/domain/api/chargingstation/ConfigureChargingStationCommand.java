@@ -15,13 +15,13 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -43,7 +43,7 @@ public final class ConfigureChargingStationCommand {
      * Creates a {@code ConfigureChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param evses        the evses with which the charging station should be configured.
+     * @param evses             the evses with which the charging station should be configured.
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
     public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Evse> evses) {
@@ -54,7 +54,7 @@ public final class ConfigureChargingStationCommand {
      * Creates a {@code ConfigureChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param settings the settings with which the charging station should be configured.
+     * @param settings          the settings with which the charging station should be configured.
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
     public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Map<String, String> settings) {
@@ -65,10 +65,10 @@ public final class ConfigureChargingStationCommand {
      * Creates a {@code ConfigureChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param evses the evses with which the charging station should be configured.
-     * @param settings the settings with which the charging station should be configured.
+     * @param evses             the evses with which the charging station should be configured.
+     * @param settings          the settings with which the charging station should be configured.
      * @throws NullPointerException if {@code chargingStationId}, {@code evses}, or {@code settings} is
-     * {@code null}.
+     *                              {@code null}.
      */
     public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Evse> evses, Map<String, String> settings) {
         this.chargingStationId = checkNotNull(chargingStationId);
@@ -96,7 +96,7 @@ public final class ConfigureChargingStationCommand {
 
     /**
      * Gets the configuration items with which the charging station should be configured.
-     *
+     * <p/>
      * These configuration items are additional information provided with which the charging station should be
      * configured but which are not required by Motown.
      *
@@ -107,30 +107,25 @@ public final class ConfigureChargingStationCommand {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ConfigureChargingStationCommand that = (ConfigureChargingStationCommand) o;
-
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (!evses.equals(that.evses)) return false;
-        if (!settings.equals(that.settings)) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(chargingStationId, evses, settings);
     }
 
     @Override
-    public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + evses.hashCode();
-        result = 31 * result + settings.hashCode();
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final ConfigureChargingStationCommand other = (ConfigureChargingStationCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.evses, other.evses) && Objects.equals(this.settings, other.settings);
     }
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this.getClass())
+        return com.google.common.base.Objects.toStringHelper(this.getClass())
                 .add("chargingStationId", chargingStationId)
                 .add("evses", evses)
                 .add("settings", settings)

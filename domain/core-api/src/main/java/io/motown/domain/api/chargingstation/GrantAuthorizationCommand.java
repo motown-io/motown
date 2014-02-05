@@ -17,6 +17,8 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -61,22 +63,19 @@ public final class GrantAuthorizationCommand {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        GrantAuthorizationCommand that = (GrantAuthorizationCommand) o;
-
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (!identifyingToken.equals(that.identifyingToken)) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(chargingStationId, identifyingToken);
     }
 
     @Override
-    public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + identifyingToken.hashCode();
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final GrantAuthorizationCommand other = (GrantAuthorizationCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.identifyingToken, other.identifyingToken);
     }
 }

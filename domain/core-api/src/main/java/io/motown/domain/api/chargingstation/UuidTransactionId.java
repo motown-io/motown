@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -63,26 +64,20 @@ public final class UuidTransactionId implements TransactionId {
         return uuid.toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        UuidTransactionId that = (UuidTransactionId) o;
-
-        if (!uuid.equals(that.uuid)) return false;
-
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
-        return uuid.hashCode();
+        return Objects.hash(uuid);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final UuidTransactionId other = (UuidTransactionId) obj;
+        return Objects.equals(this.uuid, other.uuid);
     }
 }

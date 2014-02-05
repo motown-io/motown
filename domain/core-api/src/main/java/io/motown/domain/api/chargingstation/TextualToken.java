@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -71,29 +73,20 @@ public final class TextualToken implements IdentifyingToken {
         return authenticationStatus;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        TextualToken that = (TextualToken) o;
-
-        if (authenticationStatus != that.authenticationStatus) return false;
-        if (!token.equals(that.token)) return false;
-
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
-        int result = token.hashCode();
-        result = 31 * result + (authenticationStatus != null ? authenticationStatus.hashCode() : 0);
-        return result;
+        return Objects.hash(token, authenticationStatus);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final TextualToken other = (TextualToken) obj;
+        return Objects.equals(this.token, other.token) && Objects.equals(this.authenticationStatus, other.authenticationStatus);
     }
 }

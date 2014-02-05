@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableMap;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Map;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -38,7 +39,7 @@ public final class BootChargingStationCommand {
      * Creates a {@code BootChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param protocol protocol identifier.
+     * @param protocol          protocol identifier.
      * @throws NullPointerException if {@code chargingStationId} or {@code protocol} is {@code null}.
      */
     public BootChargingStationCommand(ChargingStationId chargingStationId, String protocol) {
@@ -80,7 +81,7 @@ public final class BootChargingStationCommand {
 
     /**
      * Gets the attributes associated with the boot.
-     *
+     * <p/>
      * These attributes are additional information provided by the charging station when it booted but which are not
      * required by Motown.
      *
@@ -91,24 +92,19 @@ public final class BootChargingStationCommand {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        BootChargingStationCommand that = (BootChargingStationCommand) o;
-
-        if (attributes != null ? !attributes.equals(that.attributes) : that.attributes != null) return false;
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (!protocol.equals(that.protocol)) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(chargingStationId, protocol, attributes);
     }
 
     @Override
-    public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + protocol.hashCode();
-        result = 31 * result + (attributes != null ? attributes.hashCode() : 0);
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final BootChargingStationCommand other = (BootChargingStationCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.protocol, other.protocol) && Objects.equals(this.attributes, other.attributes);
     }
 }

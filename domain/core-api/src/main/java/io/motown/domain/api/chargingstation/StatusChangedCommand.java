@@ -17,6 +17,8 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -34,7 +36,7 @@ public class StatusChangedCommand {
      * Creates a {@code StatusChangedCommand} with an identifier and new status.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param status the resulting status of the request
+     * @param status            the resulting status of the request
      * @throws NullPointerException if {@code chargingStationId} or {@code status} is {@code null}.
      */
     public StatusChangedCommand(ChargingStationId chargingStationId, RequestStatus status) {
@@ -53,6 +55,7 @@ public class StatusChangedCommand {
 
     /**
      * Gets the resulting status of the request.
+     *
      * @return the request status
      */
     public RequestStatus getStatus() {
@@ -60,22 +63,19 @@ public class StatusChangedCommand {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        StatusChangedCommand that = (StatusChangedCommand) o;
-
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (status != that.status) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(chargingStationId, status);
     }
 
     @Override
-    public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + status.hashCode();
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final StatusChangedCommand other = (StatusChangedCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.status, other.status);
     }
 }

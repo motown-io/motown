@@ -17,6 +17,7 @@
 package io.motown.domain.api.chargingstation;
 
 import java.util.Date;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -31,6 +32,7 @@ public class MeterValue {
 
     /**
      * Creates a {@code MeterValue} holding a timestamp and a value.
+     *
      * @param timestamp
      * @param value
      * @throws NullPointerException if {@code timestamp}, or {@code value} is {@code null}.
@@ -55,22 +57,19 @@ public class MeterValue {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        MeterValue that = (MeterValue) o;
-
-        if (!timestamp.equals(that.timestamp)) return false;
-        if (!value.equals(that.value)) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(timestamp, value);
     }
 
     @Override
-    public int hashCode() {
-        int result = timestamp.hashCode();
-        result = 31 * result + value.hashCode();
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final MeterValue other = (MeterValue) obj;
+        return Objects.equals(this.timestamp, other.timestamp) && Objects.equals(this.value, other.value);
     }
 }

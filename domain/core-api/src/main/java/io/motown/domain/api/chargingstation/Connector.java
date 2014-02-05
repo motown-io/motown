@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class Connector {
@@ -65,30 +67,19 @@ public final class Connector {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Connector connector = (Connector) o;
-
-        if (maxAmp != connector.maxAmp) return false;
-        if (phase != connector.phase) return false;
-        if (voltage != connector.voltage) return false;
-        if (chargingProtocol != connector.chargingProtocol) return false;
-        if (connectorType != connector.connectorType) return false;
-        if (current != connector.current) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(maxAmp, phase, voltage, chargingProtocol, current, connectorType);
     }
 
     @Override
-    public int hashCode() {
-        int result = maxAmp;
-        result = 31 * result + phase;
-        result = 31 * result + voltage;
-        result = 31 * result + chargingProtocol.hashCode();
-        result = 31 * result + current.hashCode();
-        result = 31 * result + connectorType.hashCode();
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final Connector other = (Connector) obj;
+        return Objects.equals(this.maxAmp, other.maxAmp) && Objects.equals(this.phase, other.phase) && Objects.equals(this.voltage, other.voltage) && Objects.equals(this.chargingProtocol, other.chargingProtocol) && Objects.equals(this.current, other.current) && Objects.equals(this.connectorType, other.connectorType);
     }
 }

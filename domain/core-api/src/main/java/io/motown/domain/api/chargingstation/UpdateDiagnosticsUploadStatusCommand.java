@@ -17,6 +17,8 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -60,22 +62,19 @@ public final class UpdateDiagnosticsUploadStatusCommand {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        UpdateDiagnosticsUploadStatusCommand that = (UpdateDiagnosticsUploadStatusCommand) o;
-
-        if (isUploaded != that.isUploaded) return false;
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(chargingStationId, isUploaded);
     }
 
     @Override
-    public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + (isUploaded ? 1 : 0);
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final UpdateDiagnosticsUploadStatusCommand other = (UpdateDiagnosticsUploadStatusCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.isUploaded, other.isUploaded);
     }
 }

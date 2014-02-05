@@ -18,6 +18,7 @@ package io.motown.domain.api.chargingstation;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Date;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -39,7 +40,7 @@ public final class StopTransactionCommand {
 
     /**
      * Creates a {@code StopTransactionCommand}.
-     *
+     * <p/>
      * In contrast to most of the other classes and methods in the Core API the {@code transactionId} and
      * {@code identifyingToken} are possibly mutable. Some default, immutable implementations of these interfaces are
      * provided but the mutability of these parameters can't be guaranteed.
@@ -50,7 +51,7 @@ public final class StopTransactionCommand {
      * @param meterStop         meter value in Wh for the evse when the transaction stopped.
      * @param timestamp         the time at which the transaction stopped.
      * @throws NullPointerException if {@code chargingStationId}, {@code transactionId}, {@code identifyingToken} or
-     * {@code timestamp} is {@code null}.
+     *                              {@code timestamp} is {@code null}.
      */
     public StopTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId, IdentifyingToken identifyingToken, int meterStop, Date timestamp) {
         this.chargingStationId = checkNotNull(chargingStationId);
@@ -106,28 +107,19 @@ public final class StopTransactionCommand {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        StopTransactionCommand that = (StopTransactionCommand) o;
-
-        if (meterStop != that.meterStop) return false;
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (!identifyingToken.equals(that.identifyingToken)) return false;
-        if (!timestamp.equals(that.timestamp)) return false;
-        if (!transactionId.equals(that.transactionId)) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(chargingStationId, transactionId, identifyingToken, meterStop, timestamp);
     }
 
     @Override
-    public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + transactionId.hashCode();
-        result = 31 * result + identifyingToken.hashCode();
-        result = 31 * result + meterStop;
-        result = 31 * result + timestamp.hashCode();
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final StopTransactionCommand other = (StopTransactionCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.transactionId, other.transactionId) && Objects.equals(this.identifyingToken, other.identifyingToken) && Objects.equals(this.meterStop, other.meterStop) && Objects.equals(this.timestamp, other.timestamp);
     }
 }

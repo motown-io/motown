@@ -17,6 +17,8 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -65,24 +67,19 @@ public final class ReservationStatusChangedCommand {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ReservationStatusChangedCommand that = (ReservationStatusChangedCommand) o;
-
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (newStatus != that.newStatus) return false;
-        if (!reservationId.equals(that.reservationId)) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(chargingStationId, reservationId, newStatus);
     }
 
     @Override
-    public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + reservationId.hashCode();
-        result = 31 * result + newStatus.hashCode();
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final ReservationStatusChangedCommand other = (ReservationStatusChangedCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.reservationId, other.reservationId) && Objects.equals(this.newStatus, other.newStatus);
     }
 }

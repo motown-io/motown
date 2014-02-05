@@ -17,6 +17,8 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -84,26 +86,19 @@ public final class IncomingDataTransferCommand {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        IncomingDataTransferCommand that = (IncomingDataTransferCommand) o;
-
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (data != null ? !data.equals(that.data) : that.data != null) return false;
-        if (messageId != null ? !messageId.equals(that.messageId) : that.messageId != null) return false;
-        if (!vendorId.equals(that.vendorId)) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(chargingStationId, vendorId, messageId, data);
     }
 
     @Override
-    public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + vendorId.hashCode();
-        result = 31 * result + (messageId != null ? messageId.hashCode() : 0);
-        result = 31 * result + (data != null ? data.hashCode() : 0);
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final IncomingDataTransferCommand other = (IncomingDataTransferCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.vendorId, other.vendorId) && Objects.equals(this.messageId, other.messageId) && Objects.equals(this.data, other.data);
     }
 }
