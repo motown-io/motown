@@ -17,9 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getProtocol;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getVendorId;
+import static io.motown.domain.api.chargingstation.CoreApiTestUtils.*;
 
 public class DataTransferEventTest {
 

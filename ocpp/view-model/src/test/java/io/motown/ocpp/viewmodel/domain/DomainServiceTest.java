@@ -32,7 +32,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.persistence.EntityManagerFactory;
 import java.util.Date;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static io.motown.ocpp.viewmodel.domain.TestUtils.*;
 import static junit.framework.Assert.assertNotNull;

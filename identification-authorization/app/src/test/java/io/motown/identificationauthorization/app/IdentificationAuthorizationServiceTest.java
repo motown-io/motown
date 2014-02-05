@@ -20,9 +20,7 @@ import io.motown.identificationauthorization.pluginapi.AuthenticationProvider;
 import org.junit.Before;
 import org.junit.Test;
 
-import static io.motown.identificationauthorization.app.TestUtils.getInvalidIdentifyingToken;
-import static io.motown.identificationauthorization.app.TestUtils.getValidIdentifyingToken;
-import static io.motown.identificationauthorization.app.TestUtils.getValidIdentifyingTokenSecondAuthorizationProvider;
+import static io.motown.identificationauthorization.app.TestUtils.*;
 import static org.jgroups.util.Util.assertFalse;
 import static org.jgroups.util.Util.assertTrue;
 import static org.mockito.Mockito.*;

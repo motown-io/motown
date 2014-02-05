@@ -20,7 +20,7 @@ import org.junit.Test;
 import java.util.Date;
 import java.util.HashMap;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.*;
+import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
 
 public class RequestFirmwareUpdateCommandTest {
 

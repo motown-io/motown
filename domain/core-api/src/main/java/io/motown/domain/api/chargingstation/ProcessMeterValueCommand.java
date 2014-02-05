@@ -20,7 +20,6 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**

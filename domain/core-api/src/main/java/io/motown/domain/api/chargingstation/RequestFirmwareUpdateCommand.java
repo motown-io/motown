@@ -18,7 +18,6 @@ package io.motown.domain.api.chargingstation;
 import com.google.common.collect.ImmutableMap;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import javax.annotation.Nullable;
 import java.util.Date;
 import java.util.Map;
 

@@ -23,8 +23,6 @@ import io.motown.ocpp.v15.soap.centralsystem.schema.FirmwareStatus;
 import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import org.apache.cxf.continuations.Continuation;
-import org.apache.cxf.continuations.ContinuationProvider;
 import org.apache.cxf.headers.Header;
 import org.apache.cxf.helpers.CastUtils;
 import org.apache.cxf.jaxws.context.WrappedMessageContext;

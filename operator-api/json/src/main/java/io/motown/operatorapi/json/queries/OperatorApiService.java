@@ -15,7 +15,6 @@
  */
 package io.motown.operatorapi.json.queries;
 
-import io.motown.domain.api.chargingstation.ConnectorId;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.entities.Transaction;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;

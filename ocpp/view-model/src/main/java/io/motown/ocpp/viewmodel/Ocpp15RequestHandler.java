@@ -18,7 +18,6 @@ package io.motown.ocpp.viewmodel;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
-import io.motown.domain.api.chargingstation.RequestStatus;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

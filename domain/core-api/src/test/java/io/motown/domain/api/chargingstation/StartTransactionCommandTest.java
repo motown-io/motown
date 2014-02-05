@@ -19,9 +19,7 @@ import org.junit.Test;
 
 import java.util.Date;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getNumberedTransactionId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getTextualToken;
+import static io.motown.domain.api.chargingstation.CoreApiTestUtils.*;
 
 public class StartTransactionCommandTest {
 

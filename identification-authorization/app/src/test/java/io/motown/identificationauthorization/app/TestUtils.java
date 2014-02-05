@@ -15,7 +15,9 @@
  */
 package io.motown.identificationauthorization.app;
 
-import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.IdentifyingToken;
+import io.motown.domain.api.chargingstation.TextualToken;
 
 public class TestUtils {
 

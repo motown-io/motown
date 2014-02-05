@@ -17,7 +17,10 @@ package io.motown.ocpp.viewmodel.persistence.entities;
 
 import io.motown.domain.api.chargingstation.ConnectorId;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class Transaction {

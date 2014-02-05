@@ -18,6 +18,7 @@ package io.motown.domain.api.chargingstation;
 import org.junit.Test;
 
 import java.util.ArrayList;
+
 import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
 
 

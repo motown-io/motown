@@ -17,6 +17,7 @@ package io.motown.ocpp.viewmodel.domain;
 
 import io.motown.domain.api.chargingstation.AuthorizationResultStatus;
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 
 public class AuthorizeResultTest {

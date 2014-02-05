@@ -16,7 +16,10 @@
 
 package io.motown.ocpp.viewmodel.ocpp;
 
-import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.ConnectorId;
+import io.motown.domain.api.chargingstation.IdentifyingToken;
+import io.motown.domain.api.chargingstation.RequestStatus;
 
 import java.util.Date;
 

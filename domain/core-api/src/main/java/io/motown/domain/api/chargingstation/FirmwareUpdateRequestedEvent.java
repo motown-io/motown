@@ -15,7 +15,6 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import javax.annotation.Nullable;
 import java.util.Date;
 import java.util.Map;
 

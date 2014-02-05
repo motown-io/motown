@@ -15,8 +15,6 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import javax.annotation.Nullable;
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
