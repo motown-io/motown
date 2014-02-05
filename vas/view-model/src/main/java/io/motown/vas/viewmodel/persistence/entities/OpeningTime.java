@@ -46,12 +46,12 @@ public class OpeningTime {
 
     @Transient
     public String getTimeStartString() {
-        return String.format("%02d:%02d", new Double(Math.floor(timeStart / 60)).intValue(), (timeStart % 60));
+        return String.format("%02d:%02d", (timeStart / 60), (timeStart % 60));
     }
 
     @Transient
     public String getTimeStopString() {
-        return String.format("%02d:%02d", new Double(Math.floor(timeStop / 60)).intValue(), timeStop % 60);
+        return String.format("%02d:%02d", (timeStop / 60), timeStop % 60);
     }
 
     @Transient
@@ -75,7 +75,7 @@ public class OpeningTime {
     }
 
     private LocalTime getAsLocalTime(Integer time) {
-        return new LocalTime(new Double(Math.floor(time / 60)).intValue(), time % 60);
+        return new LocalTime(time / 60, time % 60);
     }
 
     public String getId() {
