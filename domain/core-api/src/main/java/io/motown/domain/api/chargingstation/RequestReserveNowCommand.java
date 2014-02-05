@@ -23,14 +23,14 @@ import java.util.Date;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code RequestReserveNowCommand} is the command which is published when a connector should be
+ * {@code RequestReserveNowCommand} is the command which is published when a evse should be
  * reserved.
  */
 public final class RequestReserveNowCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
-    private final ConnectorId connectorId;
+    private final EvseId evseId;
     private final IdentifyingToken identifyingToken;
     private final Date expiryDate;
     private final IdentifyingToken parentIdentifyingToken;
@@ -39,13 +39,15 @@ public final class RequestReserveNowCommand {
      * Creates a {@code RequestReserveNowCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param expiryDate
-     * @param parentIdentifyingToken
-     * @throws NullPointerException if {@code chargingStationId}, {@code identifyingToken} or {@code expiryDate} is {@code null}.
+     * @param evseId the identifier of the EVSE.
+     * @param identifyingToken the identifying token that will fulfill the reservation.
+     * @param expiryDate date at which the reservation should expire.
+     * @param parentIdentifyingToken group of the identifying token.
+     * @throws NullPointerException if {@code chargingStationId}, {@code evseId}, {@code identifyingToken} or {@code expiryDate} is {@code null}.
      */
-    public RequestReserveNowCommand(ChargingStationId chargingStationId, ConnectorId connectorId, IdentifyingToken identifyingToken, Date expiryDate, @Nullable IdentifyingToken parentIdentifyingToken) {
+    public RequestReserveNowCommand(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken identifyingToken, Date expiryDate, @Nullable IdentifyingToken parentIdentifyingToken) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.connectorId = checkNotNull(connectorId);
+        this.evseId = checkNotNull(evseId);
         this.identifyingToken = checkNotNull(identifyingToken);
         this.expiryDate = checkNotNull(expiryDate);
         this.parentIdentifyingToken = parentIdentifyingToken;
@@ -60,8 +62,8 @@ public final class RequestReserveNowCommand {
         return chargingStationId;
     }
 
-    public ConnectorId getConnectorId() {
-        return connectorId;
+    public EvseId getEvseId() {
+        return evseId;
     }
 
     public IdentifyingToken getIdentifyingToken() {

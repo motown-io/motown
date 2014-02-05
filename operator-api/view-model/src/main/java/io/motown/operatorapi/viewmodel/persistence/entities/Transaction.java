@@ -15,7 +15,7 @@
  */
 package io.motown.operatorapi.viewmodel.persistence.entities;
 
-import io.motown.domain.api.chargingstation.ConnectorId;
+import io.motown.domain.api.chargingstation.EvseId;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -42,8 +42,8 @@ public class Transaction {
     private int meterStop;
 
     @Embedded
-    @AttributeOverride( name="id", column=@Column(name = "connectorId") )
-    private ConnectorId connectorId;
+    @AttributeOverride( name="id", column=@Column(name = "evseId") )
+    private EvseId evseId;
 
     private Date startedTimestamp;
 
@@ -58,9 +58,9 @@ public class Transaction {
         this.transactionId = transactionId;
     }
 
-    public Transaction(String chargingStationId, String transactionId, ConnectorId connectorId, String idTag, int meterStart, Date startedTimestamp) {
+    public Transaction(String chargingStationId, String transactionId, EvseId evseId, String idTag, int meterStart, Date startedTimestamp) {
         this(chargingStationId, transactionId);
-        this.connectorId = checkNotNull(connectorId);
+        this.evseId = checkNotNull(evseId);
         this.idTag = idTag;
         this.meterStart = meterStart;
         this.startedTimestamp = startedTimestamp;
@@ -106,12 +106,12 @@ public class Transaction {
         this.meterStop = meterStop;
     }
 
-    public ConnectorId getConnectorId() {
-        return connectorId;
+    public EvseId getEvseId() {
+        return evseId;
     }
 
-    public void setConnectorId(ConnectorId connectorId) {
-        this.connectorId = connectorId;
+    public void setEvseId(EvseId evseId) {
+        this.evseId = evseId;
     }
 
     public Date getStartedTimestamp() {

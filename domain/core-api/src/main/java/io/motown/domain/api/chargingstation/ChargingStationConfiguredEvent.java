@@ -33,7 +33,7 @@ public final class ChargingStationConfiguredEvent {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final Set<Connector> connectors;
+    private final Set<Evse> evses;
 
     private final Map<String, String> configurationItems;
 
@@ -41,14 +41,14 @@ public final class ChargingStationConfiguredEvent {
      * Creates a {@code ChargingStationConfiguredEvent} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param connectors the connectors with which the charging station has been configured.
+     * @param evses the Evses with which the charging station has been configured.
      * @param configurationItems the configuration items with which the charging station has been configured.
-     * @throws NullPointerException if {@code chargingStationId}, {@code connectors}, or {@code configurationItems} is
+     * @throws NullPointerException if {@code chargingStationId}, {@code evses}, or {@code configurationItems} is
      * {@code null}.
      */
-    public ChargingStationConfiguredEvent(ChargingStationId chargingStationId, Set<Connector> connectors, Map<String, String> configurationItems) {
+    public ChargingStationConfiguredEvent(ChargingStationId chargingStationId, Set<Evse> evses, Map<String, String> configurationItems) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.connectors = ImmutableSet.copyOf(checkNotNull(connectors));
+        this.evses = ImmutableSet.copyOf(checkNotNull(evses));
         this.configurationItems = ImmutableMap.copyOf(checkNotNull(configurationItems));
     }
 
@@ -62,12 +62,12 @@ public final class ChargingStationConfiguredEvent {
     }
 
     /**
-     * Gets the connectors with which the charging station has been configured.
+     * Gets the Evses with which the charging station has been configured.
      *
-     * @return an immutable {@link java.util.Set} of connectors.
+     * @return an immutable {@link java.util.Set} of Evses.
      */
-    public Set<Connector> getConnectors() {
-        return connectors;
+    public Set<Evse> getEvses() {
+        return evses;
     }
 
     /**
@@ -86,7 +86,7 @@ public final class ChargingStationConfiguredEvent {
     public String toString() {
         return Objects.toStringHelper(this.getClass())
                 .add("chargingStationId", chargingStationId)
-                .add("connectors", connectors)
+                .add("evses", evses)
                 .add("configurationItems", configurationItems)
                 .toString();
     }

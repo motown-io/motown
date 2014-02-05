@@ -24,26 +24,26 @@ public class StartTransactionRequestedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new StartTransactionRequestedEvent(null, "OCPPS15", getTextualToken(), new ConnectorId(1));
+        new StartTransactionRequestedEvent(null, "OCPPS15", getTextualToken(), new EvseId(1));
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullProtocol() {
-        new StartTransactionRequestedEvent(getChargingStationId(), null, getTextualToken(), new ConnectorId(1));
+        new StartTransactionRequestedEvent(getChargingStationId(), null, getTextualToken(), new EvseId(1));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithEmptyProtocol() {
-        new StartTransactionRequestedEvent(getChargingStationId(), "", getTextualToken(), new ConnectorId(1));
+        new StartTransactionRequestedEvent(getChargingStationId(), "", getTextualToken(), new EvseId(1));
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullIdentifyingToken() {
-        new StartTransactionRequestedEvent(getChargingStationId(), "OCPPS15", null, new ConnectorId(1));
+        new StartTransactionRequestedEvent(getChargingStationId(), "OCPPS15", null, new EvseId(1));
     }
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingWithConnectorIdNull() {
+    public void nullPointerExceptionThrownWhenCreatingWithEvseIdNull() {
         new StartTransactionRequestedEvent(getChargingStationId(), "OCPPS15", getTextualToken(), null);
     }
 }

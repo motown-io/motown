@@ -92,11 +92,11 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
     @Override
     public StatusNotificationResponse statusNotification(StatusNotificationRequest request, String chargeBoxIdentity) {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
-        ConnectorId connectorId = new ConnectorId(request.getConnectorId());
+        EvseId evseId = new EvseId(request.getConnectorId());
         ComponentStatus componentStatus = getComponentStatusFromChargePointStatus(request.getStatus());
         String errorCode = request.getErrorCode() != null ? request.getErrorCode().value() : null;
 
-        domainService.statusNotification(chargingStationId, connectorId, errorCode, componentStatus, request.getInfo(), request.getTimestamp(), request.getVendorId(), request.getVendorErrorCode());
+        domainService.statusNotification(chargingStationId, evseId, errorCode, componentStatus, request.getInfo(), request.getTimestamp(), request.getVendorId(), request.getVendorErrorCode());
         return new StatusNotificationResponse();
     }
 
@@ -153,7 +153,7 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
             meterValues.add(new MeterValue(mv.getTimestamp(), mv.getValue().toString()));
         }
 
-        domainService.meterValues(chargingStationId, transactionId, new ConnectorId(request.getConnectorId()), meterValues);
+        domainService.meterValues(chargingStationId, transactionId, new EvseId(request.getConnectorId()), meterValues);
 
         return new MeterValuesResponse();
     }
@@ -253,7 +253,7 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
             reservationId = new NumberedReservationId(chargingStationId, PROTOCOL_IDENTIFIER, parameters.getReservationId());
         }
 
-        int transactionId = domainService.startTransaction(chargingStationId, new ConnectorId(parameters.getConnectorId()), new TextualToken(parameters.getIdTag()),
+        int transactionId = domainService.startTransaction(chargingStationId, new EvseId(parameters.getConnectorId()), new TextualToken(parameters.getIdTag()),
                 parameters.getMeterStart(), parameters.getTimestamp(), reservationId, PROTOCOL_IDENTIFIER);
 
         // TODO locally store identifications, so we can use these in the response. - Dennis Laumen, December 16th 2013

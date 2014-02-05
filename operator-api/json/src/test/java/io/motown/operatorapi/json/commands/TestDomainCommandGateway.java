@@ -25,8 +25,8 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
 
 
     @Override
-    public void send(RequestUnlockConnectorCommand command) {
-        log.debug("RequestUnlockConnectorCommand:" + command.toString());
+    public void send(RequestUnlockEvseCommand command) {
+        log.debug("RequestUnlockEvseCommand:" + command.toString());
     }
 
     @Override

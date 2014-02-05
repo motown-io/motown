@@ -26,6 +26,8 @@
         <module>identification-authorization/app</module>
         <module>identification-authorization/plugin-api</module>
         <module>identification-authorization/cir-plugin</module>
+        <module>chargingstation-configuration/app</module>
+        <module>chargingstation-configuration/view-model</module>
         <module>vas/v10-soap</module>
         <module>vas/view-model</module>
     </modules>
@@ -60,6 +62,7 @@
         <cxf.version>2.7.0</cxf.version>
         <mockito.version>1.9.5</mockito.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
+        <sonar-maven-plugin.version>2.2</sonar-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -312,7 +315,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>sonar-maven-plugin</artifactId>
-                    <version>2.2</version>
+                    <version>${sonar-maven-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

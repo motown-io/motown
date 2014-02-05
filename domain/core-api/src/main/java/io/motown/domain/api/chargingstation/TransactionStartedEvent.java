@@ -31,7 +31,7 @@ public final class TransactionStartedEvent {
 
     private final TransactionId transactionId;
 
-    private final ConnectorId connectorId;
+    private final EvseId evseId;
 
     private final IdentifyingToken identifyingToken;
 
@@ -50,22 +50,22 @@ public final class TransactionStartedEvent {
      *
      * @param chargingStationId the charging station's identifier.
      * @param transactionId     the transaction's identifier.
-     * @param connectorId       the connector's identifier or position.
+     * @param evseId            the evse's identifier or position.
      * @param identifyingToken  the token which started the transaction.
-     * @param meterStart        meter value in Wh for the connector when the transaction started.
+     * @param meterStart        meter value in Wh for the evse when the transaction started.
      * @param timestamp         the time at which the transaction started.
      * @param attributes        a {@link java.util.Map} of attributes. These attributes are additional information provided by
      *                          the charging station when it started the transaction but which are not required by Motown. Because
      *                          {@link java.util.Map} implementations are potentially mutable a defensive copy is made.
-     * @throws NullPointerException if {@code chargingStationId}, {@code transactionId}, {@code identifyingToken},
+     * @throws NullPointerException if {@code chargingStationId}, {@code transactionId}, {@code evseId}, {@code identifyingToken},
      * {@code timestamp} or {@code attributes} is {@code null}.
-     * @throws IllegalArgumentException if {@code connectorId} is negative.
+     * @throws IllegalArgumentException if {@code evseId} is negative.
      */
-    public TransactionStartedEvent(ChargingStationId chargingStationId, TransactionId transactionId, ConnectorId connectorId, IdentifyingToken identifyingToken,
+    public TransactionStartedEvent(ChargingStationId chargingStationId, TransactionId transactionId, EvseId evseId, IdentifyingToken identifyingToken,
                                    int meterStart, Date timestamp, Map<String, String> attributes) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = checkNotNull(transactionId);
-        this.connectorId = checkNotNull(connectorId);
+        this.evseId = checkNotNull(evseId);
         this.identifyingToken = checkNotNull(identifyingToken);
         this.meterStart = meterStart;
         this.timestamp = new Date(checkNotNull(timestamp).getTime());
@@ -91,12 +91,12 @@ public final class TransactionStartedEvent {
     }
 
     /**
-     * Gets the connector's identifier or position.
+     * Gets the evse's identifier or position.
      *
-     * @return the connector's identifier or position.
+     * @return the evse's identifier or position.
      */
-    public ConnectorId getConnectorId() {
-        return connectorId;
+    public EvseId getEvseId() {
+        return evseId;
     }
 
     /**

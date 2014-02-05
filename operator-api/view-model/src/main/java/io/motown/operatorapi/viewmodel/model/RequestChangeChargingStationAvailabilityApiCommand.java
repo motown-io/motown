@@ -15,11 +15,11 @@
  */
 package io.motown.operatorapi.viewmodel.model;
 
-import io.motown.domain.api.chargingstation.ConnectorId;
+import io.motown.domain.api.chargingstation.EvseId;
 
 public class RequestChangeChargingStationAvailabilityApiCommand implements ApiCommand {
     private String availability;
-    private ConnectorId connectorId;
+    private EvseId evseId;
 
     public RequestChangeChargingStationAvailabilityApiCommand() {
     }
@@ -32,11 +32,11 @@ public class RequestChangeChargingStationAvailabilityApiCommand implements ApiCo
         this.availability = availability;
     }
 
-    public ConnectorId getConnectorId() {
-        return connectorId;
+    public EvseId getEvseId() {
+        return evseId;
     }
 
-    public void setConnectorId(ConnectorId connectorId) {
-        this.connectorId = connectorId;
+    public void setEvseId(EvseId evseId) {
+        this.evseId = evseId;
     }
 }

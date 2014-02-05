@@ -52,13 +52,14 @@ public class RegisterJsonCommandHandlerTest {
 
     @Test
     public void testHandleComplete() {
-        JsonObject commandObject = gson.fromJson("{'configuration' : {'connectors' : [{'connectorId' : 1, 'connectorType' : 'Type2', 'maxAmp' : 16 },{'connectorId' : 2, 'connectorType' : 'Combo', 'maxAmp' : 32}], 'settings' : {'key':'value', 'key2':'value2'}}}", JsonObject.class);
+
+        JsonObject commandObject = gson.fromJson("{'configuration' : {'evses' : [{'evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}]}], 'settings' : {'key':'value', 'key2':'value2'}}}", JsonObject.class);
         handler.handle("TEST_UNREGISTERED", commandObject);
     }
 
     @Test(expected=IllegalStateException.class)
     public void testHandleCompleteUnRegistered() {
-        JsonObject commandObject = gson.fromJson("{'configuration' : {'connectors' : [{'connectorId' : 1, 'connectorType' : 'Type2', 'maxAmp' : 16 },{'connectorId' : 2, 'connectorType' : 'Combo', 'maxAmp' : 32}], 'settings' : {'key':'value', 'key2':'value2'}}}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{'configuration' : {'evses' : [{'evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}]}], 'settings' : {'key':'value', 'key2':'value2'}}}", JsonObject.class);
         handler.handle("TEST_REGISTERED", commandObject);
     }
 

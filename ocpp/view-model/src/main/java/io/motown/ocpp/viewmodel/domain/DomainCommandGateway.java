@@ -62,7 +62,7 @@ interface DomainCommandGateway {
 
     void send(StartTransactionStatusChangedCommand command);
 
-    void send(UnlockConnectorStatusChangedCommand command);
+    void send(UnlockEvseStatusChangedCommand command);
 
     void send(ChangeAvailabilityToOperativeStatusChangedCommand command);
 

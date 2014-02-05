@@ -37,7 +37,7 @@ public class ConfigureJsonCommandHandlerTest {
 
     @Test
     public void testHandleComplete() {
-        JsonObject commandObject = gson.fromJson("{'connectors' : [{'connectorId' : 1, 'connectorType' : 'Type2', 'maxAmp' : 16 },{'connectorId' : 2, 'connectorType' : 'Combo', 'maxAmp' : 32}], 'settings' : {'key':'value', 'key2':'value2'}}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{'evses' : [{'evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}]}], 'settings' : {'key':'value', 'key2':'value2'}}", JsonObject.class);
         handler.handle("TEST_CP", commandObject);
     }
 
@@ -49,19 +49,19 @@ public class ConfigureJsonCommandHandlerTest {
 
     @Test
     public void testHandleConnectorsOnly() {
-        JsonObject commandObject = gson.fromJson("{'connectors' : [{'connectorId' : 1, 'connectorType' : 'Type2', 'maxAmp' : 16 },{'connectorId' : 2, 'connectorType' : 'Combo', 'maxAmp' : 32}]}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{'evses' : [{'evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}]}]}", JsonObject.class);
         handler.handle("TEST_CP", commandObject);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testHandleFaultyPayload() {  // connector not in a list
-        JsonObject commandObject = gson.fromJson("{'connectors' : {'connectorId' : 1, 'connectorType' : 'Type2', 'maxAmp' : 16 }}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{'evses' : {'evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}] }}", JsonObject.class);
         handler.handle("TEST_CP", commandObject);
     }
 
     @Test(expected=JsonSyntaxException.class)
     public void testHandleFaultyJson() {  // list instead of array
-        JsonObject commandObject = gson.fromJson("{'connectors' : [{['connectorId' : 1, 'connectorType' : 'Type2', 'maxAmp' : 16 ],{'connectorId' : 2, 'connectorType' : 'Combo', 'maxAmp' : 32}]}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{'evses' : [{['evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}]}]}]}", JsonObject.class);
         handler.handle("TEST_CP", commandObject);
     }
 

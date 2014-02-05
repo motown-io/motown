@@ -20,7 +20,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ConfigureChargingStationCommand;
-import io.motown.domain.api.chargingstation.Connector;
+import io.motown.domain.api.chargingstation.Evse;
 import io.motown.operatorapi.viewmodel.model.ConfigureChargingStationApiCommand;
 
 import java.util.Map;
@@ -39,7 +39,7 @@ public class JsonCommandParser {
      * @param payload           configuration json object (the inner structure of configuration
      * @param gson              gson parser in use
      * @return The command to be sent for configuration of a charging station.
-     * @throws IllegalArgumentException when there is no valid configuration of at least connectors or settings found
+     * @throws IllegalArgumentException when there is no valid configuration of at least evses or settings found
      */
     public static ConfigureChargingStationCommand parseConfigureChargingStation(ChargingStationId chargingStationId, JsonObject payload, Gson gson) {
         ConfigureChargingStationApiCommand command;
@@ -51,16 +51,16 @@ public class JsonCommandParser {
         }
 
         Map<String, String> settings = command.getSettings();
-        Set<Connector> connectors = command.getConnectors();
+        Set<Evse> evses = command.getEvses();
 
-        if (settings == null && connectors != null) {
-            return new ConfigureChargingStationCommand(chargingStationId, connectors);
-        } else if (settings != null && connectors == null) {
+        if (settings == null && evses != null) {
+            return new ConfigureChargingStationCommand(chargingStationId, evses);
+        } else if (settings != null && evses == null) {
             return new ConfigureChargingStationCommand(chargingStationId, settings);
-        } else if (settings != null && connectors != null) {
-            return new ConfigureChargingStationCommand(chargingStationId, connectors, settings);
+        } else if (settings != null && evses != null) {
+            return new ConfigureChargingStationCommand(chargingStationId, evses, settings);
         } else {
-            throw new IllegalArgumentException("Configure should at least have settings or connectors");
+            throw new IllegalArgumentException("Configure should at least have settings or evses");
         }
     }
 

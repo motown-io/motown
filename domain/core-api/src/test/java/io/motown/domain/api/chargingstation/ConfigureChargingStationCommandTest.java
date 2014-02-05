@@ -22,27 +22,30 @@ import java.util.*;
 public class ConfigureChargingStationCommandTest {
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNullAndConnectors() {
-        new ConfigureChargingStationCommand(null, Collections.<Connector>emptySet());
+    public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNullAndEvses() {
+        new ConfigureChargingStationCommand(null, Collections.<Evse>emptySet());
     }
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingCommandWithConnectorsNull() {
+    public void nullPointerExceptionThrownWhenCreatingCommandWithEvsesNull() {
         new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), null, Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithConfigurationItemsNull() {
-        new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), Collections.<Connector>emptySet(), null);
+        new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), Collections.<Evse>emptySet(), null);
     }
 
+    //TODO refactor
     @Test(expected = UnsupportedOperationException.class)
-    public void unsupportedOperationExceptionThrownWhenModifyingConnectors() {
-        Set<Connector> connectors = new HashSet<>();
+    public void unsupportedOperationExceptionThrownWhenModifyingEvses() {
+        Set<Evse> evses = new HashSet<>();
 
-        ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), connectors);
+        ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), evses);
 
-        command.getConnectors().add(new Connector(new ConnectorId(1), "Type1", 32));
+        List<Connector> connectors = new ArrayList<>();
+        connectors.add(new Connector(32, 3, 230, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_2));
+        command.getEvses().add(new Evse(new EvseId(1), connectors));
     }
 
     @Test(expected = UnsupportedOperationException.class)

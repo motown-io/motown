@@ -25,26 +25,26 @@ public class TransactionStartedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new TransactionStartedEvent(null, getNumberedTransactionId(), new ConnectorId(1), getTextualToken(), 1, new Date(), getEmptyAttributesMap());
+        new TransactionStartedEvent(null, getNumberedTransactionId(), new EvseId(1), getTextualToken(), 1, new Date(), getEmptyAttributesMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTransactionId() {
-        new TransactionStartedEvent(getChargingStationId(), null, new ConnectorId(1), getTextualToken(), 1, new Date(), getEmptyAttributesMap());
+        new TransactionStartedEvent(getChargingStationId(), null, new EvseId(1), getTextualToken(), 1, new Date(), getEmptyAttributesMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullIdentifyingToken() {
-        new TransactionStartedEvent(getChargingStationId(), getNumberedTransactionId(), new ConnectorId(1), null, 1, new Date(), getEmptyAttributesMap());
+        new TransactionStartedEvent(getChargingStationId(), getNumberedTransactionId(), new EvseId(1), null, 1, new Date(), getEmptyAttributesMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTimestamp() {
-        new TransactionStartedEvent(getChargingStationId(), getNumberedTransactionId(), new ConnectorId(1), getTextualToken(), 1, null, getEmptyAttributesMap());
+        new TransactionStartedEvent(getChargingStationId(), getNumberedTransactionId(), new EvseId(1), getTextualToken(), 1, null, getEmptyAttributesMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullAttributes() {
-        new TransactionStartedEvent(getChargingStationId(), getNumberedTransactionId(), new ConnectorId(1), getTextualToken(), 1, new Date(), null);
+        new TransactionStartedEvent(getChargingStationId(), getNumberedTransactionId(), new EvseId(1), getTextualToken(), 1, new Date(), null);
     }
 }

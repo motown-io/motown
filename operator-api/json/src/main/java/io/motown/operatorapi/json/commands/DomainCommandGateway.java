@@ -18,7 +18,7 @@ package io.motown.operatorapi.json.commands;
 import io.motown.domain.api.chargingstation.*;
 
 interface DomainCommandGateway {
-    void send(RequestUnlockConnectorCommand command);
+    void send(RequestUnlockEvseCommand command);
     void send(ConfigureChargingStationCommand command);
     void send(CreateAndAcceptChargingStationCommand command);
     void send(AcceptChargingStationCommand command);

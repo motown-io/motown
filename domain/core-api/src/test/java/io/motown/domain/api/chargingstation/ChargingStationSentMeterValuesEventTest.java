@@ -26,16 +26,16 @@ public class ChargingStationSentMeterValuesEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ChargingStationSentMeterValuesEvent(null, getNumberedTransactionId(), new ConnectorId(1), new ArrayList<MeterValue>());
+        new ChargingStationSentMeterValuesEvent(null, getNumberedTransactionId(), new EvseId(1), new ArrayList<MeterValue>());
     }
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingEventWithNullConnectorId() {
+    public void nullPointerExceptionThrownWhenCreatingEventWithNullEvseId() {
         new ChargingStationSentMeterValuesEvent(getChargingStationId(), getNumberedTransactionId(), null, new ArrayList<MeterValue>());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithMeterValuesNull() {
-        new ChargingStationSentMeterValuesEvent(getChargingStationId(), getNumberedTransactionId(), new ConnectorId(1), null);
+        new ChargingStationSentMeterValuesEvent(getChargingStationId(), getNumberedTransactionId(), new EvseId(1), null);
     }
 }

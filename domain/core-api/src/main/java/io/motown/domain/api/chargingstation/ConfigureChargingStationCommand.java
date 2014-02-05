@@ -35,7 +35,7 @@ public final class ConfigureChargingStationCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final Set<Connector> connectors;
+    private final Set<Evse> evses;
 
     private final Map<String, String> settings;
 
@@ -43,11 +43,11 @@ public final class ConfigureChargingStationCommand {
      * Creates a {@code ConfigureChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param connectors        the connectors with which the charging station should be configured.
+     * @param evses        the evses with which the charging station should be configured.
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Connector> connectors) {
-        this(chargingStationId, connectors, Collections.<String, String>emptyMap());
+    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Evse> evses) {
+        this(chargingStationId, evses, Collections.<String, String>emptyMap());
     }
 
     /**
@@ -58,21 +58,21 @@ public final class ConfigureChargingStationCommand {
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
     public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Map<String, String> settings) {
-        this(chargingStationId, Collections.<Connector>emptySet(), settings);
+        this(chargingStationId, Collections.<Evse>emptySet(), settings);
     }
 
     /**
      * Creates a {@code ConfigureChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param connectors the connectors with which the charging station should be configured.
+     * @param evses the evses with which the charging station should be configured.
      * @param settings the settings with which the charging station should be configured.
-     * @throws NullPointerException if {@code chargingStationId}, {@code connectors}, or {@code settings} is
+     * @throws NullPointerException if {@code chargingStationId}, {@code evses}, or {@code settings} is
      * {@code null}.
      */
-    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Connector> connectors, Map<String, String> settings) {
+    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Evse> evses, Map<String, String> settings) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.connectors = ImmutableSet.copyOf(checkNotNull(connectors));
+        this.evses = ImmutableSet.copyOf(checkNotNull(evses));
         this.settings = ImmutableMap.copyOf(checkNotNull(settings));
     }
 
@@ -86,12 +86,12 @@ public final class ConfigureChargingStationCommand {
     }
 
     /**
-     * Gets the connectors with which the charging station should be configured.
+     * Gets the evses with which the charging station should be configured.
      *
-     * @return an immutable {@link java.util.Set} of connectors.
+     * @return an immutable {@link java.util.Set} of evses.
      */
-    public Set<Connector> getConnectors() {
-        return connectors;
+    public Set<Evse> getEvses() {
+        return evses;
     }
 
     /**
@@ -114,7 +114,7 @@ public final class ConfigureChargingStationCommand {
         ConfigureChargingStationCommand that = (ConfigureChargingStationCommand) o;
 
         if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (!connectors.equals(that.connectors)) return false;
+        if (!evses.equals(that.evses)) return false;
         if (!settings.equals(that.settings)) return false;
 
         return true;
@@ -123,7 +123,7 @@ public final class ConfigureChargingStationCommand {
     @Override
     public int hashCode() {
         int result = chargingStationId.hashCode();
-        result = 31 * result + connectors.hashCode();
+        result = 31 * result + evses.hashCode();
         result = 31 * result + settings.hashCode();
         return result;
     }
@@ -132,7 +132,7 @@ public final class ConfigureChargingStationCommand {
     public String toString() {
         return Objects.toStringHelper(this.getClass())
                 .add("chargingStationId", chargingStationId)
-                .add("connectors", connectors)
+                .add("evses", evses)
                 .add("settings", settings)
                 .toString();
     }

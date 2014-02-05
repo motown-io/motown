@@ -17,7 +17,7 @@
 package io.motown.ocpp.viewmodel.ocpp;
 
 import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.ConnectorId;
+import io.motown.domain.api.chargingstation.EvseId;
 import io.motown.domain.api.chargingstation.IdentifyingToken;
 import io.motown.domain.api.chargingstation.RequestStatus;
 
@@ -25,9 +25,9 @@ import java.util.Date;
 
 public interface ChargingStationOcpp12Client {
 
-    RequestStatus changeAvailabilityToInoperative(ChargingStationId id, ConnectorId connectorId);
+    RequestStatus changeAvailabilityToInoperative(ChargingStationId id, EvseId evseId);
 
-    RequestStatus changeAvailabilityToOperative(ChargingStationId id, ConnectorId connectorId);
+    RequestStatus changeAvailabilityToOperative(ChargingStationId id, EvseId evseId);
 
     RequestStatus changeConfiguration(ChargingStationId id, String key, String value);
 
@@ -35,7 +35,7 @@ public interface ChargingStationOcpp12Client {
 
     String getDiagnostics(ChargingStationId id, String uploadLocation, Integer numRetries, Integer retryInterval, Date periodStartTime, Date periodStopTime);
 
-    RequestStatus startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, ConnectorId connectorId);
+    RequestStatus startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, EvseId evseId);
 
     RequestStatus stopTransaction(ChargingStationId id, int transactionId);
 
@@ -43,7 +43,7 @@ public interface ChargingStationOcpp12Client {
 
     RequestStatus hardReset(ChargingStationId id);
 
-    RequestStatus unlockConnector(ChargingStationId id, ConnectorId connectorId);
+    RequestStatus unlockConnector(ChargingStationId id, EvseId evseId);
 
     void updateFirmware(ChargingStationId id, String downloadLocation, Date retrieveDate, Integer numRetries, Integer retryInterval);
 

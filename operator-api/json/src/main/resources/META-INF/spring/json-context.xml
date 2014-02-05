@@ -17,14 +17,14 @@
         <property name="dateFormat" value="yyyy-MM-dd'T'HH:mm:ss'Z'"/>
         <property name="typeAdapters">
             <set>
-                <bean class="io.motown.operatorapi.json.gson.ConnectorIdTypeAdapter"/>
+                <bean class="io.motown.operatorapi.json.gson.EvseIdTypeAdapter"/>
                 <bean class="io.motown.operatorapi.json.gson.TextualTokenTypeAdapter"/>
             </set>
         </property>
     </bean>
 
     <util:list id="jsonCommandHandlers">
-        <ref bean="unlockConnectorJsonCommandHandler"/>
+        <ref bean="unlockEvseJsonCommandHandler"/>
         <ref bean="configureJsonCommandHandler"/>
         <ref bean="registerJsonCommandHandler"/>
         <ref bean="requestStartTransactionJsonCommandHandler"/>

@@ -28,18 +28,18 @@ public final class RequestChangeChargingStationAvailabilityToOperativeCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final ConnectorId connectorId;
+    private final EvseId evseId;
 
     /**
      * Creates a {@code RequestChangeChargingStationAvailabilityToOperativeCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param connectorId       the identifier of the connector.
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @param evseId            the identifier of the evse.
+     * @throws NullPointerException if {@code chargingStationId} or {@code evseId} is {@code null}.
      */
-    public RequestChangeChargingStationAvailabilityToOperativeCommand(ChargingStationId chargingStationId, ConnectorId connectorId) {
+    public RequestChangeChargingStationAvailabilityToOperativeCommand(ChargingStationId chargingStationId, EvseId evseId) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.connectorId = checkNotNull(connectorId);
+        this.evseId = checkNotNull(evseId);
     }
 
     /**
@@ -52,11 +52,11 @@ public final class RequestChangeChargingStationAvailabilityToOperativeCommand {
     }
 
     /**
-     * Gets the connector id.
+     * Gets the evse id.
      *
-     * @return the connector id.
+     * @return the evse id.
      */
-    public ConnectorId getConnectorId() {
-        return connectorId;
+    public EvseId getEvseId() {
+        return evseId;
     }
 }

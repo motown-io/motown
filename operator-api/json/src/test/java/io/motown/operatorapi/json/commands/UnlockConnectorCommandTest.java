@@ -22,7 +22,7 @@ import org.junit.Test;
 
 public class UnlockConnectorCommandTest {
     private Gson gson;
-    private UnlockConnectorJsonCommandHandler handler = new UnlockConnectorJsonCommandHandler();
+    private UnlockEvseJsonCommandHandler handler = new UnlockEvseJsonCommandHandler();
 
     @Before
     public void setUp() {
@@ -33,13 +33,13 @@ public class UnlockConnectorCommandTest {
 
     @Test
     public void testUnlockCommand() {
-        JsonObject commandObject = gson.fromJson("{connectorId:'1'}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{evseId:'1'}", JsonObject.class);
         handler.handle("TEST_REGISTERED", commandObject);
     }
 
     @Test(expected = NullPointerException.class)
     public void testInvalidUnlockCommand() {
-        JsonObject commandObject = gson.fromJson("{connectorID:'1'}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{evseID:'1'}", JsonObject.class);
         handler.handle("TEST_REGISTERED", commandObject);
     }
 }

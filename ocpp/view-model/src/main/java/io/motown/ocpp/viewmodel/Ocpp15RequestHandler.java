@@ -79,23 +79,23 @@ public class Ocpp15RequestHandler {
     @EventHandler
     public void handle(StartTransactionRequestedEvent event) {
         log.info("StartTransactionRequestedEvent");
-        RequestStatus requestStatus =  chargingStationOcpp15Client.startTransaction(event.getChargingStationId(), event.getIdentifyingToken(), event.getConnectorId());
+        RequestStatus requestStatus =  chargingStationOcpp15Client.startTransaction(event.getChargingStationId(), event.getIdentifyingToken(), event.getEvseId());
 
         domainService.startTransactionStatusChanged(event.getChargingStationId(), requestStatus);
     }
 
     @EventHandler
-    public void handle(UnlockConnectorRequestedEvent event) {
-        log.info("UnlockConnectorRequestedEvent");
-        RequestStatus requestStatus = chargingStationOcpp15Client.unlockConnector(event.getChargingStationId(), event.getConnectorId());
+    public void handle(UnlockEvseRequestedEvent event) {
+        log.info("UnlockEvseRequestedEvent");
+        RequestStatus requestStatus = chargingStationOcpp15Client.unlockConnector(event.getChargingStationId(), event.getEvseId());
 
-        domainService.unlockConnectorStatusChanged(event.getChargingStationId(), requestStatus);
+        domainService.unlockEvseStatusChanged(event.getChargingStationId(), requestStatus);
     }
 
     @EventHandler
     public void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event) {
         log.info("ChangeChargingStationAvailabilityToInoperativeRequestedEvent");
-        RequestStatus requestStatus = chargingStationOcpp15Client.changeAvailabilityToInoperative(event.getChargingStationId(), event.getConnectorId());
+        RequestStatus requestStatus = chargingStationOcpp15Client.changeAvailabilityToInoperative(event.getChargingStationId(), event.getEvseId());
 
         domainService.changeAvailabilityToInoperativeStatusChanged(event.getChargingStationId(), requestStatus);
     }
@@ -103,7 +103,7 @@ public class Ocpp15RequestHandler {
     @EventHandler
     public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event) {
         log.info("ChangeChargingStationAvailabilityToOperativeRequestedEvent");
-        RequestStatus requestStatus = chargingStationOcpp15Client.changeAvailabilityToOperative(event.getChargingStationId(), event.getConnectorId());
+        RequestStatus requestStatus = chargingStationOcpp15Client.changeAvailabilityToOperative(event.getChargingStationId(), event.getEvseId());
 
         domainService.changeAvailabilityToOperativeStatusChanged(event.getChargingStationId(), requestStatus);
     }
@@ -181,7 +181,7 @@ public class Ocpp15RequestHandler {
 
         NumberedReservationId reservationIdentifier = domainService.generateReservationIdentifier(event.getChargingStationId(), event.getProtocol());
 
-        ReservationStatus resultStatus = chargingStationOcpp15Client.reserveNow(event.getChargingStationId(), event.getConnectorId(), event.getIdentifyingToken(), event.getExpiryDate(), event.getParentIdentifyingToken(), reservationIdentifier.getNumber());
+        ReservationStatus resultStatus = chargingStationOcpp15Client.reserveNow(event.getChargingStationId(), event.getEvseId(), event.getIdentifyingToken(), event.getExpiryDate(), event.getParentIdentifyingToken(), reservationIdentifier.getNumber());
 
         domainService.reservationStatusChanged(event.getChargingStationId(), reservationIdentifier, resultStatus);
     }

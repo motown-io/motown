@@ -15,7 +15,7 @@
  */
 package io.motown.ocpp.viewmodel.persistence.entities;
 
-import io.motown.domain.api.chargingstation.ConnectorId;
+import io.motown.domain.api.chargingstation.EvseId;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,18 +28,18 @@ public class Transaction {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String connectorId;
+    private String evseId;
 
     public Long getId() {
         return id;
     }
 
-    public ConnectorId getConnectorId() {
-        return new ConnectorId(Integer.valueOf(connectorId));
+    public EvseId getEvseId() {
+        return new EvseId(Integer.valueOf(evseId));
     }
 
-    public void setConnectorId(ConnectorId connectorId) {
-        this.connectorId = connectorId.getId();
+    public void setEvseId(EvseId evseId) {
+        this.evseId = evseId.getId();
     }
 
 }

@@ -26,16 +26,16 @@ public class ProcessMeterValuesCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new ProcessMeterValueCommand(null, getNumberedTransactionId(), new ConnectorId(1), new ArrayList<MeterValue>());
+        new ProcessMeterValueCommand(null, getNumberedTransactionId(), new EvseId(1), new ArrayList<MeterValue>());
     }
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingCommandWithConnectorIdNull() {
+    public void nullPointerExceptionThrownWhenCreatingCommandWithEvseIdNull() {
         new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), null, new ArrayList<MeterValue>());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithMeterValuesNull() {
-        new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), new ConnectorId(1), null);
+        new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), new EvseId(1), null);
     }
 }

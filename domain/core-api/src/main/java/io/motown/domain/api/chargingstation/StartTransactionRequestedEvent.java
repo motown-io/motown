@@ -29,23 +29,24 @@ public final class StartTransactionRequestedEvent implements CommunicationWithCh
 
     private final IdentifyingToken identifyingToken;
 
-    private final ConnectorId connectorId;
+    private final EvseId evseId;
 
     /**
-     * Creates a {@code StartTransactionRequestedEvent} with an identifier, a protocol and a connector identifier.
+     * Creates a {@code StartTransactionRequestedEvent} with an identifier, a protocol and a evse identifier.
      *
      * @param chargingStationId the charging station's identifier.
      * @param protocol          the protocol identifier.
      * @param identifyingToken  the token that should start the transaction.
-     * @param connectorId       the identifier of the connector.  @throws NullPointerException if {@code chargingStationId} or {@code protocol} or {@code identifyingToken} is {@code null}.
+     * @param evseId            the identifier of the evse.
+     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code identifyingToken} or {@code evseId} is {@code null}.
      */
-    public StartTransactionRequestedEvent(ChargingStationId chargingStationId, String protocol, IdentifyingToken identifyingToken, ConnectorId connectorId) {
+    public StartTransactionRequestedEvent(ChargingStationId chargingStationId, String protocol, IdentifyingToken identifyingToken, EvseId evseId) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());
         this.protocol = protocol;
         this.identifyingToken = checkNotNull(identifyingToken);
-        this.connectorId = checkNotNull(connectorId);
+        this.evseId = checkNotNull(evseId);
     }
 
     /**
@@ -74,11 +75,11 @@ public final class StartTransactionRequestedEvent implements CommunicationWithCh
     }
 
     /**
-     * Gets the connector identifier.
+     * Gets the evse identifier.
      *
-     * @return the connector identifier.
+     * @return the evse identifier.
      */
-    public ConnectorId getConnectorId() {
-        return connectorId;
+    public EvseId getEvseId() {
+        return evseId;
     }
 }

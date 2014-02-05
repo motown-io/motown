@@ -24,11 +24,11 @@ public class RequestStartTransactionCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new RequestStartTransactionCommand(null, getTextualToken(), new ConnectorId(1));
+        new RequestStartTransactionCommand(null, getTextualToken(), new EvseId(1));
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTransactionId() {
-        new RequestStartTransactionCommand(getChargingStationId(), null, new ConnectorId(1));
+        new RequestStartTransactionCommand(getChargingStationId(), null, new EvseId(1));
     }
 }

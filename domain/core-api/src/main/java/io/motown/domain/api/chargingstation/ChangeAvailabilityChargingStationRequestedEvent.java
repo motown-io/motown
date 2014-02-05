@@ -38,10 +38,10 @@ public interface ChangeAvailabilityChargingStationRequestedEvent extends Communi
     public String getProtocol();
 
     /**
-     * Gets the connector id.
+     * Gets the evse id.
      *
-     * @return the connector id.
+     * @return the evse id.
      */
-    public ConnectorId getConnectorId();
+    public EvseId getEvseId();
 
 }

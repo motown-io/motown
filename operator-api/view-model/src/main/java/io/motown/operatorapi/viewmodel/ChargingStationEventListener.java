@@ -88,7 +88,7 @@ public class ChargingStationEventListener {
     public void handle(TransactionStartedEvent event) {
         log.debug("TransactionStartedEvent for [{}] received!", event.getChargingStationId());
 
-        Transaction transaction = new Transaction(event.getChargingStationId().getId(), event.getTransactionId().getId(), event.getConnectorId(), event.getIdentifyingToken().getToken(), event.getMeterStart(), event.getTimestamp());
+        Transaction transaction = new Transaction(event.getChargingStationId().getId(), event.getTransactionId().getId(), event.getEvseId(), event.getIdentifyingToken().getToken(), event.getMeterStart(), event.getTimestamp());
         transactionRepository.save(transaction);
 
         if (!updateLastContactChargingStation(event.getChargingStationId())) {

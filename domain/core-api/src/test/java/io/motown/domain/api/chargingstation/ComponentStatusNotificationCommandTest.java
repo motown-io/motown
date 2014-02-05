@@ -26,12 +26,12 @@ public class ComponentStatusNotificationCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new ComponentStatusNotificationCommand(null, ChargingStationComponent.CONNECTOR, new ConnectorId(1), ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap());
+        new ComponentStatusNotificationCommand(null, ChargingStationComponent.CONNECTOR, new EvseId(1), ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithComponentNull() {
-        new ComponentStatusNotificationCommand(getChargingStationId(), null, new ConnectorId(1), ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap());
+        new ComponentStatusNotificationCommand(getChargingStationId(), null, new EvseId(1), ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
@@ -41,16 +41,16 @@ public class ComponentStatusNotificationCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithStatusNull() {
-        new ComponentStatusNotificationCommand(getChargingStationId(), ChargingStationComponent.CONNECTOR, new ConnectorId(1), null, new Date(), Collections.<String, String>emptyMap());
+        new ComponentStatusNotificationCommand(getChargingStationId(), ChargingStationComponent.CONNECTOR, new EvseId(1), null, new Date(), Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithTimestampNull() {
-        new ComponentStatusNotificationCommand(getChargingStationId(), ChargingStationComponent.CONNECTOR, new ConnectorId(1), ComponentStatus.AVAILABLE, null, Collections.<String, String>emptyMap());
+        new ComponentStatusNotificationCommand(getChargingStationId(), ChargingStationComponent.CONNECTOR, new EvseId(1), ComponentStatus.AVAILABLE, null, Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithAttributesNull() {
-        new ComponentStatusNotificationCommand(getChargingStationId(), ChargingStationComponent.CONNECTOR, new ConnectorId(1), ComponentStatus.AVAILABLE, new Date(), null);
+        new ComponentStatusNotificationCommand(getChargingStationId(), ChargingStationComponent.CONNECTOR, new EvseId(1), ComponentStatus.AVAILABLE, new Date(), null);
     }
 }

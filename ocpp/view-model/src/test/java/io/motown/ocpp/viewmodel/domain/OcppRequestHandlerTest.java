@@ -65,9 +65,9 @@ public class OcppRequestHandlerTest {
 
     @Test
     public void testStartTransactionRequestedEvent() {
-        requestHandler.handle(new StartTransactionRequestedEvent(getChargingStationId(), getProtocol(), getIdentifyingToken(), getConnectorId()));
+        requestHandler.handle(new StartTransactionRequestedEvent(getChargingStationId(), getProtocol(), getIdentifyingToken(), getEvseId()));
 
-        verify(client).startTransaction(getChargingStationId(), getIdentifyingToken(), getConnectorId());
+        verify(client).startTransaction(getChargingStationId(), getIdentifyingToken(), getEvseId());
     }
 
     @Test
@@ -99,24 +99,24 @@ public class OcppRequestHandlerTest {
     }
 
     @Test
-    public void testUnlockConnectorRequestedEvent() {
-        requestHandler.handle(new UnlockConnectorRequestedEvent(getChargingStationId(), getProtocol(), getConnectorId()));
+    public void testUnlockEvseRequestedEvent() {
+        requestHandler.handle(new UnlockEvseRequestedEvent(getChargingStationId(), getProtocol(), getEvseId()));
 
-        verify(client).unlockConnector(getChargingStationId(), getConnectorId());
+        verify(client).unlockConnector(getChargingStationId(), getEvseId());
     }
 
     @Test
     public void testChangeChargingStationAvailabilityToInoperativeRequested() {
-        requestHandler.handle(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(getChargingStationId(), getProtocol(), getConnectorId()));
+        requestHandler.handle(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(getChargingStationId(), getProtocol(), getEvseId()));
 
-        verify(client).changeAvailabilityToInoperative(getChargingStationId(), getConnectorId());
+        verify(client).changeAvailabilityToInoperative(getChargingStationId(), getEvseId());
     }
 
     @Test
     public void testChangeChargingStationAvailabilityToOperativeRequested() {
-        requestHandler.handle(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(getChargingStationId(), getProtocol(), getConnectorId()));
+        requestHandler.handle(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(getChargingStationId(), getProtocol(), getEvseId()));
 
-        verify(client).changeAvailabilityToOperative(getChargingStationId(), getConnectorId());
+        verify(client).changeAvailabilityToOperative(getChargingStationId(), getEvseId());
     }
 
     @Test
@@ -130,9 +130,9 @@ public class OcppRequestHandlerTest {
     @Test
     public void testReserveNowRequestedEvent() {
         Date expiryDate = new Date();
-        requestHandler.handle(new ReserveNowRequestedEvent(getChargingStationId(), getProtocol(), getConnectorId(), getIdentifyingToken(), expiryDate, null));
+        requestHandler.handle(new ReserveNowRequestedEvent(getChargingStationId(), getProtocol(), getEvseId(), getIdentifyingToken(), expiryDate, null));
 
-        verify(client).reserveNow(getChargingStationId(), getConnectorId(), getIdentifyingToken(), expiryDate, null, getReservationNumber());
+        verify(client).reserveNow(getChargingStationId(), getEvseId(), getIdentifyingToken(), expiryDate, null, getReservationNumber());
     }
 
     @Test

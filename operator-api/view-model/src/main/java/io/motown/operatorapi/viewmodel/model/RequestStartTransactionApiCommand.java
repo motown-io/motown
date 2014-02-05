@@ -15,22 +15,22 @@
  */
 package io.motown.operatorapi.viewmodel.model;
 
-import io.motown.domain.api.chargingstation.ConnectorId;
+import io.motown.domain.api.chargingstation.EvseId;
 import io.motown.domain.api.chargingstation.TextualToken;
 
 public class RequestStartTransactionApiCommand implements ApiCommand {
-    private ConnectorId connectorId;
+    private EvseId evseId;
     private TextualToken identifyingToken;
 
     public RequestStartTransactionApiCommand() {
     }
 
-    public ConnectorId getConnectorId() {
-        return connectorId;
+    public EvseId getEvseId() {
+        return evseId;
     }
 
-    public void setConnectorId(ConnectorId connectorId) {
-        this.connectorId = connectorId;
+    public void setEvseId(EvseId evseId) {
+        this.evseId = evseId;
     }
 
     public TextualToken getIdentifyingToken() {

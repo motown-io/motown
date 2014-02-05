@@ -28,7 +28,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     private String protocol;
 
-    private int numberOfConnectors;
+    private int numberOfEvses;
 
     private boolean isAccepted = false;
     private boolean isConfigured = false;
@@ -93,12 +93,12 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         // TODO mark socket (mentioned in command) 'in transaction' - Mark van den Bergh, December 2nd 2013
         // TODO store transaction identifier so we can validate 'stop transaction' commands? - Mark van den Bergh, December 2nd 2013
 
-        if (command.getConnectorId().getNumberedId() > numberOfConnectors) {
-            apply(new ConnectorNotFoundEvent(id, command.getConnectorId()));
+        if (command.getEvseId().getNumberedId() > numberOfEvses) {
+            apply(new EvseNotFoundEvent(id, command.getEvseId()));
             return;
         }
 
-        apply(new TransactionStartedEvent(command.getChargingStationId(), command.getTransactionId(), command.getConnectorId(), command.getIdentifyingToken(), command.getMeterStart(), command.getTimestamp(), command.getAttributes()));
+        apply(new TransactionStartedEvent(command.getChargingStationId(), command.getTransactionId(), command.getEvseId(), command.getIdentifyingToken(), command.getMeterStart(), command.getTimestamp(), command.getAttributes()));
     }
 
     @CommandHandler
@@ -107,17 +107,17 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(RequestUnlockConnectorCommand command) {
+    public void handle(RequestUnlockEvseCommand command) {
         checkCommunicationAllowed();
-        if (command.getConnectorId().getNumberedId() > numberOfConnectors) {
-            apply(new ConnectorNotFoundEvent(id, command.getConnectorId()));
+        if (command.getEvseId().getNumberedId() > numberOfEvses) {
+            apply(new EvseNotFoundEvent(id, command.getEvseId()));
         } else {
-            if (command.getConnectorId() == Connector.ALL) {
-                for (int i = 1; i <= numberOfConnectors; i++) {
-                    apply(new UnlockConnectorRequestedEvent(id, protocol, new ConnectorId(i)));
+            if (command.getEvseId() == Evse.ALL) {
+                for (int i = 1; i <= numberOfEvses; i++) {
+                    apply(new UnlockEvseRequestedEvent(id, protocol, new EvseId(i)));
                 }
             } else {
-                apply(new UnlockConnectorRequestedEvent(id, protocol, command.getConnectorId()));
+                apply(new UnlockEvseRequestedEvent(id, protocol, command.getEvseId()));
             }
         }
     }
@@ -132,12 +132,12 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @CommandHandler
     public void handle(ConfigureChargingStationCommand command) {
         // TODO should we allow reconfiguring of charging stations? - Dennis Laumen, Nov 28th 2013
-        apply(new ChargingStationConfiguredEvent(this.id, command.getConnectors(), command.getSettings()));
+        apply(new ChargingStationConfiguredEvent(this.id, command.getEvses(), command.getSettings()));
     }
 
     @CommandHandler
     public void handle(RequestStartTransactionCommand command) {
-        apply(new StartTransactionRequestedEvent(this.id, this.protocol, command.getIdentifyingToken(), command.getConnectorId()));
+        apply(new StartTransactionRequestedEvent(this.id, this.protocol, command.getIdentifyingToken(), command.getEvseId()));
     }
 
     @CommandHandler
@@ -158,17 +158,17 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestChangeChargingStationAvailabilityToInoperativeCommand command) {
-        apply(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(this.id, this.protocol, command.getConnectorId()));
+        apply(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(this.id, this.protocol, command.getEvseId()));
     }
 
     @CommandHandler
     public void handle(RequestChangeChargingStationAvailabilityToOperativeCommand command) {
-        apply(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(this.id, this.protocol, command.getConnectorId()));
+        apply(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(this.id, this.protocol, command.getEvseId()));
     }
 
     @CommandHandler
     public void handle(ProcessMeterValueCommand command) {
-        apply(new ChargingStationSentMeterValuesEvent(this.id, command.getTransactionId(), command.getConnectorId(), command.getMeterValueList()));
+        apply(new ChargingStationSentMeterValuesEvent(this.id, command.getTransactionId(), command.getEvseId(), command.getMeterValueList()));
     }
 
     @CommandHandler
@@ -238,7 +238,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestReserveNowCommand command) {
-        apply(new ReserveNowRequestedEvent(command.getChargingStationId(), this.protocol, command.getConnectorId(), command.getIdentifyingToken(), command.getExpiryDate(), command.getParentIdentifyingToken()));
+        apply(new ReserveNowRequestedEvent(command.getChargingStationId(), this.protocol, command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), command.getParentIdentifyingToken()));
     }
 
     @CommandHandler
@@ -312,8 +312,8 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(UnlockConnectorStatusChangedCommand command) {
-        apply(new UnlockConnectorStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
+    public void handle(UnlockEvseStatusChangedCommand command) {
+        apply(new UnlockEvseStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
     }
 
     @CommandHandler
@@ -333,7 +333,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @EventHandler
     public void handle(ChargingStationConfiguredEvent event) {
-        numberOfConnectors = event.getConnectors().size();
+        numberOfEvses = event.getEvses().size();
         this.isConfigured = true;
     }
 
@@ -352,7 +352,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
      * <p/>
      * Communication with a charging station is allowed once it is accepted (i.e. someone or something has allowed
      * this charging station to communicate with Motown) and configured (i.e. Motown has enough information to properly
-     * handle communication with the charging station, like the number of connectors).
+     * handle communication with the charging station, like the number of evses).
      *
      * @throws IllegalStateException if communication is not allowed with this charging station.
      */

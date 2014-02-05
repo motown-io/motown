@@ -15,26 +15,26 @@
  */
 package io.motown.operatorapi.viewmodel.model;
 
-import io.motown.domain.api.chargingstation.Connector;
+import io.motown.domain.api.chargingstation.Evse;
 
 import java.util.Map;
 import java.util.Set;
 
 public class ConfigureChargingStationApiCommand implements ApiCommand {
 
-    private Set<Connector> connectors;
+    private Set<Evse> evses;
 
     private Map<String, String> settings;
 
     public ConfigureChargingStationApiCommand() {
     }
 
-    public Set<Connector> getConnectors() {
-        return connectors;
+    public Set<Evse> getEvses() {
+        return evses;
     }
 
-    public void setConnectors(Set<Connector> connectors) {
-        this.connectors = connectors;
+    public void setEvses(Set<Evse> evses) {
+        this.evses = evses;
     }
 
     public Map<String, String> getSettings() {

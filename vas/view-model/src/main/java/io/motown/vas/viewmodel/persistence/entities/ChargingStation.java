@@ -56,9 +56,9 @@ public class ChargingStation {
 
     private String region;
 
-    private int numberOfConnectors;
+    private int numberOfEvses;
 
-    private int numberOfFreeConnectors;
+    private int numberOfFreeEvses;
 
     private String status;
 
@@ -103,12 +103,12 @@ public class ChargingStation {
         this.ipAddress = ipAddress;
     }
 
-    public int getNumberOfConnectors() {
-        return numberOfConnectors;
+    public int getNumberOfEvses() {
+        return numberOfEvses;
     }
 
-    public void setNumberOfConnectors(int numberOfConnectors) {
-        this.numberOfConnectors = numberOfConnectors;
+    public void setNumberOfEvses(int numberOfEvses) {
+        this.numberOfEvses = numberOfEvses;
     }
 
     public void setChargingStationId(ChargingStationId chargingStationId) {
@@ -139,8 +139,8 @@ public class ChargingStation {
         this.region = region;
     }
 
-    public void setNumberOfFreeConnectors(int numberOfFreeConnectors) {
-        this.numberOfFreeConnectors = numberOfFreeConnectors;
+    public void setNumberOfFreeEvses(int numberOfFreeEvses) {
+        this.numberOfFreeEvses = numberOfFreeEvses;
     }
 
     public void setStatus(String status) {
@@ -187,8 +187,8 @@ public class ChargingStation {
         return region;
     }
 
-    public int getNumberOfFreeConnectors() {
-        return numberOfFreeConnectors;
+    public int getNumberOfFreeEvses() {
+        return numberOfFreeEvses;
     }
 
     public String getStatus() {

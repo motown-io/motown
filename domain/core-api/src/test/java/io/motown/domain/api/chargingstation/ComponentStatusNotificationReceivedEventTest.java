@@ -26,12 +26,12 @@ public class ComponentStatusNotificationReceivedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ComponentStatusNotificationReceivedEvent(null, ChargingStationComponent.CONNECTOR, new ConnectorId(1), ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap());
+        new ComponentStatusNotificationReceivedEvent(null, ChargingStationComponent.CONNECTOR, new EvseId(1), ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithComponentNull() {
-        new ComponentStatusNotificationReceivedEvent(getChargingStationId(), null, new ConnectorId(1), ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap());
+        new ComponentStatusNotificationReceivedEvent(getChargingStationId(), null, new EvseId(1), ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
@@ -41,16 +41,16 @@ public class ComponentStatusNotificationReceivedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithStatusNull() {
-        new ComponentStatusNotificationReceivedEvent(getChargingStationId(), ChargingStationComponent.CONNECTOR, new ConnectorId(1), null, new Date(), Collections.<String, String>emptyMap());
+        new ComponentStatusNotificationReceivedEvent(getChargingStationId(), ChargingStationComponent.CONNECTOR, new EvseId(1), null, new Date(), Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithTimestampNull() {
-        new ComponentStatusNotificationReceivedEvent(getChargingStationId(), ChargingStationComponent.CONNECTOR, new ConnectorId(1), ComponentStatus.AVAILABLE, null, Collections.<String, String>emptyMap());
+        new ComponentStatusNotificationReceivedEvent(getChargingStationId(), ChargingStationComponent.CONNECTOR, new EvseId(1), ComponentStatus.AVAILABLE, null, Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithAttributesNull() {
-        new ComponentStatusNotificationReceivedEvent(getChargingStationId(), ChargingStationComponent.CONNECTOR, new ConnectorId(1), ComponentStatus.AVAILABLE, new Date(), null);
+        new ComponentStatusNotificationReceivedEvent(getChargingStationId(), ChargingStationComponent.CONNECTOR, new EvseId(1), ComponentStatus.AVAILABLE, new Date(), null);
     }
 }

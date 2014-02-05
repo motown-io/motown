@@ -15,6 +15,7 @@
  */
 package io.motown.ocpp.viewmodel.domain;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.chargingstation.*;
@@ -27,7 +28,7 @@ public class TestUtils {
     public static ChargingStation getRegisteredAndConfiguredChargingStation() {
         ChargingStation cs = new ChargingStation(getChargingStationId().getId(), getChargingStationAddress());
         cs.setRegistered(true);
-        cs.setNumberOfConnectors(getConnectors().size());
+        cs.setNumberOfEvses(getEvses().size());
         cs.setConfigured(true);
 
         return cs;
@@ -78,15 +79,19 @@ public class TestUtils {
                 .build();
     }
 
-    public static Set<Connector> getConnectors() {
-        return ImmutableSet.<Connector>builder()
-                .add(new Connector(new ConnectorId(1), "TYPE-1", 32))
-                .add(new Connector(new ConnectorId(2), "TYPE-1", 32))
+    public static Set<Evse> getEvses() {
+        List<Connector> connectors = ImmutableList.<Connector>builder()
+                .add(new Connector(32, 3, 230, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_2))
+                .build();
+
+        return ImmutableSet.<Evse>builder()
+                .add(new Evse(new EvseId(1), connectors))
+                .add(new Evse(new EvseId(2), connectors))
                 .build();
     }
 
-    public static ConnectorId getConnectorId() {
-        return new ConnectorId(1);
+    public static EvseId getEvseId() {
+        return new EvseId(1);
     }
 
     public static int getReservationNumber() {

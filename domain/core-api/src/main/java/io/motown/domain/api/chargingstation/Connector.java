@@ -19,20 +19,49 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class Connector {
 
-    public final static ConnectorId ALL = new ConnectorId(0);
-
-    private ConnectorId connectorId;
-    private String connectorType;  // should be enum ?
     private int maxAmp;
 
-    public Connector(ConnectorId connectorId, String connectorType, int maxAmp) {
-        this.connectorId = checkNotNull(connectorId);
-        this.connectorType = checkNotNull(connectorType);
+    private int phase;
+
+    private int voltage;
+
+    private ChargingProtocol chargingProtocol;
+
+    private Current current;
+
+    private ConnectorType connectorType;
+
+    public Connector(int maxAmp, int phase, int voltage, ChargingProtocol chargingProtocol, Current current, ConnectorType connectorType) {
         this.maxAmp = maxAmp;
+        this.phase = phase;
+        this.voltage = voltage;
+        this.chargingProtocol = checkNotNull(chargingProtocol);
+        this.current = checkNotNull(current);
+        this.connectorType = checkNotNull(connectorType);
     }
 
-    public ConnectorId getConnectorId() {
-        return connectorId;
+    public int getMaxAmp() {
+        return maxAmp;
+    }
+
+    public int getPhase() {
+        return phase;
+    }
+
+    public int getVoltage() {
+        return voltage;
+    }
+
+    public ChargingProtocol getChargingProtocol() {
+        return chargingProtocol;
+    }
+
+    public Current getCurrent() {
+        return current;
+    }
+
+    public ConnectorType getConnectorType() {
+        return connectorType;
     }
 
     @Override
@@ -43,23 +72,23 @@ public final class Connector {
         Connector connector = (Connector) o;
 
         if (maxAmp != connector.maxAmp) return false;
-        if (!connectorId.equals(connector.connectorId)) return false;
-        if (!connectorType.equals(connector.connectorType)) return false;
+        if (phase != connector.phase) return false;
+        if (voltage != connector.voltage) return false;
+        if (chargingProtocol != connector.chargingProtocol) return false;
+        if (connectorType != connector.connectorType) return false;
+        if (current != connector.current) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = connectorId.hashCode();
+        int result = maxAmp;
+        result = 31 * result + phase;
+        result = 31 * result + voltage;
+        result = 31 * result + chargingProtocol.hashCode();
+        result = 31 * result + current.hashCode();
         result = 31 * result + connectorType.hashCode();
-        result = 31 * result + maxAmp;
         return result;
     }
-
-    @Override
-    public String toString() {
-        return String.format("Connector(id = %s, type = %s, maxAmp = %d)", connectorId.getId(), connectorType, maxAmp);
-    }
-
 }

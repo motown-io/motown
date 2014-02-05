@@ -50,14 +50,26 @@ function ChargingStationController($scope, $http, $timeout) {
             method: 'POST',
             data: ['Register',{
                 'configuration' : {
-                    'connectors' : [{
-                        'connectorId' : 1,
-                        'connectorType' : 'Type2',
-                        'maxAmp' : 16
+                    'evses' : [{
+                        'evseId' : 1,
+                        'connectors' : [{
+                            'maxAmp': 32,
+                            'phase': 3,
+                            'voltage': 230,
+                            'chargingProtocol': 'MODE3',
+                            'current': 'AC',
+                            'connectorType': 'TESLA'
+                        }]
                     },{
-                        'connectorId' : 2,
-                        'connectorType' : 'Combo',
-                        'maxAmp' : 32
+                        'evseId' : 2,
+                        'connectors' : [{
+                            'maxAmp': 32,
+                            'phase': 3,
+                            'voltage': 230,
+                            'chargingProtocol': 'MODE3',
+                            'current': 'AC',
+                            'connectorType': 'TESLA'
+                        }]
                     }],
                     'settings' : {
                         'key':'value',
@@ -104,8 +116,8 @@ function ChargingStationController($scope, $http, $timeout) {
             dataType: 'json',
             method: 'POST',
             data: ['RequestStartTransaction',{
-                'connectorId': 1,
-                'identifyingToken': 'TOKEN'
+                'evseId': 1,
+                'identifyingToken': {'token': 'TOKEN'}
             }],
             headers: {
                 'Content-Type': 'application/json',
@@ -116,22 +128,22 @@ function ChargingStationController($scope, $http, $timeout) {
         });
     };
 
-    $scope.unlockConnector = function(chargingStation, connectorId) {
+    $scope.unlockEvse = function(chargingStation, evseId) {
         $http({
             url: 'charging-stations/' + chargingStation.id + '/commands',
             dataType: 'json',
             method: 'POST',
-            data: ['UnlockConnector',{
-                'connectorId': connectorId,
-                'identifyingToken': 'TOKEN'
+            data: ['UnlockEvse',{
+                'evseId': evseId,
+                'identifyingToken': {'token': 'TOKEN'}
             }],
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': '*/*'
             }
         }).success(function(response) {
-                console.log('unlock connector requested');
-            });
+            console.log('unlock evse requested');
+        });
     };
 
     $scope.dataTransfer = function(chargingStation, vendorId, messageId, data) {
@@ -269,7 +281,7 @@ function ChargingStationController($scope, $http, $timeout) {
             dataType: 'json',
             method: 'POST',
             data: ['ChangeAvailability',{
-                'connectorId': 1,
+                'evseId': 1,
                 'availability': availabilityType
             }],
             headers: {
@@ -281,13 +293,13 @@ function ChargingStationController($scope, $http, $timeout) {
         });
     };
 
-    $scope.reserveNow = function(chargingStation, connectorId, identifyingToken) {
+    $scope.reserveNow = function(chargingStation, evseId, identifyingToken) {
         $http({
             url: 'charging-stations/' + chargingStation.id + '/commands',
             dataType: 'json',
             method: 'POST',
             data: ['RequestReserveNow',{
-                'connectorId': connectorId,
+                'evseId': evseId,
                 'identifyingToken': identifyingToken,
                 'expiryDate': new Date()
             }],

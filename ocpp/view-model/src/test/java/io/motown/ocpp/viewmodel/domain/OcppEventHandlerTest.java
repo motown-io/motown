@@ -84,22 +84,22 @@ public class OcppEventHandlerTest {
         eventHandler.handle(new ChargingStationCreatedEvent(getChargingStationId()));
         ChargingStation cs = chargingStationRepository.findOne(getChargingStationId().getId());
         assertFalse(cs.isConfigured());
-        assertNotSame(cs.getNumberOfConnectors(), getConnectors().size());
+        assertNotSame(cs.getNumberOfEvses(), getEvses().size());
 
-        eventHandler.handle(new ChargingStationConfiguredEvent(getChargingStationId(), getConnectors(), getConfigurationItems()));
+        eventHandler.handle(new ChargingStationConfiguredEvent(getChargingStationId(), getEvses(), getConfigurationItems()));
 
         cs = chargingStationRepository.findOne(getChargingStationId().getId());
         assertTrue(cs.isConfigured());
-        assertEquals(cs.getNumberOfConnectors(), getConnectors().size());
+        assertEquals(cs.getNumberOfEvses(), getEvses().size());
     }
 
     @Test
     public void testUnknownChargingStationConfiguredEvent() {
-        eventHandler.handle(new ChargingStationConfiguredEvent(getChargingStationId(), getConnectors(), getConfigurationItems()));
+        eventHandler.handle(new ChargingStationConfiguredEvent(getChargingStationId(), getEvses(), getConfigurationItems()));
 
         ChargingStation cs = chargingStationRepository.findOne(getChargingStationId().getId());
         assertTrue(cs.isConfigured());
-        assertEquals(cs.getNumberOfConnectors(), getConnectors().size());
+        assertEquals(cs.getNumberOfEvses(), getEvses().size());
     }
 
 }

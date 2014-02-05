@@ -65,7 +65,7 @@ public class ChargingStationTestUtils {
     public static List<Object> getConfiguredChargingStation(boolean defaultAccepted) {
         return ImmutableList.<Object>builder()
                 .addAll(getCreatedChargingStation(defaultAccepted))
-                .add(new ChargingStationConfiguredEvent(getChargingStationId(), getConnectors(), getConfigurationItems()))
+                .add(new ChargingStationConfiguredEvent(getChargingStationId(), getEvses(), getConfigurationItems()))
                 .build();
     }
 
@@ -74,14 +74,18 @@ public class ChargingStationTestUtils {
                 .addAll(getCreatedChargingStation(true))
                 .add(new ConfiguredChargingStationBootedEvent(getChargingStationId(), getProtocol(), getAttributes()))
                 .add(new ChargingStationAcceptedEvent(getChargingStationId()))
-                .add(new ChargingStationConfiguredEvent(getChargingStationId(), getConnectors(), getConfigurationItems()))
+                .add(new ChargingStationConfiguredEvent(getChargingStationId(), getEvses(), getConfigurationItems()))
                 .build();
     }
 
-    public static Set<Connector> getConnectors() {
-        return ImmutableSet.<Connector>builder()
-                .add(new Connector(new ConnectorId(1), "TYPE-1", 32))
-                .add(new Connector(new ConnectorId(2), "TYPE-1", 32))
+    public static Set<Evse> getEvses() {
+        List<Connector> connectors = ImmutableList.<Connector>builder()
+                .add(new Connector(32, 3, 230, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_2))
+                .build();
+        
+        return ImmutableSet.<Evse>builder()
+                .add(new Evse(new EvseId(1), connectors))
+                .add(new Evse(new EvseId(2), connectors))
                 .build();
     }
 
@@ -108,8 +112,8 @@ public class ChargingStationTestUtils {
         return meterValues;
     }
 
-    public static ConnectorId getConnectorId() {
-        return new ConnectorId(1);
+    public static EvseId getEvseId() {
+        return new EvseId(1);
     }
 
     public static String getVendorId() {

@@ -29,20 +29,20 @@ public final class RequestStartTransactionCommand {
 
     private final IdentifyingToken identifyingToken;
 
-    private final ConnectorId connectorId;
+    private final EvseId evseId;
 
     /**
      * Creates a {@code RequestStopTransactionCommand} with an identifier and a identifying token.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param identifyingToken  the token that should start the transaction.
-     * @param connectorId       the identifier of the connector.
-     * @throws NullPointerException if {@code chargingStationId} or {@code identifyingToken} is {@code null}.
+     * @param evseId            the identifier of the evse.
+     * @throws NullPointerException if {@code chargingStationId}, {@code identifyingToken} or {@code evseId} is {@code null}.
      */
-    public RequestStartTransactionCommand(ChargingStationId chargingStationId, IdentifyingToken identifyingToken, ConnectorId connectorId) {
+    public RequestStartTransactionCommand(ChargingStationId chargingStationId, IdentifyingToken identifyingToken, EvseId evseId) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.identifyingToken = checkNotNull(identifyingToken);
-        this.connectorId = checkNotNull(connectorId);
+        this.evseId = checkNotNull(evseId);
     }
 
     /**
@@ -64,11 +64,11 @@ public final class RequestStartTransactionCommand {
     }
 
     /**
-     * Gets the connector id.
+     * Gets the evse id.
      *
-     * @return the connector id.
+     * @return the evse id.
      */
-    public ConnectorId getConnectorId() {
-        return connectorId;
+    public EvseId getEvseId() {
+        return evseId;
     }
 }

@@ -201,7 +201,7 @@ public class CentralSystemService implements io.motown.ocpp.v12.soap.centralsyst
             meterValues.add(new MeterValue(mv.getTimestamp(), Integer.toString(mv.getValue())));
         }
 
-        domainService.meterValues(chargingStationId, transactionId, new ConnectorId(request.getConnectorId()), meterValues);
+        domainService.meterValues(chargingStationId, transactionId, new EvseId(request.getConnectorId()), meterValues);
 
         return new MeterValuesResponse();
     }
@@ -212,7 +212,7 @@ public class CentralSystemService implements io.motown.ocpp.v12.soap.centralsyst
 
         ReservationId reservationId = null;
 
-        int transactionId = domainService.startTransaction(chargingStationId, new ConnectorId(parameters.getConnectorId()), new TextualToken(parameters.getIdTag()),
+        int transactionId = domainService.startTransaction(chargingStationId, new EvseId(parameters.getConnectorId()), new TextualToken(parameters.getIdTag()),
                 parameters.getMeterStart(), parameters.getTimestamp(), reservationId, PROTOCOL_IDENTIFIER);
 
         // TODO locally store identifications, so we can use these in the response. - Dennis Laumen, December 16th 2013
@@ -233,7 +233,7 @@ public class CentralSystemService implements io.motown.ocpp.v12.soap.centralsyst
     @Override
     public StatusNotificationResponse statusNotification(StatusNotificationRequest request, String chargeBoxIdentity) {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
-        ConnectorId connectorId = new ConnectorId(request.getConnectorId());
+        EvseId evseId = new EvseId(request.getConnectorId());
         ComponentStatus componentStatus = getComponentStatusFromChargePointStatus(request.getStatus());
         String errorCode = request.getErrorCode() != null ? request.getErrorCode().value() : null;
 
@@ -241,7 +241,7 @@ public class CentralSystemService implements io.motown.ocpp.v12.soap.centralsyst
         Date timestamp = new Date(); //TODO: OCPP 1.2 does not contain a timestamp. Is it valid to create one here? - Ingo Pak, 16 Jan 2014
         String vendorId = null;
         String vendorErrorCode = null;
-        domainService.statusNotification(chargingStationId, connectorId, errorCode, componentStatus, info, timestamp, vendorId, vendorErrorCode);
+        domainService.statusNotification(chargingStationId, evseId, errorCode, componentStatus, info, timestamp, vendorId, vendorErrorCode);
         return new StatusNotificationResponse();
     }
 

@@ -28,7 +28,7 @@ public class ChargingStation {
     private boolean isRegistered = false;
     private boolean isConfigured = false;
 
-    private int numberOfConnectors;
+    private int numberOfEvses;
 
     private ChargingStation() {
         // Private no-arg constructor for Hibernate.
@@ -75,12 +75,12 @@ public class ChargingStation {
         this.ipAddress = ipAddress;
     }
 
-    public int getNumberOfConnectors() {
-        return numberOfConnectors;
+    public int getNumberOfEvses() {
+        return numberOfEvses;
     }
 
-    public void setNumberOfConnectors(int numberOfConnectors) {
-        this.numberOfConnectors = numberOfConnectors;
+    public void setNumberOfEvses(int numberOfEvses) {
+        this.numberOfEvses = numberOfEvses;
     }
 
     @Override
@@ -92,7 +92,7 @@ public class ChargingStation {
 
         if (isConfigured != that.isConfigured) return false;
         if (isRegistered != that.isRegistered) return false;
-        if (numberOfConnectors != that.numberOfConnectors) return false;
+        if (numberOfEvses != that.numberOfEvses) return false;
         if (!id.equals(that.id)) return false;
         if (ipAddress != null ? !ipAddress.equals(that.ipAddress) : that.ipAddress != null) return false;
 
@@ -105,7 +105,7 @@ public class ChargingStation {
         result = 31 * result + (ipAddress != null ? ipAddress.hashCode() : 0);
         result = 31 * result + (isRegistered ? 1 : 0);
         result = 31 * result + (isConfigured ? 1 : 0);
-        result = 31 * result + numberOfConnectors;
+        result = 31 * result + numberOfEvses;
         return result;
     }
 }

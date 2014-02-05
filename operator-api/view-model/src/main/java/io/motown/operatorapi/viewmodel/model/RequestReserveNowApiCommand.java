@@ -15,25 +15,25 @@
  */
 package io.motown.operatorapi.viewmodel.model;
 
-import io.motown.domain.api.chargingstation.ConnectorId;
+import io.motown.domain.api.chargingstation.EvseId;
 import io.motown.domain.api.chargingstation.TextualToken;
 
 import java.util.Date;
 
 public class RequestReserveNowApiCommand implements ApiCommand {
-    private ConnectorId connectorId;
+    private EvseId evseId;
     private TextualToken identifyingToken;
     private Date expiryDate;
 
     public RequestReserveNowApiCommand() {
     }
 
-    public ConnectorId getConnectorId() {
-        return connectorId;
+    public EvseId getEvseId() {
+        return evseId;
     }
 
-    public void setConnectorId(ConnectorId connectorId) {
-        this.connectorId = connectorId;
+    public void setEvseId(EvseId evseId) {
+        this.evseId = evseId;
     }
 
     public TextualToken getIdentifyingToken() {

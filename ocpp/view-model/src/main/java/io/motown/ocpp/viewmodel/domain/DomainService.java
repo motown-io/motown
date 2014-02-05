@@ -41,7 +41,7 @@ import java.util.Map;
 public class DomainService {
 
     private static final Logger log = LoggerFactory.getLogger(DomainService.class);
-    public static final int CHARGING_STATION_CONNECTOR_ID = 0;
+    public static final int CHARGING_STATION_EVSE_ID = 0;
     public static final String ERROR_CODE_KEY = "errorCode";
     public static final String INFO_KEY = "info";
     public static final String VENDOR_ID_KEY = "vendorId";
@@ -153,8 +153,8 @@ public class DomainService {
         commandGateway.send(new HeartbeatCommand(chargingStationId));
     }
 
-    public void meterValues(ChargingStationId chargingStationId, TransactionId transactionId, ConnectorId connectorId, List<MeterValue> meterValues) {
-        commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, connectorId, meterValues));
+    public void meterValues(ChargingStationId chargingStationId, TransactionId transactionId, EvseId evseId, List<MeterValue> meterValues) {
+        commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, evseId, meterValues));
     }
 
     public void diagnosticsFileNameReceived(ChargingStationId chargingStationId, String diagnosticsFileName) {
@@ -184,7 +184,7 @@ public class DomainService {
         commandGateway.send(command);
     }
 
-    public void statusNotification(ChargingStationId chargingStationId, ConnectorId connectorId, String errorCode, ComponentStatus status, String info, Date timeStamp, String vendorId, String vendorErrorCode) {
+    public void statusNotification(ChargingStationId chargingStationId, EvseId evseId, String errorCode, ComponentStatus status, String info, Date timeStamp, String vendorId, String vendorErrorCode) {
         //TODO: The attributes map can contain protocol specific key values, how to know what keys to expect on receiving end - Ingo Pak, 09 Jan 2014
         Map<String, String> attributes = new HashMap<>();
         if (errorCode != null) {
@@ -202,11 +202,11 @@ public class DomainService {
 
         StatusNotificationCommand command;
 
-        if (connectorId.getNumberedId() == CHARGING_STATION_CONNECTOR_ID) {
+        if (evseId.getNumberedId() == CHARGING_STATION_EVSE_ID) {
             command = new ChargingStationStatusNotificationCommand(chargingStationId, status, timeStamp, attributes);
         } else {
             ChargingStationComponent component = ChargingStationComponent.CONNECTOR;
-            command = new ComponentStatusNotificationCommand(chargingStationId, component, connectorId, status, timeStamp, attributes);
+            command = new ComponentStatusNotificationCommand(chargingStationId, component, evseId, status, timeStamp, attributes);
         }
 
         commandGateway.send(command);
@@ -216,15 +216,15 @@ public class DomainService {
      * Generates a transaction identifier and starts a transaction by dispatching a StartTransactionCommand.
      *
      * @param chargingStationId  identifier of the charging station
-     * @param connectorId        connector identifier on which the transaction is started
+     * @param evseId             evse identifier on which the transaction is started
      * @param idTag              the identifier which started the transaction
-     * @param meterStart         meter value in Wh for the connector at start of the transaction
+     * @param meterStart         meter value in Wh for the evse at start of the transaction
      * @param timestamp          date and time on which the transaction started
      * @param reservationId      optional identifier of the reservation that terminates as a result of this transaction
-     * @param protocolIdentifier identifier of the protocol that starts the transaction  @throws IllegalStateException when the charging station cannot be found, is not registered and configured, or the connectorId is unknown for this charging station
+     * @param protocolIdentifier identifier of the protocol that starts the transaction  @throws IllegalStateException when the charging station cannot be found, is not registered and configured, or the evseId is unknown for this charging station
      * @return transaction identifier
      */
-    public int startTransaction(ChargingStationId chargingStationId, ConnectorId connectorId, IdentifyingToken idTag, int meterStart, Date timestamp, ReservationId reservationId, String protocolIdentifier) {
+    public int startTransaction(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken idTag, int meterStart, Date timestamp, ReservationId reservationId, String protocolIdentifier) {
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
         if (chargingStation == null) {
             throw new IllegalStateException("Cannot start transaction for an unknown charging station.");
@@ -234,11 +234,11 @@ public class DomainService {
             throw new IllegalStateException("Cannot start transaction for charging station that has not been registered/configured.");
         }
 
-        if (connectorId.getNumberedId() > chargingStation.getNumberOfConnectors()) {
-            throw new IllegalStateException("Cannot start transaction on a unknown connector.");
+        if (evseId.getNumberedId() > chargingStation.getNumberOfEvses()) {
+            throw new IllegalStateException("Cannot start transaction on a unknown evse.");
         }
 
-        Transaction transaction = createTransaction(chargingStationId, protocolIdentifier, connectorId);
+        Transaction transaction = createTransaction(chargingStationId, protocolIdentifier, evseId);
         NumberedTransactionId transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, transaction.getId().intValue());
 
         Map<String, String> attributes = Maps.newHashMap();
@@ -247,7 +247,7 @@ public class DomainService {
             attributes.put(RESERVATION_ID_KEY, reservationId.getId());
         }
 
-        StartTransactionCommand command = new StartTransactionCommand(chargingStationId, transactionId, connectorId, idTag, meterStart, timestamp, attributes);
+        StartTransactionCommand command = new StartTransactionCommand(chargingStationId, transactionId, evseId, idTag, meterStart, timestamp, attributes);
         commandGateway.send(command);
 
         return transactionId.getNumber();
@@ -259,7 +259,7 @@ public class DomainService {
 
         if (meterValues != null && meterValues.size() > 0) {
             Transaction transaction = transactionRepository.findTransactionById((long) transactionId.getNumber());
-            commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, transaction.getConnectorId(), meterValues));
+            commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, transaction.getEvseId(), meterValues));
         }
     }
 
@@ -283,8 +283,8 @@ public class DomainService {
         commandGateway.send(new StartTransactionStatusChangedCommand(chargingStationId, requestStatus));
     }
 
-    public void unlockConnectorStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new UnlockConnectorStatusChangedCommand(chargingStationId, requestStatus));
+    public void unlockEvseStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
+        commandGateway.send(new UnlockEvseStatusChangedCommand(chargingStationId, requestStatus));
     }
 
     public void changeAvailabilityToOperativeStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
@@ -357,17 +357,17 @@ public class DomainService {
     }
 
     /**
-     * Creates a transaction based on the charging station and protocol identifier. The connector identifier is
+     * Creates a transaction based on the charging station and protocol identifier. The evse identifier is
      * stored for later usage.
      *
      * @param chargingStationId  charging station identifier to use when generating a transaction identifier.
      * @param protocolIdentifier identifier of the protocol, used when generating a transaction identifier.
-     * @param connectorId        connector identifier that's stored in the transaction
+     * @param evseId             evse identifier that's stored in the transaction
      * @return transaction
      */
-    private Transaction createTransaction(ChargingStationId chargingStationId, String protocolIdentifier, ConnectorId connectorId) {
+    private Transaction createTransaction(ChargingStationId chargingStationId, String protocolIdentifier, EvseId evseId) {
         Transaction transaction = new Transaction();
-        transaction.setConnectorId(connectorId);
+        transaction.setEvseId(evseId);
 
         transactionRepository.saveAndFlush(transaction); // flush to make sure the generated id is populated
 

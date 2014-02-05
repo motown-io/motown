@@ -46,10 +46,23 @@ class ConfigureJsonCommandHandler implements JsonCommandHandler {
      *
      * @param chargingStationId unique identifier of the charging station
      * @param commandObject expects a string like:
-     * "['Configure',{'connectors' : [{'connectorId' : 1, 'connectorType' : 'Combo', 'maxAmp' : 32 },
-     * {'connectorId' : 2, 'connectorType' : 'Type2', 'maxAmp' : 16}],
-     * 'settings' : {'key':'value', 'key2':'value2'}}]";
-     *
+     * "'configuration' : {
+            'evses' : [{
+                'evseId' : 1,
+                'connectors' : [{
+                    'maxAmp': 32,
+                    'phase': 3,
+                    'voltage': 230,
+                    'chargingProtocol': 'MODE3',
+                    'current': 'AC',
+                    'connectorType': 'TESLA'
+                }]
+            }],
+            'settings' : {
+                'key':'value',
+                'key2':'value2'
+            }
+        }"
      */
     @Override
     public void handle(String chargingStationId, JsonObject commandObject) {

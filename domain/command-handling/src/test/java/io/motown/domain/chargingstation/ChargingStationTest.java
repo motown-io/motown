@@ -68,8 +68,8 @@ public class ChargingStationTest {
         List<MeterValue> meterValues = getMeterValues();
 
         fixture.given(getChargingStation())
-                .when(new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), getConnectorId(), meterValues))
-                .expectEvents(new ChargingStationSentMeterValuesEvent(getChargingStationId(), getNumberedTransactionId(), getConnectorId(), meterValues));
+                .when(new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), getEvseId(), meterValues))
+                .expectEvents(new ChargingStationSentMeterValuesEvent(getChargingStationId(), getNumberedTransactionId(), getEvseId(), meterValues));
     }
 
     @Test
@@ -77,8 +77,8 @@ public class ChargingStationTest {
         List<MeterValue> meterValues = new ArrayList<>();
 
         fixture.given(getChargingStation())
-                .when(new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), getConnectorId(), meterValues))
-                .expectEvents(new ChargingStationSentMeterValuesEvent(getChargingStationId(), getNumberedTransactionId(), getConnectorId(), meterValues));
+                .when(new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), getEvseId(), meterValues))
+                .expectEvents(new ChargingStationSentMeterValuesEvent(getChargingStationId(), getNumberedTransactionId(), getEvseId(), meterValues));
     }
 
     @Test
@@ -87,8 +87,8 @@ public class ChargingStationTest {
         TransactionId transactionId = null;
 
         fixture.given(getChargingStation())
-                .when(new ProcessMeterValueCommand(getChargingStationId(), transactionId, getConnectorId(), meterValues))
-                .expectEvents(new ChargingStationSentMeterValuesEvent(getChargingStationId(), transactionId, getConnectorId(), meterValues));
+                .when(new ProcessMeterValueCommand(getChargingStationId(), transactionId, getEvseId(), meterValues))
+                .expectEvents(new ChargingStationSentMeterValuesEvent(getChargingStationId(), transactionId, getEvseId(), meterValues));
     }
 
     @Test
@@ -165,94 +165,94 @@ public class ChargingStationTest {
     @Test
     public void testStartTransactionEmptyAttributes() {
         Date now = new Date();
-        ConnectorId connectorId = new ConnectorId(1);
+        EvseId evseId = new EvseId(1);
         int meterStart = 0;
 
         fixture.given(getChargingStation())
-                .when(new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), connectorId, getTextualToken(), meterStart, now))
-                .expectEvents(new TransactionStartedEvent(getChargingStationId(), getNumberedTransactionId(), connectorId, getTextualToken(), meterStart, now, getEmptyAttributesMap()));
+                .when(new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), evseId, getTextualToken(), meterStart, now))
+                .expectEvents(new TransactionStartedEvent(getChargingStationId(), getNumberedTransactionId(), evseId, getTextualToken(), meterStart, now, getEmptyAttributesMap()));
     }
 
     @Test
     public void testStartTransactionFilledAttributes() {
         Date now = new Date();
-        ConnectorId connectorId = new ConnectorId(1);
+        EvseId evseId = new EvseId(1);
         int meterStart = 0;
 
         fixture.given(getChargingStation())
-                .when(new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), connectorId, getTextualToken(), meterStart, now, getAttributes()))
-                .expectEvents(new TransactionStartedEvent(getChargingStationId(), getNumberedTransactionId(), connectorId, getTextualToken(), meterStart, now, getAttributes()));
+                .when(new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), evseId, getTextualToken(), meterStart, now, getAttributes()))
+                .expectEvents(new TransactionStartedEvent(getChargingStationId(), getNumberedTransactionId(), evseId, getTextualToken(), meterStart, now, getAttributes()));
     }
 
     @Test
     public void testConfigureChargingStation() {
         fixture.given(getRegisteredChargingStation())
-               .when(new ConfigureChargingStationCommand(getChargingStationId(), getConnectors(), getConfigurationItems()))
-               .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), getConnectors(), getConfigurationItems()));
+               .when(new ConfigureChargingStationCommand(getChargingStationId(), getEvses(), getConfigurationItems()))
+               .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), getEvses(), getConfigurationItems()));
     }
 
     @Test
-    public void testConfigureChargingStationWithoutConnectors() {
+    public void testConfigureChargingStationWithoutEvses() {
         fixture.given(getRegisteredChargingStation())
                .when(new ConfigureChargingStationCommand(getChargingStationId(), getConfigurationItems()))
-               .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), Collections.<Connector>emptySet(), getConfigurationItems()));
+               .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), Collections.<Evse>emptySet(), getConfigurationItems()));
     }
 
     @Test
     public void testConfigureChargingStationWithoutConfigurationItems() {
         fixture.given(getRegisteredChargingStation())
-               .when(new ConfigureChargingStationCommand(getChargingStationId(), getConnectors()))
-               .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), getConnectors(), Collections.<String, String>emptyMap()));
+               .when(new ConfigureChargingStationCommand(getChargingStationId(), getEvses()))
+               .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), getEvses(), Collections.<String, String>emptyMap()));
     }
 
     @Test
-    public void testRequestingToUnlockConnectorForUnregisteredChargingStation() {
+    public void testRequestingToUnlockEvseForUnregisteredChargingStation() {
         fixture.given(getConfiguredChargingStation(false))
-                .when(new RequestUnlockConnectorCommand(getChargingStationId(), getConnectorId()))
+                .when(new RequestUnlockEvseCommand(getChargingStationId(), getEvseId()))
                .expectException(IllegalStateException.class);
     }
 
     @Test
-    public void testRequestingToUnlockConnectorForUnconfiguredChargingStation() {
+    public void testRequestingToUnlockEvseForUnconfiguredChargingStation() {
         fixture.given(getRegisteredChargingStation())
-                .when(new RequestUnlockConnectorCommand(getChargingStationId(), getConnectorId()))
+                .when(new RequestUnlockEvseCommand(getChargingStationId(), getEvseId()))
                .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRequestingToStartTransactionForUnconfiguredChargingStation() {
         fixture.given(getRegisteredChargingStation())
-                .when(new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), getConnectorId(), getTextualToken(), 0, new Date()))
+                .when(new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), getEvseId(), getTextualToken(), 0, new Date()))
                .expectException(IllegalStateException.class);
     }
 
     @Test
-    public void testRequestingToUnlockConnector() {
+    public void testRequestingToUnlockEvse() {
         fixture.given(getChargingStation())
-                .when(new RequestUnlockConnectorCommand(getChargingStationId(), getConnectorId()))
-                .expectEvents(new UnlockConnectorRequestedEvent(getChargingStationId(), getProtocol(), getConnectorId()));
+                .when(new RequestUnlockEvseCommand(getChargingStationId(), getEvseId()))
+                .expectEvents(new UnlockEvseRequestedEvent(getChargingStationId(), getProtocol(), getEvseId()));
     }
 
     @Test
-    public void testRequestingToUnlockUnknownConnector() {
+    public void testRequestingToUnlockUnknownEvse() {
         fixture.given(getChargingStation())
-                .when(new RequestUnlockConnectorCommand(getChargingStationId(), new ConnectorId(3)))
-                .expectEvents(new ConnectorNotFoundEvent(getChargingStationId(), new ConnectorId(3)));
+                .when(new RequestUnlockEvseCommand(getChargingStationId(), new EvseId(3)))
+                .expectEvents(new EvseNotFoundEvent(getChargingStationId(), new EvseId(3)));
     }
 
     @Test
-    public void testStartTransactionOnUnknownConnector() {
+    public void testStartTransactionOnUnknownEvse() {
         fixture.given(getChargingStation())
-                .when(new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), new ConnectorId(3), getTextualToken(), 0, new Date()))
-                .expectEvents(new ConnectorNotFoundEvent(getChargingStationId(), new ConnectorId(3)));
+                .when(new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), new EvseId(3), getTextualToken(), 0, new Date()))
+                .expectEvents(new EvseNotFoundEvent(getChargingStationId(), new EvseId(3)));
     }
 
     @Test
-    public void testRequestingToUnlockAllConnectors() {
+    public void testRequestingToUnlockAllEvses() {
         fixture.given(getChargingStation())
-                .when(new RequestUnlockConnectorCommand(getChargingStationId(), Connector.ALL))
-                .expectEvents(new UnlockConnectorRequestedEvent(getChargingStationId(), getProtocol(), new ConnectorId(1)),
-                        new UnlockConnectorRequestedEvent(getChargingStationId(), getProtocol(), new ConnectorId(2)));
+                .when(new RequestUnlockEvseCommand(getChargingStationId(), Evse.ALL))
+                .expectEvents(new UnlockEvseRequestedEvent(getChargingStationId(), getProtocol(), new EvseId(1)),
+                        new UnlockEvseRequestedEvent(getChargingStationId(), getProtocol(), new EvseId(2)));
     }
 
     @Test
@@ -272,15 +272,15 @@ public class ChargingStationTest {
     @Test
     public void testRequestChangeChargingStationAvailabilityToInoperative() {
         fixture.given(getConfiguredChargingStation(true))
-                .when(new RequestChangeChargingStationAvailabilityToInoperativeCommand(getChargingStationId(), getConnectorId()))
-                .expectEvents(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(getChargingStationId(), getProtocol(), getConnectorId()));
+                .when(new RequestChangeChargingStationAvailabilityToInoperativeCommand(getChargingStationId(), getEvseId()))
+                .expectEvents(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(getChargingStationId(), getProtocol(), getEvseId()));
     }
 
     @Test
     public void testRequestChangeChargingStationAvailabilityToOperative() {
         fixture.given(getConfiguredChargingStation(true))
-                .when(new RequestChangeChargingStationAvailabilityToOperativeCommand(getChargingStationId(), getConnectorId()))
-                .expectEvents(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(getChargingStationId(), getProtocol(), getConnectorId()));
+                .when(new RequestChangeChargingStationAvailabilityToOperativeCommand(getChargingStationId(), getEvseId()))
+                .expectEvents(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(getChargingStationId(), getProtocol(), getEvseId()));
     }
 
     @Test
@@ -367,8 +367,8 @@ public class ChargingStationTest {
     public void testRequestReserveNow() {
         Date expiryDate = new Date();
         fixture.given(getConfiguredChargingStation(true))
-                .when(new RequestReserveNowCommand(getChargingStationId(), getConnectorId(), getTextualToken(), expiryDate, getTextualToken()))
-                .expectEvents(new ReserveNowRequestedEvent(getChargingStationId(), getProtocol(), getConnectorId(), getTextualToken(), expiryDate, getTextualToken()));
+                .when(new RequestReserveNowCommand(getChargingStationId(), getEvseId(), getTextualToken(), expiryDate, getTextualToken()))
+                .expectEvents(new ReserveNowRequestedEvent(getChargingStationId(), getProtocol(), getEvseId(), getTextualToken(), expiryDate, getTextualToken()));
     }
 
     @Test
@@ -408,8 +408,8 @@ public class ChargingStationTest {
         Date timeStamp = new Date();
 
         fixture.given(getConfiguredChargingStation(true))
-                .when(new ComponentStatusNotificationCommand(getChargingStationId(), ChargingStationComponent.CONNECTOR, getConnectorId(), ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap()))
-                .expectEvents(new ComponentStatusNotificationReceivedEvent(getChargingStationId(), ChargingStationComponent.CONNECTOR, getConnectorId(), ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap()));
+                .when(new ComponentStatusNotificationCommand(getChargingStationId(), ChargingStationComponent.CONNECTOR, getEvseId(), ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap()))
+                .expectEvents(new ComponentStatusNotificationReceivedEvent(getChargingStationId(), ChargingStationComponent.CONNECTOR, getEvseId(), ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap()));
     }
 
     @Test
@@ -492,10 +492,10 @@ public class ChargingStationTest {
     }
 
     @Test
-    public void testUnlockConnectorStatusChanged() {
+    public void testUnlockEvseStatusChanged() {
         fixture.given(getConfiguredChargingStation(true))
-                .when(new UnlockConnectorStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
-                .expectEvents(new UnlockConnectorStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+                .when(new UnlockEvseStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
+                .expectEvents(new UnlockEvseStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
     }
 
     @Test

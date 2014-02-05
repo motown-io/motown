@@ -27,20 +27,20 @@ public final class ChangeChargingStationAvailabilityToOperativeRequestedEvent im
 
     private final String protocol;
 
-    private final ConnectorId connectorId;
+    private final EvseId evseId;
 
     /**
-     * Creates a {@code ChangeChargingStationAvailabilityToOperativeRequestedEvent} with an identifier, a protocol and connector identifier.
+     * Creates a {@code ChangeChargingStationAvailabilityToOperativeRequestedEvent} with an identifier, a protocol and evse identifier.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param protocol          protocol identifier.
-     * @param connectorId       the identifier of the connector.
-     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} is {@code null}.
+     * @param evseId            the identifier of the evse.
+     * @throws NullPointerException if {@code chargingStationId}, {@code protocol} or {@code evseId} is {@code null}.
      */
-    public ChangeChargingStationAvailabilityToOperativeRequestedEvent(ChargingStationId chargingStationId, String protocol, ConnectorId connectorId) {
+    public ChangeChargingStationAvailabilityToOperativeRequestedEvent(ChargingStationId chargingStationId, String protocol, EvseId evseId) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.protocol = checkNotNull(protocol);
-        this.connectorId = checkNotNull(connectorId);
+        this.evseId = checkNotNull(evseId);
     }
 
     /**
@@ -64,12 +64,12 @@ public final class ChangeChargingStationAvailabilityToOperativeRequestedEvent im
     }
 
     /**
-     * Gets the connector id.
+     * Gets the evse id.
      *
-     * @return the connector id.
+     * @return the evse id.
      */
     @Override
-    public ConnectorId getConnectorId() {
-        return connectorId;
+    public EvseId getEvseId() {
+        return evseId;
     }
 }

@@ -26,7 +26,7 @@ public interface ChargingStationOcpp15Client {
 
     HashMap<String, String> getConfiguration(ChargingStationId id);
 
-    RequestStatus startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, ConnectorId connectorId);
+    RequestStatus startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, EvseId evseId);
 
     RequestStatus stopTransaction(ChargingStationId id, int transactionId);
 
@@ -34,11 +34,11 @@ public interface ChargingStationOcpp15Client {
 
     RequestStatus hardReset(ChargingStationId id);
 
-    RequestStatus unlockConnector(ChargingStationId id, ConnectorId connectorId);
+    RequestStatus unlockConnector(ChargingStationId id, EvseId evseId);
 
-    RequestStatus changeAvailabilityToInoperative(ChargingStationId id, ConnectorId connectorId);
+    RequestStatus changeAvailabilityToInoperative(ChargingStationId id, EvseId evseId);
 
-    RequestStatus changeAvailabilityToOperative(ChargingStationId id, ConnectorId connectorId);
+    RequestStatus changeAvailabilityToOperative(ChargingStationId id, EvseId evseId);
 
     RequestStatus dataTransfer(ChargingStationId id, String vendorId, String messageId, String data);
 
@@ -54,5 +54,5 @@ public interface ChargingStationOcpp15Client {
 
     RequestStatus sendAuthorizationList(ChargingStationId id, String hash, int listVersion, List<IdentifyingToken> identifyingTokens, AuthorizationListUpdateType updateType);
 
-    ReservationStatus reserveNow(ChargingStationId id, ConnectorId connectorId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken, int reservationId);
+    ReservationStatus reserveNow(ChargingStationId id, EvseId evseId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken, int reservationId);
 }
