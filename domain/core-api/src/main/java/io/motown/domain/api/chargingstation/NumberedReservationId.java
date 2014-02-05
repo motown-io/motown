@@ -91,14 +91,11 @@ public final class NumberedReservationId implements ReservationId {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
         int result = chargingStationId.hashCode();
         result = 31 * result + protocol.hashCode();
-        result = 31 * result + (int) (number ^ (number >>> 32));
+        result = 31 * result + number;
         return result;
     }
 }
