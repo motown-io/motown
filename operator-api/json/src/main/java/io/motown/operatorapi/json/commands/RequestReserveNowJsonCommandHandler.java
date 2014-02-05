@@ -55,7 +55,7 @@ class RequestReserveNowJsonCommandHandler implements JsonCommandHandler {
                 throw new IllegalStateException("It is not possible to request a reservation on a charging station that is not registered");
             }
         } catch (ClassCastException ex) {
-            throw new IllegalArgumentException("Reserve now command is not able to parse the payload, is your json correctly formatted?");
+            throw new IllegalArgumentException("Reserve now command is not able to parse the payload, is your json correctly formatted?", ex);
         }
     }
 

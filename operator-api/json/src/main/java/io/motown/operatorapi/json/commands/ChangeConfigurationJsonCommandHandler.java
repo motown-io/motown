@@ -53,7 +53,7 @@ class ChangeConfigurationJsonCommandHandler implements JsonCommandHandler {
                 commandGateway.send(new ChangeConfigurationCommand(new ChargingStationId(chargingStationId), command.getKey(), command.getValue()));
             }
         } catch (ClassCastException ex) {
-            throw new IllegalArgumentException("Change configuration command not able to parse the payload, is your json correctly formatted?");
+            throw new IllegalArgumentException("Change configuration command not able to parse the payload, is your json correctly formatted?", ex);
         }
 
     }

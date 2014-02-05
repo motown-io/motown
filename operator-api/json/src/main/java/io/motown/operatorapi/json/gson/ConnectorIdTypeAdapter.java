@@ -35,7 +35,7 @@ public class ConnectorIdTypeAdapter implements TypeAdapter<ConnectorId> {
         try {
             connectorId = json.getAsInt();
         } catch (ClassCastException | IllegalStateException e) {
-            throw new JsonParseException("ConnectorId must be a JSON integer");
+            throw new JsonParseException("ConnectorId must be a JSON integer", e);
         }
 
         return new ConnectorId(connectorId);

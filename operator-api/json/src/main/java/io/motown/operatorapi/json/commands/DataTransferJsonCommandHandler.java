@@ -53,7 +53,7 @@ class DataTransferJsonCommandHandler implements JsonCommandHandler {
                 commandGateway.send(new DataTransferCommand(new ChargingStationId(chargingStationId), command.getVendorId(), command.getMessageId(), command.getData()));
             }
         } catch (ClassCastException ex) {
-            throw new IllegalArgumentException("Data transfer command not able to parse the payload, is your json correctly formatted?");
+            throw new IllegalArgumentException("Data transfer command not able to parse the payload, is your json correctly formatted?", ex);
         }
 
     }

@@ -57,7 +57,7 @@ class ConfigureJsonCommandHandler implements JsonCommandHandler {
             ConfigureChargingStationCommand newCommand = JsonCommandParser.parseConfigureChargingStation(new ChargingStationId(chargingStationId), commandObject, gson);
             commandGateway.send(newCommand);
         } catch (ClassCastException ex) {
-            throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted ?");
+            throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted ?", ex);
         }
     }
 

@@ -56,7 +56,7 @@ class RequestStopTransactionJsonCommandHandler implements JsonCommandHandler {
             TransactionId transactionId = new NumberedTransactionId(chargingStationIdObject, chargingStation.getProtocol(), Integer.parseInt(command.getId()));
             commandGateway.send(new RequestStopTransactionCommand(chargingStationIdObject, transactionId));
         } catch (ClassCastException ex) {
-            throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted ?");
+            throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted ?", ex);
         }
     }
 

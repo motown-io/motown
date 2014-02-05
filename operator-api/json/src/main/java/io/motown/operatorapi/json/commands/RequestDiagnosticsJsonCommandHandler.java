@@ -53,7 +53,7 @@ class RequestDiagnosticsJsonCommandHandler implements JsonCommandHandler {
                 commandGateway.send(new RequestDiagnosticsCommand(new ChargingStationId(chargingStationId), command.getTargetLocation(), null, null, null, null));
             }
         } catch (ClassCastException ex) {
-            throw new IllegalArgumentException("Data transfer command not able to parse the payload, is your json correctly formatted?");
+            throw new IllegalArgumentException("Data transfer command not able to parse the payload, is your json correctly formatted?", ex);
         }
 
     }

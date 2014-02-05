@@ -58,7 +58,7 @@ class RequestResetChargingStationJsonCommandHandler implements JsonCommandHandle
                 }
             }
         } catch (ClassCastException ex) {
-            throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted ?");
+            throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted ?", ex);
         }
 
     }

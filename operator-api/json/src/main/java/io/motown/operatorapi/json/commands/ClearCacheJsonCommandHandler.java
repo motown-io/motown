@@ -47,7 +47,7 @@ class ClearCacheJsonCommandHandler implements JsonCommandHandler {
                 commandGateway.send(new RequestClearCacheCommand(new ChargingStationId(chargingStationId)));
             }
         } catch (ClassCastException ex) {
-            throw new IllegalArgumentException("Data transfer command not able to parse the payload, is your json correctly formatted?");
+            throw new IllegalArgumentException("Data transfer command not able to parse the payload, is your json correctly formatted?", ex);
         }
 
     }

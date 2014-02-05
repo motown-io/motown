@@ -47,7 +47,7 @@ class RequestAuthorizationListVersionJsonCommandHandler implements JsonCommandHa
                 commandGateway.send(new RequestAuthorizationListVersionCommand(new ChargingStationId(chargingStationId)));
             }
         } catch (ClassCastException ex) {
-            throw new IllegalArgumentException("GetAuthorizationListVersion command not able to parse the payload, is your json correctly formatted?");
+            throw new IllegalArgumentException("GetAuthorizationListVersion command not able to parse the payload, is your json correctly formatted?", ex);
         }
 
     }

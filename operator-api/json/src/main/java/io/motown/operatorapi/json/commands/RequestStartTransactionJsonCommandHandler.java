@@ -55,7 +55,7 @@ class RequestStartTransactionJsonCommandHandler implements JsonCommandHandler {
                 throw new IllegalStateException("It is not possible to request a start transaction on a charging station that is not registered");
             }
         } catch (ClassCastException ex) {
-            throw new IllegalArgumentException("Start transaction command is not able to parse the payload, is your json correctly formatted?");
+            throw new IllegalArgumentException("Start transaction command is not able to parse the payload, is your json correctly formatted?", ex);
         }
     }
 

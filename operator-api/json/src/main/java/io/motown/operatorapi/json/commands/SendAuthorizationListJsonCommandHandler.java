@@ -57,7 +57,7 @@ class SendAuthorizationListJsonCommandHandler implements JsonCommandHandler {
             // TODO enable usage of hash in API - Dennis Laumen, January 13th 2014
             commandGateway.send(new SendAuthorizationListCommand(new ChargingStationId(chargingStationId), authorizationList, command.getListVersion(), "", updateType));
         } catch (ClassCastException ex) {
-            throw new IllegalArgumentException("SendAuthorizationList command not able to parse the payload, is your json correctly formatted ?");
+            throw new IllegalArgumentException("SendAuthorizationList command not able to parse the payload, is your json correctly formatted ?", ex);
         }
     }
 
