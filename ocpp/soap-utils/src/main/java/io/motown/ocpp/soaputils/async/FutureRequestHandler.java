@@ -44,11 +44,13 @@ public class FutureRequestHandler<T, X> {
         if (continuation == null) {
             log.error("Failed to get continuation, falling back to synchronous request handling. Make sure async-supported is set to true on the CXF servlet (web.xml)");
             try {
-                successFactory.createResponse(future.get());
+                return successFactory.createResponse(future.get());
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
                 errorFactory.createResponse();
             }
+
+            return null;
         }
 
         if (future instanceof ContinuationFutureCallback) {

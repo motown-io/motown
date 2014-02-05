@@ -110,8 +110,8 @@ public class DomainService {
         chargingStation.setIpAddress(chargingStationAddress);
         chargingStationRepository.save(chargingStation);
 
-        //TODO: Fix these magic key values? - Mark van den Bergh, 10 Jan 2014
         Map<String, String> attributes = Maps.newHashMap();
+        attributes.put(ADDRESS_KEY, chargingStationAddress);
         if (vendor != null) {
             attributes.put(VENDOR_KEY, vendor);
         }
