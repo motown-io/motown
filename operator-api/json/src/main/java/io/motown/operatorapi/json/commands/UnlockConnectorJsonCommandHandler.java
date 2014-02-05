@@ -30,8 +30,6 @@ class UnlockConnectorJsonCommandHandler implements JsonCommandHandler {
 
     private static final String COMMAND_NAME = "UnlockConnector";
 
-    private static final String CONNECTOR_ID_FIELD = "connectorId";
-
     private DomainCommandGateway commandGateway;
 
     private Gson gson;
