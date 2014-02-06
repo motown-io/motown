@@ -32,6 +32,16 @@ public class RequestHandler<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(RequestHandler.class);
 
+    /**
+     * Decrease the timeout with this value.
+     */
+    public static final int TIMEOUT_DECREASE_STEP = 500;
+
+    /**
+     * Timeout should not reach 0. This value is the minimum timeout.
+      */
+    public static final int MINIMUM_TIMEOUT = 100;
+
     private final TaskExecutor executor;
 
     private ContinuationProvider provider;
@@ -89,11 +99,11 @@ public class RequestHandler<T> {
     }
 
     private int decreaseTimeout() {
-        if(continuationTimeout > 600) {
-            continuationTimeout -= 500;
+        if(continuationTimeout > (MINIMUM_TIMEOUT + TIMEOUT_DECREASE_STEP)) {
+            continuationTimeout -= TIMEOUT_DECREASE_STEP;
         } else {
             // keep a certain timeout
-            continuationTimeout = 100;
+            continuationTimeout = MINIMUM_TIMEOUT;
         }
         return continuationTimeout;
     }

@@ -20,6 +20,7 @@ import io.motown.operatorapi.json.queries.OperatorApiService;
 import io.motown.operatorapi.json.spark.JsonTransformerRoute;
 import io.motown.operatorapi.viewmodel.spring.ApplicationContextProvider;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -51,7 +52,7 @@ public class JsonOperatorApiApplication implements SparkApplication {
 
                 commandService.handleCommand(chargingStationId, request.body());
 
-                response.status(202);
+                response.status(HttpStatus.ACCEPTED.value());
                 return "";
             }
         });

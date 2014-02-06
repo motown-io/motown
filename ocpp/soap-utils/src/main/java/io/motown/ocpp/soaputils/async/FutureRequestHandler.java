@@ -28,6 +28,16 @@ public class FutureRequestHandler<T, X> {
 
     private static final Logger LOG = LoggerFactory.getLogger(FutureRequestHandler.class);
 
+    /**
+     * Decrease the timeout with this value.
+     */
+    public static final int TIMEOUT_DECREASE_STEP = 500;
+
+    /**
+     * Timeout should not reach 0. This value is the minimum timeout.
+     */
+    public static final int MINIMUM_TIMEOUT = 100;
+
     private ContinuationProvider provider;
 
     private int continuationTimeout;
@@ -95,11 +105,11 @@ public class FutureRequestHandler<T, X> {
     }
 
     private int decreaseTimeout() {
-        if(continuationTimeout > 600) {
-            continuationTimeout -= 500;
+        if(continuationTimeout > (MINIMUM_TIMEOUT + TIMEOUT_DECREASE_STEP)) {
+            continuationTimeout -= TIMEOUT_DECREASE_STEP;
         } else {
             // keep a certain timeout
-            continuationTimeout = 100;
+            continuationTimeout = MINIMUM_TIMEOUT;
         }
         return continuationTimeout;
     }

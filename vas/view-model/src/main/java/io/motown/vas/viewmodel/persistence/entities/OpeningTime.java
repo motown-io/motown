@@ -25,6 +25,8 @@ import java.util.Date;
 @Entity
 public class OpeningTime {
 
+    private static final int MINUTES_PER_HOUR = 60;
+
     @Id
     private String id;
 
@@ -46,12 +48,12 @@ public class OpeningTime {
 
     @Transient
     public String getTimeStartString() {
-        return String.format("%02d:%02d", (timeStart / 60), (timeStart % 60));
+        return String.format("%02d:%02d", (timeStart / MINUTES_PER_HOUR), (timeStart % MINUTES_PER_HOUR));
     }
 
     @Transient
     public String getTimeStopString() {
-        return String.format("%02d:%02d", (timeStop / 60), timeStop % 60);
+        return String.format("%02d:%02d", (timeStop / MINUTES_PER_HOUR), timeStop % MINUTES_PER_HOUR);
     }
 
     @Transient
@@ -75,7 +77,7 @@ public class OpeningTime {
     }
 
     private LocalTime getAsLocalTime(Integer time) {
-        return new LocalTime(time / 60, time % 60);
+        return new LocalTime(time / MINUTES_PER_HOUR, time % MINUTES_PER_HOUR);
     }
 
     public String getId() {
