@@ -46,7 +46,7 @@ public class FutureRequestHandler<T, X> {
             try {
                 return successFactory.createResponse(future.get());
             } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+                LOG.error("Exception while creating synchronous response", e);
                 errorFactory.createResponse();
             }
 
@@ -68,7 +68,7 @@ public class FutureRequestHandler<T, X> {
                     try {
                         return successFactory.createResponse(future.get());
                     } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
+                        LOG.error("Exception while creating response", e);
                         errorFactory.createResponse();
                     }
                 } else {
@@ -82,7 +82,7 @@ public class FutureRequestHandler<T, X> {
                     try {
                         return successFactory.createResponse(futureC.get());
                     } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
+                        LOG.error("Exception while creating response", e);
                         errorFactory.createResponse();
                     }
                 } else {

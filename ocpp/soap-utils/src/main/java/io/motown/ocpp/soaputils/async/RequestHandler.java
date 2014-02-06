@@ -76,8 +76,7 @@ public class RequestHandler<T> {
                     try {
                         return (T) futureTask.get();
                     } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-
+                        LOG.error("Exception while getting result from future task.", e);
                         return errorFactory.createResponse();
                     }
                 } else {
