@@ -52,16 +52,6 @@ public class JsonCommandService {
         commandHandler.handle(chargingStationId, commandPayloadAsObject);
     }
 
-    private String parseCommandName(String jsonCommand) {
-        JsonArray command = gson.fromJson(jsonCommand, JsonArray.class);
-        return command.get(0).getAsString();
-    }
-
-    private JsonObject parseCommandObject(String jsonCommand) {
-        JsonArray command = gson.fromJson(jsonCommand, JsonArray.class);
-        return command.get(COMMAND_PAYLOAD_INDEX).getAsJsonObject();
-    }
-
     private JsonCommandHandler getCommandHandler(String commandName) {
         for (JsonCommandHandler commandHandler : this.jsonCommandHandlers) {
             if (commandName.equals(commandHandler.getCommandName())) {
