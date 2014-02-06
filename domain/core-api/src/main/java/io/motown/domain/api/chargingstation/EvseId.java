@@ -15,7 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -58,27 +58,21 @@ public final class EvseId implements ComponentId {
         return numberedId;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        EvseId that = (EvseId) o;
-
-        if (!id.equals(that.id)) return false;
-
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(numberedId, id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final EvseId other = (EvseId) obj;
+        return Objects.equals(this.numberedId, other.numberedId) && Objects.equals(this.id, other.id);
     }
 
     /**
@@ -86,7 +80,7 @@ public final class EvseId implements ComponentId {
      */
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return com.google.common.base.Objects.toStringHelper(this)
                 .add("id", id)
                 .toString();
     }
