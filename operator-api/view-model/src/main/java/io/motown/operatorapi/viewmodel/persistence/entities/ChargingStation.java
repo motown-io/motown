@@ -53,7 +53,7 @@ public class ChargingStation {
     }
 
     public void setLastTimeBooted(Date lastTimeBooted) {
-        this.lastTimeBooted = lastTimeBooted;
+        this.lastTimeBooted = lastTimeBooted != null ? new Date(lastTimeBooted.getTime()) : null;
     }
 
     public Date getLastContact() {
@@ -61,7 +61,7 @@ public class ChargingStation {
     }
 
     public void setLastContact(Date lastContact) {
-        this.lastContact = lastContact;
+        this.lastContact = lastContact != null ? new Date(lastContact.getTime()) : null;
     }
 
     private ChargingStation() {

@@ -58,8 +58,8 @@ public final class RequestDiagnosticsCommand {
         this.uploadLocation = checkNotNull(uploadLocation);
         this.numRetries = numRetries;
         this.retryInterval = retryInterval;
-        this.periodStartTime = periodStartTime;
-        this.periodEndTime = periodEndTime;
+        this.periodStartTime = periodStartTime != null ? new Date(periodStartTime.getTime()) : null;
+        this.periodEndTime = periodEndTime != null ? new Date(periodEndTime.getTime()) : null;
     }
 
     /**

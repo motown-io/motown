@@ -78,8 +78,8 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
 
         this.numRetries = numRetries;
         this.retryInterval = retryInterval;
-        this.periodStartTime = periodStartTime;
-        this.periodStopTime = periodStopTime;
+        this.periodStartTime = periodStartTime != null ? new Date(periodStartTime.getTime()) : null;
+        this.periodStopTime = periodStopTime != null ? new Date(periodStopTime.getTime()) : null;
     }
 
     /**

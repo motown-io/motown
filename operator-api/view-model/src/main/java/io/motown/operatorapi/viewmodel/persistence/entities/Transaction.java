@@ -63,7 +63,7 @@ public class Transaction {
         this.evseId = checkNotNull(evseId);
         this.idTag = idTag;
         this.meterStart = meterStart;
-        this.startedTimestamp = startedTimestamp;
+        this.startedTimestamp = startedTimestamp != null ? new Date(startedTimestamp.getTime()) : null;
     }
 
     public String getChargingStationId() {
@@ -119,7 +119,7 @@ public class Transaction {
     }
 
     public void setStartedTimestamp(Date startedTimestamp) {
-        this.startedTimestamp = startedTimestamp;
+        this.startedTimestamp = startedTimestamp != null ? new Date(startedTimestamp.getTime()) : null;
     }
 
     public Date getStoppedTimestamp() {
@@ -127,7 +127,7 @@ public class Transaction {
     }
 
     public void setStoppedTimestamp(Date stoppedTimestamp) {
-        this.stoppedTimestamp = stoppedTimestamp;
+        this.stoppedTimestamp = stoppedTimestamp != null ? new Date(stoppedTimestamp.getTime()) : null;;
     }
 
     public Date getUpdated() {

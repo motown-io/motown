@@ -37,6 +37,6 @@ public class UpdateFirmwareApiCommand implements ApiCommand {
     }
 
     public void setRetrieveDate(Date retrieveDate) {
-        this.retrieveDate = retrieveDate;
+        this.retrieveDate = retrieveDate != null ? new Date(retrieveDate.getTime()) : null;
     }
 }
