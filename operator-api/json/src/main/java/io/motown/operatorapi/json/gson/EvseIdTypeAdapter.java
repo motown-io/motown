@@ -25,7 +25,7 @@ import java.lang.reflect.Type;
 public class EvseIdTypeAdapter implements TypeAdapter<EvseId> {
 
     @Override
-    public EvseId deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public EvseId deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
         if (!json.isJsonPrimitive()) {
             throw new JsonParseException("EvseId must be a JSON primitive");
         }

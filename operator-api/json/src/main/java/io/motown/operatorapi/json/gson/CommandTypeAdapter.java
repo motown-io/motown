@@ -27,13 +27,13 @@ import static com.google.common.base.Preconditions.checkArgument;
 public abstract class CommandTypeAdapter<C> implements TypeAdapter<C> {
 
     @Override
-    public C deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public C deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
         checkArgument(json.isJsonObject(), "API command must be a JSON object");
         JsonObject commandObject = json.getAsJsonObject();
         return deserialize(commandObject, context);
     }
 
-    public abstract C deserialize(JsonObject commandObject, JsonDeserializationContext context) throws JsonParseException;
+    public abstract C deserialize(JsonObject commandObject, JsonDeserializationContext context);
 
     public abstract Class<?> getAdaptedType();
 }

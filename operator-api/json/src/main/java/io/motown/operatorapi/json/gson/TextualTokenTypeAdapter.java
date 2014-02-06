@@ -29,7 +29,7 @@ public class TextualTokenTypeAdapter implements TypeAdapter<TextualToken> {
     }
 
     @Override
-    public TextualToken deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public TextualToken deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
         JsonObject obj;
         String token;
 

@@ -32,7 +32,7 @@ public class ReplyToHeaderInInterceptor extends AbstractSoapInterceptor {
     }
 
     @Override
-    public void handleMessage(SoapMessage message) throws Fault {
+    public void handleMessage(SoapMessage message) {
         AddressingProperties ap = ContextUtils.retrieveMAPs(message, true, false);
 
         if (ap != null) {

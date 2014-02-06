@@ -45,7 +45,7 @@ public class MessageIdHeaderInterceptor extends AbstractPhaseInterceptor<Message
     }
 
     @Override
-    public void handleMessage(Message message) throws Fault {
+    public void handleMessage(Message message) {
         ArrayList<SoapHeader> headers = (ArrayList<SoapHeader>) message.get(SOAP_HEADER_KEY);
 
         // if the header doesn't exist and we have at least one header to access 'owner document' we can create and add our own MessageID header
@@ -86,7 +86,7 @@ public class MessageIdHeaderInterceptor extends AbstractPhaseInterceptor<Message
      */
     public class LocalElementNSImpl extends ElementNSImpl {
 
-        protected LocalElementNSImpl(CoreDocumentImpl ownerDocument, String namespaceURI, String qualifiedName, String localName) throws DOMException {
+        protected LocalElementNSImpl(CoreDocumentImpl ownerDocument, String namespaceURI, String qualifiedName, String localName) {
             super(ownerDocument, namespaceURI, qualifiedName, localName);
         }
 
