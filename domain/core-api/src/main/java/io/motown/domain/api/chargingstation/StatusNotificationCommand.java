@@ -30,13 +30,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class StatusNotificationCommand {
 
     @TargetAggregateIdentifier
-    protected final ChargingStationId chargingStationId;
+    private final ChargingStationId chargingStationId;
 
-    protected final ComponentStatus status;
+    private final ComponentStatus status;
 
-    protected final Date timestamp;
+    private final Date timestamp;
 
-    protected final Map<String, String> attributes;
+    private final Map<String, String> attributes;
 
     /**
      * Creates a {@code StatusNotificationCommand}.
