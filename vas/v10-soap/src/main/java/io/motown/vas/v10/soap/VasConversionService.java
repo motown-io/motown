@@ -179,22 +179,28 @@ public class VasConversionService {
      * @return charging mode (ChargingMode.UNSPECIFIED is chargeMode is null).
      */
     public ChargingMode getVasChargingMode(ChargeMode chargeMode) {
-        if (chargeMode == null) {
-            return ChargingMode.UNSPECIFIED;
+        ChargingMode result = ChargingMode.UNSPECIFIED;
+
+        if (chargeMode != null) {
+            switch (chargeMode){
+                case MODE1:
+                    result = ChargingMode.IEC_61851_MODE_1;
+                    break;
+                case MODE2:
+                    result = ChargingMode.IEC_61851_MODE_2;
+                    break;
+                case MODE3:
+                    result = ChargingMode.IEC_61851_MODE_3;
+                    break;
+                case MODE4:
+                    result = ChargingMode.IEC_61851_MODE_4;
+                    break;
+                default:
+                    result = ChargingMode.UNSPECIFIED;
+            }
         }
 
-        switch (chargeMode){
-            case MODE1:
-                return ChargingMode.IEC_61851_MODE_1;
-            case MODE2:
-                return ChargingMode.IEC_61851_MODE_2;
-            case MODE3:
-                return ChargingMode.IEC_61851_MODE_3;
-            case MODE4:
-                return ChargingMode.IEC_61851_MODE_4;
-            default:
-                return ChargingMode.UNSPECIFIED;
-        }
+        return result;
     }
 
     /**
