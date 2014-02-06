@@ -21,97 +21,96 @@ import org.slf4j.LoggerFactory;
 
 public class TestDomainCommandGateway implements DomainCommandGateway {
 
-    private static final Logger log = LoggerFactory.getLogger(TestDomainCommandGateway.class);
-
+    private static final Logger LOG = LoggerFactory.getLogger(TestDomainCommandGateway.class);
 
     @Override
     public void send(RequestUnlockEvseCommand command) {
-        log.debug("RequestUnlockEvseCommand:" + command.toString());
+        LOG.debug("RequestUnlockEvseCommand:" + command.toString());
     }
 
     @Override
     public void send(ConfigureChargingStationCommand command) {
-        log.debug("ConfigureChargingStationCommand:" + command.toString());
+        LOG.debug("ConfigureChargingStationCommand:" + command.toString());
     }
 
     @Override
     public void send(CreateAndAcceptChargingStationCommand command) {
-        log.debug("CreateChargingStationCommand:" + command.toString());
+        LOG.debug("CreateChargingStationCommand:" + command.toString());
     }
 
     @Override
     public void send(AcceptChargingStationCommand command) {
-        log.debug("AcceptChargingStationCommand:" + command.toString());
+        LOG.debug("AcceptChargingStationCommand:" + command.toString());
     }
 
     @Override
     public void send(RequestStartTransactionCommand command){
-        log.debug("RequestStartTransactionCommand:" + command.toString());
+        LOG.debug("RequestStartTransactionCommand:" + command.toString());
     }
 
     @Override
     public void send(RequestStopTransactionCommand command){
-        log.debug("RequestStopTransactionCommand:" + command.toString());
+        LOG.debug("RequestStopTransactionCommand:" + command.toString());
     }
 
     @Override
     public void send(RequestSoftResetChargingStationCommand command) {
-        log.debug("RequestSoftResetChargingStationCommand: " + command.toString());
+        LOG.debug("RequestSoftResetChargingStationCommand: " + command.toString());
     }
 
     @Override
     public void send(RequestHardResetChargingStationCommand command) {
-        log.debug("RequestHardResetChargingStationCommand: " + command.toString());
+        LOG.debug("RequestHardResetChargingStationCommand: " + command.toString());
     }
 
     @Override
     public void send(RequestChangeChargingStationAvailabilityToInoperativeCommand command) {
-        log.debug("RequestChangeChargingStationAvailabilityToInoperativeCommand: " + command.toString());
+        LOG.debug("RequestChangeChargingStationAvailabilityToInoperativeCommand: " + command.toString());
     }
 
     @Override
     public void send(RequestChangeChargingStationAvailabilityToOperativeCommand command) {
-        log.debug("RequestChangeChargingStationAvailabilityToOperativeCommand: " + command.toString());
+        LOG.debug("RequestChangeChargingStationAvailabilityToOperativeCommand: " + command.toString());
     }
 
     @Override
     public void send(DataTransferCommand command) {
-        log.debug("DataTransferCommand: " + command.toString());
+        LOG.debug("DataTransferCommand: " + command.toString());
     }
 
     @Override
     public void send(ChangeConfigurationCommand command) {
-        log.debug("ChangeConfigurationCommand: " + command.toString());
+        LOG.debug("ChangeConfigurationCommand: " + command.toString());
     }
 
     @Override
     public void send(RequestDiagnosticsCommand command) {
-        log.debug("RequestDiagnosticsCommand: " + command.toString());
+        LOG.debug("RequestDiagnosticsCommand: " + command.toString());
     }
 
     @Override
     public void send(RequestClearCacheCommand command) {
-        log.debug("ClearCacheCommand: " + command.toString());
+        LOG.debug("ClearCacheCommand: " + command.toString());
     }
 
     @Override
     public void send(RequestFirmwareUpdateCommand command) {
-        log.debug("RequestFirmwareUpdateCommand: " + command.toString());
+        LOG.debug("RequestFirmwareUpdateCommand: " + command.toString());
     }
 
     @Override
     public void send(RequestAuthorizationListVersionCommand command) {
-        log.debug("RequestAuthorizationListVersionCommand: " + command.toString());
+        LOG.debug("RequestAuthorizationListVersionCommand: " + command.toString());
     }
 
     @Override
     public void send(SendAuthorizationListCommand command) {
-        log.debug("SendAuthorizationListCommand: " + command.toString());
+        LOG.debug("SendAuthorizationListCommand: " + command.toString());
     }
 
     @Override
     public void send(RequestReserveNowCommand command) {
-        log.debug("RequestReserveNowCommand: " + command.toString());
+        LOG.debug("RequestReserveNowCommand: " + command.toString());
     }
 
 }

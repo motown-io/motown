@@ -27,11 +27,11 @@ public enum Day {
     SATURDAY(6),
     SUNDAY(7);
 
-    private static final Map<Integer, Day> intToDayMap = new HashMap<>();
+    private static final Map<Integer, Day> INTEGER_DAY_MAP = new HashMap<>();
 
     static {
         for (Day day : Day.values()) {
-            intToDayMap.put(day.value, day);
+            INTEGER_DAY_MAP.put(day.value, day);
         }
     }
 
@@ -46,6 +46,6 @@ public enum Day {
     }
 
     public static Day fromValue(int value) {
-        return intToDayMap.get(value);
+        return INTEGER_DAY_MAP.get(value);
     }
 }

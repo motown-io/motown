@@ -18,6 +18,7 @@ package io.motown.domain.api.chargingstation;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -41,7 +42,7 @@ public final class SendAuthorizationListCommand {
     /**
      * Creates a {@code SendAuthorizationListCommand}
      *
-     * @param chargingStationId the identifier of the charging station.
+     * @param chargingStationId        the identifier of the charging station.
      * @param authorizationList
      * @param authorizationListVersion
      * @param authorizationListHash
@@ -82,30 +83,19 @@ public final class SendAuthorizationListCommand {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        SendAuthorizationListCommand that = (SendAuthorizationListCommand) o;
-
-        if (authorizationListVersion != that.authorizationListVersion) return false;
-        if (authorizationList != null ? !authorizationList.equals(that.authorizationList) : that.authorizationList != null)
-            return false;
-        if (authorizationListHash != null ? !authorizationListHash.equals(that.authorizationListHash) : that.authorizationListHash != null)
-            return false;
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (updateType != that.updateType) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(chargingStationId, authorizationList, authorizationListVersion, authorizationListHash, updateType);
     }
 
     @Override
-    public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + (authorizationList != null ? authorizationList.hashCode() : 0);
-        result = 31 * result + authorizationListVersion;
-        result = 31 * result + (authorizationListHash != null ? authorizationListHash.hashCode() : 0);
-        result = 31 * result + updateType.hashCode();
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final SendAuthorizationListCommand other = (SendAuthorizationListCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.authorizationList, other.authorizationList) && Objects.equals(this.authorizationListVersion, other.authorizationListVersion) && Objects.equals(this.authorizationListHash, other.authorizationListHash) && Objects.equals(this.updateType, other.updateType);
     }
 }

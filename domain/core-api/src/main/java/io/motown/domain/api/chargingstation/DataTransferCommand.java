@@ -17,6 +17,8 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -39,11 +41,11 @@ public final class DataTransferCommand {
      * Creates a {@code DataTransferCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param vendorId the charging station vendor.
-     * @param messageId optional additional identification field (use an empty string to signify no value).
-     * @param data the data to transfer (use an empty string to signify no value).
-     * @throws NullPointerException if {@code chargingStationId}, {@code vendorId}, {@code messageId} or {@code data} is
-     *                              {@code null}.
+     * @param vendorId          the charging station vendor.
+     * @param messageId         optional additional identification field (use an empty string to signify no value).
+     * @param data              the data to transfer (use an empty string to signify no value).
+     * @throws NullPointerException     if {@code chargingStationId}, {@code vendorId}, {@code messageId} or {@code data} is
+     *                                  {@code null}.
      * @throws IllegalArgumentException if {@code vendorId} is empty.
      */
     public DataTransferCommand(ChargingStationId chargingStationId, String vendorId, String messageId, String data) {
@@ -84,26 +86,19 @@ public final class DataTransferCommand {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        DataTransferCommand that = (DataTransferCommand) o;
-
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (data != null ? !data.equals(that.data) : that.data != null) return false;
-        if (messageId != null ? !messageId.equals(that.messageId) : that.messageId != null) return false;
-        if (!vendorId.equals(that.vendorId)) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(chargingStationId, vendorId, messageId, data);
     }
 
     @Override
-    public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + vendorId.hashCode();
-        result = 31 * result + (messageId != null ? messageId.hashCode() : 0);
-        result = 31 * result + (data != null ? data.hashCode() : 0);
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final DataTransferCommand other = (DataTransferCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.vendorId, other.vendorId) && Objects.equals(this.messageId, other.messageId) && Objects.equals(this.data, other.data);
     }
 }

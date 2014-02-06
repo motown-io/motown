@@ -16,6 +16,7 @@
 package io.motown.domain.api.chargingstation;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -38,27 +39,27 @@ public final class ChargingStationId implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ChargingStationId that = (ChargingStationId) o;
-
-        if (!id.equals(that.id)) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
-
-    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("ChargingStationId{");
         sb.append("id='").append(id).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final ChargingStationId other = (ChargingStationId) obj;
+        return Objects.equals(this.id, other.id);
     }
 }

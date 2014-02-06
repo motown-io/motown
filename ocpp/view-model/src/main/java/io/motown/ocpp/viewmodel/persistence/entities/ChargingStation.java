@@ -17,6 +17,7 @@ package io.motown.ocpp.viewmodel.persistence.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 public class ChargingStation {
@@ -59,7 +60,7 @@ public class ChargingStation {
         return isConfigured;
     }
 
-    public boolean isRegisteredAndConfigured(){
+    public boolean isRegisteredAndConfigured() {
         return (this.isRegistered() && this.isConfigured());
     }
 
@@ -84,28 +85,19 @@ public class ChargingStation {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ChargingStation that = (ChargingStation) o;
-
-        if (isConfigured != that.isConfigured) return false;
-        if (isRegistered != that.isRegistered) return false;
-        if (numberOfEvses != that.numberOfEvses) return false;
-        if (!id.equals(that.id)) return false;
-        if (ipAddress != null ? !ipAddress.equals(that.ipAddress) : that.ipAddress != null) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(id, ipAddress, isRegistered, isConfigured, numberOfEvses);
     }
 
     @Override
-    public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + (ipAddress != null ? ipAddress.hashCode() : 0);
-        result = 31 * result + (isRegistered ? 1 : 0);
-        result = 31 * result + (isConfigured ? 1 : 0);
-        result = 31 * result + numberOfEvses;
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final ChargingStation other = (ChargingStation) obj;
+        return Objects.equals(this.id, other.id) && Objects.equals(this.ipAddress, other.ipAddress) && Objects.equals(this.isRegistered, other.isRegistered) && Objects.equals(this.isConfigured, other.isConfigured) && Objects.equals(this.numberOfEvses, other.numberOfEvses);
     }
 }

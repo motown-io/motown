@@ -28,14 +28,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OcppEventHandler {
-    private static final Logger log = LoggerFactory.getLogger(io.motown.ocpp.viewmodel.OcppEventHandler.class);
+    
+    private static final Logger LOG = LoggerFactory.getLogger(io.motown.ocpp.viewmodel.OcppEventHandler.class);
 
     @Autowired
     private ChargingStationRepository chargingStationRepository;
 
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
-        log.info("Handling ChargingStationCreatedEvent");
+        LOG.info("Handling ChargingStationCreatedEvent");
         String chargingStationId = event.getChargingStationId().getId();
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
 
@@ -47,7 +48,7 @@ public class OcppEventHandler {
 
     @EventHandler
     public void handle(ChargingStationAcceptedEvent event) {
-        log.debug("ChargingStationAcceptedEvent for [{}] received!", event.getChargingStationId());
+        LOG.debug("ChargingStationAcceptedEvent for [{}] received!", event.getChargingStationId());
 
         ChargingStation chargingStation = chargingStationRepository.findOne(event.getChargingStationId().getId());
 
@@ -55,19 +56,19 @@ public class OcppEventHandler {
             chargingStation.setRegistered(true);
             chargingStationRepository.save(chargingStation);
         } else {
-            log.error("OCPP module repo COULD NOT FIND CHARGEPOINT {} and mark it as registered", event.getChargingStationId());
+            LOG.error("OCPP module repo COULD NOT FIND CHARGEPOINT {} and mark it as registered", event.getChargingStationId());
         }
     }
 
     @EventHandler
     public void handle(ChargingStationConfiguredEvent event) {
-        log.info("ChargingStationConfiguredEvent");
+        LOG.info("ChargingStationConfiguredEvent");
 
         String chargingStationId = event.getChargingStationId().getId();
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
 
         if (chargingStation == null) {
-            log.warn("Received a ChargingStationConfiguredEvent for unknown charging station. Creating the chargingStation.");
+            LOG.warn("Received a ChargingStationConfiguredEvent for unknown charging station. Creating the chargingStation.");
             chargingStation = new ChargingStation(chargingStationId);
         }
 

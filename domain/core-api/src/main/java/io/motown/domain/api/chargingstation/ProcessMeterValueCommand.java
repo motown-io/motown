@@ -19,6 +19,7 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -39,7 +40,7 @@ public final class ProcessMeterValueCommand {
      * Creates a {@code ProcessMeterValueCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @throws NullPointerException     if {@code chargingStationId} is {@code null}.
      * @throws IllegalArgumentException if {@code evseId} is negative.
      */
     public ProcessMeterValueCommand(ChargingStationId chargingStationId, @Nullable TransactionId transactionId, EvseId evseId, List<MeterValue> meterValueList) {
@@ -70,6 +71,7 @@ public final class ProcessMeterValueCommand {
 
     /**
      * Gets the listing of meter values
+     *
      * @return
      */
     public List<MeterValue> getMeterValueList() {
@@ -86,26 +88,19 @@ public final class ProcessMeterValueCommand {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ProcessMeterValueCommand that = (ProcessMeterValueCommand) o;
-
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (!evseId.equals(that.evseId)) return false;
-        if (!meterValueList.equals(that.meterValueList)) return false;
-        if (!transactionId.equals(that.transactionId)) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(chargingStationId, transactionId, evseId, meterValueList);
     }
 
     @Override
-    public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + transactionId.hashCode();
-        result = 31 * result + evseId.hashCode();
-        result = 31 * result + meterValueList.hashCode();
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final ProcessMeterValueCommand other = (ProcessMeterValueCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.transactionId, other.transactionId) && Objects.equals(this.evseId, other.evseId) && Objects.equals(this.meterValueList, other.meterValueList);
     }
 }

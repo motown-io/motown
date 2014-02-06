@@ -32,7 +32,7 @@ import java.util.List;
 @Component
 public class ChargingStationEventListener {
 
-    private static final Logger log = LoggerFactory.getLogger(ChargingStationEventListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChargingStationEventListener.class);
 
     private ChargingStationRepository repository;
 
@@ -40,14 +40,14 @@ public class ChargingStationEventListener {
 
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
-        log.debug("ChargingStationCreatedEvent creates [{}] in operator api repo", event.getChargingStationId());
+        LOG.debug("ChargingStationCreatedEvent creates [{}] in operator api repo", event.getChargingStationId());
         ChargingStation station = new ChargingStation(event.getChargingStationId().getId());
         repository.save(station);
     }
 
     @EventHandler
     public void handle(ChargingStationBootedEvent event) {
-        log.debug("ChargingStationBootedEvent for [{}] received!", event.getChargingStationId());
+        LOG.debug("ChargingStationBootedEvent for [{}] received!", event.getChargingStationId());
 
         ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
 
@@ -57,22 +57,22 @@ public class ChargingStationEventListener {
             chargingStation.setLastContact(new Date());
             repository.save(chargingStation);
         } else {
-            log.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as booted", event.getChargingStationId());
+            LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as booted", event.getChargingStationId());
         }
     }
 
     @EventHandler
     public void handle(ChargingStationSentHeartbeatEvent event) {
-        log.debug("ChargingStationSentHeartbeatEvent for [{}] received!", event.getChargingStationId());
+        LOG.debug("ChargingStationSentHeartbeatEvent for [{}] received!", event.getChargingStationId());
 
         if (!updateLastContactChargingStation(event.getChargingStationId())) {
-            log.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark last contact", event.getChargingStationId());
+            LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark last contact", event.getChargingStationId());
         }
     }
 
     @EventHandler
     public void handle(ChargingStationAcceptedEvent event) {
-        log.debug("ChargingStationAcceptedEvent for [{}] received!", event.getChargingStationId());
+        LOG.debug("ChargingStationAcceptedEvent for [{}] received!", event.getChargingStationId());
 
         ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
 
@@ -80,30 +80,30 @@ public class ChargingStationEventListener {
             chargingStation.setAccepted(true);
             repository.save(chargingStation);
         } else {
-            log.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as accepted", event.getChargingStationId());
+            LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as accepted", event.getChargingStationId());
         }
     }
 
     @EventHandler
     public void handle(TransactionStartedEvent event) {
-        log.debug("TransactionStartedEvent for [{}] received!", event.getChargingStationId());
+        LOG.debug("TransactionStartedEvent for [{}] received!", event.getChargingStationId());
 
         Transaction transaction = new Transaction(event.getChargingStationId().getId(), event.getTransactionId().getId(), event.getEvseId(), event.getIdentifyingToken().getToken(), event.getMeterStart(), event.getTimestamp());
         transactionRepository.save(transaction);
 
         if (!updateLastContactChargingStation(event.getChargingStationId())) {
-            log.warn("registered transaction (start) in operator api repo for unknown chargepoint {}", event.getChargingStationId());
+            LOG.warn("registered transaction (start) in operator api repo for unknown chargepoint {}", event.getChargingStationId());
         }
     }
 
     @EventHandler
     public void handle(TransactionStoppedEvent event) {
-        log.debug("TransactionStoppedEvent for [{}] received!", event.getChargingStationId());
+        LOG.debug("TransactionStoppedEvent for [{}] received!", event.getChargingStationId());
 
         List<Transaction> transactions = transactionRepository.findByTransactionId(event.getTransactionId().getId());
 
         if(transactions.isEmpty() || transactions.size() > 1) {
-            log.error("cannot find unique transaction with transaction id {}", event.getTransactionId());
+            LOG.error("cannot find unique transaction with transaction id {}", event.getTransactionId());
         } else {
             Transaction transaction = transactions.get(0);
             transaction.setMeterStop(event.getMeterStop());

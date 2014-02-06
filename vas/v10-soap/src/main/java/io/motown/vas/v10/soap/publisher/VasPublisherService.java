@@ -37,7 +37,7 @@ import java.util.List;
         endpointInterface = "io.motown.vas.v10.soap.schema.VasPublisherService")
 public class VasPublisherService implements io.motown.vas.v10.soap.schema.VasPublisherService {
 
-    private static final Logger log = LoggerFactory.getLogger(VasPublisherService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(VasPublisherService.class);
 
     /**
      * Timeout in milliseconds for the continuation suspend functionality
@@ -62,7 +62,7 @@ public class VasPublisherService implements io.motown.vas.v10.soap.schema.VasPub
 
     @Override
     public SubscribeResponse subscribe(@WebParam(partName = "parameters", name = "subscribeRequest", targetNamespace = "urn://Vas/Cs/2010/12/") SubscribeRequest parameters, @WebParam(partName = "SubscriberIdentity", name = "subscriberIdentity", targetNamespace = "urn://Vas/Cs/2010/12/", header = true) String subscriberIdentity) {
-        log.info("Subscribing {}", subscriberIdentity);
+        LOG.info("Subscribing {}", subscriberIdentity);
 
         SubscribeResponse subscribeResponse = new SubscribeResponse();
         try {
@@ -78,7 +78,7 @@ public class VasPublisherService implements io.motown.vas.v10.soap.schema.VasPub
                 subscribeResponse.setStatus(SubscribeStatus.DUPLICATE_IGNORED);
             }
         } catch (Exception e) {
-            log.error("Subscription failed", e);
+            LOG.error("Subscription failed", e);
             subscribeResponse.setStatus(SubscribeStatus.REJECTED);
         }
 
@@ -87,7 +87,7 @@ public class VasPublisherService implements io.motown.vas.v10.soap.schema.VasPub
 
     @Override
     public GetChargePointInfoResponse getChargePointInfo(@WebParam(partName = "parameters", name = "getChargePointInfoRequest", targetNamespace = "urn://Vas/Cs/2010/12/") GetChargePointInfoRequest parameters, @WebParam(partName = "SubscriberIdentity", name = "subscriberIdentity", targetNamespace = "urn://Vas/Cs/2010/12/", header = true) String subscriberIdentity) {
-        log.info("GetChargePointInfo {}", subscriberIdentity);
+        LOG.info("GetChargePointInfo {}", subscriberIdentity);
 
         //TODO: Right now we return info on all chargingstations known in the system (might have to exclude certain chargingstation 'pools') - Ingo Pak, 24 Jan 2014
         GetChargePointInfoResponse response = new GetChargePointInfoResponse();
@@ -102,7 +102,7 @@ public class VasPublisherService implements io.motown.vas.v10.soap.schema.VasPub
 
     @Override
     public UnsubscribeResponse unsubscribe(@WebParam(partName = "parameters", name = "unsubscribeRequest", targetNamespace = "urn://Vas/Cs/2010/12/") UnsubscribeRequest parameters, @WebParam(partName = "SubscriberIdentity", name = "subscriberIdentity", targetNamespace = "urn://Vas/Cs/2010/12/", header = true) String subscriberIdentity) {
-        log.info("Unsubscribing {}", subscriberIdentity);
+        LOG.info("Unsubscribing {}", subscriberIdentity);
 
         UnsubscribeResponse unsubscribeResponse = new UnsubscribeResponse();
         try {
@@ -115,7 +115,7 @@ public class VasPublisherService implements io.motown.vas.v10.soap.schema.VasPub
                 unsubscribeResponse.setStatus(SubscribeStatus.DUPLICATE_IGNORED);
             }
         } catch (Exception e) {
-            log.error("Unsubscription of {} failed", subscriberIdentity, e);
+            LOG.error("Unsubscription of {} failed", subscriberIdentity, e);
             unsubscribeResponse.setStatus(SubscribeStatus.REJECTED);
         }
 

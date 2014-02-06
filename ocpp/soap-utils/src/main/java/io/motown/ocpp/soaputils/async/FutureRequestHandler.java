@@ -26,7 +26,7 @@ import java.util.concurrent.Future;
 
 public class FutureRequestHandler<T, X> {
 
-    private static final Logger log = LoggerFactory.getLogger(FutureRequestHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FutureRequestHandler.class);
 
     private ContinuationProvider provider;
 
@@ -42,7 +42,7 @@ public class FutureRequestHandler<T, X> {
         final Continuation continuation = provider.getContinuation();
 
         if (continuation == null) {
-            log.error("Failed to get continuation, falling back to synchronous request handling. Make sure async-supported is set to true on the CXF servlet (web.xml)");
+            LOG.error("Failed to get continuation, falling back to synchronous request handling. Make sure async-supported is set to true on the CXF servlet (web.xml)");
             try {
                 return successFactory.createResponse(future.get());
             } catch (InterruptedException | ExecutionException e) {

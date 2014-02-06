@@ -40,7 +40,7 @@ import java.util.List;
 @Component
 public class VasSubscriberSoapClient implements Vas10Client {
 
-    private static final Logger log = LoggerFactory.getLogger(VasSubscriberSoapClient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(VasSubscriberSoapClient.class);
 
     @Autowired
     private SubscriptionRepository subscriptionRepository;
@@ -50,7 +50,7 @@ public class VasSubscriberSoapClient implements Vas10Client {
 
     @Override
     public void pushStatusChange() {
-        log.info("Pushing status change to listeners");
+        LOG.info("Pushing status change to listeners");
 
         List<Subscription> subscriptions = subscriptionRepository.findAll();
         for (Subscription subscription : subscriptions) {

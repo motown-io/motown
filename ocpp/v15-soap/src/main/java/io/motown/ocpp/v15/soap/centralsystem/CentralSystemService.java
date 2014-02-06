@@ -50,7 +50,7 @@ import java.util.List;
         endpointInterface = "io.motown.ocpp.v15.soap.centralsystem.schema.CentralSystemService")
 public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsystem.schema.CentralSystemService {
 
-    private static final Logger log = LoggerFactory.getLogger(CentralSystemService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CentralSystemService.class);
 
     private static final String PROTOCOL_IDENTIFIER = "OCPPS15";
 
@@ -206,7 +206,7 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
         }, new ResponseFactory<AuthorizeResponse>() {
             @Override
             public AuthorizeResponse createResponse() {
-                log.error("Error while handling 'authorize' request, returning invalid for idTag: {}", request.getIdTag());
+                LOG.error("Error while handling 'authorize' request, returning invalid for idTag: {}", request.getIdTag());
 
                 AuthorizeResponse response = new AuthorizeResponse();
                 IdTagInfo tagInfo = new IdTagInfo();
@@ -279,7 +279,7 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
      */
     private String getChargingStationAddress(MessageContext messageContext) {
         if (messageContext == null || !(messageContext instanceof WrappedMessageContext)) {
-            log.warn("Unable to get message context, or message context is not the right type.");
+            LOG.warn("Unable to get message context, or message context is not the right type.");
             return "";
         }
 
@@ -294,7 +294,7 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
             }
         }
 
-        log.warn("No 'From' header found in request. Not able to determine charging station address.");
+        LOG.warn("No 'From' header found in request. Not able to determine charging station address.");
         return "";
     }
 
