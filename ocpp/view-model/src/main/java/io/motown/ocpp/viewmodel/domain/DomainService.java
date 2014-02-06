@@ -77,9 +77,6 @@ public class DomainService {
     @Value("${io.motown.ocpp.viewmodel.heartbeat.interval}")
     private int heartbeatInterval;
 
-    @Value("${io.motown.ocpp.viewmodel.authorize.timeout}")
-    private int authorizeTimeout;
-
     @Autowired
     private EventWaitingGateway eventWaitingGateway;
 

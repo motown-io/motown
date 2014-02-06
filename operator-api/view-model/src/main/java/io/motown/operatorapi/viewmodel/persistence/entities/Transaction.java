@@ -66,6 +66,10 @@ public class Transaction {
         this.startedTimestamp = startedTimestamp != null ? new Date(startedTimestamp.getTime()) : null;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getChargingStationId() {
         return chargingStationId;
     }
