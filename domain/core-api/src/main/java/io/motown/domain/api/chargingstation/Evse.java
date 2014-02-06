@@ -22,7 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class Evse {
 
-    public final static EvseId ALL = new EvseId(0);
+    public static final EvseId ALL = new EvseId(0);
 
     private EvseId evseId;
 
