@@ -71,7 +71,7 @@ public final class RequestReserveNowCommand {
     }
 
     public Date getExpiryDate() {
-        return expiryDate;
+        return new Date(expiryDate.getTime());
     }
 
     @Nullable
