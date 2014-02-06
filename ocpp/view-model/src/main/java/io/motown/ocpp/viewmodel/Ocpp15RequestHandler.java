@@ -42,7 +42,7 @@ public class Ocpp15RequestHandler {
     @EventHandler
     public void handle(ConfigurationRequestedEvent event) {
         LOG.info("Handling ConfigurationRequestedEvent");
-        HashMap<String, String> configurationItems = chargingStationOcpp15Client.getConfiguration(event.getChargingStationId());
+        Map<String, String> configurationItems = chargingStationOcpp15Client.getConfiguration(event.getChargingStationId());
 
         domainService.configureChargingStation(event.getChargingStationId(), configurationItems);
     }
