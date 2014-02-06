@@ -67,8 +67,6 @@ public class VasConversionService {
     }
 
     public List<ChargingCapability> getChargingCapabilities(ChargingStation chargingStation) {
-        //chargingStation.getChargingCapabilities().collect { it.powersocketType.vasChargingCapability.value() ?: "Unspecified" };
-
         List<ChargingCapability> chargingCapabilities = new ArrayList<>();
 
         for (VasChargingCapability vasChargingCapability : chargingStation.getChargingCapabilities()){

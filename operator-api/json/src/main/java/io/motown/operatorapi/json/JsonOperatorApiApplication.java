@@ -31,8 +31,6 @@ import static spark.Spark.post;
 
 public class JsonOperatorApiApplication implements SparkApplication {
 
-//    private static final Logger LOG = LoggerFactory.getLogger(JsonOperatorApiApplication.class);
-
     private OperatorApiService service;
 
     private JsonCommandService commandService;
