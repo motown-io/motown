@@ -34,7 +34,7 @@ public class Ocpp15RequestHandler {
     private static final Logger LOG = LoggerFactory.getLogger(io.motown.ocpp.viewmodel.Ocpp15RequestHandler.class);
 
     @Autowired
-    public DomainService domainService;
+    private DomainService domainService;
 
     @Autowired
     private ChargingStationOcpp15Client chargingStationOcpp15Client;
@@ -189,5 +189,9 @@ public class Ocpp15RequestHandler {
 
     public void setChargingStationOcpp15Client(ChargingStationOcpp15Client chargingStationOcpp15Client) {
         this.chargingStationOcpp15Client = chargingStationOcpp15Client;
+    }
+
+    public void setDomainService(DomainService domainService) {
+        this.domainService = domainService;
     }
 }

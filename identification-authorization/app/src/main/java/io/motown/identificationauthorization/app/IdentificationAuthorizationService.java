@@ -25,7 +25,7 @@ import java.util.Set;
 @Service
 public class IdentificationAuthorizationService {
 
-    Set<AuthenticationProvider> providers;
+    private Set<AuthenticationProvider> providers;
 
     @Autowired
     public void setProviders(Set<AuthenticationProvider> providers) {

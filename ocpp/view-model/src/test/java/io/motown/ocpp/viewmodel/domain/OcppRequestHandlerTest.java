@@ -42,15 +42,19 @@ public class OcppRequestHandlerTest {
     @Autowired
     private ChargingStationRepository chargingStationRepository;
 
-    ChargingStationOcpp15Client client;
+    private ChargingStationOcpp15Client client;
+
+    private DomainService domainService;
 
     @Before
     public void setUp() {
         chargingStationRepository.deleteAll();
 
         requestHandler = new Ocpp15RequestHandler();
-        requestHandler.domainService = mock(DomainService.class);
-        when(requestHandler.domainService.generateReservationIdentifier(any(ChargingStationId.class), any(String.class))).thenReturn(new NumberedReservationId(getChargingStationId(), getProtocol(), 1));
+
+        domainService = mock(DomainService.class);
+        when(domainService.generateReservationIdentifier(any(ChargingStationId.class), any(String.class))).thenReturn(new NumberedReservationId(getChargingStationId(), getProtocol(), 1));
+        requestHandler.setDomainService(domainService);
 
         client = mock(ChargingStationOcpp15Client.class);
         requestHandler.setChargingStationOcpp15Client(client);
@@ -174,7 +178,7 @@ public class OcppRequestHandlerTest {
         when(client.getAuthorizationListVersion(getChargingStationId())).thenReturn(getListVersion());
         requestHandler.handle(new AuthorizationListVersionRequestedEvent(getChargingStationId(), getProtocol()));
 
-        verify(requestHandler.domainService).authorizationListVersionReceived(getChargingStationId(), getListVersion());
+        verify(domainService).authorizationListVersionReceived(getChargingStationId(), getListVersion());
     }
 
     @Test

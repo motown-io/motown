@@ -33,7 +33,7 @@ public class Ocpp12RequestHandler {
     private static final Logger LOG = LoggerFactory.getLogger(Ocpp12RequestHandler.class);
 
     @Autowired
-    public DomainService domainService;
+    private DomainService domainService;
 
     @Autowired
     private ChargingStationOcpp12Client chargingStationOcpp12Client;
