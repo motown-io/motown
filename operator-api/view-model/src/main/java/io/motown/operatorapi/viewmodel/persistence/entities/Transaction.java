@@ -131,7 +131,7 @@ public class Transaction {
     }
 
     public void setStoppedTimestamp(Date stoppedTimestamp) {
-        this.stoppedTimestamp = stoppedTimestamp != null ? new Date(stoppedTimestamp.getTime()) : null;;
+        this.stoppedTimestamp = stoppedTimestamp != null ? new Date(stoppedTimestamp.getTime()) : null;
     }
 
     public Date getUpdated() {
