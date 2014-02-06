@@ -102,6 +102,6 @@ public final class TransactionStoppedEvent {
      * @return the time at which the transaction started.
      */
     public Date getTimestamp() {
-        return timestamp;
+        return new Date(timestamp.getTime());
     }
 }

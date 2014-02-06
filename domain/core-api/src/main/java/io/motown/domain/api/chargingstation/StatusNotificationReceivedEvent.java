@@ -49,7 +49,7 @@ public abstract class StatusNotificationReceivedEvent {
     public StatusNotificationReceivedEvent(ChargingStationId chargingStationId, ComponentStatus status, Date timestamp, Map<String, String> attributes) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.status = checkNotNull(status);
-        this.timestamp = checkNotNull(timestamp);
+        this.timestamp = new Date(checkNotNull(timestamp).getTime());
         this.attributes = checkNotNull(attributes);
     }
 
@@ -77,7 +77,7 @@ public abstract class StatusNotificationReceivedEvent {
      * @return the timestamp at which the status notification occurred.
      */
     public Date getTimestamp() {
-        return timestamp;
+        return new Date(timestamp.getTime());
     }
 
     /**

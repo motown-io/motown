@@ -56,7 +56,7 @@ public final class RequestFirmwareUpdateCommand {
         checkNotNull(updateLocation);
         checkArgument(!updateLocation.isEmpty());
         this.updateLocation = updateLocation;
-        this.retrieveDate = checkNotNull(retrieveDate);
+        this.retrieveDate = new Date(checkNotNull(retrieveDate).getTime());
         this.attributes = ImmutableMap.copyOf(checkNotNull(attributes));
     }
 
@@ -80,7 +80,7 @@ public final class RequestFirmwareUpdateCommand {
      * @return the moment the charging station should start retrieving the firmware update from the updatelocation
      */
     public Date getRetrieveDate() {
-        return retrieveDate;
+        return new Date(retrieveDate.getTime());
     }
 
     /**

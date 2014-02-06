@@ -100,7 +100,7 @@ public final class RequestDiagnosticsCommand {
      */
     @Nullable
     public Date getPeriodStartTime() {
-        return periodStartTime;
+        return periodStartTime != null ? new Date(periodStartTime.getTime()) : null;
     }
 
     /**
@@ -108,7 +108,7 @@ public final class RequestDiagnosticsCommand {
      */
     @Nullable
     public Date getPeriodEndTime() {
-        return periodEndTime;
+        return periodEndTime != null ? new Date(periodEndTime.getTime()) : null;
     }
 
 }

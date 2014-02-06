@@ -115,7 +115,7 @@ public class Transaction {
     }
 
     public Date getStartedTimestamp() {
-        return startedTimestamp;
+        return startedTimestamp != null ? new Date(startedTimestamp.getTime()) : null;
     }
 
     public void setStartedTimestamp(Date startedTimestamp) {
@@ -123,7 +123,7 @@ public class Transaction {
     }
 
     public Date getStoppedTimestamp() {
-        return stoppedTimestamp;
+        return stoppedTimestamp != null ? new Date(stoppedTimestamp.getTime()) : null;
     }
 
     public void setStoppedTimestamp(Date stoppedTimestamp) {
@@ -131,11 +131,11 @@ public class Transaction {
     }
 
     public Date getUpdated() {
-        return updated;
+        return updated != null ? new Date(updated.getTime()) : null;
     }
 
     public Date getCreated() {
-        return created;
+        return created != null ? new Date(created.getTime()) : null;
     }
 
     @PrePersist

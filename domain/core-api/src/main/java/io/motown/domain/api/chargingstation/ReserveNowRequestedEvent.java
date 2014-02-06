@@ -38,7 +38,7 @@ public final class ReserveNowRequestedEvent implements CommunicationWithCharging
         this.protocol = checkNotNull(protocol);
         this.evseId = checkNotNull(evseId);
         this.identifyingToken = checkNotNull(identifyingToken);
-        this.expiryDate = checkNotNull(expiryDate);
+        this.expiryDate = new Date(checkNotNull(expiryDate).getTime());
         this.parentIdentifyingToken = parentIdentifyingToken;
     }
 
@@ -61,7 +61,7 @@ public final class ReserveNowRequestedEvent implements CommunicationWithCharging
     }
 
     public Date getExpiryDate() {
-        return expiryDate;
+        return new Date(expiryDate.getTime());
     }
 
     public IdentifyingToken getParentIdentifyingToken() {

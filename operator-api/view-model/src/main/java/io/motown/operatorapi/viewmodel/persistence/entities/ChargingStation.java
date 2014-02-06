@@ -49,7 +49,7 @@ public class ChargingStation {
     }
 
     public Date getLastTimeBooted() {
-        return lastTimeBooted;
+        return lastTimeBooted != null ? new Date(lastTimeBooted.getTime()) : null;
     }
 
     public void setLastTimeBooted(Date lastTimeBooted) {
@@ -57,7 +57,7 @@ public class ChargingStation {
     }
 
     public Date getLastContact() {
-        return lastContact;
+        return lastContact != null ? new Date(lastContact.getTime()) : null;
     }
 
     public void setLastContact(Date lastContact) {
@@ -78,11 +78,11 @@ public class ChargingStation {
     }
 
     public Date getUpdated() {
-        return updated;
+        return updated != null ? new Date(updated.getTime()) : null;
     }
 
     public Date getCreated() {
-        return created;
+        return created != null ? new Date(created.getTime()) : null;
     }
 
     @PrePersist

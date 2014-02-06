@@ -127,7 +127,7 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
      */
     @Nullable
     public Date getPeriodStartTime() {
-        return periodStartTime;
+        return periodStartTime != null ? new Date(periodStartTime.getTime()) : null;
     }
 
     /**
@@ -135,6 +135,6 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
      */
     @Nullable
     public Date getPeriodStopTime() {
-        return periodStopTime;
+        return periodStopTime != null ? new Date(periodStopTime.getTime()) : null;
     }
 }

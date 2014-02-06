@@ -50,7 +50,7 @@ public abstract class StatusNotificationCommand {
     public StatusNotificationCommand(ChargingStationId chargingStationId, ComponentStatus status, Date timestamp, Map<String, String> attributes) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.status = checkNotNull(status);
-        this.timestamp = checkNotNull(timestamp);
+        this.timestamp = new Date(checkNotNull(timestamp).getTime());
         this.attributes = ImmutableMap.copyOf(checkNotNull(attributes));
     }
 
@@ -78,7 +78,7 @@ public abstract class StatusNotificationCommand {
      * @return the timestamp at which the status notification occurred.
      */
     public Date getTimestamp() {
-        return timestamp;
+        return new Date(timestamp.getTime());
     }
 
     /**

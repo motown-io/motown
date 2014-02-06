@@ -45,7 +45,7 @@ public class RequestReserveNowApiCommand implements ApiCommand {
     }
 
     public Date getExpiryDate() {
-        return expiryDate;
+        return expiryDate != null ? new Date(expiryDate.getTime()) : null;
     }
 
     public void setExpiryDate(Date expiryDate) {
