@@ -27,6 +27,7 @@ import org.w3c.dom.DOMException;
 
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 //TODO: Duplicate of MessageIdHeaderInterceptor in ocpp 1.2 and ocpp 1.5 addons - Ingo Pak, 21 Jan 2014
@@ -72,7 +73,7 @@ public class MessageIdHeaderInterceptor extends AbstractPhaseInterceptor<Message
      * @param headers list of headers
      * @return true if the MessageID header exists, false if not
      */
-    private Boolean messageIdHeaderExists(ArrayList<SoapHeader> headers) {
+    private Boolean messageIdHeaderExists(List<SoapHeader> headers) {
         for(SoapHeader header:headers) {
             if(header.getName().getLocalPart().equalsIgnoreCase(LOCAL_NAME)) {
                 return true;

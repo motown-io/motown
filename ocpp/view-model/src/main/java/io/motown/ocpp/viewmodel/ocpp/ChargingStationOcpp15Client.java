@@ -19,12 +19,12 @@ package io.motown.ocpp.viewmodel.ocpp;
 import io.motown.domain.api.chargingstation.*;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface ChargingStationOcpp15Client {
 
-    HashMap<String, String> getConfiguration(ChargingStationId id);
+    Map<String, String> getConfiguration(ChargingStationId id);
 
     RequestStatus startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, EvseId evseId);
 

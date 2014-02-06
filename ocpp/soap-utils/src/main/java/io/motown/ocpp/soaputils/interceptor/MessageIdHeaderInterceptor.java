@@ -27,6 +27,7 @@ import org.w3c.dom.DOMException;
 
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class MessageIdHeaderInterceptor extends AbstractPhaseInterceptor<Message> {
@@ -71,7 +72,7 @@ public class MessageIdHeaderInterceptor extends AbstractPhaseInterceptor<Message
      * @param headers list of headers
      * @return true if the MessageID header exists, false if not
      */
-    private Boolean messageIdHeaderExists(ArrayList<SoapHeader> headers) {
+    private Boolean messageIdHeaderExists(List<SoapHeader> headers) {
         for(SoapHeader header:headers) {
             if(header.getName().getLocalPart().equalsIgnoreCase(LOCAL_NAME)) {
                 return true;

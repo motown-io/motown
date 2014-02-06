@@ -32,8 +32,8 @@ import org.springframework.stereotype.Component;
 
 import javax.xml.ws.BindingProvider;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static io.motown.domain.api.chargingstation.IdentifyingToken.AuthenticationStatus;
 
@@ -45,14 +45,14 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     @Autowired
     private DomainService domainService;
 
-    public HashMap<String, String> getConfiguration(ChargingStationId id) {
+    public Map<String, String> getConfiguration(ChargingStationId id) {
         LOG.info("Retrieving configuration for {}", id);
 
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         GetConfigurationResponse response = chargePointService.getConfiguration(new GetConfigurationRequest(), id.getId());
 
-        HashMap<String, String> configurationItems = Maps.newHashMap();
+        Map<String, String> configurationItems = Maps.newHashMap();
         for (KeyValue keyValue : response.getConfigurationKey()) {
             configurationItems.put(keyValue.getKey(), keyValue.getValue());
         }
