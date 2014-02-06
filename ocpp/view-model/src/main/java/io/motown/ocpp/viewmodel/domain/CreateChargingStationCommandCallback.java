@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 public class CreateChargingStationCommandCallback implements CommandCallback<Object> {
 
-    private static final Logger log = LoggerFactory.getLogger(CreateChargingStationCommandCallback.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CreateChargingStationCommandCallback.class);
 
     private ChargingStationId chargingStationId;
     private String chargingStationAddress;
@@ -67,6 +67,6 @@ public class CreateChargingStationCommandCallback implements CommandCallback<Obj
     @Override
     public void onFailure(Throwable throwable) {
         //TODO what do we do now? Do we still send out a BootChargingStationCommand so other components can react on it? - Mark van den Bergh, December 11th 2013
-        log.error("CreateChargingStationCommand failed. " + throwable.getMessage());
+        LOG.error("CreateChargingStationCommand failed. " + throwable.getMessage());
     }
 }

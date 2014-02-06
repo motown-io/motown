@@ -32,7 +32,7 @@ import java.util.Set;
 @Component
 public class ConfigurationEventListener {
 
-    private static final Logger log = LoggerFactory.getLogger(ConfigurationEventListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationEventListener.class);
 
     @Resource(name = "configurationCommandGateway")
     private ConfigurationCommandGateway commandGateway;
@@ -42,7 +42,7 @@ public class ConfigurationEventListener {
 
     @EventHandler
     protected void onEvent(UnconfiguredChargingStationBootedEvent event) {
-        log.info("Handling UnconfiguredChargingStationBootedEvent");
+        LOG.info("Handling UnconfiguredChargingStationBootedEvent");
 
         Map<String,String> attributes = event.getAttributes();
         Set<Evse> evses = domainService.getEvses(attributes.get("vendor"), attributes.get("model"));
@@ -51,7 +51,7 @@ public class ConfigurationEventListener {
             ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(event.getChargingStationId(), evses);
             commandGateway.send(command);
         } else {
-            log.info("No Evses found for vender {} and model {}", attributes.get("vendor"), attributes.get("model"));
+            LOG.info("No Evses found for vender {} and model {}", attributes.get("vendor"), attributes.get("model"));
         }
     }
 

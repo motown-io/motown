@@ -30,7 +30,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class RequestHandler<T> {
 
-    private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RequestHandler.class);
 
     private final TaskExecutor executor;
 
@@ -50,7 +50,7 @@ public class RequestHandler<T> {
         final Continuation continuation = provider.getContinuation();
 
         if (continuation == null) {
-            log.warn("Failed to get continuation, falling back to synchronous request handling. Make sure async-supported is set to true on the CXF servlet (web.xml)");
+            LOG.warn("Failed to get continuation, falling back to synchronous request handling. Make sure async-supported is set to true on the CXF servlet (web.xml)");
             return successFactory.createResponse();
         }
 

@@ -15,7 +15,6 @@
  */
 package io.motown.vas.v10.soap;
 
-import com.sun.istack.Nullable;
 import io.motown.vas.v10.soap.schema.*;
 import io.motown.vas.viewmodel.ChargeMode;
 import io.motown.vas.viewmodel.State;
@@ -31,14 +30,13 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Service that translates our VAS representation into the webservice representation
  */
 @Component
 public class VasConversionService {
 
-    private static final Logger log = LoggerFactory.getLogger(VasConversionService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(VasConversionService.class);
 
     public ChargePoint getVasRepresentation(ChargingStation chargingStation) {
         ChargePoint chargePoint = new ChargePoint();
@@ -214,7 +212,7 @@ public class VasConversionService {
                     return Enum.valueOf(ConnectorType.class, connectorType.toString());
             }
         } catch (IllegalArgumentException i) {
-            log.error("Unknown connectorType: ${connectorType}: ${i.getMessage()}");
+            LOG.error("Unknown connectorType: ${connectorType}: ${i.getMessage()}");
             return ConnectorType.UNSPECIFIED;
         }
     }

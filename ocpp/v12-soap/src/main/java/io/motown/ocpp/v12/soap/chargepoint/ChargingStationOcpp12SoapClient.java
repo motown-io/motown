@@ -38,14 +38,14 @@ import java.util.Date;
 @Component
 public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Client {
 
-    private static final Logger log = LoggerFactory.getLogger(ChargingStationOcpp12SoapClient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChargingStationOcpp12SoapClient.class);
 
     @Autowired
     private DomainService domainService;
 
     @Override
     public RequestStatus startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, EvseId evseId) {
-        log.info("Requesting remote start transaction on {}", id);
+        LOG.info("Requesting remote start transaction on {}", id);
 
         ChargePointService chargePointService = this.createChargingStationService(id);
 
@@ -56,17 +56,17 @@ public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Cli
         RemoteStartTransactionResponse response = chargePointService.remoteStartTransaction(request, id.getId());
 
         if (RemoteStartStopStatus.ACCEPTED.equals(response.getStatus())) {
-            log.info("Remote start transaction request on {} has been accepted", id);
+            LOG.info("Remote start transaction request on {} has been accepted", id);
             return RequestStatus.SUCCESS;
         } else {
-            log.warn("Remote start transaction request on {} has been rejected", id);
+            LOG.warn("Remote start transaction request on {} has been rejected", id);
             return RequestStatus.FAILURE;
         }
     }
 
     @Override
     public RequestStatus stopTransaction(ChargingStationId id, int transactionId) {
-        log.debug("Stopping transaction {} on {}", transactionId, id);
+        LOG.debug("Stopping transaction {} on {}", transactionId, id);
 
         ChargePointService chargePointService = this.createChargingStationService(id);
 
@@ -77,31 +77,31 @@ public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Cli
         response = chargePointService.remoteStopTransaction(request, id.getId());
 
         if (RemoteStartStopStatus.ACCEPTED.equals(response.getStatus())) {
-            log.info("Stop transaction {} on {} has been accepted", transactionId, id);
+            LOG.info("Stop transaction {} on {} has been accepted", transactionId, id);
             return RequestStatus.SUCCESS;
         } else {
-            log.warn("Stop transaction {} on {} has been rejected", transactionId, id);
+            LOG.warn("Stop transaction {} on {} has been rejected", transactionId, id);
             return RequestStatus.FAILURE;
         }
     }
 
     @Override
     public RequestStatus softReset(ChargingStationId id) {
-        log.info("Requesting soft reset on {}", id);
+        LOG.info("Requesting soft reset on {}", id);
 
         return reset(id, ResetType.SOFT);
     }
 
     @Override
     public RequestStatus hardReset(ChargingStationId id) {
-        log.info("Requesting hard reset on {}", id);
+        LOG.info("Requesting hard reset on {}", id);
 
         return reset(id, ResetType.HARD);
     }
 
     @Override
     public RequestStatus unlockConnector(ChargingStationId id, EvseId evseId) {
-        log.debug("Unlocking of connector {} on {}", evseId, id);
+        LOG.debug("Unlocking of connector {} on {}", evseId, id);
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         UnlockConnectorRequest request = new UnlockConnectorRequest();
@@ -110,31 +110,31 @@ public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Cli
         UnlockConnectorResponse response = chargePointService.unlockConnector(request, id.getId());
 
         if (UnlockStatus.ACCEPTED.equals(response.getStatus())) {
-            log.info("Unlocking of connector {} on {} has been accepted", evseId, id);
+            LOG.info("Unlocking of connector {} on {} has been accepted", evseId, id);
             return RequestStatus.SUCCESS;
         } else {
-            log.warn("Unlocking of connector {} on {} has been rejected", evseId, id);
+            LOG.warn("Unlocking of connector {} on {} has been rejected", evseId, id);
             return RequestStatus.FAILURE;
         }
     }
 
     @Override
     public RequestStatus changeAvailabilityToInoperative(ChargingStationId id, EvseId evseId) {
-        log.debug("Changing availability of connector {} on {} to inoperative", evseId, id);
+        LOG.debug("Changing availability of connector {} on {} to inoperative", evseId, id);
 
         return changeAvailability(id, evseId, AvailabilityType.INOPERATIVE);
     }
 
     @Override
     public RequestStatus changeAvailabilityToOperative(ChargingStationId id, EvseId evseId) {
-        log.debug("Changing availability of connector {} on {} to operative", evseId, id);
+        LOG.debug("Changing availability of connector {} on {} to operative", evseId, id);
 
         return changeAvailability(id, evseId, AvailabilityType.OPERATIVE);
     }
 
     @Override
     public RequestStatus changeConfiguration(ChargingStationId id, String key, String value) {
-        log.debug("Change configuration of {}", id);
+        LOG.debug("Change configuration of {}", id);
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         ChangeConfigurationRequest request = new ChangeConfigurationRequest();
@@ -144,11 +144,11 @@ public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Cli
         ChangeConfigurationResponse response = chargePointService.changeConfiguration(request, id.getId());
 
         if (ConfigurationStatus.ACCEPTED.equals(response.getStatus())) {
-            log.info("Configuration change of {} on {} has been accepted", key, id);
+            LOG.info("Configuration change of {} on {} has been accepted", key, id);
             return RequestStatus.SUCCESS;
         } else {
             String responseStatus = (response.getStatus() != null) ? response.getStatus().value() : "-unknown status-";
-            log.warn("Configuration change of {} on {} has failed due to {}", key, id, responseStatus);
+            LOG.warn("Configuration change of {} on {} has failed due to {}", key, id, responseStatus);
             return RequestStatus.FAILURE;
         }
     }
@@ -178,10 +178,10 @@ public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Cli
         ClearCacheResponse response = chargePointService.clearCache(request, id.getId());
 
         if (ClearCacheStatus.ACCEPTED.equals(response.getStatus())) {
-            log.info("Clear cache on {} has been accepted", id.getId());
+            LOG.info("Clear cache on {} has been accepted", id.getId());
             requestStatus = RequestStatus.SUCCESS;
         } else {
-            log.warn("Clear cache on {} has been rejected", id.getId());
+            LOG.warn("Clear cache on {} has been rejected", id.getId());
             requestStatus = RequestStatus.FAILURE;
         }
 
@@ -201,7 +201,7 @@ public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Cli
         chargePointService.updateFirmware(request, id.getId());
 
         //The charging station will respond with an async 'firmware status update' message
-        log.info("Update firmware on {} has been requested", id.getId());
+        LOG.info("Update firmware on {} has been requested", id.getId());
     }
 
     private RequestStatus reset(ChargingStationId id, ResetType type) {

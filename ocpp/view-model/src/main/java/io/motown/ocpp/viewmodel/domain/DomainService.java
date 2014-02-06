@@ -40,7 +40,7 @@ import java.util.Map;
 @Service
 public class DomainService {
 
-    private static final Logger log = LoggerFactory.getLogger(DomainService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DomainService.class);
     public static final int CHARGING_STATION_EVSE_ID = 0;
     public static final String ERROR_CODE_KEY = "errorCode";
     public static final String INFO_KEY = "info";
@@ -88,7 +88,7 @@ public class DomainService {
                                                          String imsi, String meterType, String meterSerialNumber) {
         // In case there is no charging station address specified there is no point in continuing, since we will not be able to reach the charging station later on
         if (chargingStationAddress == null || chargingStationAddress.isEmpty()) {
-            log.error("Rejecting bootnotification, no charging station address has been specified.");
+            LOG.error("Rejecting bootnotification, no charging station address has been specified.");
             return new BootChargingStationResult(false, heartbeatInterval, new Date());
         }
 
@@ -96,7 +96,7 @@ public class DomainService {
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
 
         if (chargingStation == null) {
-            log.debug("Not a known charging station on boot notification, we send a CreateChargingStationCommand.");
+            LOG.debug("Not a known charging station on boot notification, we send a CreateChargingStationCommand.");
 
             commandGateway.send(new CreateChargingStationCommand(chargingStationId), new CreateChargingStationCommandCallback(
                     chargingStationId, chargingStationAddress, vendor, model, protocol, chargingStationSerialNumber, firmwareVersion, iccid,

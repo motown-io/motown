@@ -27,7 +27,7 @@ import javax.xml.ws.Holder;
 
 public class CirAuthentication implements AuthenticationProvider {
 
-    private static final Logger log = LoggerFactory.getLogger(CirAuthentication.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CirAuthentication.class);
 
     private String username;
 
@@ -73,17 +73,17 @@ public class CirAuthentication implements AuthenticationProvider {
         try {
             inquireResult = serviceSoap.inquire(arrayOfCard, getHolder());
         } catch (Exception e) {
-            log.error("Exception calling CIR", e);
+            LOG.error("Exception calling CIR", e);
         }
 
         if (inquireResult == null) {
-            log.info("No result while querying CIR. Returning 'false' for identification: {}", identification);
+            LOG.info("No result while querying CIR. Returning 'false' for identification: {}", identification);
             return false;
         }
 
         Error error = inquireResult.getError();
         if (error != null) {
-            log.warn("Received error while querying CIR, ErrorCode: {}, ErrorTest: {}", error.getErrorCode(), error.getErrorText());
+            LOG.warn("Received error while querying CIR, ErrorCode: {}, ErrorTest: {}", error.getErrorCode(), error.getErrorText());
         }
 
         boolean valid = false;
@@ -91,7 +91,7 @@ public class CirAuthentication implements AuthenticationProvider {
                 && inquireResult.getCards().getCard().get(0) != null) {
             valid = inquireResult.getCards().getCard().get(0).isValid();
         } else {
-            log.warn("CIR response didn't contain result. Returning 'false' for identification: {}", identification);
+            LOG.warn("CIR response didn't contain result. Returning 'false' for identification: {}", identification);
         }
 
         return valid;
