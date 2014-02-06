@@ -28,7 +28,7 @@ public class GsonFactoryBean implements FactoryBean<Gson> {
     private Set<TypeAdapter<?>> typeAdapters;
 
     @Override
-    public Gson getObject() throws Exception {
+    public Gson getObject() {
         GsonBuilder builder = new GsonBuilder();
 
         if (dateFormat != null && !dateFormat.isEmpty()) {

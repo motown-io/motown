@@ -58,7 +58,7 @@ public class RequestHandler<T> {
             if(continuation.isNew()) {
                 FutureTask futureResponse = new FutureTask<>(new Callable<T>() {
                     @Override
-                    public T call() throws Exception {
+                    public T call() {
                         T response = successFactory.createResponse();
                         continuation.resume();
                         return response;

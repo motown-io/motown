@@ -36,7 +36,7 @@ public class JsonOperatorApiApplication implements SparkApplication {
 
     private JsonCommandService commandService;
 
-    public JsonOperatorApiApplication() throws Exception {
+    public JsonOperatorApiApplication() {
         ApplicationContext context = ApplicationContextProvider.getApplicationContext();
         this.service = (OperatorApiService) context.getBean("operatorApiService");
         this.commandService = (JsonCommandService) context.getBean("jsonCommandService");
