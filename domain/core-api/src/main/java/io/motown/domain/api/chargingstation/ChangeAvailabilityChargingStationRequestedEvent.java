@@ -27,7 +27,7 @@ public interface ChangeAvailabilityChargingStationRequestedEvent extends Communi
      * @return the charging station identifier.
      */
     @Override
-    public ChargingStationId getChargingStationId();
+    ChargingStationId getChargingStationId();
 
     /**
      * Gets the protocol identifier.
@@ -35,13 +35,13 @@ public interface ChangeAvailabilityChargingStationRequestedEvent extends Communi
      * @return the protocol identifier.
      */
     @Override
-    public String getProtocol();
+    String getProtocol();
 
     /**
      * Gets the evse id.
      *
      * @return the evse id.
      */
-    public EvseId getEvseId();
+    EvseId getEvseId();
 
 }

@@ -19,6 +19,6 @@ import org.apache.cxf.continuations.Continuation;
 
 public interface ContinuationFutureCallback {
 
-    public void setContinuation(Continuation continuation);
+    void setContinuation(Continuation continuation);
 
 }

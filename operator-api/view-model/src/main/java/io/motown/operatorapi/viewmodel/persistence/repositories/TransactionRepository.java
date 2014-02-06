@@ -25,6 +25,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
     /**
      * Find transactions by transaction id (not the auto-increment transaction.id)
      */
-    public List<Transaction> findByTransactionId(String transactionId);
+    List<Transaction> findByTransactionId(String transactionId);
 
 }

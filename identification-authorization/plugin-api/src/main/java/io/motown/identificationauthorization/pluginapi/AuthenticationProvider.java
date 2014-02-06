@@ -19,6 +19,6 @@ import io.motown.domain.api.chargingstation.IdentifyingToken;
 
 public interface AuthenticationProvider {
 
-    public boolean isValid(IdentifyingToken identification);
+    boolean isValid(IdentifyingToken identification);
 
 }

@@ -26,7 +26,7 @@ public interface ResetChargingStationRequestedEvent extends CommunicationWithCha
      * @return the charging station identifier.
      */
     @Override
-    public ChargingStationId getChargingStationId();
+    ChargingStationId getChargingStationId();
 
     /**
      * Gets the protocol identifier.
@@ -34,6 +34,6 @@ public interface ResetChargingStationRequestedEvent extends CommunicationWithCha
      * @return the protocol identifier.
      */
     @Override
-    public String getProtocol();
+    String getProtocol();
 
 }

@@ -22,12 +22,12 @@ import java.util.List;
 
 public interface SubscriptionRepository extends JpaRepository<Subscription, String> {
 
-    public Subscription findById(Long id);
+    Subscription findById(Long id);
 
-    public Subscription findBySubscriptionId(String subscriptionId);
+    Subscription findBySubscriptionId(String subscriptionId);
 
-    public Subscription findBySubscriberIdentityAndDeliveryAddress(String subscriberIdentity, String deliveryAddress);
+    Subscription findBySubscriberIdentityAndDeliveryAddress(String subscriberIdentity, String deliveryAddress);
 
-    public List<Subscription> findBySubscriberIdentity(String subscriberIdentity);
+    List<Subscription> findBySubscriberIdentity(String subscriberIdentity);
 
 }

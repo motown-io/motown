@@ -23,6 +23,6 @@ public interface CallInitiator {
     /**
      * Initiates the call
      */
-    public void initiateCall();
+    void initiateCall();
 
 }
