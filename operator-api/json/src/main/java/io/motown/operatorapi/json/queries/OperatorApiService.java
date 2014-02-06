@@ -19,19 +19,13 @@ import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.entities.Transaction;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository;
-import org.axonframework.commandhandling.CommandBus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Random;
 
 @Service
 public class OperatorApiService {
-
-    private Random random;
-
-    private CommandBus commandBus;
 
     private ChargingStationRepository repository;
 
@@ -43,16 +37,6 @@ public class OperatorApiService {
 
     public List<Transaction> findAllTransactions() {
         return transactionRepository.findAll();
-    }
-
-    @Autowired
-    public void setRandom(Random random) {
-        this.random = random;
-    }
-
-    @Autowired
-    public void setCommandBus(CommandBus commandBus) {
-        this.commandBus = commandBus;
     }
 
     @Autowired

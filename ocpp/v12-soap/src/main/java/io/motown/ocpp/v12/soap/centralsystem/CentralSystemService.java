@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.task.TaskExecutor;
 import org.w3c.dom.Element;
 
 import javax.annotation.Resource;
@@ -60,20 +59,11 @@ public class CentralSystemService implements io.motown.ocpp.v12.soap.centralsyst
     @Value("${io.motown.ocpp.v12.soap.cxf.continuation.timeout}")
     private int CONTINUATION_TIMEOUT;
 
-    /**
-     * Heartbeat interval which will be returned to the client if handling the bootNotification failed
-     */
-    @Value("${io.motown.ocpp.v12.soap.heartbeat.interval.fallback}")
-    private int HEARTBEAT_INTERVAL_FALLBACK;
-
     @Value("${io.motown.ocpp.v12.soap.protocol.identifier}")
     private String PROTOCOL;
 
     @Autowired
     private DomainService domainService;
-
-    @Autowired
-    private TaskExecutor taskExecutor;
 
     @Resource
     private WebServiceContext context;

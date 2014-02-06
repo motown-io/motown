@@ -28,9 +28,9 @@
     <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
 
     <!-- Interceptor that adds the messageId if not present, as CXF requires the WS-Addressing messageId header to be present, while according to the spec this is only requierd when using the replyTo or faultTo WSA headers -->
-    <bean id="headerInterceptor" class="io.motown.ocpp.v12.soap.interceptor.MessageIdHeaderInterceptor" />
+    <bean id="headerInterceptor" class="io.motown.ocpp.soaputils.interceptor.MessageIdHeaderInterceptor" />
 
-    <bean id="replyToInterceptor" class="io.motown.ocpp.v12.soap.interceptor.ReplyToHeaderInInterceptor" />
+    <bean id="replyToInterceptor" class="io.motown.ocpp.soaputils.interceptor.ReplyToHeaderInInterceptor" />
 
     <bean id="centralSystemService" class="io.motown.ocpp.v12.soap.centralsystem.CentralSystemService" />
 
@@ -41,10 +41,10 @@
         </jaxws:inInterceptors>
     </jaxws:endpoint>
 
-    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-        <property name="corePoolSize" value="5" />
-        <property name="maxPoolSize" value="10" />
-        <property name="queueCapacity" value="25" />
-    </bean>
+    <!--<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">-->
+        <!--<property name="corePoolSize" value="5" />-->
+        <!--<property name="maxPoolSize" value="10" />-->
+        <!--<property name="queueCapacity" value="25" />-->
+    <!--</bean>-->
 
 </beans>

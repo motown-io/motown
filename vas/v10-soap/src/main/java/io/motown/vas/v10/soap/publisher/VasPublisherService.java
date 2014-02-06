@@ -24,7 +24,6 @@ import io.motown.vas.viewmodel.persistence.repostories.SubscriptionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.jws.WebParam;
 import java.util.List;
@@ -38,18 +37,6 @@ import java.util.List;
 public class VasPublisherService implements io.motown.vas.v10.soap.schema.VasPublisherService {
 
     private static final Logger LOG = LoggerFactory.getLogger(VasPublisherService.class);
-
-    /**
-     * Timeout in milliseconds for the continuation suspend functionality
-     */
-    @Value("${io.motown.vas.v10.soap.cxf.continuation.timeout}")
-    private int CONTINUATION_TIMEOUT;
-
-    /**
-     * Heartbeat interval which will be returned to the client if the handling failed
-     */
-    @Value("${io.motown.vas.v10.soap.heartbeat.interval.fallback}")
-    private int HEARTBEAT_INTERVAL_FALLBACK;
 
     @Autowired
     private SubscriptionRepository subscriptionRepository;
