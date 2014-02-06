@@ -66,8 +66,15 @@ public class ChargingStation {
 
     private VasConnectorType connectorType;
 
-    private Double latitude = 0.0;   // the latitude of a coordinate
-    private Double longitude = 0.0;  // the longitude of a coordinate
+    /**
+     * The latitude of a coordinate.
+     */
+    private Double latitude = 0.0;
+
+    /**
+     * The longitude of a coordinate.
+     */
+    private Double longitude = 0.0;
 
     private boolean hasFixedCable;
 

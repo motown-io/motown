@@ -41,21 +41,32 @@ public enum ConnectorType {
     OTHER_3_PH,
     
     // VAS, comment shows OCPP 2.0 counterpart
-    Unspecified,                    // UNSPECIFIED
-    Small_Paddle_Inductive,         // W_INDUCTIVE
-    Large_Paddle_Inductive,         // W_INDUCTIVE
+    // UNSPECIFIED
+    Unspecified,
+    // W_INDUCTIVE
+    Small_Paddle_Inductive,
+    // W_INDUCTIVE
+    Large_Paddle_Inductive,
     Avcon_Connector,
-    Tesla_Connector,                // TESLA
+    // TESLA
+    Tesla_Connector,
     Sae_J1772_Yazaki,
     Nema_520,
-    Tepco_Cha_Me_Do,                // C_G105
-    Iec_621962_Type_1_Yazaki,       // C_TYPE_1 (captive enabled)
-    Iec_621962_Type_2_Mennekes,     // C_TYPE_2 (captive enabled), S_TYPE_2
-    Iec_621962_Type_3_Scame,        // S_TYPE_3
+    // C_G105
+    Tepco_Cha_Me_Do,
+    // C_TYPE_1 (captive enabled)
+    Iec_621962_Type_1_Yazaki,
+    // C_TYPE_2 (captive enabled), S_TYPE_2
+    Iec_621962_Type_2_Mennekes,
+    // S_TYPE_3
+    Iec_621962_Type_3_Scame,
     _60309Industrial2PDc,
-    _60309IndustrialPneAc,          // S_309_1P_16A or S_309_1P_32A ?
-    _60309Industrial3PEAc,          // S_309_3P_16A or S_309_3P_32A ?
-    _60309Industrial3PENAc,         // S_309_3P_16A or S_309_3P_32A ?
+    // S_309_1P_16A or S_309_1P_32A ?
+    _60309IndustrialPneAc,
+    // S_309_3P_16A or S_309_3P_32A ?
+    _60309Industrial3PEAc,
+    // S_309_3P_16A or S_309_3P_32A ?
+    _60309Industrial3PENAc,
     DomesticPlugTypeANema115Unpolarised,
     DomesticPlugTypeANema115Polarised,
     DomesticPlugTypeAJisC8303ClassII,
@@ -67,9 +78,12 @@ public enum ConnectorType {
     DomesticPlugTypeCGost7396C1,
     DomesticPlugTypeDBs5462Pin,
     DomesticPlugTypeDBs5463Pin,
-    DomesticPlugTypeECee75,         // CEE_7_7
-    DomesticPlugTypeFCee74Schuko,   // CEE_7_7
-    DomesticPlugTypeEFCee77,        // CEE_7_7
+    // CEE_7_7
+    DomesticPlugTypeECee75,
+    // CEE_7_7
+    DomesticPlugTypeFCee74Schuko,
+    // CEE_7_7
+    DomesticPlugTypeEFCee77,
     DomesticPlugTypeGBs1363Is401411Ms58,
     DomesticPlugTypeHSi32,
     DomesticPlugTypeIAsNzs3112,

@@ -27,16 +27,28 @@ public class Powersocket {
     @Id
     private String id;
 
+    /**
+     * Indication of the logical position of the socket in a charging station.
+     */
     @Column(nullable = false)
-    private Integer position;            // indication of the logical position of the socket in a chargepoint
+    private Integer position;
 
+    /**
+     * The current state of the socket.
+     */
     @Column(nullable = false)
-    private State state;                 // the current state of the socket
+    private State state;
 
+    /**
+     * Indication if the power socket is enabled or disabled.
+     */
     @Column(nullable = false)
-    private Boolean enabled = false;     // indication if the powersocket is enabled or disabled
+    private Boolean enabled = false;
 
-    private ChargeMode chargeMode;             // Charge mode for this socket
+    /**
+     * Charge mode for this socket.
+     */
+    private ChargeMode chargeMode;
 
     private Integer currentMeterValue;
 

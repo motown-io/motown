@@ -228,7 +228,8 @@ public class CentralSystemService implements io.motown.ocpp.v12.soap.centralsyst
         String errorCode = request.getErrorCode() != null ? request.getErrorCode().value() : null;
 
         String info = null;
-        Date timestamp = new Date(); //TODO: OCPP 1.2 does not contain a timestamp. Is it valid to create one here? - Ingo Pak, 16 Jan 2014
+        //TODO: OCPP 1.2 does not contain a timestamp. Is it valid to create one here? - Ingo Pak, 16 Jan 2014
+        Date timestamp = new Date();
         String vendorId = null;
         String vendorErrorCode = null;
         domainService.statusNotification(chargingStationId, evseId, errorCode, componentStatus, info, timestamp, vendorId, vendorErrorCode);

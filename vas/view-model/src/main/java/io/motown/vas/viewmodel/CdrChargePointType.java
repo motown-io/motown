@@ -20,12 +20,30 @@ package io.motown.vas.viewmodel;
  */
 public enum CdrChargePointType {
 
-    UNSPECIFIED(0),   // Unspecified
-    AC_LT_37KW(1),    // AC < 3,7kW
-    AC_37KW(2),       // AC 3,7kW
-    AC_11KW(3),       // AC 11kW
-    AC_22KW(4),       // AC 22kW
-    DC_50KW(5);       // DC 50kW
+    /**
+     * Unspecified
+     */
+    UNSPECIFIED(0),
+    /**
+     * AC < 3,7kW
+     */
+    AC_LT_37KW(1),
+    /**
+     * AC 3,7kW
+     */
+    AC_37KW(2),
+    /**
+     * AC 11kW
+     */
+    AC_11KW(3),
+    /**
+     * AC 22kW
+     */
+    AC_22KW(4),
+    /**
+     * DC 50kW
+     */
+    DC_50KW(5);
 
     private final Integer value;
 

@@ -211,7 +211,8 @@ public class VasConversionService {
         try {
             switch(connectorType) {
                 case TEPCO_CHA_DE_MO:
-                    return ConnectorType.TEPCO_CHA_ME_DO; // This is a typo in the WSDL
+                    // This is a typo in the WSDL
+                    return ConnectorType.TEPCO_CHA_ME_DO;
                 default:
                     return Enum.valueOf(ConnectorType.class, connectorType.toString());
             }
