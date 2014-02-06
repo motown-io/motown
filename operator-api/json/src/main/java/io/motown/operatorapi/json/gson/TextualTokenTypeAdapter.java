@@ -40,8 +40,8 @@ public class TextualTokenTypeAdapter implements TypeAdapter<TextualToken> {
         }
 
         try {
-            token = obj.getAsJsonPrimitive("token").getAsString();
-        } catch(NullPointerException | ClassCastException | IllegalStateException e) {
+            token = obj.getAsJsonPrimitive("token") != null ? obj.getAsJsonPrimitive("token").getAsString() : "";
+        } catch(ClassCastException | IllegalStateException e) {
             throw new JsonParseException("token must be a JSON string", e);
         }
 
