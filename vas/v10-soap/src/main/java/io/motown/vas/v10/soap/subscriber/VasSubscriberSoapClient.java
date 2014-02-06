@@ -46,7 +46,7 @@ public class VasSubscriberSoapClient implements Vas10Client {
     private SubscriptionRepository subscriptionRepository;
 
     @Value("${io.motown.vas.v10.soap.publisher.identity}")
-    private String PUBLISHER_IDENTITY;
+    private String publisherIdentity;
 
     @Override
     public void pushStatusChange() {
@@ -70,7 +70,7 @@ public class VasSubscriberSoapClient implements Vas10Client {
             statusChanges.add(statusChange);
 
             VasSubscriberService vasSubscriberService = this.createVasSubscriberService(subscription);
-            vasSubscriberService.statusChange(notification, PUBLISHER_IDENTITY);
+            vasSubscriberService.statusChange(notification, publisherIdentity);
         }
     }
 

@@ -57,10 +57,10 @@ public class CentralSystemService implements io.motown.ocpp.v12.soap.centralsyst
      * Timeout in milliseconds for the continuation suspend functionality
      */
     @Value("${io.motown.ocpp.v12.soap.cxf.continuation.timeout}")
-    private int CONTINUATION_TIMEOUT;
+    private int continuationTimeout;
 
     @Value("${io.motown.ocpp.v12.soap.protocol.identifier}")
-    private String PROTOCOL;
+    private String protocol;
 
     @Autowired
     private DomainService domainService;
@@ -74,7 +74,7 @@ public class CentralSystemService implements io.motown.ocpp.v12.soap.centralsyst
         final AuthorizationFutureEventCallback future = new AuthorizationFutureEventCallback();
         final ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
-        FutureRequestHandler<AuthorizeResponse, AuthorizationResult> handler = new FutureRequestHandler<>(context.getMessageContext(), CONTINUATION_TIMEOUT);
+        FutureRequestHandler<AuthorizeResponse, AuthorizationResult> handler = new FutureRequestHandler<>(context.getMessageContext(), continuationTimeout);
 
         return handler.handle(future, new CallInitiator() {
                 @Override
@@ -124,7 +124,7 @@ public class CentralSystemService implements io.motown.ocpp.v12.soap.centralsyst
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
         String chargingStationAddress = getChargingStationAddress(context.getMessageContext());
-        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel(), PROTOCOL,
+        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel(), protocol,
                 request.getChargePointSerialNumber(), request.getFirmwareVersion(), request.getIccid(), request.getImsi(), request.getMeterType(), request.getMeterSerialNumber());
 
         BootNotificationResponse response = new BootNotificationResponse();
