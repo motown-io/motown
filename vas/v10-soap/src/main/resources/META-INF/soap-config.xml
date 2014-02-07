@@ -65,6 +65,9 @@
     <rabbit:fanout-exchange id="eventsExchange"
                             name="${io.motown.vas.v10.soap.eventbus.amqp.rabbit.exchange.events.name}"
                             durable="true">
+        <rabbit:bindings>
+            <rabbit:binding queue="queue"/>
+        </rabbit:bindings>
     </rabbit:fanout-exchange>
 
     <axon:event-bus id="eventBus" terminal="terminal"/>
