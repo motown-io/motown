@@ -40,6 +40,12 @@ public class ConfigurationEventListener {
     @Autowired
     private DomainService domainService;
 
+    /**
+     * Handles {@code UnconfiguredChargingStationBootedEvent}s by requesting the domainService for information about
+     * the vendor and model code which should be present in the event attributes.
+     *
+     * @param event
+     */
     @EventHandler
     protected void onEvent(UnconfiguredChargingStationBootedEvent event) {
         LOG.info("Handling UnconfiguredChargingStationBootedEvent");
@@ -55,6 +61,11 @@ public class ConfigurationEventListener {
         }
     }
 
+    /**
+     * Sets the configuration gateway to use when sending out commands.
+     *
+     * @param commandGateway the command gateway.
+     */
     public void setCommandGateway(ConfigurationCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }

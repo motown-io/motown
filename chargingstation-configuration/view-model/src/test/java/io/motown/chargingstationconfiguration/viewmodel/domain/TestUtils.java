@@ -74,8 +74,8 @@ public class TestUtils {
         return evse;
     }
 
-    public static Set<Connector> getConnectors(int numberOfConnectors) {
-        Set<Connector> connectors = new HashSet<>(numberOfConnectors);
+    public static List<Connector> getConnectors(int numberOfConnectors) {
+        List<Connector> connectors = new ArrayList<>(numberOfConnectors);
         for (int i = 0; i < numberOfConnectors; i++) {
             connectors.add(getConnector());
         }

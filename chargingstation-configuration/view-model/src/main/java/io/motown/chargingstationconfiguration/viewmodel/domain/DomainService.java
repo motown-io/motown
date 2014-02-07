@@ -20,6 +20,8 @@ import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Con
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository;
 import io.motown.domain.api.chargingstation.EvseId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,33 +33,64 @@ import java.util.Set;
 @Service
 public class DomainService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(DomainService.class);
+
     @Autowired
     private ChargingStationTypeRepository chargingStationTypeRepository;
 
+    /**
+     * Retrieves a set of {@code io.motown.domain.api.chargingstation.Evse}s based on the vendor and model.
+     *
+     * @param vendor vendor code.
+     * @param model model code.
+     * @return set of Evses if they can be found, otherwise an empty set.
+     */
     public Set<io.motown.domain.api.chargingstation.Evse> getEvses(String vendor, String model) {
-        //TODO how will the database be filled? - Mark van den Bergh, Februari 5th 2014
         List<ChargingStationType> items = chargingStationTypeRepository.findByCodeAndManufacturerCode(model, vendor);
 
         Set<io.motown.domain.api.chargingstation.Evse> result = new HashSet<>();
-        if (items.size() > 0) {
+        int resultSize = items.size();
+
+        if (resultSize > 0) {
             ChargingStationType chargingStationType = items.get(0);
 
             for (Evse evse : chargingStationType.getEvses()) {
-                List<io.motown.domain.api.chargingstation.Connector> connectors = new ArrayList<>(evse.getConnectors().size());
-                for (Connector conn : evse.getConnectors()) {
-                    connectors.add(new io.motown.domain.api.chargingstation.Connector(conn.getMaxAmp(), conn.getPhase(), conn.getVoltage(),
-                            conn.getChargingProtocol(), conn.getCurrent(), conn.getConnectorType()));
-                }
-
-                result.add(new io.motown.domain.api.chargingstation.Evse(new EvseId(evse.getIdentifier()), connectors));
+                result.add(new io.motown.domain.api.chargingstation.Evse(new EvseId(evse.getIdentifier()), convertViewModelConnectorsToDomain(evse.getConnectors())));
             }
+        }
+
+        if (LOG.isWarnEnabled() && resultSize > 1) {
+            LOG.warn("Found more than 1 charging station type for vendor [{}] and model [{}]", vendor, model);
         }
 
         return result;
     }
 
+    /**
+     * Sets the charging station type repository.
+     *
+     * @param chargingStationTypeRepository repository to use.
+     */
     public void setChargingStationTypeRepository(ChargingStationTypeRepository chargingStationTypeRepository) {
         this.chargingStationTypeRepository = chargingStationTypeRepository;
+    }
+
+    /**
+     * Converts a list of {@code Connector}s to a list of {@code io.motown.domain.api.chargingstation.Connector}s for use
+     * in commands.
+     *
+     * @param connectors list of viewmodel connectors
+     * @return list of domain connectors
+     */
+    private List<io.motown.domain.api.chargingstation.Connector> convertViewModelConnectorsToDomain(List<Connector> connectors) {
+        List<io.motown.domain.api.chargingstation.Connector> resultList = new ArrayList<>(connectors.size());
+
+        for (Connector connector : connectors) {
+            resultList.add(new io.motown.domain.api.chargingstation.Connector(connector.getMaxAmp(), connector.getPhase(), connector.getVoltage(),
+                    connector.getChargingProtocol(), connector.getCurrent(), connector.getConnectorType()));
+        }
+
+        return resultList;
     }
 
 }

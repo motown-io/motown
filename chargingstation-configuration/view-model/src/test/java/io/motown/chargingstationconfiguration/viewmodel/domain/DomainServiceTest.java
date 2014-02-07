@@ -54,12 +54,52 @@ public class DomainServiceTest {
     }
 
     @Test
-    public void testGetEvses() {
-        Manufacturer manufacturer = getManufacturerWithConfiguration("motown", "model1");
-
+    public void testGetEvsesForExistingManufacturerAndModel() {
+        Manufacturer manufacturer = getManufacturerWithConfiguration("MOTOWN", "MODEL1");
         manufacturerRepository.saveAndFlush(manufacturer);
 
-        Set<Evse> evses = domainService.getEvses("motown", "model1");
+        Set<Evse> evses = domainService.getEvses("MOTOWN", "MODEL1");
+
+        assertEquals(manufacturer.getChargingStationTypes().get(0).getEvses().size(), evses.size());
+    }
+
+    @Test
+    public void testGetEvsesForNonExistingManufacturerAndModel() {
+        Manufacturer manufacturer = getManufacturerWithConfiguration("MOTOWN", "MODEL1");
+        manufacturerRepository.saveAndFlush(manufacturer);
+
+        Set<Evse> evses = domainService.getEvses("ACMECORP", "TYPE1");
+
+        assertEquals(0, evses.size());
+    }
+
+    @Test
+    public void testGetEvsesForExistingManufacturerAndNonExistingModel() {
+        Manufacturer manufacturer = getManufacturerWithConfiguration("MOTOWN", "MODEL1");
+        manufacturerRepository.saveAndFlush(manufacturer);
+
+        Set<Evse> evses = domainService.getEvses("MOTOWN", "MODEL2");
+
+        assertEquals(0, evses.size());
+    }
+
+    @Test
+    public void testGetEvsesForNonExistingManufacturerAndExistingModel() {
+        Manufacturer manufacturer = getManufacturerWithConfiguration("MOTOWN", "MODEL1");
+        manufacturerRepository.saveAndFlush(manufacturer);
+
+        Set<Evse> evses = domainService.getEvses("ACME", "MODEL1");
+
+        assertEquals(0, evses.size());
+    }
+
+    @Test
+    public void testGetEvsesForDoubleExistingManufacturerAndModel() {
+        Manufacturer manufacturer = getManufacturerWithConfiguration("MOTOWN", "MODEL1");
+        manufacturerRepository.saveAndFlush(manufacturer);
+        manufacturerRepository.saveAndFlush(getManufacturerWithConfiguration("MOTOWN", "MODEL1"));
+
+        Set<Evse> evses = domainService.getEvses("MOTOWN", "MODEL1");
 
         assertEquals(manufacturer.getChargingStationTypes().get(0).getEvses().size(), evses.size());
     }
