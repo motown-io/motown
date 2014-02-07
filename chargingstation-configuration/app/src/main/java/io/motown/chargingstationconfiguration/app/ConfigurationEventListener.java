@@ -70,5 +70,12 @@ public class ConfigurationEventListener {
         this.commandGateway = commandGateway;
     }
 
-
+    /**
+     * Sets the domain service to use.
+     *
+     * @param domainService the domain service.
+     */
+    public void setDomainService(DomainService domainService) {
+        this.domainService = domainService;
+    }
 }
