@@ -38,6 +38,10 @@ public class Evse {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public int getIdentifier() {
         return identifier;
     }
