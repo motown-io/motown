@@ -175,7 +175,7 @@ public class DomainServiceTest {
     public void testStartTransactionInvalidEvse() {
         chargingStationRepository.save(getRegisteredAndConfiguredChargingStation());
 
-        domainService.startTransaction(getChargingStationId(), new EvseId(999), getIdentifyingToken(), 0, new Date(), getReservationId(), getProtocol());
+        domainService.startTransaction(getChargingStationId(), UNKNOWN_EVSE_ID, getIdentifyingToken(), 0, new Date(), getReservationId(), getProtocol());
     }
 
     @Test(expected = IllegalStateException.class)

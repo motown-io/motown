@@ -25,6 +25,16 @@ import java.util.*;
 
 public class TestUtils {
 
+    public static final int TRANSACTION_NUMBER = 123;
+    public static final int MAX_AMP_32 = 32;
+    public static final int PHASE_3 = 3;
+    public static final int VOLTAGE_230 = 230;
+    public static final int NUMBER_OF_RETRIES = 3;
+    public static final int RETRY_INTERVAL = 20;
+    public static final int LIST_VERSION = 1;
+    public static final EvseId UNKNOWN_EVSE_ID = new EvseId(3);
+    public static final int MAX_HOURS = 12;
+
     public static ChargingStation getRegisteredAndConfiguredChargingStation() {
         ChargingStation cs = new ChargingStation(getChargingStationId().getId(), getChargingStationAddress());
         cs.setRegistered(true);
@@ -55,7 +65,7 @@ public class TestUtils {
     }
 
     public static NumberedTransactionId getNumberedTransactionId() {
-        return new NumberedTransactionId(getChargingStationId(), getProtocol(), 123);
+        return new NumberedTransactionId(getChargingStationId(), getProtocol(), TRANSACTION_NUMBER);
     }
 
     public static String getChargingStationAddress() {
@@ -81,7 +91,7 @@ public class TestUtils {
 
     public static Set<Evse> getEvses() {
         List<Connector> connectors = ImmutableList.<Connector>builder()
-                .add(new Connector(32, 3, 230, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_2))
+                .add(new Connector(MAX_AMP_32, PHASE_3, VOLTAGE_230, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_2))
                 .build();
 
         return ImmutableSet.<Evse>builder()
@@ -127,18 +137,6 @@ public class TestUtils {
                 .put("NUM_RETRIES", numberOfRetries)
                 .put("RETRY_INTERVAL", retryInterval)
                 .build();
-    }
-
-    public static Integer getNumberOfRetries() {
-        return 3;
-    }
-
-    public static Integer getRetryInterval() {
-        return 20;
-    }
-
-    public static Integer getListVersion() {
-        return 1;
     }
 
     public static List<IdentifyingToken> getAuthorizationList() {
@@ -205,7 +203,7 @@ public class TestUtils {
     public static List<MeterValue> getMeterValuesList() {
         List<MeterValue> values = new ArrayList<>();
 
-        for (int hour = 1; hour < 12; hour++) {
+        for (int hour = 1; hour < MAX_HOURS; hour++) {
             // make sure dates can be compared to other instances of this list
             Calendar c = new GregorianCalendar();
             c.set(Calendar.HOUR_OF_DAY, hour);

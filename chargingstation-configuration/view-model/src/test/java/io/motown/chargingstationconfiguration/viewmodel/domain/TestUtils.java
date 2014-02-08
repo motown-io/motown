@@ -28,16 +28,21 @@ import java.util.List;
 
 public class TestUtils {
 
+    public static final int MAX_AMP_32 = 32;
+    public static final int NUMBER_OF_CONNECTORS = 3;
+    public static final int PHASE_3 = 3;
+    public static final int VOLTAGE_230 = 230;
+
     public static Manufacturer getManufacturerWithConfiguration(String vendor, String model) {
         Manufacturer manufacturer = getManufacturer(vendor);
 
         ChargingStationType type = getChargingStationType(model);
 
         Evse evseFirst = getEvse(1);
-        evseFirst.setConnectors(getConnectors(3));
+        evseFirst.setConnectors(getConnectors(NUMBER_OF_CONNECTORS));
 
         Evse evseSecond = getEvse(2);
-        evseSecond.setConnectors(getConnectors(3));
+        evseSecond.setConnectors(getConnectors(NUMBER_OF_CONNECTORS));
 
         List<Evse> evses = new ArrayList<>(2);
         evses.add(evseFirst);
@@ -85,9 +90,9 @@ public class TestUtils {
         connector.setChargingProtocol(ChargingProtocol.MODE3);
         connector.setConnectorType(ConnectorType.Tesla_Connector);
         connector.setCurrent(Current.AC);
-        connector.setMaxAmp(32);
-        connector.setPhase(3);
-        connector.setVoltage(230);
+        connector.setMaxAmp(MAX_AMP_32);
+        connector.setPhase(PHASE_3);
+        connector.setVoltage(VOLTAGE_230);
         return connector;
     }
 

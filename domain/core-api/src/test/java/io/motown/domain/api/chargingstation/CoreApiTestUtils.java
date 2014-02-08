@@ -21,6 +21,8 @@ import java.util.Map;
 
 public class CoreApiTestUtils {
 
+    public static final int TRANSACTION_NUMBER = 123;
+
     public static ChargingStationId getChargingStationId() {
         return new ChargingStationId("CS-001");
     }
@@ -30,7 +32,7 @@ public class CoreApiTestUtils {
     }
 
     public static NumberedTransactionId getNumberedTransactionId() {
-        return new NumberedTransactionId(getChargingStationId(), getProtocol(), 123);
+        return new NumberedTransactionId(getChargingStationId(), getProtocol(), TRANSACTION_NUMBER);
     }
 
     public static TextualToken getTextualToken() {

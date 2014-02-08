@@ -19,12 +19,22 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.chargingstation.*;
-import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeUtils;
 
 import java.util.*;
 
 public class ChargingStationTestUtils {
+
+    public static final int TRANSACTION_NUMBER = 123;
+    public static final int MAX_AMP_32 = 32;
+    public static final int PHASE_3 = 3;
+    public static final int VOLTAGE_230 = 230;
+    public static final int FIVE_MINUTES = 300000;
+    public static final Date FIVE_MINUTES_AGO = new Date(DateTimeUtils.currentTimeMillis() - FIVE_MINUTES);
+    public static final int TWO_MINUTES = 120000;
+    public static final Date TWO_MINUTES_AGO = new Date(DateTimeUtils.currentTimeMillis() - TWO_MINUTES);
+    public static final EvseId UNKNOWN_EVSE_ID = new EvseId(3);
+
     public static ChargingStationId getChargingStationId() {
         return new ChargingStationId("CS-001");
     }
@@ -34,7 +44,7 @@ public class ChargingStationTestUtils {
     }
 
     public static NumberedTransactionId getNumberedTransactionId() {
-        return new NumberedTransactionId(getChargingStationId(), getProtocol(), 123);
+        return new NumberedTransactionId(getChargingStationId(), getProtocol(), TRANSACTION_NUMBER);
     }
 
     public static TextualToken getTextualToken() {
@@ -80,7 +90,7 @@ public class ChargingStationTestUtils {
 
     public static Set<Evse> getEvses() {
         List<Connector> connectors = ImmutableList.<Connector>builder()
-                .add(new Connector(32, 3, 230, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_2))
+                .add(new Connector(MAX_AMP_32, PHASE_3, VOLTAGE_230, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_2))
                 .build();
         
         return ImmutableSet.<Evse>builder()
@@ -107,8 +117,8 @@ public class ChargingStationTestUtils {
 
     public static List<MeterValue> getMeterValues() {
         List<MeterValue> meterValues = new ArrayList<>();
-        meterValues.add(new MeterValue(new Date(DateTimeUtils.currentTimeMillis() - (5 * DateTimeConstants.MILLIS_PER_MINUTE)), "100"));
-        meterValues.add(new MeterValue(new Date(DateTimeUtils.currentTimeMillis() - (2 * DateTimeConstants.MILLIS_PER_MINUTE)), "105"));
+        meterValues.add(new MeterValue(FIVE_MINUTES_AGO, "100"));
+        meterValues.add(new MeterValue(TWO_MINUTES_AGO, "105"));
         return meterValues;
     }
 

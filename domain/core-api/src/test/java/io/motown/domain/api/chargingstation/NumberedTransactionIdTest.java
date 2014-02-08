@@ -22,23 +22,26 @@ import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getProtocol;
 
 public class NumberedTransactionIdTest {
 
+    public static final int TRANSACTION_NUMBER = 123;
+    public static final int NEGATIVE_TRANSACTION_NUMBER = -123;
+
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithChargingStationIdNull() {
-        new NumberedTransactionId(null, getProtocol(), 123);
+        new NumberedTransactionId(null, getProtocol(), TRANSACTION_NUMBER);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithProtocolNull() {
-        new NumberedTransactionId(getChargingStationId(), null, 123);
+        new NumberedTransactionId(getChargingStationId(), null, TRANSACTION_NUMBER);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithEmptyProtocol() {
-        new NumberedTransactionId(getChargingStationId(), "", 123);
+        new NumberedTransactionId(getChargingStationId(), "", TRANSACTION_NUMBER);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithNegativeNumber() {
-        new NumberedTransactionId(getChargingStationId(), getProtocol(), -123);
+        new NumberedTransactionId(getChargingStationId(), getProtocol(), NEGATIVE_TRANSACTION_NUMBER);
     }
 }

@@ -21,6 +21,10 @@ import java.util.*;
 
 public class ChargingStationConfiguredEventTest {
 
+    public static final int VOLTAGE_230 = 230;
+    public static final int PHASE_3 = 3;
+    public static final int MAX_AMP_32 = 32;
+
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNullAndEvses() {
         new ChargingStationConfiguredEvent(null, Collections.<Evse>emptySet(), Collections.<String, String>emptyMap());
@@ -44,7 +48,7 @@ public class ChargingStationConfiguredEventTest {
         ChargingStationConfiguredEvent command = new ChargingStationConfiguredEvent(new ChargingStationId("CS-001"), evses, Collections.<String, String>emptyMap());
 
         List<Connector> connectors = new ArrayList<>();
-        connectors.add(new Connector(32, 3, 230, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_2));
+        connectors.add(new Connector(MAX_AMP_32, PHASE_3, VOLTAGE_230, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_2));
         command.getEvses().add(new Evse(new EvseId(1), connectors));
     }
 

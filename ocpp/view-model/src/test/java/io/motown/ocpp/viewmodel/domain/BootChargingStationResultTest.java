@@ -24,15 +24,16 @@ import static org.junit.Assert.assertTrue;
 
 public class BootChargingStationResultTest {
 
+    public static final int FIVE_MINUTES = 900;
+
     @Test
     public void testBootChargingStationResult() {
-        int interval = 900;
         Date now = new Date();
 
-        BootChargingStationResult result = new BootChargingStationResult(true, interval, now);
+        BootChargingStationResult result = new BootChargingStationResult(true, FIVE_MINUTES, now);
 
         assertTrue(result.isAccepted());
-        assertEquals(result.getHeartbeatInterval(), interval);
+        assertEquals(result.getHeartbeatInterval(), FIVE_MINUTES);
         assertEquals(result.getTimeStamp(), now);
     }
 

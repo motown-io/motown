@@ -168,17 +168,17 @@ public class OcppRequestHandlerTest {
 
         verify(client).updateFirmware(getChargingStationId(), getFirmwareUpdateLocation(), retrievedDate, null, null);
 
-        requestHandler.handle(new FirmwareUpdateRequestedEvent(getChargingStationId(), getProtocol(), getFirmwareUpdateLocation(), retrievedDate, getUpdateFirmwareAttributes(getNumberOfRetries().toString().toString(), getRetryInterval().toString())));
+        requestHandler.handle(new FirmwareUpdateRequestedEvent(getChargingStationId(), getProtocol(), getFirmwareUpdateLocation(), retrievedDate, getUpdateFirmwareAttributes(Integer.toString(NUMBER_OF_RETRIES), Integer.toString(RETRY_INTERVAL))));
 
-        verify(client).updateFirmware(getChargingStationId(), getFirmwareUpdateLocation(), retrievedDate, getNumberOfRetries(), getRetryInterval());
+        verify(client).updateFirmware(getChargingStationId(), getFirmwareUpdateLocation(), retrievedDate, NUMBER_OF_RETRIES, RETRY_INTERVAL);
     }
 
     @Test
     public void testAuthorizationListVersionRequestedEvent() {
-        when(client.getAuthorizationListVersion(getChargingStationId())).thenReturn(getListVersion());
+        when(client.getAuthorizationListVersion(getChargingStationId())).thenReturn(LIST_VERSION);
         requestHandler.handle(new AuthorizationListVersionRequestedEvent(getChargingStationId(), getProtocol()));
 
-        verify(domainService).authorizationListVersionReceived(getChargingStationId(), getListVersion());
+        verify(domainService).authorizationListVersionReceived(getChargingStationId(), LIST_VERSION);
     }
 
     @Test
