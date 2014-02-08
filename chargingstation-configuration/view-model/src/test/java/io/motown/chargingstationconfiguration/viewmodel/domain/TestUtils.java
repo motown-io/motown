@@ -24,9 +24,7 @@ import io.motown.domain.api.chargingstation.ConnectorType;
 import io.motown.domain.api.chargingstation.Current;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class TestUtils {
 

@@ -19,11 +19,9 @@ package io.motown.ocpp.soaputils.interceptor;
 import com.sun.org.apache.xerces.internal.dom.*;
 import org.apache.cxf.binding.soap.SoapHeader;
 import org.apache.cxf.headers.Header;
-import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.phase.AbstractPhaseInterceptor;
 import org.apache.cxf.phase.Phase;
-import org.w3c.dom.DOMException;
 
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
