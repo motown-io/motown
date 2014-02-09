@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.v15.soap.centralsystem;
+package io.motown.ocpp.v12.soap.centralsystem;
 
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.chargingstation.MeterValue;
 import io.motown.ocpp.soaputils.async.*;
-import io.motown.ocpp.v15.soap.centralsystem.schema.*;
-import io.motown.ocpp.v15.soap.centralsystem.schema.FirmwareStatus;
+import io.motown.ocpp.v12.soap.centralsystem.schema.*;
+import io.motown.ocpp.v12.soap.centralsystem.schema.FirmwareStatus;
 import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
@@ -44,22 +44,22 @@ import java.util.List;
 @javax.jws.WebService(
         serviceName = "CentralSystemService",
         portName = "CentralSystemServiceSoap12",
-        targetNamespace = "urn://Ocpp/Cs/2012/06/",
-        wsdlLocation = "WEB-INF/wsdl/ocpp_15_centralsystem.wsdl",
-        endpointInterface = "io.motown.ocpp.v15.soap.centralsystem.schema.CentralSystemService")
-public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsystem.schema.CentralSystemService {
+        targetNamespace = "urn://Ocpp/Cs/2010/08/",
+        wsdlLocation = "WEB-INF/wsdl/ocpp_12_centralsystem.wsdl",
+        endpointInterface = "io.motown.ocpp.v12.soap.centralsystem.schema.CentralSystemService")
+public class MotownCentralSystemService implements CentralSystemService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CentralSystemService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MotownCentralSystemService.class);
 
-    private static final String PROTOCOL_IDENTIFIER = "OCPPS15";
+    private static final String PROTOCOL_IDENTIFIER = "OCPPS12";
 
     /**
      * Timeout in milliseconds for the continuation suspend functionality
      */
-    @Value("${io.motown.ocpp.v15.soap.cxf.continuation.timeout}")
+    @Value("${io.motown.ocpp.v12.soap.cxf.continuation.timeout}")
     private int continuationTimeout;
 
-    @Value("${io.motown.ocpp.v15.soap.protocol.identifier}")
+    @Value("${io.motown.ocpp.v12.soap.protocol.identifier}")
     private String protocol;
 
     @Autowired
@@ -69,43 +69,54 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
     private WebServiceContext context;
 
     @Override
-    public DataTransferResponse dataTransfer(DataTransferRequest request, String chargeBoxIdentity) {
-        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
+    public AuthorizeResponse authorize(final AuthorizeRequest request, final String chargeBoxIdentity) {
 
-        domainService.dataTransfer(chargingStationId, request.getData(), request.getVendorId(), request.getMessageId());
+        final AuthorizationFutureEventCallback future = new AuthorizationFutureEventCallback();
+        final ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
-        DataTransferResponse response = new DataTransferResponse();
-        response.setStatus(DataTransferStatus.ACCEPTED);
-        return response;
-    }
+        FutureRequestHandler<AuthorizeResponse, AuthorizationResult> handler = new FutureRequestHandler<>(context.getMessageContext(), continuationTimeout);
 
-    @Override
-    public StatusNotificationResponse statusNotification(StatusNotificationRequest request, String chargeBoxIdentity) {
-        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
-        EvseId evseId = new EvseId(request.getConnectorId());
-        ComponentStatus componentStatus = getComponentStatusFromChargePointStatus(request.getStatus());
-        String errorCode = request.getErrorCode() != null ? request.getErrorCode().value() : null;
+        return handler.handle(future, new CallInitiator() {
+                @Override
+                public void initiateCall() {
+                    domainService.authorize(chargingStationId, request.getIdTag(), future);
+                }
+            }, new FutureResponseFactory<AuthorizeResponse, AuthorizationResult>() {
+                @Override
+                public AuthorizeResponse createResponse(AuthorizationResult futureResponse) {
+                    AuthorizeResponse response = new AuthorizeResponse();
+                    IdTagInfo tagInfo = new IdTagInfo();
+                    switch (futureResponse.getStatus()) {
+                        case ACCEPTED:
+                            tagInfo.setStatus(AuthorizationStatus.ACCEPTED);
+                            break;
+                        case BLOCKED:
+                            tagInfo.setStatus(AuthorizationStatus.BLOCKED);
+                            break;
+                        case EXPIRED:
+                            tagInfo.setStatus(AuthorizationStatus.EXPIRED);
+                            break;
+                        case INVALID:
+                            tagInfo.setStatus(AuthorizationStatus.INVALID);
+                            break;
+                    }
+                    response.setIdTagInfo(tagInfo);
+                    return response;
+                }
+            }, new ResponseFactory<AuthorizeResponse>() {
+                @Override
+                public AuthorizeResponse createResponse() {
+                    LOG.error("Error while handling 'authorize' request, returning invalid for idTag: {}", request.getIdTag());
 
-        domainService.statusNotification(chargingStationId, evseId, errorCode, componentStatus, request.getInfo(), request.getTimestamp(), request.getVendorId(), request.getVendorErrorCode());
-        return new StatusNotificationResponse();
-    }
+                    AuthorizeResponse response = new AuthorizeResponse();
+                    IdTagInfo tagInfo = new IdTagInfo();
+                    tagInfo.setStatus(AuthorizationStatus.INVALID);
+                    response.setIdTagInfo(tagInfo);
 
-    @Override
-    public StopTransactionResponse stopTransaction(StopTransactionRequest request, String chargeBoxIdentity) {
-        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
-        NumberedTransactionId transactionId = new NumberedTransactionId(chargingStationId, PROTOCOL_IDENTIFIER, request.getTransactionId());
-        IdentifyingToken identifyingToken = new TextualToken(request.getIdTag());
-
-        List<MeterValue> meterValues = new ArrayList<>();
-        List<TransactionData> transactionData = request.getTransactionData();
-        for (TransactionData data : transactionData) {
-            for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue mv : data.getValues()){
-                meterValues.add(new MeterValue(mv.getTimestamp(), mv.getValue().toString()));
+                    return response;
+                }
             }
-        }
-
-        domainService.stopTransaction(chargingStationId, transactionId, identifyingToken, request.getMeterStop(), request.getTimestamp(), meterValues);
-        return new StopTransactionResponse();
+        );
     }
 
     @Override
@@ -125,30 +136,6 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
     }
 
     @Override
-    public HeartbeatResponse heartbeat(HeartbeatRequest parameters, String chargeBoxIdentity) {
-        domainService.heartbeat(new ChargingStationId(chargeBoxIdentity));
-
-        HeartbeatResponse response = new HeartbeatResponse();
-        response.setCurrentTime(new Date());
-        return response;
-    }
-
-    @Override
-    public MeterValuesResponse meterValues(MeterValuesRequest request, String chargeBoxIdentity) {
-        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
-        TransactionId transactionId = new NumberedTransactionId(chargingStationId, PROTOCOL_IDENTIFIER, request.getTransactionId());
-
-        List<MeterValue> meterValues = new ArrayList<>();
-        for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue mv : request.getValues()) {
-            meterValues.add(new MeterValue(mv.getTimestamp(), mv.getValue().toString()));
-        }
-
-        domainService.meterValues(chargingStationId, transactionId, new EvseId(request.getConnectorId()), meterValues);
-
-        return new MeterValuesResponse();
-    }
-
-    @Override
     public DiagnosticsStatusNotificationResponse diagnosticsStatusNotification(DiagnosticsStatusNotificationRequest request, String chargeBoxIdentity) {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
         DiagnosticsStatus diagnosticsStatus = request.getStatus();
@@ -156,56 +143,6 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
         domainService.diagnosticsUploadStatusUpdate(chargingStationId, DiagnosticsStatus.UPLOADED.equals(diagnosticsStatus));
 
         return new DiagnosticsStatusNotificationResponse();
-    }
-
-    @Override
-    public AuthorizeResponse authorize(final AuthorizeRequest request, final String chargeBoxIdentity) {
-
-        final AuthorizationFutureEventCallback future = new AuthorizationFutureEventCallback();
-        final ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
-
-        FutureRequestHandler<AuthorizeResponse, AuthorizationResult> handler = new FutureRequestHandler<>(context.getMessageContext(), continuationTimeout);
-
-        return handler.handle(future, new CallInitiator() {
-            @Override
-            public void initiateCall() {
-                domainService.authorize(chargingStationId, request.getIdTag(), future);
-            }
-        }, new FutureResponseFactory<AuthorizeResponse, AuthorizationResult>() {
-            @Override
-            public AuthorizeResponse createResponse(AuthorizationResult futureResponse) {
-                AuthorizeResponse response = new AuthorizeResponse();
-                IdTagInfo tagInfo = new IdTagInfo();
-                switch (futureResponse.getStatus()) {
-                    case ACCEPTED:
-                        tagInfo.setStatus(AuthorizationStatus.ACCEPTED);
-                        break;
-                    case BLOCKED:
-                        tagInfo.setStatus(AuthorizationStatus.BLOCKED);
-                        break;
-                    case EXPIRED:
-                        tagInfo.setStatus(AuthorizationStatus.EXPIRED);
-                        break;
-                    case INVALID:
-                        tagInfo.setStatus(AuthorizationStatus.INVALID);
-                        break;
-                }
-                response.setIdTagInfo(tagInfo);
-                return response;
-            }
-        }, new ResponseFactory<AuthorizeResponse>() {
-            @Override
-            public AuthorizeResponse createResponse() {
-                LOG.error("Error while handling 'authorize' request, returning invalid for idTag: {}", request.getIdTag());
-
-                AuthorizeResponse response = new AuthorizeResponse();
-                IdTagInfo tagInfo = new IdTagInfo();
-                tagInfo.setStatus(AuthorizationStatus.INVALID);
-                response.setIdTagInfo(tagInfo);
-
-                return response;
-            }
-        });
     }
 
     @Override
@@ -235,13 +172,35 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
     }
 
     @Override
+    public HeartbeatResponse heartbeat(HeartbeatRequest parameters, String chargeBoxIdentity) {
+        domainService.heartbeat(new ChargingStationId(chargeBoxIdentity));
+
+        HeartbeatResponse response = new HeartbeatResponse();
+        response.setCurrentTime(new Date());
+        return response;
+    }
+
+    @Override
+    public MeterValuesResponse meterValues(MeterValuesRequest request, String chargeBoxIdentity) {
+        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
+        //OCPP 1.2 does not contain transactionId references in it's metervalue communication
+        TransactionId transactionId = null;
+
+        List<MeterValue> meterValues = new ArrayList<>();
+        for (io.motown.ocpp.v12.soap.centralsystem.schema.MeterValue mv : request.getValues()) {
+            meterValues.add(new MeterValue(mv.getTimestamp(), Integer.toString(mv.getValue())));
+        }
+
+        domainService.meterValues(chargingStationId, transactionId, new EvseId(request.getConnectorId()), meterValues);
+
+        return new MeterValuesResponse();
+    }
+
+    @Override
     public StartTransactionResponse startTransaction(final StartTransactionRequest parameters, final String chargeBoxIdentity) {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
         ReservationId reservationId = null;
-        if (parameters.getReservationId() != null) {
-            reservationId = new NumberedReservationId(chargingStationId, PROTOCOL_IDENTIFIER, parameters.getReservationId());
-        }
 
         int transactionId = domainService.startTransaction(chargingStationId, new EvseId(parameters.getConnectorId()), new TextualToken(parameters.getIdTag()),
                 parameters.getMeterStart(), parameters.getTimestamp(), reservationId, PROTOCOL_IDENTIFIER);
@@ -259,6 +218,35 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
         response.setIdTagInfo(idTagInfo);
         response.setTransactionId(transactionId);
         return response;
+    }
+
+    @Override
+    public StatusNotificationResponse statusNotification(StatusNotificationRequest request, String chargeBoxIdentity) {
+        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
+        EvseId evseId = new EvseId(request.getConnectorId());
+        ComponentStatus componentStatus = getComponentStatusFromChargePointStatus(request.getStatus());
+        String errorCode = request.getErrorCode() != null ? request.getErrorCode().value() : null;
+
+        String info = null;
+        //TODO: OCPP 1.2 does not contain a timestamp. Is it valid to create one here? - Ingo Pak, 16 Jan 2014
+        Date timestamp = new Date();
+        String vendorId = null;
+        String vendorErrorCode = null;
+        domainService.statusNotification(chargingStationId, evseId, errorCode, componentStatus, info, timestamp, vendorId, vendorErrorCode);
+        return new StatusNotificationResponse();
+    }
+
+    @Override
+    public StopTransactionResponse stopTransaction(StopTransactionRequest request, String chargeBoxIdentity) {
+        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
+        NumberedTransactionId transactionId = new NumberedTransactionId(chargingStationId, PROTOCOL_IDENTIFIER, request.getTransactionId());
+        IdentifyingToken identifyingToken = new TextualToken(request.getIdTag());
+
+        //OCPP 1.2 does not include the meter values in a stop transaction message
+        List<MeterValue> meterValues = new ArrayList<>();
+
+        domainService.stopTransaction(chargingStationId, transactionId, identifyingToken, request.getMeterStop(), request.getTimestamp(), meterValues);
+        return new StopTransactionResponse();
     }
 
     /**

@@ -34,9 +34,9 @@ import java.util.List;
         targetNamespace = "urn://Vas/Cs/2010/12/",
         wsdlLocation = "WEB-INF/wsdl/VasPublisherService.wsdl",
         endpointInterface = "io.motown.vas.v10.soap.schema.VasPublisherService")
-public class VasPublisherService implements io.motown.vas.v10.soap.schema.VasPublisherService {
+public class MotownVasPublisherService implements VasPublisherService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(VasPublisherService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MotownVasPublisherService.class);
 
     @Autowired
     private SubscriptionRepository subscriptionRepository;
