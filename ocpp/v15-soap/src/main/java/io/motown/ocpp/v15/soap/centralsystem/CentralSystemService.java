@@ -268,7 +268,7 @@ public class CentralSystemService implements io.motown.ocpp.v15.soap.centralsyst
      * @return charging station address, or empty string if From header is empty or doesn't exist.
      */
     private String getChargingStationAddress(MessageContext messageContext) {
-        if (messageContext == null || !(messageContext instanceof WrappedMessageContext)) {
+        if (!(messageContext instanceof WrappedMessageContext)) {
             LOG.warn("Unable to get message context, or message context is not the right type.");
             return "";
         }

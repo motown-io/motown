@@ -65,7 +65,7 @@ public class AuthorizationEventListenerTest {
         verify(gateway).send(argThat(new ArgumentMatcher<CommandMessage>() {
             @Override
             public boolean matches(Object o) {
-                if (o == null || !(o instanceof GenericCommandMessage)) {
+                if (!(o instanceof GenericCommandMessage)) {
                     return false;
                 }
                 GenericCommandMessage arg = (GenericCommandMessage) o;
@@ -87,7 +87,7 @@ public class AuthorizationEventListenerTest {
         verify(gateway).send(argThat(new ArgumentMatcher<CommandMessage>() {
             @Override
             public boolean matches(Object o) {
-                if (o == null || !(o instanceof GenericCommandMessage)) {
+                if (!(o instanceof GenericCommandMessage)) {
                     return false;
                 }
                 GenericCommandMessage arg = (GenericCommandMessage) o;
@@ -107,7 +107,7 @@ public class AuthorizationEventListenerTest {
         verify(gateway).send(argThat(new ArgumentMatcher<CommandMessage>() {
             @Override
             public boolean matches(Object o) {
-                if (o == null || !(o instanceof GenericCommandMessage)) {
+                if (!(o instanceof GenericCommandMessage)) {
                     return false;
                 }
                 // just verify the meta data size
