@@ -35,9 +35,9 @@ public class AuthorizationEventListenerTest {
 
     private AuthorizationEventListener eventListener;
 
-    IdentificationAuthorizationService service;
+    private IdentificationAuthorizationService service;
 
-    AuthorizationCommandGateway gateway;
+    private AuthorizationCommandGateway gateway;
 
     @Before
     public void setUp() {
