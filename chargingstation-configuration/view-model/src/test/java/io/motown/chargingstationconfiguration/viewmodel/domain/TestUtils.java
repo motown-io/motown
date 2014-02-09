@@ -26,7 +26,7 @@ import io.motown.domain.api.chargingstation.Current;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestUtils {
+public final class TestUtils {
 
     public static final int MAX_AMP_32 = 32;
     public static final int NUMBER_OF_CONNECTORS = 3;

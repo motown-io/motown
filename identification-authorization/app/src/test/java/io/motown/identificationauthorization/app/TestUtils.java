@@ -19,7 +19,7 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.IdentifyingToken;
 import io.motown.domain.api.chargingstation.TextualToken;
 
-public class TestUtils {
+public final class TestUtils {
 
     private TestUtils() {
         // Private no-arg constructor to prevent instantiation of utility class.

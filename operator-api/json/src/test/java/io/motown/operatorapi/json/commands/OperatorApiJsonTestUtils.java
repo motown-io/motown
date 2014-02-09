@@ -27,7 +27,7 @@ import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationR
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class OperatorApiJsonTestUtils {
+public final class OperatorApiJsonTestUtils {
 
     public static final String ISO8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 

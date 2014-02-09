@@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableMap;
 
 import java.util.Map;
 
-public class CoreApiTestUtils {
+public final class CoreApiTestUtils {
 
     public static final int TRANSACTION_NUMBER = 123;
 

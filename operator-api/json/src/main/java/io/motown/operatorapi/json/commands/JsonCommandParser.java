@@ -29,7 +29,7 @@ import java.util.Set;
 /**
  * JSON calls that provide JSON that needs to be constructed into a Axon Command make use of this class.
  */
-public class JsonCommandParser {
+public final class JsonCommandParser {
 
     private JsonCommandParser() {
         // Private no-arg constructor to prevent instantiation of utility class.

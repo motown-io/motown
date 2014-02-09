@@ -23,7 +23,7 @@ import io.motown.vas.viewmodel.persistence.entities.ChargingStation;
 
 import java.util.*;
 
-public class TestUtils {
+public final class TestUtils {
 
     public static final int TRANSACTION_NUMBER = 123;
     public static final int MAX_AMP_32 = 32;

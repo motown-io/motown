@@ -21,7 +21,7 @@ import io.motown.identificationauthorization.cirplugin.cir.schema.ArrayOfCard;
 import io.motown.identificationauthorization.cirplugin.cir.schema.Card;
 import io.motown.identificationauthorization.cirplugin.cir.schema.InquireResult;
 
-public class TestUtils {
+public final class TestUtils {
 
     private TestUtils() {
         // Private no-arg constructor to prevent instantiation of utility class.

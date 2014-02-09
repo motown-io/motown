@@ -23,7 +23,7 @@ import org.joda.time.DateTimeUtils;
 
 import java.util.*;
 
-public class ChargingStationTestUtils {
+public final class ChargingStationTestUtils {
 
     public static final int TRANSACTION_NUMBER = 123;
     public static final int MAX_AMP_32 = 32;

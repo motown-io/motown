@@ -18,7 +18,7 @@ package io.motown.domain.app.axon;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.TextualToken;
 
-public class DomainAppTestUtils {
+public final class DomainAppTestUtils {
 
     private DomainAppTestUtils() {
         // Private no-arg constructor to prevent instantiation of utility class.
