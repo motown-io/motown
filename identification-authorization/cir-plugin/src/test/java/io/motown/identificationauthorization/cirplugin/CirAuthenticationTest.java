@@ -97,14 +97,14 @@ public class CirAuthenticationTest {
 
     @Test
     public void testUnreachableWebService() {
-        CirAuthentication cirAuthentication = new CirAuthentication();
-        cirAuthentication.setCirService(new Service().getServiceSoap());
-        cirAuthentication.setEndpoint("http://localhost");
-        assertFalse(cirAuthentication.isValid(getIdentifyingToken()));
+        CirAuthentication unreachableCirAuthentication = new CirAuthentication();
+        unreachableCirAuthentication.setCirService(new Service().getServiceSoap());
+        unreachableCirAuthentication.setEndpoint("http://localhost");
+        assertFalse(unreachableCirAuthentication.isValid(getIdentifyingToken()));
 
         // also test if cir service hasn't been set yet
-        cirAuthentication.setCirService(null);
-        assertFalse(cirAuthentication.isValid(getIdentifyingToken()));
+        unreachableCirAuthentication.setCirService(null);
+        assertFalse(unreachableCirAuthentication.isValid(getIdentifyingToken()));
     }
 
 }
