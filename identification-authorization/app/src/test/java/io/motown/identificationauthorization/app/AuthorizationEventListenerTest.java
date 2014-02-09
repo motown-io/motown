@@ -65,7 +65,7 @@ public class AuthorizationEventListenerTest {
         verify(gateway).send(argThat(new ArgumentMatcher<CommandMessage>() {
             @Override
             public boolean matches(Object o) {
-                if(o == null || !(o instanceof GenericCommandMessage)) {
+                if (o == null || !(o instanceof GenericCommandMessage)) {
                     return false;
                 }
                 GenericCommandMessage arg = (GenericCommandMessage) o;
@@ -87,7 +87,7 @@ public class AuthorizationEventListenerTest {
         verify(gateway).send(argThat(new ArgumentMatcher<CommandMessage>() {
             @Override
             public boolean matches(Object o) {
-                if(o == null || !(o instanceof GenericCommandMessage)) {
+                if (o == null || !(o instanceof GenericCommandMessage)) {
                     return false;
                 }
                 GenericCommandMessage arg = (GenericCommandMessage) o;
@@ -103,14 +103,11 @@ public class AuthorizationEventListenerTest {
 
         verify(service).isValid(getValidIdentifyingToken());
 
-        final CommandMessage command = asCommandMessage(
-                new GrantAuthorizationCommand(getChargingStationId(), getValidIdentifyingToken()));
-
         // because GenericCommandMessage doesn't implement 'equals' method we have to provide a ArgumentMatcher to validate the argument
         verify(gateway).send(argThat(new ArgumentMatcher<CommandMessage>() {
             @Override
             public boolean matches(Object o) {
-                if(o == null || !(o instanceof GenericCommandMessage)) {
+                if (o == null || !(o instanceof GenericCommandMessage)) {
                     return false;
                 }
                 // just verify the meta data size

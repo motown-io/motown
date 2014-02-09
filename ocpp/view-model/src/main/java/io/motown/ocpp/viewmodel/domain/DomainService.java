@@ -232,7 +232,7 @@ public class DomainService {
             throw new IllegalStateException("Cannot start transaction on a unknown evse.");
         }
 
-        Transaction transaction = createTransaction(chargingStationId, protocolIdentifier, evseId);
+        Transaction transaction = createTransaction(evseId);
         NumberedTransactionId transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, transaction.getId().intValue());
 
         Map<String, String> attributes = Maps.newHashMap();
@@ -359,7 +359,7 @@ public class DomainService {
      * @param evseId             evse identifier that's stored in the transaction
      * @return transaction
      */
-    private Transaction createTransaction(ChargingStationId chargingStationId, String protocolIdentifier, EvseId evseId) {
+    private Transaction createTransaction(EvseId evseId) {
         Transaction transaction = new Transaction();
         transaction.setEvseId(evseId);
 
