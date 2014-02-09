@@ -24,6 +24,7 @@ public class ConfigureChargingStationCommandTest {
     public static final int MAX_AMP_32 = 32;
     public static final int PHASE_3 = 3;
     public static final int VOLTAGE_230 = 230;
+    public static final ChargingStationId CHARGING_STATION_ID = new ChargingStationId("CS-001");
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNullAndEvses() {
@@ -32,12 +33,12 @@ public class ConfigureChargingStationCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithEvsesNull() {
-        new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), null, Collections.<String, String>emptyMap());
+        new ConfigureChargingStationCommand(CHARGING_STATION_ID, null, Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithConfigurationItemsNull() {
-        new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), Collections.<Evse>emptySet(), null);
+        new ConfigureChargingStationCommand(CHARGING_STATION_ID, Collections.<Evse>emptySet(), null);
     }
 
     //TODO refactor
@@ -45,7 +46,7 @@ public class ConfigureChargingStationCommandTest {
     public void unsupportedOperationExceptionThrownWhenModifyingEvses() {
         Set<Evse> evses = new HashSet<>();
 
-        ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), evses);
+        ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(CHARGING_STATION_ID, evses);
 
         List<Connector> connectors = new ArrayList<>();
         connectors.add(new Connector(MAX_AMP_32, PHASE_3, VOLTAGE_230, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_2));
@@ -56,7 +57,7 @@ public class ConfigureChargingStationCommandTest {
     public void unsupportedOperationExceptionThrownWhenModifyingConfigurationItems() {
         Map<String, String> configurationItems = new HashMap<>();
 
-        ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(new ChargingStationId("CS-001"), configurationItems);
+        ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(CHARGING_STATION_ID, configurationItems);
 
         command.getSettings().put("configItem", "configValue");
     }

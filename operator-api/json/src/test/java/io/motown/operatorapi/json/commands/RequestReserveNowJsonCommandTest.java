@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class RequestReserveNowJsonCommandTest {
+    public static final String CHARGING_STATION_ID = "TEST_REGISTERED";
     private Gson gson;
     private RequestReserveNowJsonCommandHandler handler = new RequestReserveNowJsonCommandHandler();
 
@@ -36,24 +37,24 @@ public class RequestReserveNowJsonCommandTest {
     @Test
     public void testCommand() {
         JsonObject commandObject = gson.fromJson("{evseId:'1',identifyingToken:{token:'1'},expiryDate:'2014-02-24T12:00:00Z'}", JsonObject.class);
-        handler.handle("TEST_REGISTERED", commandObject);
+        handler.handle(CHARGING_STATION_ID, commandObject);
     }
 
     @Test(expected = NullPointerException.class)
     public void testCommandNoDate() {
         JsonObject commandObject = gson.fromJson("{evseId:'1',identifyingToken:{token:'1'}}", JsonObject.class);
-        handler.handle("TEST_REGISTERED", commandObject);
+        handler.handle(CHARGING_STATION_ID, commandObject);
     }
 
     @Test(expected = JsonSyntaxException.class)
     public void testCommandInvalidDate() {
         JsonObject commandObject = gson.fromJson("{evseId:'1',identifyingToken:{token:'1'},expiryDate:'2014-02-24'}", JsonObject.class);
-        handler.handle("TEST_REGISTERED", commandObject);
+        handler.handle(CHARGING_STATION_ID, commandObject);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCommandInvalidStatus() {
         JsonObject commandObject = gson.fromJson("{evseId:'1',identifyingToken:{token:'1',status:'NEW'},expiryDate:'2014-02-24'}", JsonObject.class);
-        handler.handle("TEST_REGISTERED", commandObject);
+        handler.handle(CHARGING_STATION_ID, commandObject);
     }
 }

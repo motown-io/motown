@@ -31,12 +31,13 @@ import java.util.List;
 @javax.jws.WebService(
         serviceName = "VasPublisherService",
         portName = "VasPublisherServiceSoap12",
-        targetNamespace = "urn://Vas/Cs/2010/12/",
+        targetNamespace = MotownVasPublisherService.VAS_NAMESPACE,
         wsdlLocation = "WEB-INF/wsdl/VasPublisherService.wsdl",
         endpointInterface = "io.motown.vas.v10.soap.schema.VasPublisherService")
 public class MotownVasPublisherService implements VasPublisherService {
 
     private static final Logger LOG = LoggerFactory.getLogger(MotownVasPublisherService.class);
+    public static final String VAS_NAMESPACE = "urn://Vas/Cs/2010/12/";
 
     @Autowired
     private SubscriptionRepository subscriptionRepository;
@@ -48,7 +49,7 @@ public class MotownVasPublisherService implements VasPublisherService {
     private VasConversionService vasConversionService;
 
     @Override
-    public SubscribeResponse subscribe(@WebParam(partName = "parameters", name = "subscribeRequest", targetNamespace = "urn://Vas/Cs/2010/12/") SubscribeRequest parameters, @WebParam(partName = "SubscriberIdentity", name = "subscriberIdentity", targetNamespace = "urn://Vas/Cs/2010/12/", header = true) String subscriberIdentity) {
+    public SubscribeResponse subscribe(@WebParam(partName = "parameters", name = "subscribeRequest", targetNamespace = VAS_NAMESPACE) SubscribeRequest parameters, @WebParam(partName = "SubscriberIdentity", name = "subscriberIdentity", targetNamespace = VAS_NAMESPACE, header = true) String subscriberIdentity) {
         LOG.info("Subscribing {}", subscriberIdentity);
 
         SubscribeResponse subscribeResponse = new SubscribeResponse();
@@ -73,7 +74,7 @@ public class MotownVasPublisherService implements VasPublisherService {
     }
 
     @Override
-    public GetChargePointInfoResponse getChargePointInfo(@WebParam(partName = "parameters", name = "getChargePointInfoRequest", targetNamespace = "urn://Vas/Cs/2010/12/") GetChargePointInfoRequest parameters, @WebParam(partName = "SubscriberIdentity", name = "subscriberIdentity", targetNamespace = "urn://Vas/Cs/2010/12/", header = true) String subscriberIdentity) {
+    public GetChargePointInfoResponse getChargePointInfo(@WebParam(partName = "parameters", name = "getChargePointInfoRequest", targetNamespace = VAS_NAMESPACE) GetChargePointInfoRequest parameters, @WebParam(partName = "SubscriberIdentity", name = "subscriberIdentity", targetNamespace = VAS_NAMESPACE, header = true) String subscriberIdentity) {
         LOG.info("GetChargePointInfo {}", subscriberIdentity);
 
         //TODO: Right now we return info on all chargingstations known in the system (might have to exclude certain chargingstation 'pools') - Ingo Pak, 24 Jan 2014
@@ -88,7 +89,7 @@ public class MotownVasPublisherService implements VasPublisherService {
     }
 
     @Override
-    public UnsubscribeResponse unsubscribe(@WebParam(partName = "parameters", name = "unsubscribeRequest", targetNamespace = "urn://Vas/Cs/2010/12/") UnsubscribeRequest parameters, @WebParam(partName = "SubscriberIdentity", name = "subscriberIdentity", targetNamespace = "urn://Vas/Cs/2010/12/", header = true) String subscriberIdentity) {
+    public UnsubscribeResponse unsubscribe(@WebParam(partName = "parameters", name = "unsubscribeRequest", targetNamespace = VAS_NAMESPACE) UnsubscribeRequest parameters, @WebParam(partName = "SubscriberIdentity", name = "subscriberIdentity", targetNamespace = VAS_NAMESPACE, header = true) String subscriberIdentity) {
         LOG.info("Unsubscribing {}", subscriberIdentity);
 
         UnsubscribeResponse unsubscribeResponse = new UnsubscribeResponse();

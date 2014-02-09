@@ -22,6 +22,7 @@ import org.junit.Test;
 
 public class SendAuthorizationListCommandTest {
 
+    public static final String CHARGING_STATION_ID = "TEST_CP";
     private Gson gson;
 
     private SendAuthorizationListJsonCommandHandler handler = new SendAuthorizationListJsonCommandHandler();
@@ -37,25 +38,25 @@ public class SendAuthorizationListCommandTest {
     @Test
     public void testSendAuthorizationListCommand() {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'FULL',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
-        handler.handle("TEST_CP", commandObject);
+        handler.handle(CHARGING_STATION_ID, commandObject);
     }
 
     @Test
     public void testDifferentialUpdateType() {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'DIFFERENTIAL',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
-        handler.handle("TEST_CP", commandObject);
+        handler.handle(CHARGING_STATION_ID, commandObject);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidUpdateType() {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'NEW',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
-        handler.handle("TEST_CP", commandObject);
+        handler.handle(CHARGING_STATION_ID, commandObject);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidAuthenticationStatus() {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'FULL',items:[{token:'1',status:'NEW'}]}", JsonObject.class);
-        handler.handle("TEST_CP", commandObject);
+        handler.handle(CHARGING_STATION_ID, commandObject);
     }
 
 }

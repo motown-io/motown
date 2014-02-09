@@ -35,6 +35,10 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DomainServiceTest {
 
+    public static final String VENDOR = "MOTOWN";
+    public static final String MODEL = "MODEL1";
+    public static final String UNKNOWN_VENDOR = "ACMECORP";
+    public static final String UNKNOWN_MODEL = "TYPE1";
     private DomainService domainService;
 
     @Autowired
@@ -54,51 +58,51 @@ public class DomainServiceTest {
 
     @Test
     public void testGetEvsesForExistingManufacturerAndModel() {
-        Manufacturer manufacturer = getManufacturerWithConfiguration("MOTOWN", "MODEL1");
+        Manufacturer manufacturer = getManufacturerWithConfiguration(VENDOR, MODEL);
         manufacturerRepository.saveAndFlush(manufacturer);
 
-        Set<Evse> evses = domainService.getEvses("MOTOWN", "MODEL1");
+        Set<Evse> evses = domainService.getEvses(VENDOR, MODEL);
 
         assertEquals(manufacturer.getChargingStationTypes().get(0).getEvses().size(), evses.size());
     }
 
     @Test
     public void testGetEvsesForNonExistingManufacturerAndModel() {
-        Manufacturer manufacturer = getManufacturerWithConfiguration("MOTOWN", "MODEL1");
+        Manufacturer manufacturer = getManufacturerWithConfiguration(VENDOR, MODEL);
         manufacturerRepository.saveAndFlush(manufacturer);
 
-        Set<Evse> evses = domainService.getEvses("ACMECORP", "TYPE1");
+        Set<Evse> evses = domainService.getEvses(UNKNOWN_VENDOR, UNKNOWN_MODEL);
 
         assertEquals(0, evses.size());
     }
 
     @Test
     public void testGetEvsesForExistingManufacturerAndNonExistingModel() {
-        Manufacturer manufacturer = getManufacturerWithConfiguration("MOTOWN", "MODEL1");
+        Manufacturer manufacturer = getManufacturerWithConfiguration(VENDOR, MODEL);
         manufacturerRepository.saveAndFlush(manufacturer);
 
-        Set<Evse> evses = domainService.getEvses("MOTOWN", "MODEL2");
+        Set<Evse> evses = domainService.getEvses(VENDOR, UNKNOWN_MODEL);
 
         assertEquals(0, evses.size());
     }
 
     @Test
     public void testGetEvsesForNonExistingManufacturerAndExistingModel() {
-        Manufacturer manufacturer = getManufacturerWithConfiguration("MOTOWN", "MODEL1");
+        Manufacturer manufacturer = getManufacturerWithConfiguration(VENDOR, MODEL);
         manufacturerRepository.saveAndFlush(manufacturer);
 
-        Set<Evse> evses = domainService.getEvses("ACME", "MODEL1");
+        Set<Evse> evses = domainService.getEvses(UNKNOWN_VENDOR, MODEL);
 
         assertEquals(0, evses.size());
     }
 
     @Test
     public void testGetEvsesForDoubleExistingManufacturerAndModel() {
-        Manufacturer manufacturer = getManufacturerWithConfiguration("MOTOWN", "MODEL1");
+        Manufacturer manufacturer = getManufacturerWithConfiguration(VENDOR, MODEL);
         manufacturerRepository.saveAndFlush(manufacturer);
-        manufacturerRepository.saveAndFlush(getManufacturerWithConfiguration("MOTOWN", "MODEL1"));
+        manufacturerRepository.saveAndFlush(getManufacturerWithConfiguration(VENDOR, MODEL));
 
-        Set<Evse> evses = domainService.getEvses("MOTOWN", "MODEL1");
+        Set<Evse> evses = domainService.getEvses(VENDOR, MODEL);
 
         assertEquals(manufacturer.getChargingStationTypes().get(0).getEvses().size(), evses.size());
     }

@@ -24,6 +24,7 @@ public class ChargingStationConfiguredEventTest {
     public static final int VOLTAGE_230 = 230;
     public static final int PHASE_3 = 3;
     public static final int MAX_AMP_32 = 32;
+    public static final ChargingStationId CHARGING_STATION_ID = new ChargingStationId("CS-001");
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNullAndEvses() {
@@ -32,12 +33,12 @@ public class ChargingStationConfiguredEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithEvsesNull() {
-        new ChargingStationConfiguredEvent(new ChargingStationId("CS-001"), null, Collections.<String, String>emptyMap());
+        new ChargingStationConfiguredEvent(CHARGING_STATION_ID, null, Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithConfigurationItemsNull() {
-        new ChargingStationConfiguredEvent(new ChargingStationId("CS-001"), Collections.<Evse>emptySet(), null);
+        new ChargingStationConfiguredEvent(CHARGING_STATION_ID, Collections.<Evse>emptySet(), null);
     }
 
     //TODO refactor
@@ -45,7 +46,7 @@ public class ChargingStationConfiguredEventTest {
     public void unsupportedOperationExceptionThrownWhenModifyingEvses() {
         Set<Evse> evses = new HashSet<>();
 
-        ChargingStationConfiguredEvent command = new ChargingStationConfiguredEvent(new ChargingStationId("CS-001"), evses, Collections.<String, String>emptyMap());
+        ChargingStationConfiguredEvent command = new ChargingStationConfiguredEvent(CHARGING_STATION_ID, evses, Collections.<String, String>emptyMap());
 
         List<Connector> connectors = new ArrayList<>();
         connectors.add(new Connector(MAX_AMP_32, PHASE_3, VOLTAGE_230, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_2));
@@ -56,7 +57,7 @@ public class ChargingStationConfiguredEventTest {
     public void unsupportedOperationExceptionThrownWhenModifyingConfigurationItems() {
         Map<String, String> configurationItems = new HashMap<>();
 
-        ChargingStationConfiguredEvent command = new ChargingStationConfiguredEvent(new ChargingStationId("CS-001"), Collections.<Evse>emptySet(), configurationItems);
+        ChargingStationConfiguredEvent command = new ChargingStationConfiguredEvent(CHARGING_STATION_ID, Collections.<Evse>emptySet(), configurationItems);
 
         command.getConfigurationItems().put("configItem", "configValue");
     }
