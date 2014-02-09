@@ -31,6 +31,9 @@ import java.util.Set;
  */
 public class JsonCommandParser {
 
+    private JsonCommandParser() {
+        // Private no-arg constructor to prevent instantiation of utility class.
+    }
 
     /**
      * Parse given JSON and give a ConfigureChargingStationCommand

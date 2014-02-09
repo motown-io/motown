@@ -31,6 +31,10 @@ public class OperatorApiJsonTestUtils {
 
     public static final String ISO8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
+    private OperatorApiJsonTestUtils() {
+        // Private no-arg constructor to prevent instantiation of utility class.
+    }
+
     public static Gson getGson() {
         return new GsonBuilder().
                 setDateFormat(ISO8601_DATE_FORMAT).

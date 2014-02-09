@@ -20,6 +20,10 @@ import io.motown.domain.api.chargingstation.TextualToken;
 
 public class DomainAppTestUtils {
 
+    private DomainAppTestUtils() {
+        // Private no-arg constructor to prevent instantiation of utility class.
+    }
+
     public static ChargingStationId getChargingStationId() {
         return new ChargingStationId("CS-001");
     }

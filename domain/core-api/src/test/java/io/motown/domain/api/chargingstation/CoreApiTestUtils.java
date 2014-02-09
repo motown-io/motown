@@ -23,6 +23,10 @@ public class CoreApiTestUtils {
 
     public static final int TRANSACTION_NUMBER = 123;
 
+    private CoreApiTestUtils() {
+        // Private no-arg constructor to prevent instantiation of utility class.
+    }
+
     public static ChargingStationId getChargingStationId() {
         return new ChargingStationId("CS-001");
     }

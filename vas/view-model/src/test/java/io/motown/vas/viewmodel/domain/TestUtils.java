@@ -31,6 +31,10 @@ public class TestUtils {
     public static final int VOLTAGE_230 = 230;
     public static final int MAX_HOURS = 12;
 
+    private TestUtils() {
+        // Private no-arg constructor to prevent instantiation of utility class.
+    }
+
     public static ChargingStation getRegisteredAndConfiguredChargingStation() {
         ChargingStation cs = new ChargingStation(getChargingStationId().getId(), getChargingStationAddress());
         cs.setRegistered(true);

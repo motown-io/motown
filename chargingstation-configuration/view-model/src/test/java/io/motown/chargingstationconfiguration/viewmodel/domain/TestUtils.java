@@ -33,6 +33,10 @@ public class TestUtils {
     public static final int PHASE_3 = 3;
     public static final int VOLTAGE_230 = 230;
 
+    private TestUtils() {
+        // Private no-arg constructor to prevent instantiation of utility class.
+    }
+
     public static Manufacturer getManufacturerWithConfiguration(String vendor, String model) {
         Manufacturer manufacturer = getManufacturer(vendor);
 

@@ -35,6 +35,10 @@ public class ChargingStationTestUtils {
     public static final Date TWO_MINUTES_AGO = new Date(DateTimeUtils.currentTimeMillis() - TWO_MINUTES);
     public static final EvseId UNKNOWN_EVSE_ID = new EvseId(3);
 
+    private ChargingStationTestUtils() {
+        // Private no-arg constructor to prevent instantiation of utility class.
+    }
+
     public static ChargingStationId getChargingStationId() {
         return new ChargingStationId("CS-001");
     }

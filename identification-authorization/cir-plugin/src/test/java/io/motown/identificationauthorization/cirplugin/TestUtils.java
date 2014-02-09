@@ -23,6 +23,10 @@ import io.motown.identificationauthorization.cirplugin.cir.schema.InquireResult;
 
 public class TestUtils {
 
+    private TestUtils() {
+        // Private no-arg constructor to prevent instantiation of utility class.
+    }
+
     public static IdentifyingToken getIdentifyingToken() {
         return new TextualToken("token");
     }
