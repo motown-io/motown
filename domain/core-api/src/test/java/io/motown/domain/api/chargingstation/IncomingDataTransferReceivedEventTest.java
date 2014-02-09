@@ -22,31 +22,31 @@ import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getVendorId;
 
 public class IncomingDataTransferReceivedEventTest {
 
-    private final String messageId = "MessageId";
-    private final String dataToTransfer = "Data to transfer";
+    private static final String MESSAGE_ID = "MessageId";
+    private static final String DATA_TO_TRANSFER = "Data to transfer";
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenChargingStationIdNull() {
-        new IncomingDataTransferReceivedEvent(null, getVendorId(), messageId, dataToTransfer);
+        new IncomingDataTransferReceivedEvent(null, getVendorId(), MESSAGE_ID, DATA_TO_TRANSFER);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenVendorIdNull() {
-        new IncomingDataTransferReceivedEvent(getChargingStationId(), null, messageId, dataToTransfer);
+        new IncomingDataTransferReceivedEvent(getChargingStationId(), null, MESSAGE_ID, DATA_TO_TRANSFER);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenVendorIdEmpty() {
-        new IncomingDataTransferReceivedEvent(getChargingStationId(), "", messageId, dataToTransfer);
+        new IncomingDataTransferReceivedEvent(getChargingStationId(), "", MESSAGE_ID, DATA_TO_TRANSFER);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenMessageIdNull() {
-        new IncomingDataTransferReceivedEvent(getChargingStationId(), getVendorId(), null, dataToTransfer);
+        new IncomingDataTransferReceivedEvent(getChargingStationId(), getVendorId(), null, DATA_TO_TRANSFER);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenDataNull() {
-        new IncomingDataTransferReceivedEvent(getChargingStationId(), getVendorId(), messageId, null);
+        new IncomingDataTransferReceivedEvent(getChargingStationId(), getVendorId(), MESSAGE_ID, null);
     }
 }

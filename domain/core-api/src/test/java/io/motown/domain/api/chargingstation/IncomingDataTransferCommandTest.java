@@ -22,31 +22,31 @@ import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getVendorId;
 
 public class IncomingDataTransferCommandTest {
 
-    private final String messageId = "MessageId";
-    private final String dataToTransfer = "Data to transfer";
+    private static final String MESSAGE_ID = "MessageId";
+    private static final String DATA_TO_TRANSFER = "Data to transfer";
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenChargingStationIdNull() {
-        new IncomingDataTransferCommand(null, getVendorId(), messageId, dataToTransfer);
+        new IncomingDataTransferCommand(null, getVendorId(), MESSAGE_ID, DATA_TO_TRANSFER);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenVendorIdNull() {
-        new IncomingDataTransferCommand(getChargingStationId(), null, messageId, dataToTransfer);
+        new IncomingDataTransferCommand(getChargingStationId(), null, MESSAGE_ID, DATA_TO_TRANSFER);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenVendorIdEmpty() {
-        new IncomingDataTransferCommand(getChargingStationId(), "", messageId, dataToTransfer);
+        new IncomingDataTransferCommand(getChargingStationId(), "", MESSAGE_ID, DATA_TO_TRANSFER);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenMessageIdNull() {
-        new IncomingDataTransferCommand(getChargingStationId(), getVendorId(), null, dataToTransfer);
+        new IncomingDataTransferCommand(getChargingStationId(), getVendorId(), null, DATA_TO_TRANSFER);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenDataNull() {
-        new IncomingDataTransferCommand(getChargingStationId(), getVendorId(), messageId, null);
+        new IncomingDataTransferCommand(getChargingStationId(), getVendorId(), MESSAGE_ID, null);
     }
 }

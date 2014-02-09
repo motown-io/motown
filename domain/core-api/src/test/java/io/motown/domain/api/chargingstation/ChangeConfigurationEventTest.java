@@ -22,27 +22,27 @@ import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getProtocol;
 
 public class ChangeConfigurationEventTest {
 
-    private final String key = "testKey";
-    private final String value = "testValue";
+    private static final String KEY = "testKey";
+    private static final String VALUE = "testValue";
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ChangeConfigurationEvent(null, getProtocol(), key, value);
+        new ChangeConfigurationEvent(null, getProtocol(), KEY, VALUE);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithProtocolNull() {
-        new ChangeConfigurationEvent(getChargingStationId(), null, key, value);
+        new ChangeConfigurationEvent(getChargingStationId(), null, KEY, VALUE);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithKeyNull() {
-        new ChangeConfigurationEvent(getChargingStationId(), getProtocol(), null, value);
+        new ChangeConfigurationEvent(getChargingStationId(), getProtocol(), null, VALUE);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithValueNull() {
-        new ChangeConfigurationEvent(getChargingStationId(), getProtocol(), key, null);
+        new ChangeConfigurationEvent(getChargingStationId(), getProtocol(), KEY, null);
     }
 
 }

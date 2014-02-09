@@ -21,22 +21,22 @@ import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingS
 
 public class ChangeConfigurationCommandTest {
 
-    private final String key = "testKey";
-    private final String value = "testValue";
+    private static final String KEY = "testKey";
+    private static final String VALUE = "testValue";
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ChangeConfigurationCommand(null, key, value);
+        new ChangeConfigurationCommand(null, KEY, VALUE);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithKeyNull() {
-        new ChangeConfigurationCommand(getChargingStationId(), null, value);
+        new ChangeConfigurationCommand(getChargingStationId(), null, VALUE);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithValueNull() {
-        new ChangeConfigurationCommand(getChargingStationId(), key, null);
+        new ChangeConfigurationCommand(getChargingStationId(), KEY, null);
     }
 
 }
