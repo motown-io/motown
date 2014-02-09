@@ -54,13 +54,13 @@ public class ConfigureJsonCommandHandlerTest {
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void testHandleFaultyPayload() {  // connector not in a list
+    public void throwIllegalArgumentExceptionIfEvsesAreNotInList() {
         JsonObject commandObject = gson.fromJson("{'evses' : {'evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}] }}", JsonObject.class);
         handler.handle("TEST_CP", commandObject);
     }
 
     @Test(expected=JsonSyntaxException.class)
-    public void testHandleFaultyJson() {  // list instead of array
+    public void throwJsonSyntaxExceptionIfEvsesAreInListInsteadOfArray() {
         JsonObject commandObject = gson.fromJson("{'evses' : [{['evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}]}]}]}", JsonObject.class);
         handler.handle("TEST_CP", commandObject);
     }
