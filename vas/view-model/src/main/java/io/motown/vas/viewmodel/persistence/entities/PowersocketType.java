@@ -22,7 +22,7 @@ import io.motown.vas.viewmodel.VasConnectorType;
 import javax.persistence.*;
 
 @Entity
-public class PowersocketType{
+public class PowersocketType {
 
     @Id
     private String id;
@@ -33,7 +33,7 @@ public class PowersocketType{
     private VasChargingCapability vasChargingCapability;
     private CdrChargePointType cdrChargePointType;
 
-    @OneToOne (fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private Powersocket powersocket;
 
@@ -41,10 +41,6 @@ public class PowersocketType{
     private String name;
     private String logoUrl;
     private Integer socketKwh;
-
-    private PowersocketType(){
-        //Private no-arg constructor for Hibernate
-    }
 
     public void setEssentId(Integer essentId) {
         this.essentId = essentId;

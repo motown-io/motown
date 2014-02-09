@@ -38,12 +38,8 @@ public class OpeningTime {
 
     private Integer timeStop;
 
-    private OpeningTime() {
-        // Private no-arg constructor for Hibernate.
-    }
-
     @ManyToOne
-    @JoinColumn(name="id", insertable = false, updatable = false)
+    @JoinColumn(name = "id", insertable = false, updatable = false)
     private ChargingStation chargingStation;
 
     @Transient
