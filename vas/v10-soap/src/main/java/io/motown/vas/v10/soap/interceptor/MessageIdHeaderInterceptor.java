@@ -83,7 +83,7 @@ public class MessageIdHeaderInterceptor extends AbstractPhaseInterceptor<Message
     /**
      * Because all constructors on ElementNSImpl are protected we extend it so we can initiate it locally.
      */
-    public class LocalElementNSImpl extends ElementNSImpl {
+    private static class LocalElementNSImpl extends ElementNSImpl {
 
         protected LocalElementNSImpl(CoreDocumentImpl ownerDocument, String namespaceURI, String qualifiedName, String localName) {
             super(ownerDocument, namespaceURI, qualifiedName, localName);
