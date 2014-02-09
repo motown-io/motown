@@ -298,6 +298,8 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
                     case CONCURRENT_TX:
                         info.setStatus(AuthorizationStatus.CONCURRENT_TX);
                         break;
+                    default:
+                        throw new IllegalArgumentException(String.format("Unknown authentication status [%s] in given identifying token [%s].", identifyingToken.getAuthenticationStatus(), identifyingToken.getToken()));
                 }
                 authData.setIdTagInfo(info);
             }
@@ -348,6 +350,8 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
             case UNAVAILABLE:
                 result = io.motown.domain.api.chargingstation.ReservationStatus.UNAVAILABLE;
                 break;
+            default:
+                throw new IllegalArgumentException(String.format("Unknown response status [%s].", responseStatus));
         }
 
         return result;
