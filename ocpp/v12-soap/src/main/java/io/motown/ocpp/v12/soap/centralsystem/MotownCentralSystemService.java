@@ -81,30 +81,8 @@ public class MotownCentralSystemService implements CentralSystemService {
                 public void initiateCall() {
                     domainService.authorize(chargingStationId, request.getIdTag(), future);
                 }
-            }, new FutureResponseFactory<AuthorizeResponse, AuthorizationResult>() {
-                @Override
-                public AuthorizeResponse createResponse(AuthorizationResult futureResponse) {
-                    AuthorizeResponse response = new AuthorizeResponse();
-                    IdTagInfo tagInfo = new IdTagInfo();
-                    switch (futureResponse.getStatus()) {
-                        case ACCEPTED:
-                            tagInfo.setStatus(AuthorizationStatus.ACCEPTED);
-                            break;
-                        case BLOCKED:
-                            tagInfo.setStatus(AuthorizationStatus.BLOCKED);
-                            break;
-                        case EXPIRED:
-                            tagInfo.setStatus(AuthorizationStatus.EXPIRED);
-                            break;
-                        case INVALID:
-                            tagInfo.setStatus(AuthorizationStatus.INVALID);
-                            break;
-                    }
-                    response.setIdTagInfo(tagInfo);
-                    return response;
-                }
-            }, new ResponseFactory<AuthorizeResponse>() {
-                @Override
+                }, new AuthorizeResponseFactory(), new ResponseFactory<AuthorizeResponse>() {
+                    @Override
                 public AuthorizeResponse createResponse() {
                     LOG.error("Error while handling 'authorize' request, returning invalid for idTag: {}", request.getIdTag());
 
@@ -290,5 +268,29 @@ public class MotownCentralSystemService implements CentralSystemService {
         }
 
         return ComponentStatus.fromValue(value);
+    }
+
+    private static class AuthorizeResponseFactory implements FutureResponseFactory<AuthorizeResponse, AuthorizationResult> {
+        @Override
+        public AuthorizeResponse createResponse(AuthorizationResult futureResponse) {
+            AuthorizeResponse response = new AuthorizeResponse();
+            IdTagInfo tagInfo = new IdTagInfo();
+            switch (futureResponse.getStatus()) {
+                case ACCEPTED:
+                    tagInfo.setStatus(AuthorizationStatus.ACCEPTED);
+                    break;
+                case BLOCKED:
+                    tagInfo.setStatus(AuthorizationStatus.BLOCKED);
+                    break;
+                case EXPIRED:
+                    tagInfo.setStatus(AuthorizationStatus.EXPIRED);
+                    break;
+                case INVALID:
+                    tagInfo.setStatus(AuthorizationStatus.INVALID);
+                    break;
+            }
+            response.setIdTagInfo(tagInfo);
+            return response;
+        }
     }
 }
