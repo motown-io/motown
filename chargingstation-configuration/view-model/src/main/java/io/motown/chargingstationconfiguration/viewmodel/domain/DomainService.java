@@ -20,8 +20,6 @@ import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Con
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository;
 import io.motown.domain.api.chargingstation.EvseId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,8 +31,6 @@ import java.util.Set;
 @Service
 public class DomainService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DomainService.class);
-
     @Autowired
     private ChargingStationTypeRepository chargingStationTypeRepository;
 
@@ -42,7 +38,7 @@ public class DomainService {
      * Retrieves a set of {@code io.motown.domain.api.chargingstation.Evse}s based on the vendor and model.
      *
      * @param vendor vendor code.
-     * @param model model code.
+     * @param model  model code.
      * @return set of Evses if they can be found, otherwise an empty set.
      */
     public Set<io.motown.domain.api.chargingstation.Evse> getEvses(String vendor, String model) {
