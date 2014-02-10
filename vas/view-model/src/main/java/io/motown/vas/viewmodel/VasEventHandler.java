@@ -18,7 +18,7 @@ package io.motown.vas.viewmodel;
 import io.motown.domain.api.chargingstation.ChargingStationAcceptedEvent;
 import io.motown.domain.api.chargingstation.ChargingStationConfiguredEvent;
 import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
-import io.motown.vas.viewmodel.persistence.entities.ChargingStation;
+import io.motown.vas.viewmodel.model.ChargingStation;
 import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;

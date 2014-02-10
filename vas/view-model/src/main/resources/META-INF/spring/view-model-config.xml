@@ -65,7 +65,7 @@
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="packagesToScan" value="io.motown.vas.viewmodel.persistence"/>
+        <property name="packagesToScan" value="io.motown.vas.viewmodel.model"/>
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
                 <property name="database" value="HSQL"/>
@@ -74,7 +74,7 @@
         </property>
     </bean>
 
-    <jpa:repositories base-package="io.motown.vas.viewmodel.persistence"/>
+    <jpa:repositories base-package="io.motown.vas.viewmodel.persistence.repostories"/>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>

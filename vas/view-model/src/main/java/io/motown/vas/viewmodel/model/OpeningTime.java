@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.vas.viewmodel.persistence.entities;
+package io.motown.vas.viewmodel.model;
 
-import io.motown.vas.viewmodel.Day;
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 

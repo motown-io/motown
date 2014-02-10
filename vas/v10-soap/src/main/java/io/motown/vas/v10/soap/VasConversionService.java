@@ -16,13 +16,13 @@
 package io.motown.vas.v10.soap;
 
 import io.motown.vas.v10.soap.schema.*;
-import io.motown.vas.viewmodel.ChargeMode;
-import io.motown.vas.viewmodel.State;
-import io.motown.vas.viewmodel.VasChargingCapability;
-import io.motown.vas.viewmodel.VasConnectorType;
-import io.motown.vas.viewmodel.persistence.entities.ChargingStation;
-import io.motown.vas.viewmodel.persistence.entities.OpeningTime;
-import io.motown.vas.viewmodel.persistence.entities.Powersocket;
+import io.motown.vas.viewmodel.model.ChargeMode;
+import io.motown.vas.viewmodel.model.State;
+import io.motown.vas.viewmodel.model.VasChargingCapability;
+import io.motown.vas.viewmodel.model.VasConnectorType;
+import io.motown.vas.viewmodel.model.ChargingStation;
+import io.motown.vas.viewmodel.model.OpeningTime;
+import io.motown.vas.viewmodel.model.Powersocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -170,7 +170,7 @@ public class VasConversionService {
     }
 
     /**
-     * Maps the {@code io.motown.vas.viewmodel.ChargeMode} to a ChargingMode. If chargeMode is null, 'unspecified' will
+     * Maps the {@code io.motown.vas.viewmodel.model.ChargeMode} to a ChargingMode. If chargeMode is null, 'unspecified' will
      * be returned.
      *
      * @param chargeMode charge mode.

@@ -15,7 +15,7 @@
  */
 package io.motown.vas.viewmodel.persistence.repostories;
 
-import io.motown.vas.viewmodel.persistence.entities.Subscription;
+import io.motown.vas.viewmodel.model.Subscription;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

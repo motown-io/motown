@@ -17,7 +17,7 @@ package io.motown.vas.viewmodel.domain;
 
 import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
 import io.motown.vas.viewmodel.VasEventHandler;
-import io.motown.vas.viewmodel.persistence.entities.ChargingStation;
+import io.motown.vas.viewmodel.model.ChargingStation;
 import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository;
 import org.junit.Before;
 import org.junit.Test;

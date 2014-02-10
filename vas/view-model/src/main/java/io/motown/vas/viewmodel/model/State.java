@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.vas.viewmodel.persistence.repostories;
+package io.motown.vas.viewmodel.model;
 
-import io.motown.vas.viewmodel.model.ChargingStation;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface ChargingStationRepository extends JpaRepository<ChargingStation, String> {
-
-    ChargingStation findById(Long id);
-
+public enum State {
+    NOT_REGISTERED,
+    PLANNED,
+    AVAILABLE,
+    OCCUPIED,
+    RESERVED,
+    UNAVAILABLE,
+    FAULTED,
+    UNKNOWN
 }

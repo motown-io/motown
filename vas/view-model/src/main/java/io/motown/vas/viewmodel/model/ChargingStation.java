@@ -13,13 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.vas.viewmodel.persistence.entities;
+package io.motown.vas.viewmodel.model;
 
 import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.vas.viewmodel.ChargeMode;
-import io.motown.vas.viewmodel.State;
-import io.motown.vas.viewmodel.VasChargingCapability;
-import io.motown.vas.viewmodel.VasConnectorType;
 
 import javax.persistence.*;
 import java.util.List;

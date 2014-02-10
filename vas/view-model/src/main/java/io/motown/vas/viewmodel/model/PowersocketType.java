@@ -13,11 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.vas.viewmodel.persistence.entities;
-
-import io.motown.vas.viewmodel.CdrChargePointType;
-import io.motown.vas.viewmodel.VasChargingCapability;
-import io.motown.vas.viewmodel.VasConnectorType;
+package io.motown.vas.viewmodel.model;
 
 import javax.persistence.*;
 
