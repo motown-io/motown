@@ -35,7 +35,7 @@ import static org.mockito.Mockito.*;
 
 @ContextConfiguration("classpath:ocpp-view-model-test-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class OcppRequestHandlerTest {
+public class Ocpp15RequestHandlerTest {
 
     private Ocpp15RequestHandler requestHandler;
 

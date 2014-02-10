@@ -144,4 +144,8 @@ public class Ocpp12RequestHandler {
     public void setChargingStationOcpp12Client(ChargingStationOcpp12Client chargingStationOcpp12Client) {
         this.chargingStationOcpp12Client = chargingStationOcpp12Client;
     }
+
+    public void setDomainService(DomainService domainService) {
+        this.domainService = domainService;
+    }
 }
