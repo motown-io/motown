@@ -30,6 +30,7 @@ public class ApplicationContextProvider implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext ctx) {
+        // writing to static variable, this is a well-known hack to get Spring context to non-managed classes.
         context = ctx;
     }
 }
