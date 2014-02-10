@@ -58,7 +58,7 @@ public class TestUtils {
     }
 
     public static Connector getConnector() {
-        return new Connector(32, 3, 230, ChargingProtocol.MODE3, Current.AC, ConnectorType.Tesla_Connector);
+        return new Connector(32, 3, 230, ChargingProtocol.MODE3, Current.AC, ConnectorType.TESLA);
     }
 
 }

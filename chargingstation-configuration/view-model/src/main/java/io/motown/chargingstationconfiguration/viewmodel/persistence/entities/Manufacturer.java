@@ -16,7 +16,7 @@
 package io.motown.chargingstationconfiguration.viewmodel.persistence.entities;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Manufacturer {
@@ -29,6 +29,7 @@ public class Manufacturer {
     /**
      * Code of the manufacturer, used to identify which charging station belongs to a manufacturer.
      */
+    @Column(unique=true)
     private String code;
 
     /**
@@ -36,8 +37,9 @@ public class Manufacturer {
      */
     @OneToMany(mappedBy="manufacturer",
                cascade = CascadeType.ALL,
-               targetEntity = ChargingStationType.class)
-    private List<ChargingStationType> chargingStationTypes;
+               targetEntity = ChargingStationType.class,
+                fetch = FetchType.EAGER)
+    private Set<ChargingStationType> chargingStationTypes;
 
     public Long getId() {
         return id;
@@ -51,11 +53,11 @@ public class Manufacturer {
         this.code = code;
     }
 
-    public List<ChargingStationType> getChargingStationTypes() {
+    public Set<ChargingStationType> getChargingStationTypes() {
         return chargingStationTypes;
     }
 
-    public void setChargingStationTypes(List<ChargingStationType> chargingStationTypes) {
+    public void setChargingStationTypes(Set<ChargingStationType> chargingStationTypes) {
         this.chargingStationTypes = chargingStationTypes;
     }
 

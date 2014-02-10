@@ -59,10 +59,6 @@ public class DomainService {
             }
         }
 
-        if (LOG.isWarnEnabled() && resultSize > 1) {
-            LOG.warn("Found more than 1 charging station type for vendor [{}] and model [{}]", vendor, model);
-        }
-
         return result;
     }
 
@@ -76,13 +72,13 @@ public class DomainService {
     }
 
     /**
-     * Converts a list of {@code Connector}s to a list of {@code io.motown.domain.api.chargingstation.Connector}s for use
+     * Converts a set of {@code Connector}s to a list of {@code io.motown.domain.api.chargingstation.Connector}s for use
      * in commands.
      *
-     * @param connectors list of viewmodel connectors
+     * @param connectors set of viewmodel connectors
      * @return list of domain connectors
      */
-    private List<io.motown.domain.api.chargingstation.Connector> convertViewModelConnectorsToDomain(List<Connector> connectors) {
+    private List<io.motown.domain.api.chargingstation.Connector> convertViewModelConnectorsToDomain(Set<Connector> connectors) {
         List<io.motown.domain.api.chargingstation.Connector> resultList = new ArrayList<>(connectors.size());
 
         for (Connector connector : connectors) {

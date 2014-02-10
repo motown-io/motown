@@ -16,8 +16,8 @@
 package io.motown.chargingstationconfiguration.viewmodel.persistence.entities;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Evse {
@@ -29,8 +29,8 @@ public class Evse {
     // TODO it's probably nicer to create a 'real' object for this, just like EvseId (see API). - Mark van den Bergh, Januari 31st 2014
     private int identifier;
 
-    @OneToMany(cascade = CascadeType.ALL, targetEntity = Connector.class)
-    private List<Connector> connectors = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = Connector.class, fetch = FetchType.EAGER)
+    private Set<Connector> connectors = new HashSet<>();
 
     public Evse() {}
 
@@ -50,11 +50,11 @@ public class Evse {
         this.identifier = identifier;
     }
 
-    public List<Connector> getConnectors() {
+    public Set<Connector> getConnectors() {
         return connectors;
     }
 
-    public void setConnectors(List<Connector> connectors) {
+    public void setConnectors(Set<Connector> connectors) {
         this.connectors = connectors;
     }
 

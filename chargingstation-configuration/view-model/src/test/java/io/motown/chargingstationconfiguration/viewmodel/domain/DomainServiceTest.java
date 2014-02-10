@@ -62,8 +62,11 @@ public class DomainServiceTest {
         manufacturerRepository.saveAndFlush(manufacturer);
 
         Set<Evse> evses = domainService.getEvses(VENDOR, MODEL);
+        assertEquals(manufacturer.getChargingStationTypes().iterator().next().getEvses().size(), evses.size());
 
-        assertEquals(manufacturer.getChargingStationTypes().get(0).getEvses().size(), evses.size());
+        // validate consistent results
+        evses = domainService.getEvses(VENDOR, MODEL);
+        assertEquals(manufacturer.getChargingStationTypes().iterator().next().getEvses().size(), evses.size());
     }
 
     @Test
@@ -94,17 +97,6 @@ public class DomainServiceTest {
         Set<Evse> evses = domainService.getEvses(UNKNOWN_VENDOR, MODEL);
 
         assertEquals(0, evses.size());
-    }
-
-    @Test
-    public void testGetEvsesForDoubleExistingManufacturerAndModel() {
-        Manufacturer manufacturer = getManufacturerWithConfiguration(VENDOR, MODEL);
-        manufacturerRepository.saveAndFlush(manufacturer);
-        manufacturerRepository.saveAndFlush(getManufacturerWithConfiguration(VENDOR, MODEL));
-
-        Set<Evse> evses = domainService.getEvses(VENDOR, MODEL);
-
-        assertEquals(manufacturer.getChargingStationTypes().get(0).getEvses().size(), evses.size());
     }
 
 }

@@ -23,8 +23,8 @@ import io.motown.domain.api.chargingstation.ChargingProtocol;
 import io.motown.domain.api.chargingstation.ConnectorType;
 import io.motown.domain.api.chargingstation.Current;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public final class TestUtils {
 
@@ -39,7 +39,12 @@ public final class TestUtils {
 
     public static Manufacturer getManufacturerWithConfiguration(String vendor, String model) {
         Manufacturer manufacturer = getManufacturer(vendor);
+        manufacturer.setChargingStationTypes(getChargingStationTypes(manufacturer, model));
 
+        return manufacturer;
+    }
+
+    public static Set<ChargingStationType> getChargingStationTypes(Manufacturer manufacturer, String model) {
         ChargingStationType type = getChargingStationType(model);
 
         Evse evseFirst = getEvse(1);
@@ -48,19 +53,16 @@ public final class TestUtils {
         Evse evseSecond = getEvse(2);
         evseSecond.setConnectors(getConnectors(NUMBER_OF_CONNECTORS));
 
-        List<Evse> evses = new ArrayList<>(2);
+        Set<Evse> evses = new HashSet<>(2);
         evses.add(evseFirst);
         evses.add(evseSecond);
 
         type.setEvses(evses);
         type.setManufacturer(manufacturer);
 
-        List<ChargingStationType> types = new ArrayList<>();
+        Set<ChargingStationType> types = new HashSet<>();
         types.add(type);
-
-        manufacturer.setChargingStationTypes(types);
-
-        return manufacturer;
+        return types;
     }
 
     public static Manufacturer getManufacturer(String code) {
@@ -81,8 +83,8 @@ public final class TestUtils {
         return evse;
     }
 
-    public static List<Connector> getConnectors(int numberOfConnectors) {
-        List<Connector> connectors = new ArrayList<>(numberOfConnectors);
+    public static Set<Connector> getConnectors(int numberOfConnectors) {
+        Set<Connector> connectors = new HashSet<>(numberOfConnectors);
         for (int i = 0; i < numberOfConnectors; i++) {
             connectors.add(getConnector());
         }
@@ -92,7 +94,7 @@ public final class TestUtils {
     public static Connector getConnector() {
         Connector connector = new Connector();
         connector.setChargingProtocol(ChargingProtocol.MODE3);
-        connector.setConnectorType(ConnectorType.Tesla_Connector);
+        connector.setConnectorType(ConnectorType.TESLA);
         connector.setCurrent(Current.AC);
         connector.setMaxAmp(MAX_AMP_32);
         connector.setPhase(PHASE_3);

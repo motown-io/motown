@@ -16,10 +16,13 @@
 package io.motown.chargingstationconfiguration.viewmodel.persistence.entities;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
+@Table(uniqueConstraints=
+    @UniqueConstraint(columnNames = {"code", "manufacturerId"})
+)
 public class ChargingStationType {
 
     @Id
@@ -27,13 +30,13 @@ public class ChargingStationType {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="id", insertable = false, updatable = false)
+    @JoinColumn(name="manufacturerId")
     private Manufacturer manufacturer;
 
     private String code;
 
-    @OneToMany(cascade = CascadeType.ALL, targetEntity = Evse.class)
-    private List<Evse> evses = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = Evse.class, fetch = FetchType.EAGER)
+    private Set<Evse> evses = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -59,11 +62,11 @@ public class ChargingStationType {
         this.code = code;
     }
 
-    public List<Evse> getEvses() {
+    public Set<Evse> getEvses() {
         return evses;
     }
 
-    public void setEvses(List<Evse> evses) {
+    public void setEvses(Set<Evse> evses) {
         this.evses = evses;
     }
 }

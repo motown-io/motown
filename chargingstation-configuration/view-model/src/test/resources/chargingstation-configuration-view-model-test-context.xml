@@ -20,11 +20,6 @@
                 <property name="generateDdl" value="true"/>
             </bean>
         </property>
-        <property name="jpaProperties">
-            <props>
-                <prop key="hibernate.enable_lazy_load_no_trans">true</prop>
-            </props>
-        </property>
     </bean>
 
     <jpa:repositories base-package="io.motown.chargingstationconfiguration.viewmodel.persistence"/>
@@ -34,9 +29,10 @@
     </bean>
 
     <jdbc:embedded-database id="dataSource" type="HSQL">
-        <!--<jdbc:script location="hsqldb/schema.sql" />-->
+        <jdbc:script location="hsqldb/schema.sql" />
         <!--&lt;!&ndash; use a script with data to make tests as close to the 'real' code as possible &ndash;&gt;-->
         <!--<jdbc:script location="hsqldb/testData.sql" />-->
     </jdbc:embedded-database>
+
 
 </beans>

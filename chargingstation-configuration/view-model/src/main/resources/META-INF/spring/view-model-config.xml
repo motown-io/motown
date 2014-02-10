@@ -22,11 +22,6 @@
                 <property name="generateDdl" value="true"/>
             </bean>
         </property>
-        <property name="jpaProperties">
-            <props>
-                <prop key="hibernate.enable_lazy_load_no_trans">true</prop>
-            </props>
-        </property>
     </bean>
 
     <jpa:repositories base-package="io.motown.chargingstationconfiguration.viewmodel.persistence"/>

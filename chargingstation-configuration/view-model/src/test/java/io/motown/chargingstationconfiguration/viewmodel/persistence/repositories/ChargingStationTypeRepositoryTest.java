@@ -21,11 +21,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
+import java.util.Set;
 
+import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.getChargingStationTypes;
 import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.getManufacturerWithConfiguration;
 import static org.junit.Assert.*;
 
@@ -60,8 +63,22 @@ public class ChargingStationTypeRepositoryTest {
         assertNotNull(chargingStationType.getId());
         assertEquals(typeCode, chargingStationType.getCode());
         assertEquals(manufacturerCode, chargingStationType.getManufacturer().getCode());
-        assertTrue(chargingStationType.getEvses().get(0).getId() > 0);
-        assertTrue(chargingStationType.getEvses().get(0).getConnectors().get(0).getId() > 0);
+        assertTrue(chargingStationType.getEvses().iterator().next().getId() > 0);
+        assertTrue(chargingStationType.getEvses().iterator().next().getConnectors().iterator().next().getId() > 0);
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    public void testUniquenessOfManufacturerAndChargingStationType() {
+        String typeCode = "MODEL1";
+        String manufacturerCode = "MOTOWN";
+
+        Manufacturer manufacturer = getManufacturerWithConfiguration(manufacturerCode, typeCode);
+        manufacturerRepository.saveAndFlush(manufacturer);
+
+        Set<ChargingStationType> chargingStationTypes = getChargingStationTypes(manufacturer, "MODEL1");
+        for (ChargingStationType type : chargingStationTypes) {
+            chargingStationTypeRepository.saveAndFlush(type);
+        }
     }
 
 }
