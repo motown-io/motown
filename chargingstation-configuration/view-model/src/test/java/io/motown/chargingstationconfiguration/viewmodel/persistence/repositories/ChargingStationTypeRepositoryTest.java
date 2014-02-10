@@ -63,8 +63,8 @@ public class ChargingStationTypeRepositoryTest {
         assertNotNull(chargingStationType.getId());
         assertEquals(typeCode, chargingStationType.getCode());
         assertEquals(manufacturerCode, chargingStationType.getManufacturer().getCode());
-        assertTrue(chargingStationType.getEvses().iterator().next().getId() > 0);
-        assertTrue(chargingStationType.getEvses().iterator().next().getConnectors().iterator().next().getId() > 0);
+        assertNotNull(chargingStationType.getEvses().iterator().next());
+        assertNotNull(chargingStationType.getEvses().iterator().next().getConnectors().iterator().next());
     }
 
     @Test(expected = DataIntegrityViolationException.class)
