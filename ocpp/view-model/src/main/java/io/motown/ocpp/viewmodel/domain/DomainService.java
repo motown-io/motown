@@ -289,7 +289,7 @@ public class DomainService {
         commandGateway.send(new ChangeAvailabilityToInoperativeStatusChangedCommand(chargingStationId, requestStatus));
     }
 
-    public void dateTransferStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
+    public void dataTransferStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
         commandGateway.send(new DataTransferStatusChangedCommand(chargingStationId, requestStatus));
     }
 
@@ -307,6 +307,10 @@ public class DomainService {
 
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
+    }
+
+    public void setEventWaitingGateway(EventWaitingGateway eventWaitingGateway) {
+        this.eventWaitingGateway = eventWaitingGateway;
     }
 
     public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {
@@ -354,8 +358,6 @@ public class DomainService {
      * Creates a transaction based on the charging station and protocol identifier. The evse identifier is
      * stored for later usage.
      *
-     * @param chargingStationId  charging station identifier to use when generating a transaction identifier.
-     * @param protocolIdentifier identifier of the protocol, used when generating a transaction identifier.
      * @param evseId             evse identifier that's stored in the transaction
      * @return transaction
      */

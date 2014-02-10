@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
+import org.axonframework.domain.EventMessage;
 
 import java.util.*;
 
@@ -106,6 +107,10 @@ public final class TestUtils {
 
     public static EvseId getEvseId() {
         return new EvseId(1);
+    }
+
+    public static EvseId getChargingStationComponentId() {
+        return new EvseId(DomainService.CHARGING_STATION_EVSE_ID);
     }
 
     public static int getReservationNumber() {
@@ -219,5 +224,30 @@ public final class TestUtils {
             values.add(new MeterValue(date, "10"));
         }
         return values;
+    }
+
+    public static String getDiagnosticsFileName() {
+        return "file.txt";
+    }
+
+    public static String getStatusNotifactionErrorCode() {
+        return "ConnectorLockFailure";
+    }
+
+    public static String getStatusNotificationInfo() {
+        return "Lock failed";
+    }
+
+    public static String getVendorErrorCode() {
+        return "001";
+    }
+
+    public static FutureEventCallback getFutureEventCallback() {
+        return new FutureEventCallback() {
+            @Override
+            public boolean onEvent(EventMessage<?> event) {
+                return false;
+            }
+        };
     }
 }

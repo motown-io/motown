@@ -17,6 +17,8 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -57,5 +59,22 @@ public final class AuthorizationListVersionReceivedCommand {
      */
     public int getVersion() {
         return version;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, version);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final AuthorizationListVersionReceivedCommand other = (AuthorizationListVersionReceivedCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.version, other.version);
     }
 }

@@ -20,6 +20,7 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -88,5 +89,22 @@ public abstract class StatusNotificationCommand {
      */
     public Map<String, String> getAttributes() {
         return attributes;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, status, timestamp, attributes);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final StatusNotificationCommand other = (StatusNotificationCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.status, other.status) && Objects.equals(this.timestamp, other.timestamp) && Objects.equals(this.attributes, other.attributes);
     }
 }

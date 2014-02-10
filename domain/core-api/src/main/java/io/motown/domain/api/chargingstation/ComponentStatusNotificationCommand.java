@@ -17,6 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -63,6 +64,23 @@ public final class ComponentStatusNotificationCommand extends StatusNotification
      */
     public ComponentId getComponentId() {
         return componentId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(component, componentId);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final ComponentStatusNotificationCommand other = (ComponentStatusNotificationCommand) obj;
+        return Objects.equals(this.component, other.component) && Objects.equals(this.componentId, other.componentId);
     }
 
 }

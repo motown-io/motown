@@ -113,7 +113,7 @@ public class Ocpp15RequestHandler {
         LOG.info("DataTransferEvent");
         RequestStatus requestStatus = chargingStationOcpp15Client.dataTransfer(event.getChargingStationId(), event.getVendorId(), event.getMessageId(), event.getData());
 
-        domainService.dateTransferStatusChanged(event.getChargingStationId(), requestStatus);
+        domainService.dataTransferStatusChanged(event.getChargingStationId(), requestStatus);
     }
 
     @EventHandler
