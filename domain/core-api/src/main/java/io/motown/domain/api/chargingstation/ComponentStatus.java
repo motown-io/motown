@@ -51,7 +51,7 @@ public enum ComponentStatus {
      */
     FAULTED("Faulted");
 
-    private String value;
+    private final String value;
 
     private ComponentStatus(String value) {
         this.value = value;
@@ -68,21 +68,13 @@ public enum ComponentStatus {
     public static ComponentStatus fromValue(String value) {
         checkNotNull(value);
 
-        if (value.equalsIgnoreCase(UNKNOWN.value)) {
-            return UNKNOWN;
-        } else if (value.equalsIgnoreCase(AVAILABLE.value)) {
-            return AVAILABLE;
-        } else if (value.equalsIgnoreCase(OCCUPIED.value)) {
-            return OCCUPIED;
-        } else if (value.equalsIgnoreCase(RESERVED.value)) {
-            return RESERVED;
-        } else if (value.equalsIgnoreCase(INOPERATIVE.value)) {
-            return INOPERATIVE;
-        } else if (value.equalsIgnoreCase(FAULTED.value)) {
-            return FAULTED;
-        } else {
-            throw new IllegalArgumentException("Component status value must be one of the known statuses");
+        for (ComponentStatus status : values()) {
+            if (status.value.equalsIgnoreCase(value)) {
+                return status;
+            }
         }
+
+        throw new IllegalArgumentException("Component status value must be one of the known statuses");
     }
 
     /**
