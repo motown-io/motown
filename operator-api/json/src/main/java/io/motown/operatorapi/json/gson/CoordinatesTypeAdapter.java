@@ -30,7 +30,7 @@ public class CoordinatesTypeAdapter implements TypeAdapter<Coordinates> {
     }
 
     @Override
-    public Coordinates deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    public Coordinates deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
         JsonObject obj;
 
         try {

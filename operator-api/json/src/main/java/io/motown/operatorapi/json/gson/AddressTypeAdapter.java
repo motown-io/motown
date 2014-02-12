@@ -27,7 +27,7 @@ public class AddressTypeAdapter implements TypeAdapter<Address> {
     }
 
     @Override
-    public Address deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    public Address deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
         JsonObject obj;
 
         try {
