@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.motown.ocpp.v15.soap.chargepoint;
 
 import com.google.common.collect.Maps;
@@ -21,16 +20,11 @@ import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
-import org.apache.cxf.binding.soap.Soap12;
-import org.apache.cxf.binding.soap.SoapBindingConfiguration;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.xml.ws.BindingProvider;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +38,9 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
     @Autowired
     private DomainService domainService;
+
+    @Autowired
+    private ChargingStationProxyFactory chargingStationProxyFactory;
 
     public Map<String, String> getConfiguration(ChargingStationId id) {
         LOG.info("Retrieving configuration for {}", id);
@@ -258,6 +255,8 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     public RequestStatus sendAuthorizationList(ChargingStationId id, String hash, int listVersion, List<IdentifyingToken> identifyingTokens, AuthorizationListUpdateType updateType) {
         ChargePointService chargePointService = this.createChargingStationService(id);
 
+        //TODO refactor this method so it's less complex and easier to test. - Mark van den Bergh, Februari 12th 2014
+
         SendLocalListRequest request = new SendLocalListRequest();
         request.setHash(hash);
         request.setListVersion(listVersion);
@@ -332,7 +331,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         request.setReservationId(reservationId);
 
         io.motown.ocpp.v15.soap.chargepoint.schema.ReservationStatus responseStatus = chargePointService.reserveNow(request, id.getId()).getStatus();
-        io.motown.domain.api.chargingstation.ReservationStatus result = null;
+        io.motown.domain.api.chargingstation.ReservationStatus result;
 
         switch (responseStatus) {
             case ACCEPTED:
@@ -355,6 +354,14 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         }
 
         return result;
+    }
+
+    public void setDomainService(DomainService domainService) {
+        this.domainService = domainService;
+    }
+
+    public void setChargingStationProxyFactory(ChargingStationProxyFactory chargingStationProxyFactory) {
+        this.chargingStationProxyFactory = chargingStationProxyFactory;
     }
 
     private RequestStatus reset(ChargingStationId id, ResetType type) {
@@ -394,22 +401,8 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
      * @param id charging station identifier
      * @return charging station web service proxy
      */
-    protected ChargePointService createChargingStationService(ChargingStationId id) {
-        JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
-        factory.setServiceClass(ChargePointService.class);
-
-        factory.setAddress(domainService.retrieveChargingStationAddress(id));
-
-        SoapBindingConfiguration conf = new SoapBindingConfiguration();
-        conf.setVersion(Soap12.getInstance());
-        factory.setBindingConfig(conf);
-        factory.getFeatures().add(new WSAddressingFeature());
-        ChargePointService chargePointService = (ChargePointService) factory.create();
-
-        //Force the use of the Async transport, even for synchronous calls
-        ((BindingProvider) chargePointService).getRequestContext().put("use.async.http.conduit", Boolean.TRUE);
-
-        return chargePointService;
+    private ChargePointService createChargingStationService(ChargingStationId id) {
+        return chargingStationProxyFactory.createChargingStationService(domainService.retrieveChargingStationAddress(id));
     }
 
 }
