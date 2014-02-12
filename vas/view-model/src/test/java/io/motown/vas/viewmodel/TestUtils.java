@@ -33,7 +33,7 @@ public final class TestUtils {
 
     public static final Coordinates COORDINATES = new Coordinates(52.3702157, 4.895167899999933);
 
-    public static final Address ADDRESS = new Address("Address line 1", null, "POSTALCODE", "City", "Region", "Country");
+    public static final Address ADDRESS = new Address("Address line 1", "Address line 2", "POSTALCODE", "City", "Region", "Country");
 
     private TestUtils() {
         // Private no-arg constructor to prevent instantiation of utility class.
