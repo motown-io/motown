@@ -15,29 +15,7 @@
  */
 package io.motown.operatorapi.viewmodel.model;
 
-import io.motown.domain.api.chargingstation.Address;
-import io.motown.domain.api.chargingstation.Coordinates;
-
-public class ImproveChargingStationLocationApiCommand implements ApiCommand {
-    private Coordinates coordinates;
-    private Address address;
-
+public class ImproveChargingStationLocationApiCommand extends GenericChargingStationLocationApiCommand {
     public ImproveChargingStationLocationApiCommand() {
-    }
-
-    public Coordinates getCoordinates() {
-        return coordinates;
-    }
-
-    public void setCoordinates(Coordinates coordinates) {
-        this.coordinates = coordinates;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
     }
 }
