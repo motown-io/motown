@@ -15,52 +15,9 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import com.google.common.base.Objects;
-import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-public final class PlaceChargingStationCommand {
-
-    @TargetAggregateIdentifier
-    private final ChargingStationId chargingStationId;
-    private final Coordinates coordinates;
-    private final Address address;
+public final class PlaceChargingStationCommand extends GenericChargingStationLocationCommand {
 
     public PlaceChargingStationCommand(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
-        this.chargingStationId = checkNotNull(chargingStationId);
-        checkArgument(coordinates != null || address != null);
-        this.coordinates = coordinates;
-        this.address = address;
-    }
-
-    public ChargingStationId getChargingStationId() {
-        return chargingStationId;
-    }
-
-    public Coordinates getCoordinates() {
-        return coordinates;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(chargingStationId, coordinates, address);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        final PlaceChargingStationCommand other = (PlaceChargingStationCommand) obj;
-        return Objects.equal(this.chargingStationId, other.chargingStationId) && Objects.equal(this.coordinates, other.coordinates) && Objects.equal(this.address, other.address);
+        super(chargingStationId, coordinates, address);
     }
 }

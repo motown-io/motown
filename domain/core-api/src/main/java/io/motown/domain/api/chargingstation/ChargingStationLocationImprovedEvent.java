@@ -15,26 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
-public final class ChargingStationLocationImprovedEvent {
-    private final ChargingStationId chargingStationId;
-    private final Coordinates coordinates;
-    private final Address address;
-
+public final class ChargingStationLocationImprovedEvent extends GenericChargingStationLocationEvent {
     public ChargingStationLocationImprovedEvent(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
-        this.chargingStationId = chargingStationId;
-        this.coordinates = coordinates;
-        this.address = address;
-    }
-
-    public ChargingStationId getChargingStationId() {
-        return chargingStationId;
-    }
-
-    public Coordinates getCoordinates() {
-        return coordinates;
-    }
-
-    public Address getAddress() {
-        return address;
+        super(chargingStationId, coordinates, address);
     }
 }

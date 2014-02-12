@@ -15,30 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-public final class ChargingStationPlacedEvent {
-    private final ChargingStationId chargingStationId;
-    private final Coordinates coordinates;
-    private final Address address;
-
+public final class ChargingStationPlacedEvent extends GenericChargingStationLocationEvent {
     public ChargingStationPlacedEvent(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
-        this.chargingStationId = checkNotNull(chargingStationId);
-        checkArgument(coordinates != null || address != null);
-        this.coordinates = coordinates;
-        this.address = address;
-    }
-
-    public ChargingStationId getChargingStationId() {
-        return chargingStationId;
-    }
-
-    public Coordinates getCoordinates() {
-        return coordinates;
-    }
-
-    public Address getAddress() {
-        return address;
+        super(chargingStationId, coordinates, address);
     }
 }
