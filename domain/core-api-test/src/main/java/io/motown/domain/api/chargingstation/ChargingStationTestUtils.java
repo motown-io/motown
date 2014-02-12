@@ -188,6 +188,36 @@ public final class ChargingStationTestUtils {
     public static final TextualToken INVALID_IDENTIFYING_TOKEN = new TextualToken("INVALID");
 
     /**
+     * The default identifying token, status ACCEPTED.
+     */
+    public static final IdentifyingToken IDENTIFYING_TOKEN_ACCEPTED = new TextualToken("ACCEPTED", IdentifyingToken.AuthenticationStatus.ACCEPTED);
+
+    /**
+     * The default identifying token, status BLOCKED.
+     */
+    public static final IdentifyingToken IDENTIFYING_TOKEN_BLOCKED = new TextualToken("BLOCKED", IdentifyingToken.AuthenticationStatus.BLOCKED);
+
+    /**
+     * The default identifying token, status CONCURRENT_TX.
+     */
+    public static final IdentifyingToken IDENTIFYING_TOKEN_CONCURRENT_TX = new TextualToken("CONCURRENT_TX", IdentifyingToken.AuthenticationStatus.CONCURRENT_TX);
+
+    /**
+     * The default identifying token, status DELETED.
+     */
+    public static final IdentifyingToken IDENTIFYING_TOKEN_DELETED = new TextualToken("DELETED", IdentifyingToken.AuthenticationStatus.DELETED);
+
+    /**
+     * The default identifying token, status EXPIRED.
+     */
+    public static final IdentifyingToken IDENTIFYING_TOKEN_EXPIRED = new TextualToken("EXPIRED", IdentifyingToken.AuthenticationStatus.EXPIRED);
+
+    /**
+     * The default identifying token, status INVALID.
+     */
+    public static final IdentifyingToken IDENTIFYING_TOKEN_INVALID = new TextualToken("INVALID", IdentifyingToken.AuthenticationStatus.INVALID);
+
+    /**
      * The default coordinates.
      */
     public static final Coordinates COORDINATES = new Coordinates(52.3702157, 4.895167899999933);
@@ -196,6 +226,14 @@ public final class ChargingStationTestUtils {
      * The default address.
      */
     public static final Address ADDRESS = new Address("Address line 1", "Address line 2", "POSTALCODE", "City", "Region", "Country");
+
+    /**
+     * The default list of identifying tokens.
+     */
+    public static final ImmutableList<IdentifyingToken> IDENTIFYING_TOKENS = ImmutableList.<IdentifyingToken>builder()
+            .add(IDENTIFYING_TOKEN)
+            .add(ANOTHER_IDENTIFYING_TOKEN)
+            .build();
 
     /**
      * The default list of meter values.
