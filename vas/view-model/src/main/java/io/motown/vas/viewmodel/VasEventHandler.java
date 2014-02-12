@@ -36,9 +36,9 @@ public class VasEventHandler {
 
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
-        LOG.info("ChargingStationCreatedEvent for {} received", event.getChargingStationId());
+        LOG.info("Handling ChargingStationCreatedEvent");
         String chargingStationId = event.getChargingStationId().getId();
-        ChargingStation chargingStation = chargingStationRepository.findOne(event.getChargingStationId().getId());
+        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
 
         if (chargingStation == null) {
             chargingStation = new ChargingStation(chargingStationId);
@@ -48,7 +48,7 @@ public class VasEventHandler {
 
     @EventHandler
     public void handle(ChargingStationAcceptedEvent event) {
-        LOG.debug("ChargingStationAcceptedEvent for {} received", event.getChargingStationId());
+        LOG.debug("ChargingStationAcceptedEvent for {} received!", event.getChargingStationId());
 
         ChargingStation chargingStation = chargingStationRepository.findOne(event.getChargingStationId().getId());
 
@@ -62,7 +62,7 @@ public class VasEventHandler {
 
     @EventHandler
     public void handle(ChargingStationConfiguredEvent event) {
-        LOG.info("ChargingStationConfiguredEvent for {} received", event.getChargingStationId());
+        LOG.info("ChargingStationConfiguredEvent");
 
         String chargingStationId = event.getChargingStationId().getId();
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
@@ -159,9 +159,35 @@ public class VasEventHandler {
 
     @EventHandler
     public void handle(ChargingStationPlacedEvent event) {
-        LOG.info("ChargingStationPlacedEvent for {} received", event.getChargingStationId());
+        LOG.info("ChargingStationPlacedEvent");
 
-        ChargingStation chargingStation = chargingStationRepository.findOne(event.getChargingStationId().getId());
+        String chargingStationId = event.getChargingStationId().getId();
+        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
+
+        if (chargingStation != null) {
+            if (event.getCoordinates() != null) {
+                chargingStation.setLatitude(event.getCoordinates().getLatitude());
+                chargingStation.setLongitude(event.getCoordinates().getLongitude());
+            }
+            if (event.getAddress() != null) {
+                chargingStation.setAddress(event.getAddress().getAddressline1());
+                chargingStation.setCity(event.getAddress().getCity());
+                chargingStation.setCountry(event.getAddress().getCountry());
+                chargingStation.setPostalCode(event.getAddress().getPostalCode());
+                chargingStation.setRegion(event.getAddress().getRegion());
+            }
+            chargingStationRepository.save(chargingStation);
+        } else {
+            LOG.error("Could not find charging station {}", event.getChargingStationId());
+        }
+    }
+
+    @EventHandler
+    public void handle(ChargingStationLocationImprovedEvent event) {
+        LOG.info("ChargingStationLocationImprovedEvent");
+
+        String chargingStationId = event.getChargingStationId().getId();
+        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
 
         if (chargingStation != null) {
             if (event.getCoordinates() != null) {
