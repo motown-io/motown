@@ -15,10 +15,7 @@
  */
 package io.motown.vas.viewmodel;
 
-import io.motown.domain.api.chargingstation.ChargingStationAcceptedEvent;
-import io.motown.domain.api.chargingstation.ChargingStationConfiguredEvent;
-import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
-import io.motown.domain.api.chargingstation.ChargingStationPlacedEvent;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.vas.viewmodel.model.ChargingStation;
 import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -39,9 +36,9 @@ public class VasEventHandler {
 
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
-        LOG.info("Handling ChargingStationCreatedEvent");
+        LOG.info("ChargingStationCreatedEvent for {} received", event.getChargingStationId());
         String chargingStationId = event.getChargingStationId().getId();
-        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
+        ChargingStation chargingStation = chargingStationRepository.findOne(event.getChargingStationId().getId());
 
         if (chargingStation == null) {
             chargingStation = new ChargingStation(chargingStationId);
@@ -51,7 +48,7 @@ public class VasEventHandler {
 
     @EventHandler
     public void handle(ChargingStationAcceptedEvent event) {
-        LOG.debug("ChargingStationAcceptedEvent for {} received!", event.getChargingStationId());
+        LOG.debug("ChargingStationAcceptedEvent for {} received", event.getChargingStationId());
 
         ChargingStation chargingStation = chargingStationRepository.findOne(event.getChargingStationId().getId());
 
@@ -65,7 +62,7 @@ public class VasEventHandler {
 
     @EventHandler
     public void handle(ChargingStationConfiguredEvent event) {
-        LOG.info("ChargingStationConfiguredEvent");
+        LOG.info("ChargingStationConfiguredEvent for {} received", event.getChargingStationId());
 
         String chargingStationId = event.getChargingStationId().getId();
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
@@ -162,10 +159,9 @@ public class VasEventHandler {
 
     @EventHandler
     public void handle(ChargingStationPlacedEvent event) {
-        LOG.info("ChargingStationPlacedEvent");
+        LOG.info("ChargingStationPlacedEvent for {} received", event.getChargingStationId());
 
-        String chargingStationId = event.getChargingStationId().getId();
-        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
+        ChargingStation chargingStation = chargingStationRepository.findOne(event.getChargingStationId().getId());
 
         if (chargingStation != null) {
             if (event.getCoordinates() != null) {
@@ -185,7 +181,39 @@ public class VasEventHandler {
         }
     }
 
+    @EventHandler
+    public void handle(ChargingStationMadeReservableEvent event) {
+        LOG.info("ChargingStationMadeReservableEvent for {} received", event.getChargingStationId());
+
+        updateReservableForChargingStation(event.getChargingStationId(), true);
+    }
+
+    @EventHandler
+    public void handle(ChargingStationMadeNotReservableEvent event) {
+        LOG.info("ChargingStationMadeNotReservableEvent for {} received", event.getChargingStationId());
+
+        updateReservableForChargingStation(event.getChargingStationId(), false);
+    }
+
     public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {
         this.chargingStationRepository = chargingStationRepository;
+    }
+
+    /**
+     * Updates the 'reservable' property of the charging station which is retrieved by the passed ChargingStationId.
+     * If the charging station cannot be found in the repository an error is logged.
+     *
+     * @param chargingStationId charging station identifier.
+     * @param reservable true if the charging station is reservable, false otherwise.
+     */
+    private void updateReservableForChargingStation(ChargingStationId chargingStationId, boolean reservable) {
+        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
+
+        if (chargingStation != null) {
+            chargingStation.setReservable(reservable);
+            chargingStationRepository.save(chargingStation);
+        } else {
+            LOG.error("Could not find charging station {}", chargingStationId);
+        }
     }
 }

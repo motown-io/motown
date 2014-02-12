@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.vas.viewmodel.domain;
+package io.motown.vas.viewmodel;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -30,6 +30,10 @@ public final class TestUtils {
     public static final int PHASE_3 = 3;
     public static final int VOLTAGE_230 = 230;
     public static final int MAX_HOURS = 12;
+
+    public static final Coordinates COORDINATES = new Coordinates(52.3702157, 4.895167899999933);
+
+    public static final Address ADDRESS = new Address("Address line 1", null, "POSTALCODE", "City", "Region", "Country");
 
     private TestUtils() {
         // Private no-arg constructor to prevent instantiation of utility class.
