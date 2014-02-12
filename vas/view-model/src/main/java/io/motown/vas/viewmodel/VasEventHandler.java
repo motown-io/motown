@@ -18,6 +18,7 @@ package io.motown.vas.viewmodel;
 import io.motown.domain.api.chargingstation.ChargingStationAcceptedEvent;
 import io.motown.domain.api.chargingstation.ChargingStationConfiguredEvent;
 import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
+import io.motown.domain.api.chargingstation.ChargingStationPlacedEvent;
 import io.motown.vas.viewmodel.model.ChargingStation;
 import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -157,6 +158,31 @@ public class VasEventHandler {
         */
 
         chargingStationRepository.save(chargingStation);
+    }
+
+    @EventHandler
+    public void handle(ChargingStationPlacedEvent event) {
+        LOG.info("ChargingStationPlacedEvent");
+
+        String chargingStationId = event.getChargingStationId().getId();
+        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
+
+        if (chargingStation != null) {
+            if (event.getCoordinates() != null) {
+                chargingStation.setLatitude(event.getCoordinates().getLatitude());
+                chargingStation.setLongitude(event.getCoordinates().getLongitude());
+            }
+            if (event.getAddress() != null) {
+                chargingStation.setAddress(event.getAddress().getAddressline1());
+                chargingStation.setCity(event.getAddress().getCity());
+                chargingStation.setCountry(event.getAddress().getCountry());
+                chargingStation.setPostalCode(event.getAddress().getPostalCode());
+                chargingStation.setRegion(event.getAddress().getRegion());
+            }
+            chargingStationRepository.save(chargingStation);
+        } else {
+            LOG.error("Could not find charging station {}", event.getChargingStationId());
+        }
     }
 
     public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {

@@ -44,6 +44,8 @@ public class ChargingStation {
 
     private ChargeMode supportedChargingMode;
 
+    private String address;
+
     private String city;
 
     private String postalCode;
@@ -126,6 +128,10 @@ public class ChargingStation {
         this.supportedChargingMode = supportedChargingMode;
     }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public void setCity(String city) {
         this.city = city;
     }
@@ -172,6 +178,10 @@ public class ChargingStation {
 
     public ChargeMode getSupportedChargingMode() {
         return supportedChargingMode;
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     public String getCity() {

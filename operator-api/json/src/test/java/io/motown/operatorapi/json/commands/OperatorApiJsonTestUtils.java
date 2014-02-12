@@ -17,8 +17,12 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.motown.domain.api.chargingstation.Address;
+import io.motown.domain.api.chargingstation.Coordinates;
 import io.motown.domain.api.chargingstation.EvseId;
 import io.motown.domain.api.chargingstation.TextualToken;
+import io.motown.operatorapi.json.gson.AddressTypeAdapter;
+import io.motown.operatorapi.json.gson.CoordinatesTypeAdapter;
 import io.motown.operatorapi.json.gson.EvseIdTypeAdapter;
 import io.motown.operatorapi.json.gson.TextualTokenTypeAdapter;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
@@ -40,6 +44,8 @@ public final class OperatorApiJsonTestUtils {
                 setDateFormat(ISO8601_DATE_FORMAT).
                 registerTypeAdapter(EvseId.class, new EvseIdTypeAdapter()).
                 registerTypeAdapter(TextualToken.class, new TextualTokenTypeAdapter()).
+                registerTypeAdapter(Coordinates.class, new CoordinatesTypeAdapter()).
+                registerTypeAdapter(Address.class, new AddressTypeAdapter()).
                 create();
     }
 

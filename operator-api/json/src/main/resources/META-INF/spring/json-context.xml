@@ -19,6 +19,8 @@
             <set>
                 <bean class="io.motown.operatorapi.json.gson.EvseIdTypeAdapter"/>
                 <bean class="io.motown.operatorapi.json.gson.TextualTokenTypeAdapter"/>
+                <bean class="io.motown.operatorapi.json.gson.CoordinatesTypeAdapter"/>
+                <bean class="io.motown.operatorapi.json.gson.AddressTypeAdapter"/>
             </set>
         </property>
     </bean>
@@ -39,6 +41,7 @@
         <ref bean="requestAuthorizationListVersionJsonCommandHandler"/>
         <ref bean="sendAuthorizationListJsonCommandHandler"/>
         <ref bean="requestReserveNowJsonCommandHandler"/>
+        <ref bean="placeChargingStationJsonCommandHandler"/>
     </util:list>
 
     <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">

@@ -36,4 +36,5 @@ interface DomainCommandGateway {
     void send(RequestAuthorizationListVersionCommand command);
     void send(SendAuthorizationListCommand command);
     void send(RequestReserveNowCommand command);
+    void send(PlaceChargingStationCommand command);
 }
