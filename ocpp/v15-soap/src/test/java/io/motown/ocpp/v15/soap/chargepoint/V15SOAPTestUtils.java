@@ -45,6 +45,10 @@ public final class V15SOAPTestUtils {
 
     public static final Date EXPIRY_DATE = getFixedDate();
 
+    public static final String AUTH_LIST_HASH = "hash";
+
+    public static final int LIST_VERSION = 3;
+
     /**
      * Private no-arg constructor to prevent instantiation of utility class.
      */
@@ -125,6 +129,12 @@ public final class V15SOAPTestUtils {
     public static GetLocalListVersionResponse getGetLocalListVersionResponse(int listVersion) {
         GetLocalListVersionResponse response = new GetLocalListVersionResponse();
         response.setListVersion(listVersion);
+        return response;
+    }
+
+    public static SendLocalListResponse getSendLocalListResponse(UpdateStatus status) {
+        SendLocalListResponse response = new SendLocalListResponse();
+        response.setStatus(status);
         return response;
     }
 

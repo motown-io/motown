@@ -15,6 +15,7 @@
  */
 package io.motown.ocpp.v15.soap.chargepoint;
 
+import io.motown.domain.api.chargingstation.AuthorizationListUpdateType;
 import io.motown.domain.api.chargingstation.NumberedTransactionId;
 import io.motown.domain.api.chargingstation.RequestStatus;
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
@@ -41,17 +42,21 @@ public class ChargingStationOcpp15SoapClientTest {
 
     private ChargingStationOcpp15SoapClient client;
 
+    private IdentifyingTokenConverterService identifyingTokenConverterService;
+
     @Before
     public void setUp() {
         ChargingStationProxyFactory chargingStationProxyFactory = mock(ChargingStationProxyFactory.class);
         chargePointService = mock(ChargePointService.class);
         DomainService domainService = mock(DomainService.class);
+        identifyingTokenConverterService = new IdentifyingTokenConverterService();
 
         when(chargingStationProxyFactory.createChargingStationService(anyString())).thenReturn(chargePointService);
 
         client = new ChargingStationOcpp15SoapClient();
         client.setChargingStationProxyFactory(chargingStationProxyFactory);
         client.setDomainService(domainService);
+        client.setIdentifyingTokenConverterService(identifyingTokenConverterService);
     }
 
     @Test
@@ -432,7 +437,75 @@ public class ChargingStationOcpp15SoapClientTest {
         verify(chargePointService).getLocalListVersion(any(GetLocalListVersionRequest.class), eq(CHARGING_STATION_ID.getId()));
     }
 
-    //TODO write tests for sendAuthorizationList once it has been refactored. - Mark van den Bergh, Februari 12th 2014
+    @Test
+    public void sendAuthorizationListAcceptedVerifyReturnValue() {
+        when(chargePointService.sendLocalList(any(SendLocalListRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getSendLocalListResponse(UpdateStatus.ACCEPTED));
+
+        RequestStatus requestStatus = client.sendAuthorizationList(CHARGING_STATION_ID, AUTH_LIST_HASH, LIST_VERSION, IDENTIFYING_TOKENS, AuthorizationListUpdateType.FULL);
+
+        assertEquals(RequestStatus.SUCCESS, requestStatus);
+    }
+
+    @Test
+    public void sendAuthorizationListFailedVerifyReturnValue() {
+        when(chargePointService.sendLocalList(any(SendLocalListRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getSendLocalListResponse(UpdateStatus.FAILED));
+
+        RequestStatus requestStatus = client.sendAuthorizationList(CHARGING_STATION_ID, AUTH_LIST_HASH, LIST_VERSION, IDENTIFYING_TOKENS, AuthorizationListUpdateType.FULL);
+
+        assertEquals(RequestStatus.FAILURE, requestStatus);
+    }
+
+    @Test
+    public void sendAuthorizationListHashErrorVerifyReturnValue() {
+        when(chargePointService.sendLocalList(any(SendLocalListRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getSendLocalListResponse(UpdateStatus.HASH_ERROR));
+
+        RequestStatus requestStatus = client.sendAuthorizationList(CHARGING_STATION_ID, AUTH_LIST_HASH, LIST_VERSION, IDENTIFYING_TOKENS, AuthorizationListUpdateType.FULL);
+
+        assertEquals(RequestStatus.FAILURE, requestStatus);
+    }
+
+    @Test
+    public void sendAuthorizationListNotSupportedVerifyReturnValue() {
+        when(chargePointService.sendLocalList(any(SendLocalListRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getSendLocalListResponse(UpdateStatus.NOT_SUPPORTED));
+
+        RequestStatus requestStatus = client.sendAuthorizationList(CHARGING_STATION_ID, AUTH_LIST_HASH, LIST_VERSION, IDENTIFYING_TOKENS, AuthorizationListUpdateType.FULL);
+
+        assertEquals(RequestStatus.FAILURE, requestStatus);
+    }
+
+    @Test
+    public void sendAuthorizationListVersionMismatchVerifyReturnValue() {
+        when(chargePointService.sendLocalList(any(SendLocalListRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getSendLocalListResponse(UpdateStatus.VERSION_MISMATCH));
+
+        RequestStatus requestStatus = client.sendAuthorizationList(CHARGING_STATION_ID, AUTH_LIST_HASH, LIST_VERSION, IDENTIFYING_TOKENS, AuthorizationListUpdateType.FULL);
+
+        assertEquals(RequestStatus.FAILURE, requestStatus);
+    }
+
+    @Test
+    public void sendAuthorizationListUpdateTypeFullVerifyServiceCall() {
+        ArgumentCaptor<SendLocalListRequest> sendLocalListArgument = ArgumentCaptor.forClass(SendLocalListRequest.class);
+        when(chargePointService.sendLocalList(any(SendLocalListRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getSendLocalListResponse(UpdateStatus.ACCEPTED));
+
+        client.sendAuthorizationList(CHARGING_STATION_ID, AUTH_LIST_HASH, LIST_VERSION, IDENTIFYING_TOKENS, AuthorizationListUpdateType.FULL);
+
+        verify(chargePointService).sendLocalList(sendLocalListArgument.capture(), eq(CHARGING_STATION_ID.getId()));
+        assertEquals(AUTH_LIST_HASH, sendLocalListArgument.getValue().getHash());
+        assertEquals(LIST_VERSION, sendLocalListArgument.getValue().getListVersion());
+        assertEquals(UpdateType.FULL, sendLocalListArgument.getValue().getUpdateType());
+        assertEquals(identifyingTokenConverterService.convertIdentifyingTokenList(IDENTIFYING_TOKENS).size(), sendLocalListArgument.getValue().getLocalAuthorisationList().size());
+    }
+
+    @Test
+    public void sendAuthorizationListUpdateTypeDifferentialVerifyServiceCall() {
+        ArgumentCaptor<SendLocalListRequest> sendLocalListArgument = ArgumentCaptor.forClass(SendLocalListRequest.class);
+        when(chargePointService.sendLocalList(any(SendLocalListRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getSendLocalListResponse(UpdateStatus.ACCEPTED));
+
+        client.sendAuthorizationList(CHARGING_STATION_ID, AUTH_LIST_HASH, LIST_VERSION, IDENTIFYING_TOKENS, AuthorizationListUpdateType.DIFFERENTIAL);
+
+        verify(chargePointService).sendLocalList(sendLocalListArgument.capture(), eq(CHARGING_STATION_ID.getId()));
+        assertEquals(UpdateType.DIFFERENTIAL, sendLocalListArgument.getValue().getUpdateType());
+    }
 
     @Test
     public void reserveNowAcceptedVerifyReturnValue() {

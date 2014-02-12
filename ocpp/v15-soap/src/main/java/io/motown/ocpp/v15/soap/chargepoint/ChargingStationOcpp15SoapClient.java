@@ -29,8 +29,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static io.motown.domain.api.chargingstation.IdentifyingToken.AuthenticationStatus;
-
 @Component
 public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Client {
 
@@ -41,6 +39,8 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
     @Autowired
     private ChargingStationProxyFactory chargingStationProxyFactory;
+
+    private IdentifyingTokenConverterService identifyingTokenConverterService;
 
     public Map<String, String> getConfiguration(ChargingStationId id) {
         LOG.info("Retrieving configuration for {}", id);
@@ -255,13 +255,11 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     public RequestStatus sendAuthorizationList(ChargingStationId id, String hash, int listVersion, List<IdentifyingToken> identifyingTokens, AuthorizationListUpdateType updateType) {
         ChargePointService chargePointService = this.createChargingStationService(id);
 
-        //TODO refactor this method so it's less complex and easier to test. - Mark van den Bergh, Februari 12th 2014
-
         SendLocalListRequest request = new SendLocalListRequest();
         request.setHash(hash);
         request.setListVersion(listVersion);
 
-        //Translate the update type to the OCPP specific type
+        // Translate the update type to the OCPP specific type
         switch (updateType) {
             case DIFFERENTIAL:
                 request.setUpdateType(UpdateType.DIFFERENTIAL);
@@ -271,40 +269,8 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
                 break;
         }
 
-        //Translate the authorization information to the OCPP specific info
-        List<AuthorisationData> authorizationList = request.getLocalAuthorisationList();
-        for (IdentifyingToken identifyingToken : identifyingTokens) {
-            AuthorisationData authData = new AuthorisationData();
-            authData.setIdTag(identifyingToken.getToken());
-
-            //The OCPP spec describes that the IdTagInfo should not be present in case the charging station has to remove the entry from the list
-            AuthenticationStatus status = identifyingToken.getAuthenticationStatus();
-            if (status != null && !AuthenticationStatus.DELETED.equals(status)) {
-                IdTagInfo info = new IdTagInfo();
-                switch (identifyingToken.getAuthenticationStatus()) {
-                    case ACCEPTED:
-                        info.setStatus(AuthorizationStatus.ACCEPTED);
-                        break;
-                    case BLOCKED:
-                        info.setStatus(AuthorizationStatus.BLOCKED);
-                        break;
-                    case EXPIRED:
-                        info.setStatus(AuthorizationStatus.EXPIRED);
-                        break;
-                    case INVALID:
-                        info.setStatus(AuthorizationStatus.INVALID);
-                        break;
-                    case CONCURRENT_TX:
-                        info.setStatus(AuthorizationStatus.CONCURRENT_TX);
-                        break;
-                    default:
-                        throw new IllegalArgumentException(String.format("Unknown authentication status [%s] in given identifying token [%s].", identifyingToken.getAuthenticationStatus(), identifyingToken.getToken()));
-                }
-                authData.setIdTagInfo(info);
-            }
-
-            authorizationList.add(authData);
-        }
+        // Translate the authorization information to the OCPP specific info
+        request.getLocalAuthorisationList().addAll(identifyingTokenConverterService.convertIdentifyingTokenList(identifyingTokens));
 
         //TODO: Make ALL calls towards the chargingstation more robust (now can result in message processing loop of death), decide on how to achieve this; either by try catching here to force ACK, or not letting Rabbit reschedule upon exception - Ingo Pak, 03 Jan 2014
         SendLocalListResponse response = chargePointService.sendLocalList(request, id.getId());
@@ -362,6 +328,10 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
     public void setChargingStationProxyFactory(ChargingStationProxyFactory chargingStationProxyFactory) {
         this.chargingStationProxyFactory = chargingStationProxyFactory;
+    }
+
+    public void setIdentifyingTokenConverterService(IdentifyingTokenConverterService identifyingTokenConverterService) {
+        this.identifyingTokenConverterService = identifyingTokenConverterService;
     }
 
     private RequestStatus reset(ChargingStationId id, ResetType type) {
