@@ -32,6 +32,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     private boolean isAccepted = false;
     private boolean isConfigured = false;
+    private boolean isReservable = false;
 
     protected ChargingStation() {
     }
@@ -74,6 +75,16 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         }
 
         apply(new ChargingStationAcceptedEvent(command.getChargingStationId()));
+    }
+
+    @CommandHandler
+    public void handle(MakeChargingStationReservableCommand command) {
+        apply(new ChargingStationMadeReservableEvent(command.getChargingStationId()));
+    }
+
+    @CommandHandler
+    public void handle(MakeChargingStationNotReservableCommand command) {
+        apply(new ChargingStationMadeNotReservableEvent(command.getChargingStationId()));
     }
 
     @CommandHandler
@@ -238,7 +249,11 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestReserveNowCommand command) {
-        apply(new ReserveNowRequestedEvent(command.getChargingStationId(), this.protocol, command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), command.getParentIdentifyingToken()));
+        if (isReservable) {
+            apply(new ReserveNowRequestedEvent(command.getChargingStationId(), this.protocol, command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), command.getParentIdentifyingToken()));
+        } else {
+            //TODO create and apply new event to indicate reservation cannot be made. - Mark van den Bergh, Februari 12th 2014
+        }
     }
 
     @CommandHandler
@@ -350,6 +365,16 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
         this.id = event.getChargingStationId();
+    }
+
+    @EventHandler
+    public void handle(ChargingStationMadeReservableEvent event) {
+        this.isReservable = true;
+    }
+
+    @EventHandler
+    public void handle(ChargingStationMadeNotReservableEvent event) {
+        this.isReservable = false;
     }
 
     /**

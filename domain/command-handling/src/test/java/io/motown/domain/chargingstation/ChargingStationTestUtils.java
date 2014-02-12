@@ -34,6 +34,8 @@ public final class ChargingStationTestUtils {
     public static final int TWO_MINUTES = 120000;
     public static final Date TWO_MINUTES_AGO = new Date(DateTimeUtils.currentTimeMillis() - TWO_MINUTES);
     public static final EvseId UNKNOWN_EVSE_ID = new EvseId(3);
+    public static final int METER_STOP = 500;
+
 
     private ChargingStationTestUtils() {
         // Private no-arg constructor to prevent instantiation of utility class.
@@ -80,6 +82,14 @@ public final class ChargingStationTestUtils {
         return ImmutableList.<Object>builder()
                 .addAll(getCreatedChargingStation(defaultAccepted))
                 .add(new ChargingStationConfiguredEvent(getChargingStationId(), getEvses(), getConfigurationItems()))
+                .build();
+    }
+
+    public static List<Object> getConfiguredReservableChargingStation(boolean defaultAccepted) {
+        return ImmutableList.<Object>builder()
+                .addAll(getCreatedChargingStation(defaultAccepted))
+                .add(new ChargingStationConfiguredEvent(getChargingStationId(), getEvses(), getConfigurationItems()))
+                .add(new ChargingStationMadeReservableEvent(getChargingStationId()))
                 .build();
     }
 

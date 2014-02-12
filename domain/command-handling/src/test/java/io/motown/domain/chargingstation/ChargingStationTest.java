@@ -163,6 +163,20 @@ public class ChargingStationTest {
     }
 
     @Test
+    public void testRequestStartTransaction() {
+        fixture.given(getRegisteredChargingStation())
+                .when(new RequestStartTransactionCommand(getChargingStationId(), getTextualToken(), getEvseId()))
+                .expectEvents(new StartTransactionRequestedEvent(getChargingStationId(), getProtocol(), getTextualToken(), getEvseId()));
+    }
+
+    @Test
+    public void testRequestStopTransaction() {
+        fixture.given(getRegisteredChargingStation())
+                .when(new RequestStopTransactionCommand(getChargingStationId(), getNumberedTransactionId()))
+                .expectEvents(new StopTransactionRequestedEvent(getChargingStationId(), getProtocol(), getNumberedTransactionId()));
+    }
+
+    @Test
     public void testStartTransactionEmptyAttributes() {
         Date now = new Date();
         EvseId evseId = new EvseId(1);
@@ -366,7 +380,7 @@ public class ChargingStationTest {
     @Test
     public void testRequestReserveNow() {
         Date expiryDate = new Date();
-        fixture.given(getConfiguredChargingStation(true))
+        fixture.given(getConfiguredReservableChargingStation(true))
                 .when(new RequestReserveNowCommand(getChargingStationId(), getEvseId(), getTextualToken(), expiryDate, getTextualToken()))
                 .expectEvents(new ReserveNowRequestedEvent(getChargingStationId(), getProtocol(), getEvseId(), getTextualToken(), expiryDate, getTextualToken()));
     }
@@ -485,6 +499,14 @@ public class ChargingStationTest {
     }
 
     @Test
+    public void testStopTransaction() {
+        Date now = new Date();
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new StopTransactionCommand(getChargingStationId(), getNumberedTransactionId(), getTextualToken(), METER_STOP, now))
+                .expectEvents(new TransactionStoppedEvent(getChargingStationId(), getNumberedTransactionId(), getTextualToken(), METER_STOP, now));
+    }
+
+    @Test
     public void testStopTransactionStatusChanged() {
         fixture.given(getConfiguredChargingStation(true))
                 .when(new StopTransactionStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
@@ -517,6 +539,20 @@ public class ChargingStationTest {
         fixture.given(getConfiguredChargingStation(true))
                 .when(new DenyAuthorizationCommand(getChargingStationId(), getTextualToken()))
                 .expectEvents(new AuthorizationResultEvent(getChargingStationId(), getTextualToken(), AuthorizationResultStatus.INVALID));
+    }
+
+    @Test
+    public void testMakeChargingStationReservable() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new MakeChargingStationReservableCommand(getChargingStationId()))
+                .expectEvents(new ChargingStationMadeReservableEvent(getChargingStationId()));
+    }
+
+    @Test
+    public void testMakeChargingStationNotReservable() {
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new MakeChargingStationNotReservableCommand(getChargingStationId()))
+                .expectEvents(new ChargingStationMadeNotReservableEvent(getChargingStationId()));
     }
 
 }
