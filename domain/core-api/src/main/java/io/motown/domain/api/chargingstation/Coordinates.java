@@ -15,13 +15,15 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public final class Coordinates {
     private final double latitude;
     private final double longitude;
 
     public Coordinates(double latitude, double longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.latitude = checkNotNull(latitude);
+        this.longitude = checkNotNull(longitude);
     }
 
     public double getLatitude() {

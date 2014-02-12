@@ -45,9 +45,9 @@ public class AddressTypeAdapter implements TypeAdapter<Address> {
 
         JsonPrimitive addressline2Obj = obj.getAsJsonPrimitive("addressline2"), postalCodeObj = obj.getAsJsonPrimitive("postalCode"), regionObj = obj.getAsJsonPrimitive("region");
 
-        String addressline2 = addressline2Obj != null ? addressline2Obj.getAsString() : null;
-        String postalCode = postalCodeObj != null ? postalCodeObj.getAsString() : null;
-        String region = regionObj != null ? regionObj.getAsString() : null;
+        String addressline2 = addressline2Obj != null ? addressline2Obj.getAsString() : "";
+        String postalCode = postalCodeObj != null ? postalCodeObj.getAsString() : "";
+        String region = regionObj != null ? regionObj.getAsString() : "";
 
         return new Address(addressline1, addressline2, postalCode, city, region, country);
     }

@@ -30,12 +30,12 @@ public final class Address {
         checkNotNull(addressline1);
         checkArgument(!addressline1.isEmpty());
         this.addressline1 = addressline1;
-        this.addressline2 = addressline2;
-        this.postalCode = postalCode;
+        this.addressline2 = checkNotNull(addressline2);
+        this.postalCode = checkNotNull(postalCode);
         checkNotNull(city);
         checkArgument(!city.isEmpty());
         this.city = city;
-        this.region = region;
+        this.region = checkNotNull(region);
         checkNotNull(country);
         checkArgument(!country.isEmpty());
         this.country = country;
