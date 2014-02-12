@@ -252,7 +252,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         if (isReservable) {
             apply(new ReserveNowRequestedEvent(command.getChargingStationId(), this.protocol, command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), command.getParentIdentifyingToken()));
         } else {
-            //TODO create and apply new event to indicate reservation cannot be made. - Mark van den Bergh, Februari 12th 2014
+            apply(new ReserveNowRequestedForUnreservableChargingStationEvent(command.getChargingStationId(), command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), command.getParentIdentifyingToken()));
         }
     }
 

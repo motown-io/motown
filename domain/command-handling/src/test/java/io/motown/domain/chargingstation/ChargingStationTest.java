@@ -378,11 +378,19 @@ public class ChargingStationTest {
     }
 
     @Test
-    public void testRequestReserveNow() {
+    public void testRequestReserveNowReservableChargingStation() {
         Date expiryDate = new Date();
         fixture.given(getConfiguredReservableChargingStation(true))
                 .when(new RequestReserveNowCommand(getChargingStationId(), getEvseId(), getTextualToken(), expiryDate, getTextualToken()))
                 .expectEvents(new ReserveNowRequestedEvent(getChargingStationId(), getProtocol(), getEvseId(), getTextualToken(), expiryDate, getTextualToken()));
+    }
+
+    @Test
+    public void testRequestReserveNowNotReservableChargingStation() {
+        Date expiryDate = new Date();
+        fixture.given(getConfiguredChargingStation(true))
+                .when(new RequestReserveNowCommand(getChargingStationId(), getEvseId(), getTextualToken(), expiryDate, getTextualToken()))
+                .expectEvents(new ReserveNowRequestedForUnreservableChargingStationEvent(getChargingStationId(), getEvseId(), getTextualToken(), expiryDate, getTextualToken()));
     }
 
     @Test
