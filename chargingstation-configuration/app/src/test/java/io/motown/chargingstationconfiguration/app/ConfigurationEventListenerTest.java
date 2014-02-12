@@ -24,11 +24,12 @@ import org.junit.Test;
 
 import java.util.HashSet;
 
-import static io.motown.chargingstationconfiguration.app.TestUtils.*;
+import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
 import static org.mockito.Mockito.*;
 
 public class ConfigurationEventListenerTest {
 
+    public static final int NUMBER_OF_EVSES = 3;
     private ConfigurationEventListener eventListener;
 
     private DomainService domainService;
@@ -52,7 +53,7 @@ public class ConfigurationEventListenerTest {
         String unknownModel = "MODEL";
         when(domainService.getEvses(unknownManufacturer, unknownModel)).thenReturn(new HashSet<Evse>());
 
-        eventListener.onEvent(new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getProtocol(), getAttributesMap(unknownManufacturer, unknownModel)));
+        eventListener.onEvent(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, getAttributes(unknownManufacturer, unknownModel)));
 
         verify(domainService).getEvses(unknownManufacturer, unknownModel);
         verify(gateway, never()).send(any(ConfigureChargingStationCommand.class));
@@ -64,7 +65,7 @@ public class ConfigurationEventListenerTest {
         String unknownModel = "MODEL";
         when(domainService.getEvses(unknownManufacturer, unknownModel)).thenReturn(null);
 
-        eventListener.onEvent(new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getProtocol(), getAttributesMap(unknownManufacturer, unknownModel)));
+        eventListener.onEvent(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, getAttributes(unknownManufacturer, unknownModel)));
 
         verify(domainService).getEvses(unknownManufacturer, unknownModel);
         verify(gateway, never()).send(any(ConfigureChargingStationCommand.class));
@@ -74,12 +75,12 @@ public class ConfigurationEventListenerTest {
     public void testConfigurationFound() {
         String manufacturer = "MOTOWN";
         String model = "MODEL1";
-        when(domainService.getEvses(manufacturer, model)).thenReturn(getEvses(3));
+        when(domainService.getEvses(manufacturer, model)).thenReturn(getEvses(NUMBER_OF_EVSES));
 
-        eventListener.onEvent(new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getProtocol(), getAttributesMap(manufacturer, model)));
+        eventListener.onEvent(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, getAttributes(manufacturer, model)));
 
         verify(domainService).getEvses(manufacturer, model);
-        verify(gateway).send(new ConfigureChargingStationCommand(getChargingStationId(), getEvses(3)));
+        verify(gateway).send(new ConfigureChargingStationCommand(CHARGING_STATION_ID, getEvses(NUMBER_OF_EVSES)));
     }
 
 }

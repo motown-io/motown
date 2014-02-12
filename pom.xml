@@ -13,6 +13,7 @@
         <module>domain/app</module>
         <module>domain/command-handling</module>
         <module>domain/core-api</module>
+        <module>domain/core-api-test</module>
         <module>domain/utils</module>
         <module>ocpp/v12-soap</module>
         <module>ocpp/v15-soap</module>
@@ -63,6 +64,7 @@
         <mockito.version>1.9.5</mockito.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
         <sonar-maven-plugin.version>2.2</sonar-maven-plugin.version>
+        <joda-time.version>2.1</joda-time.version>
     </properties>
 
     <dependencyManagement>
@@ -285,6 +287,11 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aop</artifactId>
                 <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${joda-time.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

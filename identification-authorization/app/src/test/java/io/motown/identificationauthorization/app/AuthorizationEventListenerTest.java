@@ -26,7 +26,7 @@ import org.mockito.ArgumentMatcher;
 
 import java.util.Collections;
 
-import static io.motown.identificationauthorization.app.TestUtils.*;
+import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
 import static org.axonframework.commandhandling.GenericCommandMessage.asCommandMessage;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
@@ -44,8 +44,8 @@ public class AuthorizationEventListenerTest {
         eventListener = new AuthorizationEventListener();
 
         service = mock(IdentificationAuthorizationService.class);
-        when(service.isValid(getInvalidIdentifyingToken())).thenReturn(false);
-        when(service.isValid(getValidIdentifyingToken())).thenReturn(true);
+        when(service.isValid(INVALID_IDENTIFYING_TOKEN)).thenReturn(false);
+        when(service.isValid(IDENTIFYING_TOKEN)).thenReturn(true);
         eventListener.setService(service);
 
         gateway = mock(AuthorizationCommandGateway.class);
@@ -54,12 +54,12 @@ public class AuthorizationEventListenerTest {
 
     @Test
     public void testValidIdentification() {
-        eventListener.onEvent(new AuthorizationRequestedEvent(getChargingStationId(), getValidIdentifyingToken()), getCorrelationId());
+        eventListener.onEvent(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN), CORRELATION_ID);
 
-        verify(service).isValid(getValidIdentifyingToken());
+        verify(service).isValid(IDENTIFYING_TOKEN);
 
         final CommandMessage command = asCommandMessage(
-                new GrantAuthorizationCommand(getChargingStationId(), getValidIdentifyingToken())).andMetaData(Collections.singletonMap("correlationId", getCorrelationId()));
+                new GrantAuthorizationCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN)).andMetaData(Collections.singletonMap("correlationId", CORRELATION_ID));
 
         // because GenericCommandMessage doesn't implement 'equals' method we have to provide a ArgumentMatcher to validate the argument
         verify(gateway).send(argThat(new ArgumentMatcher<CommandMessage>() {
@@ -76,12 +76,12 @@ public class AuthorizationEventListenerTest {
 
     @Test
     public void testInvalidIdentification() {
-        eventListener.onEvent(new AuthorizationRequestedEvent(getChargingStationId(), getInvalidIdentifyingToken()), getCorrelationId());
+        eventListener.onEvent(new AuthorizationRequestedEvent(CHARGING_STATION_ID, INVALID_IDENTIFYING_TOKEN), CORRELATION_ID);
 
-        verify(service).isValid(getInvalidIdentifyingToken());
+        verify(service).isValid(INVALID_IDENTIFYING_TOKEN);
 
         final CommandMessage command = asCommandMessage(
-                new DenyAuthorizationCommand(getChargingStationId(), getInvalidIdentifyingToken())).andMetaData(Collections.singletonMap("correlationId", getCorrelationId()));
+                new DenyAuthorizationCommand(CHARGING_STATION_ID, INVALID_IDENTIFYING_TOKEN)).andMetaData(Collections.singletonMap("correlationId", CORRELATION_ID));
 
         // because GenericCommandMessage doesn't implement 'equals' method we have to provide a ArgumentMatcher to validate the argument
         verify(gateway).send(argThat(new ArgumentMatcher<CommandMessage>() {
@@ -99,9 +99,9 @@ public class AuthorizationEventListenerTest {
 
     @Test
     public void testNullCorrelationId() {
-        eventListener.onEvent(new AuthorizationRequestedEvent(getChargingStationId(), getValidIdentifyingToken()), null);
+        eventListener.onEvent(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN), null);
 
-        verify(service).isValid(getValidIdentifyingToken());
+        verify(service).isValid(IDENTIFYING_TOKEN);
 
         // because GenericCommandMessage doesn't implement 'equals' method we have to provide a ArgumentMatcher to validate the argument
         verify(gateway).send(argThat(new ArgumentMatcher<CommandMessage>() {

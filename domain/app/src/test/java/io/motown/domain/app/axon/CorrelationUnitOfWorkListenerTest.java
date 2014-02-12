@@ -26,8 +26,8 @@ import org.junit.Test;
 
 import java.util.Collections;
 
-import static io.motown.domain.app.axon.DomainAppTestUtils.getChargingStationId;
-import static io.motown.domain.app.axon.DomainAppTestUtils.getTextualToken;
+import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.IDENTIFYING_TOKEN;
 import static org.axonframework.domain.GenericEventMessage.asEventMessage;
 import static org.junit.Assert.assertTrue;
 
@@ -40,16 +40,16 @@ public class CorrelationUnitOfWorkListenerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithCommandWithoutCorrectMetaData() {
-        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(getChargingStationId(), getTextualToken()));
+        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN));
         new CorrelationUnitOfWorkListener(command);
     }
 
     @Test
     public void onEventRegisteredReturnsEventWithMetaData() {
-        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(getChargingStationId(), getTextualToken())).withMetaData(Collections.singletonMap("correlationId", "12345"));
+        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN)).withMetaData(Collections.singletonMap("correlationId", "12345"));
         UnitOfWorkListener listener = new CorrelationUnitOfWorkListener(command);
 
-        EventMessage event = listener.onEventRegistered(new DefaultUnitOfWork(), asEventMessage(new AuthorizationRequestedEvent(getChargingStationId(), getTextualToken())));
+        EventMessage event = listener.onEventRegistered(new DefaultUnitOfWork(), asEventMessage(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN)));
 
         assertTrue(event.getMetaData().get("correlationId").equals("12345"));
     }

@@ -15,6 +15,7 @@
  */
 package io.motown.domain.chargingstation;
 
+import com.google.common.collect.ImmutableMap;
 import io.motown.domain.api.chargingstation.*;
 import org.axonframework.repository.AggregateNotFoundException;
 import org.axonframework.test.FixtureConfiguration;
@@ -24,7 +25,7 @@ import org.junit.Test;
 
 import java.util.*;
 
-import static io.motown.domain.chargingstation.ChargingStationTestUtils.*;
+import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
 
 public class ChargingStationTest {
 
@@ -37,143 +38,140 @@ public class ChargingStationTest {
 
     @Test
     public void testBootingCreatedChargingStation() {
-        fixture.given(getCreatedChargingStation(false))
-               .when(new BootChargingStationCommand(getChargingStationId(), getProtocol(), getAttributes()))
-               .expectEvents(new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getProtocol(), getAttributes()));
+        fixture.given(CREATED_CHARGING_STATION)
+                .when(new BootChargingStationCommand(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES))
+                .expectEvents(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES));
     }
 
     @Test
     public void testBootingRegisteredChargingStation() {
-        fixture.given(getRegisteredChargingStation())
-               .when(new BootChargingStationCommand(getChargingStationId(), getProtocol(), getAttributes()))
-               .expectEvents(new UnconfiguredChargingStationBootedEvent(getChargingStationId(), getProtocol(), getAttributes()));
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new BootChargingStationCommand(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES))
+                .expectEvents(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES));
     }
 
     @Test
     public void testBootingConfiguredChargingStation() {
-        fixture.given(getChargingStation())
-               .when(new BootChargingStationCommand(getChargingStationId(), getProtocol(), getAttributes()))
-               .expectEvents(new ConfiguredChargingStationBootedEvent(getChargingStationId(), getProtocol(), getAttributes()));
+        fixture.given(CHARGING_STATION)
+                .when(new BootChargingStationCommand(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES))
+                .expectEvents(new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES));
     }
 
     @Test
     public void testHeartbeat() {
-        fixture.given(getChargingStation())
-                .when(new HeartbeatCommand(getChargingStationId()))
-                .expectEvents(new ChargingStationSentHeartbeatEvent(getChargingStationId()));
+        fixture.given(CHARGING_STATION)
+                .when(new HeartbeatCommand(CHARGING_STATION_ID))
+                .expectEvents(new ChargingStationSentHeartbeatEvent(CHARGING_STATION_ID));
     }
 
     @Test
     public void testMultipleMeterValues() {
-        List<MeterValue> meterValues = getMeterValues();
-
-        fixture.given(getChargingStation())
-                .when(new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), getEvseId(), meterValues))
-                .expectEvents(new ChargingStationSentMeterValuesEvent(getChargingStationId(), getNumberedTransactionId(), getEvseId(), meterValues));
+        fixture.given(CHARGING_STATION)
+                .when(new ProcessMeterValueCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, METER_VALUES))
+                .expectEvents(new ChargingStationSentMeterValuesEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, METER_VALUES));
     }
 
     @Test
     public void testNoMeterValues() {
         List<MeterValue> meterValues = new ArrayList<>();
 
-        fixture.given(getChargingStation())
-                .when(new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), getEvseId(), meterValues))
-                .expectEvents(new ChargingStationSentMeterValuesEvent(getChargingStationId(), getNumberedTransactionId(), getEvseId(), meterValues));
+        fixture.given(CHARGING_STATION)
+                .when(new ProcessMeterValueCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, meterValues))
+                .expectEvents(new ChargingStationSentMeterValuesEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, meterValues));
     }
 
     @Test
     public void testMeterValuesNoTransaction() {
-        List<MeterValue> meterValues = getMeterValues();
         TransactionId transactionId = null;
 
-        fixture.given(getChargingStation())
-                .when(new ProcessMeterValueCommand(getChargingStationId(), transactionId, getEvseId(), meterValues))
-                .expectEvents(new ChargingStationSentMeterValuesEvent(getChargingStationId(), transactionId, getEvseId(), meterValues));
+        fixture.given(CHARGING_STATION)
+                .when(new ProcessMeterValueCommand(CHARGING_STATION_ID, transactionId, EVSE_ID, METER_VALUES))
+                .expectEvents(new ChargingStationSentMeterValuesEvent(CHARGING_STATION_ID, transactionId, EVSE_ID, METER_VALUES));
     }
 
     @Test
     public void testRegisteringUnacceptedChargingStation() {
-        fixture.given(getCreatedChargingStation(false))
-               .when(new AcceptChargingStationCommand(getChargingStationId()))
-               .expectEvents(new ChargingStationAcceptedEvent(getChargingStationId()));
+        fixture.given(CREATED_CHARGING_STATION)
+                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID))
+                .expectEvents(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
     }
 
     @Test
     public void testRegisteringAcceptedChargingStation() {
-        fixture.given(getCreatedChargingStation(true))
-               .when(new AcceptChargingStationCommand(getChargingStationId()))
-               .expectException(IllegalStateException.class);
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID))
+                .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRegisteringNonExistentChargingStation() {
         fixture.given()
-               .when(new AcceptChargingStationCommand(getChargingStationId()))
-               .expectException(AggregateNotFoundException.class);
+                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID))
+                .expectException(AggregateNotFoundException.class);
     }
 
     @Test
     public void testRegisteringAlreadyRegisteredChargingStation() {
-        fixture.given(getRegisteredChargingStation())
-               .when(new AcceptChargingStationCommand(getChargingStationId()))
-               .expectException(IllegalStateException.class);
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID))
+                .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testChargePointCreation() {
         fixture.given()
-               .when(new CreateChargingStationCommand(getChargingStationId()))
-               .expectEvents(new ChargingStationCreatedEvent(getChargingStationId()));
+                .when(new CreateChargingStationCommand(CHARGING_STATION_ID))
+                .expectEvents(new ChargingStationCreatedEvent(CHARGING_STATION_ID));
     }
 
     @Test
     public void testCreatingAndAcceptingChargingStation() {
         fixture.given()
-               .when(new CreateAndAcceptChargingStationCommand(getChargingStationId()))
-               .expectEvents(new ChargingStationCreatedEvent(getChargingStationId()),
-                       new ChargingStationAcceptedEvent(getChargingStationId()));
+                .when(new CreateAndAcceptChargingStationCommand(CHARGING_STATION_ID))
+                .expectEvents(new ChargingStationCreatedEvent(CHARGING_STATION_ID),
+                        new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
     }
 
     @Test
     public void testChargeAcceptance() {
-        fixture.given(new ChargingStationCreatedEvent(getChargingStationId()))
-                .when(new AcceptChargingStationCommand(getChargingStationId()))
-                .expectEvents(new ChargingStationAcceptedEvent(getChargingStationId()));
+        fixture.given(new ChargingStationCreatedEvent(CHARGING_STATION_ID))
+                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID))
+                .expectEvents(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
     }
 
     @Test
     public void testRequestConfigurationForUnconfiguredChargingStation() {
-        fixture.given(getRegisteredChargingStation())
-               .when(new RequestConfigurationCommand(getChargingStationId()))
-               .expectException(IllegalStateException.class);
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new RequestConfigurationCommand(CHARGING_STATION_ID))
+                .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRequestConfigurationForUnregisteredChargingStation() {
-        fixture.given(getConfiguredChargingStation(false))
-               .when(new RequestConfigurationCommand(getChargingStationId()))
-               .expectException(IllegalStateException.class);
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new RequestConfigurationCommand(CHARGING_STATION_ID))
+                .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRequestConfiguration() {
-        fixture.given(getChargingStation())
-               .when(new RequestConfigurationCommand(getChargingStationId()))
-               .expectEvents(new ConfigurationRequestedEvent(getChargingStationId(), getProtocol()));
+        fixture.given(CHARGING_STATION)
+                .when(new RequestConfigurationCommand(CHARGING_STATION_ID))
+                .expectEvents(new ConfigurationRequestedEvent(CHARGING_STATION_ID, PROTOCOL));
     }
 
     @Test
     public void testRequestStartTransaction() {
-        fixture.given(getRegisteredChargingStation())
-                .when(new RequestStartTransactionCommand(getChargingStationId(), getTextualToken(), getEvseId()))
-                .expectEvents(new StartTransactionRequestedEvent(getChargingStationId(), getProtocol(), getTextualToken(), getEvseId()));
+        fixture.given(CHARGING_STATION)
+                .when(new RequestStartTransactionCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, EVSE_ID))
+                .expectEvents(new StartTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, IDENTIFYING_TOKEN, EVSE_ID));
     }
 
     @Test
     public void testRequestStopTransaction() {
-        fixture.given(getRegisteredChargingStation())
-                .when(new RequestStopTransactionCommand(getChargingStationId(), getNumberedTransactionId()))
-                .expectEvents(new StopTransactionRequestedEvent(getChargingStationId(), getProtocol(), getNumberedTransactionId()));
+        fixture.given(CHARGING_STATION)
+                .when(new RequestStopTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID))
+                .expectEvents(new StopTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, TRANSACTION_ID));
     }
 
     @Test
@@ -182,9 +180,9 @@ public class ChargingStationTest {
         EvseId evseId = new EvseId(1);
         int meterStart = 0;
 
-        fixture.given(getChargingStation())
-                .when(new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), evseId, getTextualToken(), meterStart, now))
-                .expectEvents(new TransactionStartedEvent(getChargingStationId(), getNumberedTransactionId(), evseId, getTextualToken(), meterStart, now, getEmptyAttributesMap()));
+        fixture.given(CHARGING_STATION)
+                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, evseId, IDENTIFYING_TOKEN, meterStart, now))
+                .expectEvents(new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, evseId, IDENTIFYING_TOKEN, meterStart, now, ImmutableMap.<String, String>of()));
     }
 
     @Test
@@ -193,162 +191,162 @@ public class ChargingStationTest {
         EvseId evseId = new EvseId(1);
         int meterStart = 0;
 
-        fixture.given(getChargingStation())
-                .when(new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), evseId, getTextualToken(), meterStart, now, getAttributes()))
-                .expectEvents(new TransactionStartedEvent(getChargingStationId(), getNumberedTransactionId(), evseId, getTextualToken(), meterStart, now, getAttributes()));
+        fixture.given(CHARGING_STATION)
+                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, evseId, IDENTIFYING_TOKEN, meterStart, now, BOOT_NOTIFICATION_ATTRIBUTES))
+                .expectEvents(new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, evseId, IDENTIFYING_TOKEN, meterStart, now, BOOT_NOTIFICATION_ATTRIBUTES));
     }
 
     @Test
     public void testConfigureChargingStation() {
-        fixture.given(getRegisteredChargingStation())
-               .when(new ConfigureChargingStationCommand(getChargingStationId(), getEvses(), getConfigurationItems()))
-               .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), getEvses(), getConfigurationItems()));
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new ConfigureChargingStationCommand(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS))
+                .expectEvents(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
     }
 
     @Test
     public void testConfigureChargingStationWithoutEvses() {
-        fixture.given(getRegisteredChargingStation())
-               .when(new ConfigureChargingStationCommand(getChargingStationId(), getConfigurationItems()))
-               .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), Collections.<Evse>emptySet(), getConfigurationItems()));
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new ConfigureChargingStationCommand(CHARGING_STATION_ID, CONFIGURATION_ITEMS))
+                .expectEvents(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, Collections.<Evse>emptySet(), CONFIGURATION_ITEMS));
     }
 
     @Test
     public void testConfigureChargingStationWithoutConfigurationItems() {
-        fixture.given(getRegisteredChargingStation())
-               .when(new ConfigureChargingStationCommand(getChargingStationId(), getEvses()))
-               .expectEvents(new ChargingStationConfiguredEvent(getChargingStationId(), getEvses(), Collections.<String, String>emptyMap()));
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new ConfigureChargingStationCommand(CHARGING_STATION_ID, EVSES))
+                .expectEvents(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, Collections.<String, String>emptyMap()));
     }
 
     @Test
     public void testRequestingToUnlockEvseForUnregisteredChargingStation() {
-        fixture.given(getConfiguredChargingStation(false))
-                .when(new RequestUnlockEvseCommand(getChargingStationId(), getEvseId()))
-               .expectException(IllegalStateException.class);
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, EVSE_ID))
+                .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRequestingToUnlockEvseForUnconfiguredChargingStation() {
-        fixture.given(getRegisteredChargingStation())
-                .when(new RequestUnlockEvseCommand(getChargingStationId(), getEvseId()))
-               .expectException(IllegalStateException.class);
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, EVSE_ID))
+                .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRequestingToStartTransactionForUnconfiguredChargingStation() {
-        fixture.given(getRegisteredChargingStation())
-                .when(new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), getEvseId(), getTextualToken(), 0, new Date()))
-               .expectException(IllegalStateException.class);
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, new Date()))
+                .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRequestingToUnlockEvse() {
-        fixture.given(getChargingStation())
-                .when(new RequestUnlockEvseCommand(getChargingStationId(), getEvseId()))
-                .expectEvents(new UnlockEvseRequestedEvent(getChargingStationId(), getProtocol(), getEvseId()));
+        fixture.given(CHARGING_STATION)
+                .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, EVSE_ID))
+                .expectEvents(new UnlockEvseRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID));
     }
 
     @Test
     public void testRequestingToUnlockUnknownEvse() {
-        fixture.given(getChargingStation())
-                .when(new RequestUnlockEvseCommand(getChargingStationId(), UNKNOWN_EVSE_ID))
-                .expectEvents(new EvseNotFoundEvent(getChargingStationId(), UNKNOWN_EVSE_ID));
+        fixture.given(CHARGING_STATION)
+                .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, UNKNOWN_EVSE_ID))
+                .expectEvents(new EvseNotFoundEvent(CHARGING_STATION_ID, UNKNOWN_EVSE_ID));
     }
 
     @Test
     public void testStartTransactionOnUnknownEvse() {
-        fixture.given(getChargingStation())
-                .when(new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), UNKNOWN_EVSE_ID, getTextualToken(), 0, new Date()))
-                .expectEvents(new EvseNotFoundEvent(getChargingStationId(), UNKNOWN_EVSE_ID));
+        fixture.given(CHARGING_STATION)
+                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, UNKNOWN_EVSE_ID, IDENTIFYING_TOKEN, 0, new Date()))
+                .expectEvents(new EvseNotFoundEvent(CHARGING_STATION_ID, UNKNOWN_EVSE_ID));
     }
 
     @Test
     public void testRequestingToUnlockAllEvses() {
-        fixture.given(getChargingStation())
-                .when(new RequestUnlockEvseCommand(getChargingStationId(), Evse.ALL))
-                .expectEvents(new UnlockEvseRequestedEvent(getChargingStationId(), getProtocol(), new EvseId(1)),
-                        new UnlockEvseRequestedEvent(getChargingStationId(), getProtocol(), new EvseId(2)));
+        fixture.given(CHARGING_STATION)
+                .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, Evse.ALL))
+                .expectEvents(new UnlockEvseRequestedEvent(CHARGING_STATION_ID, PROTOCOL, new EvseId(1)),
+                        new UnlockEvseRequestedEvent(CHARGING_STATION_ID, PROTOCOL, new EvseId(2)));
     }
 
     @Test
     public void testRequestSoftResetChargingStation() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new RequestSoftResetChargingStationCommand(getChargingStationId()))
-                .expectEvents(new SoftResetChargingStationRequestedEvent(getChargingStationId(), getProtocol()));
+        fixture.given(CHARGING_STATION)
+                .when(new RequestSoftResetChargingStationCommand(CHARGING_STATION_ID))
+                .expectEvents(new SoftResetChargingStationRequestedEvent(CHARGING_STATION_ID, PROTOCOL));
     }
 
     @Test
     public void testRequestHardResetChargingStation() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new RequestHardResetChargingStationCommand(getChargingStationId()))
-                .expectEvents(new HardResetChargingStationRequestedEvent(getChargingStationId(), getProtocol()));
+        fixture.given(CHARGING_STATION)
+                .when(new RequestHardResetChargingStationCommand(CHARGING_STATION_ID))
+                .expectEvents(new HardResetChargingStationRequestedEvent(CHARGING_STATION_ID, PROTOCOL));
     }
 
     @Test
     public void testRequestChangeChargingStationAvailabilityToInoperative() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new RequestChangeChargingStationAvailabilityToInoperativeCommand(getChargingStationId(), getEvseId()))
-                .expectEvents(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(getChargingStationId(), getProtocol(), getEvseId()));
+        fixture.given(CHARGING_STATION)
+                .when(new RequestChangeChargingStationAvailabilityToInoperativeCommand(CHARGING_STATION_ID, EVSE_ID))
+                .expectEvents(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID));
     }
 
     @Test
     public void testRequestChangeChargingStationAvailabilityToOperative() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new RequestChangeChargingStationAvailabilityToOperativeCommand(getChargingStationId(), getEvseId()))
-                .expectEvents(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(getChargingStationId(), getProtocol(), getEvseId()));
+        fixture.given(CHARGING_STATION)
+                .when(new RequestChangeChargingStationAvailabilityToOperativeCommand(CHARGING_STATION_ID, EVSE_ID))
+                .expectEvents(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID));
     }
 
     @Test
     public void testDataTransfer() {
         String messageId = "updateChargeSchema";
         String data = "{'schema' : [{'offset':'2013-07-19T12:47:11.5959704Z', 'power':0.0}, {'offset':'2013-07-19T12:52:11.5959704Z'}]}";
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new DataTransferCommand(getChargingStationId(), getVendorId(), messageId, data))
-                .expectEvents(new DataTransferEvent(getChargingStationId(), getProtocol(), getVendorId(), messageId, data));
+        fixture.given(CHARGING_STATION)
+                .when(new DataTransferCommand(CHARGING_STATION_ID, CHARGING_STATION_VENDOR, messageId, data))
+                .expectEvents(new DataTransferEvent(CHARGING_STATION_ID, PROTOCOL, CHARGING_STATION_VENDOR, messageId, data));
     }
 
     @Test
     public void testGetDiagnostics() {
         String targetLocation = "ftp://abc.com/";
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new RequestDiagnosticsCommand(getChargingStationId(), targetLocation, null, null, null, null))
-                .expectEvents(new DiagnosticsRequestedEvent(getChargingStationId(), getProtocol(), targetLocation));
+        fixture.given(CHARGING_STATION)
+                .when(new RequestDiagnosticsCommand(CHARGING_STATION_ID, targetLocation, null, null, null, null))
+                .expectEvents(new DiagnosticsRequestedEvent(CHARGING_STATION_ID, PROTOCOL, targetLocation));
     }
 
     @Test
     public void testGetDiagnosticsFileNameReceived() {
         String diagnosticsFileName = "diagnostics.zip";
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new DiagnosticsFileNameReceivedCommand(getChargingStationId(), diagnosticsFileName))
-                .expectEvents(new DiagnosticsFileNameReceivedEvent(getChargingStationId(), diagnosticsFileName));
+        fixture.given(CHARGING_STATION)
+                .when(new DiagnosticsFileNameReceivedCommand(CHARGING_STATION_ID, diagnosticsFileName))
+                .expectEvents(new DiagnosticsFileNameReceivedEvent(CHARGING_STATION_ID, diagnosticsFileName));
     }
 
     @Test
     public void testGetDiagnosticsEmptyFileNameReceived() {
         String diagnosticsFileName = "";
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new DiagnosticsFileNameReceivedCommand(getChargingStationId(), diagnosticsFileName))
-                .expectEvents(new NoDiagnosticsInformationAvailableEvent(getChargingStationId()));
+        fixture.given(CHARGING_STATION)
+                .when(new DiagnosticsFileNameReceivedCommand(CHARGING_STATION_ID, diagnosticsFileName))
+                .expectEvents(new NoDiagnosticsInformationAvailableEvent(CHARGING_STATION_ID));
     }
 
     @Test
     public void testDiagnosticsStatusUpdate() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new UpdateDiagnosticsUploadStatusCommand(getChargingStationId(), true))
-                .expectEvents(new DiagnosticsUploadStatusUpdatedEvent(getChargingStationId(), true));
+        fixture.given(CHARGING_STATION)
+                .when(new UpdateDiagnosticsUploadStatusCommand(CHARGING_STATION_ID, true))
+                .expectEvents(new DiagnosticsUploadStatusUpdatedEvent(CHARGING_STATION_ID, true));
     }
 
     @Test
     public void testFirmwareStatusUpdate() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new UpdateFirmwareStatusCommand(getChargingStationId(), FirmwareStatus.DOWNLOAD_FAILED))
-                .expectEvents(new FirmwareStatusUpdatedEvent(getChargingStationId(), FirmwareStatus.DOWNLOAD_FAILED));
+        fixture.given(CHARGING_STATION)
+                .when(new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED))
+                .expectEvents(new FirmwareStatusUpdatedEvent(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED));
     }
 
     @Test
     public void testClearCache() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new RequestClearCacheCommand(getChargingStationId()))
-                .expectEvents(new ClearCacheRequestedEvent(getChargingStationId(), getProtocol()));
+        fixture.given(CHARGING_STATION)
+                .when(new RequestClearCacheCommand(CHARGING_STATION_ID))
+                .expectEvents(new ClearCacheRequestedEvent(CHARGING_STATION_ID, PROTOCOL));
     }
 
     @Test
@@ -357,210 +355,210 @@ public class ChargingStationTest {
         Date retrieveDate = new Date();
         Map<String, String> attributes = new HashMap<>();
 
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new RequestFirmwareUpdateCommand(getChargingStationId(), updateLocation, retrieveDate, attributes))
-                .expectEvents(new FirmwareUpdateRequestedEvent(getChargingStationId(), getProtocol(), updateLocation, retrieveDate, attributes));
+        fixture.given(CHARGING_STATION)
+                .when(new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, updateLocation, retrieveDate, attributes))
+                .expectEvents(new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, updateLocation, retrieveDate, attributes));
     }
 
     @Test
     public void testGetAuthorizationListVersionRequest() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new RequestAuthorizationListVersionCommand(getChargingStationId()))
-                .expectEvents(new AuthorizationListVersionRequestedEvent(getChargingStationId(), getProtocol()));
+        fixture.given(CHARGING_STATION)
+                .when(new RequestAuthorizationListVersionCommand(CHARGING_STATION_ID))
+                .expectEvents(new AuthorizationListVersionRequestedEvent(CHARGING_STATION_ID, PROTOCOL));
     }
 
     @Test
     public void testGetAuthorizationListVersionReceived() {
         int version = 1;
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new AuthorizationListVersionReceivedCommand(getChargingStationId(), version))
-                .expectEvents(new AuthorizationListVersionReceivedEvent(getChargingStationId(), version));
+        fixture.given(CHARGING_STATION)
+                .when(new AuthorizationListVersionReceivedCommand(CHARGING_STATION_ID, version))
+                .expectEvents(new AuthorizationListVersionReceivedEvent(CHARGING_STATION_ID, version));
     }
 
     @Test
     public void testRequestReserveNowReservableChargingStation() {
         Date expiryDate = new Date();
-        fixture.given(getConfiguredReservableChargingStation(true))
-                .when(new RequestReserveNowCommand(getChargingStationId(), getEvseId(), getTextualToken(), expiryDate, getTextualToken()))
-                .expectEvents(new ReserveNowRequestedEvent(getChargingStationId(), getProtocol(), getEvseId(), getTextualToken(), expiryDate, getTextualToken()));
+        fixture.given(RESERVABLE_CHARGING_STATION)
+                .when(new RequestReserveNowCommand(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN))
+                .expectEvents(new ReserveNowRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN));
     }
 
     @Test
     public void testRequestReserveNowNotReservableChargingStation() {
         Date expiryDate = new Date();
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new RequestReserveNowCommand(getChargingStationId(), getEvseId(), getTextualToken(), expiryDate, getTextualToken()))
-                .expectEvents(new ReserveNowRequestedForUnreservableChargingStationEvent(getChargingStationId(), getEvseId(), getTextualToken(), expiryDate, getTextualToken()));
+        fixture.given(CHARGING_STATION)
+                .when(new RequestReserveNowCommand(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN))
+                .expectEvents(new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN));
     }
 
     @Test
     public void testRequestCancelReservation() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new RequestCancelReservationCommand(getChargingStationId(), getReservationId()))
-                .expectEvents(new CancelReservationRequestedEvent(getChargingStationId(), getProtocol(), getReservationId()));
+        fixture.given(CHARGING_STATION)
+                .when(new RequestCancelReservationCommand(CHARGING_STATION_ID, RESERVATION_ID))
+                .expectEvents(new CancelReservationRequestedEvent(CHARGING_STATION_ID, PROTOCOL, RESERVATION_ID));
     }
 
     @Test
     public void testReservationStatusChanged() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new ReservationStatusChangedCommand(getChargingStationId(), getReservationId(), getReservationStatus()))
-                .expectEvents(new ReservationStatusChangedEvent(getChargingStationId(), getReservationId(), getReservationStatus()));
+        fixture.given(CHARGING_STATION)
+                .when(new ReservationStatusChangedCommand(CHARGING_STATION_ID, RESERVATION_ID, ReservationStatus.OCCUPIED))
+                .expectEvents(new ReservationStatusChangedEvent(CHARGING_STATION_ID, RESERVATION_ID, ReservationStatus.OCCUPIED));
     }
 
     @Test
     public void testIncomingDataTransfer() {
         String messageId = "MessageId";
         String dataToTransfer = "Data to transfer";
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new IncomingDataTransferCommand(getChargingStationId(), getVendorId(), messageId, dataToTransfer))
-                .expectEvents(new IncomingDataTransferReceivedEvent(getChargingStationId(), getVendorId(), messageId, dataToTransfer));
+        fixture.given(CHARGING_STATION)
+                .when(new IncomingDataTransferCommand(CHARGING_STATION_ID, CHARGING_STATION_VENDOR, messageId, dataToTransfer))
+                .expectEvents(new IncomingDataTransferReceivedEvent(CHARGING_STATION_ID, CHARGING_STATION_VENDOR, messageId, dataToTransfer));
     }
 
     @Test
     public void testChargingStationStatusNotification() {
         Date timeStamp = new Date();
 
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new ChargingStationStatusNotificationCommand(getChargingStationId(), ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap()))
-                .expectEvents(new ChargingStationStatusNotificationReceivedEvent(getChargingStationId(), ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap()));
+        fixture.given(CHARGING_STATION)
+                .when(new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap()))
+                .expectEvents(new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap()));
     }
 
     @Test
     public void testComponentStatusNotification() {
         Date timeStamp = new Date();
 
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new ComponentStatusNotificationCommand(getChargingStationId(), ChargingStationComponent.CONNECTOR, getEvseId(), ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap()))
-                .expectEvents(new ComponentStatusNotificationReceivedEvent(getChargingStationId(), ChargingStationComponent.CONNECTOR, getEvseId(), ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap()));
+        fixture.given(CHARGING_STATION)
+                .when(new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap()))
+                .expectEvents(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap()));
     }
 
     @Test
     public void testClearCacheRequestStatusChanged() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new ClearCacheStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
-                .expectEvents(new ClearCacheStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+        fixture.given(CHARGING_STATION)
+                .when(new ClearCacheStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
+                .expectEvents(new ClearCacheStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
     }
 
     @Test
     public void testChangeAvailabilityToInoperativeStatusChanged() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new ChangeAvailabilityToInoperativeStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
-                .expectEvents(new ChangeAvailabilityToInoperativeStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+        fixture.given(CHARGING_STATION)
+                .when(new ChangeAvailabilityToInoperativeStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
+                .expectEvents(new ChangeAvailabilityToInoperativeStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
     }
 
     @Test
     public void testChangeAvailabilityToOperativeStatusChanged() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new ChangeAvailabilityToOperativeStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
-                .expectEvents(new ChangeAvailabilityToOperativeStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+        fixture.given(CHARGING_STATION)
+                .when(new ChangeAvailabilityToOperativeStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
+                .expectEvents(new ChangeAvailabilityToOperativeStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
     }
 
     @Test
     public void testChangeConfiguration() {
         String configKey = "heartbeatInterval";
         String configValue = "800";
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new ChangeConfigurationCommand(getChargingStationId(), configKey, configValue))
-                .expectEvents(new ChangeConfigurationEvent(getChargingStationId(), getProtocol(), configKey, configValue));
+        fixture.given(CHARGING_STATION)
+                .when(new ChangeConfigurationCommand(CHARGING_STATION_ID, configKey, configValue))
+                .expectEvents(new ChangeConfigurationEvent(CHARGING_STATION_ID, PROTOCOL, configKey, configValue));
     }
 
     @Test
     public void testChangeConfigurationStatusChanged() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new ChangeConfigurationStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
-                .expectEvents(new ChangeConfigurationStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+        fixture.given(CHARGING_STATION)
+                .when(new ChangeConfigurationStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
+                .expectEvents(new ChangeConfigurationStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
     }
 
     @Test
     public void testDataTransferStatusChanged() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new DataTransferStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
-                .expectEvents(new DataTransferStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+        fixture.given(CHARGING_STATION)
+                .when(new DataTransferStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
+                .expectEvents(new DataTransferStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
     }
 
     @Test
     public void testHardResetStatusChanged() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new HardResetStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
-                .expectEvents(new HardResetStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+        fixture.given(CHARGING_STATION)
+                .when(new HardResetStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
+                .expectEvents(new HardResetStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
     }
 
     @Test
     public void testSendAuthorizationListStatusChanged() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new SendAuthorizationListStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
-                .expectEvents(new SendAuthorizationListStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+        fixture.given(CHARGING_STATION)
+                .when(new SendAuthorizationListStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
+                .expectEvents(new SendAuthorizationListStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
     }
 
     @Test
     public void testSoftResetStatusChanged() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new SoftResetStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
-                .expectEvents(new SoftResetStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+        fixture.given(CHARGING_STATION)
+                .when(new SoftResetStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
+                .expectEvents(new SoftResetStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
     }
 
     @Test
     public void testStartTransactionStatusChangedCommand() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new StartTransactionStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
-                .expectEvents(new StartTransactionStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+        fixture.given(CHARGING_STATION)
+                .when(new StartTransactionStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
+                .expectEvents(new StartTransactionStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
     }
 
     @Test
     public void testStopTransaction() {
         Date now = new Date();
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new StopTransactionCommand(getChargingStationId(), getNumberedTransactionId(), getTextualToken(), METER_STOP, now))
-                .expectEvents(new TransactionStoppedEvent(getChargingStationId(), getNumberedTransactionId(), getTextualToken(), METER_STOP, now));
+        fixture.given(CHARGING_STATION)
+                .when(new StopTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, now))
+                .expectEvents(new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, now));
     }
 
     @Test
     public void testStopTransactionStatusChanged() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new StopTransactionStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
-                .expectEvents(new StopTransactionStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+        fixture.given(CHARGING_STATION)
+                .when(new StopTransactionStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
+                .expectEvents(new StopTransactionStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
     }
 
     @Test
     public void testUnlockEvseStatusChanged() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new UnlockEvseStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS))
-                .expectEvents(new UnlockEvseStatusChangedEvent(getChargingStationId(), RequestStatus.SUCCESS));
+        fixture.given(CHARGING_STATION)
+                .when(new UnlockEvseStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
+                .expectEvents(new UnlockEvseStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
     }
 
     @Test
     public void testAuthorize() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new AuthorizeCommand(getChargingStationId(), getTextualToken()))
-                .expectEvents(new AuthorizationRequestedEvent(getChargingStationId(), getTextualToken()));
+        fixture.given(CHARGING_STATION)
+                .when(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN))
+                .expectEvents(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN));
     }
 
     @Test
     public void testGrantAuthorization() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new GrantAuthorizationCommand(getChargingStationId(), getTextualToken()))
-                .expectEvents(new AuthorizationResultEvent(getChargingStationId(), getTextualToken(), AuthorizationResultStatus.ACCEPTED));
+        fixture.given(CHARGING_STATION)
+                .when(new GrantAuthorizationCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN))
+                .expectEvents(new AuthorizationResultEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, AuthorizationResultStatus.ACCEPTED));
     }
 
     @Test
     public void testDenyAuthorization() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new DenyAuthorizationCommand(getChargingStationId(), getTextualToken()))
-                .expectEvents(new AuthorizationResultEvent(getChargingStationId(), getTextualToken(), AuthorizationResultStatus.INVALID));
+        fixture.given(CHARGING_STATION)
+                .when(new DenyAuthorizationCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN))
+                .expectEvents(new AuthorizationResultEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, AuthorizationResultStatus.INVALID));
     }
 
     @Test
     public void testMakeChargingStationReservable() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new MakeChargingStationReservableCommand(getChargingStationId()))
-                .expectEvents(new ChargingStationMadeReservableEvent(getChargingStationId()));
+        fixture.given(CHARGING_STATION)
+                .when(new MakeChargingStationReservableCommand(CHARGING_STATION_ID))
+                .expectEvents(new ChargingStationMadeReservableEvent(CHARGING_STATION_ID));
     }
 
     @Test
     public void testMakeChargingStationNotReservable() {
-        fixture.given(getConfiguredChargingStation(true))
-                .when(new MakeChargingStationNotReservableCommand(getChargingStationId()))
-                .expectEvents(new ChargingStationMadeNotReservableEvent(getChargingStationId()));
+        fixture.given(CHARGING_STATION)
+                .when(new MakeChargingStationNotReservableCommand(CHARGING_STATION_ID))
+                .expectEvents(new ChargingStationMadeNotReservableEvent(CHARGING_STATION_ID));
     }
 
 }

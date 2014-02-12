@@ -15,29 +15,13 @@
  */
 package io.motown.ocpp.v15.soap.chargepoint;
 
-import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
-import io.motown.ocpp.v15.soap.chargepoint.schema.ReservationStatus;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class TestUtils {
-
-    public static final ChargingStationId CHARGING_STATION_ID = new ChargingStationId("CS-001");
-
-    public static final IdentifyingToken IDENTIFYING_TOKEN = new TextualToken("token");
-
-    public static final EvseId EVSE_ID = new EvseId(1);
-
-    public static final int TRANSACTION_ID = 2;
-
-    public static final String VENDOR_ID = "MOTOWN";
-
-    public static final String DATA_TRANSFER_MESSAGE_ID = "MESSAGE_ID";
-
-    public static final String DATA = "DATA";
+public final class V15SOAPTestUtils {
 
     public static final String CONFIGURATION_KEY = "HEARTBEATINTERVAL";
 
@@ -61,9 +45,11 @@ public class TestUtils {
 
     public static final Date EXPIRY_DATE = getFixedDate();
 
-    public static final IdentifyingToken PARENT_IDENTIFYING_TOKEN = new TextualToken("parent");
-
-    public static final int RESERVATION_ID = 2;
+    /**
+     * Private no-arg constructor to prevent instantiation of utility class.
+     */
+    private V15SOAPTestUtils() {
+    }
 
     public static GetConfigurationResponse getGetConfigurationResponse() {
         GetConfigurationResponse response = new GetConfigurationResponse();

@@ -15,118 +15,43 @@
  */
 package io.motown.ocpp.viewmodel.domain;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import org.axonframework.domain.EventMessage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-public final class TestUtils {
+import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
 
-    public static final int TRANSACTION_NUMBER = 123;
-    public static final int MAX_AMP_32 = 32;
-    public static final int PHASE_3 = 3;
-    public static final int VOLTAGE_230 = 230;
+public final class OccpViewModelTestUtils {
+
+    public static final String CHARGING_STATION_ADDRESS = "127.0.0.1";
     public static final int NUMBER_OF_RETRIES = 3;
     public static final int RETRY_INTERVAL = 20;
     public static final int LIST_VERSION = 1;
-    public static final EvseId UNKNOWN_EVSE_ID = new EvseId(3);
-    public static final int MAX_HOURS = 12;
 
-    private TestUtils() {
+    private OccpViewModelTestUtils() {
         // Private no-arg constructor to prevent instantiation of utility class.
     }
 
     public static ChargingStation getRegisteredAndConfiguredChargingStation() {
-        ChargingStation cs = new ChargingStation(getChargingStationId().getId(), getChargingStationAddress());
+        ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId(), CHARGING_STATION_ADDRESS);
         cs.setRegistered(true);
-        cs.setNumberOfEvses(getEvses().size());
+        cs.setNumberOfEvses(EVSES.size());
         cs.setConfigured(true);
 
         return cs;
-    }
-
-    public static ChargingStationId getChargingStationId() {
-        return new ChargingStationId("CS-001");
-    }
-
-    public static String getProtocol() {
-        return "OCPPS15";
-    }
-
-    public static String getRandomString() {
-        return UUID.randomUUID().toString();
-    }
-
-    public static IdentifyingToken getIdentifyingToken() {
-        return new TextualToken("ID-TAG");
-    }
-
-    public static String getIdTag() {
-        return "ID-TAG";
-    }
-
-    public static NumberedTransactionId getNumberedTransactionId() {
-        return new NumberedTransactionId(getChargingStationId(), getProtocol(), TRANSACTION_NUMBER);
-    }
-
-    public static String getChargingStationAddress() {
-        return "127.0.0.1";
     }
 
     public static String getVendor() {
         return "Mowotn";
     }
 
-    public static String getModel() {
-        return "ChargingStation";
-    }
-
-    public static Map<String, String> getConfigurationItems() {
-        return ImmutableMap.<String, String>builder()
-                .put("io.motown.sockets.amount", "2")
-                .put("io.motown.random.config.item", "true")
-                .put("io.motown.another.random.config.item", "12")
-                .put("io.motown.yet.another.one", "blue")
-                .build();
-    }
-
-    public static Set<Evse> getEvses() {
-        List<Connector> connectors = ImmutableList.<Connector>builder()
-                .add(new Connector(MAX_AMP_32, PHASE_3, VOLTAGE_230, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_2))
-                .build();
-
-        return ImmutableSet.<Evse>builder()
-                .add(new Evse(new EvseId(1), connectors))
-                .add(new Evse(new EvseId(2), connectors))
-                .build();
-    }
-
-    public static EvseId getEvseId() {
-        return new EvseId(1);
-    }
-
     public static EvseId getChargingStationComponentId() {
         return new EvseId(DomainService.CHARGING_STATION_EVSE_ID);
-    }
-
-    public static int getReservationNumber() {
-        return 1;
-    }
-
-    public static ReservationId getReservationId() {
-        return new NumberedReservationId(getChargingStationId(), getProtocol(), getReservationNumber());
-    }
-
-    public static String getMessageId() {
-        return "messageId";
-    }
-
-    public static String getData() {
-        return "data";
     }
 
     public static String getConfigurationKey() {
@@ -201,29 +126,12 @@ public final class TestUtils {
 
     public static Map<String, String> getStartTransactionAttributesMap(int reservationId) {
         return ImmutableMap.<String, String>builder()
-                .put("reservationId", new NumberedReservationId(getChargingStationId(), getProtocol(), reservationId).getId())
+                .put("reservationId", new NumberedReservationId(CHARGING_STATION_ID, PROTOCOL, reservationId).getId())
                 .build();
     }
 
     public static List<MeterValue> getEmptyMeterValuesList() {
         return new ArrayList<MeterValue>();
-    }
-
-    public static List<MeterValue> getMeterValuesList() {
-        List<MeterValue> values = new ArrayList<>();
-
-        for (int hour = 1; hour < MAX_HOURS; hour++) {
-            // make sure dates can be compared to other instances of this list
-            Calendar c = new GregorianCalendar();
-            c.set(Calendar.HOUR_OF_DAY, hour);
-            c.set(Calendar.MINUTE, 0);
-            c.set(Calendar.SECOND, 0);
-            c.set(Calendar.MILLISECOND, 0);
-            Date date = c.getTime();
-
-            values.add(new MeterValue(date, "10"));
-        }
-        return values;
     }
 
     public static String getDiagnosticsFileName() {

@@ -15,7 +15,6 @@
  */
 package io.motown.domain.app.axon;
 
-import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ChargingStationSentHeartbeatEvent;
 import io.motown.domain.api.chargingstation.HardResetChargingStationRequestedEvent;
 import org.axonframework.domain.EventMessage;
@@ -25,6 +24,8 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 
+import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.PROTOCOL;
 import static org.junit.Assert.assertEquals;
 
 public class MotownRoutingKeyResolverTest {
@@ -45,28 +46,21 @@ public class MotownRoutingKeyResolverTest {
 
     @Test
     public void testResolveRoutingKeyCommunicationWithChargingStationEvent() {
-        String protocol = "OCPP15S";
-
-        EventMessage message = new GenericEventMessage<>(new HardResetChargingStationRequestedEvent(getChargingStationId(), protocol));
+        EventMessage message = new GenericEventMessage<>(new HardResetChargingStationRequestedEvent(CHARGING_STATION_ID, PROTOCOL));
 
         String routingKey = resolver.resolveRoutingKey(message);
-        String expected = routingKeyPrefix + protocol;
+        String expected = routingKeyPrefix + PROTOCOL;
 
         assertEquals(expected, routingKey);
     }
 
     @Test
     public void testResolveRoutingKeyNoCommunicationEvent() {
-        EventMessage message = new GenericEventMessage<>(new ChargingStationSentHeartbeatEvent(getChargingStationId()));
+        EventMessage message = new GenericEventMessage<>(new ChargingStationSentHeartbeatEvent(CHARGING_STATION_ID));
 
         String routingKey = resolver.resolveRoutingKey(message);
         String expected = ChargingStationSentHeartbeatEvent.class.getPackage().getName();
 
         assertEquals(expected, routingKey);
     }
-
-    private ChargingStationId getChargingStationId() {
-        return new ChargingStationId("id");
-    }
-
 }

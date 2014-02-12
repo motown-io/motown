@@ -20,7 +20,7 @@ import io.motown.identificationauthorization.pluginapi.AuthenticationProvider;
 import org.junit.Before;
 import org.junit.Test;
 
-import static io.motown.identificationauthorization.app.TestUtils.*;
+import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
 import static org.jgroups.util.Util.assertFalse;
 import static org.jgroups.util.Util.assertTrue;
 import static org.mockito.Mockito.*;
@@ -38,11 +38,11 @@ public class IdentificationAuthorizationServiceTest {
         service = new IdentificationAuthorizationService();
 
         firstProvider = mock(AuthenticationProvider.class);
-        when(firstProvider.isValid(getValidIdentifyingToken())).thenReturn(true);
-        when(firstProvider.isValid(getInvalidIdentifyingToken())).thenReturn(false);
+        when(firstProvider.isValid(IDENTIFYING_TOKEN)).thenReturn(true);
+        when(firstProvider.isValid(INVALID_IDENTIFYING_TOKEN)).thenReturn(false);
 
         secondProvider = mock(AuthenticationProvider.class);
-        when(secondProvider.isValid(getValidIdentifyingTokenSecondAuthorizationProvider())).thenReturn(true);
+        when(secondProvider.isValid(ANOTHER_IDENTIFYING_TOKEN)).thenReturn(true);
 
         service.setProviders(ImmutableSet.<AuthenticationProvider>builder()
                 .add(firstProvider)
@@ -52,26 +52,26 @@ public class IdentificationAuthorizationServiceTest {
 
     @Test
     public void testIsValidFirstProvider() {
-        assertTrue(service.isValid(getValidIdentifyingToken()));
+        assertTrue(service.isValid(IDENTIFYING_TOKEN));
 
-        verify(firstProvider).isValid(getValidIdentifyingToken());
-        verify(secondProvider, never()).isValid(getValidIdentifyingToken());
+        verify(firstProvider).isValid(IDENTIFYING_TOKEN);
+        verify(secondProvider, never()).isValid(IDENTIFYING_TOKEN);
     }
 
     @Test
     public void testIsValidSecondProvider() {
-        assertTrue(service.isValid(getValidIdentifyingTokenSecondAuthorizationProvider()));
+        assertTrue(service.isValid(ANOTHER_IDENTIFYING_TOKEN));
 
-        verify(firstProvider).isValid(getValidIdentifyingTokenSecondAuthorizationProvider());
-        verify(secondProvider).isValid(getValidIdentifyingTokenSecondAuthorizationProvider());
+        verify(firstProvider).isValid(ANOTHER_IDENTIFYING_TOKEN);
+        verify(secondProvider).isValid(ANOTHER_IDENTIFYING_TOKEN);
     }
 
     @Test
     public void testIsInvalidBothProviders() {
-        assertFalse(service.isValid(getInvalidIdentifyingToken()));
+        assertFalse(service.isValid(INVALID_IDENTIFYING_TOKEN));
 
-        verify(firstProvider).isValid(getInvalidIdentifyingToken());
-        verify(secondProvider).isValid(getInvalidIdentifyingToken());
+        verify(firstProvider).isValid(INVALID_IDENTIFYING_TOKEN);
+        verify(secondProvider).isValid(INVALID_IDENTIFYING_TOKEN);
     }
 
 }

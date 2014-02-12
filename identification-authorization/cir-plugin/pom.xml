@@ -38,6 +38,12 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.motown.domain</groupId>
+            <artifactId>domain-core-api-test</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
@@ -86,7 +92,8 @@
                                     <wsdl>${basedir}/src/main/resources/wsdl/cir10.wsdl</wsdl>
                                     <wsdlLocation>classpath:wsdl/cir10.wsdl</wsdlLocation>
                                     <packagenames>
-                                        <packagename>io.motown.identificationauthorization.cirplugin.cir.schema</packagename>
+                                        <packagename>io.motown.identificationauthorization.cirplugin.cir.schema
+                                        </packagename>
                                     </packagenames>
                                     <extraargs>
                                         <extraarg>-compile</extraarg>

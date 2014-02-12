@@ -15,9 +15,9 @@
  */
 package io.motown.ocpp.v15.soap.chargepoint;
 
-import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.NumberedTransactionId;
+import io.motown.domain.api.chargingstation.RequestStatus;
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
-import io.motown.ocpp.v15.soap.chargepoint.schema.ReservationStatus;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -26,22 +26,16 @@ import org.mockito.ArgumentCaptor;
 
 import java.util.Map;
 
-import static io.motown.ocpp.v15.soap.chargepoint.TestUtils.*;
-import static io.motown.ocpp.v15.soap.chargepoint.TestUtils.getGetConfigurationResponse;
+import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
+import static io.motown.ocpp.v15.soap.chargepoint.V15SOAPTestUtils.*;
 import static org.jgroups.util.Util.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ChargingStationOcpp15SoapClientTest {
-
-    private ChargingStationProxyFactory chargingStationProxyFactory;
-
-    private DomainService domainService;
 
     private ChargePointService chargePointService;
 
@@ -49,9 +43,9 @@ public class ChargingStationOcpp15SoapClientTest {
 
     @Before
     public void setUp() {
-        chargingStationProxyFactory = mock(ChargingStationProxyFactory.class);
+        ChargingStationProxyFactory chargingStationProxyFactory = mock(ChargingStationProxyFactory.class);
         chargePointService = mock(ChargePointService.class);
-        domainService = mock(DomainService.class);
+        DomainService domainService = mock(DomainService.class);
 
         when(chargingStationProxyFactory.createChargingStationService(anyString())).thenReturn(chargePointService);
 
@@ -110,14 +104,14 @@ public class ChargingStationOcpp15SoapClientTest {
 
         verify(chargePointService).remoteStartTransaction(remoteStartTransactionRequestArgument.capture(), eq(CHARGING_STATION_ID.getId()));
         assertEquals(IDENTIFYING_TOKEN.getToken(), remoteStartTransactionRequestArgument.getValue().getIdTag());
-        assertEquals(new Integer(EVSE_ID.getId()), remoteStartTransactionRequestArgument.getValue().getConnectorId());
+        assertEquals(Integer.valueOf(EVSE_ID.getId()), remoteStartTransactionRequestArgument.getValue().getConnectorId());
     }
 
     @Test
     public void stopTransactionAcceptedVerifyReturnValue() {
         when(chargePointService.remoteStopTransaction(any(RemoteStopTransactionRequest.class), anyString())).thenReturn(getRemoteStopTransactionResponse(RemoteStartStopStatus.ACCEPTED));
 
-        RequestStatus requestStatus = client.stopTransaction(CHARGING_STATION_ID, TRANSACTION_ID);
+        RequestStatus requestStatus = client.stopTransaction(CHARGING_STATION_ID, ((NumberedTransactionId) TRANSACTION_ID).getNumber());
 
         assertEquals(RequestStatus.SUCCESS, requestStatus);
     }
@@ -126,7 +120,7 @@ public class ChargingStationOcpp15SoapClientTest {
     public void stopTransactionRejectedVerifyReturnValue() {
         when(chargePointService.remoteStopTransaction(any(RemoteStopTransactionRequest.class), anyString())).thenReturn(getRemoteStopTransactionResponse(RemoteStartStopStatus.REJECTED));
 
-        RequestStatus requestStatus = client.stopTransaction(CHARGING_STATION_ID, TRANSACTION_ID);
+        RequestStatus requestStatus = client.stopTransaction(CHARGING_STATION_ID, ((NumberedTransactionId) TRANSACTION_ID).getNumber());
 
         assertEquals(RequestStatus.FAILURE, requestStatus);
     }
@@ -136,10 +130,10 @@ public class ChargingStationOcpp15SoapClientTest {
         when(chargePointService.remoteStopTransaction(any(RemoteStopTransactionRequest.class), anyString())).thenReturn(getRemoteStopTransactionResponse(RemoteStartStopStatus.ACCEPTED));
         ArgumentCaptor<RemoteStopTransactionRequest> remoteStopTransactionRequestArgument = ArgumentCaptor.forClass(RemoteStopTransactionRequest.class);
 
-        client.stopTransaction(CHARGING_STATION_ID, TRANSACTION_ID);
+        client.stopTransaction(CHARGING_STATION_ID, ((NumberedTransactionId) TRANSACTION_ID).getNumber());
 
         verify(chargePointService).remoteStopTransaction(remoteStopTransactionRequestArgument.capture(), eq(CHARGING_STATION_ID.getId()));
-        assertEquals(TRANSACTION_ID, remoteStopTransactionRequestArgument.getValue().getTransactionId());
+        assertEquals(((NumberedTransactionId) TRANSACTION_ID).getNumber(), remoteStopTransactionRequestArgument.getValue().getTransactionId());
     }
 
     @Test
@@ -293,7 +287,7 @@ public class ChargingStationOcpp15SoapClientTest {
     public void dataTransferAcceptedVerifyReturnValue() {
         when(chargePointService.dataTransfer(any(DataTransferRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getDataTransferResponse(DataTransferStatus.ACCEPTED));
 
-        RequestStatus requestStatus = client.dataTransfer(CHARGING_STATION_ID, VENDOR_ID, DATA_TRANSFER_MESSAGE_ID, DATA);
+        RequestStatus requestStatus = client.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
 
         assertEquals(RequestStatus.SUCCESS, requestStatus);
     }
@@ -302,7 +296,7 @@ public class ChargingStationOcpp15SoapClientTest {
     public void dataTransferRejectedVerifyReturnValue() {
         when(chargePointService.dataTransfer(any(DataTransferRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getDataTransferResponse(DataTransferStatus.REJECTED));
 
-        RequestStatus requestStatus = client.dataTransfer(CHARGING_STATION_ID, VENDOR_ID, DATA_TRANSFER_MESSAGE_ID, DATA);
+        RequestStatus requestStatus = client.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
 
         assertEquals(RequestStatus.FAILURE, requestStatus);
     }
@@ -312,12 +306,12 @@ public class ChargingStationOcpp15SoapClientTest {
         when(chargePointService.dataTransfer(any(DataTransferRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getDataTransferResponse(DataTransferStatus.ACCEPTED));
         ArgumentCaptor<DataTransferRequest> dataTransferArgument = ArgumentCaptor.forClass(DataTransferRequest.class);
 
-        client.dataTransfer(CHARGING_STATION_ID, VENDOR_ID, DATA_TRANSFER_MESSAGE_ID, DATA);
+        client.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
 
         verify(chargePointService).dataTransfer(dataTransferArgument.capture(), eq(CHARGING_STATION_ID.getId()));
         assertEquals(DATA_TRANSFER_MESSAGE_ID, dataTransferArgument.getValue().getMessageId());
-        assertEquals(DATA, dataTransferArgument.getValue().getData());
-        assertEquals(VENDOR_ID, dataTransferArgument.getValue().getVendorId());
+        assertEquals(DATA_TRANSFER_DATA, dataTransferArgument.getValue().getData());
+        assertEquals(DATA_TRANSFER_VENDOR, dataTransferArgument.getValue().getVendorId());
     }
 
     @Test
@@ -444,7 +438,7 @@ public class ChargingStationOcpp15SoapClientTest {
     public void reserveNowAcceptedVerifyReturnValue() {
         when(chargePointService.reserveNow(any(ReserveNowRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getReserveNowResponse(ReservationStatus.ACCEPTED));
 
-        io.motown.domain.api.chargingstation.ReservationStatus reservationStatus = client.reserveNow(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, PARENT_IDENTIFYING_TOKEN, RESERVATION_ID);
+        io.motown.domain.api.chargingstation.ReservationStatus reservationStatus = client.reserveNow(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, PARENT_IDENTIFYING_TOKEN, RESERVATION_ID.getNumber());
 
         assertEquals(io.motown.domain.api.chargingstation.ReservationStatus.ACCEPTED, reservationStatus);
     }
@@ -453,7 +447,7 @@ public class ChargingStationOcpp15SoapClientTest {
     public void reserveNowFaultedVerifyReturnValue() {
         when(chargePointService.reserveNow(any(ReserveNowRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getReserveNowResponse(ReservationStatus.FAULTED));
 
-        io.motown.domain.api.chargingstation.ReservationStatus reservationStatus = client.reserveNow(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, PARENT_IDENTIFYING_TOKEN, RESERVATION_ID);
+        io.motown.domain.api.chargingstation.ReservationStatus reservationStatus = client.reserveNow(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, PARENT_IDENTIFYING_TOKEN, RESERVATION_ID.getNumber());
 
         assertEquals(io.motown.domain.api.chargingstation.ReservationStatus.FAULTED, reservationStatus);
     }
@@ -462,7 +456,7 @@ public class ChargingStationOcpp15SoapClientTest {
     public void reserveNowOccupiedVerifyReturnValue() {
         when(chargePointService.reserveNow(any(ReserveNowRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getReserveNowResponse(ReservationStatus.OCCUPIED));
 
-        io.motown.domain.api.chargingstation.ReservationStatus reservationStatus = client.reserveNow(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, PARENT_IDENTIFYING_TOKEN, RESERVATION_ID);
+        io.motown.domain.api.chargingstation.ReservationStatus reservationStatus = client.reserveNow(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, PARENT_IDENTIFYING_TOKEN, RESERVATION_ID.getNumber());
 
         assertEquals(io.motown.domain.api.chargingstation.ReservationStatus.OCCUPIED, reservationStatus);
     }
@@ -471,7 +465,7 @@ public class ChargingStationOcpp15SoapClientTest {
     public void reserveNowRejectedVerifyReturnValue() {
         when(chargePointService.reserveNow(any(ReserveNowRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getReserveNowResponse(ReservationStatus.REJECTED));
 
-        io.motown.domain.api.chargingstation.ReservationStatus reservationStatus = client.reserveNow(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, PARENT_IDENTIFYING_TOKEN, RESERVATION_ID);
+        io.motown.domain.api.chargingstation.ReservationStatus reservationStatus = client.reserveNow(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, PARENT_IDENTIFYING_TOKEN, RESERVATION_ID.getNumber());
 
         assertEquals(io.motown.domain.api.chargingstation.ReservationStatus.REJECTED, reservationStatus);
     }
@@ -480,7 +474,7 @@ public class ChargingStationOcpp15SoapClientTest {
     public void reserveNowUnavailableVerifyReturnValue() {
         when(chargePointService.reserveNow(any(ReserveNowRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getReserveNowResponse(ReservationStatus.UNAVAILABLE));
 
-        io.motown.domain.api.chargingstation.ReservationStatus reservationStatus = client.reserveNow(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, PARENT_IDENTIFYING_TOKEN, RESERVATION_ID);
+        io.motown.domain.api.chargingstation.ReservationStatus reservationStatus = client.reserveNow(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, PARENT_IDENTIFYING_TOKEN, RESERVATION_ID.getNumber());
 
         assertEquals(io.motown.domain.api.chargingstation.ReservationStatus.UNAVAILABLE, reservationStatus);
     }
@@ -491,14 +485,14 @@ public class ChargingStationOcpp15SoapClientTest {
         when(chargePointService.reserveNow(any(ReserveNowRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getReserveNowResponse(ReservationStatus.ACCEPTED));
         ArgumentCaptor<ReserveNowRequest> reserveNowArgument = ArgumentCaptor.forClass(ReserveNowRequest.class);
 
-        client.reserveNow(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, PARENT_IDENTIFYING_TOKEN, RESERVATION_ID);
+        client.reserveNow(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, PARENT_IDENTIFYING_TOKEN, RESERVATION_ID.getNumber());
 
         verify(chargePointService).reserveNow(reserveNowArgument.capture(), eq(CHARGING_STATION_ID.getId()));
         assertEquals(Integer.parseInt(EVSE_ID.getId()), reserveNowArgument.getValue().getConnectorId());
         assertEquals(IDENTIFYING_TOKEN.getToken(), reserveNowArgument.getValue().getIdTag());
         assertEquals(EXPIRY_DATE, reserveNowArgument.getValue().getExpiryDate());
         assertEquals(PARENT_IDENTIFYING_TOKEN.getToken(), reserveNowArgument.getValue().getParentIdTag());
-        assertEquals(RESERVATION_ID, reserveNowArgument.getValue().getReservationId());
+        assertEquals(RESERVATION_ID.getNumber(), reserveNowArgument.getValue().getReservationId());
     }
 
 }

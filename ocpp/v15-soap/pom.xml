@@ -48,6 +48,12 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.motown.domain</groupId>
+            <artifactId>domain-core-api-test</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
@@ -132,7 +138,9 @@
                                 <wsdlOption>
                                     <wsdl>src/main/webapp/WEB-INF/wsdl/ocpp_15_centralsystem.wsdl</wsdl>
                                     <bindingFiles>
-                                        <bindingFile>src/main/webapp/WEB-INF/wsdl/CentralSystemXMLGregorianCalendarBinding.xml</bindingFile>
+                                        <bindingFile>
+                                            src/main/webapp/WEB-INF/wsdl/CentralSystemXMLGregorianCalendarBinding.xml
+                                        </bindingFile>
                                     </bindingFiles>
                                     <wsdlLocation>wsdl/ocpp_15_centralsystem.wsdl</wsdlLocation>
                                     <packagenames>
@@ -146,7 +154,9 @@
                                 <wsdlOption>
                                     <wsdl>src/main/webapp/WEB-INF/wsdl/ocpp_15_chargepoint.wsdl</wsdl>
                                     <bindingFiles>
-                                        <bindingFile>src/main/webapp/WEB-INF/wsdl/ChargePointXMLGregorianCalendarBinding.xml</bindingFile>
+                                        <bindingFile>
+                                            src/main/webapp/WEB-INF/wsdl/ChargePointXMLGregorianCalendarBinding.xml
+                                        </bindingFile>
                                     </bindingFiles>
                                     <wsdlLocation>wsdl/ocpp_15_chargepoint.wsdl</wsdlLocation>
                                     <packagenames>

@@ -16,19 +16,19 @@
 package io.motown.identificationauthorization.cirplugin;
 
 import io.motown.domain.api.chargingstation.IdentifyingToken;
-import io.motown.domain.api.chargingstation.TextualToken;
 import io.motown.identificationauthorization.cirplugin.cir.schema.ArrayOfCard;
 import io.motown.identificationauthorization.cirplugin.cir.schema.Card;
 import io.motown.identificationauthorization.cirplugin.cir.schema.InquireResult;
 
-public final class TestUtils {
+import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.IDENTIFYING_TOKEN;
 
-    private TestUtils() {
+public final class CirPluginTestUtils {
+
+    public static final String CIR_USERNAME = "username";
+    public static final String CIR_PASSWORD = "password";
+
+    private CirPluginTestUtils() {
         // Private no-arg constructor to prevent instantiation of utility class.
-    }
-
-    public static IdentifyingToken getIdentifyingToken() {
-        return new TextualToken("token");
     }
 
     public static ArrayOfCard getArrayOfCard(IdentifyingToken token) {
@@ -44,7 +44,7 @@ public final class TestUtils {
     public static InquireResult getInquireResult(boolean valid) {
         InquireResult result = new InquireResult();
 
-        ArrayOfCard arrayOfCard = getArrayOfCard(getIdentifyingToken());
+        ArrayOfCard arrayOfCard = getArrayOfCard(IDENTIFYING_TOKEN);
         arrayOfCard.getCard().get(0).setValid(valid);
         result.setCards(arrayOfCard);
 
@@ -61,13 +61,4 @@ public final class TestUtils {
 
         return result;
     }
-
-    public static String getCirServiceUsername() {
-        return "username";
-    }
-
-    public static String getCirServicePassword() {
-        return "password";
-    }
-
 }

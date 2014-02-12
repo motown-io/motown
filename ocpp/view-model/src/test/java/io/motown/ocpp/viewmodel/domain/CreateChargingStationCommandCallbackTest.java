@@ -23,7 +23,8 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static io.motown.ocpp.viewmodel.domain.TestUtils.*;
+import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
+import static io.motown.ocpp.viewmodel.domain.OccpViewModelTestUtils.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -47,15 +48,15 @@ public class CreateChargingStationCommandCallbackTest {
         DomainCommandGateway gateway = mock(DomainCommandGateway.class);
         domainService.setCommandGateway(gateway);
 
-        createChargingStationCommandCallback = new CreateChargingStationCommandCallback(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel(), getProtocol(), getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber(), chargingStationRepository, domainService);
+        createChargingStationCommandCallback = new CreateChargingStationCommandCallback(CHARGING_STATION_ID, CHARGING_STATION_ADDRESS, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber(), chargingStationRepository, domainService);
     }
 
     @Test
     public void testOnSuccess() {
         createChargingStationCommandCallback.onSuccess(new Object());
 
-        verify(domainService).bootChargingStation(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel(), getProtocol(), getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
-        verify(chargingStationRepository).save(new ChargingStation(getChargingStationId().getId()));
+        verify(domainService).bootChargingStation(CHARGING_STATION_ID, CHARGING_STATION_ADDRESS, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
+        verify(chargingStationRepository).save(new ChargingStation(CHARGING_STATION_ID.getId()));
     }
 
     @Test

@@ -28,7 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static io.motown.ocpp.viewmodel.domain.TestUtils.*;
+import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
 import static junit.framework.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -53,53 +53,53 @@ public class OcppEventHandlerTest {
 
     @Test
     public void testChargingStationBootedEvent() {
-        assertNull(chargingStationRepository.findOne(getChargingStationId().getId()));
+        assertNull(chargingStationRepository.findOne(CHARGING_STATION_ID.getId()));
 
-        eventHandler.handle(new ChargingStationCreatedEvent(getChargingStationId()));
+        eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID));
 
-        ChargingStation cs = chargingStationRepository.findOne(getChargingStationId().getId());
+        ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
         assertNotNull(cs);
 
-        assertEquals(cs.getId(), getChargingStationId().getId());
+        assertEquals(cs.getId(), CHARGING_STATION_ID.getId());
     }
 
     @Test
     public void testChargingStationAcceptedEvent() {
-        eventHandler.handle(new ChargingStationCreatedEvent(getChargingStationId()));
+        eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID));
 
-        eventHandler.handle(new ChargingStationAcceptedEvent(getChargingStationId()));
+        eventHandler.handle(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
 
-        ChargingStation cs = chargingStationRepository.findOne(getChargingStationId().getId());
+        ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
         assertTrue(cs.isRegistered());
     }
 
     @Test
     public void testUnknownChargingStationAcceptedEvent() {
         // no exception expected on unknown charging station
-        eventHandler.handle(new ChargingStationAcceptedEvent(getChargingStationId()));
+        eventHandler.handle(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
     }
 
     @Test
     public void testChargingStationConfiguredEvent() {
-        eventHandler.handle(new ChargingStationCreatedEvent(getChargingStationId()));
-        ChargingStation cs = chargingStationRepository.findOne(getChargingStationId().getId());
+        eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID));
+        ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
         assertFalse(cs.isConfigured());
-        assertNotSame(cs.getNumberOfEvses(), getEvses().size());
+        assertNotSame(cs.getNumberOfEvses(), EVSES.size());
 
-        eventHandler.handle(new ChargingStationConfiguredEvent(getChargingStationId(), getEvses(), getConfigurationItems()));
+        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
 
-        cs = chargingStationRepository.findOne(getChargingStationId().getId());
+        cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
         assertTrue(cs.isConfigured());
-        assertEquals(cs.getNumberOfEvses(), getEvses().size());
+        assertEquals(cs.getNumberOfEvses(), EVSES.size());
     }
 
     @Test
     public void testUnknownChargingStationConfiguredEvent() {
-        eventHandler.handle(new ChargingStationConfiguredEvent(getChargingStationId(), getEvses(), getConfigurationItems()));
+        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
 
-        ChargingStation cs = chargingStationRepository.findOne(getChargingStationId().getId());
+        ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
         assertTrue(cs.isConfigured());
-        assertEquals(cs.getNumberOfEvses(), getEvses().size());
+        assertEquals(cs.getNumberOfEvses(), EVSES.size());
     }
 
 }

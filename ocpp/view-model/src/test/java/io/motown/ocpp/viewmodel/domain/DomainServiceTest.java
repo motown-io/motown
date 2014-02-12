@@ -35,7 +35,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.motown.ocpp.viewmodel.domain.TestUtils.*;
+import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
+import static io.motown.ocpp.viewmodel.domain.OccpViewModelTestUtils.*;
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -86,36 +87,36 @@ public class DomainServiceTest {
 
     @Test
     public void testBootUnknownChargingStation() {
-        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel(), getProtocol(), getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
+        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(CHARGING_STATION_ID, CHARGING_STATION_ADDRESS, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
         assertFalse(bootChargingStationResult.isAccepted());
 
-        verify(gateway).send(eq(new CreateChargingStationCommand(getChargingStationId())), any(CommandCallback.class));
+        verify(gateway).send(eq(new CreateChargingStationCommand(CHARGING_STATION_ID)), any(CommandCallback.class));
     }
 
     @Test
     public void testBootNullAndEmptyChargingStationAddress() {
-        BootChargingStationResult result = domainService.bootChargingStation(getChargingStationId(), null, getVendor(), getModel(), getProtocol(), getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
+        BootChargingStationResult result = domainService.bootChargingStation(CHARGING_STATION_ID, null, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
         assertFalse(result.isAccepted());
 
-        result = domainService.bootChargingStation(getChargingStationId(), "", getVendor(), getModel(), getProtocol(), getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
+        result = domainService.bootChargingStation(CHARGING_STATION_ID, "", CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
         assertFalse(result.isAccepted());
     }
 
     @Test
     public void testBootKnownChargingStation() {
-        ChargingStation cs = new ChargingStation(getChargingStationId().getId(), getChargingStationAddress());
+        ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId(), CHARGING_STATION_ADDRESS);
         cs.setRegistered(true);
         cs.setNumberOfEvses(2);
         cs.setConfigured(true);
         chargingStationRepository.save(cs);
 
-        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(getChargingStationId(), getChargingStationAddress(), getVendor(), getModel(), getProtocol(), getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
+        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(CHARGING_STATION_ID, CHARGING_STATION_ADDRESS, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
         assertTrue(bootChargingStationResult.isAccepted());
 
         Map<String, String> attributes = Maps.newHashMap();
-        attributes.put("vendor", getVendor());
-        attributes.put("model", getModel());
-        attributes.put("address", getChargingStationAddress());
+        attributes.put("vendor", CHARGING_STATION_VENDOR);
+        attributes.put("model", CHARGING_STATION_MODEL);
+        attributes.put("address", CHARGING_STATION_ADDRESS);
         attributes.put("chargingStationSerialNumber", getChargingStationSerialNumber());
         attributes.put("firmwareVersion", getFirmwareVersion());
         attributes.put("iccid", getIccid());
@@ -124,244 +125,244 @@ public class DomainServiceTest {
         attributes.put("meterSerialNumber", getMeterSerialNumber());
 
         // test if the charging station is stored and in the state we expect it after a boot of an unknown charging station
-        cs = chargingStationRepository.findOne(getChargingStationId().getId());
-        assertEquals(cs.getId(), getChargingStationId().getId());
-        assertEquals(cs.getIpAddress(), getChargingStationAddress());
+        cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
+        assertEquals(cs.getId(), CHARGING_STATION_ID.getId());
+        assertEquals(cs.getIpAddress(), CHARGING_STATION_ADDRESS);
         assertEquals(cs.getNumberOfEvses(), 2);
         assertTrue(cs.isConfigured());
         assertTrue(cs.isRegistered());
         assertTrue(cs.isRegisteredAndConfigured());
-        assertEquals(cs.getIpAddress(), getChargingStationAddress());
+        assertEquals(cs.getIpAddress(), CHARGING_STATION_ADDRESS);
 
-        verify(gateway).send(new BootChargingStationCommand(getChargingStationId(), getProtocol(), attributes));
+        verify(gateway).send(new BootChargingStationCommand(CHARGING_STATION_ID, PROTOCOL, attributes));
     }
 
     @Test
     public void testHeartbeat() {
-        domainService.heartbeat(getChargingStationId());
+        domainService.heartbeat(CHARGING_STATION_ID);
 
-        verify(gateway).send(new HeartbeatCommand(getChargingStationId()));
+        verify(gateway).send(new HeartbeatCommand(CHARGING_STATION_ID));
     }
 
     @Test
     public void testDataTransfer() {
-        domainService.dataTransfer(getChargingStationId(), getData(), getVendor(), getMessageId());
+        domainService.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_DATA, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID);
 
-        verify(gateway).send(new IncomingDataTransferCommand(getChargingStationId(), getVendor(), getMessageId(), getData()));
+        verify(gateway).send(new IncomingDataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA));
     }
 
     @Test
     public void testMeterValues() {
-        domainService.meterValues(getChargingStationId(), getNumberedTransactionId(), getEvseId(), getMeterValuesList());
+        domainService.meterValues(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, METER_VALUES);
 
-        verify(gateway).send(new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), getEvseId(), getMeterValuesList()));
+        verify(gateway).send(new ProcessMeterValueCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, METER_VALUES));
     }
 
     @Test
     public void testDiagnosticsFileNameReceived() {
-        domainService.diagnosticsFileNameReceived(getChargingStationId(), getDiagnosticsFileName());
+        domainService.diagnosticsFileNameReceived(CHARGING_STATION_ID, getDiagnosticsFileName());
 
-        verify(gateway).send(new DiagnosticsFileNameReceivedCommand(getChargingStationId(), getDiagnosticsFileName()));
+        verify(gateway).send(new DiagnosticsFileNameReceivedCommand(CHARGING_STATION_ID, getDiagnosticsFileName()));
     }
 
     @Test
     public void testAuthorizationListVersionReceived() {
-        domainService.authorizationListVersionReceived(getChargingStationId(), getAuthorizationListVersion());
+        domainService.authorizationListVersionReceived(CHARGING_STATION_ID, getAuthorizationListVersion());
 
-        verify(gateway).send(new AuthorizationListVersionReceivedCommand(getChargingStationId(), getAuthorizationListVersion()));
+        verify(gateway).send(new AuthorizationListVersionReceivedCommand(CHARGING_STATION_ID, getAuthorizationListVersion()));
     }
 
     @Test
     public void testAuthorize() {
         FutureEventCallback futureEventCallback = getFutureEventCallback();
-        domainService.authorize(getChargingStationId(), getIdTag(), futureEventCallback);
-        verify(eventWaitingGateway).sendAndWaitForEvent(new AuthorizeCommand(getChargingStationId(), getIdentifyingToken()), futureEventCallback);
+        domainService.authorize(CHARGING_STATION_ID, IDENTIFYING_TOKEN.getToken(), futureEventCallback);
+        verify(eventWaitingGateway).sendAndWaitForEvent(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN), futureEventCallback);
     }
 
     @Test
     public void testDiagnosticsUploadStatusUpdate() {
-        domainService.diagnosticsUploadStatusUpdate(getChargingStationId(), true);
-        verify(gateway).send(new UpdateDiagnosticsUploadStatusCommand(getChargingStationId(), true));
+        domainService.diagnosticsUploadStatusUpdate(CHARGING_STATION_ID, true);
+        verify(gateway).send(new UpdateDiagnosticsUploadStatusCommand(CHARGING_STATION_ID, true));
 
-        domainService.diagnosticsUploadStatusUpdate(getChargingStationId(), false);
-        verify(gateway).send(new UpdateDiagnosticsUploadStatusCommand(getChargingStationId(), false));
+        domainService.diagnosticsUploadStatusUpdate(CHARGING_STATION_ID, false);
+        verify(gateway).send(new UpdateDiagnosticsUploadStatusCommand(CHARGING_STATION_ID, false));
     }
 
     @Test
     public void testFirmwareStatusUpdate() {
-        domainService.firmwareStatusUpdate(getChargingStationId(), FirmwareStatus.DOWNLOADED);
-        verify(gateway).send(new UpdateFirmwareStatusCommand(getChargingStationId(), FirmwareStatus.DOWNLOADED));
+        domainService.firmwareStatusUpdate(CHARGING_STATION_ID, FirmwareStatus.DOWNLOADED);
+        verify(gateway).send(new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOADED));
 
-        domainService.firmwareStatusUpdate(getChargingStationId(), FirmwareStatus.INSTALLATION_FAILED);
-        verify(gateway).send(new UpdateFirmwareStatusCommand(getChargingStationId(), FirmwareStatus.INSTALLATION_FAILED));
+        domainService.firmwareStatusUpdate(CHARGING_STATION_ID, FirmwareStatus.INSTALLATION_FAILED);
+        verify(gateway).send(new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.INSTALLATION_FAILED));
     }
 
     @Test
     public void testStatusNotification() {
         Date now = new Date();
-        domainService.statusNotification(getChargingStationId(), getEvseId(), getStatusNotifactionErrorCode(), ComponentStatus.AVAILABLE, getStatusNotificationInfo(), now, getVendor(), getVendorErrorCode());
+        domainService.statusNotification(CHARGING_STATION_ID, EVSE_ID, getStatusNotifactionErrorCode(), ComponentStatus.AVAILABLE, getStatusNotificationInfo(), now, getVendor(), getVendorErrorCode());
         Map<String, String> attributes = new HashMap<>();
         attributes.put(DomainService.ERROR_CODE_KEY, getStatusNotifactionErrorCode());
         attributes.put(DomainService.INFO_KEY, getStatusNotificationInfo());
         attributes.put(DomainService.VENDOR_ID_KEY, getVendor());
         attributes.put(DomainService.VENDOR_ERROR_CODE_KEY, getVendorErrorCode());
 
-        verify(gateway).send(new ComponentStatusNotificationCommand(getChargingStationId(), ChargingStationComponent.CONNECTOR, getEvseId(), ComponentStatus.AVAILABLE, now, attributes));
+        verify(gateway).send(new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, now, attributes));
 
-        domainService.statusNotification(getChargingStationId(), getChargingStationComponentId(), getStatusNotifactionErrorCode(), ComponentStatus.AVAILABLE, getStatusNotificationInfo(), now, getVendor(), getVendorErrorCode());
-        verify(gateway).send(new ChargingStationStatusNotificationCommand(getChargingStationId(), ComponentStatus.AVAILABLE, now, attributes));
+        domainService.statusNotification(CHARGING_STATION_ID, getChargingStationComponentId(), getStatusNotifactionErrorCode(), ComponentStatus.AVAILABLE, getStatusNotificationInfo(), now, getVendor(), getVendorErrorCode());
+        verify(gateway).send(new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, now, attributes));
     }
 
     @Test
     public void testStatusNotificationEmptyArgs() {
         Date now = new Date();
-        domainService.statusNotification(getChargingStationId(), getEvseId(), null, ComponentStatus.AVAILABLE, null, now, null, null);
+        domainService.statusNotification(CHARGING_STATION_ID, EVSE_ID, null, ComponentStatus.AVAILABLE, null, now, null, null);
         Map<String, String> attributes = new HashMap<>();
 
-        verify(gateway).send(new ComponentStatusNotificationCommand(getChargingStationId(), ChargingStationComponent.CONNECTOR, getEvseId(), ComponentStatus.AVAILABLE, now, attributes));
+        verify(gateway).send(new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, now, attributes));
 
-        domainService.statusNotification(getChargingStationId(), getChargingStationComponentId(), null, ComponentStatus.AVAILABLE, null, now, null, null);
-        verify(gateway).send(new ChargingStationStatusNotificationCommand(getChargingStationId(), ComponentStatus.AVAILABLE, now, attributes));
+        domainService.statusNotification(CHARGING_STATION_ID, getChargingStationComponentId(), null, ComponentStatus.AVAILABLE, null, now, null, null);
+        verify(gateway).send(new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, now, attributes));
     }
 
     @Test
     public void testStopTransactionStatusChanged() {
-        domainService.stopTransactionStatusChanged(getChargingStationId(), RequestStatus.SUCCESS);
-        verify(gateway).send(new StopTransactionStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS));
+        domainService.stopTransactionStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
+        verify(gateway).send(new StopTransactionStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
 
-        domainService.stopTransactionStatusChanged(getChargingStationId(), RequestStatus.FAILURE);
-        verify(gateway).send(new StopTransactionStatusChangedCommand(getChargingStationId(), RequestStatus.FAILURE));
+        domainService.stopTransactionStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
+        verify(gateway).send(new StopTransactionStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
     }
 
     @Test
     public void testSoftResetStatusChanged() {
-        domainService.softResetStatusChanged(getChargingStationId(), RequestStatus.SUCCESS);
-        verify(gateway).send(new SoftResetStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS));
+        domainService.softResetStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
+        verify(gateway).send(new SoftResetStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
 
-        domainService.softResetStatusChanged(getChargingStationId(), RequestStatus.FAILURE);
-        verify(gateway).send(new SoftResetStatusChangedCommand(getChargingStationId(), RequestStatus.FAILURE));
+        domainService.softResetStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
+        verify(gateway).send(new SoftResetStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
     }
 
     @Test
     public void testHardResetStatusChanged() {
-        domainService.hardResetStatusChanged(getChargingStationId(), RequestStatus.SUCCESS);
-        verify(gateway).send(new HardResetStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS));
+        domainService.hardResetStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
+        verify(gateway).send(new HardResetStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
 
-        domainService.hardResetStatusChanged(getChargingStationId(), RequestStatus.FAILURE);
-        verify(gateway).send(new HardResetStatusChangedCommand(getChargingStationId(), RequestStatus.FAILURE));
+        domainService.hardResetStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
+        verify(gateway).send(new HardResetStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
     }
 
     @Test
     public void testStartTransactionStatusChanged() {
-        domainService.startTransactionStatusChanged(getChargingStationId(), RequestStatus.SUCCESS);
-        verify(gateway).send(new StartTransactionStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS));
+        domainService.startTransactionStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
+        verify(gateway).send(new StartTransactionStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
 
-        domainService.startTransactionStatusChanged(getChargingStationId(), RequestStatus.FAILURE);
-        verify(gateway).send(new StartTransactionStatusChangedCommand(getChargingStationId(), RequestStatus.FAILURE));
+        domainService.startTransactionStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
+        verify(gateway).send(new StartTransactionStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
     }
 
     @Test
     public void testUnlockEvseStatusChanged() {
-        domainService.unlockEvseStatusChanged(getChargingStationId(), RequestStatus.SUCCESS);
-        verify(gateway).send(new UnlockEvseStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS));
+        domainService.unlockEvseStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
+        verify(gateway).send(new UnlockEvseStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
 
-        domainService.unlockEvseStatusChanged(getChargingStationId(), RequestStatus.FAILURE);
-        verify(gateway).send(new UnlockEvseStatusChangedCommand(getChargingStationId(), RequestStatus.FAILURE));
+        domainService.unlockEvseStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
+        verify(gateway).send(new UnlockEvseStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
     }
 
     @Test
     public void testChangeAvailabilityToOperativeStatusChanged() {
-        domainService.changeAvailabilityToOperativeStatusChanged(getChargingStationId(), RequestStatus.SUCCESS);
-        verify(gateway).send(new ChangeAvailabilityToOperativeStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS));
+        domainService.changeAvailabilityToOperativeStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
+        verify(gateway).send(new ChangeAvailabilityToOperativeStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
 
-        domainService.changeAvailabilityToOperativeStatusChanged(getChargingStationId(), RequestStatus.FAILURE);
-        verify(gateway).send(new ChangeAvailabilityToOperativeStatusChangedCommand(getChargingStationId(), RequestStatus.FAILURE));
+        domainService.changeAvailabilityToOperativeStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
+        verify(gateway).send(new ChangeAvailabilityToOperativeStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
     }
 
     @Test
     public void testDataTransferStatusChanged() {
-        domainService.dataTransferStatusChanged(getChargingStationId(), RequestStatus.SUCCESS);
-        verify(gateway).send(new DataTransferStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS));
+        domainService.dataTransferStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
+        verify(gateway).send(new DataTransferStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
 
-        domainService.dataTransferStatusChanged(getChargingStationId(), RequestStatus.FAILURE);
-        verify(gateway).send(new DataTransferStatusChangedCommand(getChargingStationId(), RequestStatus.FAILURE));
+        domainService.dataTransferStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
+        verify(gateway).send(new DataTransferStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
     }
 
     @Test
     public void testChangeConfigurationStatusChanged() {
-        domainService.changeConfigurationStatusChanged(getChargingStationId(), RequestStatus.SUCCESS);
-        verify(gateway).send(new ChangeConfigurationStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS));
+        domainService.changeConfigurationStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
+        verify(gateway).send(new ChangeConfigurationStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
 
-        domainService.changeConfigurationStatusChanged(getChargingStationId(), RequestStatus.FAILURE);
-        verify(gateway).send(new ChangeConfigurationStatusChangedCommand(getChargingStationId(), RequestStatus.FAILURE));
+        domainService.changeConfigurationStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
+        verify(gateway).send(new ChangeConfigurationStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
     }
 
     @Test
     public void testClearCacheStatusChanged() {
-        domainService.clearCacheStatusChanged(getChargingStationId(), RequestStatus.SUCCESS);
-        verify(gateway).send(new ClearCacheStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS));
+        domainService.clearCacheStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
+        verify(gateway).send(new ClearCacheStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
 
-        domainService.clearCacheStatusChanged(getChargingStationId(), RequestStatus.FAILURE);
-        verify(gateway).send(new ClearCacheStatusChangedCommand(getChargingStationId(), RequestStatus.FAILURE));
+        domainService.clearCacheStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
+        verify(gateway).send(new ClearCacheStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
     }
 
     @Test
     public void testSendAuthorizationListStatusChanged() {
-        domainService.sendAuthorizationListStatusChanged(getChargingStationId(), RequestStatus.SUCCESS);
-        verify(gateway).send(new SendAuthorizationListStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS));
+        domainService.sendAuthorizationListStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
+        verify(gateway).send(new SendAuthorizationListStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
 
-        domainService.sendAuthorizationListStatusChanged(getChargingStationId(), RequestStatus.FAILURE);
-        verify(gateway).send(new SendAuthorizationListStatusChangedCommand(getChargingStationId(), RequestStatus.FAILURE));
+        domainService.sendAuthorizationListStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
+        verify(gateway).send(new SendAuthorizationListStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
     }
 
     @Test
     public void testChangeAvailabilityToInoperativeStatusChanged() {
-        domainService.changeAvailabilityToInoperativeStatusChanged(getChargingStationId(), RequestStatus.SUCCESS);
-        verify(gateway).send(new ChangeAvailabilityToInoperativeStatusChangedCommand(getChargingStationId(), RequestStatus.SUCCESS));
+        domainService.changeAvailabilityToInoperativeStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
+        verify(gateway).send(new ChangeAvailabilityToInoperativeStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
 
-        domainService.changeAvailabilityToInoperativeStatusChanged(getChargingStationId(), RequestStatus.FAILURE);
-        verify(gateway).send(new ChangeAvailabilityToInoperativeStatusChangedCommand(getChargingStationId(), RequestStatus.FAILURE));
+        domainService.changeAvailabilityToInoperativeStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
+        verify(gateway).send(new ChangeAvailabilityToInoperativeStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
     }
 
     @Test
     public void testConfigureChargingStation() {
-        domainService.configureChargingStation(getChargingStationId(), getConfigurationItems());
-        verify(gateway).send(new ConfigureChargingStationCommand(getChargingStationId(), getConfigurationItems()));
+        domainService.configureChargingStation(CHARGING_STATION_ID, CONFIGURATION_ITEMS);
+        verify(gateway).send(new ConfigureChargingStationCommand(CHARGING_STATION_ID, CONFIGURATION_ITEMS));
     }
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionUnknownChargingStation() {
-        domainService.startTransaction(new ChargingStationId(getRandomString()), new EvseId(1), getIdentifyingToken(), 0, new Date(), getReservationId(), getProtocol());
+        domainService.startTransaction(UNKNOWN_CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), RESERVATION_ID, PROTOCOL);
     }
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionUnregisteredChargingStation() {
-        chargingStationRepository.save(new ChargingStation(getChargingStationId().getId()));
+        chargingStationRepository.save(new ChargingStation(CHARGING_STATION_ID.getId()));
 
-        domainService.startTransaction(getChargingStationId(), new EvseId(1), getIdentifyingToken(), 0, new Date(), getReservationId(), getProtocol());
+        domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), RESERVATION_ID, PROTOCOL);
     }
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionUnconfiguredChargingStation() {
-        ChargingStation cs = new ChargingStation(getChargingStationId().getId());
+        ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
         cs.setRegistered(true);
         chargingStationRepository.save(cs);
 
-        domainService.startTransaction(getChargingStationId(), new EvseId(1), getIdentifyingToken(), 0, new Date(), getReservationId(), getProtocol());
+        domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), RESERVATION_ID, PROTOCOL);
     }
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionInvalidEvse() {
         chargingStationRepository.save(getRegisteredAndConfiguredChargingStation());
 
-        domainService.startTransaction(getChargingStationId(), UNKNOWN_EVSE_ID, getIdentifyingToken(), 0, new Date(), getReservationId(), getProtocol());
+        domainService.startTransaction(CHARGING_STATION_ID, UNKNOWN_EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), RESERVATION_ID, PROTOCOL);
     }
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionUnknownEvse() {
         chargingStationRepository.save(getRegisteredAndConfiguredChargingStation());
 
-        domainService.startTransaction(getChargingStationId(), new EvseId(getEvses().size() + 1), getIdentifyingToken(), 0, new Date(), getReservationId(), getProtocol());
+        domainService.startTransaction(CHARGING_STATION_ID, UNKNOWN_EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), RESERVATION_ID, PROTOCOL);
     }
 
     @Test
@@ -369,12 +370,12 @@ public class DomainServiceTest {
         chargingStationRepository.save(getRegisteredAndConfiguredChargingStation());
 
         Date now = new Date();
-        int ocppTransactionId = domainService.startTransaction(getChargingStationId(), new EvseId(1), getIdentifyingToken(), 0, now, null, getProtocol());
+        int ocppTransactionId = domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, now, null, PROTOCOL);
         assertTrue(ocppTransactionId > 0);
 
-        TransactionId transactionId = new NumberedTransactionId(getChargingStationId(), getProtocol(), ocppTransactionId);
+        TransactionId transactionId = new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL, ocppTransactionId);
 
-        verify(gateway).send(new StartTransactionCommand(getChargingStationId(), transactionId, new EvseId(1), getIdentifyingToken(), 0, now, getEmptyAttributesMap()));
+        verify(gateway).send(new StartTransactionCommand(CHARGING_STATION_ID, transactionId, EVSE_ID, IDENTIFYING_TOKEN, 0, now, getEmptyAttributesMap()));
     }
 
     @Test
@@ -382,24 +383,24 @@ public class DomainServiceTest {
         chargingStationRepository.save(getRegisteredAndConfiguredChargingStation());
 
         Date now = new Date();
-        int ocppTransactionId = domainService.startTransaction(getChargingStationId(), new EvseId(1), getIdentifyingToken(), 0, now, getReservationId(), getProtocol());
+        int ocppTransactionId = domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, now, RESERVATION_ID, PROTOCOL);
         assertTrue(ocppTransactionId > 0);
 
-        TransactionId transactionId = new NumberedTransactionId(getChargingStationId(), getProtocol(), ocppTransactionId);
+        TransactionId transactionId = new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL, ocppTransactionId);
 
-        verify(gateway).send(new StartTransactionCommand(getChargingStationId(), transactionId, new EvseId(1), getIdentifyingToken(), 0, now, getStartTransactionAttributesMap(getReservationNumber())));
+        verify(gateway).send(new StartTransactionCommand(CHARGING_STATION_ID, transactionId, EVSE_ID, IDENTIFYING_TOKEN, 0, now, getStartTransactionAttributesMap(RESERVATION_ID.getNumber())));
     }
 
     @Test
     public void testStopTransaction() {
         int ocppTransactionId = 0;
-        NumberedTransactionId transactionId = new NumberedTransactionId(getChargingStationId(), getProtocol(), ocppTransactionId);
+        NumberedTransactionId transactionId = new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL, ocppTransactionId);
         int meterStopValue = 1;
         Date now = new Date();
 
-        domainService.stopTransaction(getChargingStationId(), transactionId, getIdentifyingToken(), meterStopValue, now, getEmptyMeterValuesList());
+        domainService.stopTransaction(CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, now, getEmptyMeterValuesList());
 
-        verify(gateway).send(new StopTransactionCommand(getChargingStationId(), transactionId, getIdentifyingToken(), meterStopValue, now));
+        verify(gateway).send(new StopTransactionCommand(CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, now));
     }
 
     /**
@@ -411,34 +412,34 @@ public class DomainServiceTest {
 
         // registers a transaction in the transactionRepository
         Date startTransactionDate = new Date();
-        int ocppTransactionId = domainService.startTransaction(getChargingStationId(), getEvseId(), getIdentifyingToken(), 0, startTransactionDate, getReservationId(), getProtocol());
+        int ocppTransactionId = domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, startTransactionDate, RESERVATION_ID, PROTOCOL);
 
 
-        NumberedTransactionId transactionId = new NumberedTransactionId(getChargingStationId(), getProtocol(), ocppTransactionId);
+        NumberedTransactionId transactionId = new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL, ocppTransactionId);
         int meterStopValue = 1;
         Date stopTransactionDate = new Date();
 
-        domainService.stopTransaction(getChargingStationId(), transactionId, getIdentifyingToken(), meterStopValue, stopTransactionDate, getMeterValuesList());
+        domainService.stopTransaction(CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, stopTransactionDate, METER_VALUES);
 
-        verify(gateway).send(new StopTransactionCommand(getChargingStationId(), transactionId, getIdentifyingToken(), meterStopValue, stopTransactionDate));
+        verify(gateway).send(new StopTransactionCommand(CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, stopTransactionDate));
         // stored transaction should provide the evse id that's needed to process the meter values
-        verify(gateway).send(new ProcessMeterValueCommand(getChargingStationId(), transactionId, getEvseId(), getMeterValuesList()));
+        verify(gateway).send(new ProcessMeterValueCommand(CHARGING_STATION_ID, transactionId, EVSE_ID, METER_VALUES));
     }
 
     @Test
     public void testRetrieveChargingStationAddress() {
-        String address = domainService.retrieveChargingStationAddress(getChargingStationId());
+        String address = domainService.retrieveChargingStationAddress(CHARGING_STATION_ID);
         assertEquals(address, "");
 
         chargingStationRepository.save(getRegisteredAndConfiguredChargingStation());
 
-        address = domainService.retrieveChargingStationAddress(getChargingStationId());
-        assertEquals(address, getChargingStationAddress());
+        address = domainService.retrieveChargingStationAddress(CHARGING_STATION_ID);
+        assertEquals(address, CHARGING_STATION_ADDRESS);
     }
 
     @Test
     public void testGenerateReservationIdentifier() {
-        NumberedReservationId numberedReservationId = domainService.generateReservationIdentifier(getChargingStationId(), getProtocol());
+        NumberedReservationId numberedReservationId = domainService.generateReservationIdentifier(CHARGING_STATION_ID, PROTOCOL);
 
         assertNotNull(numberedReservationId.getId());
         assertNotNull(numberedReservationId.getNumber());
@@ -446,9 +447,9 @@ public class DomainServiceTest {
 
     @Test
     public void testReservationStatusChanged() {
-        domainService.reservationStatusChanged(getChargingStationId(), getReservationId(), getReservationStatus());
+        domainService.reservationStatusChanged(CHARGING_STATION_ID, RESERVATION_ID, getReservationStatus());
 
-        verify(gateway).send(new ReservationStatusChangedCommand(getChargingStationId(), getReservationId(), getReservationStatus()));
+        verify(gateway).send(new ReservationStatusChangedCommand(CHARGING_STATION_ID, RESERVATION_ID, getReservationStatus()));
     }
 
 }

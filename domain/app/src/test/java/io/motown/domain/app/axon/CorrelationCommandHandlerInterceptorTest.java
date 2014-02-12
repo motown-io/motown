@@ -24,8 +24,8 @@ import org.junit.Test;
 
 import java.util.Collections;
 
-import static io.motown.domain.app.axon.DomainAppTestUtils.getChargingStationId;
-import static io.motown.domain.app.axon.DomainAppTestUtils.getTextualToken;
+import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.IDENTIFYING_TOKEN;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -33,7 +33,7 @@ public class CorrelationCommandHandlerInterceptorTest {
 
     @Test
     public void verifyCorrelationUnitOfWorkListenerIsRegistered() throws Throwable {
-        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(getChargingStationId(), getTextualToken()))
+        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN))
                 .withMetaData(Collections.singletonMap("correlationId", "12345"));
         UnitOfWork unitOfWork = mock(UnitOfWork.class);
         InterceptorChain chain = mock(InterceptorChain.class);
@@ -45,7 +45,7 @@ public class CorrelationCommandHandlerInterceptorTest {
 
     @Test
     public void verifyCorrelationUnitOfWorkListenerIsNotRegistered() throws Throwable {
-        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(getChargingStationId(), getTextualToken()));
+        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN));
         UnitOfWork unitOfWork = mock(UnitOfWork.class);
         InterceptorChain chain = mock(InterceptorChain.class);
 
@@ -56,7 +56,7 @@ public class CorrelationCommandHandlerInterceptorTest {
 
     @Test
     public void verifyInterceptorChainIsProceeded() throws Throwable {
-        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(getChargingStationId(), getTextualToken()))
+        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN))
                 .withMetaData(Collections.singletonMap("correlationId", "12345"));
         UnitOfWork unitOfWork = mock(UnitOfWork.class);
         InterceptorChain chain = mock(InterceptorChain.class);
