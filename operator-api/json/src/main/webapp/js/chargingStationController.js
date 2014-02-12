@@ -312,4 +312,21 @@ function ChargingStationController($scope, $http, $timeout) {
         });
     };
 
+    $scope.updateReservable = function(chargingStation, reservable) {
+        $http({
+            url: 'charging-stations/' + chargingStation.id + '/commands',
+            dataType: 'json',
+            method: 'POST',
+            data: ['UpdateChargingStationReservable',{
+                'reservable': reservable
+            }],
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            }
+        }).success(function(response) {
+            console.log('update reservable requested');
+        });
+    };
+
 }

@@ -35,13 +35,13 @@ public class RequestChangeChargingStationAvailabilityJsonCommandTest {
     @Test
     public void testInoperativeCommand() {
         JsonObject commandObject = gson.fromJson("{evseId:'1',availability:'inoperative'}", JsonObject.class);
-        handler.handle("TEST_REGISTERED", commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
     }
 
     @Test
     public void testOperativeCommand() {
         JsonObject commandObject = gson.fromJson("{evseId:'1',availability:'operative'}", JsonObject.class);
-        handler.handle("TEST_REGISTERED", commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
     }
 
 }

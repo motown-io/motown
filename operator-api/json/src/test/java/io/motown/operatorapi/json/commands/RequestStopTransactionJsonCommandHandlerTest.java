@@ -20,6 +20,8 @@ import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import static io.motown.operatorapi.json.commands.OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING;
+
 public class RequestStopTransactionJsonCommandHandlerTest {
 
     private Gson gson;
@@ -38,7 +40,7 @@ public class RequestStopTransactionJsonCommandHandlerTest {
     @Test
     public void testHandleStopTransactionOnRegisteredStation() {
         JsonObject commandObject = gson.fromJson("{'id' : 123}", JsonObject.class);
-        handler.handle("TEST_REGISTERED", commandObject);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject);
     }
 
     //TODO: Add more tests scenarios when the RequestStopTransactionJsonCommandHandler is more final - Ingo Pak, 04 dec 2013

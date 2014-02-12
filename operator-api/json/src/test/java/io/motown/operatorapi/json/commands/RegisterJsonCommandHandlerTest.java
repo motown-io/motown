@@ -44,8 +44,8 @@ public class RegisterJsonCommandHandlerTest {
         when(registeredStation.isAccepted()).thenReturn(true);
         ChargingStation unregisteredStation = mock(ChargingStation.class);
         when(unregisteredStation.isAccepted()).thenReturn(false);
-        when(repo.findOne("TEST_REGISTERED")).thenReturn(registeredStation);
-        when(repo.findOne("TEST_UNREGISTERED")).thenReturn(unregisteredStation);
+        when(repo.findOne(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING)).thenReturn(registeredStation);
+        when(repo.findOne(OperatorApiJsonTestUtils.UNREGISTERED_CHARGING_STATION_ID_STRING)).thenReturn(unregisteredStation);
 
         handler.setRepository(repo);
     }
@@ -54,18 +54,18 @@ public class RegisterJsonCommandHandlerTest {
     public void testHandleComplete() {
 
         JsonObject commandObject = gson.fromJson("{'configuration' : {'evses' : [{'evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}]}], 'settings' : {'key':'value', 'key2':'value2'}}}", JsonObject.class);
-        handler.handle("TEST_UNREGISTERED", commandObject);
+        handler.handle(OperatorApiJsonTestUtils.UNREGISTERED_CHARGING_STATION_ID_STRING, commandObject);
     }
 
     @Test(expected=IllegalStateException.class)
     public void testHandleCompleteUnRegistered() {
         JsonObject commandObject = gson.fromJson("{'configuration' : {'evses' : [{'evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}]}], 'settings' : {'key':'value', 'key2':'value2'}}}", JsonObject.class);
-        handler.handle("TEST_REGISTERED", commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
     }
 
     @Test
     public void testHandleConfigNull() {
         JsonObject commandObject = gson.fromJson("{'configuration' : null }", JsonObject.class);
-        handler.handle("TEST_UNREGISTERED", commandObject);
+        handler.handle(OperatorApiJsonTestUtils.UNREGISTERED_CHARGING_STATION_ID_STRING, commandObject);
     }
 }

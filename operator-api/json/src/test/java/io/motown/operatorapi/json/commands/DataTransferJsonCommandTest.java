@@ -38,12 +38,12 @@ public class DataTransferJsonCommandTest {
     @Test
     public void testDataTransferCommand() {
         JsonObject command = gson.fromJson("{vendorId:'ALFEN',messageId:'1',data:'NEW DATA'}", JsonObject.class);
-        handler.handle("TEST_REGISTERED", command);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, command);
     }
 
     @Test(expected = NullPointerException.class)
     public void testInvalidDataTransferCommand() {
         JsonObject command = gson.fromJson("{vendorID:'ALFEN',messageID:'1',data:'NEW DATA'}", JsonObject.class);
-        handler.handle("TEST_REGISTERED", command);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, command);
     }
 }

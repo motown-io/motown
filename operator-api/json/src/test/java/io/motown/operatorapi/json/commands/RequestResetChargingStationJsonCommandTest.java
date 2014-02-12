@@ -21,7 +21,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class RequestResetChargingStationJsonCommandTest {
+
     private Gson gson;
+
     private RequestResetChargingStationJsonCommandHandler handler = new RequestResetChargingStationJsonCommandHandler();
 
     @Before
@@ -35,13 +37,13 @@ public class RequestResetChargingStationJsonCommandTest {
     @Test
     public void testResetCommand() {
         JsonObject commandObject = gson.fromJson("{type:'soft'}", JsonObject.class);
-        handler.handle("TEST_REGISTERED", commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
     }
 
     @Test
     public void testHardResetCommand() {
         JsonObject commandObject = gson.fromJson("{type:'hard'}", JsonObject.class);
-        handler.handle("TEST_REGISTERED", commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
     }
 
 }

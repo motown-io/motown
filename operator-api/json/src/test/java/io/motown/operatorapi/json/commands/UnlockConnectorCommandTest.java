@@ -20,8 +20,12 @@ import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import static io.motown.operatorapi.json.commands.OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING;
+
 public class UnlockConnectorCommandTest {
+
     private Gson gson;
+
     private UnlockEvseJsonCommandHandler handler = new UnlockEvseJsonCommandHandler();
 
     @Before
@@ -34,12 +38,12 @@ public class UnlockConnectorCommandTest {
     @Test
     public void testUnlockCommand() {
         JsonObject commandObject = gson.fromJson("{evseId:'1'}", JsonObject.class);
-        handler.handle("TEST_REGISTERED", commandObject);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject);
     }
 
     @Test(expected = NullPointerException.class)
     public void testInvalidUnlockCommand() {
         JsonObject commandObject = gson.fromJson("{evseID:'1'}", JsonObject.class);
-        handler.handle("TEST_REGISTERED", commandObject);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject);
     }
 }

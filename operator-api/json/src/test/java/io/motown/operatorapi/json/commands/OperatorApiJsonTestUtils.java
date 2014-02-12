@@ -17,10 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.motown.domain.api.chargingstation.Address;
-import io.motown.domain.api.chargingstation.Coordinates;
-import io.motown.domain.api.chargingstation.EvseId;
-import io.motown.domain.api.chargingstation.TextualToken;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.operatorapi.json.gson.AddressTypeAdapter;
 import io.motown.operatorapi.json.gson.CoordinatesTypeAdapter;
 import io.motown.operatorapi.json.gson.EvseIdTypeAdapter;
@@ -34,6 +31,12 @@ import static org.mockito.Mockito.when;
 public final class OperatorApiJsonTestUtils {
 
     public static final String ISO8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+    public static final String CHARGING_STATION_ID_STRING = "TEST_REGISTERED";
+
+    public static final String UNREGISTERED_CHARGING_STATION_ID_STRING = "TEST_UNREGISTERED";
+
+    public static final ChargingStationId CHARGING_STATION_ID = new ChargingStationId(CHARGING_STATION_ID_STRING);
 
     private OperatorApiJsonTestUtils() {
         // Private no-arg constructor to prevent instantiation of utility class.
@@ -56,8 +59,8 @@ public final class OperatorApiJsonTestUtils {
         when(registeredStation.isAccepted()).thenReturn(true);
         ChargingStation unregisteredStation = mock(ChargingStation.class);
         when(unregisteredStation.isAccepted()).thenReturn(false);
-        when(repo.findOne("TEST_REGISTERED")).thenReturn(registeredStation);
-        when(repo.findOne("TEST_UNREGISTERED")).thenReturn(unregisteredStation);
+        when(repo.findOne(CHARGING_STATION_ID_STRING)).thenReturn(registeredStation);
+        when(repo.findOne(UNREGISTERED_CHARGING_STATION_ID_STRING)).thenReturn(unregisteredStation);
         return repo;
     }
 }

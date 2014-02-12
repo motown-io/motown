@@ -123,4 +123,14 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
         LOG.debug("ImproveChargingStationCommand: " + command.toString());
     }
 
+    @Override
+    public void send(MakeChargingStationReservableCommand command) {
+        LOG.debug("MakeChargingStationReservableCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(MakeChargingStationNotReservableCommand command) {
+        LOG.debug("MakeChargingStationNotReservableCommand: " + command.toString());
+    }
+
 }
