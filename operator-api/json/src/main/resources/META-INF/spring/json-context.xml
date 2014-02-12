@@ -42,6 +42,7 @@
         <ref bean="sendAuthorizationListJsonCommandHandler"/>
         <ref bean="requestReserveNowJsonCommandHandler"/>
         <ref bean="placeChargingStationJsonCommandHandler"/>
+        <ref bean="moveChargingStationJsonCommandHandler"/>
         <ref bean="updateChargingStationReservableJsonCommandHandler"/>
     </util:list>
 

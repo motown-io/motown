@@ -208,6 +208,31 @@ public class VasEventHandler {
     }
 
     @EventHandler
+    public void handle(ChargingStationMovedEvent event) {
+        LOG.info("ChargingStationMovedEvent");
+
+        String chargingStationId = event.getChargingStationId().getId();
+        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
+
+        if (chargingStation != null) {
+            if (event.getCoordinates() != null) {
+                chargingStation.setLatitude(event.getCoordinates().getLatitude());
+                chargingStation.setLongitude(event.getCoordinates().getLongitude());
+            }
+            if (event.getAddress() != null) {
+                chargingStation.setAddress(event.getAddress().getAddressline1());
+                chargingStation.setCity(event.getAddress().getCity());
+                chargingStation.setCountry(event.getAddress().getCountry());
+                chargingStation.setPostalCode(event.getAddress().getPostalCode());
+                chargingStation.setRegion(event.getAddress().getRegion());
+            }
+            chargingStationRepository.save(chargingStation);
+        } else {
+            LOG.error("Could not find charging station {}", event.getChargingStationId());
+        }
+    }
+
+    @EventHandler
     public void handle(ChargingStationMadeReservableEvent event) {
         LOG.info("ChargingStationMadeReservableEvent for {} received", event.getChargingStationId());
 

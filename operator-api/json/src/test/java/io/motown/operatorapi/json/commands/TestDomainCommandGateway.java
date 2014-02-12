@@ -120,7 +120,12 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
 
     @Override
     public void send(ImproveChargingStationLocationCommand command) {
-        LOG.debug("ImproveChargingStationCommand: " + command.toString());
+        LOG.debug("ImproveChargingStationLocationCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(MoveChargingStationCommand command) {
+        LOG.debug("MoveChargingStationCommand: " + command.toString());
     }
 
     @Override

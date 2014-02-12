@@ -38,6 +38,7 @@ interface DomainCommandGateway {
     void send(RequestReserveNowCommand command);
     void send(PlaceChargingStationCommand command);
     void send(ImproveChargingStationLocationCommand command);
+    void send(MoveChargingStationCommand command);
     void send(MakeChargingStationReservableCommand command);
     void send(MakeChargingStationNotReservableCommand command);
 }
