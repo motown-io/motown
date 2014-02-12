@@ -38,9 +38,27 @@ public class ImproveChargingStationLocationCommandTest {
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
     }
 
+    @Test(expected = NullPointerException.class)
+    public void testInvalidAddress() {
+        JsonObject commandObject = gson.fromJson("{address:{addressline:'Teststraat 1',city:'Deurne',country:'NL'}}", JsonObject.class);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+    }
+
     @Test
     public void testCoordinates() {
         JsonObject commandObject = gson.fromJson("{coordinates:{latitude:'0.0',longitude:'0.0'}}", JsonObject.class);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+    }
+
+    @Test(expected = NumberFormatException.class)
+    public void testInvalidCoordinatesNumber() {
+        JsonObject commandObject = gson.fromJson("{coordinates:{latitude:'center',longitude:'0.0'}}", JsonObject.class);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testInvalidCoordinates() {
+        JsonObject commandObject = gson.fromJson("{coordinates:{lattitude:'0.0',longitude:'0.0'}}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
     }
 }
