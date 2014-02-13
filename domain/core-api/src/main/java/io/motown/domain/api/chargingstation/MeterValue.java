@@ -24,11 +24,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * {@code MeterValue} holds information on the charging progress.
  */
-public class MeterValue {
+public final class MeterValue {
 
-    private Date timestamp;
+    private final Date timestamp;
 
-    private String value;
+    private final String value;
 
     /**
      * Creates a {@code MeterValue} holding a timestamp and a value.
