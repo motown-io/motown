@@ -15,31 +15,63 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * The {@code FirmwareStatus} represents the status of a firmware update
+ * The {@code FirmwareStatus} represents the status of a firmware update.
  */
 public enum FirmwareStatus {
+    /**
+     * The firmware update download was successfully completed.
+     */
     DOWNLOADED("Downloaded"),
+
+    /**
+     * The firmware update download failed.
+     */
     DOWNLOAD_FAILED("DownloadFailed"),
+
+    /**
+     * The firmware update installation failed.
+     */
     INSTALLATION_FAILED("InstallationFailed"),
+
+    /**
+     * The firmware update installation was successfully completed.
+     */
     INSTALLED("Installed");
 
     private final String value;
 
-    FirmwareStatus(String v) {
+    private FirmwareStatus(String v) {
         value = v;
     }
 
-    public String value() {
-        return value;
-    }
+    /**
+     * Gets a {@code FirmwareStatus} from a {@code String} value.
+     *
+     * @param value a {@code String} value representing one of the statuses.
+     * @return the {@code FirmwareStatus}.
+     * @throws NullPointerException     if value is null.
+     * @throws IllegalArgumentException if value is not one of the known statuses.
+     */
+    public static FirmwareStatus fromValue(String value) {
+        checkNotNull(value);
 
-    public static FirmwareStatus fromValue(String v) {
-        for (FirmwareStatus c: FirmwareStatus.values()) {
-            if (c.value.equals(v)) {
-                return c;
+        for (FirmwareStatus status : values()) {
+            if (status.value.equalsIgnoreCase(value)) {
+                return status;
             }
         }
-        throw new IllegalArgumentException(v);
+
+        throw new IllegalArgumentException("FirmwareStatus value must be one of the known statuses");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return value;
     }
 }
