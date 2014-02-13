@@ -239,6 +239,10 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         return response;
     }
 
+    public void setDomainService(DomainService domainService) {
+        this.domainService = domainService;
+    }
+
     /**
      * Gets the charging station address from the SOAP "From" header.
      *

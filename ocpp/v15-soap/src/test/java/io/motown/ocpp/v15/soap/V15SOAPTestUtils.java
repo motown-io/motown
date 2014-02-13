@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.v15.soap.chargepoint;
+package io.motown.ocpp.v15.soap;
 
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
 
@@ -48,6 +48,10 @@ public final class V15SOAPTestUtils {
     public static final String AUTH_LIST_HASH = "hash";
 
     public static final int LIST_VERSION = 3;
+
+    public static final String STATUS_NOTIFICATION_ERROR_INFO = "error info";
+
+    public static final String STATUS_NOTIFICATION_VENDOR_ERROR_CODE = "007";
 
     /**
      * Private no-arg constructor to prevent instantiation of utility class.

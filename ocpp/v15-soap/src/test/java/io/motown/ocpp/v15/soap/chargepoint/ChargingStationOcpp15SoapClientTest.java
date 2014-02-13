@@ -28,7 +28,7 @@ import org.mockito.ArgumentCaptor;
 import java.util.Map;
 
 import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
-import static io.motown.ocpp.v15.soap.chargepoint.V15SOAPTestUtils.*;
+import static io.motown.ocpp.v15.soap.V15SOAPTestUtils.*;
 import static org.jgroups.util.Util.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
