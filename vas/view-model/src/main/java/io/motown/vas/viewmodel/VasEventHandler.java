@@ -161,66 +161,21 @@ public class VasEventHandler {
     public void handle(ChargingStationPlacedEvent event) {
         LOG.info("ChargingStationPlacedEvent");
 
-        ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
-
-        if (chargingStation != null) {
-            if (event.getCoordinates() != null) {
-                chargingStation.setLatitude(event.getCoordinates().getLatitude());
-                chargingStation.setLongitude(event.getCoordinates().getLongitude());
-            }
-            if (event.getAddress() != null) {
-                chargingStation.setAddress(event.getAddress().getAddressline1());
-                chargingStation.setCity(event.getAddress().getCity());
-                chargingStation.setCountry(event.getAddress().getCountry());
-                chargingStation.setPostalCode(event.getAddress().getPostalCode());
-                chargingStation.setRegion(event.getAddress().getRegion());
-            }
-            chargingStationRepository.save(chargingStation);
-        }
+        updateLocationForChargingStation(event.getChargingStationId(), event.getCoordinates(), event.getAddress());
     }
 
     @EventHandler
     public void handle(ChargingStationLocationImprovedEvent event) {
         LOG.info("ChargingStationLocationImprovedEvent");
 
-        ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
-
-        if (chargingStation != null) {
-            if (event.getCoordinates() != null) {
-                chargingStation.setLatitude(event.getCoordinates().getLatitude());
-                chargingStation.setLongitude(event.getCoordinates().getLongitude());
-            }
-            if (event.getAddress() != null) {
-                chargingStation.setAddress(event.getAddress().getAddressline1());
-                chargingStation.setCity(event.getAddress().getCity());
-                chargingStation.setCountry(event.getAddress().getCountry());
-                chargingStation.setPostalCode(event.getAddress().getPostalCode());
-                chargingStation.setRegion(event.getAddress().getRegion());
-            }
-            chargingStationRepository.save(chargingStation);
-        }
+        updateLocationForChargingStation(event.getChargingStationId(), event.getCoordinates(), event.getAddress());
     }
 
     @EventHandler
     public void handle(ChargingStationMovedEvent event) {
         LOG.info("ChargingStationMovedEvent");
 
-        ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
-
-        if (chargingStation != null) {
-            if (event.getCoordinates() != null) {
-                chargingStation.setLatitude(event.getCoordinates().getLatitude());
-                chargingStation.setLongitude(event.getCoordinates().getLongitude());
-            }
-            if (event.getAddress() != null) {
-                chargingStation.setAddress(event.getAddress().getAddressline1());
-                chargingStation.setCity(event.getAddress().getCity());
-                chargingStation.setCountry(event.getAddress().getCountry());
-                chargingStation.setPostalCode(event.getAddress().getPostalCode());
-                chargingStation.setRegion(event.getAddress().getRegion());
-            }
-            chargingStationRepository.save(chargingStation);
-        }
+        updateLocationForChargingStation(event.getChargingStationId(), event.getCoordinates(), event.getAddress());
     }
 
     @EventHandler
@@ -270,6 +225,36 @@ public class VasEventHandler {
 
         if (chargingStation != null) {
             chargingStation.setReservable(reservable);
+            chargingStationRepository.save(chargingStation);
+        }
+    }
+
+    /**
+     * Updates the location of the charging station to either new lat/long coordinates or a geographical address (or both).
+     * If the charging station cannot be found in the repository an error is logged.
+     *
+     * @param chargingStationId charging station identifier.
+     * @param coordinates the lat/long coordinates of the charging station.
+     * @param address the geographical address of the charging station.
+     */
+    private void updateLocationForChargingStation(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
+        ChargingStation chargingStation = getChargingStation(chargingStationId);
+
+        if (chargingStation != null) {
+
+            if (coordinates != null) {
+                chargingStation.setLatitude(coordinates.getLatitude());
+                chargingStation.setLongitude(coordinates.getLongitude());
+            }
+
+            if (address != null) {
+                chargingStation.setAddress(address.getAddressline1());
+                chargingStation.setCity(address.getCity());
+                chargingStation.setCountry(address.getCountry());
+                chargingStation.setPostalCode(address.getPostalCode());
+                chargingStation.setRegion(address.getRegion());
+            }
+
             chargingStationRepository.save(chargingStation);
         }
     }
