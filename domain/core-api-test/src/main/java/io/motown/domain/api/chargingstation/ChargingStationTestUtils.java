@@ -368,6 +368,8 @@ public final class ChargingStationTestUtils {
      * @return a set with the given number of default EVSEs.
      */
     public static Set<Evse> getEvses(int numberOfEvses) {
+        checkArgument(numberOfEvses > 0);
+
         Set<Evse> evses = new HashSet<>(numberOfEvses);
         for (int i = 0; i < numberOfEvses; i++) {
             evses.add(getEvse(i));
