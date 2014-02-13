@@ -15,7 +15,10 @@
  */
 package io.motown.vas.viewmodel.model;
 
+import com.google.common.collect.ImmutableMap;
 import io.motown.domain.api.chargingstation.ConnectorType;
+
+import java.util.Map;
 
 public enum VasConnectorType {
 
@@ -214,6 +217,24 @@ public enum VasConnectorType {
 
     private final String value;
 
+    private static final Map<ConnectorType, VasConnectorType> mapping = ImmutableMap.<ConnectorType, VasConnectorType>builder()
+            .put(ConnectorType.W_INDUCTIVE, SMALL_PADDLE_INDUCTIVE)
+            .put(ConnectorType.TESLA, TESLA_CONNECTOR)
+            .put(ConnectorType.C_G105, TEPCO_CHA_DE_MO)
+            .put(ConnectorType.C_TYPE_1, IEC_621962_TYPE_1_YAZAKI)
+            .put(ConnectorType.C_TYPE_2, IEC_621962_TYPE_2_MENNEKES)
+            .put(ConnectorType.S_TYPE_3, IEC_621962_TYPE_3_SCAME)
+            .put(ConnectorType.S_309_1P_16A, _60309IndustrialPneAc)
+            .put(ConnectorType.S_309_1P_32A, _60309IndustrialPneAc)
+            // S_309_3P_16A could also be _60309Industrial3PENAc?
+            .put(ConnectorType.S_309_3P_16A, _60309Industrial3PEAc)
+            // S_309_3P_32A could also be _60309Industrial3PENAc?
+            .put(ConnectorType.S_309_3P_32A, _60309Industrial3PEAc)
+            // CEE_7_7 could also be DomesticPlugTypeECee75, DomesticPlugTypeFCee74Schuko?
+            .put(ConnectorType.CEE_7_7, DOMESTIC_PLUG_TYPE_EF_CEE_77)
+            .put(ConnectorType.UNSPECIFIED, UNSPECIFIED)
+            .build();
+
     VasConnectorType(String v) {
         value = v;
     }
@@ -239,49 +260,10 @@ public enum VasConnectorType {
      * @return the corresponding vas connector type, or UNSPECIFIED if no mapping can be made.
      */
     public static VasConnectorType fromConnectorType(ConnectorType connectorType) {
-        VasConnectorType vasConnectorType = UNSPECIFIED;
+        VasConnectorType vasConnectorType = mapping.get(connectorType);
 
-        switch (connectorType) {
-            case W_INDUCTIVE:
-                vasConnectorType = SMALL_PADDLE_INDUCTIVE;
-                // what about LARGE_PADDLE_INDUCTIVE?
-                break;
-            case TESLA:
-                vasConnectorType = TESLA_CONNECTOR;
-                break;
-            case C_G105:
-                vasConnectorType = TEPCO_CHA_DE_MO;
-                break;
-            case C_TYPE_1:
-                vasConnectorType = IEC_621962_TYPE_1_YAZAKI;
-                break;
-            case C_TYPE_2:
-                vasConnectorType = IEC_621962_TYPE_2_MENNEKES;
-                break;
-            case S_TYPE_3:
-                vasConnectorType = IEC_621962_TYPE_3_SCAME;
-                break;
-            case S_309_1P_16A:
-                vasConnectorType = _60309IndustrialPneAc;
-                break;
-            case S_309_1P_32A:
-                vasConnectorType = _60309IndustrialPneAc;
-                break;
-            case S_309_3P_16A:
-                vasConnectorType = _60309Industrial3PEAc;
-                // what about _60309Industrial3PENAc?
-                break;
-            case S_309_3P_32A:
-                vasConnectorType = _60309Industrial3PEAc;
-                // what about _60309Industrial3PENAc?
-                break;
-            case CEE_7_7:
-                vasConnectorType = DOMESTIC_PLUG_TYPE_EF_CEE_77;
-                // what about DomesticPlugTypeECee75, DomesticPlugTypeFCee74Schuko which are also classified as CEE_7_7?
-                break;
-            case UNSPECIFIED:
-                vasConnectorType = UNSPECIFIED;
-                break;
+        if (vasConnectorType == null) {
+            vasConnectorType = UNSPECIFIED;
         }
 
         return vasConnectorType;
