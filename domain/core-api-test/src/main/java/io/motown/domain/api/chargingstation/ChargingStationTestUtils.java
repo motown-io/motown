@@ -258,6 +258,7 @@ public final class ChargingStationTestUtils {
      */
     public static final List<Connector> CONNECTORS = ImmutableList.<Connector>builder()
             .add(new Connector(MAX_AMP, PHASE, VOLTAGE, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_2))
+            .add(new Connector(MAX_AMP, PHASE, VOLTAGE, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_1))
             .build();
 
     /**
