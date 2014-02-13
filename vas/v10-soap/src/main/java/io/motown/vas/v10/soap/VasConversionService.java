@@ -17,7 +17,6 @@ package io.motown.vas.v10.soap;
 
 import io.motown.vas.v10.soap.schema.*;
 import io.motown.vas.viewmodel.model.*;
-import io.motown.vas.viewmodel.model.Evse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -127,7 +126,7 @@ public class VasConversionService {
     public List<OpeningPeriod> getOpeningPeriod(ChargingStation chargingStation) {
         List<OpeningTime> openingTimes = chargingStation.getOpeningTimes();
 
-        List openingPeriodsVas = new ArrayList<OpeningPeriod>();
+        List<OpeningPeriod> openingPeriodsVas = new ArrayList<>();
         if(openingTimes != null && !openingTimes.isEmpty()) {
             for (OpeningTime openingTime : openingTimes){
                 OpeningPeriod openingPeriod = new OpeningPeriod();
