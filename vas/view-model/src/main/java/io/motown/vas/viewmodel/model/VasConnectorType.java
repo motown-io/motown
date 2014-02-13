@@ -217,7 +217,7 @@ public enum VasConnectorType {
 
     private final String value;
 
-    private static final Map<ConnectorType, VasConnectorType> mapping = ImmutableMap.<ConnectorType, VasConnectorType>builder()
+    private static final Map<ConnectorType, VasConnectorType> MAPPING = ImmutableMap.<ConnectorType, VasConnectorType>builder()
             .put(ConnectorType.W_INDUCTIVE, SMALL_PADDLE_INDUCTIVE)
             .put(ConnectorType.TESLA, TESLA_CONNECTOR)
             .put(ConnectorType.C_G105, TEPCO_CHA_DE_MO)
@@ -260,7 +260,7 @@ public enum VasConnectorType {
      * @return the corresponding vas connector type, or UNSPECIFIED if no mapping can be made.
      */
     public static VasConnectorType fromConnectorType(ConnectorType connectorType) {
-        VasConnectorType vasConnectorType = mapping.get(connectorType);
+        VasConnectorType vasConnectorType = MAPPING.get(connectorType);
 
         if (vasConnectorType == null) {
             vasConnectorType = UNSPECIFIED;
