@@ -16,13 +16,8 @@
 package io.motown.vas.v10.soap;
 
 import io.motown.vas.v10.soap.schema.*;
-import io.motown.vas.viewmodel.model.ChargeMode;
-import io.motown.vas.viewmodel.model.State;
-import io.motown.vas.viewmodel.model.VasChargingCapability;
-import io.motown.vas.viewmodel.model.VasConnectorType;
-import io.motown.vas.viewmodel.model.ChargingStation;
-import io.motown.vas.viewmodel.model.OpeningTime;
-import io.motown.vas.viewmodel.model.Powersocket;
+import io.motown.vas.viewmodel.model.*;
+import io.motown.vas.viewmodel.model.Evse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -63,7 +58,7 @@ public class VasConversionService {
     }
 
     public String getAddress(ChargingStation chargingStation) {
-        return chargingStation.getIpAddress();
+        return chargingStation.getAddress();
     }
 
     public List<ChargingCapability> getChargingCapabilities(ChargingStation chargingStation) {
@@ -77,13 +72,7 @@ public class VasConversionService {
     }
 
     public ChargingMode getChargingMode(ChargingStation chargingStation) {
-        List<Powersocket> powersockets = chargingStation.getPowersockets();
-
-        ChargeMode chargeMode = null;
-        if(powersockets != null && powersockets.size() > 0){
-            chargeMode = powersockets.get(0).getChargeMode();
-        }
-        return getVasChargingMode(chargeMode);
+        return getVasChargingMode(chargingStation.getChargeMode());
     }
 
     public String getCity(ChargingStation chargingStation) {
@@ -91,13 +80,13 @@ public class VasConversionService {
     }
 
     public Integer getConnectors(ChargingStation chargingStation) {
-        return chargingStation.getPowersockets().size();
+        return chargingStation.getEvses().size();
     }
 
     public Integer getConnectorsFree(ChargingStation chargingStation) {
         int freeConnectors = 0;
-        for(Powersocket powersocket: chargingStation.getPowersockets()){
-            if(powersocket.getState().equals(State.AVAILABLE)){
+        for(Evse evse : chargingStation.getEvses()){
+            if(evse.getState().equals(State.AVAILABLE)){
                 ++freeConnectors;
             }
         }
@@ -106,12 +95,12 @@ public class VasConversionService {
     }
 
     public List<ConnectorType> getConnectorTypes(ChargingStation chargingStation) {
-
         List<ConnectorType> connectorTypes = new ArrayList<>();
-        for(Powersocket powersocket: chargingStation.getPowersockets()){
-            String typeValue = powersocket.getPowersocketType().getVasConnectorType().value();
-            connectorTypes.add(ConnectorType.fromValue((typeValue != null)?typeValue : "Unspecified"));
+
+        for (VasConnectorType connectorType : chargingStation.getConnectorTypes()) {
+            connectorTypes.add(ConnectorType.fromValue((connectorType.value() != null)?connectorType.value() : "Unspecified"));
         }
+
         return connectorTypes;
     }
 

@@ -54,7 +54,6 @@ public class VasSubscriberSoapClient implements Vas10Client {
 
         List<Subscription> subscriptions = subscriptionRepository.findAll();
         for (Subscription subscription : subscriptions) {
-           subscription.getDeliveryAddress();
 
             StatusChangeNotification notification = new StatusChangeNotification();
             notification.setSubscriptionId(subscription.getSubscriptionId());

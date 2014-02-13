@@ -18,20 +18,16 @@ package io.motown.vas.viewmodel;
 import io.motown.vas.viewmodel.model.ChargingStation;
 
 import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.EVSES;
 
 public final class VasViewModelTestUtils {
-
-    public static final String CHARGING_STATION_ADDRESS = "127.0.0.1";
 
     private VasViewModelTestUtils() {
         // Private no-arg constructor to prevent instantiation of utility class.
     }
 
     public static ChargingStation getRegisteredAndConfiguredChargingStation() {
-        ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId(), CHARGING_STATION_ADDRESS);
+        ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
         cs.setRegistered(true);
-        cs.setNumberOfEvses(EVSES.size());
         cs.setConfigured(true);
 
         return cs;

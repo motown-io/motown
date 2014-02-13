@@ -72,7 +72,15 @@ public class VasEventHandler {
             chargingStation = new ChargingStation(chargingStationId);
         }
 
-        chargingStation.setNumberOfEvses(event.getEvses().size());
+        //TODO determine charge mode based on the info in event.getEvses() - Mark van den Bergh, Februari 13th 2014
+        //chargingStation.setChargeMode(ChargeMode.MODE3);
+
+        //TODO determine list of connector types based on the info in event.getEvses() - Mark van den Bergh, Februari 13th 2014
+        //chargingStation.setConnectorTypes();
+
+        //TODO determine the info for the Evse list - Mark van den Bergh, Februari 13th 2014
+        //chargingStation.setEvses();
+
         chargingStation.setConfigured(true);
 
         /*
@@ -192,6 +200,16 @@ public class VasEventHandler {
         updateReservableForChargingStation(event.getChargingStationId(), false);
     }
 
+    @EventHandler
+    public void handle(ChargingStationStatusNotificationReceivedEvent event) {
+        //TODO implement. - Mark van den Bergh, Februari 13th 2014
+    }
+
+    @EventHandler
+    public void handle(ComponentStatusNotificationReceivedEvent event) {
+        //TODO implement. - Mark van den Bergh, Februari 13th 2014
+    }
+
     public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {
         this.chargingStationRepository = chargingStationRepository;
     }
@@ -214,8 +232,8 @@ public class VasEventHandler {
     }
 
     /**
-     * Updates the 'reservable' property of the charging station which is retrieved by the passed ChargingStationId.
-     * If the charging station cannot be found in the repository an error is logged.
+     * Updates the 'reservable' property of the charging station. If the charging station cannot be found in the
+     * repository an error is logged.
      *
      * @param chargingStationId charging station identifier.
      * @param reservable true if the charging station is reservable, false otherwise.

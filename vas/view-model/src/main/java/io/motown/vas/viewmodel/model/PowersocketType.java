@@ -31,7 +31,7 @@ public class PowersocketType {
 
     @OneToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
-    private Powersocket powersocket;
+    private Evse evse;
 
     @Column(nullable = false)
     private String name;
@@ -54,8 +54,8 @@ public class PowersocketType {
         this.cdrChargePointType = cdrChargePointType;
     }
 
-    public void setPowersocket(Powersocket powersocket) {
-        this.powersocket = powersocket;
+    public void setEvse(Evse evse) {
+        this.evse = evse;
     }
 
     public void setName(String name) {
@@ -90,8 +90,8 @@ public class PowersocketType {
         return cdrChargePointType;
     }
 
-    public Powersocket getPowersocket() {
-        return powersocket;
+    public Evse getEvse() {
+        return evse;
     }
 
     public String getName() {

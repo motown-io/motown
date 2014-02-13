@@ -22,21 +22,20 @@ import java.util.List;
 
 @Entity
 public class ChargingStation {
+
     @Id
     private String id;
 
     private ChargingStationId chargingStationId;
 
-    @OneToMany(mappedBy = "chargingStation", targetEntity = Powersocket.class)
-    private List<Powersocket> powersockets;
+    @OneToMany(mappedBy = "chargingStation", targetEntity = Evse.class)
+    private List<Evse> evses;
 
     @OneToMany(mappedBy = "chargingStation", targetEntity = OpeningTime.class)
     private List<OpeningTime> openingTimes;
 
     private boolean isRegistered;
     private boolean isConfigured;
-
-    private String ipAddress;
 
     @ElementCollection(targetClass = VasChargingCapability.class)
     @Enumerated(EnumType.STRING)
@@ -54,15 +53,13 @@ public class ChargingStation {
 
     private String region;
 
-    private int numberOfEvses;
-
-    private int numberOfFreeEvses;
-
-    private String status;
-
     private String accessibility;
 
-    private VasConnectorType connectorType;
+    private ChargeMode chargeMode;
+
+    @ElementCollection(targetClass = VasChargingCapability.class)
+    @Enumerated(EnumType.STRING)
+    private List<VasConnectorType> connectorTypes;
 
     /**
      * The latitude of a coordinate.
@@ -82,7 +79,6 @@ public class ChargingStation {
 
     private State state;
 
-
     private ChargingStation() {
         // Private no-arg constructor for Hibernate.
     }
@@ -91,29 +87,12 @@ public class ChargingStation {
         this.id = id;
     }
 
-    public ChargingStation(String id, String ipAddress) {
-        this.id = id;
-        this.ipAddress = ipAddress;
-    }
-
     public String getId() {
         return id;
     }
 
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
-    }
-
     public int getNumberOfEvses() {
-        return numberOfEvses;
-    }
-
-    public void setNumberOfEvses(int numberOfEvses) {
-        this.numberOfEvses = numberOfEvses;
+        return evses.size();
     }
 
     public void setChargingStationId(ChargingStationId chargingStationId) {
@@ -148,16 +127,12 @@ public class ChargingStation {
         this.region = region;
     }
 
-    public void setNumberOfFreeEvses(int numberOfFreeEvses) {
-        this.numberOfFreeEvses = numberOfFreeEvses;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public void setAccessibility(String accessibility) {
         this.accessibility = accessibility;
+    }
+
+    public void setChargeMode(ChargeMode chargeMode) {
+        this.chargeMode = chargeMode;
     }
 
     public void setHasFixedCable(boolean hasFixedCable) {
@@ -201,15 +176,21 @@ public class ChargingStation {
     }
 
     public int getNumberOfFreeEvses() {
-        return numberOfFreeEvses;
-    }
-
-    public String getStatus() {
-        return status;
+        int numOfFreeEvses = 0;
+        for (Evse evse : evses) {
+            if(evse.getState().equals(State.AVAILABLE)) {
+                numOfFreeEvses++;
+            }
+        }
+        return numOfFreeEvses;
     }
 
     public String getAccessibility() {
         return accessibility;
+    }
+
+    public ChargeMode getChargeMode() {
+        return chargeMode;
     }
 
     public boolean isHasFixedCable() {
@@ -244,8 +225,8 @@ public class ChargingStation {
         return chargingCapabilities;
     }
 
-    public VasConnectorType getConnectorType() {
-        return connectorType;
+    public List<VasConnectorType> getConnectorTypes() {
+        return connectorTypes;
     }
 
     public Double getLatitude() {
@@ -264,8 +245,8 @@ public class ChargingStation {
         this.chargingCapabilities = chargingCapabilities;
     }
 
-    public void setConnectorType(VasConnectorType connectorType) {
-        this.connectorType = connectorType;
+    public void setConnectorTypes(List<VasConnectorType> connectorTypes) {
+        this.connectorTypes = connectorTypes;
     }
 
     public void setLatitude(Double latitude) {
@@ -280,16 +261,16 @@ public class ChargingStation {
         this.state = state;
     }
 
-    public List<Powersocket> getPowersockets() {
-        return powersockets;
+    public List<Evse> getEvses() {
+        return evses;
     }
 
     public List<OpeningTime> getOpeningTimes() {
         return openingTimes;
     }
 
-    public void setPowersockets(List<Powersocket> powersockets) {
-        this.powersockets = powersockets;
+    public void setEvses(List<Evse> evses) {
+        this.evses = evses;
     }
 
     public void setOpeningTimes(List<OpeningTime> openingTimes) {
