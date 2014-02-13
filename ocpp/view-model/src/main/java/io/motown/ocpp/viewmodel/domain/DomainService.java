@@ -109,30 +109,15 @@ public class DomainService {
 
         Map<String, String> attributes = Maps.newHashMap();
         attributes.put(ADDRESS_KEY, chargingStationAddress);
-        if (vendor != null) {
-            attributes.put(VENDOR_KEY, vendor);
-        }
-        if (model != null) {
-            attributes.put(MODEL_KEY, model);
-        }
-        if (chargingStationSerialNumber != null) {
-            attributes.put(CHARGING_STATION_SERIALNUMBER_KEY, chargingStationSerialNumber);
-        }
-        if (firmwareVersion != null) {
-            attributes.put(FIRMWARE_VERSION_KEY, firmwareVersion);
-        }
-        if (iccid != null) {
-            attributes.put(ICCID_KEY, iccid);
-        }
-        if (imsi != null) {
-            attributes.put(IMSI_KEY, imsi);
-        }
-        if (meterType != null) {
-            attributes.put(METER_TYPE_KEY, meterType);
-        }
-        if (meterSerialNumber != null) {
-            attributes.put(METER_SERIALNUMBER_KEY, meterSerialNumber);
-        }
+
+        addAttributeIfNotNull(attributes, VENDOR_KEY, vendor);
+        addAttributeIfNotNull(attributes, MODEL_KEY, model);
+        addAttributeIfNotNull(attributes, CHARGING_STATION_SERIALNUMBER_KEY, chargingStationSerialNumber);
+        addAttributeIfNotNull(attributes, FIRMWARE_VERSION_KEY, firmwareVersion);
+        addAttributeIfNotNull(attributes, ICCID_KEY, iccid);
+        addAttributeIfNotNull(attributes, IMSI_KEY, imsi);
+        addAttributeIfNotNull(attributes, METER_TYPE_KEY, meterType);
+        addAttributeIfNotNull(attributes, METER_SERIALNUMBER_KEY, meterSerialNumber);
 
         commandGateway.send(new BootChargingStationCommand(chargingStationId, protocol, attributes));
 
@@ -181,18 +166,11 @@ public class DomainService {
     public void statusNotification(ChargingStationId chargingStationId, EvseId evseId, String errorCode, ComponentStatus status, String info, Date timeStamp, String vendorId, String vendorErrorCode) {
         //TODO: The attributes map can contain protocol specific key values, how to know what keys to expect on receiving end - Ingo Pak, 09 Jan 2014
         Map<String, String> attributes = new HashMap<>();
-        if (errorCode != null) {
-            attributes.put(ERROR_CODE_KEY, errorCode);
-        }
-        if (info != null) {
-            attributes.put(INFO_KEY, info);
-        }
-        if (vendorId != null) {
-            attributes.put(VENDOR_ID_KEY, vendorId);
-        }
-        if (vendorErrorCode != null) {
-            attributes.put(VENDOR_ERROR_CODE_KEY, vendorErrorCode);
-        }
+
+        addAttributeIfNotNull(attributes, ERROR_CODE_KEY, errorCode);
+        addAttributeIfNotNull(attributes, INFO_KEY, info);
+        addAttributeIfNotNull(attributes, VENDOR_ID_KEY, vendorId);
+        addAttributeIfNotNull(attributes, VENDOR_ERROR_CODE_KEY, vendorErrorCode);
 
         StatusNotificationCommand command;
 
@@ -237,7 +215,6 @@ public class DomainService {
 
         Map<String, String> attributes = Maps.newHashMap();
         if (reservationId != null) {
-            //TODO: Fix this magic key value? - Mark van den Bergh, 10 Jan 2014
             attributes.put(RESERVATION_ID_KEY, reservationId.getId());
         }
 
@@ -352,6 +329,19 @@ public class DomainService {
          */
         Long identifier = (Long) entityManagerFactory.getPersistenceUnitUtil().getIdentifier(reservationIdentifier);
         return new NumberedReservationId(chargingStationId, protocolIdentifier, identifier.intValue());
+    }
+
+    /**
+     * Adds the attribute to the map using the key and value if the value is not null.
+     *
+     * @param attributes    map of keys and values.
+     * @param key           key of the attribute.
+     * @param value         value of the attribute.
+     */
+    private void addAttributeIfNotNull(Map<String, String> attributes, String key, String value) {
+        if (value != null) {
+            attributes.put(key, value);
+        }
     }
 
     /**

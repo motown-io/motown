@@ -15,11 +15,15 @@
  */
 package io.motown.ocpp.v15.soap;
 
+import com.google.common.collect.ImmutableList;
+import io.motown.domain.api.chargingstation.ChargingStationTestUtils;
+import io.motown.domain.api.chargingstation.MeterValue;
+import io.motown.ocpp.v15.soap.centralsystem.schema.TransactionData;
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
+
+import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.FIVE_MINUTES_AGO;
 
 public final class V15SOAPTestUtils {
 
@@ -146,6 +150,26 @@ public final class V15SOAPTestUtils {
         ReserveNowResponse response = new ReserveNowResponse();
         response.setStatus(status);
         return response;
+    }
+
+    public static List<TransactionData> getTransactionDataForMeterValues(List<MeterValue> meterValues) {
+        List<TransactionData> transactionData = new ArrayList<>();
+
+        for (MeterValue meterValue : meterValues) {
+            io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value value = new io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value();
+            value.setValue(meterValue.getValue());
+
+            io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue meterValueSoap = new io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue();
+            meterValueSoap.getValue().add(value);
+            meterValueSoap.setTimestamp(FIVE_MINUTES_AGO);
+
+            TransactionData data = new TransactionData();
+            data.getValues().add(meterValueSoap);
+
+            transactionData.add(data);
+        }
+
+        return transactionData;
     }
 
     /**

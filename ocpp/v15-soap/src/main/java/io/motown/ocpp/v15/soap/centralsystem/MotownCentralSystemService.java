@@ -94,6 +94,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
     public StopTransactionResponse stopTransaction(StopTransactionRequest request, String chargeBoxIdentity) {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
         NumberedTransactionId transactionId = new NumberedTransactionId(chargingStationId, PROTOCOL_IDENTIFIER, request.getTransactionId());
+        //TODO idTag is optional in the web service. TextualToken doesn't accept null/empty string. - Mark van den Bergh, Februari 13th 2014
         IdentifyingToken identifyingToken = new TextualToken(request.getIdTag());
 
         List<MeterValue> meterValues = new ArrayList<>();
