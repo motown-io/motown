@@ -75,24 +75,24 @@ public enum VasConnectorType {
     IEC_621962_TYPE_3_SCAME("Iec621962Type3Scame"),
 
     /**
-     * [Converted from 60309Industrial2PDc to _60309Industrial2PDc] 60309 - industrial 2P (DC).
+     * [Converted from 60309Industrial2PDc to A_60309Industrial2PDc] 60309 - industrial 2P (DC).
      */
-    _60309Industrial2PDc("60309Industrial2PDc"),
+    A_60309Industrial2PDc("60309Industrial2PDc"),
 
     /**
-     * [Converted from 60309IndustrialPneAc to _60309IndustrialPneAc] 60309 - industrial P + N int  + E (AC).
+     * [Converted from 60309IndustrialPneAc to A_60309IndustrialPneAc] 60309 - industrial P + N int  + E (AC).
      */
-    _60309IndustrialPneAc("60309IndustrialPneAc"),
+    A_60309IndustrialPneAc("60309IndustrialPneAc"),
 
     /**
-     * [Converted from 60309Industrial3PEAc to _60309Industrial3PEAc] 60309 - industrial 3P + E (AC).
+     * [Converted from 60309Industrial3PEAc to A_60309Industrial3PEAc] 60309 - industrial 3P + E (AC).
      */
-    _60309Industrial3PEAc("60309Industrial3PEAc"),
+    A_60309Industrial3PEAc("60309Industrial3PEAc"),
 
     /**
-     * [Converted from 60309Industrial3PENAc to _60309Industrial3PENAc] 60309 - industrial 3P + E + N (AC).
+     * [Converted from 60309Industrial3PENAc to A_60309Industrial3PENAc] 60309 - industrial 3P + E + N (AC).
      */
-    _60309Industrial3PENAc("60309Industrial3PENAc"),
+    A_60309Industrial3PENAc("60309Industrial3PENAc"),
 
     /**
      *             Domestic plug type A (NEMA 1-15 unpolarised).
@@ -224,12 +224,12 @@ public enum VasConnectorType {
             .put(ConnectorType.C_TYPE_1, IEC_621962_TYPE_1_YAZAKI)
             .put(ConnectorType.C_TYPE_2, IEC_621962_TYPE_2_MENNEKES)
             .put(ConnectorType.S_TYPE_3, IEC_621962_TYPE_3_SCAME)
-            .put(ConnectorType.S_309_1P_16A, _60309IndustrialPneAc)
-            .put(ConnectorType.S_309_1P_32A, _60309IndustrialPneAc)
-            // S_309_3P_16A could also be _60309Industrial3PENAc?
-            .put(ConnectorType.S_309_3P_16A, _60309Industrial3PEAc)
-            // S_309_3P_32A could also be _60309Industrial3PENAc?
-            .put(ConnectorType.S_309_3P_32A, _60309Industrial3PEAc)
+            .put(ConnectorType.S_309_1P_16A, A_60309IndustrialPneAc)
+            .put(ConnectorType.S_309_1P_32A, A_60309IndustrialPneAc)
+            // S_309_3P_16A could also be A_60309Industrial3PENAc?
+            .put(ConnectorType.S_309_3P_16A, A_60309Industrial3PEAc)
+            // S_309_3P_32A could also be A_60309Industrial3PENAc?
+            .put(ConnectorType.S_309_3P_32A, A_60309Industrial3PEAc)
             // CEE_7_7 could also be DomesticPlugTypeECee75, DomesticPlugTypeFCee74Schuko?
             .put(ConnectorType.CEE_7_7, DOMESTIC_PLUG_TYPE_EF_CEE_77)
             .put(ConnectorType.UNSPECIFIED, UNSPECIFIED)
