@@ -16,6 +16,7 @@
 package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -25,52 +26,81 @@ import java.util.Collection;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(Parameterized.class)
+@RunWith(Enclosed.class)
 public class ComponentStatusTest {
 
-    private String value;
-    private ComponentStatus componentStatus;
+    @RunWith(Parameterized.class)
+    public static class FromValueTest {
 
-    public ComponentStatusTest(ComponentStatus componentStatus, String value) {
-        this.componentStatus = componentStatus;
-        this.value = value;
+        private String value;
+        private ComponentStatus componentStatus;
+
+        public FromValueTest(ComponentStatus componentStatus, String value) {
+            this.componentStatus = componentStatus;
+            this.value = value;
+        }
+
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    {ComponentStatus.UNKNOWN, "Unknown"},
+                    {ComponentStatus.AVAILABLE, "Available"},
+                    {ComponentStatus.OCCUPIED, "Occupied"},
+                    {ComponentStatus.RESERVED, "Reserved"},
+                    {ComponentStatus.INOPERATIVE, "Inoperative"},
+                    {ComponentStatus.FAULTED, "Faulted"},
+                    {ComponentStatus.UNKNOWN, "UNKNOWN"},
+                    {ComponentStatus.AVAILABLE, "AVAILABLE"},
+                    {ComponentStatus.OCCUPIED, "OCCUPIED"},
+                    {ComponentStatus.RESERVED, "RESERVED"},
+                    {ComponentStatus.INOPERATIVE, "INOPERATIVE"},
+                    {ComponentStatus.FAULTED, "FAULTED"}
+            });
+        }
+
+        @Test
+        public void testFromValue() {
+            assertEquals(componentStatus, ComponentStatus.fromValue(value));
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void testFromValueWithUnknownComponentStatus() {
+            ComponentStatus.fromValue("NonExistentComponentStatus");
+        }
+
+        @Test(expected = NullPointerException.class)
+        public void testFromValueWithComponentStatusNull() {
+            ComponentStatus.fromValue(null);
+        }
     }
 
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-                {ComponentStatus.UNKNOWN, "Unknown"},
-                {ComponentStatus.AVAILABLE, "Available"},
-                {ComponentStatus.OCCUPIED, "Occupied"},
-                {ComponentStatus.RESERVED, "Reserved"},
-                {ComponentStatus.INOPERATIVE, "Inoperative"},
-                {ComponentStatus.FAULTED, "Faulted"},
-                {ComponentStatus.UNKNOWN, "UNKNOWN"},
-                {ComponentStatus.AVAILABLE, "AVAILABLE"},
-                {ComponentStatus.OCCUPIED, "OCCUPIED"},
-                {ComponentStatus.RESERVED, "RESERVED"},
-                {ComponentStatus.INOPERATIVE, "INOPERATIVE"},
-                {ComponentStatus.FAULTED, "FAULTED"}
-        });
-    }
+    @RunWith(Parameterized.class)
+    public static class ToStringTest {
 
-    @Test
-    public void testFromValue() {
-        assertEquals(componentStatus, ComponentStatus.fromValue(value));
-    }
+        private String value;
+        private ComponentStatus componentStatus;
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testFromValueWithUnknownComponentStatus() {
-        ComponentStatus.fromValue("NonExistentComponentStatus");
-    }
+        public ToStringTest(ComponentStatus componentStatus, String value) {
+            this.componentStatus = componentStatus;
+            this.value = value;
+        }
 
-    @Test(expected = NullPointerException.class)
-    public void testFromValueWithComponentStatusNull() {
-        ComponentStatus.fromValue(null);
-    }
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    {ComponentStatus.UNKNOWN, "Unknown"},
+                    {ComponentStatus.AVAILABLE, "Available"},
+                    {ComponentStatus.OCCUPIED, "Occupied"},
+                    {ComponentStatus.RESERVED, "Reserved"},
+                    {ComponentStatus.INOPERATIVE, "Inoperative"},
+                    {ComponentStatus.FAULTED, "Faulted"},
+            });
+        }
 
-    @Test
-    public void testToString() {
-        assertTrue(componentStatus.toString().equalsIgnoreCase(value));
+
+        @Test
+        public void testToString() {
+            assertTrue(componentStatus.toString().equals(value));
+        }
     }
 }
