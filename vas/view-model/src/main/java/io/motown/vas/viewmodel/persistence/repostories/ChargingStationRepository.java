@@ -20,6 +20,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ChargingStationRepository extends JpaRepository<ChargingStation, String> {
 
-    ChargingStation findById(Long id);
+    ChargingStation findByChargingStationId(String chargingStationId);
 
 }

@@ -16,13 +16,14 @@
 package io.motown.vas.viewmodel.model;
 
 import javax.persistence.*;
-
+import java.util.Objects;
 
 @Entity
 public class Evse {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     /**
      * Indication of the logical position of the EVSE in a charging station.
@@ -36,22 +37,13 @@ public class Evse {
     @Column(nullable = false)
     private State state;
 
-    @ManyToOne
-    @JoinColumn(name="id", insertable = false, updatable = false)
-    private ChargingStation chargingStation;
-
     private Evse() {
         // Private no-arg constructor for Hibernate.
     }
 
-    public Evse(String id, Integer position, State state) {
-        this.id = id;
+    public Evse(Integer position, State state) {
         this.position = position;
         this.state = state;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public Integer getPosition() {
@@ -62,7 +54,22 @@ public class Evse {
         return state;
     }
 
-    public ChargingStation getChargingStation() {
-        return chargingStation;
+    @Override
+    public int hashCode() {
+        // field 'id' is left out of hash on purpose because comparisons do not care about the generated id
+        return Objects.hash(position, state);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        // field 'id' is left out of equals on purpose because comparisons do not care about the generated id
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final Evse other = (Evse) obj;
+        return Objects.equals(this.position, other.position) && Objects.equals(this.state, other.state);
     }
 }

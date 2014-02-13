@@ -11,6 +11,8 @@
 
     <context:property-placeholder location="classpath:configViewModel.properties" />
 
+    <context:component-scan base-package="io.motown.vas.viewmodel"/>
+
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="packagesToScan" value="io.motown.vas.viewmodel.model"/>

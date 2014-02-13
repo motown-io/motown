@@ -15,10 +15,13 @@
  */
 package io.motown.vas.viewmodel.model;
 
+import io.motown.domain.api.chargingstation.Connector;
+
 /**
  * Charging Capability as per VAS spec
  */
 public enum VasChargingCapability {
+
     UNSPECIFIED("Unspecified"),
     BATTERY_EXCHANGE("BatteryExchange"),
     V_120V_1_PHASE_10A("120V1Phase10A"),
@@ -52,6 +55,27 @@ public enum VasChargingCapability {
             }
         }
         throw new IllegalArgumentException(v);
+    }
+
+    /**
+     * Tries to map the information from the connector to a charging capability. Returns UNSPECIFIED if no mapping
+     * can be made.
+     * Note: BatteryExchange and DcFastCharging are not supported at the moment.
+     *
+     * @param connector connector with charging capability information.
+     * @return charging capability if a mapping has been made, otherwise UNSPECIFIED.
+     */
+    public static VasChargingCapability fromConnector(Connector connector) {
+        VasChargingCapability chargingCapability = UNSPECIFIED;
+
+        try {
+            chargingCapability = VasChargingCapability.fromValue(String.format("%dV%dPhase%dA", connector.getVoltage(), connector.getPhase(), connector.getMaxAmp()));
+        } catch (IllegalArgumentException ex) {
+            // cannot convert to valid VAS charging capability.
+            //TODO log?
+        }
+
+        return chargingCapability;
     }
 
 }

@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Service that translates our VAS representation into the webservice representation
@@ -124,7 +125,7 @@ public class VasConversionService {
     }
 
     public List<OpeningPeriod> getOpeningPeriod(ChargingStation chargingStation) {
-        List<OpeningTime> openingTimes = chargingStation.getOpeningTimes();
+        Set<OpeningTime> openingTimes = chargingStation.getOpeningTimes();
 
         List<OpeningPeriod> openingPeriodsVas = new ArrayList<>();
         if(openingTimes != null && !openingTimes.isEmpty()) {
@@ -169,17 +170,23 @@ public class VasConversionService {
 
         if (chargeMode != null) {
             switch (chargeMode){
-                case MODE1:
+                case IEC_61851_MODE_1:
                     result = ChargingMode.IEC_61851_MODE_1;
                     break;
-                case MODE2:
+                case IEC_61851_MODE_2:
                     result = ChargingMode.IEC_61851_MODE_2;
                     break;
-                case MODE3:
+                case IEC_61851_MODE_3:
                     result = ChargingMode.IEC_61851_MODE_3;
                     break;
-                case MODE4:
+                case IEC_61851_MODE_4:
                     result = ChargingMode.IEC_61851_MODE_4;
+                    break;
+                case CHA_DE_MO:
+                    result = ChargingMode.CHA_DE_MO;
+                    break;
+                case UNSPECIFIED:
+                    result = ChargingMode.UNSPECIFIED;
                     break;
                 default:
                     result = ChargingMode.UNSPECIFIED;
@@ -230,6 +237,6 @@ public class VasConversionService {
     }
 
     public String getUid(ChargingStation chargingStation) {
-        return chargingStation.getId();
+        return chargingStation.getChargingStationId();
     }
 }

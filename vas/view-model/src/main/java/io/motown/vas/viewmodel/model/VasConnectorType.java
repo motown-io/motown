@@ -15,6 +15,8 @@
  */
 package io.motown.vas.viewmodel.model;
 
+import io.motown.domain.api.chargingstation.ConnectorType;
+
 public enum VasConnectorType {
 
     UNSPECIFIED("Unspecified"),
@@ -227,6 +229,62 @@ public enum VasConnectorType {
             }
         }
         throw new IllegalArgumentException(v);
+    }
+
+    /**
+     * Maps a ConnectorType (based on OCPP) to a VAS representation. The connector types that cannot be mapped will
+     * result in UNSPECIFIED.
+     *
+     * @param connectorType    connector type
+     * @return the corresponding vas connector type, or UNSPECIFIED if no mapping can be made.
+     */
+    public static VasConnectorType fromConnectorType(ConnectorType connectorType) {
+        VasConnectorType vasConnectorType = UNSPECIFIED;
+
+        switch (connectorType) {
+            case W_INDUCTIVE:
+                vasConnectorType = SMALL_PADDLE_INDUCTIVE;
+                // what about LARGE_PADDLE_INDUCTIVE?
+                break;
+            case TESLA:
+                vasConnectorType = TESLA_CONNECTOR;
+                break;
+            case C_G105:
+                vasConnectorType = TEPCO_CHA_DE_MO;
+                break;
+            case C_TYPE_1:
+                vasConnectorType = IEC_621962_TYPE_1_YAZAKI;
+                break;
+            case C_TYPE_2:
+                vasConnectorType = IEC_621962_TYPE_2_MENNEKES;
+                break;
+            case S_TYPE_3:
+                vasConnectorType = IEC_621962_TYPE_3_SCAME;
+                break;
+            case S_309_1P_16A:
+                vasConnectorType = _60309IndustrialPneAc;
+                break;
+            case S_309_1P_32A:
+                vasConnectorType = _60309IndustrialPneAc;
+                break;
+            case S_309_3P_16A:
+                vasConnectorType = _60309Industrial3PEAc;
+                // what about _60309Industrial3PENAc?
+                break;
+            case S_309_3P_32A:
+                vasConnectorType = _60309Industrial3PEAc;
+                // what about _60309Industrial3PENAc?
+                break;
+            case CEE_7_7:
+                vasConnectorType = DOMESTIC_PLUG_TYPE_EF_CEE_77;
+                // what about DomesticPlugTypeECee75, DomesticPlugTypeFCee74Schuko which are also classified as CEE_7_7?
+                break;
+            case UNSPECIFIED:
+                vasConnectorType = UNSPECIFIED;
+                break;
+        }
+
+        return vasConnectorType;
     }
 
 }

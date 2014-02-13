@@ -17,12 +17,11 @@ package io.motown.domain.api.chargingstation;
 
 public enum ChargingProtocol {
 
-    //TODO are these names the correct ones, or do we want to use the more specific ones (VAS)
     UNSPECIFIED,
     MODE1,
     MODE2,
     MODE3,
     MODE4,
-    CHAMEDO
+    CHA_DE_MO
 
 }

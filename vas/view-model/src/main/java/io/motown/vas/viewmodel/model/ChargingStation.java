@@ -15,33 +15,30 @@
  */
 package io.motown.vas.viewmodel.model;
 
-import io.motown.domain.api.chargingstation.ChargingStationId;
-
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 public class ChargingStation {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private ChargingStationId chargingStationId;
+    private String chargingStationId;
 
-    @OneToMany(mappedBy = "chargingStation", targetEntity = Evse.class)
-    private List<Evse> evses;
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = Evse.class, fetch = FetchType.EAGER)
+    private Set<Evse> evses;
 
-    @OneToMany(mappedBy = "chargingStation", targetEntity = OpeningTime.class)
-    private List<OpeningTime> openingTimes;
+    @OneToMany(mappedBy = "id", targetEntity = OpeningTime.class, fetch = FetchType.EAGER)
+    private Set<OpeningTime> openingTimes;
 
     private boolean isRegistered;
     private boolean isConfigured;
 
-    @ElementCollection(targetClass = VasChargingCapability.class)
+    @ElementCollection(targetClass = VasChargingCapability.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private List<VasChargingCapability> chargingCapabilities;
-
-    private ChargeMode supportedChargingMode;
+    private Set<VasChargingCapability> chargingCapabilities;
 
     private String address;
 
@@ -57,9 +54,9 @@ public class ChargingStation {
 
     private ChargeMode chargeMode;
 
-    @ElementCollection(targetClass = VasChargingCapability.class)
+    @ElementCollection(targetClass = VasConnectorType.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private List<VasConnectorType> connectorTypes;
+    private Set<VasConnectorType> connectorTypes;
 
     /**
      * The latitude of a coordinate.
@@ -83,11 +80,11 @@ public class ChargingStation {
         // Private no-arg constructor for Hibernate.
     }
 
-    public ChargingStation(String id) {
-        this.id = id;
+    public ChargingStation(String chargingStationId) {
+        this.chargingStationId = chargingStationId;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -95,16 +92,12 @@ public class ChargingStation {
         return evses.size();
     }
 
-    public void setChargingStationId(ChargingStationId chargingStationId) {
+    public void setChargingStationId(String chargingStationId) {
         this.chargingStationId = chargingStationId;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
-    }
-
-    public void setSupportedChargingMode(ChargeMode supportedChargingMode) {
-        this.supportedChargingMode = supportedChargingMode;
     }
 
     public void setAddress(String address) {
@@ -147,12 +140,8 @@ public class ChargingStation {
         this.operator = operator;
     }
 
-    public ChargingStationId getChargingStationId() {
+    public String getChargingStationId() {
         return chargingStationId;
-    }
-
-    public ChargeMode getSupportedChargingMode() {
-        return supportedChargingMode;
     }
 
     public String getAddress() {
@@ -221,11 +210,11 @@ public class ChargingStation {
         isConfigured = configured;
     }
 
-    public List<VasChargingCapability> getChargingCapabilities() {
+    public Set<VasChargingCapability> getChargingCapabilities() {
         return chargingCapabilities;
     }
 
-    public List<VasConnectorType> getConnectorTypes() {
+    public Set<VasConnectorType> getConnectorTypes() {
         return connectorTypes;
     }
 
@@ -241,11 +230,11 @@ public class ChargingStation {
         return state;
     }
 
-    public void setChargingCapabilities(List<VasChargingCapability> chargingCapabilities) {
+    public void setChargingCapabilities(Set<VasChargingCapability> chargingCapabilities) {
         this.chargingCapabilities = chargingCapabilities;
     }
 
-    public void setConnectorTypes(List<VasConnectorType> connectorTypes) {
+    public void setConnectorTypes(Set<VasConnectorType> connectorTypes) {
         this.connectorTypes = connectorTypes;
     }
 
@@ -261,19 +250,19 @@ public class ChargingStation {
         this.state = state;
     }
 
-    public List<Evse> getEvses() {
+    public Set<Evse> getEvses() {
         return evses;
     }
 
-    public List<OpeningTime> getOpeningTimes() {
+    public Set<OpeningTime> getOpeningTimes() {
         return openingTimes;
     }
 
-    public void setEvses(List<Evse> evses) {
+    public void setEvses(Set<Evse> evses) {
         this.evses = evses;
     }
 
-    public void setOpeningTimes(List<OpeningTime> openingTimes) {
+    public void setOpeningTimes(Set<OpeningTime> openingTimes) {
         this.openingTimes = openingTimes;
     }
 }

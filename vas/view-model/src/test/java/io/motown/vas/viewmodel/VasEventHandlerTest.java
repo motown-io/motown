@@ -16,7 +16,8 @@
 package io.motown.vas.viewmodel;
 
 import io.motown.domain.api.chargingstation.*;
-import io.motown.vas.viewmodel.model.ChargingStation;
+import io.motown.vas.viewmodel.model.*;
+import io.motown.vas.viewmodel.model.Evse;
 import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,8 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Set;
+
 import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
-import static io.motown.vas.viewmodel.VasViewModelTestUtils.getRegisteredAndConfiguredChargingStation;
+import static io.motown.vas.viewmodel.VasViewModelTestUtils.*;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.*;
@@ -40,40 +43,45 @@ public class VasEventHandlerTest {
     @Autowired
     private ChargingStationRepository chargingStationRepository;
 
+    @Autowired
+    private ConfigurationConversionService configurationConversionService;
+
     @Before
     public void setUp() {
         chargingStationRepository.deleteAll();
 
+
         eventHandler = new VasEventHandler();
 
         eventHandler.setChargingStationRepository(chargingStationRepository);
+        eventHandler.setConfigurationConversionService(configurationConversionService);
     }
 
     @Test
     public void chargingStationBootedEventChargingStationCreated() {
-        assertNull(chargingStationRepository.findOne(CHARGING_STATION_ID.getId()));
+        assertNull(getTestChargingStationFromRepository());
 
         eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID));
 
-        ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
+        ChargingStation cs = getTestChargingStationFromRepository();
 
         assertNotNull(cs);
-        assertEquals(cs.getId(), CHARGING_STATION_ID.getId());
+        assertEquals(cs.getChargingStationId(), CHARGING_STATION_ID.getId());
     }
 
     @Test
     public void chargingStationAcceptedEventChargingStationRegistered() {
         chargingStationRepository.saveAndFlush(new ChargingStation(CHARGING_STATION_ID.getId()));
-        assertFalse(chargingStationRepository.findOne(CHARGING_STATION_ID.getId()).isRegistered());
+        assertFalse(getTestChargingStationFromRepository().isRegistered());
 
         eventHandler.handle(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
 
-        assertTrue(chargingStationRepository.findOne(CHARGING_STATION_ID.getId()).isRegistered());
+        assertTrue(getTestChargingStationFromRepository().isRegistered());
     }
 
     @Test
     public void chargingStationAcceptedEventUnknownChargingStationNoExceptionThrown() {
-        assertNull(chargingStationRepository.findOne(CHARGING_STATION_ID.getId()));
+        assertNull(getTestChargingStationFromRepository());
 
         eventHandler.handle(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
     }
@@ -86,7 +94,7 @@ public class VasEventHandlerTest {
 
         eventHandler.handle(new ChargingStationPlacedEvent(CHARGING_STATION_ID, COORDINATES, null));
 
-        ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
+        ChargingStation cs = getTestChargingStationFromRepository();
         assertEquals(Double.valueOf(COORDINATES.getLatitude()), cs.getLatitude());
         assertEquals(Double.valueOf(COORDINATES.getLongitude()), cs.getLongitude());
     }
@@ -97,7 +105,7 @@ public class VasEventHandlerTest {
 
         eventHandler.handle(new ChargingStationPlacedEvent(CHARGING_STATION_ID, null, ADDRESS));
 
-        ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
+        ChargingStation cs = getTestChargingStationFromRepository();
         assertEquals(ADDRESS.getAddressline1(), cs.getAddress());
         assertEquals(ADDRESS.getPostalCode(), cs.getPostalCode());
         assertEquals(ADDRESS.getRegion(), cs.getRegion());
@@ -111,7 +119,7 @@ public class VasEventHandlerTest {
 
         eventHandler.handle(new ChargingStationPlacedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS));
 
-        ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
+        ChargingStation cs = getTestChargingStationFromRepository();
         assertEquals(Double.valueOf(COORDINATES.getLatitude()), cs.getLatitude());
         assertEquals(Double.valueOf(COORDINATES.getLongitude()), cs.getLongitude());
         assertEquals(ADDRESS.getAddressline1(), cs.getAddress());
@@ -123,7 +131,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationPlacedEventUnknownChargingStationNoExceptionThrown() {
-        assertNull(chargingStationRepository.findOne(CHARGING_STATION_ID.getId()));
+        assertNull(getTestChargingStationFromRepository());
 
         eventHandler.handle(new ChargingStationPlacedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS));
     }
@@ -134,7 +142,7 @@ public class VasEventHandlerTest {
 
         eventHandler.handle(new ChargingStationMadeReservableEvent(CHARGING_STATION_ID));
 
-        assertTrue(chargingStationRepository.findOne(CHARGING_STATION_ID.getId()).isReservable());
+        assertTrue(getTestChargingStationFromRepository().isReservable());
     }
 
     @Test
@@ -143,14 +151,79 @@ public class VasEventHandlerTest {
 
         eventHandler.handle(new ChargingStationMadeNotReservableEvent(CHARGING_STATION_ID));
 
-        assertFalse(chargingStationRepository.findOne(CHARGING_STATION_ID.getId()).isReservable());
+        assertFalse(getTestChargingStationFromRepository().isReservable());
     }
 
     @Test
     public void chargingStationMadeReservableEventUnknownChargingStationNoExceptionThrown() {
-        assertNull(chargingStationRepository.findOne(CHARGING_STATION_ID.getId()));
+        assertNull(getTestChargingStationFromRepository());
 
         eventHandler.handle(new ChargingStationMadeReservableEvent(CHARGING_STATION_ID));
+    }
+
+    @Test
+    public void chargingStationConfiguredEventUnknownChargingStationShouldCreateChargingStation() {
+        assertNull(getTestChargingStationFromRepository());
+
+        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
+
+        assertNotNull(getTestChargingStationFromRepository());
+    }
+
+    @Test
+    public void chargingStationConfiguredEventChargingStationShouldBeConfigured() {
+        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+
+        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
+
+        assertTrue(getTestChargingStationFromRepository().isConfigured());
+    }
+
+    @Test
+    public void chargingStationConfiguredEventVerifyChargeMode() {
+        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        ChargeMode expectedChargeMode = ChargeMode.fromChargingProtocol(EVSES.iterator().next().getConnectors().get(0).getChargingProtocol());
+
+        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
+
+        assertEquals(expectedChargeMode, getTestChargingStationFromRepository().getChargeMode());
+    }
+
+    @Test
+    public void chargingStationConfiguredEventVerifyConnectorTypes() {
+        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        Set<VasConnectorType> expectedConnectorTypes = configurationConversionService.getConnectorTypesFromEvses(EVSES);
+
+        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
+
+        // not testing if Set with expected values contain the correct values, configurationConversionService has it's own test set
+        assertEquals(expectedConnectorTypes, getTestChargingStationFromRepository().getConnectorTypes());
+    }
+
+    @Test
+    public void chargingStationConfiguredEventVerifyEvses() {
+        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        Set<Evse> expectedEvses = configurationConversionService.getEvsesFromEventEvses(EVSES);
+
+        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
+
+        // not testing if Set with expected values contain the correct values, configurationConversionService has it's own test set
+        assertEquals(expectedEvses, getTestChargingStationFromRepository().getEvses());
+    }
+
+    @Test
+    public void chargingStationConfiguredEventVerifyChargingCapabilities() {
+        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        Set<VasChargingCapability> expectedChargingCapabilities = configurationConversionService.getChargingCapabilitiesFromEvses(EVSES);
+
+        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
+
+        // not testing if Set with expected values contain the correct values, configurationConversionService has it's own test set
+        assertEquals(expectedChargingCapabilities, getTestChargingStationFromRepository().getChargingCapabilities());
+    }
+
+    private ChargingStation getTestChargingStationFromRepository() {
+        return chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId());
     }
 
 }
