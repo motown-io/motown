@@ -361,6 +361,17 @@ public class ChargingStationTest {
     }
 
     @Test
+    public void testSendAuthorizationList() {
+        final int version = 1;
+        final String hash = "4894007260";
+        final AuthorizationListUpdateType updateType = AuthorizationListUpdateType.FULL;
+
+        fixture.given(CHARGING_STATION)
+                .when(new SendAuthorizationListCommand(CHARGING_STATION_ID, IDENTIFYING_TOKENS, version, hash, AuthorizationListUpdateType.FULL))
+                .expectEvents(new SendAuthorizationListRequestedEvent(CHARGING_STATION_ID, PROTOCOL, IDENTIFYING_TOKENS, version, hash, AuthorizationListUpdateType.FULL));
+    }
+
+    @Test
     public void testGetAuthorizationListVersionRequest() {
         fixture.given(CHARGING_STATION)
                 .when(new RequestAuthorizationListVersionCommand(CHARGING_STATION_ID))
@@ -561,4 +572,24 @@ public class ChargingStationTest {
                 .expectEvents(new ChargingStationMadeNotReservableEvent(CHARGING_STATION_ID));
     }
 
+    @Test
+    public void testPlaceChargingStationCommand() {
+        fixture.given(CHARGING_STATION)
+                .when(new PlaceChargingStationCommand(CHARGING_STATION_ID, COORDINATES, ADDRESS))
+                .expectEvents(new ChargingStationPlacedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS));
+    }
+
+    @Test
+    public void testImproveChargingStationLocationCommand() {
+        fixture.given(CHARGING_STATION)
+                .when(new ImproveChargingStationLocationCommand(CHARGING_STATION_ID, COORDINATES, ADDRESS))
+                .expectEvents(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS));
+    }
+
+    @Test
+    public void MoveChargingStationCommand() {
+        fixture.given(CHARGING_STATION)
+                .when(new MoveChargingStationCommand(CHARGING_STATION_ID, COORDINATES, ADDRESS))
+                .expectEvents(new ChargingStationMovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS));
+    }
 }
