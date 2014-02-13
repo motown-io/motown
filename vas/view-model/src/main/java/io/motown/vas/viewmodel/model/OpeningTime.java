@@ -15,11 +15,7 @@
  */
 package io.motown.vas.viewmodel.model;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalTime;
-
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 public class OpeningTime {
@@ -30,8 +26,6 @@ public class OpeningTime {
     private String id;
 
     private Day day;
-
-    private Boolean closed;
 
     private Integer timeStart;
 
@@ -51,40 +45,12 @@ public class OpeningTime {
         return String.format("%02d:%02d", (timeStop / MINUTES_PER_HOUR), timeStop % MINUTES_PER_HOUR);
     }
 
-    @Transient
-    public Boolean isDuringOpeningTime(Date givenDate) {
-        assert givenDate != null;
-
-        // Both Joda Time's DateTimeConstants as well as our Day use the ISO numbering as the value for the day (i.e. 1
-        // is Monday and 7 is Sunday).
-        Day givenDay = Day.fromValue(new DateTime(givenDate).getDayOfWeek());
-        LocalTime givenTime = new LocalTime(givenDate);
-
-        return givenDay == day && !closed && getTimeStartAsLocalTime().isBefore(givenTime) && getTimeStopAsLocalTime().isAfter(givenTime);
-    }
-
-    private LocalTime getTimeStartAsLocalTime() {
-        return getAsLocalTime(timeStart);
-    }
-
-    private LocalTime getTimeStopAsLocalTime() {
-        return getAsLocalTime(timeStop);
-    }
-
-    private LocalTime getAsLocalTime(Integer time) {
-        return new LocalTime(time / MINUTES_PER_HOUR, time % MINUTES_PER_HOUR);
-    }
-
     public String getId() {
         return id;
     }
 
     public Day getDay() {
         return day;
-    }
-
-    public Boolean getClosed() {
-        return closed;
     }
 
     public Integer getTimeStart() {
@@ -101,10 +67,6 @@ public class OpeningTime {
 
     public void setDay(Day day) {
         this.day = day;
-    }
-
-    public void setClosed(Boolean closed) {
-        this.closed = closed;
     }
 
     public void setTimeStart(Integer timeStart) {
