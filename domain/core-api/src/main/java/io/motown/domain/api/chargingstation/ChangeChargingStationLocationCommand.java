@@ -18,7 +18,6 @@ package io.motown.domain.api.chargingstation;
 import com.google.common.base.Objects;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class ChangeChargingStationLocationCommand {
@@ -30,7 +29,9 @@ public abstract class ChangeChargingStationLocationCommand {
 
     protected ChangeChargingStationLocationCommand(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        checkArgument(coordinates != null || address != null);
+        if (coordinates == null && address == null) {
+            throw new NullPointerException("Either coordinates or address parameter must be non-null");
+        }
         this.coordinates = coordinates;
         this.address = address;
     }
