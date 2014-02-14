@@ -16,8 +16,7 @@
 package io.motown.vas.viewmodel;
 
 import io.motown.domain.api.chargingstation.*;
-import io.motown.domain.api.chargingstation.Evse;
-import io.motown.vas.viewmodel.model.*;
+import io.motown.vas.viewmodel.model.ChargingStation;
 import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
@@ -116,6 +115,26 @@ public class VasEventHandler {
         LOG.info("ChargingStationMovedEvent");
 
         updateLocationForChargingStation(event.getChargingStationId(), event.getCoordinates(), event.getAddress());
+    }
+
+    @EventHandler
+    public void handle(ChargingStationOpeningTimesSetEvent event) {
+        LOG.info("ChargingStationOpeningTimesSetEvent");
+
+        ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
+        if (chargingStation != null) {
+            // TODO implement - Mark Manders (2014-02-14)
+        }
+    }
+
+    @EventHandler
+    public void handle(ChargingStationOpeningTimesAddedEvent event) {
+        LOG.info("ChargingStationOpeningTimesAddedEvent");
+
+        ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
+        if (chargingStation != null) {
+            // TODO implement - Mark Manders (2014-02-14)
+        }
     }
 
     @EventHandler

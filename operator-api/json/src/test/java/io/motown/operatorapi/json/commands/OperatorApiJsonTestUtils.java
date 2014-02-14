@@ -18,10 +18,7 @@ package io.motown.operatorapi.json.commands;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.motown.domain.api.chargingstation.*;
-import io.motown.operatorapi.json.gson.AddressTypeAdapter;
-import io.motown.operatorapi.json.gson.CoordinatesTypeAdapter;
-import io.motown.operatorapi.json.gson.EvseIdTypeAdapter;
-import io.motown.operatorapi.json.gson.TextualTokenTypeAdapter;
+import io.motown.operatorapi.json.gson.*;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
@@ -49,6 +46,7 @@ public final class OperatorApiJsonTestUtils {
                 registerTypeAdapter(TextualToken.class, new TextualTokenTypeAdapter()).
                 registerTypeAdapter(Coordinates.class, new CoordinatesTypeAdapter()).
                 registerTypeAdapter(Address.class, new AddressTypeAdapter()).
+                registerTypeAdapter(OpeningTime.class, new OpeningTimeTypeAdapter()).
                 create();
     }
 

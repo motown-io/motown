@@ -356,6 +356,16 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         apply(new ChargingStationMovedEvent(command.getChargingStationId(), command.getCoordinates(), command.getAddress()));
     }
 
+    @CommandHandler
+    public void handle(SetChargingStationOpeningTimesCommand command) {
+        apply(new ChargingStationOpeningTimesSetEvent(command.getChargingStationId(), command.getOpeningTimes()));
+    }
+
+    @CommandHandler
+    public void handle(AddChargingStationOpeningTimesCommand command) {
+        apply(new ChargingStationOpeningTimesAddedEvent(command.getChargingStationId(), command.getOpeningTimes()));
+    }
+
     @EventSourcingHandler
     public void handle(ChargingStationBootedEvent event) {
         this.protocol = event.getProtocol();

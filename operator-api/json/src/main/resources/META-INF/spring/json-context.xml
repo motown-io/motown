@@ -21,6 +21,7 @@
                 <bean class="io.motown.operatorapi.json.gson.TextualTokenTypeAdapter"/>
                 <bean class="io.motown.operatorapi.json.gson.CoordinatesTypeAdapter"/>
                 <bean class="io.motown.operatorapi.json.gson.AddressTypeAdapter"/>
+                <bean class="io.motown.operatorapi.json.gson.OpeningTimeTypeAdapter"/>
             </set>
         </property>
     </bean>
@@ -45,6 +46,8 @@
         <ref bean="improveChargingStationLocationJsonCommandHandler"/>
         <ref bean="moveChargingStationJsonCommandHandler"/>
         <ref bean="updateChargingStationReservableJsonCommandHandler"/>
+        <ref bean="setChargingStationOpeningTimesJsonCommandHandler"/>
+        <ref bean="addChargingStationOpeningTimesJsonCommandHandler"/>
     </util:list>
 
     <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
