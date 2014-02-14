@@ -46,6 +46,10 @@ public class Evse {
         this.state = state;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public Integer getPosition() {
         return position;
     }
