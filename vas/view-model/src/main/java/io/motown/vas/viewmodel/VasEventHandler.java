@@ -246,8 +246,8 @@ public class VasEventHandler {
         for (OpeningTime source : input) {
             io.motown.vas.viewmodel.model.OpeningTime openingTime = new io.motown.vas.viewmodel.model.OpeningTime();
             openingTime.setDay(Day.fromValue(source.getDay().value()));
-            openingTime.setTimeStart(openingTime.getTimeStart());
-            openingTime.setTimeStop(openingTime.getTimeStop());
+            openingTime.setTimeStart(source.getTimeStart());
+            openingTime.setTimeStop(source.getTimeStop());
             output.add(openingTime);
         }
         return output;
