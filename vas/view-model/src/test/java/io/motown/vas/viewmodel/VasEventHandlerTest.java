@@ -16,6 +16,7 @@
 package io.motown.vas.viewmodel;
 
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.OpeningTime;
 import io.motown.vas.viewmodel.model.*;
 import io.motown.vas.viewmodel.model.Evse;
 import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository;
@@ -26,13 +27,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Iterator;
 import java.util.Set;
 
 import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
-import static io.motown.vas.viewmodel.VasViewModelTestUtils.*;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static org.junit.Assert.*;
+import static io.motown.vas.viewmodel.VasViewModelTestUtils.getRegisteredAndConfiguredChargingStation;
+import static junit.framework.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @ContextConfiguration("classpath:vas-view-model-test-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -220,6 +222,23 @@ public class VasEventHandlerTest {
 
         // not testing if Set with expected values contain the correct values, configurationConversionService has it's own test set
         assertEquals(expectedChargingCapabilities, getTestChargingStationFromRepository().getChargingCapabilities());
+    }
+
+    @Test
+    public void chargingStationOpeningTimesSetEvent() {
+        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        eventHandler.handle(new ChargingStationOpeningTimesSetEvent(CHARGING_STATION_ID, OPENING_TIMES));
+
+        ChargingStation chargingStation = getTestChargingStationFromRepository();
+        assertEquals(OPENING_TIMES.size(), chargingStation.getOpeningTimes().size());
+        Iterator<io.motown.vas.viewmodel.model.OpeningTime> csIter = chargingStation.getOpeningTimes().iterator();
+        for (OpeningTime openingTime : OPENING_TIMES) {
+            io.motown.vas.viewmodel.model.OpeningTime csOpeningTime = csIter.next();
+
+            assertEquals(openingTime.getDay().value(), csOpeningTime.getDay().value());
+            assertEquals(openingTime.getTimeStart(), csOpeningTime.getTimeStart());
+            assertEquals(openingTime.getTimeStop(), csOpeningTime.getTimeStop());
+        }
     }
 
     private ChargingStation getTestChargingStationFromRepository() {
