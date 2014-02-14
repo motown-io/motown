@@ -23,7 +23,8 @@ public class OpeningTime {
     private static final int MINUTES_PER_HOUR = 60;
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private Day day;
 
@@ -45,7 +46,7 @@ public class OpeningTime {
         return String.format("%02d:%02d", (timeStop / MINUTES_PER_HOUR), timeStop % MINUTES_PER_HOUR);
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 

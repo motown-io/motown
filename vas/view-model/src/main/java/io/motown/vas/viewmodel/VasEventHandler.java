@@ -17,6 +17,7 @@ package io.motown.vas.viewmodel;
 
 import io.motown.domain.api.chargingstation.*;
 import io.motown.vas.viewmodel.model.ChargingStation;
+import io.motown.vas.viewmodel.model.Day;
 import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Component
@@ -121,9 +123,11 @@ public class VasEventHandler {
     public void handle(ChargingStationOpeningTimesSetEvent event) {
         LOG.info("ChargingStationOpeningTimesSetEvent");
 
+        // TODO maybe there's a better solution for converting classes of the same name - Mark Manders (2014-02-14)
         ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
         if (chargingStation != null) {
-            // TODO implement - Mark Manders (2014-02-14)
+            chargingStation.setOpeningTimes(convertFromApiOpeningTimes(event.getOpeningTimes()));
+            chargingStationRepository.save(chargingStation);
         }
     }
 
@@ -131,9 +135,14 @@ public class VasEventHandler {
     public void handle(ChargingStationOpeningTimesAddedEvent event) {
         LOG.info("ChargingStationOpeningTimesAddedEvent");
 
+        // TODO maybe there's a better solution for converting classes of the same name - Mark Manders (2014-02-14)
         ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
         if (chargingStation != null) {
-            // TODO implement - Mark Manders (2014-02-14)
+            if (chargingStation.getOpeningTimes() == null) {
+                chargingStation.setOpeningTimes(new HashSet<io.motown.vas.viewmodel.model.OpeningTime>());
+            }
+            chargingStation.getOpeningTimes().addAll(convertFromApiOpeningTimes(event.getOpeningTimes()));
+            chargingStationRepository.save(chargingStation);
         }
     }
 
@@ -230,5 +239,17 @@ public class VasEventHandler {
 
             chargingStationRepository.save(chargingStation);
         }
+    }
+
+    private Set<io.motown.vas.viewmodel.model.OpeningTime> convertFromApiOpeningTimes(Set<OpeningTime> input) {
+        Set<io.motown.vas.viewmodel.model.OpeningTime> output = new HashSet<>();
+        for (OpeningTime source : input) {
+            io.motown.vas.viewmodel.model.OpeningTime openingTime = new io.motown.vas.viewmodel.model.OpeningTime();
+            openingTime.setDay(Day.fromValue(source.getDay().value()));
+            openingTime.setTimeStart(openingTime.getTimeStart());
+            openingTime.setTimeStop(openingTime.getTimeStop());
+            output.add(openingTime);
+        }
+        return output;
     }
 }
