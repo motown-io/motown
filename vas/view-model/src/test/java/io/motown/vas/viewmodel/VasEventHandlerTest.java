@@ -16,7 +16,6 @@
 package io.motown.vas.viewmodel;
 
 import io.motown.domain.api.chargingstation.*;
-import io.motown.domain.api.chargingstation.OpeningTime;
 import io.motown.vas.viewmodel.model.*;
 import io.motown.vas.viewmodel.model.Evse;
 import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository;
@@ -27,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
@@ -231,14 +229,6 @@ public class VasEventHandlerTest {
 
         ChargingStation chargingStation = getTestChargingStationFromRepository();
         assertEquals(OPENING_TIMES.size(), chargingStation.getOpeningTimes().size());
-        Iterator<io.motown.vas.viewmodel.model.OpeningTime> csIter = chargingStation.getOpeningTimes().iterator();
-        for (OpeningTime openingTime : OPENING_TIMES) {
-            io.motown.vas.viewmodel.model.OpeningTime csOpeningTime = csIter.next();
-
-            assertEquals(openingTime.getDay().value(), csOpeningTime.getDay().value());
-            assertEquals(openingTime.getTimeStart(), csOpeningTime.getTimeStart());
-            assertEquals(openingTime.getTimeStop(), csOpeningTime.getTimeStop());
-        }
     }
 
     private ChargingStation getTestChargingStationFromRepository() {
