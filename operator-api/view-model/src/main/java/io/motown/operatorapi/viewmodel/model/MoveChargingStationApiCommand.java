@@ -15,7 +15,7 @@
  */
 package io.motown.operatorapi.viewmodel.model;
 
-public class MoveChargingStationApiCommand extends GenericChargingStationLocationApiCommand {
+public class MoveChargingStationApiCommand extends ChangeChargingStationLocationApiCommand {
     public MoveChargingStationApiCommand() {
     }
 }

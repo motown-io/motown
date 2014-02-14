@@ -15,7 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
-public final class ImproveChargingStationLocationCommand extends GenericChargingStationLocationCommand {
+public final class ImproveChargingStationLocationCommand extends ChangeChargingStationLocationCommand {
 
     public ImproveChargingStationLocationCommand(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
         super(chargingStationId, coordinates, address);

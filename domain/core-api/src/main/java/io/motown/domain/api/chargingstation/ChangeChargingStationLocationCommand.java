@@ -21,14 +21,14 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public abstract class GenericChargingStationLocationCommand {
+public abstract class ChangeChargingStationLocationCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
     private final Coordinates coordinates;
     private final Address address;
 
-    protected GenericChargingStationLocationCommand(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
+    protected ChangeChargingStationLocationCommand(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkArgument(coordinates != null || address != null);
         this.coordinates = coordinates;
@@ -60,7 +60,7 @@ public abstract class GenericChargingStationLocationCommand {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final GenericChargingStationLocationCommand other = (GenericChargingStationLocationCommand) obj;
+        final ChangeChargingStationLocationCommand other = (ChangeChargingStationLocationCommand) obj;
         return Objects.equal(this.chargingStationId, other.chargingStationId) && Objects.equal(this.coordinates, other.coordinates) && Objects.equal(this.address, other.address);
     }
 }

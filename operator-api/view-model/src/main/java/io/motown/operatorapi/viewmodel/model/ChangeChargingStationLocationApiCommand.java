@@ -18,11 +18,11 @@ package io.motown.operatorapi.viewmodel.model;
 import io.motown.domain.api.chargingstation.Address;
 import io.motown.domain.api.chargingstation.Coordinates;
 
-public abstract class GenericChargingStationLocationApiCommand implements ApiCommand {
+public abstract class ChangeChargingStationLocationApiCommand implements ApiCommand {
     private Coordinates coordinates;
     private Address address;
 
-    protected GenericChargingStationLocationApiCommand() {
+    protected ChangeChargingStationLocationApiCommand() {
     }
 
     public Coordinates getCoordinates() {

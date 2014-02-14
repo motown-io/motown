@@ -15,12 +15,12 @@
  */
 package io.motown.domain.api.chargingstation;
 
-public abstract class GenericChargingStationLocationEvent {
+public abstract class ChangeChargingStationLocationEvent {
     private final ChargingStationId chargingStationId;
     private final Coordinates coordinates;
     private final Address address;
 
-    protected GenericChargingStationLocationEvent(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
+    protected ChangeChargingStationLocationEvent(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
         this.chargingStationId = chargingStationId;
         this.coordinates = coordinates;
         this.address = address;
