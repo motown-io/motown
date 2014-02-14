@@ -35,52 +35,36 @@ public class VasConversionService {
 
     public ChargePoint getVasRepresentation(ChargingStation chargingStation) {
         ChargePoint chargePoint = new ChargePoint();
-        chargePoint.setAddress(getAddress(chargingStation));
+        chargePoint.setAddress(chargingStation.getAddress());
         chargePoint.getChargingCapabilities().addAll(getChargingCapabilities(chargingStation));
-        chargePoint.setChargingMode(getChargingMode(chargingStation));
+        chargePoint.setChargingMode(getVasChargingMode(chargingStation.getChargeMode()));
         chargePoint.setCity(chargingStation.getCity());
-        chargePoint.setConnectors(getConnectors(chargingStation));
+        chargePoint.setConnectors(chargingStation.getEvses().size());
         chargePoint.setConnectorsFree(getConnectorsFree(chargingStation));
         chargePoint.getConnectorTypes().addAll(getConnectorTypes(chargingStation));
         chargePoint.setCoordinates(getCoordinates(chargingStation));
-        chargePoint.setCountry(getCountry(chargingStation));
+        chargePoint.setCountry(chargingStation.getCountry());
         chargePoint.setHasFixedCable(getHasFixedCable(chargingStation));
-        chargePoint.setIsReservable(getIsReservable(chargingStation));
+        chargePoint.setIsReservable(chargingStation.isReservable());
         chargePoint.getOpeningPeriod().addAll(getOpeningPeriod(chargingStation));
         chargePoint.setOperator(getOperator(chargingStation));
-        chargePoint.setPostalCode(getPostalCode(chargingStation));
+        chargePoint.setPostalCode(chargingStation.getPostalCode());
         chargePoint.setPublic(getPublic(chargingStation));
-        chargePoint.setRegion(getRegion(chargingStation));
+        chargePoint.setRegion(chargingStation.getRegion());
         chargePoint.setStatus(getStatus(chargingStation));
-        chargePoint.setUid(getUid(chargingStation));
+        chargePoint.setUid(chargingStation.getChargingStationId());
 
         return chargePoint;
-    }
-
-    public String getAddress(ChargingStation chargingStation) {
-        return chargingStation.getAddress();
     }
 
     public List<ChargingCapability> getChargingCapabilities(ChargingStation chargingStation) {
         List<ChargingCapability> chargingCapabilities = new ArrayList<>();
 
         for (VasChargingCapability vasChargingCapability : chargingStation.getChargingCapabilities()){
-            chargingCapabilities.add(ChargingCapability.fromValue( vasChargingCapability.value() != null? vasChargingCapability.value() : "Unspecified"));
+            chargingCapabilities.add(ChargingCapability.fromValue( vasChargingCapability.value() != null ? vasChargingCapability.value() : "Unspecified"));
         }
 
         return chargingCapabilities;
-    }
-
-    public ChargingMode getChargingMode(ChargingStation chargingStation) {
-        return getVasChargingMode(chargingStation.getChargeMode());
-    }
-
-    public String getCity(ChargingStation chargingStation) {
-        return chargingStation.getCity();
-    }
-
-    public Integer getConnectors(ChargingStation chargingStation) {
-        return chargingStation.getEvses().size();
     }
 
     public Integer getConnectorsFree(ChargingStation chargingStation) {
@@ -105,22 +89,13 @@ public class VasConversionService {
     }
 
     public Wgs84Coordinates getCoordinates(ChargingStation chargingStation) {
-
         Wgs84Coordinates wgs84Coordinates = new Wgs84Coordinates();
         wgs84Coordinates.setLatitude(chargingStation.getLatitude());
         wgs84Coordinates.setLongitude(chargingStation.getLongitude());
         return wgs84Coordinates;
     }
 
-    public String getCountry(ChargingStation chargingStation) {
-        return chargingStation.getCountry();
-    }
-
     public Boolean getHasFixedCable(ChargingStation chargingStation) {
-        return false;
-    }
-
-    public Boolean getIsReservable(ChargingStation chargingStation) {
         return false;
     }
 
@@ -143,19 +118,11 @@ public class VasConversionService {
 
     public String getOperator(ChargingStation chargingStation) {
         String operatorName = chargingStation.getOperator();
-        return operatorName != null? operatorName: "UNKNOWN";
-    }
-
-    public String getPostalCode(ChargingStation chargingStation) {
-        return chargingStation.getPostalCode();
+        return operatorName != null ? operatorName: "UNKNOWN";
     }
 
     public Accessibility getPublic(ChargingStation chargingStation) {
         return Accessibility.PAYING_PUBLIC;
-    }
-
-    public String getRegion(ChargingStation chargingStation) {
-        return "Unknown";
     }
 
     /**
@@ -218,25 +185,25 @@ public class VasConversionService {
     }
 
     public ChargePointStatus getStatus(ChargingStation chargingStation) {
-        ChargePointStatus chargePointStatus;
-        switch(chargingStation.getState()) {
-            case AVAILABLE:
-                chargePointStatus = ChargePointStatus.AVAILABLE;
-                break;
-            case OCCUPIED:
-                chargePointStatus = ChargePointStatus.OCCUPIED;
-                break;
-            case UNAVAILABLE:
-                chargePointStatus = ChargePointStatus.UNAVAILABLE;
-                break;
-            default:
-                chargePointStatus = ChargePointStatus.UNKNOWN;
-                break;
+        ChargePointStatus chargePointStatus = ChargePointStatus.UNKNOWN;
+        State state = chargingStation.getState();
+
+        if (state != null) {
+            switch(state) {
+                case AVAILABLE:
+                    chargePointStatus = ChargePointStatus.AVAILABLE;
+                    break;
+                case OCCUPIED:
+                    chargePointStatus = ChargePointStatus.OCCUPIED;
+                    break;
+                case UNAVAILABLE:
+                    chargePointStatus = ChargePointStatus.UNAVAILABLE;
+                    break;
+                default:
+                    chargePointStatus = ChargePointStatus.UNKNOWN;
+                    break;
+            }
         }
         return chargePointStatus;
-    }
-
-    public String getUid(ChargingStation chargingStation) {
-        return chargingStation.getChargingStationId();
     }
 }
