@@ -32,10 +32,6 @@ public class OpeningTime {
 
     private Integer timeStop;
 
-    @ManyToOne
-    @JoinColumn(name = "id", insertable = false, updatable = false)
-    private ChargingStation chargingStation;
-
     @Transient
     public String getTimeStartString() {
         return String.format("%02d:%02d", (timeStart / MINUTES_PER_HOUR), (timeStart % MINUTES_PER_HOUR));
@@ -62,10 +58,6 @@ public class OpeningTime {
         return timeStop;
     }
 
-    public ChargingStation getChargingStation() {
-        return chargingStation;
-    }
-
     public void setDay(Day day) {
         this.day = day;
     }
@@ -78,7 +70,4 @@ public class OpeningTime {
         this.timeStop = timeStop;
     }
 
-    public void setChargingStation(ChargingStation chargingStation) {
-        this.chargingStation = chargingStation;
-    }
 }

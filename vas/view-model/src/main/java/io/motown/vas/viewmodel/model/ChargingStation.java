@@ -30,7 +30,7 @@ public class ChargingStation {
     @OneToMany(cascade = CascadeType.ALL, targetEntity = Evse.class, fetch = FetchType.EAGER)
     private Set<Evse> evses;
 
-    @OneToMany(mappedBy = "id", targetEntity = OpeningTime.class, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = OpeningTime.class, fetch = FetchType.EAGER)
     private Set<OpeningTime> openingTimes;
 
     private boolean isRegistered;
