@@ -15,7 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
-public final class ChargingStationPlacedEvent extends ChangeChargingStationLocationEvent {
+public final class ChargingStationPlacedEvent extends ChargingStationLocationChangedEvent {
     public ChargingStationPlacedEvent(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
         super(chargingStationId, coordinates, address);
     }
