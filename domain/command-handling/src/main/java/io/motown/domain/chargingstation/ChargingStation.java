@@ -17,9 +17,9 @@ package io.motown.domain.chargingstation;
 
 import io.motown.domain.api.chargingstation.*;
 import org.axonframework.commandhandling.annotation.CommandHandler;
-import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
+import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
 
 public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
@@ -356,33 +356,33 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         apply(new ChargingStationMovedEvent(command.getChargingStationId(), command.getCoordinates(), command.getAddress()));
     }
 
-    @EventHandler
+    @EventSourcingHandler
     public void handle(ChargingStationBootedEvent event) {
         this.protocol = event.getProtocol();
     }
 
-    @EventHandler
+    @EventSourcingHandler
     public void handle(ChargingStationConfiguredEvent event) {
         numberOfEvses = event.getEvses().size();
         this.isConfigured = true;
     }
 
-    @EventHandler
+    @EventSourcingHandler
     public void handle(ChargingStationAcceptedEvent event) {
         this.isAccepted = true;
     }
 
-    @EventHandler
+    @EventSourcingHandler
     public void handle(ChargingStationCreatedEvent event) {
         this.id = event.getChargingStationId();
     }
 
-    @EventHandler
+    @EventSourcingHandler
     public void handle(ChargingStationMadeReservableEvent event) {
         this.isReservable = true;
     }
 
-    @EventHandler
+    @EventSourcingHandler
     public void handle(ChargingStationMadeNotReservableEvent event) {
         this.isReservable = false;
     }

@@ -90,10 +90,24 @@
                   value="true"/>
     </bean>
 
+    <bean id="jCacheManager" class="net.sf.ehcache.jcache.JCacheManager">
+        <constructor-arg name="name" value="cacheManager" />
+        <constructor-arg name="ehcacheManager">
+            <bean class="net.sf.ehcache.CacheManager" factory-method="create" />
+        </constructor-arg>
+        <constructor-arg name="classLoader">
+            <bean class="java.security.SecureClassLoader"/>
+        </constructor-arg>
+    </bean>
+
     <bean id="cache"
           class="net.sf.ehcache.jcache.JCache">
         <constructor-arg>
             <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean"/>
+        </constructor-arg>
+        <constructor-arg ref="jCacheManager" />
+        <constructor-arg>
+            <bean class="java.security.SecureClassLoader"/>
         </constructor-arg>
     </bean>
 
