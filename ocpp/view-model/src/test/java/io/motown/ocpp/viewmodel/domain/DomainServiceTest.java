@@ -35,7 +35,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.viewmodel.domain.OccpViewModelTestUtils.*;
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.*;

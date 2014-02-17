@@ -28,7 +28,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Set;
 
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.vas.viewmodel.VasViewModelTestUtils.getRegisteredAndConfiguredChargingStation;
 import static junit.framework.Assert.*;
 import static org.junit.Assert.assertFalse;

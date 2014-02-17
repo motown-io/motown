@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.domain.api.chargingstation;
+package io.motown.domain.api.chargingstation.test;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import io.motown.domain.api.chargingstation.*;
 import org.joda.time.DateTimeUtils;
 
 import java.util.*;

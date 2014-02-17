@@ -16,8 +16,8 @@
 package io.motown.ocpp.v15.soap.chargepoint;
 
 import com.google.common.collect.ImmutableList;
-import io.motown.domain.api.chargingstation.ChargingStationTestUtils;
 import io.motown.domain.api.chargingstation.IdentifyingToken;
+import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
 import io.motown.ocpp.v15.soap.chargepoint.schema.AuthorisationData;
 import io.motown.ocpp.v15.soap.chargepoint.schema.AuthorizationStatus;
 import junit.framework.Assert;
@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 

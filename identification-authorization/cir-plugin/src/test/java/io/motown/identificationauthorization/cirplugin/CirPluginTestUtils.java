@@ -20,7 +20,7 @@ import io.motown.identificationauthorization.cirplugin.cir.schema.ArrayOfCard;
 import io.motown.identificationauthorization.cirplugin.cir.schema.Card;
 import io.motown.identificationauthorization.cirplugin.cir.schema.InquireResult;
 
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.IDENTIFYING_TOKEN;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.IDENTIFYING_TOKEN;
 
 public final class CirPluginTestUtils {
 

@@ -17,7 +17,7 @@ package io.motown.vas.viewmodel;
 
 import io.motown.vas.viewmodel.model.ChargingStation;
 
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 
 public final class VasViewModelTestUtils {
 

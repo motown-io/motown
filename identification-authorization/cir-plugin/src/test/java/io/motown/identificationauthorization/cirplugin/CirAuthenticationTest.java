@@ -22,7 +22,7 @@ import org.mockito.ArgumentCaptor;
 
 import javax.xml.ws.Holder;
 
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.IDENTIFYING_TOKEN;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.IDENTIFYING_TOKEN;
 import static io.motown.identificationauthorization.cirplugin.CirPluginTestUtils.*;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;

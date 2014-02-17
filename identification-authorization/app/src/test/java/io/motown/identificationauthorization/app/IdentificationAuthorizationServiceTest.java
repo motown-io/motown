@@ -20,7 +20,7 @@ import io.motown.identificationauthorization.pluginapi.AuthenticationProvider;
 import org.junit.Before;
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static org.jgroups.util.Util.assertFalse;
 import static org.jgroups.util.Util.assertTrue;
 import static org.mockito.Mockito.*;

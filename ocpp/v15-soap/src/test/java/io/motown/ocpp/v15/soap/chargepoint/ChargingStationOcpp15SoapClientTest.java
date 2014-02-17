@@ -27,7 +27,7 @@ import org.mockito.ArgumentCaptor;
 
 import java.util.Map;
 
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.v15.soap.V15SOAPTestUtils.*;
 import static org.jgroups.util.Util.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -63,7 +63,7 @@ public class ChargingStationOcpp15SoapClientTest {
     public void getConfigurationVerifyReturnValue() {
         when(chargePointService.getConfiguration(any(GetConfigurationRequest.class), anyString())).thenReturn(getGetConfigurationResponse());
 
-        Map<String,String> configuration = client.getConfiguration(CHARGING_STATION_ID);
+        Map<String, String> configuration = client.getConfiguration(CHARGING_STATION_ID);
 
         for (KeyValue keyValue : getGetConfigurationResponse().getConfigurationKey()) {
             assertTrue(configuration.containsKey(keyValue.getKey()));

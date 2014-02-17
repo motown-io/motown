@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import java.util.HashSet;
 
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static org.mockito.Mockito.*;
 
 public class ConfigurationEventListenerTest {

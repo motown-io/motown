@@ -54,12 +54,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.motown.domain</groupId>
-            <artifactId>domain-core-api-test</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-amqp</artifactId>
         </dependency>

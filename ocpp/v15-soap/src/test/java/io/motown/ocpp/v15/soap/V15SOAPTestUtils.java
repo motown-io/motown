@@ -21,7 +21,7 @@ import io.motown.ocpp.v15.soap.chargepoint.schema.*;
 
 import java.util.*;
 
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.FIVE_MINUTES_AGO;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.FIVE_MINUTES_AGO;
 
 public final class V15SOAPTestUtils {
 

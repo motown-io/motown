@@ -13,7 +13,6 @@
         <module>domain/app</module>
         <module>domain/command-handling</module>
         <module>domain/core-api</module>
-        <module>domain/core-api-test</module>
         <module>domain/utils</module>
         <module>ocpp/v12-soap</module>
         <module>ocpp/v15-soap</module>

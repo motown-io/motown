@@ -26,8 +26,8 @@ import org.junit.Test;
 
 import java.util.Collections;
 
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.IDENTIFYING_TOKEN;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.IDENTIFYING_TOKEN;
 import static org.axonframework.domain.GenericEventMessage.asEventMessage;
 import static org.junit.Assert.assertTrue;
 

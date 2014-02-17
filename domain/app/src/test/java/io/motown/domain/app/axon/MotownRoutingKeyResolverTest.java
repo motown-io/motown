@@ -24,8 +24,8 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.PROTOCOL;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.PROTOCOL;
 import static org.junit.Assert.assertEquals;
 
 public class MotownRoutingKeyResolverTest {

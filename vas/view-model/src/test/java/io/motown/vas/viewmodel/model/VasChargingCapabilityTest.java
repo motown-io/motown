@@ -21,7 +21,7 @@ import io.motown.domain.api.chargingstation.ConnectorType;
 import io.motown.domain.api.chargingstation.Current;
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.PHASE;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.PHASE;
 import static org.junit.Assert.assertEquals;
 
 public class VasChargingCapabilityTest {

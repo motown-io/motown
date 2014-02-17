@@ -21,7 +21,7 @@ import io.motown.ocpp.viewmodel.domain.DomainService;
 import org.junit.Before;
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.v15.soap.V15SOAPTestUtils.STATUS_NOTIFICATION_ERROR_INFO;
 import static io.motown.ocpp.v15.soap.V15SOAPTestUtils.STATUS_NOTIFICATION_VENDOR_ERROR_CODE;
 import static org.junit.Assert.assertEquals;

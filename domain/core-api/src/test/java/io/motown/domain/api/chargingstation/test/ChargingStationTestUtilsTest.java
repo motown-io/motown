@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.domain.api.chargingstation;
+package io.motown.domain.api.chargingstation.test;
 
+import io.motown.domain.api.chargingstation.Connector;
+import io.motown.domain.api.chargingstation.Evse;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static junit.framework.Assert.assertEquals;
 
 public class ChargingStationTestUtilsTest {

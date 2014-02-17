@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import java.util.*;
 
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.*;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class ChargingStationTest {
 
