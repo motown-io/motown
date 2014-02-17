@@ -59,9 +59,6 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
     @Value("${io.motown.ocpp.v15.soap.cxf.continuation.timeout}")
     private int continuationTimeout;
 
-    @Value("${io.motown.ocpp.v15.soap.protocol.identifier}")
-    private String protocol;
-
     @Autowired
     private DomainService domainService;
 
@@ -114,7 +111,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
         String chargingStationAddress = getChargingStationAddress(context.getMessageContext());
-        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel(), protocol,
+        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel(), PROTOCOL_IDENTIFIER,
                 request.getChargePointSerialNumber(), request.getFirmwareVersion(), request.getIccid(), request.getImsi(), request.getMeterType(), request.getMeterSerialNumber());
 
         BootNotificationResponse response = new BootNotificationResponse();
@@ -172,8 +169,8 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
             public void initiateCall() {
                 domainService.authorize(chargingStationId, request.getIdTag(), future);
             }
-                }, new AuthorizeResponseFactory(), new ResponseFactory<AuthorizeResponse>() {
-                    @Override
+        }, new AuthorizeResponseFactory(), new ResponseFactory<AuthorizeResponse>() {
+            @Override
             public AuthorizeResponse createResponse() {
                 LOG.error("Error while handling 'authorize' request, returning invalid for idTag: {}", request.getIdTag());
 
@@ -196,16 +193,12 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
 
         if (FirmwareStatus.INSTALLED.equals(status)) {
             firmwareStatus = io.motown.domain.api.chargingstation.FirmwareStatus.INSTALLED;
-
         } else if (FirmwareStatus.DOWNLOADED.equals(status)) {
             firmwareStatus = io.motown.domain.api.chargingstation.FirmwareStatus.DOWNLOADED;
-
         } else if (FirmwareStatus.INSTALLATION_FAILED.equals(status)) {
             firmwareStatus = io.motown.domain.api.chargingstation.FirmwareStatus.INSTALLATION_FAILED;
-
         } else {
             firmwareStatus = io.motown.domain.api.chargingstation.FirmwareStatus.DOWNLOAD_FAILED;
-
         }
 
         domainService.firmwareStatusUpdate(chargingStationId, firmwareStatus);
@@ -242,6 +235,10 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
 
     public void setDomainService(DomainService domainService) {
         this.domainService = domainService;
+    }
+
+    public void setContext(WebServiceContext context) {
+        this.context = context;
     }
 
     /**

@@ -22,6 +22,7 @@ import io.motown.ocpp.v15.soap.chargepoint.schema.*;
 import java.util.*;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.FIVE_MINUTES_AGO;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.METER_STOP;
 
 public final class V15SOAPTestUtils {
 
@@ -54,6 +55,22 @@ public final class V15SOAPTestUtils {
     public static final String STATUS_NOTIFICATION_ERROR_INFO = "error info";
 
     public static final String STATUS_NOTIFICATION_VENDOR_ERROR_CODE = "007";
+
+    public static final Integer HEARTBEAT_INTERVAL = 900;
+
+    public static final String PROTOCOL_IDENTIFIER = "OCPPS15";
+
+    public static final String CHARGING_STATION_SERIAL_NUMBER = "SN001";
+
+    public static final String CHARGING_STATION_FIRMWARE_VERSION = "FW001";
+
+    public static final String CHARGING_STATION_ICCID = "ICCID";
+
+    public static final String CHARGING_STATION_IMSI = "IMSI";
+
+    public static final String CHARGING_STATION_METER_TYPE = "METER_TYPE";
+
+    public static final String CHARGING_STATION_METER_SERIAL_NUMBER = "METER_SERIAL_NUMBER";
 
     /**
      * Private no-arg constructor to prevent instantiation of utility class.
@@ -168,6 +185,23 @@ public final class V15SOAPTestUtils {
         }
 
         return transactionData;
+    }
+    
+    public static List<io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue> getMeterValuesSoap(int numberOfEntries) {
+        List<io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue> meterValues = new ArrayList<>();
+
+        for (int i = 0; i < numberOfEntries; i++) {
+            io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value meterValue = new io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value();
+            meterValue.setValue(String.valueOf(METER_STOP));
+
+            io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue meterValueSoap = new io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue();
+            meterValueSoap.getValue().add(meterValue);
+            meterValueSoap.setTimestamp(FIVE_MINUTES_AGO);
+
+            meterValues.add(meterValueSoap);
+        }
+
+        return meterValues;
     }
 
     /**
