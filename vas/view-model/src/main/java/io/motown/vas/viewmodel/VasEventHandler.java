@@ -33,6 +33,7 @@ import java.util.Set;
 public class VasEventHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(io.motown.vas.viewmodel.VasEventHandler.class);
+    private static final int MINUTES_IN_HOUR = 60;
 
     @Autowired
     private ChargingStationRepository chargingStationRepository;
@@ -287,8 +288,8 @@ public class VasEventHandler {
         for (OpeningTime source : input) {
             io.motown.vas.viewmodel.model.OpeningTime openingTime = new io.motown.vas.viewmodel.model.OpeningTime();
             openingTime.setDay(Day.fromValue(source.getDay().value()));
-            openingTime.setTimeStart(source.getTimeStart().getHourOfDay() * 60 + source.getTimeStart().getMinutesInHour());
-            openingTime.setTimeStop(source.getTimeStop().getHourOfDay() * 60 + source.getTimeStop().getMinutesInHour());
+            openingTime.setTimeStart(source.getTimeStart().getHourOfDay() * MINUTES_IN_HOUR + source.getTimeStart().getMinutesInHour());
+            openingTime.setTimeStop(source.getTimeStop().getHourOfDay() * MINUTES_IN_HOUR + source.getTimeStop().getMinutesInHour());
             output.add(openingTime);
         }
         return output;
