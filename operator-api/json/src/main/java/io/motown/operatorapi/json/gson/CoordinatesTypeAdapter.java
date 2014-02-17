@@ -23,6 +23,17 @@ import io.motown.domain.api.chargingstation.Coordinates;
 
 import java.lang.reflect.Type;
 
+/**
+ * Type adapter for the {@code Coordinates} JSON object.
+ * <pre>
+ * {@code
+ * {
+ *  latitude:   "double",
+ *  longitude:  "double"
+ * }
+ * }
+ * </pre>
+ */
 public class CoordinatesTypeAdapter implements TypeAdapter<Coordinates> {
     @Override
     public Class<?> getAdaptedType() {

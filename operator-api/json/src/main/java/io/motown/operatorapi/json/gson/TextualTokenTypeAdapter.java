@@ -21,6 +21,17 @@ import io.motown.domain.api.chargingstation.TextualToken;
 
 import java.lang.reflect.Type;
 
+/**
+ * Type adapter for the {@code TextualToken} JSON object.
+ * <pre>
+ * {@code
+ * {
+ *  token:  "string",
+ *  status: "string"    // one of [ACCEPTED, BLOCKED, EXPIRED, INVALID, CONCURRENT_TX, DELETED]
+ * }
+ * }
+ * </pre>
+ */
 public class TextualTokenTypeAdapter implements TypeAdapter<TextualToken> {
 
     @Override

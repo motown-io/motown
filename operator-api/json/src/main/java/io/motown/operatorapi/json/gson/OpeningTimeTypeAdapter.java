@@ -27,6 +27,18 @@ import java.lang.reflect.Type;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Type adapter for the {@code OpeningTime} JSON object.
+ * <pre>
+ * {@code
+ * {
+ *  day:        "int",      // 1-7 representing monday - sunday
+ *  timeStart:  "string",   // valid 24-hour time (00:00 - 23:59)
+ *  timeStop:   "string",   // same sa timeStart
+ * }
+ * }
+ * </pre>
+ */
 public class OpeningTimeTypeAdapter implements TypeAdapter<OpeningTime> {
     private static final Pattern TIME_OF_DAY = Pattern.compile("^([01]?[0-9]|2[0-3]):([0-5][0-9])$");
     private static final int HOUR_GROUP = 1;

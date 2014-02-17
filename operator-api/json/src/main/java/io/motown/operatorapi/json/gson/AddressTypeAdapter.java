@@ -20,6 +20,21 @@ import io.motown.domain.api.chargingstation.Address;
 
 import java.lang.reflect.Type;
 
+/**
+ * Type adapter for the {@code Address} JSON object.
+ * <pre>
+ * {@code
+ * {
+ *  addressline1:    "string",
+ *  addressline2:    "string",
+ *  postalCode:      "string",
+ *  city:            "string",
+ *  region:          "string",
+ *  country:         "string"
+ * }
+ * }
+ * </pre>
+ */
 public class AddressTypeAdapter implements TypeAdapter<Address> {
     @Override
     public Class<?> getAdaptedType() {
