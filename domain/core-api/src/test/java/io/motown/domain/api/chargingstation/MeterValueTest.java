@@ -24,6 +24,8 @@ import static org.junit.Assert.assertEquals;
 
 public class MeterValueTest {
 
+    public static final int YEAR = 81;
+
     @Test(expected = NullPointerException.class)
     public void createMeterValueWithNullTimestampThrowsNullPointerException() {
         new MeterValue(null, "123");
@@ -40,7 +42,7 @@ public class MeterValueTest {
         MeterValue meterValue = new MeterValue(now, "123");
 
         // If this method returns a defensive copy, changing date should affect the internal timestamp.
-        meterValue.getTimestamp().setYear(81);
+        meterValue.getTimestamp().setYear(YEAR);
 
         assertEquals(now, meterValue.getTimestamp());
     }
