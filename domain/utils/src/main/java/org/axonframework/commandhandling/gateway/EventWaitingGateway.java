@@ -36,6 +36,8 @@ import static org.axonframework.commandhandling.GenericCommandMessage.asCommandM
  */
 public class EventWaitingGateway {
 
+    private static final String CORRELATION_ID_KEY = "correlationId";
+
     private CommandBus commandBus;
     private EventBus eventBus;
 
@@ -52,13 +54,13 @@ public class EventWaitingGateway {
         }
 
         final CommandMessage commandMessage = asCommandMessage(command)
-                .andMetaData(Collections.singletonMap("correlationId", correlationId));
+                .andMetaData(Collections.singletonMap(CORRELATION_ID_KEY, correlationId));
         commandBus.dispatch(commandMessage);
     }
 
     @EventHandler
     protected void onEvent(EventMessage<?> message,
-                           @MetaData(value = "correlationId", required = true) String correlationId) {
+                           @MetaData(value = CORRELATION_ID_KEY, required = true) String correlationId) {
         final EventCallback callback = callbacks.get(correlationId);
         if (callback != null) {
             boolean handled = callback.onEvent(message);
