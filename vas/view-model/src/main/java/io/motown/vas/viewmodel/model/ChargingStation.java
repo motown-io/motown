@@ -16,10 +16,13 @@
 package io.motown.vas.viewmodel.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 public class ChargingStation {
+
+    public static final String UNKNOWN_OPERATOR = "Unknown";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,17 +31,17 @@ public class ChargingStation {
     private String chargingStationId;
 
     @OneToMany(cascade = CascadeType.ALL, targetEntity = Evse.class, fetch = FetchType.EAGER)
-    private Set<Evse> evses;
+    private Set<Evse> evses = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, targetEntity = OpeningTime.class, fetch = FetchType.EAGER)
-    private Set<OpeningTime> openingTimes;
+    private Set<OpeningTime> openingTimes = new HashSet<>();
 
     private boolean isRegistered;
     private boolean isConfigured;
 
     @ElementCollection(targetClass = ChargingCapability.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<ChargingCapability> chargingCapabilities;
+    private Set<ChargingCapability> chargingCapabilities = new HashSet<>();
 
     private String address;
 
@@ -56,7 +59,7 @@ public class ChargingStation {
 
     @ElementCollection(targetClass = ConnectorType.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<ConnectorType> connectorTypes;
+    private Set<ConnectorType> connectorTypes = new HashSet<>();
 
     /**
      * The latitude of a coordinate.
@@ -72,7 +75,7 @@ public class ChargingStation {
 
     private boolean isReservable;
 
-    private String operator;
+    private String operator = UNKNOWN_OPERATOR;
 
     private ComponentStatus state = ComponentStatus.UNKNOWN;
 
@@ -137,7 +140,7 @@ public class ChargingStation {
     }
 
     public void setOperator(String operator) {
-        this.operator = operator;
+        this.operator = operator == null ? UNKNOWN_OPERATOR : operator;
     }
 
     public String getChargingStationId() {

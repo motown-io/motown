@@ -15,14 +15,12 @@
  */
 package io.motown.vas.v10.soap;
 
-import io.motown.vas.v10.soap.schema.ChargePointStatus;
+import io.motown.vas.v10.soap.schema.ChargePoint;
 import io.motown.vas.viewmodel.model.ChargingStation;
-import io.motown.vas.viewmodel.model.ComponentStatus;
 import org.junit.Before;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static org.junit.Assert.assertEquals;
 
 public class VasConversionServiceTest {
 
@@ -34,70 +32,27 @@ public class VasConversionServiceTest {
     }
 
     @Test
-    public void getStatusOfNewInstanceChargingStationThrowsNoExceptions() {
-        service.getStatus(new ChargingStation(CHARGING_STATION_ID.getId()));
+    public void getVasRepresentationNewChargingStationNoExceptions() {
+        service.getVasRepresentation(new ChargingStation(CHARGING_STATION_ID.getId()));
     }
 
     @Test
-    public void getStatusAvailableValidateReturnValue() {
+    public void getVasRepresentationNewChargingStationValidateReturnValue() {
         ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
-        cs.setState(ComponentStatus.AVAILABLE);
 
-        ChargePointStatus status = service.getStatus(cs);
+        ChargePoint vasRepresentation = service.getVasRepresentation(cs);
 
-        assertEquals(ChargePointStatus.AVAILABLE, status);
+        VasSoapTestUtils.compareChargingStationToVasRepresentation(cs, vasRepresentation);
     }
 
     @Test
-    public void getStatusUnknownValidateReturnValue() {
-        ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
-        cs.setState(ComponentStatus.UNKNOWN);
+    public void getVasRepresentationFilledChargingStationValidateReturnValue() {
+        ChargingStation cs = VasSoapTestUtils.getConfiguredAndFilledChargingStation();
 
-        ChargePointStatus status = service.getStatus(cs);
+        ChargePoint vasRepresentation = service.getVasRepresentation(cs);
 
-        assertEquals(ChargePointStatus.UNKNOWN, status);
+        VasSoapTestUtils.compareChargingStationToVasRepresentation(cs, vasRepresentation);
     }
 
-    @Test
-    public void getStatusUnavailableValidateReturnValue() {
-        ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
-        cs.setState(ComponentStatus.UNAVAILABLE);
-
-        ChargePointStatus status = service.getStatus(cs);
-
-        assertEquals(ChargePointStatus.UNAVAILABLE, status);
-    }
-
-    @Test
-    public void getStatusOccupiedValidateReturnValue() {
-        ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
-        cs.setState(ComponentStatus.OCCUPIED);
-
-        ChargePointStatus status = service.getStatus(cs);
-
-        assertEquals(ChargePointStatus.OCCUPIED, status);
-    }
-
-    @Test
-    public void getStatusNullValidateReturnValue() {
-        ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
-        cs.setState(null);
-
-        ChargePointStatus status = service.getStatus(cs);
-
-        assertEquals(ChargePointStatus.UNKNOWN, status);
-    }
-
-    @Test
-    public void getStatusShouldThrowNoExeptionsForAnyState() {
-        ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
-
-        for (ComponentStatus status : ComponentStatus.values()) {
-            cs.setState(status);
-
-            // no exception should be thrown
-            service.getStatus(cs);
-        }
-    }
 
 }

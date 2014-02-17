@@ -43,15 +43,15 @@ public class VasConversionService {
         chargePoint.getChargingCapabilities().addAll(getChargingCapabilities(chargingStation));
         chargePoint.setChargingMode(getVasChargingMode(chargingStation.getChargeMode()));
         chargePoint.setCity(chargingStation.getCity());
-        chargePoint.setConnectors(chargingStation.getEvses().size());
+        chargePoint.setConnectors(chargingStation.getNumberOfEvses());
         chargePoint.setConnectorsFree(chargingStation.getNumberOfFreeEvses());
         chargePoint.getConnectorTypes().addAll(getConnectorTypes(chargingStation));
         chargePoint.setCoordinates(getCoordinates(chargingStation));
         chargePoint.setCountry(chargingStation.getCountry());
-        chargePoint.setHasFixedCable(getHasFixedCable(chargingStation));
+        chargePoint.setHasFixedCable(chargingStation.isHasFixedCable());
         chargePoint.setIsReservable(chargingStation.isReservable());
         chargePoint.getOpeningPeriod().addAll(getOpeningPeriod(chargingStation));
-        chargePoint.setOperator(getOperator(chargingStation));
+        chargePoint.setOperator(chargingStation.getOperator());
         chargePoint.setPostalCode(chargingStation.getPostalCode());
         chargePoint.setPublic(getPublic(chargingStation));
         chargePoint.setRegion(chargingStation.getRegion());
@@ -110,10 +110,6 @@ public class VasConversionService {
         return wgs84Coordinates;
     }
 
-    public Boolean getHasFixedCable(ChargingStation chargingStation) {
-        return false;
-    }
-
     public List<OpeningPeriod> getOpeningPeriod(ChargingStation chargingStation) {
         Set<OpeningTime> openingTimes = chargingStation.getOpeningTimes();
 
@@ -131,12 +127,8 @@ public class VasConversionService {
         return openingPeriodsVas;
     }
 
-    public String getOperator(ChargingStation chargingStation) {
-        String operatorName = chargingStation.getOperator();
-        return operatorName != null ? operatorName: "UNKNOWN";
-    }
-
     public Accessibility getPublic(ChargingStation chargingStation) {
+        //TODO implement
         return Accessibility.PAYING_PUBLIC;
     }
 
@@ -148,7 +140,7 @@ public class VasConversionService {
      * @return charging mode (ChargingMode.UNSPECIFIED is chargeMode is null).
      */
     public ChargingMode getVasChargingMode(ChargeMode chargeMode) {
-        return chargeMode == null ? ChargingMode.UNSPECIFIED : ChargingMode.valueOf(chargeMode.value());
+        return chargeMode == null ? ChargingMode.UNSPECIFIED : ChargingMode.fromValue(chargeMode.value());
     }
 
     /**
