@@ -30,11 +30,16 @@ import java.util.Set;
 
 import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.getChargingStationTypes;
 import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.getManufacturerWithConfiguration;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @ContextConfiguration("classpath:chargingstation-configuration-view-model-test-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ChargingStationTypeRepositoryTest {
+
+    public static final String MANUFACTURER_CODE = "MOTOWN";
+
+    public static final String TYPE_CODE = "MODEL1";
 
     @Autowired
     private ChargingStationTypeRepository chargingStationTypeRepository;
@@ -50,13 +55,13 @@ public class ChargingStationTypeRepositoryTest {
 
     @Test
     public void testFindByCodeAndManufacturerCode() {
-        String typeCode = "MODEL1";
-        String manufacturerCode = "MOTOWN";
+        String typeCode = TYPE_CODE;
+        String manufacturerCode = MANUFACTURER_CODE;
 
         Manufacturer manufacturer = getManufacturerWithConfiguration(manufacturerCode, typeCode);
         manufacturerRepository.saveAndFlush(manufacturer);
 
-        List<ChargingStationType> chargingStationTypes = chargingStationTypeRepository.findByCodeAndManufacturerCode("MODEL1", "MOTOWN");
+        List<ChargingStationType> chargingStationTypes = chargingStationTypeRepository.findByCodeAndManufacturerCode(TYPE_CODE, MANUFACTURER_CODE);
 
         assertEquals(chargingStationTypes.size(), manufacturer.getChargingStationTypes().size());
         ChargingStationType chargingStationType = chargingStationTypes.get(0);
@@ -69,13 +74,13 @@ public class ChargingStationTypeRepositoryTest {
 
     @Test(expected = DataIntegrityViolationException.class)
     public void testUniquenessOfManufacturerAndChargingStationType() {
-        String typeCode = "MODEL1";
-        String manufacturerCode = "MOTOWN";
+        String typeCode = TYPE_CODE;
+        String manufacturerCode = MANUFACTURER_CODE;
 
         Manufacturer manufacturer = getManufacturerWithConfiguration(manufacturerCode, typeCode);
         manufacturerRepository.saveAndFlush(manufacturer);
 
-        Set<ChargingStationType> chargingStationTypes = getChargingStationTypes(manufacturer, "MODEL1");
+        Set<ChargingStationType> chargingStationTypes = getChargingStationTypes(manufacturer, TYPE_CODE);
         for (ChargingStationType type : chargingStationTypes) {
             chargingStationTypeRepository.saveAndFlush(type);
         }
