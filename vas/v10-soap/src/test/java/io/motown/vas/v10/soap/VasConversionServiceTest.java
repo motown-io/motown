@@ -21,7 +21,7 @@ import io.motown.vas.viewmodel.model.VasChargingStationStatus;
 import org.junit.Before;
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static org.junit.Assert.assertEquals;
 
 public class VasConversionServiceTest {
