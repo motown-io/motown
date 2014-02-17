@@ -17,6 +17,7 @@ package io.motown.vas.viewmodel;
 
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.chargingstation.ComponentStatus;
+import io.motown.domain.api.chargingstation.OpeningTime;
 import io.motown.vas.viewmodel.model.*;
 import io.motown.vas.viewmodel.model.ConnectorType;
 import io.motown.vas.viewmodel.model.Evse;
@@ -34,10 +35,9 @@ import java.util.Set;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.vas.viewmodel.VasViewModelTestUtils.getRegisteredAndConfiguredChargingStation;
-import static junit.framework.Assert.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.*;
 
 @ContextConfiguration("classpath:vas-view-model-test-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -233,6 +233,13 @@ public class VasEventHandlerTest {
 
         ChargingStation chargingStation = getTestChargingStationFromRepository();
         assertEquals(OPENING_TIMES.size(), chargingStation.getOpeningTimes().size());
+        OpeningTime[] cOT = OPENING_TIMES.toArray(new OpeningTime[OPENING_TIMES.size()]);
+        io.motown.vas.viewmodel.model.OpeningTime[] vOT = chargingStation.getOpeningTimes().toArray(new io.motown.vas.viewmodel.model.OpeningTime[chargingStation.getOpeningTimes().size()]);
+        assertEquals(cOT[0].getDay().value(), vOT[0].getDay().value());
+        assertEquals(cOT[0].getTimeStart().getHourOfDay(), vOT[0].getTimeStart() / 60);
+        assertEquals(cOT[0].getTimeStart().getMinutesInHour(), vOT[0].getTimeStart() % 60);
+        assertEquals(cOT[0].getTimeStop().getHourOfDay(), vOT[0].getTimeStop() / 60);
+        assertEquals(cOT[0].getTimeStop().getMinutesInHour(), vOT[0].getTimeStop() % 60);
     }
 
     @Test
