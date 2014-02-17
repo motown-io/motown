@@ -314,6 +314,14 @@ public final class ChargingStationTestUtils {
             .build();
 
     /**
+     * The default opening times.
+     */
+    public static final Set<OpeningTime> OPENING_TIMES = ImmutableSet.<OpeningTime>builder()
+            .add(new OpeningTime(Day.MONDAY, 200, 400))
+            .add(new OpeningTime(Day.TUESDAY, 100, 400))
+            .build();
+
+    /**
      * Private no-arg constructor to prevent instantiation of this utility class.
      */
     private ChargingStationTestUtils() {
@@ -377,12 +385,4 @@ public final class ChargingStationTestUtils {
 
         return evses;
     }
-
-    /**
-     * The default opening times.
-     */
-    public static final Set<OpeningTime> OPENING_TIMES = ImmutableSet.<OpeningTime>builder()
-            .add(new OpeningTime(Day.MONDAY, 200, 400))
-            .add(new OpeningTime(Day.TUESDAY, 100, 400))
-            .build();
 }
