@@ -24,7 +24,7 @@ import org.junit.Test;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.PHASE;
 import static org.junit.Assert.assertEquals;
 
-public class VasChargingCapabilityTest {
+public class ChargingCapabilityTest {
 
     public static final int PHASE_1 = 1;
     public static final int PHASE_UNKNOWN = 9;
@@ -43,90 +43,90 @@ public class VasChargingCapabilityTest {
     public void fromConnector120Volt1Phase10Amp() {
         Connector connector = new Connector(MAX_AMP_10, PHASE_1, VOLTAGE_120, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_1);
 
-        assertEquals(VasChargingCapability.V_120V_1_PHASE_10A, VasChargingCapability.fromConnector(connector));
+        assertEquals(ChargingCapability.V_120V_1_PHASE_10A, ChargingCapability.fromConnector(connector));
     }
 
     @Test
     public void fromConnector120Volt1Phase12Amp() {
         Connector connector = new Connector(MAX_AMP_12, PHASE_1, VOLTAGE_120, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_1);
 
-        assertEquals(VasChargingCapability.V_120V_1_PHASE_12A, VasChargingCapability.fromConnector(connector));
+        assertEquals(ChargingCapability.V_120V_1_PHASE_12A, ChargingCapability.fromConnector(connector));
     }
 
     @Test
     public void fromConnector120Volt1Phase16Amp() {
         Connector connector = new Connector(MAX_AMP_16, PHASE_1, VOLTAGE_120, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_1);
 
-        assertEquals(VasChargingCapability.V_120V_1_PHASE_16A, VasChargingCapability.fromConnector(connector));
+        assertEquals(ChargingCapability.V_120V_1_PHASE_16A, ChargingCapability.fromConnector(connector));
     }
 
     @Test
     public void fromConnector240Volt1Phase10Amp() {
         Connector connector = new Connector(MAX_AMP_10, PHASE_1, VOLTAGE_240, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_1);
 
-        assertEquals(VasChargingCapability.V_240V_1_PHASE_10A, VasChargingCapability.fromConnector(connector));
+        assertEquals(ChargingCapability.V_240V_1_PHASE_10A, ChargingCapability.fromConnector(connector));
     }
 
     @Test
     public void fromConnector240Volt1Phase12Amp() {
         Connector connector = new Connector(MAX_AMP_12, PHASE_1, VOLTAGE_240, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_1);
 
-        assertEquals(VasChargingCapability.V_240V_1_PHASE_12A, VasChargingCapability.fromConnector(connector));
+        assertEquals(ChargingCapability.V_240V_1_PHASE_12A, ChargingCapability.fromConnector(connector));
     }
 
     @Test
     public void fromConnector240Volt1Phase16Amp() {
         Connector connector = new Connector(MAX_AMP_16, PHASE_1, VOLTAGE_240, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_1);
 
-        assertEquals(VasChargingCapability.V_240V_1_PHASE_16A, VasChargingCapability.fromConnector(connector));
+        assertEquals(ChargingCapability.V_240V_1_PHASE_16A, ChargingCapability.fromConnector(connector));
     }
 
     @Test
     public void fromConnector240Volt1Phase32Amp() {
         Connector connector = new Connector(MAX_AMP_32, PHASE_1, VOLTAGE_240, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_1);
 
-        assertEquals(VasChargingCapability.V_240V_1_PHASE_32A, VasChargingCapability.fromConnector(connector));
+        assertEquals(ChargingCapability.V_240V_1_PHASE_32A, ChargingCapability.fromConnector(connector));
     }
 
     @Test
     public void fromConnector240Volt3Phase16Amp() {
         Connector connector = new Connector(MAX_AMP_16, PHASE, VOLTAGE_240, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_1);
 
-        assertEquals(VasChargingCapability.V_240V_3_PHASE_16A, VasChargingCapability.fromConnector(connector));
+        assertEquals(ChargingCapability.V_240V_3_PHASE_16A, ChargingCapability.fromConnector(connector));
     }
 
     @Test
     public void fromConnector240Volt3Phase32Amp() {
         Connector connector = new Connector(MAX_AMP_32, PHASE, VOLTAGE_240, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_1);
 
-        assertEquals(VasChargingCapability.V_240V_3_PHASE_32A, VasChargingCapability.fromConnector(connector));
+        assertEquals(ChargingCapability.V_240V_3_PHASE_32A, ChargingCapability.fromConnector(connector));
     }
 
     @Test
     public void fromConnector480Volt3Phase16Amp() {
         Connector connector = new Connector(MAX_AMP_16, PHASE, VOLTAGE_480, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_1);
 
-        assertEquals(VasChargingCapability.V_480V_3_PHASE_16A, VasChargingCapability.fromConnector(connector));
+        assertEquals(ChargingCapability.V_480V_3_PHASE_16A, ChargingCapability.fromConnector(connector));
     }
 
     @Test
     public void fromConnector480Volt3Phase32Amp() {
         Connector connector = new Connector(MAX_AMP_32, PHASE, VOLTAGE_480, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_1);
 
-        assertEquals(VasChargingCapability.V_480V_3_PHASE_32A, VasChargingCapability.fromConnector(connector));
+        assertEquals(ChargingCapability.V_480V_3_PHASE_32A, ChargingCapability.fromConnector(connector));
     }
 
     @Test
     public void fromConnector480Volt3Phase63Amp() {
         Connector connector = new Connector(MAX_AMP_63, PHASE, VOLTAGE_480, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_1);
 
-        assertEquals(VasChargingCapability.V_480V_3_PHASE_63A, VasChargingCapability.fromConnector(connector));
+        assertEquals(ChargingCapability.V_480V_3_PHASE_63A, ChargingCapability.fromConnector(connector));
     }
 
     @Test
     public void fromConnectorUnknownToUnspecified() {
         Connector connector = new Connector(MAX_AMP_UNKNOWN, PHASE_UNKNOWN, VOLTAGE_UNKNOWN, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_1);
 
-        assertEquals(VasChargingCapability.UNSPECIFIED, VasChargingCapability.fromConnector(connector));
+        assertEquals(ChargingCapability.UNSPECIFIED, ChargingCapability.fromConnector(connector));
     }
 }

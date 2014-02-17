@@ -27,16 +27,16 @@ import java.util.Set;
 public class ConfigurationConversionService {
 
     /**
-     * Creates a set of {@code VasConnectorType} based on the EVSEs. Duplicates will be filtered.
+     * Creates a set of {@code ConnectorType} based on the EVSEs. Duplicates will be filtered.
      *
      * @param evses list of EVSEs
      * @return set of connector types
      */
-    public Set<VasConnectorType> getConnectorTypesFromEvses(Set<Evse> evses) {
-        Set<VasConnectorType> connectorTypes = new HashSet<>();
+    public Set<ConnectorType> getConnectorTypesFromEvses(Set<Evse> evses) {
+        Set<ConnectorType> connectorTypes = new HashSet<>();
         for (Evse evse : evses) {
             for (Connector connector : evse.getConnectors()) {
-                connectorTypes.add(VasConnectorType.fromConnectorType(connector.getConnectorType()));
+                connectorTypes.add(ConnectorType.fromConnectorType(connector.getConnectorType()));
             }
         }
         return connectorTypes;
@@ -71,23 +71,23 @@ public class ConfigurationConversionService {
     public Set<io.motown.vas.viewmodel.model.Evse> getEvsesFromEventEvses(Set<Evse> eventEvses) {
         Set<io.motown.vas.viewmodel.model.Evse> evses = new HashSet<>();
         for (Evse evse : eventEvses) {
-            evses.add(new io.motown.vas.viewmodel.model.Evse(evse.getEvseId().getNumberedId(), State.UNKNOWN));
+            evses.add(new io.motown.vas.viewmodel.model.Evse(evse.getEvseId().getNumberedId(), ComponentStatus.UNKNOWN));
         }
         return evses;
     }
 
     /**
-     * Returns a set of {@code io.motown.vas.viewmodel.model.VasChargingCapability}s based on the EVSEs.
+     * Returns a set of {@code io.motown.vas.viewmodel.model.ChargingCapability}s based on the EVSEs.
      *
      * @param evses list of EVSEs.
-     * @return set of VasChargingCapability.
+     * @return set of ChargingCapability.
      */
-    public Set<VasChargingCapability> getChargingCapabilitiesFromEvses(Set<Evse> evses) {
-        Set<VasChargingCapability> chargingCapabilities = new HashSet<>();
+    public Set<ChargingCapability> getChargingCapabilitiesFromEvses(Set<Evse> evses) {
+        Set<ChargingCapability> chargingCapabilities = new HashSet<>();
 
         for (Evse evse : evses) {
             for (Connector connector : evse.getConnectors()) {
-                chargingCapabilities.add(VasChargingCapability.fromConnector(connector));
+                chargingCapabilities.add(ChargingCapability.fromConnector(connector));
             }
         }
 

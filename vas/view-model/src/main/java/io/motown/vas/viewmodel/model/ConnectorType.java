@@ -16,11 +16,10 @@
 package io.motown.vas.viewmodel.model;
 
 import com.google.common.collect.ImmutableMap;
-import io.motown.domain.api.chargingstation.ConnectorType;
 
 import java.util.Map;
 
-public enum VasConnectorType {
+public enum ConnectorType {
 
     UNSPECIFIED("Unspecified"),
 
@@ -217,25 +216,25 @@ public enum VasConnectorType {
 
     private final String value;
 
-    private static final Map<ConnectorType, VasConnectorType> MAPPING = ImmutableMap.<ConnectorType, VasConnectorType>builder()
-            .put(ConnectorType.W_INDUCTIVE, SMALL_PADDLE_INDUCTIVE)
-            .put(ConnectorType.TESLA, TESLA_CONNECTOR)
-            .put(ConnectorType.C_G105, TEPCO_CHA_DE_MO)
-            .put(ConnectorType.C_TYPE_1, IEC_621962_TYPE_1_YAZAKI)
-            .put(ConnectorType.C_TYPE_2, IEC_621962_TYPE_2_MENNEKES)
-            .put(ConnectorType.S_TYPE_3, IEC_621962_TYPE_3_SCAME)
-            .put(ConnectorType.S_309_1P_16A, IEC_60309INDUSTRIAL_P_N_E_AC)
-            .put(ConnectorType.S_309_1P_32A, IEC_60309INDUSTRIAL_P_N_E_AC)
+    private static final Map<io.motown.domain.api.chargingstation.ConnectorType, ConnectorType> MAPPING = ImmutableMap.<io.motown.domain.api.chargingstation.ConnectorType, ConnectorType>builder()
+            .put(io.motown.domain.api.chargingstation.ConnectorType.W_INDUCTIVE, SMALL_PADDLE_INDUCTIVE)
+            .put(io.motown.domain.api.chargingstation.ConnectorType.TESLA, TESLA_CONNECTOR)
+            .put(io.motown.domain.api.chargingstation.ConnectorType.C_G105, TEPCO_CHA_DE_MO)
+            .put(io.motown.domain.api.chargingstation.ConnectorType.C_TYPE_1, IEC_621962_TYPE_1_YAZAKI)
+            .put(io.motown.domain.api.chargingstation.ConnectorType.C_TYPE_2, IEC_621962_TYPE_2_MENNEKES)
+            .put(io.motown.domain.api.chargingstation.ConnectorType.S_TYPE_3, IEC_621962_TYPE_3_SCAME)
+            .put(io.motown.domain.api.chargingstation.ConnectorType.S_309_1P_16A, IEC_60309INDUSTRIAL_P_N_E_AC)
+            .put(io.motown.domain.api.chargingstation.ConnectorType.S_309_1P_32A, IEC_60309INDUSTRIAL_P_N_E_AC)
             // S_309_3P_16A could also be IEC_60309_INDUSTRIAL_3P_E_N_AC?
-            .put(ConnectorType.S_309_3P_16A, IEC_60309_INDUSTRIAL_3P_E_AC)
+            .put(io.motown.domain.api.chargingstation.ConnectorType.S_309_3P_16A, IEC_60309_INDUSTRIAL_3P_E_AC)
             // S_309_3P_32A could also be IEC_60309_INDUSTRIAL_3P_E_N_AC?
-            .put(ConnectorType.S_309_3P_32A, IEC_60309_INDUSTRIAL_3P_E_AC)
+            .put(io.motown.domain.api.chargingstation.ConnectorType.S_309_3P_32A, IEC_60309_INDUSTRIAL_3P_E_AC)
             // CEE_7_7 could also be DomesticPlugTypeECee75, DomesticPlugTypeFCee74Schuko?
-            .put(ConnectorType.CEE_7_7, DOMESTIC_PLUG_TYPE_EF_CEE_77)
-            .put(ConnectorType.UNSPECIFIED, UNSPECIFIED)
+            .put(io.motown.domain.api.chargingstation.ConnectorType.CEE_7_7, DOMESTIC_PLUG_TYPE_EF_CEE_77)
+            .put(io.motown.domain.api.chargingstation.ConnectorType.UNSPECIFIED, UNSPECIFIED)
             .build();
 
-    VasConnectorType(String v) {
+    ConnectorType(String v) {
         value = v;
     }
 
@@ -243,8 +242,8 @@ public enum VasConnectorType {
         return value;
     }
 
-    public static VasConnectorType fromValue(String v) {
-        for (VasConnectorType c: VasConnectorType.values()) {
+    public static ConnectorType fromValue(String v) {
+        for (ConnectorType c: ConnectorType.values()) {
             if (c.value.equals(v)) {
                 return c;
             }
@@ -259,8 +258,8 @@ public enum VasConnectorType {
      * @param connectorType    connector type
      * @return the corresponding vas connector type, or UNSPECIFIED if no mapping can be made.
      */
-    public static VasConnectorType fromConnectorType(ConnectorType connectorType) {
-        VasConnectorType vasConnectorType = MAPPING.get(connectorType);
+    public static ConnectorType fromConnectorType(io.motown.domain.api.chargingstation.ConnectorType connectorType) {
+        ConnectorType vasConnectorType = MAPPING.get(connectorType);
 
         if (vasConnectorType == null) {
             vasConnectorType = UNSPECIFIED;

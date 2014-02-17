@@ -25,8 +25,8 @@ public class PowersocketType {
 
     private Integer essentId;
 
-    private VasConnectorType vasConnectorType;
-    private VasChargingCapability vasChargingCapability;
+    private ConnectorType connectorType;
+    private ChargingCapability chargingCapability;
     private CdrChargePointType cdrChargePointType;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -42,12 +42,12 @@ public class PowersocketType {
         this.essentId = essentId;
     }
 
-    public void setVasConnectorType(VasConnectorType vasConnectorType) {
-        this.vasConnectorType = vasConnectorType;
+    public void setConnectorType(ConnectorType connectorType) {
+        this.connectorType = connectorType;
     }
 
-    public void setVasChargingCapability(VasChargingCapability vasChargingCapability) {
-        this.vasChargingCapability = vasChargingCapability;
+    public void setChargingCapability(ChargingCapability chargingCapability) {
+        this.chargingCapability = chargingCapability;
     }
 
     public void setCdrChargePointType(CdrChargePointType cdrChargePointType) {
@@ -78,12 +78,12 @@ public class PowersocketType {
         return essentId;
     }
 
-    public VasConnectorType getVasConnectorType() {
-        return vasConnectorType;
+    public ConnectorType getConnectorType() {
+        return connectorType;
     }
 
-    public VasChargingCapability getVasChargingCapability() {
-        return vasChargingCapability;
+    public ChargingCapability getChargingCapability() {
+        return chargingCapability;
     }
 
     public CdrChargePointType getCdrChargePointType() {

@@ -16,6 +16,11 @@
 package io.motown.vas.viewmodel;
 
 import io.motown.vas.viewmodel.model.ChargingStation;
+import io.motown.vas.viewmodel.model.ComponentStatus;
+import io.motown.vas.viewmodel.model.Evse;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 
@@ -29,6 +34,11 @@ public final class VasViewModelTestUtils {
         ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
         cs.setRegistered(true);
         cs.setConfigured(true);
+
+        Set<Evse> evses = new HashSet<>();
+        evses.add(new Evse(1, ComponentStatus.UNKNOWN));
+        evses.add(new Evse(2, ComponentStatus.UNKNOWN));
+        cs.setEvses(evses);
 
         return cs;
     }

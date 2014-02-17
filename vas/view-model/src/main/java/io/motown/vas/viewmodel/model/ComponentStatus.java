@@ -15,9 +15,7 @@
  */
 package io.motown.vas.viewmodel.model;
 
-import io.motown.domain.api.chargingstation.ComponentStatus;
-
-public enum VasChargingStationStatus {
+public enum ComponentStatus {
 
     AVAILABLE("Available"),
     OCCUPIED("Occupied"),
@@ -26,7 +24,7 @@ public enum VasChargingStationStatus {
 
     private final String value;
 
-    VasChargingStationStatus(String v) {
+    ComponentStatus(String v) {
         value = v;
     }
 
@@ -34,8 +32,8 @@ public enum VasChargingStationStatus {
         return value;
     }
 
-    public static VasChargingStationStatus fromValue(String v) {
-        for (VasChargingStationStatus c: VasChargingStationStatus.values()) {
+    public static ComponentStatus fromValue(String v) {
+        for (ComponentStatus c: ComponentStatus.values()) {
             if (c.value.equals(v)) {
                 return c;
             }
@@ -43,34 +41,34 @@ public enum VasChargingStationStatus {
         throw new IllegalArgumentException(v);
     }
 
-    public static VasChargingStationStatus fromComponentStatus(ComponentStatus status) {
-        VasChargingStationStatus vasChargingStationStatus;
+    public static ComponentStatus fromApiComponentStatus(io.motown.domain.api.chargingstation.ComponentStatus status) {
+        ComponentStatus componentStatus;
 
         switch (status) {
             case AVAILABLE:
-                vasChargingStationStatus = AVAILABLE;
+                componentStatus = AVAILABLE;
                 break;
             case FAULTED:
-                vasChargingStationStatus = UNAVAILABLE;
+                componentStatus = UNAVAILABLE;
                 break;
             case INOPERATIVE:
-                vasChargingStationStatus = UNAVAILABLE;
+                componentStatus = UNAVAILABLE;
                 break;
             case OCCUPIED:
-                vasChargingStationStatus = OCCUPIED;
+                componentStatus = OCCUPIED;
                 break;
             case RESERVED:
                 //TODO is this the right status for VAS? Probably there is no car charging yet... - Mark van den Bergh, Februari 13th 2014
-                vasChargingStationStatus = OCCUPIED;
+                componentStatus = OCCUPIED;
                 break;
             case UNKNOWN:
-                vasChargingStationStatus = UNKNOWN;
+                componentStatus = UNKNOWN;
                 break;
             default:
-                vasChargingStationStatus = VasChargingStationStatus.UNKNOWN;
+                componentStatus = ComponentStatus.UNKNOWN;
         }
 
-        return vasChargingStationStatus;
+        return componentStatus;
     }
 
 }

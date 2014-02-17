@@ -17,7 +17,7 @@ package io.motown.vas.v10.soap;
 
 import io.motown.vas.v10.soap.schema.ChargePointStatus;
 import io.motown.vas.viewmodel.model.ChargingStation;
-import io.motown.vas.viewmodel.model.VasChargingStationStatus;
+import io.motown.vas.viewmodel.model.ComponentStatus;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,7 +41,7 @@ public class VasConversionServiceTest {
     @Test
     public void getStatusAvailableValidateReturnValue() {
         ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
-        cs.setState(VasChargingStationStatus.AVAILABLE);
+        cs.setState(ComponentStatus.AVAILABLE);
 
         ChargePointStatus status = service.getStatus(cs);
 
@@ -51,7 +51,7 @@ public class VasConversionServiceTest {
     @Test
     public void getStatusUnknownValidateReturnValue() {
         ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
-        cs.setState(VasChargingStationStatus.UNKNOWN);
+        cs.setState(ComponentStatus.UNKNOWN);
 
         ChargePointStatus status = service.getStatus(cs);
 
@@ -61,7 +61,7 @@ public class VasConversionServiceTest {
     @Test
     public void getStatusUnavailableValidateReturnValue() {
         ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
-        cs.setState(VasChargingStationStatus.UNAVAILABLE);
+        cs.setState(ComponentStatus.UNAVAILABLE);
 
         ChargePointStatus status = service.getStatus(cs);
 
@@ -71,7 +71,7 @@ public class VasConversionServiceTest {
     @Test
     public void getStatusOccupiedValidateReturnValue() {
         ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
-        cs.setState(VasChargingStationStatus.OCCUPIED);
+        cs.setState(ComponentStatus.OCCUPIED);
 
         ChargePointStatus status = service.getStatus(cs);
 
@@ -92,7 +92,7 @@ public class VasConversionServiceTest {
     public void getStatusShouldThrowNoExeptionsForAnyState() {
         ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
 
-        for (VasChargingStationStatus status : VasChargingStationStatus.values()) {
+        for (ComponentStatus status : ComponentStatus.values()) {
             cs.setState(status);
 
             // no exception should be thrown

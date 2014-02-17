@@ -17,6 +17,8 @@ package io.motown.vas.v10.soap;
 
 import io.motown.vas.v10.soap.schema.*;
 import io.motown.vas.viewmodel.model.*;
+import io.motown.vas.viewmodel.model.ChargingCapability;
+import io.motown.vas.viewmodel.model.ConnectorType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -40,7 +42,7 @@ public class VasConversionService {
         chargePoint.setChargingMode(getVasChargingMode(chargingStation.getChargeMode()));
         chargePoint.setCity(chargingStation.getCity());
         chargePoint.setConnectors(chargingStation.getEvses().size());
-        chargePoint.setConnectorsFree(getConnectorsFree(chargingStation));
+        chargePoint.setConnectorsFree(chargingStation.getNumberOfFreeEvses());
         chargePoint.getConnectorTypes().addAll(getConnectorTypes(chargingStation));
         chargePoint.setCoordinates(getCoordinates(chargingStation));
         chargePoint.setCountry(chargingStation.getCountry());
@@ -57,32 +59,21 @@ public class VasConversionService {
         return chargePoint;
     }
 
-    public List<ChargingCapability> getChargingCapabilities(ChargingStation chargingStation) {
-        List<ChargingCapability> chargingCapabilities = new ArrayList<>();
+    public List<io.motown.vas.v10.soap.schema.ChargingCapability> getChargingCapabilities(ChargingStation chargingStation) {
+        List<io.motown.vas.v10.soap.schema.ChargingCapability> chargingCapabilities = new ArrayList<>();
 
-        for (VasChargingCapability vasChargingCapability : chargingStation.getChargingCapabilities()){
-            chargingCapabilities.add(ChargingCapability.fromValue( vasChargingCapability.value() != null ? vasChargingCapability.value() : "Unspecified"));
+        for (ChargingCapability chargingCapability : chargingStation.getChargingCapabilities()){
+            chargingCapabilities.add(io.motown.vas.v10.soap.schema.ChargingCapability.fromValue(chargingCapability.value() != null ? chargingCapability.value() : "Unspecified"));
         }
 
         return chargingCapabilities;
     }
 
-    public Integer getConnectorsFree(ChargingStation chargingStation) {
-        int freeConnectors = 0;
-        for(Evse evse : chargingStation.getEvses()){
-            if(evse.getState().equals(State.AVAILABLE)){
-                ++freeConnectors;
-            }
-        }
+    public List<io.motown.vas.v10.soap.schema.ConnectorType> getConnectorTypes(ChargingStation chargingStation) {
+        List<io.motown.vas.v10.soap.schema.ConnectorType> connectorTypes = new ArrayList<>();
 
-        return freeConnectors;
-    }
-
-    public List<ConnectorType> getConnectorTypes(ChargingStation chargingStation) {
-        List<ConnectorType> connectorTypes = new ArrayList<>();
-
-        for (VasConnectorType connectorType : chargingStation.getConnectorTypes()) {
-            connectorTypes.add(ConnectorType.fromValue((connectorType.value() != null)?connectorType.value() : "Unspecified"));
+        for (ConnectorType connectorType : chargingStation.getConnectorTypes()) {
+            connectorTypes.add(io.motown.vas.v10.soap.schema.ConnectorType.fromValue((connectorType.value() != null) ? connectorType.value() : "Unspecified"));
         }
 
         return connectorTypes;
@@ -164,23 +155,23 @@ public class VasConversionService {
     }
 
     /**
-     * Converts an nl.ihomer.lukas.enums.VasConnectorType to a vas.ConnectorType
+     * Converts an nl.ihomer.lukas.enums.ConnectorType to a vas.ConnectorType
      * Fixes typo TEPCO_CHA_ME_DO (Should be TEPCO_CHA_DE_MO) internally
      * @param connectorType The nl.ihomer.lukas.enums.ConnectorType
      * @return A vas.ConnectorType
      */
-    public ConnectorType convertConnectorType(VasConnectorType connectorType) {
+    public io.motown.vas.v10.soap.schema.ConnectorType convertConnectorType(ConnectorType connectorType) {
         try {
             switch(connectorType) {
                 case TEPCO_CHA_DE_MO:
                     // This is a typo in the WSDL
-                    return ConnectorType.TEPCO_CHA_ME_DO;
+                    return io.motown.vas.v10.soap.schema.ConnectorType.TEPCO_CHA_ME_DO;
                 default:
-                    return Enum.valueOf(ConnectorType.class, connectorType.toString());
+                    return Enum.valueOf(io.motown.vas.v10.soap.schema.ConnectorType.class, connectorType.toString());
             }
         } catch (IllegalArgumentException i) {
             LOG.error("Unknown connectorType: ${connectorType}: ${i.getMessage()}");
-            return ConnectorType.UNSPECIFIED;
+            return io.motown.vas.v10.soap.schema.ConnectorType.UNSPECIFIED;
         }
     }
 

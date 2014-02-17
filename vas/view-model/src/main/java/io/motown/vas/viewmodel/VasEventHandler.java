@@ -16,7 +16,10 @@
 package io.motown.vas.viewmodel;
 
 import io.motown.domain.api.chargingstation.*;
-import io.motown.vas.viewmodel.model.ChargingStation;
+import io.motown.domain.api.chargingstation.Evse;
+import io.motown.domain.api.chargingstation.OpeningTime;
+import io.motown.vas.viewmodel.model.*;
+import io.motown.vas.viewmodel.model.ComponentStatus;
 import io.motown.vas.viewmodel.model.Day;
 import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -162,12 +165,26 @@ public class VasEventHandler {
 
     @EventHandler
     public void handle(ChargingStationStatusNotificationReceivedEvent event) {
-        //TODO implement. - Mark van den Bergh, Februari 13th 2014
+        LOG.info("ChargingStationStatusNotificationReceivedEvent for {} received", event.getChargingStationId());
+
+        ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
+        if (chargingStation != null) {
+            chargingStation.setState(ComponentStatus.fromApiComponentStatus(event.getStatus()));
+            chargingStationRepository.save(chargingStation);
+        }
     }
 
     @EventHandler
     public void handle(ComponentStatusNotificationReceivedEvent event) {
-        //TODO implement. - Mark van den Bergh, Februari 13th 2014
+        LOG.info("ComponentStatusNotificationReceivedEvent for {} received", event.getChargingStationId());
+
+        ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
+
+        if (chargingStation != null && event.getComponentId() instanceof EvseId) {
+            io.motown.vas.viewmodel.model.Evse evse = chargingStation.getEvse( ((EvseId)event.getComponentId()).getNumberedId() );
+            evse.setState(ComponentStatus.fromApiComponentStatus(event.getStatus()));
+            chargingStationRepository.save(chargingStation);
+        }
     }
 
     public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {

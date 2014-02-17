@@ -16,7 +16,9 @@
 package io.motown.vas.viewmodel;
 
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.ComponentStatus;
 import io.motown.vas.viewmodel.model.*;
+import io.motown.vas.viewmodel.model.ConnectorType;
 import io.motown.vas.viewmodel.model.Evse;
 import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository;
 import org.junit.Before;
@@ -26,11 +28,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Set;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.vas.viewmodel.VasViewModelTestUtils.getRegisteredAndConfiguredChargingStation;
 import static junit.framework.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -49,7 +54,6 @@ public class VasEventHandlerTest {
     @Before
     public void setUp() {
         chargingStationRepository.deleteAll();
-
 
         eventHandler = new VasEventHandler();
 
@@ -192,11 +196,11 @@ public class VasEventHandlerTest {
     @Test
     public void chargingStationConfiguredEventVerifyConnectorTypes() {
         chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
-        Set<VasConnectorType> expectedConnectorTypes = configurationConversionService.getConnectorTypesFromEvses(EVSES);
+        Set<ConnectorType> expectedConnectorTypes = configurationConversionService.getConnectorTypesFromEvses(EVSES);
 
         eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
 
-        // not testing if Set with expected values contain the correct values, configurationConversionService has it's own test set
+        // not testing if Set with expected values contain the correct values, configurationConversionService has its own test set
         assertEquals(expectedConnectorTypes, getTestChargingStationFromRepository().getConnectorTypes());
     }
 
@@ -207,18 +211,18 @@ public class VasEventHandlerTest {
 
         eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
 
-        // not testing if Set with expected values contain the correct values, configurationConversionService has it's own test set
+        // not testing if Set with expected values contain the correct values, configurationConversionService has its own test set
         assertEquals(expectedEvses, getTestChargingStationFromRepository().getEvses());
     }
 
     @Test
     public void chargingStationConfiguredEventVerifyChargingCapabilities() {
         chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
-        Set<VasChargingCapability> expectedChargingCapabilities = configurationConversionService.getChargingCapabilitiesFromEvses(EVSES);
+        Set<ChargingCapability> expectedChargingCapabilities = configurationConversionService.getChargingCapabilitiesFromEvses(EVSES);
 
         eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
 
-        // not testing if Set with expected values contain the correct values, configurationConversionService has it's own test set
+        // not testing if Set with expected values contain the correct values, configurationConversionService has its own test set
         assertEquals(expectedChargingCapabilities, getTestChargingStationFromRepository().getChargingCapabilities());
     }
 
@@ -229,6 +233,51 @@ public class VasEventHandlerTest {
 
         ChargingStation chargingStation = getTestChargingStationFromRepository();
         assertEquals(OPENING_TIMES.size(), chargingStation.getOpeningTimes().size());
+    }
+
+    @Test
+    public void chargingStationStatusNotificationReceivedEventUnknownChargingStationNoException() {
+        assertNull(getTestChargingStationFromRepository());
+
+        eventHandler.handle(new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, new Date(), new HashMap<String, String>()));
+    }
+
+    @Test
+    public void chargingStationStatusNotificationAvailableReceivedEventVerifyChargingStationState() {
+        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        ChargingStation chargingStation = getTestChargingStationFromRepository();
+        assertTrue(chargingStation.getState().equals(io.motown.vas.viewmodel.model.ComponentStatus.UNKNOWN));
+
+        eventHandler.handle(new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, new Date(), new HashMap<String, String>()));
+
+        chargingStation = getTestChargingStationFromRepository();
+        assertTrue(chargingStation.getState().equals(io.motown.vas.viewmodel.model.ComponentStatus.AVAILABLE));
+    }
+
+    @Test
+    public void componentStatusNotificationReceivedEventUnknownChargingStationNoException() {
+        assertNull(getTestChargingStationFromRepository());
+
+        eventHandler.handle(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, ComponentStatus.AVAILABLE, new Date(), new HashMap<String, String>()));
+    }
+
+    @Test
+    public void componentStatusNotificationReceivedEventUnknownEvseNoException() {
+        assertNull(getTestChargingStationFromRepository());
+
+        eventHandler.handle(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.EVSE, UNKNOWN_EVSE_ID, ComponentStatus.AVAILABLE, new Date(), new HashMap<String, String>()));
+    }
+
+    @Test
+    public void componentStatusNotificationAvailableReceivedEventVerifyEvseState() {
+        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        ChargingStation chargingStation = getTestChargingStationFromRepository();
+        assertTrue(chargingStation.getEvse(EVSE_ID.getNumberedId()).getState().equals(io.motown.vas.viewmodel.model.ComponentStatus.UNKNOWN));
+
+        eventHandler.handle(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, ComponentStatus.AVAILABLE, new Date(), new HashMap<String, String>()));
+
+        chargingStation = getTestChargingStationFromRepository();
+        assertTrue(chargingStation.getEvse(EVSE_ID.getNumberedId()).getState().equals(io.motown.vas.viewmodel.model.ComponentStatus.AVAILABLE));
     }
 
     private ChargingStation getTestChargingStationFromRepository() {

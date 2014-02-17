@@ -35,13 +35,13 @@ public class Evse {
      * The current state of the EVSE.
      */
     @Column(nullable = false)
-    private State state;
+    private ComponentStatus state;
 
     private Evse() {
         // Private no-arg constructor for Hibernate.
     }
 
-    public Evse(Integer position, State state) {
+    public Evse(Integer position, ComponentStatus state) {
         this.position = position;
         this.state = state;
     }
@@ -54,8 +54,12 @@ public class Evse {
         return position;
     }
 
-    public State getState() {
+    public ComponentStatus getState() {
         return state;
+    }
+
+    public void setState(ComponentStatus state) {
+        this.state = state;
     }
 
     @Override

@@ -36,9 +36,9 @@ public class ChargingStation {
     private boolean isRegistered;
     private boolean isConfigured;
 
-    @ElementCollection(targetClass = VasChargingCapability.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = ChargingCapability.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<VasChargingCapability> chargingCapabilities;
+    private Set<ChargingCapability> chargingCapabilities;
 
     private String address;
 
@@ -54,9 +54,9 @@ public class ChargingStation {
 
     private ChargeMode chargeMode;
 
-    @ElementCollection(targetClass = VasConnectorType.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = ConnectorType.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<VasConnectorType> connectorTypes;
+    private Set<ConnectorType> connectorTypes;
 
     /**
      * The latitude of a coordinate.
@@ -74,7 +74,7 @@ public class ChargingStation {
 
     private String operator;
 
-    private VasChargingStationStatus state = VasChargingStationStatus.UNKNOWN;
+    private ComponentStatus state = ComponentStatus.UNKNOWN;
 
     private ChargingStation() {
         // Private no-arg constructor for Hibernate.
@@ -167,7 +167,7 @@ public class ChargingStation {
     public int getNumberOfFreeEvses() {
         int numOfFreeEvses = 0;
         for (Evse evse : evses) {
-            if(evse.getState().equals(State.AVAILABLE)) {
+            if(evse.getState().equals(ComponentStatus.AVAILABLE)) {
                 numOfFreeEvses++;
             }
         }
@@ -210,11 +210,11 @@ public class ChargingStation {
         isConfigured = configured;
     }
 
-    public Set<VasChargingCapability> getChargingCapabilities() {
+    public Set<ChargingCapability> getChargingCapabilities() {
         return chargingCapabilities;
     }
 
-    public Set<VasConnectorType> getConnectorTypes() {
+    public Set<ConnectorType> getConnectorTypes() {
         return connectorTypes;
     }
 
@@ -226,15 +226,15 @@ public class ChargingStation {
         return longitude;
     }
 
-    public VasChargingStationStatus getState() {
+    public ComponentStatus getState() {
         return state;
     }
 
-    public void setChargingCapabilities(Set<VasChargingCapability> chargingCapabilities) {
+    public void setChargingCapabilities(Set<ChargingCapability> chargingCapabilities) {
         this.chargingCapabilities = chargingCapabilities;
     }
 
-    public void setConnectorTypes(Set<VasConnectorType> connectorTypes) {
+    public void setConnectorTypes(Set<ConnectorType> connectorTypes) {
         this.connectorTypes = connectorTypes;
     }
 
@@ -246,8 +246,17 @@ public class ChargingStation {
         this.longitude = longitude;
     }
 
-    public void setState(VasChargingStationStatus state) {
-        this.state = state == null ? VasChargingStationStatus.UNKNOWN : state;
+    public void setState(ComponentStatus state) {
+        this.state = state == null ? ComponentStatus.UNKNOWN : state;
+    }
+
+    public Evse getEvse(Integer position) {
+        for (Evse evse : evses) {
+            if (evse.getPosition().equals(position)) {
+                return evse;
+            }
+        }
+        return null;
     }
 
     public Set<Evse> getEvses() {
