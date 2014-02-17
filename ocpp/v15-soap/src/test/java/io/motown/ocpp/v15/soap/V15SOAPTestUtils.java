@@ -15,8 +15,6 @@
  */
 package io.motown.ocpp.v15.soap;
 
-import com.google.common.collect.ImmutableList;
-import io.motown.domain.api.chargingstation.ChargingStationTestUtils;
 import io.motown.domain.api.chargingstation.MeterValue;
 import io.motown.ocpp.v15.soap.centralsystem.schema.TransactionData;
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
@@ -174,7 +172,7 @@ public final class V15SOAPTestUtils {
 
     /**
      * Creates a fixed date so it can be compared to an instance of this method created later in time.
-
+     *
      * @return fixed date.
      */
     private static Date getFixedDate() {
