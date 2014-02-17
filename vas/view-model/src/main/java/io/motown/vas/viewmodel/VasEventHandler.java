@@ -16,9 +16,7 @@
 package io.motown.vas.viewmodel;
 
 import io.motown.domain.api.chargingstation.*;
-import io.motown.domain.api.chargingstation.Evse;
-import io.motown.domain.api.chargingstation.OpeningTime;
-import io.motown.vas.viewmodel.model.*;
+import io.motown.vas.viewmodel.model.ChargingStation;
 import io.motown.vas.viewmodel.model.ComponentStatus;
 import io.motown.vas.viewmodel.model.Day;
 import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository;
@@ -101,6 +99,10 @@ public class VasEventHandler {
         chargingStationRepository.save(chargingStation);
     }
 
+    /**
+     * Handles the {@code ChargingStationPlacedEvent}.
+     * @param event the actual event.
+     */
     @EventHandler
     public void handle(ChargingStationPlacedEvent event) {
         LOG.info("ChargingStationPlacedEvent");
@@ -108,6 +110,10 @@ public class VasEventHandler {
         updateLocationForChargingStation(event.getChargingStationId(), event.getCoordinates(), event.getAddress());
     }
 
+    /**
+     * Handles the {@code ChargingStationLocationImprovedEvent}.
+     * @param event the actual event.
+     */
     @EventHandler
     public void handle(ChargingStationLocationImprovedEvent event) {
         LOG.info("ChargingStationLocationImprovedEvent");
@@ -115,6 +121,10 @@ public class VasEventHandler {
         updateLocationForChargingStation(event.getChargingStationId(), event.getCoordinates(), event.getAddress());
     }
 
+    /**
+     * Handles the {@code ChargingStationMovedEvent}.
+     * @param event the actual event.
+     */
     @EventHandler
     public void handle(ChargingStationMovedEvent event) {
         LOG.info("ChargingStationMovedEvent");
@@ -122,6 +132,10 @@ public class VasEventHandler {
         updateLocationForChargingStation(event.getChargingStationId(), event.getCoordinates(), event.getAddress());
     }
 
+    /**
+     * Handles the {@code ChargingStationOpeningTimesSetEvent}.
+     * @param event the actual event.
+     */
     @EventHandler
     public void handle(ChargingStationOpeningTimesSetEvent event) {
         LOG.info("ChargingStationOpeningTimesSetEvent");
@@ -134,6 +148,10 @@ public class VasEventHandler {
         }
     }
 
+    /**
+     * Handles the {@code ChargingStationOpeningTimesAddedEvent}.
+     * @param event the actual event.
+     */
     @EventHandler
     public void handle(ChargingStationOpeningTimesAddedEvent event) {
         LOG.info("ChargingStationOpeningTimesAddedEvent");
@@ -258,6 +276,12 @@ public class VasEventHandler {
         }
     }
 
+    /**
+     * Converts the opening times from the {@link io.motown.domain.api.chargingstation.OpeningTime} to the {@link io.motown.vas.viewmodel.model.OpeningTime} format.
+     *
+     * @param input the opening times from the core.
+     * @return the new set of opening times.
+     */
     private Set<io.motown.vas.viewmodel.model.OpeningTime> convertFromApiOpeningTimes(Set<OpeningTime> input) {
         Set<io.motown.vas.viewmodel.model.OpeningTime> output = new HashSet<>();
         for (OpeningTime source : input) {
