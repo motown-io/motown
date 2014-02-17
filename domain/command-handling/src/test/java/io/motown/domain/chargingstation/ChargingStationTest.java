@@ -364,7 +364,6 @@ public class ChargingStationTest {
     public void testSendAuthorizationList() {
         final int version = 1;
         final String hash = "4894007260";
-        final AuthorizationListUpdateType updateType = AuthorizationListUpdateType.FULL;
 
         fixture.given(CHARGING_STATION)
                 .when(new SendAuthorizationListCommand(CHARGING_STATION_ID, IDENTIFYING_TOKENS, version, hash, AuthorizationListUpdateType.FULL))
