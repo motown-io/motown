@@ -19,8 +19,6 @@ import io.motown.vas.v10.soap.schema.*;
 import io.motown.vas.viewmodel.model.*;
 import io.motown.vas.viewmodel.model.ChargingCapability;
 import io.motown.vas.viewmodel.model.ConnectorType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -33,8 +31,12 @@ import java.util.Set;
 @Component
 public class VasConversionService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(VasConversionService.class);
-
+    /**
+     * Creates a VAS representation of a charging station.
+     *
+     * @param chargingStation charging station.
+     * @return VAS representation of the charging station.
+     */
     public ChargePoint getVasRepresentation(ChargingStation chargingStation) {
         ChargePoint chargePoint = new ChargePoint();
         chargePoint.setAddress(chargingStation.getAddress());
@@ -59,26 +61,48 @@ public class VasConversionService {
         return chargePoint;
     }
 
+    /**
+     * Converts {@code ChargingCapability}s from {@code ChargingStation} to {@code io.motown.vas.v10.soap.schema.ChargingCapability}.
+     *
+     * @param chargingStation charging station object that contains the charging capabilities.
+     * @return List of {@code io.motown.vas.v10.soap.schema.ChargingCapability}.
+     */
     public List<io.motown.vas.v10.soap.schema.ChargingCapability> getChargingCapabilities(ChargingStation chargingStation) {
         List<io.motown.vas.v10.soap.schema.ChargingCapability> chargingCapabilities = new ArrayList<>();
 
         for (ChargingCapability chargingCapability : chargingStation.getChargingCapabilities()){
-            chargingCapabilities.add(io.motown.vas.v10.soap.schema.ChargingCapability.fromValue(chargingCapability.value() != null ? chargingCapability.value() : "Unspecified"));
+            chargingCapabilities.add(io.motown.vas.v10.soap.schema.ChargingCapability.fromValue(chargingCapability.value()));
         }
 
         return chargingCapabilities;
     }
 
+    /**
+     * Converts the {@code ConnectorType}s from {@code ChargingStation} to {@code io.motown.vas.v10.soap.schema.ConnectorType}.
+     *
+     * @param chargingStation charging station object that contains the connector types.
+     * @return List of {@code io.motown.vas.v10.soap.schema.ConnectorType}.
+     */
     public List<io.motown.vas.v10.soap.schema.ConnectorType> getConnectorTypes(ChargingStation chargingStation) {
         List<io.motown.vas.v10.soap.schema.ConnectorType> connectorTypes = new ArrayList<>();
 
         for (ConnectorType connectorType : chargingStation.getConnectorTypes()) {
-            connectorTypes.add(io.motown.vas.v10.soap.schema.ConnectorType.fromValue((connectorType.value() != null) ? connectorType.value() : "Unspecified"));
+            if(connectorType.equals(ConnectorType.TEPCO_CHA_DE_MO)) {
+                connectorTypes.add(io.motown.vas.v10.soap.schema.ConnectorType.TEPCO_CHA_ME_DO);
+            } else {
+                connectorTypes.add(io.motown.vas.v10.soap.schema.ConnectorType.fromValue(connectorType.value()));
+            }
         }
 
         return connectorTypes;
     }
 
+    /**
+     * Creates {@code Wgs84Coordinates} based on the charging station coordinates.
+     *
+     * @param chargingStation charging station
+     * @return {@code Wgs84Coordinates} based on the charging station coordinates.
+     */
     public Wgs84Coordinates getCoordinates(ChargingStation chargingStation) {
         Wgs84Coordinates wgs84Coordinates = new Wgs84Coordinates();
         wgs84Coordinates.setLatitude(chargingStation.getLatitude());
@@ -124,55 +148,7 @@ public class VasConversionService {
      * @return charging mode (ChargingMode.UNSPECIFIED is chargeMode is null).
      */
     public ChargingMode getVasChargingMode(ChargeMode chargeMode) {
-        ChargingMode result = ChargingMode.UNSPECIFIED;
-
-        if (chargeMode != null) {
-            switch (chargeMode){
-                case IEC_61851_MODE_1:
-                    result = ChargingMode.IEC_61851_MODE_1;
-                    break;
-                case IEC_61851_MODE_2:
-                    result = ChargingMode.IEC_61851_MODE_2;
-                    break;
-                case IEC_61851_MODE_3:
-                    result = ChargingMode.IEC_61851_MODE_3;
-                    break;
-                case IEC_61851_MODE_4:
-                    result = ChargingMode.IEC_61851_MODE_4;
-                    break;
-                case CHA_DE_MO:
-                    result = ChargingMode.CHA_DE_MO;
-                    break;
-                case UNSPECIFIED:
-                    result = ChargingMode.UNSPECIFIED;
-                    break;
-                default:
-                    result = ChargingMode.UNSPECIFIED;
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Converts an nl.ihomer.lukas.enums.ConnectorType to a vas.ConnectorType
-     * Fixes typo TEPCO_CHA_ME_DO (Should be TEPCO_CHA_DE_MO) internally
-     * @param connectorType The nl.ihomer.lukas.enums.ConnectorType
-     * @return A vas.ConnectorType
-     */
-    public io.motown.vas.v10.soap.schema.ConnectorType convertConnectorType(ConnectorType connectorType) {
-        try {
-            switch(connectorType) {
-                case TEPCO_CHA_DE_MO:
-                    // This is a typo in the WSDL
-                    return io.motown.vas.v10.soap.schema.ConnectorType.TEPCO_CHA_ME_DO;
-                default:
-                    return Enum.valueOf(io.motown.vas.v10.soap.schema.ConnectorType.class, connectorType.toString());
-            }
-        } catch (IllegalArgumentException i) {
-            LOG.error("Unknown connectorType: ${connectorType}: ${i.getMessage()}");
-            return io.motown.vas.v10.soap.schema.ConnectorType.UNSPECIFIED;
-        }
+        return chargeMode == null ? ChargingMode.UNSPECIFIED : ChargingMode.valueOf(chargeMode.value());
     }
 
     /**
