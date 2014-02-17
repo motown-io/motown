@@ -176,7 +176,7 @@ public final class V15SOAPTestUtils {
 
             io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue meterValueSoap = new io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue();
             meterValueSoap.getValue().add(value);
-            meterValueSoap.setTimestamp(FIVE_MINUTES_AGO);
+            meterValueSoap.setTimestamp(meterValue.getTimestamp());
 
             TransactionData data = new TransactionData();
             data.getValues().add(meterValueSoap);

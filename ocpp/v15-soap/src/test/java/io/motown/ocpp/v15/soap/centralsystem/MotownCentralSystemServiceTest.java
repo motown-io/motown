@@ -111,19 +111,19 @@ public class MotownCentralSystemServiceTest {
         assertNotNull(response);
     }
 
-//    @Test
-//    public void stopTransactionVerifyServiceCall() {
-//        StopTransactionRequest request = new StopTransactionRequest();
-//        request.setIdTag(IDENTIFYING_TOKEN.getToken());
-//        request.setMeterStop(METER_STOP);
-//        request.setTimestamp(FIVE_MINUTES_AGO);
-//        request.setTransactionId(TRANSACTION_NUMBER);
-//        request.getTransactionData().addAll(getTransactionDataForMeterValues(METER_VALUES));
-//
-//        motownCentralSystemService.stopTransaction(request, CHARGING_STATION_ID.getId());
-//
-//        verify(domainService).stopTransaction(CHARGING_STATION_ID, new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL, TRANSACTION_NUMBER), IDENTIFYING_TOKEN, METER_STOP, FIVE_MINUTES_AGO, METER_VALUES);
-//    }
+    @Test
+    public void stopTransactionVerifyServiceCall() {
+        StopTransactionRequest request = new StopTransactionRequest();
+        request.setIdTag(IDENTIFYING_TOKEN.getToken());
+        request.setMeterStop(METER_STOP);
+        request.setTimestamp(FIVE_MINUTES_AGO);
+        request.setTransactionId(TRANSACTION_NUMBER);
+        request.getTransactionData().addAll(getTransactionDataForMeterValues(METER_VALUES));
+
+        motownCentralSystemService.stopTransaction(request, CHARGING_STATION_ID.getId());
+
+        verify(domainService).stopTransaction(CHARGING_STATION_ID, new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL, TRANSACTION_NUMBER), IDENTIFYING_TOKEN, METER_STOP, FIVE_MINUTES_AGO, METER_VALUES);
+    }
 
     @Test
     public void bootNotificationAcceptedVerifyResponse() {

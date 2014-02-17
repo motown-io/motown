@@ -98,7 +98,9 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         List<TransactionData> transactionData = request.getTransactionData();
         for (TransactionData data : transactionData) {
             for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue mv : data.getValues()){
-                meterValues.add(new MeterValue(mv.getTimestamp(), mv.getValue().toString()));
+                for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value value : mv.getValue()) {
+                    meterValues.add(new MeterValue(mv.getTimestamp(), value.getValue()));
+                }
             }
         }
 
