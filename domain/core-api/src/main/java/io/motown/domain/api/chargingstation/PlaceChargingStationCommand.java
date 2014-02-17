@@ -15,6 +15,9 @@
  */
 package io.motown.domain.api.chargingstation;
 
+/**
+ * Command to indicate that a new charging station is placed on a specific location.
+ */
 public final class PlaceChargingStationCommand extends ChangeChargingStationLocationCommand {
 
     public PlaceChargingStationCommand(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {

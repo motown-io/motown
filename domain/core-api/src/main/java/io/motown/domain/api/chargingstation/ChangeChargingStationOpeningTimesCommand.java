@@ -22,20 +22,38 @@ import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * Generic class for all commands that change the opening times.
+ */
 public abstract class ChangeChargingStationOpeningTimesCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
     private final Set<OpeningTime> openingTimes;
 
+    /**
+     * Creates a command object that changes the opening times of a charging station.
+     *
+     * @param chargingStationId The identifier of the charging station.
+     * @param openingTimes The opening times of the charging station.
+     * @throws java.lang.NullPointerException if either {@code chargingStationId} or {@code openingTimes} is {@code null}.
+     */
     protected ChangeChargingStationOpeningTimesCommand(ChargingStationId chargingStationId, Set<OpeningTime> openingTimes) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.openingTimes = checkNotNull(openingTimes);
     }
 
+    /**
+     * Gets the charging station identifier.
+     * @return the charging station identifier.
+     */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
     }
 
+    /**
+     * Gets the opening times of the charging station.
+     * @return the opening times.
+     */
     public Set<OpeningTime> getOpeningTimes() {
         return openingTimes;
     }

@@ -15,6 +15,9 @@
  */
 package io.motown.domain.api.chargingstation;
 
+/**
+ * Event which is generated when the location of the charging station is improved.
+ */
 public final class ChargingStationLocationImprovedEvent extends ChargingStationLocationChangedEvent {
     public ChargingStationLocationImprovedEvent(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
         super(chargingStationId, coordinates, address);

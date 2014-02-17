@@ -17,11 +17,21 @@ package io.motown.domain.api.chargingstation;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * Generic event that is triggered when the location of a charging station is changed.
+ */
 public abstract class ChargingStationLocationChangedEvent {
     private final ChargingStationId chargingStationId;
     private final Coordinates coordinates;
     private final Address address;
 
+    /**
+     * Creates a new {@code ChargingStationLocationChangedEvent}.
+     *
+     * @param chargingStationId the identifier of the charging station.
+     * @param coordinates the coordinates of the charging station.
+     * @param address the address of the charging station.
+     */
     protected ChargingStationLocationChangedEvent(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
         this.chargingStationId = checkNotNull(chargingStationId);
         if (coordinates == null && address == null) {
@@ -31,14 +41,26 @@ public abstract class ChargingStationLocationChangedEvent {
         this.address = address;
     }
 
+    /**
+     * Gets the identifier of the charging station.
+     * @return the charging station identifier.
+     */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
     }
 
+    /**
+     * Gets the coordinates of the charging station.
+     * @return the coordinates.
+     */
     public Coordinates getCoordinates() {
         return coordinates;
     }
 
+    /**
+     * Gets the address of the charging station.
+     * @return the address.
+     */
     public Address getAddress() {
         return address;
     }

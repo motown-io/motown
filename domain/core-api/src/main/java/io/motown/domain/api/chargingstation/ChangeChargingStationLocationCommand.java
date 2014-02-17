@@ -20,6 +20,9 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * Generic class for all commands that change the location ({@link Coordinates} or {@link Address}).
+ */
 public abstract class ChangeChargingStationLocationCommand {
 
     @TargetAggregateIdentifier
@@ -27,6 +30,14 @@ public abstract class ChangeChargingStationLocationCommand {
     private final Coordinates coordinates;
     private final Address address;
 
+    /**
+     * Creates a command object that changes the location of a charging station.
+     *
+     * @param chargingStationId The identifier of the charging station.
+     * @param coordinates The coordinates (latitude/longitude) of the charging station.
+     * @param address The address of the charging station.
+     * @throws java.lang.NullPointerException if either {@code coordinates} or {@code address} is {@code null}.
+     */
     protected ChangeChargingStationLocationCommand(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
         this.chargingStationId = checkNotNull(chargingStationId);
         if (coordinates == null && address == null) {
@@ -36,14 +47,26 @@ public abstract class ChangeChargingStationLocationCommand {
         this.address = address;
     }
 
+    /**
+     * Gets the charging station identifier.
+     * @return the charging station identifier.
+     */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
     }
 
+    /**
+     * Gets the coordinates of the charging station.
+     * @return the coordinates.
+     */
     public Coordinates getCoordinates() {
         return coordinates;
     }
 
+    /**
+     * Gets the address of the charging station.
+     * @return the address.
+     */
     public Address getAddress() {
         return address;
     }

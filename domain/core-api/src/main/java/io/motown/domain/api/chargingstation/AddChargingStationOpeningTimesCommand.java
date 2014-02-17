@@ -17,6 +17,9 @@ package io.motown.domain.api.chargingstation;
 
 import java.util.Set;
 
+/**
+ * Command that is used to add opening times to the existing opening times of the charging station.
+ */
 public final class AddChargingStationOpeningTimesCommand extends ChangeChargingStationOpeningTimesCommand {
     public AddChargingStationOpeningTimesCommand(ChargingStationId chargingStationId, Set<OpeningTime> openingTimes) {
         super(chargingStationId, openingTimes);

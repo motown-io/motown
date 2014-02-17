@@ -15,6 +15,9 @@
  */
 package io.motown.domain.api.chargingstation;
 
+/**
+ * Command that is used to indicate that the location of the charging station has moved to another location.
+ */
 public final class MoveChargingStationCommand extends ChangeChargingStationLocationCommand {
 
     public MoveChargingStationCommand(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {

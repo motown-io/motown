@@ -17,19 +17,38 @@ package io.motown.domain.api.chargingstation;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * The {@code Coordinates} object denotes the physical location in latitude/longitude of a charging station.
+ * @see <a href="http://en.wikipedia.org/wiki/World_Geodetic_System">http://en.wikipedia.org/wiki/World_Geodetic_System</a>
+ */
 public final class Coordinates {
     private final double latitude;
     private final double longitude;
 
+    /**
+     * Constructs a {@code Coordinates} object using a latitude and longitude.
+     *
+     * @param latitude the latitude of the coordinates.
+     * @param longitude the longitude of the coordinates.
+     * @throws java.lang.NullPointerException when one of the paramters is {@code null}.
+     */
     public Coordinates(double latitude, double longitude) {
         this.latitude = checkNotNull(latitude);
         this.longitude = checkNotNull(longitude);
     }
 
+    /**
+     * Gets the latitude of the coordinates.
+     * @return the latitude.
+     */
     public double getLatitude() {
         return latitude;
     }
 
+    /**
+     * Gets the longitude of the coordinates.
+     * @return the longitude.
+     */
     public double getLongitude() {
         return longitude;
     }

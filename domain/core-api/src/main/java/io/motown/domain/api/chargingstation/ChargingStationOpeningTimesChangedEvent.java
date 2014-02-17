@@ -19,19 +19,37 @@ import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * Generic event which is generated when the opening times of a charging station have either been set or added to.
+ */
 public abstract class ChargingStationOpeningTimesChangedEvent {
     private final ChargingStationId chargingStationId;
     private final Set<OpeningTime> openingTimes;
 
+    /**
+     * Creates a new {@code ChargingStationOpeningTimesChangedEvent}.
+     *
+     * @param chargingStationId the identifier of the charging station.
+     * @param openingTimes the new opening times.
+     * @throws java.lang.NullPointerException if one of the parameters is {@code null}.
+     */
     protected ChargingStationOpeningTimesChangedEvent(ChargingStationId chargingStationId, Set<OpeningTime> openingTimes) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.openingTimes = checkNotNull(openingTimes);
     }
 
+    /**
+     * Gets the identifier of the charging station.
+     * @return the charging station identifier.
+     */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
     }
 
+    /**
+     * Gets the opening times.
+     * @return the opening times.
+     */
     public Set<OpeningTime> getOpeningTimes() {
         return openingTimes;
     }

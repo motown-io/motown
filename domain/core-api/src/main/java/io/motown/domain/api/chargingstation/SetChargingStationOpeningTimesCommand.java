@@ -17,6 +17,9 @@ package io.motown.domain.api.chargingstation;
 
 import java.util.Set;
 
+/**
+ * Command that is used to set opening times of the charging station.
+ */
 public final class SetChargingStationOpeningTimesCommand extends ChangeChargingStationOpeningTimesCommand {
     public SetChargingStationOpeningTimesCommand(ChargingStationId chargingStationId, Set<OpeningTime> openingTimes) {
         super(chargingStationId, openingTimes);

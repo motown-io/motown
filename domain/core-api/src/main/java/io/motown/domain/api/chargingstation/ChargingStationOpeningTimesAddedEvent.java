@@ -17,6 +17,9 @@ package io.motown.domain.api.chargingstation;
 
 import java.util.Set;
 
+/**
+ * Event generated when new opening times have been added to existing ones.
+ */
 public final class ChargingStationOpeningTimesAddedEvent extends ChargingStationOpeningTimesChangedEvent {
     public ChargingStationOpeningTimesAddedEvent(ChargingStationId chargingStationId, Set<OpeningTime> openingTimes) {
         super(chargingStationId, openingTimes);

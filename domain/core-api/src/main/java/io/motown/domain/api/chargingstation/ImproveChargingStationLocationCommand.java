@@ -15,6 +15,9 @@
  */
 package io.motown.domain.api.chargingstation;
 
+/**
+ * Command that is used to improve the location of the charging station, e.g. add the coordinates or add a building number to the address.
+ */
 public final class ImproveChargingStationLocationCommand extends ChangeChargingStationLocationCommand {
 
     public ImproveChargingStationLocationCommand(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
