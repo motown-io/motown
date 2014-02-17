@@ -17,43 +17,43 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.*;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class DataTransferEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new DataTransferEvent(null, getVendorId(), getProtocol(), "", "");
+        new DataTransferEvent(null, DATA_TRANSFER_VENDOR, PROTOCOL, "", "");
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithVendorIdNull() {
-        new DataTransferEvent(getChargingStationId(), null, getProtocol(), "", "");
+        new DataTransferEvent(CHARGING_STATION_ID, null, PROTOCOL, "", "");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingEventWithVendorIdEmpty() {
-        new DataTransferEvent(getChargingStationId(), "", getProtocol(), "", "");
+        new DataTransferEvent(CHARGING_STATION_ID, "", PROTOCOL, "", "");
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithProtocolNull() {
-        new DataTransferEvent(getChargingStationId(), getVendorId(), null, "", "");
+        new DataTransferEvent(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, null, "", "");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingEventWithProtocolEmpty() {
-        new DataTransferEvent(getChargingStationId(), getVendorId(), "", "", "");
+        new DataTransferEvent(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, "", "", "");
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithMessageIdNull() {
-        new DataTransferEvent(getChargingStationId(), getVendorId(), getProtocol(), null, "");
+        new DataTransferEvent(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, PROTOCOL, null, "");
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithDataNull() {
-        new DataTransferEvent(getChargingStationId(), getVendorId(), getProtocol(), "", null);
+        new DataTransferEvent(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, PROTOCOL, "", null);
     }
 
 }

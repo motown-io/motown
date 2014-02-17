@@ -19,50 +19,47 @@ import org.junit.Test;
 
 import java.util.Date;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getTextualToken;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static org.junit.Assert.assertEquals;
 
 public class ReserveNowRequestedForUnreservableChargingStationEventTest {
-
-    private static final EvseId EVSE_ID = new EvseId(1);
 
     private static final Date EXPIRY_DATE = new Date();
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ReserveNowRequestedForUnreservableChargingStationEvent(null, EVSE_ID, getTextualToken(), EXPIRY_DATE, getTextualToken());
+        new ReserveNowRequestedForUnreservableChargingStationEvent(null, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, IDENTIFYING_TOKEN);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithEvseIdNull() {
-        new ReserveNowRequestedForUnreservableChargingStationEvent(getChargingStationId(), null, getTextualToken(), EXPIRY_DATE, getTextualToken());
+        new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, null, IDENTIFYING_TOKEN, EXPIRY_DATE, IDENTIFYING_TOKEN);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithTokenNull() {
-        new ReserveNowRequestedForUnreservableChargingStationEvent(getChargingStationId(), EVSE_ID, null, EXPIRY_DATE, getTextualToken());
+        new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, EVSE_ID, null, EXPIRY_DATE, IDENTIFYING_TOKEN);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithExpiryDateNull() {
-        new ReserveNowRequestedForUnreservableChargingStationEvent(getChargingStationId(), EVSE_ID, getTextualToken(), null, getTextualToken());
+        new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, null, IDENTIFYING_TOKEN);
     }
 
     @Test
     public void noNullPointerExceptionThrownWhenCreatingEventWithParentTokenNull() {
-        new ReserveNowRequestedForUnreservableChargingStationEvent(getChargingStationId(), EVSE_ID, getTextualToken(), EXPIRY_DATE, null);
+        new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, null);
     }
 
     @Test
     public void testAllGetters() {
-        ReserveNowRequestedForUnreservableChargingStationEvent event = new ReserveNowRequestedForUnreservableChargingStationEvent(getChargingStationId(), EVSE_ID, getTextualToken(), EXPIRY_DATE, getTextualToken());
+        ReserveNowRequestedForUnreservableChargingStationEvent event = new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, IDENTIFYING_TOKEN);
 
-        assertEquals(getChargingStationId(), event.getChargingStationId());
+        assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
         assertEquals(EXPIRY_DATE, event.getExpiryDate());
         assertEquals(EVSE_ID, event.getEvseId());
-        assertEquals(getTextualToken(), event.getIdentifyingToken());
-        assertEquals(getTextualToken(), event.getParentIdentifyingToken());
+        assertEquals(IDENTIFYING_TOKEN, event.getIdentifyingToken());
+        assertEquals(IDENTIFYING_TOKEN, event.getParentIdentifyingToken());
     }
 
 }

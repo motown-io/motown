@@ -19,23 +19,22 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getNumberedTransactionId;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class ChargingStationSentMeterValuesEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ChargingStationSentMeterValuesEvent(null, getNumberedTransactionId(), new EvseId(1), new ArrayList<MeterValue>());
+        new ChargingStationSentMeterValuesEvent(null, TRANSACTION_ID, EVSE_ID, new ArrayList<MeterValue>());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithNullEvseId() {
-        new ChargingStationSentMeterValuesEvent(getChargingStationId(), getNumberedTransactionId(), null, new ArrayList<MeterValue>());
+        new ChargingStationSentMeterValuesEvent(CHARGING_STATION_ID, TRANSACTION_ID, null, new ArrayList<MeterValue>());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithMeterValuesNull() {
-        new ChargingStationSentMeterValuesEvent(getChargingStationId(), getNumberedTransactionId(), new EvseId(1), null);
+        new ChargingStationSentMeterValuesEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, null);
     }
 }

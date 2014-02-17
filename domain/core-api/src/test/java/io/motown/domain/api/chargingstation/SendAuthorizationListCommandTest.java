@@ -17,30 +17,29 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.Collections;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 
 public class SendAuthorizationListCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new SendAuthorizationListCommand(null, new ArrayList<IdentifyingToken>(), 1, "", AuthorizationListUpdateType.FULL);
+        new SendAuthorizationListCommand(null, Collections.<IdentifyingToken>emptyList(), 1, "", AuthorizationListUpdateType.FULL);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithTokensNull() {
-        new SendAuthorizationListCommand(getChargingStationId(), null, 1, "", AuthorizationListUpdateType.FULL);
+        new SendAuthorizationListCommand(CHARGING_STATION_ID, null, 1, "", AuthorizationListUpdateType.FULL);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithHashNull() {
-        new SendAuthorizationListCommand(getChargingStationId(), new ArrayList<IdentifyingToken>(), 1, null, AuthorizationListUpdateType.FULL);
+        new SendAuthorizationListCommand(CHARGING_STATION_ID, Collections.<IdentifyingToken>emptyList(), 1, null, AuthorizationListUpdateType.FULL);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithUpdateTypeNull() {
-        new SendAuthorizationListCommand(getChargingStationId(), new ArrayList<IdentifyingToken>(), 1, "", null);
+        new SendAuthorizationListCommand(CHARGING_STATION_ID, Collections.<IdentifyingToken>emptyList(), 1, "", null);
     }
 }

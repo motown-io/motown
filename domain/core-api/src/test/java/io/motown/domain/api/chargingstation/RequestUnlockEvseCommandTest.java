@@ -17,17 +17,18 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.EVSE_ID;
 
 public class RequestUnlockEvseCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new RequestUnlockEvseCommand(null, new EvseId(1));
+        new RequestUnlockEvseCommand(null, EVSE_ID);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithEvseIdNull() {
-        new RequestUnlockEvseCommand(getChargingStationId(), null);
+        new RequestUnlockEvseCommand(CHARGING_STATION_ID, null);
     }
 }

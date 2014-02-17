@@ -17,24 +17,24 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getProtocol;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.PROTOCOL;
 
 public class DiagnosticsRequestedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithChargingStationIdNull() {
-        new DiagnosticsRequestedEvent(null, getProtocol(), "ftp://abc.com");
+        new DiagnosticsRequestedEvent(null, PROTOCOL, "ftp://abc.com");
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithProtocolNull() {
-        new DiagnosticsRequestedEvent(getChargingStationId(), null, "ftp://abc.com");
+        new DiagnosticsRequestedEvent(CHARGING_STATION_ID, null, "ftp://abc.com");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithEmptyProtocol() {
-        new DiagnosticsRequestedEvent(getChargingStationId(), "", "ftp://abc.com");
+        new DiagnosticsRequestedEvent(CHARGING_STATION_ID, "", "ftp://abc.com");
     }
 
 }

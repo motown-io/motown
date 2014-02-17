@@ -17,31 +17,29 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getProtocol;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class NumberedTransactionIdTest {
 
-    public static final int TRANSACTION_NUMBER = 123;
     public static final int NEGATIVE_TRANSACTION_NUMBER = -123;
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithChargingStationIdNull() {
-        new NumberedTransactionId(null, getProtocol(), TRANSACTION_NUMBER);
+        new NumberedTransactionId(null, PROTOCOL, TRANSACTION_NUMBER);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithProtocolNull() {
-        new NumberedTransactionId(getChargingStationId(), null, TRANSACTION_NUMBER);
+        new NumberedTransactionId(CHARGING_STATION_ID, null, TRANSACTION_NUMBER);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithEmptyProtocol() {
-        new NumberedTransactionId(getChargingStationId(), "", TRANSACTION_NUMBER);
+        new NumberedTransactionId(CHARGING_STATION_ID, "", TRANSACTION_NUMBER);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithNegativeNumber() {
-        new NumberedTransactionId(getChargingStationId(), getProtocol(), NEGATIVE_TRANSACTION_NUMBER);
+        new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL, NEGATIVE_TRANSACTION_NUMBER);
     }
 }

@@ -17,7 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 
 public class RequestDiagnosticsCommandTest {
 
@@ -28,6 +28,6 @@ public class RequestDiagnosticsCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void illegalArgumentExceptionThrownWhenCreatingCommandWithoutUploadLocation() {
-        new RequestDiagnosticsCommand(getChargingStationId(), null, null, null, null, null);
+        new RequestDiagnosticsCommand(CHARGING_STATION_ID, null, null, null, null, null);
     }
 }

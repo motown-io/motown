@@ -17,28 +17,27 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getNumberedTransactionId;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class StopTransactionRequestedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new StopTransactionRequestedEvent(null, "OCPPS15", getNumberedTransactionId());
+        new StopTransactionRequestedEvent(null, PROTOCOL, TRANSACTION_ID);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullProtocol() {
-        new StopTransactionRequestedEvent(getChargingStationId(), null, getNumberedTransactionId());
+        new StopTransactionRequestedEvent(CHARGING_STATION_ID, null, TRANSACTION_ID);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithEmptyProtocol() {
-        new StopTransactionRequestedEvent(getChargingStationId(), "", getNumberedTransactionId());
+        new StopTransactionRequestedEvent(CHARGING_STATION_ID, "", TRANSACTION_ID);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTransactionId() {
-        new StopTransactionRequestedEvent(getChargingStationId(), "OCPPS15", null);
+        new StopTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, null);
     }
 }

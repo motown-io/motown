@@ -17,36 +17,32 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getVendorId;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class IncomingDataTransferReceivedEventTest {
 
-    private static final String MESSAGE_ID = "MessageId";
-    private static final String DATA_TO_TRANSFER = "Data to transfer";
-
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenChargingStationIdNull() {
-        new IncomingDataTransferReceivedEvent(null, getVendorId(), MESSAGE_ID, DATA_TO_TRANSFER);
+        new IncomingDataTransferReceivedEvent(null, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenVendorIdNull() {
-        new IncomingDataTransferReceivedEvent(getChargingStationId(), null, MESSAGE_ID, DATA_TO_TRANSFER);
+        new IncomingDataTransferReceivedEvent(CHARGING_STATION_ID, null, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenVendorIdEmpty() {
-        new IncomingDataTransferReceivedEvent(getChargingStationId(), "", MESSAGE_ID, DATA_TO_TRANSFER);
+        new IncomingDataTransferReceivedEvent(CHARGING_STATION_ID, "", DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenMessageIdNull() {
-        new IncomingDataTransferReceivedEvent(getChargingStationId(), getVendorId(), null, DATA_TO_TRANSFER);
+        new IncomingDataTransferReceivedEvent(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, null, DATA_TRANSFER_DATA);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenDataNull() {
-        new IncomingDataTransferReceivedEvent(getChargingStationId(), getVendorId(), MESSAGE_ID, null);
+        new IncomingDataTransferReceivedEvent(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, null);
     }
 }

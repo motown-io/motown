@@ -17,37 +17,37 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getProtocol;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.PROTOCOL;
 
 public class FirmwareUpdateRequestedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new FirmwareUpdateRequestedEvent(null, getProtocol(), "https://somewhere.nl", new Date(), new HashMap());
+        new FirmwareUpdateRequestedEvent(null, PROTOCOL, "https://somewhere.nl", new Date(), Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullProtocol() {
-        new FirmwareUpdateRequestedEvent(getChargingStationId(), null, "https://somewhere.nl", new Date(), new HashMap());
+        new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, null, "https://somewhere.nl", new Date(), Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullDownloadLocation() {
-        new FirmwareUpdateRequestedEvent(getChargingStationId(), getProtocol(), null, new Date(), new HashMap());
+        new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, null, new Date(), Collections.<String, String>emptyMap());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithEmptyDownloadLocation() {
-        new FirmwareUpdateRequestedEvent(getChargingStationId(), getProtocol(), "", new Date(), new HashMap());
+        new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, "", new Date(), Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullRetrieveDate() {
-        new FirmwareUpdateRequestedEvent(getChargingStationId(), getProtocol(), "https://somewhere.nl", null, new HashMap());
+        new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, "https://somewhere.nl", null, Collections.<String, String>emptyMap());
     }
 
 }

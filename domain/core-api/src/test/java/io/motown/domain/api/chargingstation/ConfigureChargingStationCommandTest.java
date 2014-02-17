@@ -17,14 +17,11 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Collections;
+
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class ConfigureChargingStationCommandTest {
-
-    public static final int MAX_AMP_32 = 32;
-    public static final int PHASE_3 = 3;
-    public static final int VOLTAGE_230 = 230;
-    public static final ChargingStationId CHARGING_STATION_ID = new ChargingStationId("CS-001");
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNullAndEvses() {
@@ -44,20 +41,14 @@ public class ConfigureChargingStationCommandTest {
     //TODO refactor
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedOperationExceptionThrownWhenModifyingEvses() {
-        Set<Evse> evses = new HashSet<>();
+        ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(CHARGING_STATION_ID, EVSES);
 
-        ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(CHARGING_STATION_ID, evses);
-
-        List<Connector> connectors = new ArrayList<>();
-        connectors.add(new Connector(MAX_AMP_32, PHASE_3, VOLTAGE_230, ChargingProtocol.MODE3, Current.AC, ConnectorType.C_TYPE_2));
-        command.getEvses().add(new Evse(new EvseId(1), connectors));
+        command.getEvses().add(new Evse(EVSE_ID, CONNECTORS));
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedOperationExceptionThrownWhenModifyingConfigurationItems() {
-        Map<String, String> configurationItems = new HashMap<>();
-
-        ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(CHARGING_STATION_ID, configurationItems);
+        ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(CHARGING_STATION_ID, CONFIGURATION_ITEMS);
 
         command.getSettings().put("configItem", "configValue");
     }

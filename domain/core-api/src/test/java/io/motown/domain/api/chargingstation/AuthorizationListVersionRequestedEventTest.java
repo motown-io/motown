@@ -17,13 +17,12 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getProtocol;
-
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.PROTOCOL;
 
 public class AuthorizationListVersionRequestedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new AuthorizationListVersionRequestedEvent(null, getProtocol());
+        new AuthorizationListVersionRequestedEvent(null, PROTOCOL);
     }
 }

@@ -19,27 +19,27 @@ import org.junit.Test;
 
 import java.util.Date;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.*;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class StopTransactionCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new StopTransactionCommand(null, getNumberedTransactionId(), getTextualToken(), 1, new Date());
+        new StopTransactionCommand(null, TRANSACTION_ID, IDENTIFYING_TOKEN, 1, new Date());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTransactionId() {
-        new StopTransactionCommand(getChargingStationId(), null, getTextualToken(), 1, new Date());
+        new StopTransactionCommand(CHARGING_STATION_ID, null, IDENTIFYING_TOKEN, 1, new Date());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullIdentifyingToken() {
-        new StopTransactionCommand(getChargingStationId(), getNumberedTransactionId(), null, 1, new Date());
+        new StopTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, null, 1, new Date());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTimestamp() {
-        new StopTransactionCommand(getChargingStationId(), getNumberedTransactionId(), getTextualToken(), 1, null);
+        new StopTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, 1, null);
     }
 }

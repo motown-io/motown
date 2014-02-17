@@ -17,25 +17,24 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.Collections;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getNumberedTransactionId;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class ProcessMeterValuesCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new ProcessMeterValueCommand(null, getNumberedTransactionId(), new EvseId(1), new ArrayList<MeterValue>());
+        new ProcessMeterValueCommand(null, TRANSACTION_ID, EVSE_ID, Collections.<MeterValue>emptyList());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithEvseIdNull() {
-        new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), null, new ArrayList<MeterValue>());
+        new ProcessMeterValueCommand(CHARGING_STATION_ID, TRANSACTION_ID, null, Collections.<MeterValue>emptyList());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithMeterValuesNull() {
-        new ProcessMeterValueCommand(getChargingStationId(), getNumberedTransactionId(), new EvseId(1), null);
+        new ProcessMeterValueCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, null);
     }
 }

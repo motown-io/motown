@@ -19,27 +19,27 @@ import org.junit.Test;
 
 import java.util.Date;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.*;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class StartTransactionCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new StartTransactionCommand(null, getNumberedTransactionId(), new EvseId(1), getTextualToken(), 1, new Date());
+        new StartTransactionCommand(null, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 1, new Date());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTransactionId() {
-        new StartTransactionCommand(getChargingStationId(), null, new EvseId(1), getTextualToken(), 1, new Date());
+        new StartTransactionCommand(CHARGING_STATION_ID, null, EVSE_ID, IDENTIFYING_TOKEN, 1, new Date());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullIdentifyingToken() {
-        new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), new EvseId(1), null, 1, new Date());
+        new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, null, 1, new Date());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTimestamp() {
-        new StartTransactionCommand(getChargingStationId(), getNumberedTransactionId(), new EvseId(1), getTextualToken(), 1, null);
+        new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 1, null);
     }
 }

@@ -18,28 +18,25 @@ package io.motown.domain.api.chargingstation;
 import org.junit.Test;
 
 import java.util.HashMap;
-import java.util.Map;
+
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class ConfiguredChargingStationBootedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNullAndAttributes() {
-        new ConfiguredChargingStationBootedEvent(null, "protocol", new HashMap<String, String>());
+        new ConfiguredChargingStationBootedEvent(null, PROTOCOL, new HashMap<String, String>());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdAndAttributesNull() {
-        new ConfiguredChargingStationBootedEvent(new ChargingStationId("CS-001"), "protocol", null);
+        new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, null);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedOperationExceptionThrownWhenModifyingAttributes() {
-        Map<String, String> attributes = new HashMap<>();
-        attributes.put("vendor", "VENDOR");
-        attributes.put("model", "MODEL");
+        ConfiguredChargingStationBootedEvent command = new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES);
 
-        ConfiguredChargingStationBootedEvent command = new ConfiguredChargingStationBootedEvent(new ChargingStationId("CS-001"), "protocol", attributes);
-
-        command.getAttributes().put("vendor", "ANOTHER_VENDOR");
+        command.getAttributes().put("foo", "bar");
     }
 }

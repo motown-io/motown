@@ -17,7 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 
 public class FirmwareStatusUpdatedEventTest {
 
@@ -28,6 +28,6 @@ public class FirmwareStatusUpdatedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithoutStatus() {
-        new FirmwareStatusUpdatedEvent(getChargingStationId(), null);
+        new FirmwareStatusUpdatedEvent(CHARGING_STATION_ID, null);
     }
 }

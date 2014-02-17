@@ -17,7 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 
 public class ChangeConfigurationCommandTest {
 
@@ -31,12 +31,12 @@ public class ChangeConfigurationCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithKeyNull() {
-        new ChangeConfigurationCommand(getChargingStationId(), null, VALUE);
+        new ChangeConfigurationCommand(CHARGING_STATION_ID, null, VALUE);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithValueNull() {
-        new ChangeConfigurationCommand(getChargingStationId(), KEY, null);
+        new ChangeConfigurationCommand(CHARGING_STATION_ID, KEY, null);
     }
 
 }

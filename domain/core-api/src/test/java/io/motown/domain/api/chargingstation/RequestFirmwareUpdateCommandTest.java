@@ -17,35 +17,35 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 
 public class RequestFirmwareUpdateCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new RequestFirmwareUpdateCommand(null, "https://somewhere.nl", new Date(), new HashMap());
+        new RequestFirmwareUpdateCommand(null, "https://somewhere.nl", new Date(), Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullDownloadLocation() {
-        new RequestFirmwareUpdateCommand(getChargingStationId(), null, new Date(), new HashMap());
+        new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, null, new Date(), Collections.<String, String>emptyMap());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithEmptyDownloadLocation() {
-        new RequestFirmwareUpdateCommand(getChargingStationId(), "", new Date(), new HashMap());
+        new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, "", new Date(), Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullRetrieveDate() {
-        new RequestFirmwareUpdateCommand(getChargingStationId(), "https://somewhere.nl", null, new HashMap());
+        new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, "https://somewhere.nl", null, Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullAttributes() {
-        new RequestFirmwareUpdateCommand(getChargingStationId(), "https://somewhere.nl", new Date(), null);
+        new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, "https://somewhere.nl", new Date(), null);
     }
 }

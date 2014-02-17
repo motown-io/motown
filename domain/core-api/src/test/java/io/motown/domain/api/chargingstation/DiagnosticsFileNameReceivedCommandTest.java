@@ -17,7 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 
 public class DiagnosticsFileNameReceivedCommandTest {
 
@@ -28,6 +28,6 @@ public class DiagnosticsFileNameReceivedCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithDiagnosticsFileNameNull() {
-        new DiagnosticsFileNameReceivedCommand(getChargingStationId(), null);
+        new DiagnosticsFileNameReceivedCommand(CHARGING_STATION_ID, null);
     }
 }

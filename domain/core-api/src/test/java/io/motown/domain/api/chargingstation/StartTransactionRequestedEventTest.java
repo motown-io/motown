@@ -17,33 +17,32 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getTextualToken;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class StartTransactionRequestedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new StartTransactionRequestedEvent(null, "OCPPS15", getTextualToken(), new EvseId(1));
+        new StartTransactionRequestedEvent(null, PROTOCOL, IDENTIFYING_TOKEN, EVSE_ID);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullProtocol() {
-        new StartTransactionRequestedEvent(getChargingStationId(), null, getTextualToken(), new EvseId(1));
+        new StartTransactionRequestedEvent(CHARGING_STATION_ID, null, IDENTIFYING_TOKEN, EVSE_ID);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithEmptyProtocol() {
-        new StartTransactionRequestedEvent(getChargingStationId(), "", getTextualToken(), new EvseId(1));
+        new StartTransactionRequestedEvent(CHARGING_STATION_ID, "", IDENTIFYING_TOKEN, EVSE_ID);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullIdentifyingToken() {
-        new StartTransactionRequestedEvent(getChargingStationId(), "OCPPS15", null, new EvseId(1));
+        new StartTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, null, EVSE_ID);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithEvseIdNull() {
-        new StartTransactionRequestedEvent(getChargingStationId(), "OCPPS15", getTextualToken(), null);
+        new StartTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, IDENTIFYING_TOKEN, null);
     }
 }

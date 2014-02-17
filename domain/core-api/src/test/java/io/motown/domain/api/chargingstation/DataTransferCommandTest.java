@@ -17,34 +17,34 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getVendorId;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.DATA_TRANSFER_VENDOR;
 
 public class DataTransferCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new DataTransferCommand(null, getVendorId(), "", "");
+        new DataTransferCommand(null, DATA_TRANSFER_VENDOR, "", "");
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithVendorIdNull() {
-        new DataTransferCommand(getChargingStationId(), null, "", "");
+        new DataTransferCommand(CHARGING_STATION_ID, null, "", "");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingCommandWithVendorIdEmpty() {
-        new DataTransferCommand(getChargingStationId(), "", "", "");
+        new DataTransferCommand(CHARGING_STATION_ID, "", "", "");
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithMessageIdNull() {
-        new DataTransferCommand(getChargingStationId(), getVendorId(), null, "");
+        new DataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, null, "");
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithDataNull() {
-        new DataTransferCommand(getChargingStationId(), getVendorId(), "", null);
+        new DataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, "", null);
     }
 
 }

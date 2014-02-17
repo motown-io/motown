@@ -17,36 +17,32 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getVendorId;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class IncomingDataTransferCommandTest {
 
-    private static final String MESSAGE_ID = "MessageId";
-    private static final String DATA_TO_TRANSFER = "Data to transfer";
-
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenChargingStationIdNull() {
-        new IncomingDataTransferCommand(null, getVendorId(), MESSAGE_ID, DATA_TO_TRANSFER);
+        new IncomingDataTransferCommand(null, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenVendorIdNull() {
-        new IncomingDataTransferCommand(getChargingStationId(), null, MESSAGE_ID, DATA_TO_TRANSFER);
+        new IncomingDataTransferCommand(CHARGING_STATION_ID, null, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenVendorIdEmpty() {
-        new IncomingDataTransferCommand(getChargingStationId(), "", MESSAGE_ID, DATA_TO_TRANSFER);
+        new IncomingDataTransferCommand(CHARGING_STATION_ID, "", DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenMessageIdNull() {
-        new IncomingDataTransferCommand(getChargingStationId(), getVendorId(), null, DATA_TO_TRANSFER);
+        new IncomingDataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, null, DATA_TRANSFER_DATA);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenDataNull() {
-        new IncomingDataTransferCommand(getChargingStationId(), getVendorId(), MESSAGE_ID, null);
+        new IncomingDataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, null);
     }
 }

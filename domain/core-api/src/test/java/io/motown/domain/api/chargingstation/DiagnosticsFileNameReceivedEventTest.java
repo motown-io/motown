@@ -17,7 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 
 public class DiagnosticsFileNameReceivedEventTest {
 
@@ -28,12 +28,12 @@ public class DiagnosticsFileNameReceivedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithFileNameNull() {
-        new DiagnosticsFileNameReceivedEvent(getChargingStationId(), null);
+        new DiagnosticsFileNameReceivedEvent(CHARGING_STATION_ID, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullPointerExceptionThrownWhenCreatingWithFileNameEmpty() {
-        new DiagnosticsFileNameReceivedEvent(getChargingStationId(), "");
+        new DiagnosticsFileNameReceivedEvent(CHARGING_STATION_ID, "");
     }
 
 }

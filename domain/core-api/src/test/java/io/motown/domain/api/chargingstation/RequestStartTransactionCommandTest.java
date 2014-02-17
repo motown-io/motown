@@ -17,18 +17,17 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getTextualToken;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class RequestStartTransactionCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new RequestStartTransactionCommand(null, getTextualToken(), new EvseId(1));
+        new RequestStartTransactionCommand(null, IDENTIFYING_TOKEN, EVSE_ID);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTransactionId() {
-        new RequestStartTransactionCommand(getChargingStationId(), null, new EvseId(1));
+        new RequestStartTransactionCommand(CHARGING_STATION_ID, null, EVSE_ID);
     }
 }

@@ -17,41 +17,40 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.Collections;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getProtocol;
-
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.PROTOCOL;
 
 public class SendAuthorizationListEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new SendAuthorizationListRequestedEvent(null, getProtocol(), new ArrayList<IdentifyingToken>(), 1, null, AuthorizationListUpdateType.FULL);
+        new SendAuthorizationListRequestedEvent(null, PROTOCOL, Collections.<IdentifyingToken>emptyList(), 1, null, AuthorizationListUpdateType.FULL);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithProtocolNull() {
-        new SendAuthorizationListRequestedEvent(getChargingStationId(), null, new ArrayList<IdentifyingToken>(), 1, null, AuthorizationListUpdateType.FULL);
+        new SendAuthorizationListRequestedEvent(CHARGING_STATION_ID, null, Collections.<IdentifyingToken>emptyList(), 1, null, AuthorizationListUpdateType.FULL);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingEventWithProtocolEmpty() {
-        new SendAuthorizationListRequestedEvent(getChargingStationId(), "", new ArrayList<IdentifyingToken>(), 1, null, AuthorizationListUpdateType.FULL);
+        new SendAuthorizationListRequestedEvent(CHARGING_STATION_ID, "", Collections.<IdentifyingToken>emptyList(), 1, null, AuthorizationListUpdateType.FULL);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithTokensNull() {
-        new SendAuthorizationListRequestedEvent(getChargingStationId(), getProtocol(), null, 1, "", AuthorizationListUpdateType.FULL);
+        new SendAuthorizationListRequestedEvent(CHARGING_STATION_ID, PROTOCOL, null, 1, "", AuthorizationListUpdateType.FULL);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithHashNull() {
-        new SendAuthorizationListRequestedEvent(getChargingStationId(), getProtocol(), new ArrayList<IdentifyingToken>(), 1, null, AuthorizationListUpdateType.FULL);
+        new SendAuthorizationListRequestedEvent(CHARGING_STATION_ID, PROTOCOL, Collections.<IdentifyingToken>emptyList(), 1, null, AuthorizationListUpdateType.FULL);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithUpdateTypeNull() {
-        new SendAuthorizationListRequestedEvent(getChargingStationId(), getProtocol(), new ArrayList<IdentifyingToken>(), 1, null, null);
+        new SendAuthorizationListRequestedEvent(CHARGING_STATION_ID, PROTOCOL, Collections.<IdentifyingToken>emptyList(), 1, null, null);
     }
 }

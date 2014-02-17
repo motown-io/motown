@@ -20,7 +20,7 @@ import org.junit.Test;
 import java.util.Collections;
 import java.util.Date;
 
-import static io.motown.domain.api.chargingstation.CoreApiTestUtils.getChargingStationId;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 
 public class ChargingStationStatusNotificationCommandTest {
 
@@ -31,16 +31,16 @@ public class ChargingStationStatusNotificationCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithStatusNull() {
-        new ChargingStationStatusNotificationCommand(getChargingStationId(), null, new Date(), Collections.<String, String>emptyMap());
+        new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, null, new Date(), Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithTimestampNull() {
-        new ChargingStationStatusNotificationCommand(getChargingStationId(), ComponentStatus.AVAILABLE, null, Collections.<String, String>emptyMap());
+        new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, null, Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithAttributesNull() {
-        new ChargingStationStatusNotificationCommand(getChargingStationId(), ComponentStatus.AVAILABLE, new Date(), null);
+        new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, new Date(), null);
     }
 }
