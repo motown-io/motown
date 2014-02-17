@@ -21,10 +21,17 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import io.motown.domain.api.chargingstation.Day;
 import io.motown.domain.api.chargingstation.OpeningTime;
+import io.motown.domain.api.chargingstation.TimeOfDay;
 
 import java.lang.reflect.Type;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class OpeningTimeTypeAdapter implements TypeAdapter<OpeningTime> {
+    private static final Pattern TIME_OF_DAY = Pattern.compile("^([01]?[0-9]|2[0-3]):([0-5][0-9])$");
+    private static final int HOUR_GROUP = 1;
+    private static final int MINUTES_GROUP = 2;
+
     @Override
     public Class<?> getAdaptedType() {
         return OpeningTime.class;
@@ -44,8 +51,20 @@ public class OpeningTimeTypeAdapter implements TypeAdapter<OpeningTime> {
         }
 
         Day day = Day.fromValue(obj.getAsJsonPrimitive("day").getAsInt());
-        Integer timeStart = obj.getAsJsonPrimitive("timeStart").getAsInt();
-        Integer timeStop = obj.getAsJsonPrimitive("timeStop").getAsInt();
+        String timeStartStr = obj.getAsJsonPrimitive("timeStart").getAsString();
+        String timeStopStr = obj.getAsJsonPrimitive("timeStop").getAsString();
+
+        TimeOfDay timeStart;
+        TimeOfDay timeStop;
+
+        Matcher start = TIME_OF_DAY.matcher(timeStartStr);
+        Matcher stop = TIME_OF_DAY.matcher(timeStopStr);
+        if (start.matches() && stop.matches()) {
+            timeStart = new TimeOfDay(Integer.parseInt(start.group(HOUR_GROUP)), Integer.parseInt(start.group(MINUTES_GROUP)));
+            timeStop = new TimeOfDay(Integer.parseInt(stop.group(HOUR_GROUP)), Integer.parseInt(stop.group(MINUTES_GROUP)));
+        } else {
+            throw new JsonParseException("timeStart and timeStop must be a valid 24-hour time (00:00 - 23:59)");
+        }
 
         return new OpeningTime(day, timeStart, timeStop);
     }

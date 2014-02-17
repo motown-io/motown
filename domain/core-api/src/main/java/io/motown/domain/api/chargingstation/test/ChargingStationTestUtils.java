@@ -318,8 +318,8 @@ public final class ChargingStationTestUtils {
      * The default opening times.
      */
     public static final Set<OpeningTime> OPENING_TIMES = ImmutableSet.<OpeningTime>builder()
-            .add(new OpeningTime(Day.MONDAY, 200, 400))
-            .add(new OpeningTime(Day.TUESDAY, 100, 400))
+            .add(new OpeningTime(Day.MONDAY, new TimeOfDay(12,0), new TimeOfDay(15,0)))
+            .add(new OpeningTime(Day.TUESDAY, new TimeOfDay(11,0), new TimeOfDay(17,0)))
             .build();
 
     /**

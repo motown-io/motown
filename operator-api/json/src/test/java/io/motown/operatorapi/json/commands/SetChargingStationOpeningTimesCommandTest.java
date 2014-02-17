@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,19 +35,31 @@ public class SetChargingStationOpeningTimesCommandTest {
 
     @Test
     public void testSetOpeningTimes() {
-        JsonObject commandObject = gson.fromJson("{openingTimes:[{day:1,timeStart:200,timeStop:400}]}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{openingTimes:[{day:1,timeStart:'12:00',timeStop:'15:00'}]}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
     }
 
     @Test(expected = NullPointerException.class)
     public void testSetOpeningTimesInvalidDay() {
-        JsonObject commandObject = gson.fromJson("{openingTimes:[{day:8,timeStart:200,timeStop:400}]}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{openingTimes:[{day:8,timeStart:'12:00',timeStop:'15:00'}]}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
     }
 
     @Test(expected = NumberFormatException.class)
     public void testSetOpeningTimesInvalidArgument() {
-        JsonObject commandObject = gson.fromJson("{openingTimes:[{day:'MONDAY',timeStart:200,timeStop:400}]}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{openingTimes:[{day:'MONDAY',timeStart:'12:00',timeStop:'15:00'}]}", JsonObject.class);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+    }
+
+    @Test(expected = JsonParseException.class)
+    public void testSetOpeningTimesInvalidTime() {
+        JsonObject commandObject = gson.fromJson("{openingTimes:[{day:'2',timeStart:'12:60',timeStop:'15:00'}]}", JsonObject.class);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+    }
+
+    @Test(expected = JsonParseException.class)
+    public void testSetOpeningTimesInvalidTime2() {
+        JsonObject commandObject = gson.fromJson("{openingTimes:[{day:'2',timeStart:'24:00',timeStop:'15:00'}]}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
     }
 }

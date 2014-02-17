@@ -19,10 +19,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class OpeningTime {
     private final Day day;
-    private final Integer timeStart;
-    private final Integer timeStop;
+    private final TimeOfDay timeStart;
+    private final TimeOfDay timeStop;
 
-    public OpeningTime(Day day, Integer timeStart, Integer timeStop) {
+    public OpeningTime(Day day, TimeOfDay timeStart, TimeOfDay timeStop) {
         this.day = checkNotNull(day);
         this.timeStart = checkNotNull(timeStart);
         this.timeStop = checkNotNull(timeStop);
@@ -32,11 +32,11 @@ public final class OpeningTime {
         return day;
     }
 
-    public Integer getTimeStart() {
+    public TimeOfDay getTimeStart() {
         return timeStart;
     }
 
-    public Integer getTimeStop() {
+    public TimeOfDay getTimeStop() {
         return timeStop;
     }
 }
