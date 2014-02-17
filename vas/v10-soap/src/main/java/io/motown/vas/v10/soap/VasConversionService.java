@@ -184,26 +184,13 @@ public class VasConversionService {
         }
     }
 
+    /**
+     * Gets the {@code ChargePointStatus} from a charging station state.
+     *
+     * @param chargingStation charging station.
+     * @return charge point status.
+     */
     public ChargePointStatus getStatus(ChargingStation chargingStation) {
-        ChargePointStatus chargePointStatus = ChargePointStatus.UNKNOWN;
-        State state = chargingStation.getState();
-
-        if (state != null) {
-            switch(state) {
-                case AVAILABLE:
-                    chargePointStatus = ChargePointStatus.AVAILABLE;
-                    break;
-                case OCCUPIED:
-                    chargePointStatus = ChargePointStatus.OCCUPIED;
-                    break;
-                case UNAVAILABLE:
-                    chargePointStatus = ChargePointStatus.UNAVAILABLE;
-                    break;
-                default:
-                    chargePointStatus = ChargePointStatus.UNKNOWN;
-                    break;
-            }
-        }
-        return chargePointStatus;
+        return ChargePointStatus.fromValue(chargingStation.getState().value());
     }
 }

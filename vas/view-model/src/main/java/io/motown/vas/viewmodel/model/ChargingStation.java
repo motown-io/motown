@@ -74,7 +74,7 @@ public class ChargingStation {
 
     private String operator;
 
-    private State state;
+    private VasChargingStationStatus state = VasChargingStationStatus.UNKNOWN;
 
     private ChargingStation() {
         // Private no-arg constructor for Hibernate.
@@ -226,7 +226,7 @@ public class ChargingStation {
         return longitude;
     }
 
-    public State getState() {
+    public VasChargingStationStatus getState() {
         return state;
     }
 
@@ -246,8 +246,8 @@ public class ChargingStation {
         this.longitude = longitude;
     }
 
-    public void setState(State state) {
-        this.state = state;
+    public void setState(VasChargingStationStatus state) {
+        this.state = state == null ? VasChargingStationStatus.UNKNOWN : state;
     }
 
     public Set<Evse> getEvses() {
