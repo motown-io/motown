@@ -23,16 +23,11 @@ import io.motown.domain.api.chargingstation.RequestStatus;
 import io.motown.ocpp.v12.soap.chargepoint.schema.*;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp12Client;
-import org.apache.cxf.binding.soap.Soap12;
-import org.apache.cxf.binding.soap.SoapBindingConfiguration;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.xml.ws.BindingProvider;
 import java.util.Date;
 
 @Component
@@ -42,6 +37,9 @@ public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Cli
 
     @Autowired
     private DomainService domainService;
+
+    @Autowired
+    private ChargingStationProxyFactory chargingStationProxyFactory;
 
     @Override
     public RequestStatus startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, EvseId evseId) {
@@ -204,6 +202,14 @@ public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Cli
         LOG.info("Update firmware on {} has been requested", id.getId());
     }
 
+    public void setDomainService(DomainService domainService) {
+        this.domainService = domainService;
+    }
+
+    public void setChargingStationProxyFactory(ChargingStationProxyFactory chargingStationProxyFactory) {
+        this.chargingStationProxyFactory = chargingStationProxyFactory;
+    }
+
     private RequestStatus reset(ChargingStationId id, ResetType type) {
         ChargePointService chargePointService = this.createChargingStationService(id);
 
@@ -241,22 +247,8 @@ public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Cli
      * @param id charging station identifier
      * @return charging station web service proxy
      */
-    protected ChargePointService createChargingStationService(ChargingStationId id) {
-        JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
-        factory.setServiceClass(ChargePointService.class);
-
-        factory.setAddress(domainService.retrieveChargingStationAddress(id));
-
-        SoapBindingConfiguration conf = new SoapBindingConfiguration();
-        conf.setVersion(Soap12.getInstance());
-        factory.setBindingConfig(conf);
-        factory.getFeatures().add(new WSAddressingFeature());
-        ChargePointService chargePointService = (ChargePointService) factory.create();
-
-        //Force the use of the Async transport, even for synchronous calls
-        ((BindingProvider) chargePointService).getRequestContext().put("use.async.http.conduit", Boolean.TRUE);
-
-        return chargePointService;
+    private ChargePointService createChargingStationService(ChargingStationId id) {
+        return chargingStationProxyFactory.createChargingStationService(domainService.retrieveChargingStationAddress(id));
     }
 
 }

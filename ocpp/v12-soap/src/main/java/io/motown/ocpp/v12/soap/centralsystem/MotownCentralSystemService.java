@@ -59,9 +59,6 @@ public class MotownCentralSystemService implements CentralSystemService {
     @Value("${io.motown.ocpp.v12.soap.cxf.continuation.timeout}")
     private int continuationTimeout;
 
-    @Value("${io.motown.ocpp.v12.soap.protocol.identifier}")
-    private String protocol;
-
     @Autowired
     private DomainService domainService;
 
@@ -102,7 +99,7 @@ public class MotownCentralSystemService implements CentralSystemService {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
         String chargingStationAddress = getChargingStationAddress(context.getMessageContext());
-        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel(), protocol,
+        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel(), PROTOCOL_IDENTIFIER,
                 request.getChargePointSerialNumber(), request.getFirmwareVersion(), request.getIccid(), request.getImsi(), request.getMeterType(), request.getMeterSerialNumber());
 
         BootNotificationResponse response = new BootNotificationResponse();
@@ -225,6 +222,14 @@ public class MotownCentralSystemService implements CentralSystemService {
 
         domainService.stopTransaction(chargingStationId, transactionId, identifyingToken, request.getMeterStop(), request.getTimestamp(), meterValues);
         return new StopTransactionResponse();
+    }
+
+    public void setDomainService(DomainService domainService) {
+        this.domainService = domainService;
+    }
+
+    public void setContext(WebServiceContext context) {
+        this.context = context;
     }
 
     /**
