@@ -100,6 +100,7 @@ public class MotownVasPublisherService implements VasPublisherService {
                 subscriptionRepository.delete(subscription);
                 unsubscribeResponse.setStatus(SubscribeStatus.ACCEPTED);
             } else {
+                //TODO duplicate? the subscription was not found... is this the right response? - Mark van den Bergh, Februari 18th 2014
                 unsubscribeResponse.setStatus(SubscribeStatus.DUPLICATE_IGNORED);
             }
         } catch (Exception e) {
@@ -108,5 +109,17 @@ public class MotownVasPublisherService implements VasPublisherService {
         }
 
         return unsubscribeResponse;
+    }
+
+    public void setSubscriptionRepository(SubscriptionRepository subscriptionRepository) {
+        this.subscriptionRepository = subscriptionRepository;
+    }
+
+    public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {
+        this.chargingStationRepository = chargingStationRepository;
+    }
+
+    public void setVasConversionService(VasConversionService vasConversionService) {
+        this.vasConversionService = vasConversionService;
     }
 }

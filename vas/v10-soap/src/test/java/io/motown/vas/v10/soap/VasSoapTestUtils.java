@@ -27,6 +27,11 @@ import static org.jgroups.util.Util.assertTrue;
 
 public class VasSoapTestUtils {
 
+    public static final String DELIVERY_ADDRESS = "http://localhost/";
+    public static final String OTHER_DELIVERY_ADDRESS = "http://127.0.0.1/";
+
+    public static final String SUBSCRIBER_IDENTITY = "MOTOWN_SUBSCRIBER";
+
     private static final String OPERATOR = "MOTOWN";
 
     public static ChargingStation getConfiguredAndFilledChargingStation() {
