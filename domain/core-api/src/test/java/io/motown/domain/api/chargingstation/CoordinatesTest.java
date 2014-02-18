@@ -17,20 +17,18 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static junit.framework.Assert.assertEquals;
 
-public class ChargingStationCreatedEventTest {
-
-    @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ChargingStationCreatedEvent(null);
-    }
+public class CoordinatesTest {
 
     @Test
     public void constructorSetsFields() {
-        ChargingStationCreatedEvent event = new ChargingStationCreatedEvent(CHARGING_STATION_ID);
+        // not using constant from test utils as it uses the method that's being tested here.
+        double latitude = 20.123;
+        double longitude = 12.200;
+        Coordinates coordinates = new Coordinates(latitude, longitude);
 
-        assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
+        assertEquals(coordinates.getLatitude(), latitude);
+        assertEquals(coordinates.getLongitude(), longitude);
     }
 }

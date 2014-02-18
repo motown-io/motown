@@ -17,20 +17,24 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static junit.framework.Assert.assertEquals;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.EVSE_ID;
+import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
-public class ChargingStationCreatedEventTest {
+public class EvseIdTest {
 
-    @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ChargingStationCreatedEvent(null);
+    @Test(expected = IllegalArgumentException.class)
+    public void negativeIdThrowsInvalidArgumentException() {
+        new EvseId(-1);
     }
 
     @Test
     public void constructorSetsFields() {
-        ChargingStationCreatedEvent event = new ChargingStationCreatedEvent(CHARGING_STATION_ID);
+        // not using constant from test utils as it uses the method that's being tested here.
+        int evseId = 1;
+        EvseId id = new EvseId(evseId);
 
-        assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
+        assertEquals(evseId, id.getNumberedId());
+        assertNotNull(id.toString());
     }
 }

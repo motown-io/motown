@@ -17,20 +17,18 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static junit.framework.Assert.assertEquals;
 
-public class ChargingStationCreatedEventTest {
+public class ChargingStationMadeReservableEventTest {
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ChargingStationCreatedEvent(null);
+    public void nullChargingStationIdInConstructorThrowsException() {
+        new ChargingStationMadeReservableEvent(null);
     }
 
     @Test
     public void constructorSetsFields() {
-        ChargingStationCreatedEvent event = new ChargingStationCreatedEvent(CHARGING_STATION_ID);
-
-        assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
+        assertEquals(CHARGING_STATION_ID, new ChargingStationMadeReservableEvent(CHARGING_STATION_ID).getChargingStationId());
     }
 }

@@ -20,6 +20,7 @@ import org.junit.Test;
 import java.util.HashMap;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static junit.framework.Assert.assertEquals;
 
 public class ConfiguredChargingStationBootedEventTest {
 
@@ -35,8 +36,17 @@ public class ConfiguredChargingStationBootedEventTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedOperationExceptionThrownWhenModifyingAttributes() {
-        ConfiguredChargingStationBootedEvent command = new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES);
+        ConfiguredChargingStationBootedEvent event = new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES);
 
-        command.getAttributes().put("foo", "bar");
+        event.getAttributes().put("foo", "bar");
+    }
+
+    @Test
+    public void constructorSetsFields() {
+        ConfiguredChargingStationBootedEvent event = new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES);
+
+        assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
+        assertEquals(PROTOCOL, event.getProtocol());
+        assertEquals(BOOT_NOTIFICATION_ATTRIBUTES, event.getAttributes());
     }
 }

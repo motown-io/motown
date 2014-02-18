@@ -20,6 +20,8 @@ import org.junit.Test;
 import java.util.Collections;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 
 public class ChargingStationConfiguredEventTest {
 
@@ -51,5 +53,15 @@ public class ChargingStationConfiguredEventTest {
         ChargingStationConfiguredEvent command = new ChargingStationConfiguredEvent(CHARGING_STATION_ID, Collections.<Evse>emptySet(), CONFIGURATION_ITEMS);
 
         command.getConfigurationItems().put("configItem", "configValue");
+    }
+
+    @Test
+    public void constructorSetsFields() {
+        ChargingStationConfiguredEvent event = new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS);
+
+        assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
+        assertEquals(EVSES, event.getEvses());
+        assertEquals(CONFIGURATION_ITEMS, event.getConfigurationItems());
+        assertNotNull(event.toString());
     }
 }
