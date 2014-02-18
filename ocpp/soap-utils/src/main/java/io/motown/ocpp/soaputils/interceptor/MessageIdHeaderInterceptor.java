@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.motown.ocpp.soaputils.interceptor;
 
 import com.sun.org.apache.xerces.internal.dom.*;
@@ -22,6 +21,7 @@ import org.apache.cxf.headers.Header;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.phase.AbstractPhaseInterceptor;
 import org.apache.cxf.phase.Phase;
+import org.w3c.dom.Document;
 
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
@@ -49,19 +49,22 @@ public class MessageIdHeaderInterceptor extends AbstractPhaseInterceptor<Message
         // if the header doesn't exist and we have at least one header to access 'owner document' we can create and add our own MessageID header
         if(!messageIdHeaderExists(headers) && headers.size() > 0) {
             ElementNSImpl existingHeaderElement = (ElementNSImpl) headers.get(0).getObject();
-
-            // use the existing header element to create our own MessageID header with random UUID
-            ElementImpl element = new LocalElementNSImpl((DocumentImpl) existingHeaderElement.getOwnerDocument(), NAMESPACE_URI, QUALIFIED_NAME, LOCAL_NAME);
-            element.appendChild(new TextImpl((DocumentImpl) existingHeaderElement.getOwnerDocument(), "uuid:" + UUID.randomUUID().toString()));
-
-            QName qname = new QName(NAMESPACE_URI, LOCAL_NAME);
-            SoapHeader header = new SoapHeader(qname, element);
-
-            // by default a SoapHeader is created with 'direction out'
-            header.setDirection(Header.Direction.DIRECTION_IN);
-
-            headers.add(header);
+            SoapHeader soapHeader = createSoapHeaderForDocument(existingHeaderElement.getOwnerDocument(), NAMESPACE_URI, QUALIFIED_NAME, LOCAL_NAME, "uuid:" + UUID.randomUUID().toString(), Header.Direction.DIRECTION_IN);
+            headers.add(soapHeader);
         }
+    }
+
+    private SoapHeader createSoapHeaderForDocument(Document document, String nameSpace, String qualifiedName, String localName, String value, Header.Direction direction) {
+        // use the existing header element to create our own MessageID header with random UUID
+        ElementImpl element = new LocalElementNSImpl((DocumentImpl) document, nameSpace, qualifiedName, localName);
+        element.appendChild(new TextImpl((DocumentImpl) document, value));
+
+        QName qname = new QName(nameSpace, localName);
+
+        SoapHeader header = new SoapHeader(qname, element);
+        header.setDirection(direction);
+
+        return header;
     }
 
     /**
@@ -83,7 +86,6 @@ public class MessageIdHeaderInterceptor extends AbstractPhaseInterceptor<Message
      * Because all constructors on ElementNSImpl are protected we extend it so we can initiate it locally.
      */
     private static class LocalElementNSImpl extends ElementNSImpl {
-
         protected LocalElementNSImpl(CoreDocumentImpl ownerDocument, String namespaceURI, String qualifiedName, String localName) {
             super(ownerDocument, namespaceURI, qualifiedName, localName);
         }

@@ -57,10 +57,8 @@ public class FutureRequestHandler<T, X> {
                 return successFactory.createResponse(future.get());
             } catch (InterruptedException | ExecutionException e) {
                 LOG.error("Exception while creating synchronous response", e);
-                errorFactory.createResponse();
+                return errorFactory.createResponse();
             }
-
-            return null;
         }
 
         if (future instanceof ContinuationFutureCallback) {
@@ -79,7 +77,7 @@ public class FutureRequestHandler<T, X> {
                         return successFactory.createResponse(future.get());
                     } catch (InterruptedException | ExecutionException e) {
                         LOG.error("Exception while creating response", e);
-                        errorFactory.createResponse();
+                        return errorFactory.createResponse();
                     }
                 } else {
                     // suspend the transport thread so it can handle other requests
@@ -93,7 +91,7 @@ public class FutureRequestHandler<T, X> {
                         return successFactory.createResponse(futureC.get());
                     } catch (InterruptedException | ExecutionException e) {
                         LOG.error("Exception while creating response", e);
-                        errorFactory.createResponse();
+                        return errorFactory.createResponse();
                     }
                 } else {
                     continuation.suspend(decreaseTimeout());
@@ -102,6 +100,10 @@ public class FutureRequestHandler<T, X> {
         }
         // unreachable
         return null;
+    }
+
+    public void setContinuationProvider(ContinuationProvider provider) {
+        this.provider = provider;
     }
 
     private int decreaseTimeout() {
