@@ -15,8 +15,6 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * The {@code Coordinates} object denotes the physical location in latitude/longitude of a charging station.
  * @see <a href="http://en.wikipedia.org/wiki/World_Geodetic_System">http://en.wikipedia.org/wiki/World_Geodetic_System</a>
