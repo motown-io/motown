@@ -30,11 +30,10 @@ public final class Coordinates {
      *
      * @param latitude the latitude of the coordinates.
      * @param longitude the longitude of the coordinates.
-     * @throws java.lang.NullPointerException when one of the paramters is {@code null}.
      */
     public Coordinates(double latitude, double longitude) {
-        this.latitude = checkNotNull(latitude);
-        this.longitude = checkNotNull(longitude);
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     /**
