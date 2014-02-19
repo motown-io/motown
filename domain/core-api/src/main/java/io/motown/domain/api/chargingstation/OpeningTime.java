@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -33,11 +34,15 @@ public final class OpeningTime {
      * @param timeStart the time when the charging station is first open.
      * @param timeStop the time when the charging station closes.
      * @throws java.lang.NullPointerException when one of the parameters is {@code null}.
+     * @throws java.lang.IllegalArgumentException when {@code timeStop} is not later than {@code timeStart}.
      */
     public OpeningTime(Day day, TimeOfDay timeStart, TimeOfDay timeStop) {
         this.day = checkNotNull(day);
-        this.timeStart = checkNotNull(timeStart);
-        this.timeStop = checkNotNull(timeStop);
+        checkNotNull(timeStart);
+        checkNotNull(timeStop);
+        checkArgument(timeStart.getHourOfDay() == timeStop.getHourOfDay() ? timeStop.getMinutesInHour() > timeStart.getMinutesInHour() : timeStop.getHourOfDay() > timeStart.getHourOfDay());
+        this.timeStart = timeStart;
+        this.timeStop = timeStop;
     }
 
     public Day getDay() {
