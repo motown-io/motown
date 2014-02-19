@@ -31,7 +31,7 @@ import javax.annotation.Resource;
 @Component
 class RequestDiagnosticsJsonCommandHandler implements JsonCommandHandler {
 
-    private static final String COMMAND_NAME = "GetDiagnostics";
+    private static final String COMMAND_NAME = "RequestDiagnostics";
 
     private DomainCommandGateway commandGateway;
 
