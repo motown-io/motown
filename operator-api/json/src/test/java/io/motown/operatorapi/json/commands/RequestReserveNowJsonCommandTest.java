@@ -17,7 +17,6 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,7 +48,7 @@ public class RequestReserveNowJsonCommandTest {
         handler.handle(CHARGING_STATION_ID_STRING, commandObject);
     }
 
-    @Test(expected = JsonSyntaxException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCommandInvalidDate() {
         JsonObject commandObject = gson.fromJson("{evseId:'1',identifyingToken:{token:'1'},expiryDate:'2014-02-24'}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID_STRING, commandObject);

@@ -32,6 +32,7 @@ public class UnlockConnectorCommandTest {
     public void setUp() {
         this.gson = OperatorApiJsonTestUtils.getGson();
         handler.setGson(gson);
+        handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
         handler.setCommandGateway(new TestDomainCommandGateway());
     }
 

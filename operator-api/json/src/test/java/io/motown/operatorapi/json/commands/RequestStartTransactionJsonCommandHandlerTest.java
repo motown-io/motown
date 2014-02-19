@@ -68,7 +68,7 @@ public class RequestStartTransactionJsonCommandHandlerTest {
         handler.handle(CHARGING_STATION_ID_STRING, command);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = JsonParseException.class)
     public void testStartTransactionStatusIsObject() {
         JsonObject command = gson.fromJson("{evseId:'1',identifyingToken:{token:'1',status:{status:'ACCEPTED'}}}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID_STRING, command);
