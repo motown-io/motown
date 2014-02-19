@@ -16,7 +16,6 @@
 package io.motown.operatorapi.json.commands;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestAuthorizationListVersionCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
@@ -29,7 +28,7 @@ import javax.annotation.Resource;
 @Component
 class RequestAuthorizationListVersionJsonCommandHandler implements JsonCommandHandler {
 
-    private static final String COMMAND_NAME = "GetAuthorizationListVersion";
+    private static final String COMMAND_NAME = "RequestAuthorizationListVersion";
 
     private DomainCommandGateway commandGateway;
 
@@ -42,15 +41,10 @@ class RequestAuthorizationListVersionJsonCommandHandler implements JsonCommandHa
 
     @Override
     public void handle(String chargingStationId, JsonObject commandObject) {
-        try {
-            ChargingStation chargingStation = repository.findOne(chargingStationId);
-            if (chargingStation != null && chargingStation.isAccepted()) {
-                commandGateway.send(new RequestAuthorizationListVersionCommand(new ChargingStationId(chargingStationId)));
-            }
-        } catch (JsonSyntaxException ex) {
-            throw new IllegalArgumentException("GetAuthorizationListVersion command not able to parse the payload, is your json correctly formatted?", ex);
+        ChargingStation chargingStation = repository.findOne(chargingStationId);
+        if (chargingStation != null && chargingStation.isAccepted()) {
+            commandGateway.send(new RequestAuthorizationListVersionCommand(new ChargingStationId(chargingStationId)));
         }
-
     }
 
     @Resource(name = "domainCommandGateway")
