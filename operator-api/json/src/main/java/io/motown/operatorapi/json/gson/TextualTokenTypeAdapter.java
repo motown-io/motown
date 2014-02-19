@@ -56,18 +56,14 @@ public class TextualTokenTypeAdapter implements TypeAdapter<TextualToken> {
             throw new JsonParseException("token must be a JSON string", e);
         }
 
-        JsonPrimitive authenticationStatus = obj.getAsJsonPrimitive("status");
-        if (authenticationStatus != null) {
-
-            String status;
-
-            try {
-                status = authenticationStatus.getAsString();
-            } catch(ClassCastException | IllegalStateException e) {
-                throw new JsonParseException("status must be a JSON string", e);
+        try {
+            JsonPrimitive authenticationStatus = obj.getAsJsonPrimitive("status");
+            if (authenticationStatus != null) {
+                String status = authenticationStatus.getAsString();
+                return new TextualToken(token, IdentifyingToken.AuthenticationStatus.valueOf(status));
             }
-
-            return new TextualToken(token, IdentifyingToken.AuthenticationStatus.valueOf(status));
+        } catch(ClassCastException | IllegalStateException e) {
+            throw new JsonParseException("status must be a JSON string", e);
         }
 
         return new TextualToken(token);
