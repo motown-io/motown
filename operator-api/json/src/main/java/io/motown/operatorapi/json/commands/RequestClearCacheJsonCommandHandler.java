@@ -16,7 +16,6 @@
 package io.motown.operatorapi.json.commands;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestClearCacheCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
@@ -27,9 +26,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component
-class ClearCacheJsonCommandHandler implements JsonCommandHandler {
+class RequestClearCacheJsonCommandHandler implements JsonCommandHandler {
 
-    private static final String COMMAND_NAME = "ClearCache";
+    private static final String COMMAND_NAME = "RequestClearCache";
 
     private DomainCommandGateway commandGateway;
 
@@ -42,15 +41,10 @@ class ClearCacheJsonCommandHandler implements JsonCommandHandler {
 
     @Override
     public void handle(String chargingStationId, JsonObject commandObject) {
-        try {
-            ChargingStation chargingStation = repository.findOne(chargingStationId);
-            if (chargingStation != null && chargingStation.isAccepted()) {
-                commandGateway.send(new RequestClearCacheCommand(new ChargingStationId(chargingStationId)));
-            }
-        } catch (JsonSyntaxException ex) {
-            throw new IllegalArgumentException("Data transfer command not able to parse the payload, is your json correctly formatted?", ex);
+        ChargingStation chargingStation = repository.findOne(chargingStationId);
+        if (chargingStation != null && chargingStation.isAccepted()) {
+            commandGateway.send(new RequestClearCacheCommand(new ChargingStationId(chargingStationId)));
         }
-
     }
 
     @Resource(name = "domainCommandGateway")

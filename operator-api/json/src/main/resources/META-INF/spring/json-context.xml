@@ -37,7 +37,7 @@
         <ref bean="dataTransferJsonCommandHandler"/>
         <ref bean="changeConfigurationJsonCommandHandler"/>
         <ref bean="requestDiagnosticsJsonCommandHandler"/>
-        <ref bean="clearCacheJsonCommandHandler"/>
+        <ref bean="requestClearCacheJsonCommandHandler"/>
         <ref bean="updateFirmwareJsonCommandHandler"/>
         <ref bean="requestAuthorizationListVersionJsonCommandHandler"/>
         <ref bean="sendAuthorizationListJsonCommandHandler"/>
