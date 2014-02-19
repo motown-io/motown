@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestDiagnosticsCommand;
 import io.motown.operatorapi.viewmodel.model.RequestDiagnosticsApiCommand;
@@ -52,7 +53,7 @@ class RequestDiagnosticsJsonCommandHandler implements JsonCommandHandler {
 
                 commandGateway.send(new RequestDiagnosticsCommand(new ChargingStationId(chargingStationId), command.getTargetLocation(), null, null, null, null));
             }
-        } catch (ClassCastException ex) {
+        } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Data transfer command not able to parse the payload, is your json correctly formatted?", ex);
         }
 

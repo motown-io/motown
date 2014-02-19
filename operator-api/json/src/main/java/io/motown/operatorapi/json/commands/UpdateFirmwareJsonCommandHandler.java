@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestFirmwareUpdateCommand;
 import io.motown.operatorapi.viewmodel.model.UpdateFirmwareApiCommand;
@@ -53,7 +54,7 @@ class UpdateFirmwareJsonCommandHandler implements JsonCommandHandler {
 
                 commandGateway.send(new RequestFirmwareUpdateCommand(new ChargingStationId(chargingStationId), command.getLocation(), command.getRetrieveDate(), new HashMap<String, String>()));
             }
-        } catch (ClassCastException ex) {
+        } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Change configuration command not able to parse the payload, is your json correctly formatted?", ex);
         }
 

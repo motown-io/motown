@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChangeConfigurationCommand;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.operatorapi.viewmodel.model.ChangeConfigurationApiCommand;
@@ -52,7 +53,7 @@ class ChangeConfigurationJsonCommandHandler implements JsonCommandHandler {
 
                 commandGateway.send(new ChangeConfigurationCommand(new ChargingStationId(chargingStationId), command.getKey(), command.getValue()));
             }
-        } catch (ClassCastException ex) {
+        } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Change configuration command not able to parse the payload, is your json correctly formatted?", ex);
         }
 

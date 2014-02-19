@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestHardResetChargingStationCommand;
 import io.motown.domain.api.chargingstation.RequestSoftResetChargingStationCommand;
@@ -57,7 +58,7 @@ class RequestResetChargingStationJsonCommandHandler implements JsonCommandHandle
                     commandGateway.send(new RequestSoftResetChargingStationCommand(new ChargingStationId(chargingStationId)));
                 }
             }
-        } catch (ClassCastException ex) {
+        } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted ?", ex);
         }
 

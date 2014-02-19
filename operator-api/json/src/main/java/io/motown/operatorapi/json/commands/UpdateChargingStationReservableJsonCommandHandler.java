@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.MakeChargingStationNotReservableCommand;
 import io.motown.domain.api.chargingstation.MakeChargingStationReservableCommand;
@@ -46,18 +47,22 @@ class UpdateChargingStationReservableJsonCommandHandler implements JsonCommandHa
 
     @Override
     public void handle(String chargingStationId, JsonObject commandObject) {
-        ChargingStation chargingStation = repository.findOne(chargingStationId);
+        try {
+            ChargingStation chargingStation = repository.findOne(chargingStationId);
 
-        if (chargingStation != null && chargingStation.isAccepted()) {
-            UpdateChargingStationReservableApiCommand command = gson.fromJson(commandObject, UpdateChargingStationReservableApiCommand.class);
+            if (chargingStation != null && chargingStation.isAccepted()) {
+                UpdateChargingStationReservableApiCommand command = gson.fromJson(commandObject, UpdateChargingStationReservableApiCommand.class);
 
-            ChargingStationId csId = new ChargingStationId(chargingStationId);
+                ChargingStationId csId = new ChargingStationId(chargingStationId);
 
-            if (command.isReservable()) {
-                commandGateway.send(new MakeChargingStationReservableCommand(csId));
-            } else {
-                commandGateway.send(new MakeChargingStationNotReservableCommand(csId));
+                if (command.isReservable()) {
+                    commandGateway.send(new MakeChargingStationReservableCommand(csId));
+                } else {
+                    commandGateway.send(new MakeChargingStationNotReservableCommand(csId));
+                }
             }
+        } catch (JsonSyntaxException e) {
+            throw new IllegalArgumentException("Update charging station reservable command not able to parse the payload, is your JSON correctly formatted?", e);
         }
     }
 

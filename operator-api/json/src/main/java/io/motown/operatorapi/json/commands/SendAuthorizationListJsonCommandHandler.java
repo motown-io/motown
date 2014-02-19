@@ -18,6 +18,7 @@ package io.motown.operatorapi.json.commands;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.AuthorizationListUpdateType;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.IdentifyingToken;
@@ -56,7 +57,7 @@ class SendAuthorizationListJsonCommandHandler implements JsonCommandHandler {
 
             // TODO enable usage of hash in API - Dennis Laumen, January 13th 2014
             commandGateway.send(new SendAuthorizationListCommand(new ChargingStationId(chargingStationId), authorizationList, command.getListVersion(), "", updateType));
-        } catch (ClassCastException ex) {
+        } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("SendAuthorizationList command not able to parse the payload, is your json correctly formatted ?", ex);
         }
     }

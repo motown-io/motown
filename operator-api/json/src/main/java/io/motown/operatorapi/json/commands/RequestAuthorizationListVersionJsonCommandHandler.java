@@ -16,6 +16,7 @@
 package io.motown.operatorapi.json.commands;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestAuthorizationListVersionCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
@@ -46,7 +47,7 @@ class RequestAuthorizationListVersionJsonCommandHandler implements JsonCommandHa
             if (chargingStation != null && chargingStation.isAccepted()) {
                 commandGateway.send(new RequestAuthorizationListVersionCommand(new ChargingStationId(chargingStationId)));
             }
-        } catch (ClassCastException ex) {
+        } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("GetAuthorizationListVersion command not able to parse the payload, is your json correctly formatted?", ex);
         }
 

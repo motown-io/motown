@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ImproveChargingStationLocationCommand;
 import io.motown.operatorapi.viewmodel.model.ImproveChargingStationLocationApiCommand;
@@ -48,7 +49,7 @@ class ImproveChargingStationLocationJsonCommandHandler implements JsonCommandHan
                 ImproveChargingStationLocationApiCommand command = gson.fromJson(commandObject, ImproveChargingStationLocationApiCommand.class);
                 commandGateway.send(new ImproveChargingStationLocationCommand(new ChargingStationId(chargingStationId), command.getCoordinates(), command.getAddress()));
             }
-        } catch (ClassCastException ex) {
+        } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Improve charging station location command not able to parse the payload, is your JSON correctly formatted?", ex);
         }
     }

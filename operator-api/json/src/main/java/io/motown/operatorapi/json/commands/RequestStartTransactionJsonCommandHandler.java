@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestStartTransactionCommand;
 import io.motown.operatorapi.viewmodel.model.RequestStartTransactionApiCommand;
@@ -54,7 +55,7 @@ class RequestStartTransactionJsonCommandHandler implements JsonCommandHandler {
             } else {
                 throw new IllegalStateException("It is not possible to request a start transaction on a charging station that is not registered");
             }
-        } catch (ClassCastException ex) {
+        } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Start transaction command is not able to parse the payload, is your json correctly formatted?", ex);
         }
     }

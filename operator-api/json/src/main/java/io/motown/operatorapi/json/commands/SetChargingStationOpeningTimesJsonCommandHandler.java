@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.SetChargingStationOpeningTimesCommand;
 import io.motown.operatorapi.viewmodel.model.SetChargingStationOpeningTimesApiCommand;
@@ -47,7 +48,7 @@ class SetChargingStationOpeningTimesJsonCommandHandler implements JsonCommandHan
                 SetChargingStationOpeningTimesApiCommand command = gson.fromJson(commandObject, SetChargingStationOpeningTimesApiCommand.class);
                 commandGateway.send(new SetChargingStationOpeningTimesCommand(new ChargingStationId(chargingStationId), command.getOpeningTimes()));
             }
-        } catch (ClassCastException e) {
+        } catch (JsonSyntaxException e) {
             throw new IllegalArgumentException("Set charging station opening times command not able to parse the payload, is your JSON correctly formatted?", e);
         }
     }

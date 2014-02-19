@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ConfigureChargingStationCommand;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,7 @@ class ConfigureJsonCommandHandler implements JsonCommandHandler {
         try {
             ConfigureChargingStationCommand newCommand = JsonCommandParser.parseConfigureChargingStation(new ChargingStationId(chargingStationId), commandObject, gson);
             commandGateway.send(newCommand);
-        } catch (ClassCastException ex) {
+        } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted ?", ex);
         }
     }

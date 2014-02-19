@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.NumberedTransactionId;
 import io.motown.domain.api.chargingstation.RequestStopTransactionCommand;
@@ -55,7 +56,7 @@ class RequestStopTransactionJsonCommandHandler implements JsonCommandHandler {
             // TODO assuming a NumberedTransactionId, needs to be fixed - Dennis Laumen, December 20th 2013
             TransactionId transactionId = new NumberedTransactionId(chargingStationIdObject, chargingStation.getProtocol(), Integer.parseInt(command.getId()));
             commandGateway.send(new RequestStopTransactionCommand(chargingStationIdObject, transactionId));
-        } catch (ClassCastException ex) {
+        } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted ?", ex);
         }
     }

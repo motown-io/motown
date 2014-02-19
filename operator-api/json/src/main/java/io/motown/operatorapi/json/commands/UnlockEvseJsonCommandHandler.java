@@ -17,9 +17,12 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestUnlockEvseCommand;
 import io.motown.operatorapi.viewmodel.model.UnlockEvseApiCommand;
+import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
+import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +35,8 @@ class UnlockEvseJsonCommandHandler implements JsonCommandHandler {
 
     private DomainCommandGateway commandGateway;
 
+    private ChargingStationRepository repository;
+
     private Gson gson;
 
     @Override
@@ -41,9 +46,15 @@ class UnlockEvseJsonCommandHandler implements JsonCommandHandler {
 
     @Override
     public void handle(String chargingStationId, JsonObject commandObject) {
-        UnlockEvseApiCommand command = gson.fromJson(commandObject, UnlockEvseApiCommand.class);
-
-        commandGateway.send(new RequestUnlockEvseCommand(new ChargingStationId(chargingStationId), command.getEvseId()));
+        try {
+            ChargingStation chargingStation = repository.findOne(chargingStationId);
+            if (chargingStation != null && chargingStation.isAccepted()) {
+                UnlockEvseApiCommand command = gson.fromJson(commandObject, UnlockEvseApiCommand.class);
+                commandGateway.send(new RequestUnlockEvseCommand(new ChargingStationId(chargingStationId), command.getEvseId()));
+            }
+        } catch (JsonSyntaxException e) {
+            throw new IllegalArgumentException("Unlock evse command not able to parse the payload, is your JSON correctly formatted?", e);
+        }
     }
 
     @Resource(name = "domainCommandGateway")
@@ -54,5 +65,10 @@ class UnlockEvseJsonCommandHandler implements JsonCommandHandler {
     @Autowired
     public void setGson(Gson gson) {
         this.gson = gson;
+    }
+
+    @Autowired
+    public void setRepository(ChargingStationRepository repository) {
+        this.repository = repository;
     }
 }
