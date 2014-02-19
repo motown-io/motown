@@ -20,7 +20,7 @@ import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 
-public class SendAuthorizationListCommandTest {
+public class SendAuthorizationListJsonCommandHandlerTest {
 
     public static final String CHARGING_STATION_ID = "TEST_CP";
     private Gson gson;

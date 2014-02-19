@@ -20,9 +20,9 @@ import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 
-public class MoveChargingStationCommandTest {
+public class PlaceChargingStationJsonCommandHandlerTest {
     private Gson gson;
-    private MoveChargingStationJsonCommandHandler handler = new MoveChargingStationJsonCommandHandler();
+    private PlaceChargingStationJsonCommandHandler handler = new PlaceChargingStationJsonCommandHandler();
 
     @Before
     public void setUp() {

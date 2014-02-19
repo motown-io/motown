@@ -22,35 +22,29 @@ import org.junit.Test;
 
 import static io.motown.operatorapi.json.commands.OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING;
 
-public class UpdateFirmwareCommandTest {
+public class UnlockConnectorJsonCommandHandlerTest {
 
     private Gson gson;
 
-    private UpdateFirmwareJsonCommandHandler handler = new UpdateFirmwareJsonCommandHandler();
+    private UnlockEvseJsonCommandHandler handler = new UnlockEvseJsonCommandHandler();
 
     @Before
     public void setUp() {
         this.gson = OperatorApiJsonTestUtils.getGson();
         handler.setGson(gson);
-        handler.setCommandGateway(new TestDomainCommandGateway());
         handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
+        handler.setCommandGateway(new TestDomainCommandGateway());
     }
 
     @Test
-    public void testUpdateFirmwareCommand() {
-        JsonObject commandObject = gson.fromJson("{location:'DEURNE',retrieveDate:'2014-02-03T12:00:00Z'}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testInvalidUpdateCommandInvalidDate() {
-        JsonObject commandObject = gson.fromJson("{location:'DEURNE',retrieveDate:'2014-02-03'}", JsonObject.class);
+    public void testUnlockCommand() {
+        JsonObject commandObject = gson.fromJson("{evseId:'1'}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID_STRING, commandObject);
     }
 
     @Test(expected = NullPointerException.class)
-    public void testInvalidUpdateCommandInvalidLocation() {
-        JsonObject commandObject = gson.fromJson("{loc:'DEURNE',retrieveDate:'2014-02-03T12:00:00Z'}", JsonObject.class);
+    public void testInvalidUnlockCommand() {
+        JsonObject commandObject = gson.fromJson("{evseID:'1'}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID_STRING, commandObject);
     }
 }

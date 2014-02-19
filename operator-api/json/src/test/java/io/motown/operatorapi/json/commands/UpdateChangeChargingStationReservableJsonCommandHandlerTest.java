@@ -27,7 +27,7 @@ import static io.motown.operatorapi.json.commands.OperatorApiJsonTestUtils.CHARG
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class UpdateChangeChargingStationReservableJsonCommandTest {
+public class UpdateChangeChargingStationReservableJsonCommandHandlerTest {
 
     private Gson gson;
 

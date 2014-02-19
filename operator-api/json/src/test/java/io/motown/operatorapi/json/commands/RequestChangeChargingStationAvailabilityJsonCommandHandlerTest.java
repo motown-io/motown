@@ -20,29 +20,27 @@ import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 
-public class RequestResetChargingStationJsonCommandTest {
-
+public class RequestChangeChargingStationAvailabilityJsonCommandHandlerTest {
     private Gson gson;
-
-    private RequestResetChargingStationJsonCommandHandler handler = new RequestResetChargingStationJsonCommandHandler();
+    private RequestChangeChargingStationAvailabilityJsonCommandHandler handler = new RequestChangeChargingStationAvailabilityJsonCommandHandler();
 
     @Before
     public void setUp() {
-        this.gson = OperatorApiJsonTestUtils.getGson();
+        gson = OperatorApiJsonTestUtils.getGson();
         handler.setGson(gson);
         handler.setCommandGateway(new TestDomainCommandGateway());
         handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
     }
 
     @Test
-    public void testResetCommand() {
-        JsonObject commandObject = gson.fromJson("{type:'soft'}", JsonObject.class);
+    public void testInoperativeCommand() {
+        JsonObject commandObject = gson.fromJson("{evseId:'1',availability:'inoperative'}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
     }
 
     @Test
-    public void testHardResetCommand() {
-        JsonObject commandObject = gson.fromJson("{type:'hard'}", JsonObject.class);
+    public void testOperativeCommand() {
+        JsonObject commandObject = gson.fromJson("{evseId:'1',availability:'operative'}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
     }
 

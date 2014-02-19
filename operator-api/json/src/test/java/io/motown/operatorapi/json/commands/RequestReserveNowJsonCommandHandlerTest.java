@@ -22,29 +22,41 @@ import org.junit.Test;
 
 import static io.motown.operatorapi.json.commands.OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING;
 
-public class UnlockConnectorCommandTest {
+public class RequestReserveNowJsonCommandHandlerTest {
 
     private Gson gson;
 
-    private UnlockEvseJsonCommandHandler handler = new UnlockEvseJsonCommandHandler();
+    private RequestReserveNowJsonCommandHandler handler = new RequestReserveNowJsonCommandHandler();
 
     @Before
     public void setUp() {
         this.gson = OperatorApiJsonTestUtils.getGson();
         handler.setGson(gson);
-        handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
         handler.setCommandGateway(new TestDomainCommandGateway());
+        handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
     }
 
     @Test
-    public void testUnlockCommand() {
-        JsonObject commandObject = gson.fromJson("{evseId:'1'}", JsonObject.class);
+    public void testCommand() {
+        JsonObject commandObject = gson.fromJson("{evseId:'1',identifyingToken:{token:'1'},expiryDate:'2014-02-24T12:00:00Z'}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID_STRING, commandObject);
     }
 
     @Test(expected = NullPointerException.class)
-    public void testInvalidUnlockCommand() {
-        JsonObject commandObject = gson.fromJson("{evseID:'1'}", JsonObject.class);
+    public void testCommandNoDate() {
+        JsonObject commandObject = gson.fromJson("{evseId:'1',identifyingToken:{token:'1'}}", JsonObject.class);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCommandInvalidDate() {
+        JsonObject commandObject = gson.fromJson("{evseId:'1',identifyingToken:{token:'1'},expiryDate:'2014-02-24'}", JsonObject.class);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCommandInvalidStatus() {
+        JsonObject commandObject = gson.fromJson("{evseId:'1',identifyingToken:{token:'1',status:'NEW'},expiryDate:'2014-02-24'}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID_STRING, commandObject);
     }
 }

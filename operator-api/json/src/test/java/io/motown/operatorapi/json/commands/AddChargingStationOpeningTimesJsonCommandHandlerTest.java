@@ -21,9 +21,9 @@ import com.google.gson.JsonParseException;
 import org.junit.Before;
 import org.junit.Test;
 
-public class SetChargingStationOpeningTimesCommandTest {
+public class AddChargingStationOpeningTimesJsonCommandHandlerTest {
     private Gson gson;
-    private SetChargingStationOpeningTimesJsonCommandHandler handler = new SetChargingStationOpeningTimesJsonCommandHandler();
+    private AddChargingStationOpeningTimesJsonCommandHandler handler = new AddChargingStationOpeningTimesJsonCommandHandler();
 
     @Before
     public void setUp() {
