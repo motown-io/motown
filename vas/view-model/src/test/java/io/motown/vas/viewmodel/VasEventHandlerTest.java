@@ -141,6 +141,102 @@ public class VasEventHandlerTest {
     }
 
     @Test
+    public void chargingStationLocationImprovedEventCoordinatesEmptyAddress() {
+        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+
+        eventHandler.handle(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, COORDINATES, null));
+
+        ChargingStation cs = getTestChargingStationFromRepository();
+        assertEquals(Double.valueOf(COORDINATES.getLatitude()), cs.getLatitude());
+        assertEquals(Double.valueOf(COORDINATES.getLongitude()), cs.getLongitude());
+    }
+
+    @Test
+    public void chargingStationLocationImprovedEventAddressEmptyCoordinates() {
+        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+
+        eventHandler.handle(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, null, ADDRESS));
+
+        ChargingStation cs = getTestChargingStationFromRepository();
+        assertEquals(ADDRESS.getAddressline1(), cs.getAddress());
+        assertEquals(ADDRESS.getPostalCode(), cs.getPostalCode());
+        assertEquals(ADDRESS.getRegion(), cs.getRegion());
+        assertEquals(ADDRESS.getCity(), cs.getCity());
+        assertEquals(ADDRESS.getCountry(), cs.getCountry());
+    }
+
+    @Test
+    public void chargingStationLocationImprovedEventAddressAndCoordinates() {
+        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+
+        eventHandler.handle(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS));
+
+        ChargingStation cs = getTestChargingStationFromRepository();
+        assertEquals(Double.valueOf(COORDINATES.getLatitude()), cs.getLatitude());
+        assertEquals(Double.valueOf(COORDINATES.getLongitude()), cs.getLongitude());
+        assertEquals(ADDRESS.getAddressline1(), cs.getAddress());
+        assertEquals(ADDRESS.getPostalCode(), cs.getPostalCode());
+        assertEquals(ADDRESS.getRegion(), cs.getRegion());
+        assertEquals(ADDRESS.getCity(), cs.getCity());
+        assertEquals(ADDRESS.getCountry(), cs.getCountry());
+    }
+
+    @Test
+    public void chargingStationLocationImprovedEventUnknownChargingStationNoExceptionThrown() {
+        assertNull(getTestChargingStationFromRepository());
+
+        eventHandler.handle(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS));
+    }
+
+    @Test
+    public void chargingStationMovedEventCoordinatesEmptyAddress() {
+        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+
+        eventHandler.handle(new ChargingStationMovedEvent(CHARGING_STATION_ID, COORDINATES, null));
+
+        ChargingStation cs = getTestChargingStationFromRepository();
+        assertEquals(Double.valueOf(COORDINATES.getLatitude()), cs.getLatitude());
+        assertEquals(Double.valueOf(COORDINATES.getLongitude()), cs.getLongitude());
+    }
+
+    @Test
+    public void chargingStationMovedEventAddressEmptyCoordinates() {
+        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+
+        eventHandler.handle(new ChargingStationMovedEvent(CHARGING_STATION_ID, null, ADDRESS));
+
+        ChargingStation cs = getTestChargingStationFromRepository();
+        assertEquals(ADDRESS.getAddressline1(), cs.getAddress());
+        assertEquals(ADDRESS.getPostalCode(), cs.getPostalCode());
+        assertEquals(ADDRESS.getRegion(), cs.getRegion());
+        assertEquals(ADDRESS.getCity(), cs.getCity());
+        assertEquals(ADDRESS.getCountry(), cs.getCountry());
+    }
+
+    @Test
+    public void chargingStationMovedEventAddressAndCoordinates() {
+        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+
+        eventHandler.handle(new ChargingStationMovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS));
+
+        ChargingStation cs = getTestChargingStationFromRepository();
+        assertEquals(Double.valueOf(COORDINATES.getLatitude()), cs.getLatitude());
+        assertEquals(Double.valueOf(COORDINATES.getLongitude()), cs.getLongitude());
+        assertEquals(ADDRESS.getAddressline1(), cs.getAddress());
+        assertEquals(ADDRESS.getPostalCode(), cs.getPostalCode());
+        assertEquals(ADDRESS.getRegion(), cs.getRegion());
+        assertEquals(ADDRESS.getCity(), cs.getCity());
+        assertEquals(ADDRESS.getCountry(), cs.getCountry());
+    }
+
+    @Test
+    public void chargingStationMovedEventUnknownChargingStationNoExceptionThrown() {
+        assertNull(getTestChargingStationFromRepository());
+
+        eventHandler.handle(new ChargingStationMovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS));
+    }
+
+    @Test
     public void chargingStationMadeReservableEventChargingStationReservable() {
         chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
 
@@ -230,6 +326,22 @@ public class VasEventHandlerTest {
     public void chargingStationOpeningTimesSetEvent() {
         chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
         eventHandler.handle(new ChargingStationOpeningTimesSetEvent(CHARGING_STATION_ID, OPENING_TIMES));
+
+        ChargingStation chargingStation = getTestChargingStationFromRepository();
+        assertEquals(OPENING_TIMES.size(), chargingStation.getOpeningTimes().size());
+        OpeningTime[] cOT = OPENING_TIMES.toArray(new OpeningTime[OPENING_TIMES.size()]);
+        io.motown.vas.viewmodel.model.OpeningTime[] vOT = chargingStation.getOpeningTimes().toArray(new io.motown.vas.viewmodel.model.OpeningTime[chargingStation.getOpeningTimes().size()]);
+        assertEquals(cOT[0].getDay().value(), vOT[0].getDay().value());
+        assertEquals(cOT[0].getTimeStart().getHourOfDay(), vOT[0].getTimeStart() / 60);
+        assertEquals(cOT[0].getTimeStart().getMinutesInHour(), vOT[0].getTimeStart() % 60);
+        assertEquals(cOT[0].getTimeStop().getHourOfDay(), vOT[0].getTimeStop() / 60);
+        assertEquals(cOT[0].getTimeStop().getMinutesInHour(), vOT[0].getTimeStop() % 60);
+    }
+
+    @Test
+    public void chargingStationOpeningTimesAddedEvent() {
+        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        eventHandler.handle(new ChargingStationOpeningTimesAddedEvent(CHARGING_STATION_ID, OPENING_TIMES));
 
         ChargingStation chargingStation = getTestChargingStationFromRepository();
         assertEquals(OPENING_TIMES.size(), chargingStation.getOpeningTimes().size());
