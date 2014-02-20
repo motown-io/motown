@@ -20,8 +20,8 @@ import org.junit.Test;
 import java.util.Collections;
 import java.util.Date;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.EVSE_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static org.junit.Assert.assertEquals;
 
 public class ComponentStatusNotificationReceivedEventTest {
 
@@ -53,5 +53,17 @@ public class ComponentStatusNotificationReceivedEventTest {
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithAttributesNull() {
         new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, new Date(), null);
+    }
+
+    @Test
+    public void constructorSetsFields() {
+        ComponentStatusNotificationReceivedEvent event = new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, FIVE_MINUTES_AGO, Collections.<String, String>emptyMap());
+
+        assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
+        assertEquals(ChargingStationComponent.CONNECTOR, event.getComponent());
+        assertEquals(EVSE_ID, event.getComponentId());
+        assertEquals(ComponentStatus.AVAILABLE, event.getStatus());
+        assertEquals(FIVE_MINUTES_AGO, event.getTimestamp());
+        assertEquals(Collections.<String, String>emptyMap(), event.getAttributes());
     }
 }

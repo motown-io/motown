@@ -21,23 +21,24 @@ import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.EVSE_ID;
 import static org.junit.Assert.assertEquals;
 
-public class RequestUnlockEvseCommandTest {
+public class EvseNotFoundEventTest {
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new RequestUnlockEvseCommand(null, EVSE_ID);
+    public void nullPointerExceptionThrownWhenCreatingWithChargingStationIdNull() {
+        new EvseNotFoundEvent(null, EVSE_ID);
     }
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingCommandWithEvseIdNull() {
-        new RequestUnlockEvseCommand(CHARGING_STATION_ID, null);
+    public void nullPointerExceptionThrownWhenCreatingWithEvseIdNull() {
+        new EvseNotFoundEvent(CHARGING_STATION_ID, null);
     }
 
     @Test
     public void constructorSetsFields() {
-        RequestUnlockEvseCommand command = new RequestUnlockEvseCommand(CHARGING_STATION_ID, EVSE_ID);
+        EvseNotFoundEvent event = new EvseNotFoundEvent(CHARGING_STATION_ID, EVSE_ID);
 
-        assertEquals(CHARGING_STATION_ID, command.getChargingStationId());
-        assertEquals(EVSE_ID, command.getEvseId());
+        assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
+        assertEquals(EVSE_ID, event.getEvseId());
     }
+
 }
