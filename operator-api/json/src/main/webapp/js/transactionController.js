@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-function TransactionController($scope, $http, $timeout) {
+function TransactionController($scope, $http, $timeout, $httpProvider) {
+    $httpProvider.defaults.headers.common['Content-Type'] = 'application/json';
+    $httpProvider.defaults.headers.common['Accept'] = '*/*';
+
     $scope.init = function() {
         $scope.startGetTransactionsTimer();
     };
@@ -28,13 +31,8 @@ function TransactionController($scope, $http, $timeout) {
     $scope.getTransactions = function() {
         $http({
             url: 'transactions',
-            dataType: 'json',
             method: 'GET',
-            data: '',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': '*/*'
-            }
+            data: ''
         }).success(function(response) {
             $scope.transactions = response;
         });
@@ -43,15 +41,10 @@ function TransactionController($scope, $http, $timeout) {
     $scope.stopTransaction = function(chargingStationId, id) {
         $http({
             url: 'charging-stations/' + chargingStationId + '/commands',
-            dataType: 'json',
             method: 'POST',
             data: ['RequestStopTransaction',{
                 'id': id
-            }],
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': '*/*' // if this is not specified our request will fail
-            }
+            }]
         }).success(function(response) {
             console.log('remote stop!');
         });

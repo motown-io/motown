@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-function ChargingStationController($scope, $http, $timeout) {
+function ChargingStationController($scope, $http, $timeout, $httpProvider) {
+    $httpProvider.defaults.headers.common['Content-Type'] = 'application/json';
+    $httpProvider.defaults.headers.common['Accept'] = '*/*';
+
     $scope.init = function() {
         $scope.startGetChargingStationsTimer();
     };
@@ -28,13 +31,8 @@ function ChargingStationController($scope, $http, $timeout) {
     $scope.getChargingStations = function() {
         $http({
             url: 'charging-stations',
-            dataType: 'json',
             method: 'GET',
-            data: '',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': '*/*'
-            }
+            data: ''
         }).success(function(response) {
             $scope.chargingStations = response;
         });
@@ -46,7 +44,6 @@ function ChargingStationController($scope, $http, $timeout) {
 
         $http({
             url: 'charging-stations/' + chargingStation.id + '/commands',
-            dataType: 'json',
             method: 'POST',
             data: ['Register',{
                 'configuration' : {
@@ -76,11 +73,7 @@ function ChargingStationController($scope, $http, $timeout) {
                         'key2':'value2'
                     }
                 }
-            }],
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': '*/*'
-            }
+            }]
         }).success(function(response) {
             console.log('registered');
             cs.accepted = true;
@@ -96,15 +89,10 @@ function ChargingStationController($scope, $http, $timeout) {
 
         $http({
             url: 'charging-stations/' + chargingStation.id + '/commands',
-            dataType: 'json',
             method: 'POST',
             data: ['ResetChargingStation',{
                 'type': resetType
-            }],
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': '*/*'
-            }
+            }]
         }).success(function(response) {
             console.log('reset requested');
         });
@@ -113,16 +101,11 @@ function ChargingStationController($scope, $http, $timeout) {
     $scope.startTransaction = function(chargingStation) {
         $http({
             url: 'charging-stations/' + chargingStation.id + '/commands',
-            dataType: 'json',
             method: 'POST',
             data: ['RequestStartTransaction',{
                 'evseId': 1,
                 'identifyingToken': {'token': 'TOKEN'}
-            }],
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': '*/*'
-            }
+            }]
         }).success(function(response) {
             console.log('start transaction requested');
         });
@@ -131,16 +114,11 @@ function ChargingStationController($scope, $http, $timeout) {
     $scope.unlockEvse = function(chargingStation, evseId) {
         $http({
             url: 'charging-stations/' + chargingStation.id + '/commands',
-            dataType: 'json',
             method: 'POST',
             data: ['UnlockEvse',{
                 'evseId': evseId,
                 'identifyingToken': {'token': 'TOKEN'}
-            }],
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': '*/*'
-            }
+            }]
         }).success(function(response) {
             console.log('unlock evse requested');
         });
@@ -149,17 +127,12 @@ function ChargingStationController($scope, $http, $timeout) {
     $scope.dataTransfer = function(chargingStation, vendorId, messageId, data) {
         $http({
             url: 'charging-stations/' + chargingStation.id + '/commands',
-            dataType: 'json',
             method: 'POST',
             data: ['DataTransfer',{
                 'vendorId': vendorId,
                 'messageId': messageId,
                 'data': data
-            }],
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': '*/*'
-            }
+            }]
         }).success(function(response) {
                 console.log('data transfer requested');
             });
@@ -168,16 +141,11 @@ function ChargingStationController($scope, $http, $timeout) {
     $scope.changeConfiguration = function(chargingStation, key, value) {
         $http({
             url: 'charging-stations/' + chargingStation.id + '/commands',
-            dataType: 'json',
             method: 'POST',
             data: ['ChangeConfiguration',{
                 'key': key,
                 'value': value
-            }],
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': '*/*'
-            }
+            }]
         }).success(function(response) {
                 console.log('change configuration requested');
             });
@@ -186,15 +154,10 @@ function ChargingStationController($scope, $http, $timeout) {
     $scope.getDiagnostics = function(chargingStation, targetLocation) {
         $http({
             url: 'charging-stations/' + chargingStation.id + '/commands',
-            dataType: 'json',
             method: 'POST',
             data: ['RequestDiagnostics',{
                 'targetLocation': targetLocation
-            }],
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': '*/*'
-            }
+            }]
         }).success(function(response) {
                 console.log('diagnostics requested');
             });
@@ -203,14 +166,9 @@ function ChargingStationController($scope, $http, $timeout) {
     $scope.clearCache = function(chargingStation) {
         $http({
             url: 'charging-stations/' + chargingStation.id + '/commands',
-            dataType: 'json',
             method: 'POST',
             data: ['ClearCache',{
-            }],
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': '*/*'
-            }
+            }]
         }).success(function(response) {
                 console.log('clear cache requested');
             });
@@ -219,16 +177,11 @@ function ChargingStationController($scope, $http, $timeout) {
     $scope.updateFirmware = function(chargingStation, location, retrieveDate) {
         $http({
             url: 'charging-stations/' + chargingStation.id + '/commands',
-            dataType: 'json',
             method: 'POST',
             data: ['UpdateFirmware',{
                 'location': location,
                 'retrieveDate': retrieveDate
-            }],
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': '*/*'
-            }
+            }]
         }).success(function(response) {
                 console.log('clear cache requested');
             });
@@ -237,14 +190,9 @@ function ChargingStationController($scope, $http, $timeout) {
     $scope.getAuthorizationListVersion = function(chargingStation) {
         $http({
             url: 'charging-stations/' + chargingStation.id + '/commands',
-            dataType: 'json',
             method: 'POST',
             data: ['RequestAuthorizationListVersion',{
-            }],
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': '*/*'
-            }
+            }]
         }).success(function(response) {
                 console.log('clear cache requested');
             });
@@ -253,17 +201,12 @@ function ChargingStationController($scope, $http, $timeout) {
     $scope.sendAuthorizationList = function(chargingStation, listVersion, updateType, items) {
         $http({
             url: 'charging-stations/' + chargingStation.id + '/commands',
-            dataType: 'json',
             method: 'POST',
             data: ['SendAuthorizationList',{
                 'listVersion': listVersion,
                 'updateType': updateType,
                 'items': items
-            }],
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': '*/*'
-            }
+            }]
         }).success(function(response) {
                 console.log('clear cache requested');
             });
@@ -278,16 +221,11 @@ function ChargingStationController($scope, $http, $timeout) {
 
         $http({
             url: 'charging-stations/' + chargingStation.id + '/commands',
-            dataType: 'json',
             method: 'POST',
             data: ['ChangeAvailability',{
                 'evseId': 1,
                 'availability': availabilityType
-            }],
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': '*/*'
-            }
+            }]
         }).success(function(response) {
             console.log('change availability requested');
         });
@@ -296,17 +234,12 @@ function ChargingStationController($scope, $http, $timeout) {
     $scope.reserveNow = function(chargingStation, evseId, identifyingToken) {
         $http({
             url: 'charging-stations/' + chargingStation.id + '/commands',
-            dataType: 'json',
             method: 'POST',
             data: ['RequestReserveNow',{
                 'evseId': evseId,
                 'identifyingToken': identifyingToken,
                 'expiryDate': new Date()
-            }],
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': '*/*'
-            }
+            }]
         }).success(function(response) {
             console.log('change availability requested');
         });
@@ -315,15 +248,10 @@ function ChargingStationController($scope, $http, $timeout) {
     $scope.updateReservable = function(chargingStation, reservable) {
         $http({
             url: 'charging-stations/' + chargingStation.id + '/commands',
-            dataType: 'json',
             method: 'POST',
             data: ['UpdateChargingStationReservable',{
                 'reservable': reservable
-            }],
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': '*/*'
-            }
+            }]
         }).success(function(response) {
             console.log('update reservable requested');
         });
