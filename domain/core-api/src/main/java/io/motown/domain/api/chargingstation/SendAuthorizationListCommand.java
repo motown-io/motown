@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import com.google.common.collect.ImmutableList;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.List;
@@ -51,7 +52,7 @@ public final class SendAuthorizationListCommand {
      */
     public SendAuthorizationListCommand(ChargingStationId chargingStationId, List<IdentifyingToken> authorizationList, int authorizationListVersion, String authorizationListHash, AuthorizationListUpdateType updateType) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.authorizationList = checkNotNull(authorizationList);
+        this.authorizationList = ImmutableList.copyOf(checkNotNull(authorizationList));
         this.authorizationListVersion = authorizationListVersion;
         this.authorizationListHash = checkNotNull(authorizationListHash);
         this.updateType = checkNotNull(updateType);

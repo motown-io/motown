@@ -16,6 +16,7 @@
 package io.motown.domain.api.chargingstation;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableSet;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Set;
@@ -39,7 +40,7 @@ public abstract class ChangeChargingStationOpeningTimesCommand {
      */
     protected ChangeChargingStationOpeningTimesCommand(ChargingStationId chargingStationId, Set<OpeningTime> openingTimes) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.openingTimes = checkNotNull(openingTimes);
+        this.openingTimes = ImmutableSet.copyOf(checkNotNull(openingTimes));
     }
 
     /**

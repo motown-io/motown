@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import com.google.common.collect.ImmutableSet;
+
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -35,7 +37,7 @@ public abstract class ChargingStationOpeningTimesChangedEvent {
      */
     protected ChargingStationOpeningTimesChangedEvent(ChargingStationId chargingStationId, Set<OpeningTime> openingTimes) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.openingTimes = checkNotNull(openingTimes);
+        this.openingTimes = ImmutableSet.copyOf(checkNotNull(openingTimes));
     }
 
     /**

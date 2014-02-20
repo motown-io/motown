@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import com.google.common.collect.ImmutableList;
+
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -54,7 +56,7 @@ public final class SendAuthorizationListRequestedEvent implements CommunicationW
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());
         this.protocol = protocol;
-        this.authorizationList = checkNotNull(authorizationList);
+        this.authorizationList = ImmutableList.copyOf(checkNotNull(authorizationList));
         this.authorizationListVersion = checkNotNull(authorizationListVersion);
         this.authorizationListHash = checkNotNull(authorizationListHash);
         this.updateType = checkNotNull(updateType);
