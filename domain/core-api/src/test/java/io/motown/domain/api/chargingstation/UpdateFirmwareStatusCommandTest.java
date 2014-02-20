@@ -17,7 +17,11 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
+import java.util.Objects;
+
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class UpdateFirmwareStatusCommandTest {
 
@@ -29,5 +33,32 @@ public class UpdateFirmwareStatusCommandTest {
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithoutStatus() {
         new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, null);
+    }
+
+    @Test
+    public void constructorSetsFields() {
+        UpdateFirmwareStatusCommand command = new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED);
+
+        assertEquals(CHARGING_STATION_ID, command.getChargingStationId());
+        assertEquals(FirmwareStatus.DOWNLOAD_FAILED, command.getStatus());
+    }
+
+    @Test
+    public void hashCodeEqualsChargingStationIdAndStatusHashCode() {
+        assertEquals(Objects.hash(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED), new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED).hashCode());
+    }
+
+    @Test
+    public void equalsWithSameInstanceReturnsTrue() {
+        UpdateFirmwareStatusCommand command = new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED);
+
+        assertTrue(command.equals(command));
+    }
+
+    @Test
+    public void equalsWithSameValuesReturnsTrue() {
+        UpdateFirmwareStatusCommand command = new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED);
+
+        assertTrue(command.equals(new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED)));
     }
 }

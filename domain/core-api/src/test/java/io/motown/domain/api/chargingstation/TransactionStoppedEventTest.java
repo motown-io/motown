@@ -20,26 +20,38 @@ import org.junit.Test;
 import java.util.Date;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static org.junit.Assert.assertEquals;
 
 public class TransactionStoppedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new TransactionStoppedEvent(null, TRANSACTION_ID, IDENTIFYING_TOKEN, 1, new Date());
+        new TransactionStoppedEvent(null, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, new Date());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTransactionId() {
-        new TransactionStoppedEvent(CHARGING_STATION_ID, null, IDENTIFYING_TOKEN, 1, new Date());
+        new TransactionStoppedEvent(CHARGING_STATION_ID, null, IDENTIFYING_TOKEN, METER_STOP, new Date());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullIdentifyingToken() {
-        new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, null, 1, new Date());
+        new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, null, METER_STOP, new Date());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTimestamp() {
-        new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, 1, null);
+        new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, null);
+    }
+
+    @Test
+    public void constructorSetsFields() {
+        TransactionStoppedEvent event = new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, FIVE_MINUTES_AGO);
+
+        assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
+        assertEquals(TRANSACTION_ID, event.getTransactionId());
+        assertEquals(IDENTIFYING_TOKEN, event.getIdTag());
+        assertEquals(METER_STOP, event.getMeterStop());
+        assertEquals(FIVE_MINUTES_AGO, event.getTimestamp());
     }
 }

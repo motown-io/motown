@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.Date;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.FIVE_MINUTES_AGO;
+import static org.junit.Assert.assertEquals;
 
 public class ChargingStationStatusNotificationReceivedEventTest {
 
@@ -42,5 +44,15 @@ public class ChargingStationStatusNotificationReceivedEventTest {
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithAttributesNull() {
         new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, new Date(), null);
+    }
+
+    @Test
+    public void constructorSetsFields() {
+        ChargingStationStatusNotificationReceivedEvent event = new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, FIVE_MINUTES_AGO, Collections.<String, String>emptyMap());
+
+        assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
+        assertEquals(ComponentStatus.AVAILABLE, event.getStatus());
+        assertEquals(FIVE_MINUTES_AGO, event.getTimestamp());
+        assertEquals(Collections.<String, String>emptyMap(), event.getAttributes());
     }
 }

@@ -20,6 +20,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static org.junit.Assert.assertEquals;
 
 public class ChargingStationSentMeterValuesEventTest {
 
@@ -36,5 +37,15 @@ public class ChargingStationSentMeterValuesEventTest {
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithMeterValuesNull() {
         new ChargingStationSentMeterValuesEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, null);
+    }
+
+    @Test
+    public void constructorSetsFields() {
+        ChargingStationSentMeterValuesEvent event = new ChargingStationSentMeterValuesEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, new ArrayList<MeterValue>());
+
+        assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
+        assertEquals(TRANSACTION_ID, event.getTransactionId());
+        assertEquals(EVSE_ID, event.getEvseId());
+        assertEquals(new ArrayList<MeterValue>(), event.getMeterValueList());
     }
 }
