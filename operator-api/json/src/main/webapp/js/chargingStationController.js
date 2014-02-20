@@ -188,7 +188,7 @@ function ChargingStationController($scope, $http, $timeout) {
             url: 'charging-stations/' + chargingStation.id + '/commands',
             dataType: 'json',
             method: 'POST',
-            data: ['GetDiagnostics',{
+            data: ['RequestDiagnostics',{
                 'targetLocation': targetLocation
             }],
             headers: {
@@ -239,7 +239,7 @@ function ChargingStationController($scope, $http, $timeout) {
             url: 'charging-stations/' + chargingStation.id + '/commands',
             dataType: 'json',
             method: 'POST',
-            data: ['GetAuthorizationListVersion',{
+            data: ['RequestAuthorizationListVersion',{
             }],
             headers: {
                 'Content-Type': 'application/json',
