@@ -38,7 +38,7 @@ public final class MeterValue {
      * @throws NullPointerException if {@code timestamp}, or {@code value} is {@code null}.
      */
     public MeterValue(Date timestamp, String value) {
-        this.timestamp = checkNotNull(timestamp);
+        this.timestamp = new Date(checkNotNull(timestamp).getTime());
         this.value = checkNotNull(value);
     }
 

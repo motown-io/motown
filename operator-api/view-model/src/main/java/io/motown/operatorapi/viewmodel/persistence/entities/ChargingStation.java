@@ -21,7 +21,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import java.util.Date;
 
-@Entity
+@Entity // TODO should the Date fields really be copies? - Mark Manders 2014-02-20
 public class ChargingStation {
     @Id
     private String id;

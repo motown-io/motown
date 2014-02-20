@@ -32,6 +32,7 @@ public class UpdateFirmwareApiCommand implements ApiCommand {
         this.location = location;
     }
 
+    // TODO should the Date fields really be copies? - Mark Manders 2014-02-20
     public Date getRetrieveDate() {
         return retrieveDate != null ? new Date(retrieveDate.getTime()) : null;
     }

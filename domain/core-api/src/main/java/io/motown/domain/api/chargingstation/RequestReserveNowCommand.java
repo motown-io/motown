@@ -49,7 +49,7 @@ public final class RequestReserveNowCommand {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.evseId = checkNotNull(evseId);
         this.identifyingToken = checkNotNull(identifyingToken);
-        this.expiryDate = checkNotNull(expiryDate);
+        this.expiryDate = new Date(checkNotNull(expiryDate).getTime());
         this.parentIdentifyingToken = parentIdentifyingToken;
     }
 

@@ -44,6 +44,7 @@ public class RequestReserveNowApiCommand implements ApiCommand {
         this.identifyingToken = identifyingToken;
     }
 
+    // TODO should the Date fields really be copies? - Mark Manders 2014-02-20
     public Date getExpiryDate() {
         return expiryDate != null ? new Date(expiryDate.getTime()) : null;
     }
