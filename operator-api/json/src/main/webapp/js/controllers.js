@@ -262,6 +262,69 @@ angular.module('demoApp.controllers', []).
                     console.log('update reservable requested');
                 });
             };
+
+            $scope.placeChargingStation = function (chargingStation, coordinates, address) {
+                $http({
+                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    method: 'POST',
+                    data: ['PlaceChargingStation', {
+                        'coordinates': coordinates,
+                        'address': address
+                    }]
+                }).success(function (response) {
+                    console.log('charging station placed');
+                });
+            };
+
+            $scope.improveChargingStationLocation = function (chargingStation, coordinates, address) {
+                $http({
+                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    method: 'POST',
+                    data: ['ImproveChargingStationLocation', {
+                        'coordinates': coordinates,
+                        'address': address
+                    }]
+                }).success(function (response) {
+                    console.log('charging station location improved');
+                });
+            };
+
+            $scope.moveChargingStation = function (chargingStation, coordinates, address) {
+                $http({
+                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    method: 'POST',
+                    data: ['MoveChargingStation', {
+                        'coordinates': coordinates,
+                        'address': address
+                    }]
+                }).success(function (response) {
+                    console.log('charging station moved');
+                });
+            };
+
+            $scope.setOpeningTimes = function (chargingStation, openingTimes) {
+                $http({
+                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    method: 'POST',
+                    data: ['SetChargingStationOpeningTimes', {
+                        'openingTimes': openingTimes
+                    }]
+                }).success(function (response) {
+                    console.log('Opening times set');
+                });
+            };
+
+            $scope.addOpeningTimes = function (chargingStation, openingTimes) {
+                $http({
+                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    method: 'POST',
+                    data: ['AddChargingStationOpeningTimes', {
+                        'openingTimes': openingTimes
+                    }]
+                }).success(function (response) {
+                    console.log('Opening times added');
+                });
+            };
         }]).
     controller('TransactionController',
         ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
