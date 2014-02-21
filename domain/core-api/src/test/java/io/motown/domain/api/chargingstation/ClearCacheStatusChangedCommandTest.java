@@ -17,8 +17,6 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import java.util.Collections;
-
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static org.junit.Assert.assertEquals;
 

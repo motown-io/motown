@@ -314,11 +314,16 @@ public final class ChargingStationTestUtils {
             .add(new ChargingStationMadeReservableEvent(CHARGING_STATION_ID))
             .build();
 
+    private static final int OPENING_TIME_START_HOUR = 12;
+    private static final int OPENING_TIME_START_MINUTES = 35;
+    private static final int OPENING_TIME_STOP_HOUR = 15;
+    private static final int OPENING_TIME_STOP_MINUTES = 13;
+
     /**
      * The default opening times.
      */
     public static final Set<OpeningTime> OPENING_TIMES = ImmutableSet.<OpeningTime>builder()
-            .add(new OpeningTime(Day.MONDAY, new TimeOfDay(12,35), new TimeOfDay(15,13)))
+            .add(new OpeningTime(Day.MONDAY, new TimeOfDay(OPENING_TIME_START_HOUR,OPENING_TIME_START_MINUTES), new TimeOfDay(OPENING_TIME_STOP_HOUR,OPENING_TIME_STOP_MINUTES)))
             .build();
 
     /**
