@@ -39,7 +39,7 @@ public final class ReserveNowRequestedEvent implements CommunicationWithCharging
         this.evseId = checkNotNull(evseId);
         this.identifyingToken = checkNotNull(identifyingToken);
         this.expiryDate = new Date(checkNotNull(expiryDate).getTime());
-        this.parentIdentifyingToken = parentIdentifyingToken;
+        this.parentIdentifyingToken = checkNotNull(parentIdentifyingToken);
     }
 
     @Override
