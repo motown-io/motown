@@ -83,6 +83,8 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         ComponentStatus componentStatus = getComponentStatusFromChargePointStatus(request.getStatus());
         String errorCode = request.getErrorCode() != null ? request.getErrorCode().value() : null;
 
+        //TODO timestamp is not mandatory in the WSDL, however it's mandatory in the statusNotification command! - Mark van den Bergh, Februari 21st 2014
+
         domainService.statusNotification(chargingStationId, evseId, errorCode, componentStatus, request.getInfo(), request.getTimestamp(), request.getVendorId(), request.getVendorErrorCode());
         return new StatusNotificationResponse();
     }
