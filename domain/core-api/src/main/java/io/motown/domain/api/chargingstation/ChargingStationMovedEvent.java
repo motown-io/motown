@@ -19,7 +19,7 @@ package io.motown.domain.api.chargingstation;
  * Event generated when the charging station is moved from one location to another.
  */
 public final class ChargingStationMovedEvent extends ChargingStationLocationChangedEvent {
-    public ChargingStationMovedEvent(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
-        super(chargingStationId, coordinates, address);
+    public ChargingStationMovedEvent(ChargingStationId chargingStationId, Coordinates coordinates, Address address, Accessibility accessibility) {
+        super(chargingStationId, coordinates, address, accessibility);
     }
 }

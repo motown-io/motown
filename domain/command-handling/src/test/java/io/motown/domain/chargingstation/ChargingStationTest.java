@@ -574,21 +574,21 @@ public class ChargingStationTest {
     @Test
     public void testPlaceChargingStationCommand() {
         fixture.given(CHARGING_STATION)
-                .when(new PlaceChargingStationCommand(CHARGING_STATION_ID, COORDINATES, ADDRESS))
-                .expectEvents(new ChargingStationPlacedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS));
+                .when(new PlaceChargingStationCommand(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY))
+                .expectEvents(new ChargingStationPlacedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY));
     }
 
     @Test
     public void testImproveChargingStationLocationCommand() {
         fixture.given(CHARGING_STATION)
-                .when(new ImproveChargingStationLocationCommand(CHARGING_STATION_ID, COORDINATES, ADDRESS))
-                .expectEvents(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS));
+                .when(new ImproveChargingStationLocationCommand(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY))
+                .expectEvents(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY));
     }
 
     @Test
     public void MoveChargingStationCommand() {
         fixture.given(CHARGING_STATION)
-                .when(new MoveChargingStationCommand(CHARGING_STATION_ID, COORDINATES, ADDRESS))
-                .expectEvents(new ChargingStationMovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS));
+                .when(new MoveChargingStationCommand(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY))
+                .expectEvents(new ChargingStationMovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY));
     }
 }

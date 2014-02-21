@@ -263,39 +263,42 @@ angular.module('demoApp.controllers', []).
                 });
             };
 
-            $scope.placeChargingStation = function (chargingStation, coordinates, address) {
+            $scope.placeChargingStation = function (chargingStation, coordinates, address, accessibility) {
                 $http({
                     url: 'charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['PlaceChargingStation', {
                         'coordinates': coordinates,
-                        'address': address
+                        'address': address,
+                        'accessibility': accessibility
                     }]
                 }).success(function (response) {
                     console.log('charging station placed');
                 });
             };
 
-            $scope.improveChargingStationLocation = function (chargingStation, coordinates, address) {
+            $scope.improveChargingStationLocation = function (chargingStation, coordinates, address, accessibility) {
                 $http({
                     url: 'charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['ImproveChargingStationLocation', {
                         'coordinates': coordinates,
-                        'address': address
+                        'address': address,
+                        'accessibility': accessibility
                     }]
                 }).success(function (response) {
                     console.log('charging station location improved');
                 });
             };
 
-            $scope.moveChargingStation = function (chargingStation, coordinates, address) {
+            $scope.moveChargingStation = function (chargingStation, coordinates, address, accessibility) {
                 $http({
                     url: 'charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['MoveChargingStation', {
                         'coordinates': coordinates,
-                        'address': address
+                        'address': address,
+                        'accessibility': accessibility
                     }]
                 }).success(function (response) {
                     console.log('charging station moved');

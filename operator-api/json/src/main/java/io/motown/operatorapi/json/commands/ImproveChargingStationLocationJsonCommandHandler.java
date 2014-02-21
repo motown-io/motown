@@ -47,7 +47,7 @@ class ImproveChargingStationLocationJsonCommandHandler implements JsonCommandHan
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
                 ImproveChargingStationLocationApiCommand command = gson.fromJson(commandObject, ImproveChargingStationLocationApiCommand.class);
-                commandGateway.send(new ImproveChargingStationLocationCommand(new ChargingStationId(chargingStationId), command.getCoordinates(), command.getAddress()));
+                commandGateway.send(new ImproveChargingStationLocationCommand(new ChargingStationId(chargingStationId), command.getCoordinates(), command.getAddress(), command.getAccessibility()));
             }
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Improve charging station location command not able to parse the payload, is your JSON correctly formatted?", ex);

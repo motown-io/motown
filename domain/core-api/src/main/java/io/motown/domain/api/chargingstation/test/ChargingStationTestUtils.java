@@ -229,6 +229,11 @@ public final class ChargingStationTestUtils {
     public static final Address ADDRESS = new Address("Address line 1", "Address line 2", "POSTALCODE", "City", "Region", "Country");
 
     /**
+     * The default accessibility.
+     */
+    public static final Accessibility ACCESSIBILITY = Accessibility.PUBLIC;
+
+    /**
      * The default list of identifying tokens.
      */
     public static final ImmutableList<IdentifyingToken> IDENTIFYING_TOKENS = ImmutableList.<IdentifyingToken>builder()

@@ -15,12 +15,14 @@
  */
 package io.motown.operatorapi.viewmodel.model;
 
+import io.motown.domain.api.chargingstation.Accessibility;
 import io.motown.domain.api.chargingstation.Address;
 import io.motown.domain.api.chargingstation.Coordinates;
 
 public abstract class ChangeChargingStationLocationApiCommand implements ApiCommand {
     private Coordinates coordinates;
     private Address address;
+    private Accessibility accessibility;
 
     protected ChangeChargingStationLocationApiCommand() {
     }
@@ -39,5 +41,13 @@ public abstract class ChangeChargingStationLocationApiCommand implements ApiComm
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public Accessibility getAccessibility() {
+        return accessibility;
+    }
+
+    public void setAccessibility(Accessibility accessibility) {
+        this.accessibility = accessibility;
     }
 }

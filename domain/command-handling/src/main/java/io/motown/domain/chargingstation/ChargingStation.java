@@ -343,17 +343,17 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(PlaceChargingStationCommand command) {
-        apply(new ChargingStationPlacedEvent(command.getChargingStationId(), command.getCoordinates(), command.getAddress()));
+        apply(new ChargingStationPlacedEvent(command.getChargingStationId(), command.getCoordinates(), command.getAddress(), command.getAccessibility()));
     }
 
     @CommandHandler
     public void handle(ImproveChargingStationLocationCommand command) {
-        apply(new ChargingStationLocationImprovedEvent(command.getChargingStationId(), command.getCoordinates(), command.getAddress()));
+        apply(new ChargingStationLocationImprovedEvent(command.getChargingStationId(), command.getCoordinates(), command.getAddress(), command.getAccessibility()));
     }
 
     @CommandHandler
     public void handle(MoveChargingStationCommand command) {
-        apply(new ChargingStationMovedEvent(command.getChargingStationId(), command.getCoordinates(), command.getAddress()));
+        apply(new ChargingStationMovedEvent(command.getChargingStationId(), command.getCoordinates(), command.getAddress(), command.getAccessibility()));
     }
 
     @CommandHandler

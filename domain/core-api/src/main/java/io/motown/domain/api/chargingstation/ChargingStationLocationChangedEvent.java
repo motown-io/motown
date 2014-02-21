@@ -24,6 +24,7 @@ public abstract class ChargingStationLocationChangedEvent {
     private final ChargingStationId chargingStationId;
     private final Coordinates coordinates;
     private final Address address;
+    private final Accessibility accessibility;
 
     /**
      * Creates a new {@code ChargingStationLocationChangedEvent}.
@@ -31,14 +32,16 @@ public abstract class ChargingStationLocationChangedEvent {
      * @param chargingStationId the identifier of the charging station.
      * @param coordinates the coordinates of the charging station.
      * @param address the address of the charging station.
+     * @param accessibility the accessibility of the charging station.
      */
-    protected ChargingStationLocationChangedEvent(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
+    protected ChargingStationLocationChangedEvent(ChargingStationId chargingStationId, Coordinates coordinates, Address address, Accessibility accessibility) {
         this.chargingStationId = checkNotNull(chargingStationId);
         if (coordinates == null && address == null) {
             throw new NullPointerException("Either coordinates or address parameter must be non-null");
         }
         this.coordinates = coordinates;
         this.address = address;
+        this.accessibility = checkNotNull(accessibility);
     }
 
     /**
@@ -63,5 +66,13 @@ public abstract class ChargingStationLocationChangedEvent {
      */
     public Address getAddress() {
         return address;
+    }
+
+    /**
+     * Gets the accessibility of the charging station.
+     * @return the accesibility.
+     */
+    public Accessibility getAccessibility() {
+        return accessibility;
     }
 }

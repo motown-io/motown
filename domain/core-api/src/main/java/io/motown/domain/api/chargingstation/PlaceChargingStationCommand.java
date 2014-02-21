@@ -20,7 +20,7 @@ package io.motown.domain.api.chargingstation;
  */
 public final class PlaceChargingStationCommand extends ChangeChargingStationLocationCommand {
 
-    public PlaceChargingStationCommand(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
-        super(chargingStationId, coordinates, address);
+    public PlaceChargingStationCommand(ChargingStationId chargingStationId, Coordinates coordinates, Address address, Accessibility accessibility) {
+        super(chargingStationId, coordinates, address, accessibility);
     }
 }

@@ -29,6 +29,7 @@ public abstract class ChangeChargingStationLocationCommand {
     private final ChargingStationId chargingStationId;
     private final Coordinates coordinates;
     private final Address address;
+    private final Accessibility accessibility;
 
     /**
      * Creates a command object that changes the location of a charging station.
@@ -36,15 +37,17 @@ public abstract class ChangeChargingStationLocationCommand {
      * @param chargingStationId The identifier of the charging station.
      * @param coordinates The coordinates (latitude/longitude) of the charging station.
      * @param address The address of the charging station.
+     * @param accessibility The accessibility of the charging station.
      * @throws java.lang.NullPointerException if either {@code coordinates} or {@code address} is {@code null}.
      */
-    protected ChangeChargingStationLocationCommand(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
+    protected ChangeChargingStationLocationCommand(ChargingStationId chargingStationId, Coordinates coordinates, Address address, Accessibility accessibility) {
         this.chargingStationId = checkNotNull(chargingStationId);
         if (coordinates == null && address == null) {
             throw new NullPointerException("Either coordinates or address parameter must be non-null");
         }
         this.coordinates = coordinates;
         this.address = address;
+        this.accessibility = checkNotNull(accessibility);
     }
 
     /**
@@ -71,9 +74,17 @@ public abstract class ChangeChargingStationLocationCommand {
         return address;
     }
 
+    /**
+     * Gets the accessibility of the charging station.
+     * @return the accessibility.
+     */
+    public Accessibility getAccessibility() {
+        return accessibility;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hashCode(chargingStationId, coordinates, address);
+        return Objects.hashCode(chargingStationId, coordinates, address, accessibility);
     }
 
     @Override
@@ -85,6 +96,6 @@ public abstract class ChangeChargingStationLocationCommand {
             return false;
         }
         final ChangeChargingStationLocationCommand other = (ChangeChargingStationLocationCommand) obj;
-        return Objects.equal(this.chargingStationId, other.chargingStationId) && Objects.equal(this.coordinates, other.coordinates) && Objects.equal(this.address, other.address);
+        return Objects.equal(this.chargingStationId, other.chargingStationId) && Objects.equal(this.coordinates, other.coordinates) && Objects.equal(this.address, other.address) && Objects.equal(this.accessibility, other.accessibility);
     }
 }

@@ -96,18 +96,20 @@ public class VasEventHandlerTest {
     public void chargingStationPlacedEventCoordinatesEmptyAddress() {
         chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
 
-        eventHandler.handle(new ChargingStationPlacedEvent(CHARGING_STATION_ID, COORDINATES, null));
+        eventHandler.handle(new ChargingStationPlacedEvent(CHARGING_STATION_ID, COORDINATES, null, ACCESSIBILITY));
 
         ChargingStation cs = getTestChargingStationFromRepository();
         assertEquals(Double.valueOf(COORDINATES.getLatitude()), cs.getLatitude());
         assertEquals(Double.valueOf(COORDINATES.getLongitude()), cs.getLongitude());
+
+        assertEquals(ACCESSIBILITY.name(), cs.getAccessibility());
     }
 
     @Test
     public void chargingStationPlacedEventAddressEmptyCoordinates() {
         chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
 
-        eventHandler.handle(new ChargingStationPlacedEvent(CHARGING_STATION_ID, null, ADDRESS));
+        eventHandler.handle(new ChargingStationPlacedEvent(CHARGING_STATION_ID, null, ADDRESS, ACCESSIBILITY));
 
         ChargingStation cs = getTestChargingStationFromRepository();
         assertEquals(ADDRESS.getAddressline1(), cs.getAddress());
@@ -115,13 +117,15 @@ public class VasEventHandlerTest {
         assertEquals(ADDRESS.getRegion(), cs.getRegion());
         assertEquals(ADDRESS.getCity(), cs.getCity());
         assertEquals(ADDRESS.getCountry(), cs.getCountry());
+
+        assertEquals(ACCESSIBILITY.name(), cs.getAccessibility());
     }
 
     @Test
     public void chargingStationPlacedEventAddressAndCoordinates() {
         chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
 
-        eventHandler.handle(new ChargingStationPlacedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS));
+        eventHandler.handle(new ChargingStationPlacedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY));
 
         ChargingStation cs = getTestChargingStationFromRepository();
         assertEquals(Double.valueOf(COORDINATES.getLatitude()), cs.getLatitude());
@@ -131,31 +135,35 @@ public class VasEventHandlerTest {
         assertEquals(ADDRESS.getRegion(), cs.getRegion());
         assertEquals(ADDRESS.getCity(), cs.getCity());
         assertEquals(ADDRESS.getCountry(), cs.getCountry());
+
+        assertEquals(ACCESSIBILITY.name(), cs.getAccessibility());
     }
 
     @Test
     public void chargingStationPlacedEventUnknownChargingStationNoExceptionThrown() {
         assertNull(getTestChargingStationFromRepository());
 
-        eventHandler.handle(new ChargingStationPlacedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS));
+        eventHandler.handle(new ChargingStationPlacedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY));
     }
 
     @Test
     public void chargingStationLocationImprovedEventCoordinatesEmptyAddress() {
         chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
 
-        eventHandler.handle(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, COORDINATES, null));
+        eventHandler.handle(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, COORDINATES, null, ACCESSIBILITY));
 
         ChargingStation cs = getTestChargingStationFromRepository();
         assertEquals(Double.valueOf(COORDINATES.getLatitude()), cs.getLatitude());
         assertEquals(Double.valueOf(COORDINATES.getLongitude()), cs.getLongitude());
+
+        assertEquals(ACCESSIBILITY.name(), cs.getAccessibility());
     }
 
     @Test
     public void chargingStationLocationImprovedEventAddressEmptyCoordinates() {
         chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
 
-        eventHandler.handle(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, null, ADDRESS));
+        eventHandler.handle(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, null, ADDRESS, ACCESSIBILITY));
 
         ChargingStation cs = getTestChargingStationFromRepository();
         assertEquals(ADDRESS.getAddressline1(), cs.getAddress());
@@ -163,13 +171,15 @@ public class VasEventHandlerTest {
         assertEquals(ADDRESS.getRegion(), cs.getRegion());
         assertEquals(ADDRESS.getCity(), cs.getCity());
         assertEquals(ADDRESS.getCountry(), cs.getCountry());
+
+        assertEquals(ACCESSIBILITY.name(), cs.getAccessibility());
     }
 
     @Test
     public void chargingStationLocationImprovedEventAddressAndCoordinates() {
         chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
 
-        eventHandler.handle(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS));
+        eventHandler.handle(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY));
 
         ChargingStation cs = getTestChargingStationFromRepository();
         assertEquals(Double.valueOf(COORDINATES.getLatitude()), cs.getLatitude());
@@ -179,31 +189,35 @@ public class VasEventHandlerTest {
         assertEquals(ADDRESS.getRegion(), cs.getRegion());
         assertEquals(ADDRESS.getCity(), cs.getCity());
         assertEquals(ADDRESS.getCountry(), cs.getCountry());
+
+        assertEquals(ACCESSIBILITY.name(), cs.getAccessibility());
     }
 
     @Test
     public void chargingStationLocationImprovedEventUnknownChargingStationNoExceptionThrown() {
         assertNull(getTestChargingStationFromRepository());
 
-        eventHandler.handle(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS));
+        eventHandler.handle(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY));
     }
 
     @Test
     public void chargingStationMovedEventCoordinatesEmptyAddress() {
         chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
 
-        eventHandler.handle(new ChargingStationMovedEvent(CHARGING_STATION_ID, COORDINATES, null));
+        eventHandler.handle(new ChargingStationMovedEvent(CHARGING_STATION_ID, COORDINATES, null, ACCESSIBILITY));
 
         ChargingStation cs = getTestChargingStationFromRepository();
         assertEquals(Double.valueOf(COORDINATES.getLatitude()), cs.getLatitude());
         assertEquals(Double.valueOf(COORDINATES.getLongitude()), cs.getLongitude());
+
+        assertEquals(ACCESSIBILITY.name(), cs.getAccessibility());
     }
 
     @Test
     public void chargingStationMovedEventAddressEmptyCoordinates() {
         chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
 
-        eventHandler.handle(new ChargingStationMovedEvent(CHARGING_STATION_ID, null, ADDRESS));
+        eventHandler.handle(new ChargingStationMovedEvent(CHARGING_STATION_ID, null, ADDRESS, ACCESSIBILITY));
 
         ChargingStation cs = getTestChargingStationFromRepository();
         assertEquals(ADDRESS.getAddressline1(), cs.getAddress());
@@ -211,13 +225,15 @@ public class VasEventHandlerTest {
         assertEquals(ADDRESS.getRegion(), cs.getRegion());
         assertEquals(ADDRESS.getCity(), cs.getCity());
         assertEquals(ADDRESS.getCountry(), cs.getCountry());
+
+        assertEquals(ACCESSIBILITY.name(), cs.getAccessibility());
     }
 
     @Test
     public void chargingStationMovedEventAddressAndCoordinates() {
         chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
 
-        eventHandler.handle(new ChargingStationMovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS));
+        eventHandler.handle(new ChargingStationMovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY));
 
         ChargingStation cs = getTestChargingStationFromRepository();
         assertEquals(Double.valueOf(COORDINATES.getLatitude()), cs.getLatitude());
@@ -227,13 +243,15 @@ public class VasEventHandlerTest {
         assertEquals(ADDRESS.getRegion(), cs.getRegion());
         assertEquals(ADDRESS.getCity(), cs.getCity());
         assertEquals(ADDRESS.getCountry(), cs.getCountry());
+
+        assertEquals(ACCESSIBILITY.name(), cs.getAccessibility());
     }
 
     @Test
     public void chargingStationMovedEventUnknownChargingStationNoExceptionThrown() {
         assertNull(getTestChargingStationFromRepository());
 
-        eventHandler.handle(new ChargingStationMovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS));
+        eventHandler.handle(new ChargingStationMovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY));
     }
 
     @Test

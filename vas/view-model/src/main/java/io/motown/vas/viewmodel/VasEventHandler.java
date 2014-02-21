@@ -108,7 +108,7 @@ public class VasEventHandler {
     public void handle(ChargingStationPlacedEvent event) {
         LOG.info("ChargingStationPlacedEvent");
 
-        updateLocationForChargingStation(event.getChargingStationId(), event.getCoordinates(), event.getAddress());
+        updateLocationForChargingStation(event.getChargingStationId(), event.getCoordinates(), event.getAddress(), event.getAccessibility());
     }
 
     /**
@@ -119,7 +119,7 @@ public class VasEventHandler {
     public void handle(ChargingStationLocationImprovedEvent event) {
         LOG.info("ChargingStationLocationImprovedEvent");
 
-        updateLocationForChargingStation(event.getChargingStationId(), event.getCoordinates(), event.getAddress());
+        updateLocationForChargingStation(event.getChargingStationId(), event.getCoordinates(), event.getAddress(), event.getAccessibility());
     }
 
     /**
@@ -130,7 +130,7 @@ public class VasEventHandler {
     public void handle(ChargingStationMovedEvent event) {
         LOG.info("ChargingStationMovedEvent");
 
-        updateLocationForChargingStation(event.getChargingStationId(), event.getCoordinates(), event.getAddress());
+        updateLocationForChargingStation(event.getChargingStationId(), event.getCoordinates(), event.getAddress(), event.getAccessibility());
     }
 
     /**
@@ -254,8 +254,9 @@ public class VasEventHandler {
      * @param chargingStationId charging station identifier.
      * @param coordinates the lat/long coordinates of the charging station.
      * @param address the geographical address of the charging station.
+     * @param accessibility the accessibility of the charging station.
      */
-    private void updateLocationForChargingStation(ChargingStationId chargingStationId, Coordinates coordinates, Address address) {
+    private void updateLocationForChargingStation(ChargingStationId chargingStationId, Coordinates coordinates, Address address, Accessibility accessibility) {
         ChargingStation chargingStation = getChargingStation(chargingStationId);
 
         if (chargingStation != null) {
@@ -272,6 +273,8 @@ public class VasEventHandler {
                 chargingStation.setPostalCode(address.getPostalCode());
                 chargingStation.setRegion(address.getRegion());
             }
+
+            chargingStation.setAccessibility(accessibility.name());
 
             chargingStationRepository.save(chargingStation);
         }
