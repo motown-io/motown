@@ -56,15 +56,18 @@ public final class JsonCommandParser {
         Map<String, String> settings = command.getSettings();
         Set<Evse> evses = command.getEvses();
 
+        ConfigureChargingStationCommand result;
         if (settings == null && evses != null) {
-            return new ConfigureChargingStationCommand(chargingStationId, evses);
+            result = new ConfigureChargingStationCommand(chargingStationId, evses);
         } else if (settings != null && evses == null) {
-            return new ConfigureChargingStationCommand(chargingStationId, settings);
-        } else if (settings != null && evses != null) {
-            return new ConfigureChargingStationCommand(chargingStationId, evses, settings);
+            result = new ConfigureChargingStationCommand(chargingStationId, settings);
+        } else if (settings != null) {
+            result = new ConfigureChargingStationCommand(chargingStationId, evses, settings);
         } else {
             throw new IllegalArgumentException("Configure should at least have settings or evses");
         }
+
+        return result;
     }
 
 }
