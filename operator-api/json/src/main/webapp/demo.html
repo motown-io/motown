@@ -60,9 +60,9 @@
                             <button class="btn btn-default" href="#" ng-click="reserveNow(chargingStation, 1, {'token': 'TOKEN'})">reserve now</button>
                             <button class="btn btn-default" href="#" ng-click="updateReservable(chargingStation, true)">Set reservable</button>
                             <button class="btn btn-default" href="#" ng-click="updateReservable(chargingStation, false)">Set not reservable</button>
-                            <button class="btn btn-default" href="#" ng-click="placeChargingStation(chargingStation, {'latitude': 51.464055, 'longitude': 5.794529}, undefined, 'PUBLIC')">Place charging station</button>
+                            <button class="btn btn-default" href="#" ng-click="placeChargingStation(chargingStation, {'latitude': 51.464055, 'longitude': 5.794529}, undefined, 'public')">Place charging station</button>
                             <button class="btn btn-default" href="#" ng-click="improveChargingStationLocation(chargingStation, undefined, {'addressline1': 'Markt 8', 'addressline2': '', 'postalCode': '5751 BE', 'city': 'Deurne', 'region': '', 'country': 'The Netherlands'}, 'PAYING')">Improve charging station location</button>
-                            <button class="btn btn-default" href="#" ng-click="moveChargingStation(chargingStation, {'latitude': 51.463976, 'longitude': 5.793803}, {'addressline1': 'Helmondseweg 2', 'addressline2': '', 'postalCode': '', 'city': 'Deurne', 'region': '', 'country': 'The Netherlands'}, 'PRIVATE')">Move charging station</button>
+                            <button class="btn btn-default" href="#" ng-click="moveChargingStation(chargingStation, {'latitude': 51.463976, 'longitude': 5.793803}, {'addressline1': 'Helmondseweg 2', 'addressline2': '', 'postalCode': '', 'city': 'Deurne', 'region': '', 'country': 'The Netherlands'}, 'Private')">Move charging station</button>
                             <button class="btn btn-default" href="#" ng-click="setOpeningTimes(chargingStation, [{'day': 1, 'timeStart': '12:00', timeStop: '15:00'}, {'day': 1, 'timeStart': '20:00', timeStop: '22:00'}])">Set opening times</button>
                             <button class="btn btn-default" href="#" ng-click="addOpeningTimes(chargingStation, [{'day': 2, 'timeStart': '8:30', timeStop: '17:00'}])">Add opening times</button>
                         </div>

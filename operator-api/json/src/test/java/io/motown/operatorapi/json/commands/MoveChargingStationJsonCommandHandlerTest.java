@@ -38,7 +38,7 @@ public class MoveChargingStationJsonCommandHandlerTest {
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAddressWrongAccessibility() {
         JsonObject commandObject = gson.fromJson("{address:{addressline1:'Teststraat 1',city:'Deurne',country:'NL'},accessibility:'NON-PUBLIC'}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
