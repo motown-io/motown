@@ -27,63 +27,68 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(Enclosed.class)
-public class DayTest {
+public class AccessibilityTest {
 
     @RunWith(Parameterized.class)
     public static class FromValueTest {
-        private Day day;
-        private int value;
+        private Accessibility accessibility;
+        private String value;
 
-        public FromValueTest(Day day, int value) {
-            this.day = day;
+        public FromValueTest(Accessibility accessibility, String value) {
+            this.accessibility = accessibility;
             this.value = value;
         }
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][] {
-                    {Day.MONDAY, 1},
-                    {Day.TUESDAY, 2},
-                    {Day.WEDNESDAY, 3},
-                    {Day.THURSDAY, 4},
-                    {Day.FRIDAY, 5},
-                    {Day.SATURDAY, 6},
-                    {Day.SUNDAY, 7}
+                    {Accessibility.PUBLIC, "Public"},
+                    {Accessibility.PAYING, "Paying"},
+                    {Accessibility.PRIVATE, "Private"},
+                    {Accessibility.PUBLIC, "PUBLIC"},
+                    {Accessibility.PAYING, "PAYING"},
+                    {Accessibility.PRIVATE, "PRIVATE"}
             });
         }
 
         @Test
         public void testFromValue() {
-            assertEquals(day, Day.fromValue(value));
+            assertEquals(accessibility, Accessibility.fromValue(value));
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void testInvalidValue() {
+            Accessibility.fromValue("Non-public");
+        }
+
+        @Test(expected = NullPointerException.class)
+        public void testNullValue() {
+            Accessibility.fromValue(null);
         }
     }
 
     @RunWith(Parameterized.class)
-    public static class ValueTest {
-        private Day day;
-        private int value;
+    public static class ToStringTest {
+        private Accessibility accessibility;
+        private String value;
 
-        public ValueTest(Day day, int value) {
-            this.day = day;
+        public ToStringTest(Accessibility accessibility, String value) {
+            this.accessibility = accessibility;
             this.value = value;
         }
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][] {
-                    {Day.MONDAY, 1},
-                    {Day.TUESDAY, 2},
-                    {Day.WEDNESDAY, 3},
-                    {Day.THURSDAY, 4},
-                    {Day.FRIDAY, 5},
-                    {Day.SATURDAY, 6},
-                    {Day.SUNDAY, 7}
+                    {Accessibility.PUBLIC, "Public"},
+                    {Accessibility.PAYING, "Paying"},
+                    {Accessibility.PRIVATE, "Private"}
             });
         }
 
         @Test
-        public void testValue() {
-            assertTrue(day.value() == value);
+        public void testToString() {
+            assertTrue(accessibility.toString().equals(value));
         }
     }
 }

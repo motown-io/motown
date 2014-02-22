@@ -47,6 +47,7 @@ public final class OperatorApiJsonTestUtils {
                 registerTypeAdapter(Coordinates.class, new CoordinatesTypeAdapter()).
                 registerTypeAdapter(Address.class, new AddressTypeAdapter()).
                 registerTypeAdapter(OpeningTime.class, new OpeningTimeTypeAdapter()).
+                registerTypeAdapter(Accessibility.class, new AccessibilityTypeAdapter()).
                 create();
     }
 

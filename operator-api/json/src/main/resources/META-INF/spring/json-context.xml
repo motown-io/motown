@@ -22,6 +22,7 @@
                 <bean class="io.motown.operatorapi.json.gson.CoordinatesTypeAdapter"/>
                 <bean class="io.motown.operatorapi.json.gson.AddressTypeAdapter"/>
                 <bean class="io.motown.operatorapi.json.gson.OpeningTimeTypeAdapter"/>
+                <bean class="io.motown.operatorapi.json.gson.AccessibilityTypeAdapter"/>
             </set>
         </property>
     </bean>

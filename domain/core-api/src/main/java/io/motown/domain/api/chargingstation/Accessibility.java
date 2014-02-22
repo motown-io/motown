@@ -15,14 +15,12 @@
  */
 package io.motown.domain.api.chargingstation;
 
-//import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public enum Accessibility {
-    // TODO maybe uncomment this to get rid of the mandatory casing - Mark Manders 2014-02-21
-
-    /*PUBLIC("public"),
-    PAYING("paying"),
-    PRIVATE("private");
+    PUBLIC("Public"),
+    PAYING("Paying"),
+    PRIVATE("Private");
 
     private final String value;
 
@@ -39,9 +37,8 @@ public enum Accessibility {
         throw new IllegalArgumentException(value);
     }
 
-    public String value() {
+    @Override
+    public String toString() {
         return value;
-    }*/
-
-    PUBLIC, PAYING, PRIVATE
+    }
 }
