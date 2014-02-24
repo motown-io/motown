@@ -30,7 +30,17 @@
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
-    <jdbc:embedded-database id="dataSource" type="HSQL"/>
+    <!-- named DB instead of using jdbc:embedded-database id="dataSource" type="HSQL" to prevent overlap with other modules -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName"
+                  value="org.hsqldb.jdbcDriver" />
+        <property name="url"
+                  value="jdbc:hsqldb:mem:vasViewModelDb" />
+        <property name="username"
+                  value="sa" />
+        <property name="password"
+                  value="" />
+    </bean>
 
     <!-- executorService for pushing status changes to subscribers -->
     <bean id="executorService" class="java.util.concurrent.Executors"
