@@ -44,8 +44,6 @@ public class VasEventHandler {
     @Autowired
     private VasSubscriberService subscriberService;
 
-    //TODO: Determine which event handlers are necessary to keep the model state up to date - Ingo Pak, 22 Jan 2014
-
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
         LOG.info("Handling ChargingStationCreatedEvent");

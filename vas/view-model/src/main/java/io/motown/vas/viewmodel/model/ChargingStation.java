@@ -17,6 +17,7 @@ package io.motown.vas.viewmodel.model;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -276,5 +277,22 @@ public class ChargingStation {
 
     public void setOpeningTimes(Set<OpeningTime> openingTimes) {
         this.openingTimes = openingTimes;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, chargingStationId, evses, openingTimes, isRegistered, isConfigured, chargingCapabilities, address, city, postalCode, country, region, accessibility, chargeMode, connectorTypes, latitude, longitude, hasFixedCable, isReservable, operator, state);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final ChargingStation other = (ChargingStation) obj;
+        return Objects.equals(this.id, other.id) && Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.evses, other.evses) && Objects.equals(this.openingTimes, other.openingTimes) && Objects.equals(this.isRegistered, other.isRegistered) && Objects.equals(this.isConfigured, other.isConfigured) && Objects.equals(this.chargingCapabilities, other.chargingCapabilities) && Objects.equals(this.address, other.address) && Objects.equals(this.city, other.city) && Objects.equals(this.postalCode, other.postalCode) && Objects.equals(this.country, other.country) && Objects.equals(this.region, other.region) && Objects.equals(this.accessibility, other.accessibility) && Objects.equals(this.chargeMode, other.chargeMode) && Objects.equals(this.connectorTypes, other.connectorTypes) && Objects.equals(this.latitude, other.latitude) && Objects.equals(this.longitude, other.longitude) && Objects.equals(this.hasFixedCable, other.hasFixedCable) && Objects.equals(this.isReservable, other.isReservable) && Objects.equals(this.operator, other.operator) && Objects.equals(this.state, other.state);
     }
 }

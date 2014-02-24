@@ -39,6 +39,7 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 @ContextConfiguration("classpath:vas-view-model-test-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -391,8 +392,16 @@ public class VasEventHandlerTest {
 
         eventHandler.handle(new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, new Date(), new HashMap<String, String>()));
 
-        chargingStation = getTestChargingStationFromRepository();
-        assertTrue(chargingStation.getState().equals(io.motown.vas.viewmodel.model.ComponentStatus.AVAILABLE));
+        assertTrue(getTestChargingStationFromRepository().getState().equals(io.motown.vas.viewmodel.model.ComponentStatus.AVAILABLE));
+    }
+
+    @Test
+    public void chargingStationStatusNotificationVerifySubscriberServiceCall() {
+        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+
+        eventHandler.handle(new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, FIVE_MINUTES_AGO, new HashMap<String, String>()));
+
+        verify(subscriberService).updateSubscribers(getTestChargingStationFromRepository(), FIVE_MINUTES_AGO);
     }
 
     @Test
@@ -419,6 +428,15 @@ public class VasEventHandlerTest {
 
         chargingStation = getTestChargingStationFromRepository();
         assertTrue(chargingStation.getEvse(EVSE_ID.getNumberedId()).getState().equals(io.motown.vas.viewmodel.model.ComponentStatus.AVAILABLE));
+    }
+
+    @Test
+    public void componentStatusNotificationReceivedVerifySubscriptionServiceCall() {
+        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+
+        eventHandler.handle(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, ComponentStatus.AVAILABLE, FIVE_MINUTES_AGO, new HashMap<String, String>()));
+
+        verify(subscriberService).updateSubscribers(getTestChargingStationFromRepository(), FIVE_MINUTES_AGO);
     }
 
     private ChargingStation getTestChargingStationFromRepository() {
