@@ -45,6 +45,7 @@
         </jaxws:inInterceptors>
     </jaxws:endpoint>
 
+    <!-- TODO what is this taskExecutor used for? Is it still in use? - Mark van den Bergh, Februari 21st 2014 -->
     <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
         <property name="corePoolSize" value="5"/>
         <property name="maxPoolSize" value="10"/>

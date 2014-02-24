@@ -15,6 +15,10 @@
  */
 package io.motown.vas.viewmodel.model;
 
+/**
+ * Component status that can translate a domain API Component status to a VAS status. The values in this
+ * enum are translatable to the external VAS representation.
+ */
 public enum ComponentStatus {
 
     AVAILABLE("Available"),
