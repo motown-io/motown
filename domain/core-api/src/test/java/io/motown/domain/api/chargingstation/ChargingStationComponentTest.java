@@ -16,36 +16,76 @@
 package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.Collection;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(Parameterized.class)
+@RunWith(Enclosed.class)
 public class ChargingStationComponentTest {
 
-    private ChargingStationComponent chargingStationComponent;
+    @RunWith(Parameterized.class)
+    public static class ToStringTest {
+        private ChargingStationComponent chargingStationComponent;
+        private String value;
 
-    private String value;
+        public ToStringTest(ChargingStationComponent chargingStationComponent, String value) {
+            this.chargingStationComponent = chargingStationComponent;
+            this.value = value;
+        }
 
-    public ChargingStationComponentTest(ChargingStationComponent chargingStationComponent, String value) {
-        this.chargingStationComponent = chargingStationComponent;
-        this.value = value;
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    {ChargingStationComponent.CONNECTOR, "Connector"},
+                    {ChargingStationComponent.EVSE, "EVSE"}
+            });
+        }
+
+        @Test
+        public void toStringShouldReturnTheGivenStringValue() {
+            assertTrue(chargingStationComponent.toString().equals(value));
+        }
     }
 
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-                {ChargingStationComponent.CONNECTOR, "Connector"},
-                {ChargingStationComponent.EVSE, "EVSE"}
-        });
-    }
+    @RunWith(Parameterized.class)
+    public static class FromValueTest {
+        private ChargingStationComponent chargingStationComponent;
+        private String value;
 
-    @Test
-    public void toStringShouldReturnTheGivenStringValue() {
-        assertTrue(chargingStationComponent.toString().equals(value));
+        public FromValueTest(ChargingStationComponent chargingStationComponent, String value) {
+            this.chargingStationComponent = chargingStationComponent;
+            this.value = value;
+        }
+
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][] {
+                    {ChargingStationComponent.CONNECTOR, "Connector"},
+                    {ChargingStationComponent.EVSE, "Evse"},
+                    {ChargingStationComponent.CONNECTOR, "CONNECTOR"},
+                    {ChargingStationComponent.EVSE, "EVSE"}
+            });
+        }
+
+        @Test
+        public void testFromValue() {
+            assertEquals(chargingStationComponent, ChargingStationComponent.fromValue(value));
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void testNonExistentValue() {
+            ComponentStatus.fromValue("NonExistentValue");
+        }
+
+        @Test(expected = NullPointerException.class)
+        public void testNullValue() {
+            ComponentStatus.fromValue(null);
+        }
     }
 }

@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * The components of a charging station.
  */
@@ -44,6 +46,20 @@ public enum ChargingStationComponent {
      */
     private ChargingStationComponent(String value) {
         this.value = value;
+    }
+
+    /**
+     * Gets a {@code ChargingStationComponent} from a {@code String} value.
+     * @param value The string value.
+     * @return The component.
+     */
+    public static ChargingStationComponent fromValue(String value) {
+        for (ChargingStationComponent chargingStationComponent : ChargingStationComponent.values()) {
+            if (chargingStationComponent.value.equalsIgnoreCase(checkNotNull(value))) {
+                return chargingStationComponent;
+            }
+        }
+        throw new IllegalArgumentException("Charging station component must be one of the known values");
     }
 
     /**
