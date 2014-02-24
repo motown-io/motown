@@ -337,6 +337,11 @@ public final class ChargingStationTestUtils {
             .build();
 
     /**
+     * A default opening times.
+     */
+    public static final OpeningTime OPENING_TIME = new OpeningTime(Day.MONDAY, new TimeOfDay(OPENING_TIME_START_HOUR, OPENING_TIME_START_MINUTES), new TimeOfDay(OPENING_TIME_STOP_HOUR, OPENING_TIME_STOP_MINUTES));
+
+    /**
      * Private no-arg constructor to prevent instantiation of this utility class.
      */
     private ChargingStationTestUtils() {
