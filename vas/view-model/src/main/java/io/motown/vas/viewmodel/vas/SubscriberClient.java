@@ -20,6 +20,6 @@ import io.motown.vas.viewmodel.model.Subscription;
 
 public interface SubscriberClient {
 
-    public void pushStatusChange(Subscription subscription, StatusChange statusChange);
+    void pushStatusChange(Subscription subscription, StatusChange statusChange);
 
 }

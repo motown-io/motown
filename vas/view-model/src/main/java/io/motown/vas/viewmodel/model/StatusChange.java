@@ -50,7 +50,7 @@ public class StatusChange {
     }
 
     public Date getTimestamp() {
-        return timestamp;
+        return new Date(timestamp.getTime());
     }
 
     public ComponentStatus getStatus() {
