@@ -53,12 +53,7 @@ public class FutureRequestHandler<T, X> {
 
         if (continuation == null) {
             LOG.error("Failed to get continuation, falling back to synchronous request handling. Make sure async-supported is set to true on the CXF servlet (web.xml)");
-            try {
-                return successFactory.createResponse(future.get());
-            } catch (InterruptedException | ExecutionException e) {
-                LOG.error("Exception while creating synchronous response", e);
-                return errorFactory.createResponse();
-            }
+            return getResponse(future, successFactory, errorFactory);
         }
 
         if (future instanceof ContinuationFutureCallback) {
@@ -67,18 +62,12 @@ public class FutureRequestHandler<T, X> {
 
         synchronized (continuation) {
             if(continuation.isNew()) {
-
                 // initiate the call for which the 'future' is going to wait
                 initiator.initiateCall();
 
                 continuation.setObject(future);
                 if (future.isDone()) {
-                    try {
-                        return successFactory.createResponse(future.get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        LOG.error("Exception while creating response", e);
-                        return errorFactory.createResponse();
-                    }
+                    return getResponse(future, successFactory, errorFactory);
                 } else {
                     // suspend the transport thread so it can handle other requests
                     continuation.suspend(continuationTimeout);
@@ -87,12 +76,7 @@ public class FutureRequestHandler<T, X> {
             } else {
                 Future<X> futureC = (Future<X>) continuation.getObject();
                 if (futureC.isDone()) {
-                    try {
-                        return successFactory.createResponse(futureC.get());
-                    } catch (InterruptedException | ExecutionException e) {
-                        LOG.error("Exception while creating response", e);
-                        return errorFactory.createResponse();
-                    }
+                    return getResponse(future, successFactory, errorFactory);
                 } else {
                     continuation.suspend(decreaseTimeout());
                 }
@@ -100,6 +84,15 @@ public class FutureRequestHandler<T, X> {
         }
         // unreachable
         return null;
+    }
+
+    private T getResponse(Future<X> future, FutureResponseFactory<T, X> successFactory, ResponseFactory<T> errorFactory) {
+        try {
+            return successFactory.createResponse(future.get());
+        } catch (InterruptedException | ExecutionException e) {
+            LOG.error("Exception while creating response", e);
+            return errorFactory.createResponse();
+        }
     }
 
     public void setContinuationProvider(ContinuationProvider provider) {
