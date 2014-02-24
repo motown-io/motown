@@ -62,4 +62,12 @@ public class ReserveNowRequestedForUnreservableChargingStationEventTest {
         assertEquals(IDENTIFYING_TOKEN, event.getParentIdentifyingToken());
     }
 
+    @Test
+    public void testImmutableDate() {
+        Date now = new Date();
+        ReserveNowRequestedForUnreservableChargingStationEvent event = new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, now, PARENT_IDENTIFYING_TOKEN);
+        event.getExpiryDate().setTime(TWO_MINUTES_AGO.getTime());
+        assertEquals(now, event.getExpiryDate());
+    }
+
 }

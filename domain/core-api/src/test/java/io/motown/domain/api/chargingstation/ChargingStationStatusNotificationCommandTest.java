@@ -20,7 +20,8 @@ import org.junit.Test;
 import java.util.Collections;
 import java.util.Date;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static junit.framework.Assert.assertEquals;
 
 public class ChargingStationStatusNotificationCommandTest {
 
@@ -42,5 +43,13 @@ public class ChargingStationStatusNotificationCommandTest {
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithAttributesNull() {
         new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, new Date(), null);
+    }
+
+    @Test
+    public void testImmutableDate() {
+        Date now = new Date();
+        ChargingStationStatusNotificationCommand command = new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, now, BOOT_NOTIFICATION_ATTRIBUTES);
+        command.getTimestamp().setTime(TWO_MINUTES_AGO.getTime());
+        assertEquals(now, command.getTimestamp());
     }
 }

@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Date;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static junit.framework.Assert.assertEquals;
 
 public class TransactionStartedEventTest {
 
@@ -47,5 +48,13 @@ public class TransactionStartedEventTest {
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullAttributes() {
         new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 1, new Date(), null);
+    }
+
+    @Test
+    public void testImmutableDate() {
+        Date now = new Date();
+        TransactionStartedEvent event = new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, TRANSACTION_NUMBER, now, BOOT_NOTIFICATION_ATTRIBUTES);
+        event.getTimestamp().setTime(TWO_MINUTES_AGO.getTime());
+        assertEquals(now, event.getTimestamp());
     }
 }

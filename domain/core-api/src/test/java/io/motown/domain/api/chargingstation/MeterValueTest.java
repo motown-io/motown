@@ -20,11 +20,10 @@ import org.junit.Test;
 
 import java.util.Date;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.TWO_MINUTES_AGO;
 import static org.junit.Assert.assertEquals;
 
 public class MeterValueTest {
-
-    public static final int YEAR = 81;
 
     @Test(expected = NullPointerException.class)
     public void createMeterValueWithNullTimestampThrowsNullPointerException() {
@@ -42,7 +41,7 @@ public class MeterValueTest {
         MeterValue meterValue = new MeterValue(now, "123");
 
         // If this method returns a defensive copy, changing date should affect the internal timestamp.
-        meterValue.getTimestamp().setYear(YEAR);
+        meterValue.getTimestamp().setTime(TWO_MINUTES_AGO.getTime());
 
         assertEquals(now, meterValue.getTimestamp());
     }

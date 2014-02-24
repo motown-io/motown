@@ -20,8 +20,7 @@ import org.junit.Test;
 import java.util.Collections;
 import java.util.Date;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.FIVE_MINUTES_AGO;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static org.junit.Assert.assertEquals;
 
 public class ChargingStationStatusNotificationReceivedEventTest {
@@ -54,5 +53,13 @@ public class ChargingStationStatusNotificationReceivedEventTest {
         assertEquals(ComponentStatus.AVAILABLE, event.getStatus());
         assertEquals(FIVE_MINUTES_AGO, event.getTimestamp());
         assertEquals(Collections.<String, String>emptyMap(), event.getAttributes());
+    }
+
+    @Test
+    public void testImmutableDate() {
+        Date now = new Date();
+        ChargingStationStatusNotificationReceivedEvent event = new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, now, BOOT_NOTIFICATION_ATTRIBUTES);
+        event.getTimestamp().setTime(TWO_MINUTES_AGO.getTime());
+        assertEquals(now, event.getTimestamp());
     }
 }

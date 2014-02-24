@@ -20,19 +20,19 @@ import org.junit.Test;
 import java.util.Collections;
 import java.util.Date;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.PROTOCOL;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static junit.framework.Assert.assertEquals;
 
 public class FirmwareUpdateRequestedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new FirmwareUpdateRequestedEvent(null, PROTOCOL, "https://somewhere.nl", new Date(), Collections.<String, String>emptyMap());
+        new FirmwareUpdateRequestedEvent(null, PROTOCOL, UPDATE_LOCATION, new Date(), Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullProtocol() {
-        new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, null, "https://somewhere.nl", new Date(), Collections.<String, String>emptyMap());
+        new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, null, UPDATE_LOCATION, new Date(), Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
@@ -47,7 +47,15 @@ public class FirmwareUpdateRequestedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullRetrieveDate() {
-        new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, "https://somewhere.nl", null, Collections.<String, String>emptyMap());
+        new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, UPDATE_LOCATION, null, Collections.<String, String>emptyMap());
+    }
+
+    @Test
+    public void testImmutableDate() {
+        Date now = new Date();
+        FirmwareUpdateRequestedEvent event = new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, UPDATE_LOCATION, now, BOOT_NOTIFICATION_ATTRIBUTES);
+        event.getRetrieveDate().setTime(TWO_MINUTES_AGO.getTime());
+        assertEquals(now, event.getRetrieveDate());
     }
 
 }

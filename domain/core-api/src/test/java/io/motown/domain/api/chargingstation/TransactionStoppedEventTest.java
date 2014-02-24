@@ -54,4 +54,12 @@ public class TransactionStoppedEventTest {
         assertEquals(METER_STOP, event.getMeterStop());
         assertEquals(FIVE_MINUTES_AGO, event.getTimestamp());
     }
+
+    @Test
+    public void testImmutableDate() {
+        Date now = new Date();
+        TransactionStoppedEvent event = new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, now);
+        event.getTimestamp().setTime(TWO_MINUTES_AGO.getTime());
+        assertEquals(now, event.getTimestamp());
+    }
 }

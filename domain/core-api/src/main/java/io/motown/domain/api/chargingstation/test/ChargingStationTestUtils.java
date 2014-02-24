@@ -234,6 +234,11 @@ public final class ChargingStationTestUtils {
     public static final Accessibility ACCESSIBILITY = Accessibility.PUBLIC;
 
     /**
+     * The default update location.
+     */
+    public static final String UPDATE_LOCATION = "https://somewhere.nl";
+
+    /**
      * The default list of identifying tokens.
      */
     public static final ImmutableList<IdentifyingToken> IDENTIFYING_TOKENS = ImmutableList.<IdentifyingToken>builder()

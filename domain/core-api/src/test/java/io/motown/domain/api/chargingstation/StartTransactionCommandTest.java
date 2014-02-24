@@ -20,6 +20,7 @@ import org.junit.Test;
 import java.util.Date;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static junit.framework.Assert.assertEquals;
 
 public class StartTransactionCommandTest {
 
@@ -41,5 +42,13 @@ public class StartTransactionCommandTest {
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTimestamp() {
         new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 1, null);
+    }
+
+    @Test
+    public void testImmutableDate() {
+        Date now = new Date();
+        StartTransactionCommand command = new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, TRANSACTION_NUMBER, now);
+        command.getTimestamp().setTime(TWO_MINUTES_AGO.getTime());
+        assertEquals(now, command.getTimestamp());
     }
 }

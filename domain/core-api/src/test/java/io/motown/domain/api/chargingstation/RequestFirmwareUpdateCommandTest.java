@@ -20,13 +20,14 @@ import org.junit.Test;
 import java.util.Collections;
 import java.util.Date;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static junit.framework.Assert.assertEquals;
 
 public class RequestFirmwareUpdateCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new RequestFirmwareUpdateCommand(null, "https://somewhere.nl", new Date(), Collections.<String, String>emptyMap());
+        new RequestFirmwareUpdateCommand(null, UPDATE_LOCATION, new Date(), Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
@@ -41,11 +42,19 @@ public class RequestFirmwareUpdateCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullRetrieveDate() {
-        new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, "https://somewhere.nl", null, Collections.<String, String>emptyMap());
+        new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, UPDATE_LOCATION, null, Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullAttributes() {
-        new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, "https://somewhere.nl", new Date(), null);
+        new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, UPDATE_LOCATION, new Date(), null);
+    }
+
+    @Test
+    public void testImmutableDate() {
+        Date now = new Date();
+        RequestFirmwareUpdateCommand command = new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, UPDATE_LOCATION, now, BOOT_NOTIFICATION_ATTRIBUTES);
+        command.getRetrieveDate().setTime(TWO_MINUTES_AGO.getTime());
+        assertEquals(now, command.getRetrieveDate());
     }
 }

@@ -66,4 +66,12 @@ public class ComponentStatusNotificationReceivedEventTest {
         assertEquals(FIVE_MINUTES_AGO, event.getTimestamp());
         assertEquals(Collections.<String, String>emptyMap(), event.getAttributes());
     }
+
+    @Test
+    public void testImmutableDate() {
+        Date now = new Date();
+        ComponentStatusNotificationReceivedEvent event = new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, now, BOOT_NOTIFICATION_ATTRIBUTES);
+        event.getTimestamp().setTime(TWO_MINUTES_AGO.getTime());
+        assertEquals(now, event.getTimestamp());
+    }
 }
