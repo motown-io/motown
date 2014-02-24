@@ -38,6 +38,7 @@ import static io.motown.vas.viewmodel.VasViewModelTestUtils.getRegisteredAndConf
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 @ContextConfiguration("classpath:vas-view-model-test-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -51,14 +52,19 @@ public class VasEventHandlerTest {
     @Autowired
     private ConfigurationConversionService configurationConversionService;
 
+    private VasSubscriberService subscriberService;
+
     @Before
     public void setUp() {
         chargingStationRepository.deleteAll();
 
         eventHandler = new VasEventHandler();
 
+        subscriberService = mock(VasSubscriberService.class);
+
         eventHandler.setChargingStationRepository(chargingStationRepository);
         eventHandler.setConfigurationConversionService(configurationConversionService);
+        eventHandler.setSubscriberService(subscriberService);
     }
 
     @Test
@@ -89,8 +95,6 @@ public class VasEventHandlerTest {
 
         eventHandler.handle(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
     }
-
-    //TODO: Finish tests - Ingo Pak, 21 Jan 2014
 
     @Test
     public void chargingStationPlacedEventCoordinatesEmptyAddress() {

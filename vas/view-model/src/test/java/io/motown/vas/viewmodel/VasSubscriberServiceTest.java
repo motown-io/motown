@@ -21,11 +21,11 @@ import io.motown.vas.viewmodel.vas.SubscriptionUpdater;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Date;
 import java.util.concurrent.ExecutorService;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.vas.viewmodel.VasViewModelTestUtils.SUBSCRIPTIONS;
+import static io.motown.vas.viewmodel.VasViewModelTestUtils.getRegisteredAndConfiguredChargingStation;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -49,19 +49,19 @@ public class VasSubscriberServiceTest {
 
     @Test
     public void updateSubscribersWithoutSubscribers() {
-        StatusChange statusChange = new StatusChange(CHARGING_STATION_ID.getId(), new Date(), ComponentStatus.AVAILABLE, 2);
+        ChargingStation chargingStation = getRegisteredAndConfiguredChargingStation();
 
-        subscribeService.updateSubscribers(statusChange);
+        subscribeService.updateSubscribers(chargingStation, FIVE_MINUTES_AGO);
 
         verify(executorService, never()).execute(any(SubscriptionUpdater.class));
     }
 
     @Test
     public void updateSubscribersVerifyExecutorServiceCalls() {
+        ChargingStation chargingStation = getRegisteredAndConfiguredChargingStation();
         when(subscriptionRepository.findAll()).thenReturn(SUBSCRIPTIONS);
-        StatusChange statusChange = new StatusChange(CHARGING_STATION_ID.getId(), new Date(), ComponentStatus.AVAILABLE, 2);
 
-        subscribeService.updateSubscribers(statusChange);
+        subscribeService.updateSubscribers(chargingStation, FIVE_MINUTES_AGO);
 
         verify(executorService, times(SUBSCRIPTIONS.size())).execute(any(SubscriptionUpdater.class));
     }

@@ -41,6 +41,9 @@ public class VasEventHandler {
     @Autowired
     private ConfigurationConversionService configurationConversionService;
 
+    @Autowired
+    private VasSubscriberService subscriberService;
+
     //TODO: Determine which event handlers are necessary to keep the model state up to date - Ingo Pak, 22 Jan 2014
 
     @EventHandler
@@ -190,6 +193,8 @@ public class VasEventHandler {
         if (chargingStation != null) {
             chargingStation.setState(ComponentStatus.fromApiComponentStatus(event.getStatus()));
             chargingStationRepository.save(chargingStation);
+
+            subscriberService.updateSubscribers(chargingStation, event.getTimestamp());
         }
     }
 
@@ -203,7 +208,10 @@ public class VasEventHandler {
             io.motown.vas.viewmodel.model.Evse evse = chargingStation.getEvse( ((EvseId)event.getComponentId()).getNumberedId() );
             evse.setState(ComponentStatus.fromApiComponentStatus(event.getStatus()));
             chargingStationRepository.save(chargingStation);
+
+            subscriberService.updateSubscribers(chargingStation, event.getTimestamp());
         }
+
     }
 
     public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {
@@ -212,6 +220,10 @@ public class VasEventHandler {
 
     public void setConfigurationConversionService(ConfigurationConversionService configurationConversionService) {
         this.configurationConversionService = configurationConversionService;
+    }
+
+    public void setSubscriberService(VasSubscriberService subscriberService) {
+        this.subscriberService = subscriberService;
     }
 
     /**

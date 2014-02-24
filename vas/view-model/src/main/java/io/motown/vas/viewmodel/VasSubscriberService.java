@@ -15,6 +15,7 @@
  */
 package io.motown.vas.viewmodel;
 
+import io.motown.vas.viewmodel.model.ChargingStation;
 import io.motown.vas.viewmodel.model.StatusChange;
 import io.motown.vas.viewmodel.model.Subscription;
 import io.motown.vas.viewmodel.persistence.repostories.SubscriptionRepository;
@@ -23,6 +24,7 @@ import io.motown.vas.viewmodel.vas.SubscriptionUpdater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
@@ -38,18 +40,39 @@ public class VasSubscriberService {
     @Autowired
     private SubscriberClient subscriberClient;
 
-    public void updateSubscribers(StatusChange change) {
+    /**
+     * Updates all known subscribers (from the repository) about the new state the charging station is in. Uses the executor
+     * service to execute updaters. Any exceptions thrown by an updater (e.g. client not reachable) will not influence
+     * other updaters.
+     *
+     * @param chargingStation charging station that had it's state changed.
+     * @param timestampStatusChange timestamp of the change
+     */
+    public void updateSubscribers(ChargingStation chargingStation, Date timestampStatusChange) {
+        StatusChange change = new StatusChange(chargingStation.getChargingStationId(), timestampStatusChange, chargingStation.getState(), chargingStation.getNumberOfFreeEvses());
+
         List<Subscription> subscriptions = subscriptionRepository.findAll();
         for (Subscription subscription : subscriptions) {
             executorService.execute(new SubscriptionUpdater(subscriberClient, subscription, change));
         }
     }
 
+    /**
+     * Sets the subscription repository.
+     *
+     * @param subscriptionRepository subscription repository.
+     */
     public void setSubscriptionRepository(SubscriptionRepository subscriptionRepository) {
         this.subscriptionRepository = subscriptionRepository;
     }
 
+    /**
+     * Sets the executor service which is used to execute the subscription updates.
+     *
+     * @param executorService executor service.
+     */
     public void setExecutorService(ExecutorService executorService) {
         this.executorService = executorService;
     }
+
 }
