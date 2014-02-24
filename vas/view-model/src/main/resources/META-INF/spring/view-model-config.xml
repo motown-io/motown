@@ -82,4 +82,9 @@
 
     <jdbc:embedded-database id="dataSource" type="HSQL"/>
 
+    <!-- executorService for pushing status changes to subscribers -->
+    <bean id="executorService" class="java.util.concurrent.Executors"
+          factory-method="newCachedThreadPool"
+          destroy-method="shutdownNow" />
+
 </beans>

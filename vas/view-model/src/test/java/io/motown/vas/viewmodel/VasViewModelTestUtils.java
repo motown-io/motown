@@ -15,11 +15,14 @@
  */
 package io.motown.vas.viewmodel;
 
+import com.google.common.collect.ImmutableList;
 import io.motown.vas.viewmodel.model.ChargingStation;
 import io.motown.vas.viewmodel.model.ComponentStatus;
 import io.motown.vas.viewmodel.model.Evse;
+import io.motown.vas.viewmodel.model.Subscription;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
@@ -29,6 +32,11 @@ public final class VasViewModelTestUtils {
     private VasViewModelTestUtils() {
         // Private no-arg constructor to prevent instantiation of utility class.
     }
+
+    public static List<Subscription> SUBSCRIPTIONS = ImmutableList.<Subscription>builder()
+            .add(new Subscription("identity1", "http://localhost/identity1"))
+            .add(new Subscription("identity2", "http://localhost/identity2"))
+            .build();
 
     public static ChargingStation getRegisteredAndConfiguredChargingStation() {
         ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
