@@ -15,12 +15,6 @@
     <context:property-placeholder location="classpath:config.properties, file:${io.motown.identificationauthorization.app.config}"
                                   ignore-resource-not-found="true"/>
 
-    <bean id="cirAuthentication" class="io.motown.identificationauthorization.cirplugin.CirAuthentication">
-        <property name="username" value="${io.motown.identificationauthorization.cirplugin.cirservice.username}" />
-        <property name="password" value="${io.motown.identificationauthorization.cirplugin.cirservice.password}" />
-        <property name="endpoint" value="${io.motown.identificationauthorization.cirplugin.cirservice.endpoint}" />
-    </bean>
-
     <bean class="io.motown.identificationauthorization.app.AuthorizationEventListener">
         <property name="commandGateway" ref="authorizationCommandGateway" />
         <property name="identificationAuthorizationService" ref="identificationAuthorizationService" />
@@ -29,7 +23,11 @@
     <bean id="identificationAuthorizationService" class="io.motown.identificationauthorization.app.IdentificationAuthorizationService">
         <property name="providers">
             <set>
-                <bean class="io.motown.identificationauthorization.cirplugin.CirAuthentication" />
+                <bean id="cirAuthentication" class="io.motown.identificationauthorization.cirplugin.CirAuthentication">
+                    <property name="username" value="${io.motown.identificationauthorization.cirplugin.cirservice.username}" />
+                    <property name="password" value="${io.motown.identificationauthorization.cirplugin.cirservice.password}" />
+                    <property name="endpoint" value="${io.motown.identificationauthorization.cirplugin.cirservice.endpoint}" />
+                </bean>
             </set>
         </property>
     </bean>

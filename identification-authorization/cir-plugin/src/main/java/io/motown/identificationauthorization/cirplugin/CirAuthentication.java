@@ -97,6 +97,10 @@ public class CirAuthentication implements AuthenticationProvider {
         return valid;
     }
 
+    public void setCirService(ServiceSoap service) {
+        this.cirService = service;
+    }
+
     /**
      * Creates a holder containing a web service header with the username and password, used to authenticate
      * ourselves with CIR.
@@ -121,10 +125,6 @@ public class CirAuthentication implements AuthenticationProvider {
             cirService = ws;
         }
         return cirService;
-    }
-
-    public void setCirService(ServiceSoap service) {
-        this.cirService = service;
     }
 
 }
