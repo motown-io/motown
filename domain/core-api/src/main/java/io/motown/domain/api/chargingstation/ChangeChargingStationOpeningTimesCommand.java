@@ -15,10 +15,10 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import java.util.Objects;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -61,7 +61,7 @@ public abstract class ChangeChargingStationOpeningTimesCommand {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(chargingStationId, openingTimes);
+        return Objects.hash(chargingStationId, openingTimes);
     }
 
     @Override
@@ -73,6 +73,6 @@ public abstract class ChangeChargingStationOpeningTimesCommand {
             return false;
         }
         final ChangeChargingStationOpeningTimesCommand other = (ChangeChargingStationOpeningTimesCommand) obj;
-        return Objects.equal(this.chargingStationId, other.chargingStationId) && Objects.equal(this.openingTimes, other.openingTimes);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.openingTimes, other.openingTimes);
     }
 }
