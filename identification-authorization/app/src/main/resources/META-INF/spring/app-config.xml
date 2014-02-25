@@ -21,7 +21,18 @@
         <property name="endpoint" value="${io.motown.identificationauthorization.cirplugin.cirservice.endpoint}" />
     </bean>
 
-    <context:component-scan base-package="io.motown.identificationauthorization.app"/>
+    <bean class="io.motown.identificationauthorization.app.AuthorizationEventListener">
+        <property name="commandGateway" ref="authorizationCommandGateway" />
+        <property name="identificationAuthorizationService" ref="identificationAuthorizationService" />
+    </bean>
+
+    <bean id="identificationAuthorizationService" class="io.motown.identificationauthorization.app.IdentificationAuthorizationService">
+        <property name="providers">
+            <set>
+                <bean class="io.motown.identificationauthorization.cirplugin.CirAuthentication" />
+            </set>
+        </property>
+    </bean>
 
     <bean id="beanValidationInterceptor" class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor"/>
 

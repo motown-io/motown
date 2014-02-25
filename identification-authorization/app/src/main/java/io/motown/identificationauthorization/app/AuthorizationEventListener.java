@@ -21,21 +21,15 @@ import io.motown.domain.api.chargingstation.GrantAuthorizationCommand;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.common.annotation.MetaData;
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.Collections;
 
 import static org.axonframework.commandhandling.GenericCommandMessage.asCommandMessage;
 
-@Component
 public class AuthorizationEventListener {
 
-    @Autowired
-    private IdentificationAuthorizationService service;
+    private IdentificationAuthorizationService identificationAuthorizationService;
 
-    @Resource(name = "authorizationCommandGateway")
     private AuthorizationCommandGateway commandGateway;
 
     /**
@@ -50,7 +44,7 @@ public class AuthorizationEventListener {
     @EventHandler
     protected void onEvent(AuthorizationRequestedEvent event,
                            @MetaData(value = "correlationId", required = false) String correlationId) {
-        boolean valid = service.isValid(event.getIdentifyingToken());
+        boolean valid = identificationAuthorizationService.isValid(event.getIdentifyingToken());
 
         CommandMessage commandMessage;
         if (valid) {
@@ -66,8 +60,8 @@ public class AuthorizationEventListener {
         commandGateway.send(commandMessage);
     }
 
-    public void setService(IdentificationAuthorizationService service) {
-        this.service = service;
+    public void setIdentificationAuthorizationService(IdentificationAuthorizationService identificationAuthorizationService) {
+        this.identificationAuthorizationService = identificationAuthorizationService;
     }
 
     public void setCommandGateway(AuthorizationCommandGateway commandGateway) {

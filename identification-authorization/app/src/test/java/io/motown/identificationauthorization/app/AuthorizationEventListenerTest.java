@@ -46,7 +46,7 @@ public class AuthorizationEventListenerTest {
         service = mock(IdentificationAuthorizationService.class);
         when(service.isValid(INVALID_IDENTIFYING_TOKEN)).thenReturn(false);
         when(service.isValid(IDENTIFYING_TOKEN)).thenReturn(true);
-        eventListener.setService(service);
+        eventListener.setIdentificationAuthorizationService(service);
 
         gateway = mock(AuthorizationCommandGateway.class);
         eventListener.setCommandGateway(gateway);

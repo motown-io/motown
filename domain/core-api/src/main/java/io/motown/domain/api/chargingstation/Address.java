@@ -32,7 +32,7 @@ public final class Address {
     /**
      * Creates an {@code Address} instance
      *
-     * @param addressline1 This usually denotes a street inluding a housenumber.
+     * @param addressline1 This usually denotes a street including a house number.
      * @param addressline2 This is used for e.g. a building number.
      * @param postalCode The postal code of the address.
      * @param city The city of the address.
