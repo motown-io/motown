@@ -14,7 +14,19 @@
     <context:property-placeholder location="classpath:config.properties, file:${io.motown.chargingstationconfiguration.app.config}"
                                   ignore-resource-not-found="true"/>
 
-    <context:component-scan base-package="io.motown.chargingstationconfiguration.app"/>
+    <bean class="io.motown.chargingstationconfiguration.app.ConfigurationEventListener">
+        <property name="commandGateway" ref="configurationCommandGateway" />
+        <property name="domainService" ref="domainService" />
+    </bean>
+
+    <bean id="domainService" class="io.motown.chargingstationconfiguration.viewmodel.domain.DomainService">
+        <property name="chargingStationTypeRepository" ref="chargingStationTypeRepository" />
+    </bean>
+
+    <!-- Configure a DAO for ChargingStationTypeRepository class -->
+    <bean id="chargingStationTypeRepository" class="org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean">
+        <property name="repositoryInterface" value="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository" />
+    </bean>
 
     <bean id="beanValidationInterceptor" class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor"/>
 
