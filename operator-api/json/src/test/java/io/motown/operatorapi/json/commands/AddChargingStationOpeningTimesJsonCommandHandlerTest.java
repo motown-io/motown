@@ -45,7 +45,7 @@ public class AddChargingStationOpeningTimesJsonCommandHandlerTest {
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testSetOpeningTimesInvalidDay() {
         JsonObject commandObject = gson.fromJson("{openingTimes:[{day:8,timeStart:'12:00',timeStop:'15:00'}]}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);

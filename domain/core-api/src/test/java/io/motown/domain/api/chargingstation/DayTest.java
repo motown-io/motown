@@ -56,6 +56,11 @@ public class DayTest {
         public void testFromValue() {
             assertEquals(day, Day.fromValue(value));
         }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void testIllegalValue() {
+            Day.fromValue(8);
+        }
     }
 
     @RunWith(Parameterized.class)

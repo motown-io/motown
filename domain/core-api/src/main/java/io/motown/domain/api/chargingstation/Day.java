@@ -15,9 +15,6 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public enum Day {
     MONDAY(1),
     TUESDAY(2),
@@ -26,14 +23,6 @@ public enum Day {
     FRIDAY(5),
     SATURDAY(6),
     SUNDAY(7);
-
-    private static final Map<Integer, Day> INTEGER_DAY_MAP = new HashMap<>();
-
-    static {
-        for (Day day : Day.values()) {
-            INTEGER_DAY_MAP.put(day.value, day);
-        }
-    }
 
     private final int value;
 
@@ -46,6 +35,11 @@ public enum Day {
     }
 
     public static Day fromValue(int value) {
-        return INTEGER_DAY_MAP.get(value);
+        for (Day day : Day.values()) {
+            if (day.value == value) {
+                return day;
+            }
+        }
+        throw new IllegalArgumentException(String.valueOf(value));
     }
 }
