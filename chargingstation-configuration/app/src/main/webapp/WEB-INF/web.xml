@@ -26,8 +26,7 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            classpath:META-INF/spring/app-config.xml,
-            classpath:META-INF/spring/view-model-config.xml
+            classpath:META-INF/spring/app-config.xml
         </param-value>
     </context-param>
 
