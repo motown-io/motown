@@ -15,8 +15,9 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import com.google.common.base.Objects;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
+
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -84,7 +85,7 @@ public abstract class ChangeChargingStationLocationCommand {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(chargingStationId, coordinates, address, accessibility);
+        return Objects.hash(chargingStationId, coordinates, address, accessibility);
     }
 
     @Override
@@ -96,6 +97,6 @@ public abstract class ChangeChargingStationLocationCommand {
             return false;
         }
         final ChangeChargingStationLocationCommand other = (ChangeChargingStationLocationCommand) obj;
-        return Objects.equal(this.chargingStationId, other.chargingStationId) && Objects.equal(this.coordinates, other.coordinates) && Objects.equal(this.address, other.address) && Objects.equal(this.accessibility, other.accessibility);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.coordinates, other.coordinates) && Objects.equals(this.address, other.address) && Objects.equals(this.accessibility, other.accessibility);
     }
 }
