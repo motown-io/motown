@@ -16,17 +16,18 @@
 package io.motown.operatorapi.json.gson;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
 import io.motown.domain.api.chargingstation.Coordinates;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 
 public class CoordinatesTypeAdapterTest {
+    private final CoordinatesTypeAdapter adapter = new CoordinatesTypeAdapter();
 
     @Test
     public void testCoordinatesTypeAdapter() {
-        CoordinatesTypeAdapter adapter = new CoordinatesTypeAdapter();
-
         assertEquals(adapter.getAdaptedType(), Coordinates.class);
 
         JsonObject coordinatesJson = new JsonObject();
@@ -37,5 +38,11 @@ public class CoordinatesTypeAdapterTest {
 
         assertEquals(coordinatesJson.get("latitude").getAsDouble(), coordinates.getLatitude());
         assertEquals(coordinatesJson.get("longitude").getAsDouble(), coordinates.getLongitude());
+    }
+
+    @Test(expected = JsonParseException.class)
+    public void testCoordinatesAsPrimitive() {
+        JsonPrimitive jsonPrimitive = new JsonPrimitive("0.0, 0.0");
+        adapter.deserialize(jsonPrimitive, Coordinates.class, null);
     }
 }

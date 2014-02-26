@@ -58,7 +58,7 @@ public class OpeningTimeTypeAdapter implements TypeAdapter<OpeningTime> {
             if (obj == null) {
                 return null;
             }
-        } catch (ClassCastException | IllegalArgumentException e) {
+        } catch (ClassCastException | IllegalStateException e) {
             throw new JsonParseException("OpeningTime must be a valid JSON object", e);
         }
 
