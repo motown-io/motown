@@ -15,6 +15,8 @@
  */
 package io.motown.operatorapi.json.gson;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import io.motown.domain.api.chargingstation.EvseId;
 import org.junit.Test;
@@ -22,11 +24,10 @@ import org.junit.Test;
 import static junit.framework.Assert.assertEquals;
 
 public class EvseIdTypeAdapterTest {
+    private final EvseIdTypeAdapter adapter = new EvseIdTypeAdapter();
 
     @Test
     public void testEvseIdTypeAdapter() {
-        EvseIdTypeAdapter adapter = new EvseIdTypeAdapter();
-
         assertEquals(adapter.getAdaptedType(), EvseId.class);
 
         JsonPrimitive evseIdJson = new JsonPrimitive(1);
@@ -34,5 +35,18 @@ public class EvseIdTypeAdapterTest {
         EvseId evseId = adapter.deserialize(evseIdJson, EvseId.class, null);
 
         assertEquals(evseIdJson.getAsInt(), evseId.getNumberedId());
+    }
+
+    @Test(expected = JsonParseException.class)
+    public void testEvseIdAsObject() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("evseId", 1);
+        adapter.deserialize(jsonObject, EvseId.class, null);
+    }
+
+    @Test(expected = JsonParseException.class)
+    public void testEvseIdAsUnparsableString() {
+        JsonPrimitive jsonPrimitive = new JsonPrimitive("1x");
+        adapter.deserialize(jsonPrimitive, EvseId.class, null);
     }
 }

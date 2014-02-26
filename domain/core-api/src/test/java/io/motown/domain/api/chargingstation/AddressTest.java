@@ -17,8 +17,6 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADDRESS;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.COORDINATES;
 import static junit.framework.Assert.assertEquals;
 
 public class AddressTest {
@@ -42,4 +40,15 @@ public class AddressTest {
         assertEquals(region, address.getRegion());
         assertEquals(country, address.getCountry());
     }
+
+    @Test(expected = NullPointerException.class)
+    public void testConstructorWithNullArguments() {
+        new Address(null, null, null, null, null, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testIllegalArgumentExceptionOnEmptyArguments() {
+        new Address("", "", "", "", "", "");
+    }
+
 }

@@ -17,6 +17,10 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
+import java.util.UUID;
+
+import static junit.framework.Assert.assertEquals;
+
 public class UuidTransactionIdTest {
 
     @Test(expected = IllegalArgumentException.class)
@@ -27,5 +31,16 @@ public class UuidTransactionIdTest {
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithIncorrectTextualUuid() {
         new UuidTransactionId("this-is-not-a-uuid");
+    }
+
+    @Test
+    public void testConstructors() {
+        UUID uuid = UUID.randomUUID();
+        UuidTransactionId id = new UuidTransactionId(uuid);
+        String uuidString = "9287bafe-cba6-472a-bffe-9823751095ba";
+        UuidTransactionId idFromString = new UuidTransactionId(uuidString);
+
+        assertEquals(uuid.toString(), id.getId());
+        assertEquals(uuidString, idFromString.getId());
     }
 }

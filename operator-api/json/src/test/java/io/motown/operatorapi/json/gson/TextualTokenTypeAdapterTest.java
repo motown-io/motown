@@ -16,19 +16,19 @@
 package io.motown.operatorapi.json.gson;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
 import io.motown.domain.api.chargingstation.TextualToken;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 
 public class TextualTokenTypeAdapterTest {
 
-    private static TextualTokenTypeAdapter adapter;
+    private final TextualTokenTypeAdapter adapter = new TextualTokenTypeAdapter();
 
-    @BeforeClass
-    public static void setUp() {
-        adapter = new TextualTokenTypeAdapter();
+    @Test
+    public void testAdaptedType() {
         assertEquals(adapter.getAdaptedType(), TextualToken.class);
     }
 
@@ -52,5 +52,20 @@ public class TextualTokenTypeAdapterTest {
 
         assertEquals(textualTokenJson.get("token").getAsString(), textualToken.getToken());
         assertEquals(textualTokenJson.get("status").getAsString(), textualToken.getAuthenticationStatus().toString());
+    }
+
+    @Test(expected = JsonParseException.class)
+    public void testTokenAsJsonPrimitive() {
+        JsonPrimitive jsonPrimitive = new JsonPrimitive("1");
+        adapter.deserialize(jsonPrimitive, TextualToken.class, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvalidAuthenticationStatus() {
+        JsonObject textualTokenJson = new JsonObject();
+        textualTokenJson.addProperty("token", "1");
+        textualTokenJson.addProperty("status", "BLOCKING");
+
+        adapter.deserialize(textualTokenJson, TextualToken.class, null);
     }
 }

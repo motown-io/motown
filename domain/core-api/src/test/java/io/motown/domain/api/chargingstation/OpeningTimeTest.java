@@ -44,7 +44,7 @@ public class OpeningTimeTest {
         TimeOfDay start = new TimeOfDay(START_HOUR, START_MINUTES);
         TimeOfDay stop = new TimeOfDay(START_HOUR, START_MINUTES);
 
-        OpeningTime openingTime = new OpeningTime(monday, start, stop);
+        new OpeningTime(monday, start, stop);
     }
 
     @Test
@@ -53,6 +53,11 @@ public class OpeningTimeTest {
         TimeOfDay start = new TimeOfDay(START_HOUR, START_MINUTES);
         TimeOfDay stop = new TimeOfDay(START_HOUR, STOP_MINUTES);
 
-        OpeningTime openingTime = new OpeningTime(monday, start, stop);
+        new OpeningTime(monday, start, stop);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testNullPointerExceptionBeingThrown() {
+        new OpeningTime(null, null, null);
     }
 }

@@ -50,7 +50,7 @@ public class AddressTypeAdapter implements TypeAdapter<Address> {
             if (obj == null) {
                 return null;
             }
-        } catch (ClassCastException | IllegalArgumentException e) {
+        } catch (ClassCastException | IllegalStateException e) {
             throw new JsonParseException("Address must be a JSON object", e);
         }
 

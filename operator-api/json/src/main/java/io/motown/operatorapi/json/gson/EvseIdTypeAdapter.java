@@ -34,7 +34,7 @@ public class EvseIdTypeAdapter implements TypeAdapter<EvseId> {
 
         try {
             evseId = json.getAsInt();
-        } catch (ClassCastException | IllegalStateException e) {
+        } catch (ClassCastException | IllegalStateException | NumberFormatException e) {
             throw new JsonParseException("EvseId must be a JSON integer", e);
         }
 

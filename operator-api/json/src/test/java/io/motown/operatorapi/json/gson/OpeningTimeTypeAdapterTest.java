@@ -16,17 +16,18 @@
 package io.motown.operatorapi.json.gson;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
 import io.motown.domain.api.chargingstation.OpeningTime;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 
 public class OpeningTimeTypeAdapterTest {
+    private final OpeningTimeTypeAdapter adapter = new OpeningTimeTypeAdapter();
 
     @Test
     public void testOpeningTimeTypeAdapter() {
-        OpeningTimeTypeAdapter adapter = new OpeningTimeTypeAdapter();
-
         assertEquals(adapter.getAdaptedType(), OpeningTime.class);
 
         JsonObject openingTimeJson = new JsonObject();
@@ -40,4 +41,29 @@ public class OpeningTimeTypeAdapterTest {
         assertEquals(openingTimeJson.get("timeStart").getAsString(), String.format("%02d:%02d", openingTime.getTimeStart().getHourOfDay(), openingTime.getTimeStart().getMinutesInHour()));
         assertEquals(openingTimeJson.get("timeStop").getAsString(), String.format("%02d:%02d", openingTime.getTimeStop().getHourOfDay(), openingTime.getTimeStop().getMinutesInHour()));
     }
+
+    @Test(expected = JsonParseException.class)
+    public void testOpeningTimeAsJsonPrimitive() {
+        JsonPrimitive jsonPrimitive = new JsonPrimitive("12:00");
+        adapter.deserialize(jsonPrimitive, OpeningTime.class, null);
+    }
+
+    @Test(expected = JsonParseException.class)
+    public void testUnparsableTimeFormat() {
+        JsonObject openingTimeJson = new JsonObject();
+        openingTimeJson.addProperty("day", 1);
+        openingTimeJson.addProperty("timeStart", "12.00");
+        openingTimeJson.addProperty("timeStop", "15.00");
+        adapter.deserialize(openingTimeJson, OpeningTime.class, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvalidDay() {
+        JsonObject openingTimeJson = new JsonObject();
+        openingTimeJson.addProperty("day", 8);
+        openingTimeJson.addProperty("timeStart", "12:00");
+        openingTimeJson.addProperty("timeStop", "15:00");
+        adapter.deserialize(openingTimeJson, OpeningTime.class, null);
+    }
+
 }

@@ -15,6 +15,8 @@
  */
 package io.motown.operatorapi.json.gson;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import io.motown.domain.api.chargingstation.Accessibility;
 import org.junit.Test;
@@ -24,10 +26,10 @@ import static junit.framework.Assert.assertTrue;
 
 public class AccessibilityTypeAdapterTest {
 
+    private final AccessibilityTypeAdapter adapter = new AccessibilityTypeAdapter();
+
     @Test
     public void testAccessibility() {
-        AccessibilityTypeAdapter adapter = new AccessibilityTypeAdapter();
-
         assertEquals(adapter.getAdaptedType(), Accessibility.class);
 
         JsonPrimitive accessibilityJson = new JsonPrimitive("public");
@@ -36,4 +38,18 @@ public class AccessibilityTypeAdapterTest {
 
         assertTrue(accessibilityJson.getAsString().equalsIgnoreCase(accessibility.toString()));
     }
+
+    @Test(expected = JsonParseException.class)
+    public void testUnparsableAccessibility() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("accessibility", "Public");
+        adapter.deserialize(jsonObject, Accessibility.class, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testIllegalAccessibilityValue() {
+        JsonPrimitive jsonPrimitive = new JsonPrimitive("non-public");
+        adapter.deserialize(jsonPrimitive, Accessibility.class, null);
+    }
+
 }

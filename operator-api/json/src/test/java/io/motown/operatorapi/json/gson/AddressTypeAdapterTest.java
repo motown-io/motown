@@ -16,17 +16,18 @@
 package io.motown.operatorapi.json.gson;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
 import io.motown.domain.api.chargingstation.Address;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 
 public class AddressTypeAdapterTest {
+    private final AddressTypeAdapter adapter = new AddressTypeAdapter();
 
     @Test
     public void testAddressTypeAdapter() {
-        AddressTypeAdapter adapter = new AddressTypeAdapter();
-
         assertEquals(adapter.getAdaptedType(), Address.class);
 
         JsonObject addressJson = new JsonObject();
@@ -45,5 +46,24 @@ public class AddressTypeAdapterTest {
         assertEquals(addressJson.get("city").getAsString(), address.getCity());
         assertEquals(addressJson.get("region").getAsString(), address.getRegion());
         assertEquals(addressJson.get("country").getAsString(), address.getCountry());
+    }
+
+    @Test(expected = JsonParseException.class)
+    public void testAddressAsPrimitive() {
+        JsonPrimitive jsonPrimitive = new JsonPrimitive("addressline1");
+        adapter.deserialize(jsonPrimitive, Address.class, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testEmptyMandatoryFields() {
+        JsonObject addressJson = new JsonObject();
+        addressJson.addProperty("addressline1", "");
+        addressJson.addProperty("addressline2", "");
+        addressJson.addProperty("postalCode", "");
+        addressJson.addProperty("city", "");
+        addressJson.addProperty("region", "");
+        addressJson.addProperty("country", "");
+
+        adapter.deserialize(addressJson, Address.class, null);
     }
 }
