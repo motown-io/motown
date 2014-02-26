@@ -40,8 +40,7 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            classpath:META-INF/spring/json-context.xml,
-            classpath:spring/view-model-context.xml
+            classpath:META-INF/spring/json-context.xml
         </param-value>
     </context-param>
 

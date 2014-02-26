@@ -20,11 +20,12 @@ import io.motown.operatorapi.json.queries.OperatorApiService;
 import io.motown.operatorapi.json.spark.JsonTransformerRoute;
 import io.motown.operatorapi.viewmodel.spring.ApplicationContextProvider;
 import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpStatus;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 import spark.servlet.SparkApplication;
+
+import java.net.HttpURLConnection;
 
 import static spark.Spark.get;
 import static spark.Spark.post;
@@ -36,6 +37,7 @@ public class JsonOperatorApiApplication implements SparkApplication {
     private JsonCommandService commandService;
 
     public JsonOperatorApiApplication() {
+        // TODO refactor this so application context is not needed - Mark van den Bergh, Februari 26th 2014
         ApplicationContext context = ApplicationContextProvider.getApplicationContext();
         this.service = (OperatorApiService) context.getBean("operatorApiService");
         this.commandService = (JsonCommandService) context.getBean("jsonCommandService");
@@ -50,7 +52,7 @@ public class JsonOperatorApiApplication implements SparkApplication {
 
                 commandService.handleCommand(chargingStationId, request.body());
 
-                response.status(HttpStatus.ACCEPTED.value());
+                response.status(HttpURLConnection.HTTP_ACCEPTED);
                 return "";
             }
         });

@@ -23,12 +23,7 @@ import io.motown.domain.api.chargingstation.RequestStartTransactionCommand;
 import io.motown.operatorapi.viewmodel.model.RequestStartTransactionApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-
-@Component
 class RequestStartTransactionJsonCommandHandler implements JsonCommandHandler {
 
     private static final String COMMAND_NAME = "RequestStartTransaction";
@@ -60,17 +55,14 @@ class RequestStartTransactionJsonCommandHandler implements JsonCommandHandler {
         }
     }
 
-    @Resource(name = "domainCommandGateway")
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
 
-    @Autowired
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
     }
 
-    @Autowired
     public void setGson(Gson gson) {
         this.gson = gson;
     }

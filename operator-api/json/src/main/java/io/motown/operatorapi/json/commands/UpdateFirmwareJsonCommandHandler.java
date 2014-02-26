@@ -23,13 +23,9 @@ import io.motown.domain.api.chargingstation.RequestFirmwareUpdateCommand;
 import io.motown.operatorapi.viewmodel.model.UpdateFirmwareApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 
-@Component
 class UpdateFirmwareJsonCommandHandler implements JsonCommandHandler {
 
     private static final String COMMAND_NAME = "UpdateFirmware";
@@ -60,17 +56,14 @@ class UpdateFirmwareJsonCommandHandler implements JsonCommandHandler {
 
     }
 
-    @Resource(name = "domainCommandGateway")
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
 
-    @Autowired
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
     }
 
-    @Autowired
     public void setGson(Gson gson) {
         this.gson = gson;
     }

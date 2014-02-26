@@ -20,12 +20,7 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestAuthorizationListVersionCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-
-@Component
 class RequestAuthorizationListVersionJsonCommandHandler implements JsonCommandHandler {
 
     private static final String COMMAND_NAME = "RequestAuthorizationListVersion";
@@ -47,12 +42,10 @@ class RequestAuthorizationListVersionJsonCommandHandler implements JsonCommandHa
         }
     }
 
-    @Resource(name = "domainCommandGateway")
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
 
-    @Autowired
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
     }

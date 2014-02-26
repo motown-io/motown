@@ -24,12 +24,7 @@ import io.motown.domain.api.chargingstation.MakeChargingStationReservableCommand
 import io.motown.operatorapi.viewmodel.model.UpdateChargingStationReservableApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-
-@Component
 class UpdateChargingStationReservableJsonCommandHandler implements JsonCommandHandler {
 
     private static final String COMMAND_NAME = "UpdateChargingStationReservable";
@@ -66,17 +61,14 @@ class UpdateChargingStationReservableJsonCommandHandler implements JsonCommandHa
         }
     }
 
-    @Resource(name = "domainCommandGateway")
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
 
-    @Autowired
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
     }
 
-    @Autowired
     public void setGson(Gson gson) {
         this.gson = gson;
     }

@@ -21,6 +21,7 @@ import org.springframework.beans.factory.FactoryBean;
 
 import java.util.Set;
 
+//TODO can this be refactored into something without Spring dependency? - Mark van den Bergh, Februari 26th 2014
 public class GsonFactoryBean implements FactoryBean<Gson> {
 
     private String dateFormat;
