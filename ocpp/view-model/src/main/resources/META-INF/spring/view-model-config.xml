@@ -27,18 +27,6 @@
         <property name="transactionRepository" ref="transactionRepository" />
     </bean>
 
-    <bean id="chargingStationRepository" class="org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean">
-        <property name="repositoryInterface" value="io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository" />
-    </bean>
-
-    <bean id="transactionRepository" class="org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean">
-        <property name="repositoryInterface" value="io.motown.ocpp.viewmodel.persistence.repostories.TransactionRepository" />
-    </bean>
-
-    <bean id="reservationIdentifierRepository" class="org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean">
-        <property name="repositoryInterface" value="io.motown.ocpp.viewmodel.persistence.repostories.ReservationIdentifierRepository" />
-    </bean>
-
     <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
         <property name="commandBus" ref="commandBus"/>
         <property name="gatewayInterface" value="io.motown.ocpp.viewmodel.domain.DomainCommandGateway"/>
