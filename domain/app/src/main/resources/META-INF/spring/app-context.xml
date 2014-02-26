@@ -12,13 +12,14 @@
                            http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.1.xsd">
 
     <axon:annotation-config/>
-    <context:component-scan base-package="io.motown.domain"/>
 
     <context:property-placeholder location="classpath:config.properties, file:${io.motown.domain.app.config}"
                                   ignore-resource-not-found="true"/>
 
     <axon:event-bus id="eventBus"
                     terminal="terminal"/>
+
+    <context:component-scan base-package="io.motown.domain.chargingstation"/>
 
     <bean id="commandBus"
           class="org.axonframework.commandhandling.distributed.DistributedCommandBus">
@@ -156,4 +157,17 @@
     <rabbit:fanout-exchange id="exchange"
                             name="${io.motown.domain.app.eventbus.amqp.rabbit.exchange.name}"
                             durable="true"/>
+
+    <axon:aggregate-command-handler aggregate-type="io.motown.domain.chargingstation.ChargingStation"
+                                    repository="chargingStationRepository"
+                                    command-bus="commandBus"/>
+
+    <axon:event-sourcing-repository id="chargingStationRepository"
+                                    aggregate-type="io.motown.domain.chargingstation.ChargingStation"
+                                    cache-ref="cache"
+                                    event-bus="eventBus"
+                                    event-store="eventStore">
+        <axon:snapshotter-trigger event-count-threshold="50" snapshotter-ref="snapshotter"/>
+    </axon:event-sourcing-repository>
+
 </beans>
