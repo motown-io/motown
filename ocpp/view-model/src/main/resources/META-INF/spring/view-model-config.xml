@@ -16,13 +16,28 @@
                                   ignore-resource-not-found="true"
                                   ignore-unresolvable="true"/>
 
-    <context:component-scan base-package="io.motown.ocpp.viewmodel">
-        <!--
-         The specific OCPP RequestHandlers are excluded here, as the one to use is configured on application level for specific OCPP version handling
-         TODO: Decide if this is the way to go, or move RequestHandlers to the specific OCPP application layer
-        -->
-        <context:exclude-filter type="regex" expression="io\.motown\.ocpp\.viewmodel\.Ocpp.*RequestHandler"/>
-    </context:component-scan>
+    <bean id="domainService" class="io.motown.ocpp.viewmodel.domain.DomainService">
+        <property name="chargingStationRepository" ref="chargingStationRepository" />
+        <property name="commandGateway" ref="domainCommandGateway" />
+        <!-- "Event waiting gateway" should be defined by the Spring context that incorporates this one -->
+        <property name="eventWaitingGateway" ref="eventWaitingGateway" />
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+        <property name="heartbeatInterval" value="${io.motown.ocpp.viewmodel.heartbeat.interval}" />
+        <property name="reservationIdentifierRepository" ref="reservationIdentifierRepository" />
+        <property name="transactionRepository" ref="transactionRepository" />
+    </bean>
+
+    <bean id="chargingStationRepository" class="org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean">
+        <property name="repositoryInterface" value="io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository" />
+    </bean>
+
+    <bean id="transactionRepository" class="org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean">
+        <property name="repositoryInterface" value="io.motown.ocpp.viewmodel.persistence.repostories.TransactionRepository" />
+    </bean>
+
+    <bean id="reservationIdentifierRepository" class="org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean">
+        <property name="repositoryInterface" value="io.motown.ocpp.viewmodel.persistence.repostories.ReservationIdentifierRepository" />
+    </bean>
 
     <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
         <property name="commandBus" ref="commandBus"/>

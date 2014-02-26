@@ -29,8 +29,6 @@ import org.apache.cxf.jaxws.context.WrappedMessageContext;
 import org.apache.cxf.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.w3c.dom.Element;
 
 import javax.annotation.Resource;
@@ -56,10 +54,8 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
     /**
      * Timeout in milliseconds for the continuation suspend functionality
      */
-    @Value("${io.motown.ocpp.v15.soap.cxf.continuation.timeout}")
     private int continuationTimeout;
 
-    @Autowired
     private DomainService domainService;
 
     @Resource
@@ -243,6 +239,10 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
 
     public void setContext(WebServiceContext context) {
         this.context = context;
+    }
+
+    public void setContinuationTimeout(int continuationTimeout) {
+        this.continuationTimeout = continuationTimeout;
     }
 
     /**

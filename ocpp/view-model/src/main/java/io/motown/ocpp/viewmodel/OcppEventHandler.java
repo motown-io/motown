@@ -23,15 +23,11 @@ import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepositor
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class OcppEventHandler {
     
     private static final Logger LOG = LoggerFactory.getLogger(io.motown.ocpp.viewmodel.OcppEventHandler.class);
 
-    @Autowired
     private ChargingStationRepository chargingStationRepository;
 
     @EventHandler

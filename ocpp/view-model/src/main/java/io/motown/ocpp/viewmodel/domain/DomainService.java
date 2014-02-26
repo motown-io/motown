@@ -26,18 +26,13 @@ import io.motown.ocpp.viewmodel.persistence.repostories.TransactionRepository;
 import org.axonframework.commandhandling.gateway.EventWaitingGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
 public class DomainService {
 
     private static final Logger LOG = LoggerFactory.getLogger(DomainService.class);
@@ -59,25 +54,18 @@ public class DomainService {
 
     public static final String RESERVATION_ID_KEY = "reservationId";
 
-    @Resource(name = "domainCommandGateway")
     private DomainCommandGateway commandGateway;
 
-    @Autowired
     private ChargingStationRepository chargingStationRepository;
 
-    @Autowired
     private TransactionRepository transactionRepository;
 
-    @Autowired
     private ReservationIdentifierRepository reservationIdentifierRepository;
 
-    @Autowired
     private EntityManagerFactory entityManagerFactory;
 
-    @Value("${io.motown.ocpp.viewmodel.heartbeat.interval}")
     private int heartbeatInterval;
 
-    @Autowired
     private EventWaitingGateway eventWaitingGateway;
 
     public BootChargingStationResult bootChargingStation(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model,
@@ -304,6 +292,10 @@ public class DomainService {
 
     public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
+    }
+
+    public void setHeartbeatInterval(int heartbeatInterval) {
+        this.heartbeatInterval = heartbeatInterval;
     }
 
     public String retrieveChargingStationAddress(ChargingStationId id) {

@@ -34,11 +34,6 @@
 
     <axon:annotation-config/>
 
-    <context:component-scan base-package="io.motown.ocpp.v12.soap"/>
-
-    <bean class="io.motown.ocpp.viewmodel.Ocpp12RequestHandler"/>
-    <bean class="io.motown.ocpp.v12.soap.centralsystem.schema.ObjectFactory"/>
-
     <rabbit:connection-factory id="amqpConnection"
                                username="${io.motown.ocpp.v12.soap.eventbus.amqp.rabbit.username}"
                                password="${io.motown.ocpp.v12.soap.eventbus.amqp.rabbit.password}"
@@ -56,6 +51,12 @@
                   name="${io.motown.ocpp.v12.soap.eventbus.amqp.rabbit.ocpp.queue.name}"
                   exclusive="false"/>
 
+    <!-- TODO ocpp-v15-soap the fanout-exchange has a rabbit:binding to "queue", why isn't that defined here? -->
+    <rabbit:fanout-exchange id="eventsExchange"
+                            name="${io.motown.ocpp.v12.soap.eventbus.amqp.rabbit.exchange.events.name}"
+                            durable="true">
+    </rabbit:fanout-exchange>
+
     <rabbit:direct-exchange id="ocppExchange"
                             name="${io.motown.ocpp.v12.soap.eventbus.amqp.rabbit.exchange.events.ocpp.name}"
                             durable="true">
@@ -65,12 +66,12 @@
         </rabbit:bindings>
     </rabbit:direct-exchange>
 
-    <rabbit:fanout-exchange id="eventsExchange"
-                            name="${io.motown.ocpp.v12.soap.eventbus.amqp.rabbit.exchange.events.name}"
-                            durable="true">
-    </rabbit:fanout-exchange>
-
     <axon:event-bus id="eventBus" terminal="terminal"/>
+
+    <bean id="eventWaitingGateway" class="org.axonframework.commandhandling.gateway.EventWaitingGateway">
+        <property name="commandBus" ref="commandBus"/>
+        <property name="eventBus" ref="eventBus"/>
+    </bean>
 
     <axon-amqp:terminal id="terminal"
                         connection-factory="amqpConnection"

@@ -21,21 +21,16 @@ import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
-@Component
 public class Ocpp15RequestHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(io.motown.ocpp.viewmodel.Ocpp15RequestHandler.class);
 
-    @Autowired
     private DomainService domainService;
 
-    @Autowired
     private ChargingStationOcpp15Client chargingStationOcpp15Client;
 
     @EventHandler

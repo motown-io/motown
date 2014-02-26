@@ -25,20 +25,15 @@ import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp12Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-@Component
 public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Client {
 
     private static final Logger LOG = LoggerFactory.getLogger(ChargingStationOcpp12SoapClient.class);
 
-    @Autowired
     private DomainService domainService;
 
-    @Autowired
     private ChargingStationProxyFactory chargingStationProxyFactory;
 
     @Override

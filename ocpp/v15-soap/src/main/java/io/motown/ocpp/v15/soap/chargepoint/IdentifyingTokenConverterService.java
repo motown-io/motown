@@ -19,12 +19,10 @@ import io.motown.domain.api.chargingstation.IdentifyingToken;
 import io.motown.ocpp.v15.soap.chargepoint.schema.AuthorisationData;
 import io.motown.ocpp.v15.soap.chargepoint.schema.AuthorizationStatus;
 import io.motown.ocpp.v15.soap.chargepoint.schema.IdTagInfo;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
 public class IdentifyingTokenConverterService {
 
     /**
