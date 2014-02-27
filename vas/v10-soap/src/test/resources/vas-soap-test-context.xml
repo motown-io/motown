@@ -39,6 +39,8 @@
         </property>
     </bean>
 
+    <bean class="io.motown.vas.v10.soap.VasConversionService" />
+
     <jpa:repositories base-package="io.motown.vas.viewmodel.persistence.repostories"/>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">

@@ -23,25 +23,19 @@ import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Component
 public class VasEventHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(io.motown.vas.viewmodel.VasEventHandler.class);
     private static final int MINUTES_IN_HOUR = 60;
 
-    @Autowired
     private ChargingStationRepository chargingStationRepository;
 
-    @Autowired
     private ConfigurationConversionService configurationConversionService;
 
-    @Autowired
     private VasSubscriberService subscriberService;
 
     @EventHandler

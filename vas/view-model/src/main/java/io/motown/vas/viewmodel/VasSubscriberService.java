@@ -21,23 +21,17 @@ import io.motown.vas.viewmodel.model.Subscription;
 import io.motown.vas.viewmodel.persistence.repostories.SubscriptionRepository;
 import io.motown.vas.viewmodel.vas.SubscriberClient;
 import io.motown.vas.viewmodel.vas.SubscriptionUpdater;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-@Service
 public class VasSubscriberService {
 
-    @Autowired
     private SubscriptionRepository subscriptionRepository;
 
-    @Autowired
     private ExecutorService executorService;
 
-    @Autowired
     private SubscriberClient subscriberClient;
 
     /**
@@ -75,4 +69,12 @@ public class VasSubscriberService {
         this.executorService = executorService;
     }
 
+    /**
+     * Sets the subscriber client which is passed to the SubscriberUpdater.
+     *
+     * @param subscriberClient subscriber client.
+     */
+    public void setSubscriberClient(SubscriberClient subscriberClient) {
+        this.subscriberClient = subscriberClient;
+    }
 }

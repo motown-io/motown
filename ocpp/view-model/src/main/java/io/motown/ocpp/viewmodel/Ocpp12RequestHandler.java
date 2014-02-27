@@ -21,7 +21,6 @@ import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp12Client;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
@@ -130,8 +129,8 @@ public class Ocpp12RequestHandler {
             attrNumRetries = attributes.get("NUM_RETRIES");
             attrRetryInterval = attributes.get("RETRY_INTERVAL");
         }
-        Integer numRetries = (!StringUtils.isEmpty(attrNumRetries))? Integer.parseInt(attrNumRetries): null;
-        Integer retryInterval = (!StringUtils.isEmpty(attrRetryInterval))? Integer.parseInt(attrRetryInterval): null;
+        Integer numRetries = (attrNumRetries != null && !"".equals(attrNumRetries))? Integer.parseInt(attrNumRetries): null;
+        Integer retryInterval = (attrRetryInterval != null && !"".equals(attrRetryInterval))? Integer.parseInt(attrRetryInterval): null;
 
         chargingStationOcpp12Client.updateFirmware(event.getChargingStationId(), event.getUpdateLocation(), event.getRetrieveDate(), numRetries, retryInterval);
     }
