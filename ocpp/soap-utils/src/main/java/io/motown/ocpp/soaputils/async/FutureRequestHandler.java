@@ -76,7 +76,7 @@ public class FutureRequestHandler<T, X> {
             } else {
                 Future<X> futureC = (Future<X>) continuation.getObject();
                 if (futureC.isDone()) {
-                    return getResponse(future, successFactory, errorFactory);
+                    return getResponse(futureC, successFactory, errorFactory);
                 } else {
                     continuation.suspend(decreaseTimeout());
                 }
