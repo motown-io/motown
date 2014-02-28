@@ -21,6 +21,7 @@ import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestChangeChargingStationAvailabilityToInoperativeCommand;
 import io.motown.domain.api.chargingstation.RequestChangeChargingStationAvailabilityToOperativeCommand;
+import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.operatorapi.viewmodel.model.RequestChangeChargingStationAvailabilityApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -53,9 +54,9 @@ class RequestChangeChargingStationAvailabilityJsonCommandHandler implements Json
                 RequestChangeChargingStationAvailabilityApiCommand command = gson.fromJson(commandObject, RequestChangeChargingStationAvailabilityApiCommand.class);
 
                 if ("inoperative".equalsIgnoreCase(command.getAvailability())) {
-                    commandGateway.send(new RequestChangeChargingStationAvailabilityToInoperativeCommand(new ChargingStationId(chargingStationId), command.getEvseId()));
+                    commandGateway.send(new RequestChangeChargingStationAvailabilityToInoperativeCommand(new ChargingStationId(chargingStationId), command.getEvseId()), new CorrelationToken());
                 } else {
-                    commandGateway.send(new RequestChangeChargingStationAvailabilityToOperativeCommand(new ChargingStationId(chargingStationId), command.getEvseId()));
+                    commandGateway.send(new RequestChangeChargingStationAvailabilityToOperativeCommand(new ChargingStationId(chargingStationId), command.getEvseId()), new CorrelationToken());
                 }
             }
         } catch (JsonSyntaxException ex) {

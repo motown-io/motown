@@ -18,6 +18,7 @@ package io.motown.operatorapi.json.commands;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestAuthorizationListVersionCommand;
+import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ class RequestAuthorizationListVersionJsonCommandHandler implements JsonCommandHa
     public void handle(String chargingStationId, JsonObject commandObject) {
         ChargingStation chargingStation = repository.findOne(chargingStationId);
         if (chargingStation != null && chargingStation.isAccepted()) {
-            commandGateway.send(new RequestAuthorizationListVersionCommand(new ChargingStationId(chargingStationId)));
+            commandGateway.send(new RequestAuthorizationListVersionCommand(new ChargingStationId(chargingStationId)), new CorrelationToken());
         }
     }
 

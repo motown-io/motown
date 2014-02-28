@@ -61,56 +61,56 @@ public class Ocpp12RequestHandlerTest {
 
     @Test
     public void testStartTransactionRequestedEvent() {
-        requestHandler.handle(new StartTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, IDENTIFYING_TOKEN, EVSE_ID));
+        requestHandler.handle(new StartTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, IDENTIFYING_TOKEN, EVSE_ID), CORRELATION_TOKEN);
 
         verify(client).startTransaction(CHARGING_STATION_ID, IDENTIFYING_TOKEN, EVSE_ID);
     }
 
     @Test
     public void testStopTransactionRequestedEvent() {
-        requestHandler.handle(new StopTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, TRANSACTION_ID));
+        requestHandler.handle(new StopTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, TRANSACTION_ID), CORRELATION_TOKEN);
 
         verify(client).stopTransaction(CHARGING_STATION_ID, ((NumberedTransactionId) TRANSACTION_ID).getNumber());
     }
 
     @Test
     public void noTransactionStoppedIfTransactionIdIsIncorrectType() {
-        requestHandler.handle(new StopTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, new UuidTransactionId()));
+        requestHandler.handle(new StopTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, new UuidTransactionId()), CORRELATION_TOKEN);
 
         verifyZeroInteractions(client);
     }
 
     @Test
     public void testRequestSoftResetChargingStationEvent() {
-        requestHandler.handle(new SoftResetChargingStationRequestedEvent(CHARGING_STATION_ID, PROTOCOL));
+        requestHandler.handle(new SoftResetChargingStationRequestedEvent(CHARGING_STATION_ID, PROTOCOL), CORRELATION_TOKEN);
 
         verify(client).softReset(CHARGING_STATION_ID);
     }
 
     @Test
     public void testRequestHardResetChargingStationEvent() {
-        requestHandler.handle(new HardResetChargingStationRequestedEvent(CHARGING_STATION_ID, PROTOCOL));
+        requestHandler.handle(new HardResetChargingStationRequestedEvent(CHARGING_STATION_ID, PROTOCOL), CORRELATION_TOKEN);
 
         verify(client).hardReset(CHARGING_STATION_ID);
     }
 
     @Test
     public void testUnlockEvseRequestedEvent() {
-        requestHandler.handle(new UnlockEvseRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID));
+        requestHandler.handle(new UnlockEvseRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID), CORRELATION_TOKEN);
 
         verify(client).unlockConnector(CHARGING_STATION_ID, EVSE_ID);
     }
 
     @Test
     public void testChangeChargingStationAvailabilityToInoperativeRequested() {
-        requestHandler.handle(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID));
+        requestHandler.handle(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID), CORRELATION_TOKEN);
 
         verify(client).changeAvailabilityToInoperative(CHARGING_STATION_ID, EVSE_ID);
     }
 
     @Test
     public void testChangeChargingStationAvailabilityToOperativeRequested() {
-        requestHandler.handle(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID));
+        requestHandler.handle(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID), CORRELATION_TOKEN);
 
         verify(client).changeAvailabilityToOperative(CHARGING_STATION_ID, EVSE_ID);
     }
@@ -118,21 +118,22 @@ public class Ocpp12RequestHandlerTest {
     @Test
     public void testDiagnosticsRequestedEvent() {
         String uploadLocation = "ftp://abc.com/xyz";
-        requestHandler.handle(new DiagnosticsRequestedEvent(CHARGING_STATION_ID, PROTOCOL, uploadLocation));
+        CorrelationToken correlationToken = new CorrelationToken();
+        requestHandler.handle(new DiagnosticsRequestedEvent(CHARGING_STATION_ID, PROTOCOL, uploadLocation), correlationToken);
 
         verify(client).getDiagnostics(CHARGING_STATION_ID, uploadLocation, null, null, null, null);
     }
 
     @Test
     public void testChangeConfigurationEvent() {
-        requestHandler.handle(new ChangeConfigurationEvent(CHARGING_STATION_ID, PROTOCOL, getConfigurationKey(), getConfigurationValue()));
+        requestHandler.handle(new ChangeConfigurationEvent(CHARGING_STATION_ID, PROTOCOL, getConfigurationKey(), getConfigurationValue()), CORRELATION_TOKEN);
 
         verify(client).changeConfiguration(CHARGING_STATION_ID, getConfigurationKey(), getConfigurationValue());
     }
 
     @Test
     public void testClearCacheRequestedEvent() {
-        requestHandler.handle(new ClearCacheRequestedEvent(CHARGING_STATION_ID, PROTOCOL));
+        requestHandler.handle(new ClearCacheRequestedEvent(CHARGING_STATION_ID, PROTOCOL), CORRELATION_TOKEN);
 
         verify(client).clearCache(CHARGING_STATION_ID);
     }

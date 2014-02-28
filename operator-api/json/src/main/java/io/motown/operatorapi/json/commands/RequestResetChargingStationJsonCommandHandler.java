@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.RequestHardResetChargingStationCommand;
 import io.motown.domain.api.chargingstation.RequestSoftResetChargingStationCommand;
 import io.motown.operatorapi.viewmodel.model.RequestResetChargingStationApiCommand;
@@ -53,9 +54,9 @@ class RequestResetChargingStationJsonCommandHandler implements JsonCommandHandle
                 RequestResetChargingStationApiCommand command = gson.fromJson(commandObject, RequestResetChargingStationApiCommand.class);
 
                 if("hard".equalsIgnoreCase(command.getType())) {
-                    commandGateway.send(new RequestHardResetChargingStationCommand(new ChargingStationId(chargingStationId)));
+                    commandGateway.send(new RequestHardResetChargingStationCommand(new ChargingStationId(chargingStationId)), new CorrelationToken());
                 } else {
-                    commandGateway.send(new RequestSoftResetChargingStationCommand(new ChargingStationId(chargingStationId)));
+                    commandGateway.send(new RequestSoftResetChargingStationCommand(new ChargingStationId(chargingStationId)), new CorrelationToken());
                 }
             }
         } catch (JsonSyntaxException ex) {

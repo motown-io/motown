@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.RequestReserveNowCommand;
 import io.motown.operatorapi.viewmodel.model.RequestReserveNowApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
@@ -51,7 +52,7 @@ class RequestReserveNowJsonCommandHandler implements JsonCommandHandler {
             if (chargingStation != null && chargingStation.isAccepted()) {
                 RequestReserveNowApiCommand command = gson.fromJson(commandObject, RequestReserveNowApiCommand.class);
 
-                commandGateway.send(new RequestReserveNowCommand(new ChargingStationId(chargingStationId), command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), null));
+                commandGateway.send(new RequestReserveNowCommand(new ChargingStationId(chargingStationId), command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), null), new CorrelationToken());
             } else {
                 throw new IllegalStateException("It is not possible to request a reservation on a charging station that is not registered");
             }

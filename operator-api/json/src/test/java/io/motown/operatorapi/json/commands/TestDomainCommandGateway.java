@@ -16,6 +16,7 @@
 package io.motown.operatorapi.json.commands;
 
 import io.motown.domain.api.chargingstation.*;
+import org.axonframework.common.annotation.MetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +25,7 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
     private static final Logger LOG = LoggerFactory.getLogger(TestDomainCommandGateway.class);
 
     @Override
-    public void send(RequestUnlockEvseCommand command) {
+    public void send(RequestUnlockEvseCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.debug("RequestUnlockEvseCommand:" + command.toString());
     }
 
@@ -44,72 +45,72 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
     }
 
     @Override
-    public void send(RequestStartTransactionCommand command){
+    public void send(RequestStartTransactionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken){
         LOG.debug("RequestStartTransactionCommand:" + command.toString());
     }
 
     @Override
-    public void send(RequestStopTransactionCommand command){
+    public void send(RequestStopTransactionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken){
         LOG.debug("RequestStopTransactionCommand:" + command.toString());
     }
 
     @Override
-    public void send(RequestSoftResetChargingStationCommand command) {
+    public void send(RequestSoftResetChargingStationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.debug("RequestSoftResetChargingStationCommand: " + command.toString());
     }
 
     @Override
-    public void send(RequestHardResetChargingStationCommand command) {
+    public void send(RequestHardResetChargingStationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.debug("RequestHardResetChargingStationCommand: " + command.toString());
     }
 
     @Override
-    public void send(RequestChangeChargingStationAvailabilityToInoperativeCommand command) {
+    public void send(RequestChangeChargingStationAvailabilityToInoperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.debug("RequestChangeChargingStationAvailabilityToInoperativeCommand: " + command.toString());
     }
 
     @Override
-    public void send(RequestChangeChargingStationAvailabilityToOperativeCommand command) {
+    public void send(RequestChangeChargingStationAvailabilityToOperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.debug("RequestChangeChargingStationAvailabilityToOperativeCommand: " + command.toString());
     }
 
     @Override
-    public void send(DataTransferCommand command) {
+    public void send(DataTransferCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.debug("DataTransferCommand: " + command.toString());
     }
 
     @Override
-    public void send(ChangeConfigurationCommand command) {
+    public void send(ChangeConfigurationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.debug("ChangeConfigurationCommand: " + command.toString());
     }
 
     @Override
-    public void send(RequestDiagnosticsCommand command) {
+    public void send(RequestDiagnosticsCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.debug("RequestDiagnosticsCommand: " + command.toString());
     }
 
     @Override
-    public void send(RequestClearCacheCommand command) {
+    public void send(RequestClearCacheCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.debug("ClearCacheCommand: " + command.toString());
     }
 
     @Override
-    public void send(RequestFirmwareUpdateCommand command) {
+    public void send(RequestFirmwareUpdateCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.debug("RequestFirmwareUpdateCommand: " + command.toString());
     }
 
     @Override
-    public void send(RequestAuthorizationListVersionCommand command) {
+    public void send(RequestAuthorizationListVersionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.debug("RequestAuthorizationListVersionCommand: " + command.toString());
     }
 
     @Override
-    public void send(SendAuthorizationListCommand command) {
+    public void send(SendAuthorizationListCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.debug("SendAuthorizationListCommand: " + command.toString());
     }
 
     @Override
-    public void send(RequestReserveNowCommand command) {
+    public void send(RequestReserveNowCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.debug("RequestReserveNowCommand: " + command.toString());
     }
 

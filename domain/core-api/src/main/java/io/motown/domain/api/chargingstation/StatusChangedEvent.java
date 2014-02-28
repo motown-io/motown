@@ -27,16 +27,20 @@ public class StatusChangedEvent {
 
     private final RequestStatus status;
 
+    private final String statusMessage;
+
     /**
      * Creates a {@code StatusChangedEvent} with an identifier and new status.
      *
-     * @param chargingStationId the identifier of the charging station.
-     * @param status the resulting status of the request
+     * @param chargingStationId   the identifier of the charging station.
+     * @param status              the resulting status of the request
+     * @param statusMessage       optional status message, to primarily inform about the cause of a failure
      * @throws NullPointerException if {@code chargingStationId} or {@code status} is {@code null}.
      */
-    public StatusChangedEvent(ChargingStationId chargingStationId, RequestStatus status) {
+    public StatusChangedEvent(ChargingStationId chargingStationId, RequestStatus status, String statusMessage) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.status = checkNotNull(status);
+        this.statusMessage = statusMessage;
     }
 
     /**
@@ -54,5 +58,14 @@ public class StatusChangedEvent {
      */
     public RequestStatus getStatus() {
         return status;
+    }
+
+    /**
+     * Gets the resulting protocol specific status message.
+     *
+     * @return the message
+     */
+    public String getStatusMessage() {
+        return statusMessage;
     }
 }

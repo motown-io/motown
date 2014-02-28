@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestStartTransactionCommand;
+import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.operatorapi.viewmodel.model.RequestStartTransactionApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -51,7 +52,7 @@ class RequestStartTransactionJsonCommandHandler implements JsonCommandHandler {
             if (chargingStation != null && chargingStation.isAccepted()) {
                 RequestStartTransactionApiCommand command = gson.fromJson(commandObject, RequestStartTransactionApiCommand.class);
 
-                commandGateway.send(new RequestStartTransactionCommand(new ChargingStationId(chargingStationId), command.getIdentifyingToken(), command.getEvseId()));
+                commandGateway.send(new RequestStartTransactionCommand(new ChargingStationId(chargingStationId), command.getIdentifyingToken(), command.getEvseId()), new CorrelationToken());
             } else {
                 throw new IllegalStateException("It is not possible to request a start transaction on a charging station that is not registered");
             }
