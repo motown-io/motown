@@ -173,7 +173,7 @@ public class Ocpp15RequestHandler {
 
         RequestStatus requestStatus = chargingStationOcpp15Client.sendAuthorizationList(event.getChargingStationId(), event.getAuthorizationListHash(), event.getAuthorizationListVersion(), event.getAuthorizationList(), event.getUpdateType());
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, null);
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
     @EventHandler
@@ -183,7 +183,7 @@ public class Ocpp15RequestHandler {
         NumberedReservationId reservationIdentifier = domainService.generateReservationIdentifier(event.getChargingStationId(), event.getProtocol());
 
         ReservationStatus reservationStatus = chargingStationOcpp15Client.reserveNow(event.getChargingStationId(), event.getEvseId(), event.getIdentifyingToken(), event.getExpiryDate(), event.getParentIdentifyingToken(), reservationIdentifier.getNumber());
-        String reservationStatusMessage = (reservationStatus != null) ? reservationStatus.name() : null;
+        String reservationStatusMessage = (reservationStatus != null) ? reservationStatus.name() : "";
 
         RequestStatus requestStatus = ReservationStatus.ACCEPTED.equals(reservationStatus) ? RequestStatus.SUCCESS : RequestStatus.FAILURE;
 
