@@ -17,6 +17,8 @@ package io.motown.domain.api.chargingstation;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -37,13 +39,13 @@ public final class StatusChangedCommand {
      *
      * @param chargingStationId   the identifier of the charging station.
      * @param status              the resulting status of the request
-     * @param statusMessage       optional status message, to primarily inform about the cause of a failure
-     * @throws NullPointerException if {@code chargingStationId} or {@code status} is {@code null}.
+     * @param statusMessage       status message, to primarily inform about the cause of a failure
+     * @throws NullPointerException if {@code chargingStationId}, {@code status} or {@code statusMessage} is {@code null}.
      */
     public StatusChangedCommand(ChargingStationId chargingStationId, RequestStatus status, String statusMessage) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.status = checkNotNull(status);
-        this.statusMessage = statusMessage;
+        this.statusMessage = checkNotNull(statusMessage);
     }
 
     /**
@@ -74,25 +76,19 @@ public final class StatusChangedCommand {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        StatusChangedCommand that = (StatusChangedCommand) o;
-
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (status != that.status) return false;
-        if (statusMessage != null ? !statusMessage.equals(that.statusMessage) : that.statusMessage != null)
-            return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(chargingStationId, status, statusMessage);
     }
 
     @Override
-    public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + status.hashCode();
-        result = 31 * result + (statusMessage != null ? statusMessage.hashCode() : 0);
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final StatusChangedCommand other = (StatusChangedCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.status, other.status) && Objects.equals(this.statusMessage, other.statusMessage);
     }
 }

@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -58,19 +59,19 @@ public final class CorrelationToken {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CorrelationToken that = (CorrelationToken) o;
-
-        if (!token.equals(that.token)) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(token);
     }
 
     @Override
-    public int hashCode() {
-        return token.hashCode();
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final CorrelationToken other = (CorrelationToken) obj;
+        return Objects.equals(this.token, other.token);
     }
 }

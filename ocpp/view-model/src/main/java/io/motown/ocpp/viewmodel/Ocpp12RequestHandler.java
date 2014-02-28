@@ -47,7 +47,7 @@ public class Ocpp12RequestHandler {
             NumberedTransactionId transactionId = (NumberedTransactionId) event.getTransactionId();
             RequestStatus requestStatus = chargingStationOcpp12Client.stopTransaction(event.getChargingStationId(), transactionId.getNumber());
 
-            domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, null);
+            domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
         } else {
             LOG.warn("StopTransactionRequestedEvent does not contain a NumberedTransactionId. Event: {}", event);
         }
@@ -58,7 +58,7 @@ public class Ocpp12RequestHandler {
         LOG.info("OCPP 1.2 SoftResetChargingStationRequestedEvent");
         RequestStatus requestStatus = chargingStationOcpp12Client.softReset(event.getChargingStationId());
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, null);
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
     @EventHandler
@@ -66,7 +66,7 @@ public class Ocpp12RequestHandler {
         LOG.info("OCPP 1.2 HardResetChargingStationRequestedEvent");
         RequestStatus requestStatus = chargingStationOcpp12Client.hardReset(event.getChargingStationId());
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, null);
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
     @EventHandler
@@ -74,7 +74,7 @@ public class Ocpp12RequestHandler {
         LOG.info("OCPP 1.2 StartTransactionRequestedEvent");
         RequestStatus requestStatus =  chargingStationOcpp12Client.startTransaction(event.getChargingStationId(), event.getIdentifyingToken(), event.getEvseId());
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, null);
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
     @EventHandler
@@ -82,7 +82,7 @@ public class Ocpp12RequestHandler {
         LOG.info("OCPP 1.2 UnlockEvseRequestedEvent");
         RequestStatus requestStatus = chargingStationOcpp12Client.unlockConnector(event.getChargingStationId(), event.getEvseId());
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, null);
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
     @EventHandler
@@ -90,7 +90,7 @@ public class Ocpp12RequestHandler {
         LOG.info("OCPP 1.2 ChangeChargingStationAvailabilityToInoperativeRequestedEvent");
         RequestStatus requestStatus = chargingStationOcpp12Client.changeAvailabilityToInoperative(event.getChargingStationId(), event.getEvseId());
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, null);
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
     @EventHandler
@@ -98,7 +98,7 @@ public class Ocpp12RequestHandler {
         LOG.info("OCPP 1.2 ChangeChargingStationAvailabilityToOperativeRequestedEvent");
         RequestStatus requestStatus = chargingStationOcpp12Client.changeAvailabilityToOperative(event.getChargingStationId(), event.getEvseId());
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, null);
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
     @EventHandler
@@ -106,7 +106,7 @@ public class Ocpp12RequestHandler {
         LOG.info("OCPP 1.2 ChangeConfigurationEvent");
         RequestStatus requestStatus = chargingStationOcpp12Client.changeConfiguration(event.getChargingStationId(), event.getKey(), event.getValue());
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, null);
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
     @EventHandler
@@ -122,7 +122,7 @@ public class Ocpp12RequestHandler {
         LOG.info("OCPP 1.2 ClearCacheRequestedEvent");
         RequestStatus requestStatus = chargingStationOcpp12Client.clearCache(event.getChargingStationId());
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, null);
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
     @EventHandler

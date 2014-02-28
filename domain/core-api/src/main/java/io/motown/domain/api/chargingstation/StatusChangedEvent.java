@@ -34,13 +34,13 @@ public class StatusChangedEvent {
      *
      * @param chargingStationId   the identifier of the charging station.
      * @param status              the resulting status of the request
-     * @param statusMessage       optional status message, to primarily inform about the cause of a failure
-     * @throws NullPointerException if {@code chargingStationId} or {@code status} is {@code null}.
+     * @param statusMessage       status message, to primarily inform about the cause of a failure
+     * @throws NullPointerException if {@code chargingStationId}, {@code status} or {@code statusMessage} is {@code null}.
      */
     public StatusChangedEvent(ChargingStationId chargingStationId, RequestStatus status, String statusMessage) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.status = checkNotNull(status);
-        this.statusMessage = statusMessage;
+        this.statusMessage = checkNotNull(statusMessage);
     }
 
     /**
