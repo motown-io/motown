@@ -21,13 +21,11 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 		  http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
-    <display-name>Motown.IO - Domain</display-name>
+    <display-name>Motown.IO - Samples - Configuration Distributed - Domain</display-name>
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>
-            classpath:META-INF/spring/app-context.xml
-        </param-value>
+        <param-value>classpath:META-INF/spring/app-context.xml</param-value>
     </context-param>
 
     <listener>

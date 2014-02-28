@@ -30,6 +30,7 @@
         <module>chargingstation-configuration/view-model</module>
         <module>vas/v10-soap</module>
         <module>vas/view-model</module>
+        <module>samples/configuration-distributed</module>
     </modules>
 
     <properties>

@@ -30,7 +30,7 @@
 
     <groupId>io.motown.identification-authorization</groupId>
     <artifactId>identification-authorization-app</artifactId>
-    <packaging>war</packaging>
+    <!--<packaging>war</packaging>-->
 
     <properties>
         <jetty.port>8082</jetty.port>
