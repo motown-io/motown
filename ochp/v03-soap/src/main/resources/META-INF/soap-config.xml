@@ -65,21 +65,7 @@
         </rabbit:bindings>
     </rabbit:fanout-exchange>
 
-    <rabbit:direct-exchange id="ochpExchange"
-                            name="${io.motown.ochp.v03.soap.eventbus.amqp.rabbit.exchange.events.ochp.name}"
-                            durable="true">
-        <rabbit:bindings>
-            <rabbit:binding queue="ochpRequestsQueue" key="${io.motown.ochp.v03.soap.eventbus.amqp.rabbit.routing.key.base}.${io.motown.ochp.v03.soap.protocol.identifier}"/>
-            <rabbit:binding exchange="eventsExchange"/>
-        </rabbit:bindings>
-    </rabbit:direct-exchange>
-
     <axon:event-bus id="eventBus" terminal="terminal"/>
-
-    <bean class="org.axonframework.commandhandling.gateway.EventWaitingGateway">
-        <property name="commandBus" ref="commandBus"/>
-        <property name="eventBus" ref="eventBus"/>
-    </bean>
 
     <axon-amqp:terminal id="terminal"
                         connection-factory="amqpConnection"

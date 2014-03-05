@@ -24,16 +24,6 @@
         <context:exclude-filter type="regex" expression="io\.motown\.ochp\.viewmodel\.Ochp.*RequestHandler"/>
     </context:component-scan>
 
-    <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
-        <property name="commandBus" ref="commandBus"/>
-        <property name="gatewayInterface" value="io.motown.ochp.viewmodel.domain.DomainCommandGateway"/>
-    </bean>
-
-    <bean id="configurationCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
-        <property name="commandBus" ref="commandBus"/>
-        <property name="gatewayInterface" value="io.motown.ochp.viewmodel.configuration.ConfigurationCommandGateway"/>
-    </bean>
-
     <bean id="beanValidationInterceptor" class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor"/>
 
     <bean id="commandBus"

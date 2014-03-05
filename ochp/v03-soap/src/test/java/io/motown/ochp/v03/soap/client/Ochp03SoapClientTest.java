@@ -32,7 +32,7 @@ public class Ochp03SoapClientTest {
         OchpProxyFactory ochpClientProxyFactory = mock(OchpProxyFactory.class);
         Echs ochp03SoapClient = mock(Echs.class);
 
-        when(ochpClientProxyFactory.createOchpService(anyString())).thenReturn(ochp03SoapClient);
+        when(ochpClientProxyFactory.createOchpService(anyString(), anyBoolean())).thenReturn(ochp03SoapClient);
 
         client = new Ochp03SoapClient();
         client.setOchpProxyFactory(ochpClientProxyFactory);

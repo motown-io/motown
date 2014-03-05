@@ -25,8 +25,8 @@ public class OchpProxyFactoryTest {
     private OchpProxyFactory factory = new OchpProxyFactory();
 
     @Test
-    public void createChargingStationProxyVerifyReturnValue() {
-        Echs echsService = factory.createOchpService("http://localhost");
+    public void createOchpProxyVerifyReturnValue() {
+        Echs echsService = factory.createOchpService("http://localhost", OchpProxyFactory.NO_AUTHENTICATION );
 
         assertNotNull(echsService);
     }
