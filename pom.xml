@@ -30,6 +30,8 @@
         <module>chargingstation-configuration/view-model</module>
         <module>vas/v10-soap</module>
         <module>vas/view-model</module>
+        <module>ochp/v03-soap</module>
+        <module>ochp/view-model</module>
     </modules>
 
     <properties>

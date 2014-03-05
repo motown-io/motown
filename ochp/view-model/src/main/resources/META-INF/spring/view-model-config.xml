@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:axon="http://www.axonframework.org/schema/core"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
+                           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
+
+                           http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd">
+
+    <context:property-placeholder location="classpath:configViewModel.properties"
+                                  ignore-resource-not-found="true"
+                                  ignore-unresolvable="true"/>
+
+    <context:component-scan base-package="io.motown.ochp.viewmodel">
+        <!--
+         The specific OCHP RequestHandlers are excluded here, as the one to use is configured on application level for specific OCHP version handling
+         TODO: Decide if this is the way to go, or move RequestHandlers to the specific OCHP application layer
+        -->
+        <context:exclude-filter type="regex" expression="io\.motown\.ochp\.viewmodel\.Ochp.*RequestHandler"/>
+    </context:component-scan>
+
+    <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
+        <property name="commandBus" ref="commandBus"/>
+        <property name="gatewayInterface" value="io.motown.ochp.viewmodel.domain.DomainCommandGateway"/>
+    </bean>
+
+    <bean id="configurationCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
+        <property name="commandBus" ref="commandBus"/>
+        <property name="gatewayInterface" value="io.motown.ochp.viewmodel.configuration.ConfigurationCommandGateway"/>
+    </bean>
+
+    <bean id="beanValidationInterceptor" class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor"/>
+
+    <bean id="commandBus"
+          class="org.axonframework.commandhandling.distributed.DistributedCommandBus">
+        <constructor-arg ref="jgroupsConnector"/>
+        <property name="CommandDispatchInterceptors" ref="beanValidationInterceptor"/>
+    </bean>
+
+    <bean id="jgroupsConnector"
+          class="org.axonframework.commandhandling.distributed.jgroups.JGroupsConnectorFactoryBean">
+        <property name="configuration"
+                  value="flush-udp.xml"/>
+        <property name="clusterName"
+                  value="io.motown.commands"/>
+        <property name="localSegment">
+            <axon:command-bus/>
+        </property>
+        <property name="serializer">
+            <bean class="org.axonframework.serializer.xml.XStreamSerializer"/>
+        </property>
+    </bean>
+
+    <bean id="asyncExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean">
+        <property name="corePoolSize" value="1"/>
+        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+    </bean>
+
+    <bean id="serializer" class="org.axonframework.serializer.xml.XStreamSerializer"/>
+
+    <!-- Spring Data JPA -->
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="io.motown.ochp.viewmodel.persistence.entities"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="database" value="HSQL"/>
+                <property name="generateDdl" value="true"/>
+            </bean>
+        </property>
+    </bean>
+
+    <jpa:repositories base-package="io.motown.ochp.viewmodel.persistence.repostories"/>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <jdbc:embedded-database id="dataSource" type="HSQL"/>
+
+</beans>
