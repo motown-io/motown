@@ -41,7 +41,7 @@
 
     <bean id="centralSystemService" class="io.motown.ocpp.v15.soap.centralsystem.MotownCentralSystemService">
         <property name="domainService" ref="domainService" />
-        <property name="continuationTimeout" value="${io.motown.ocpp.viewmodel.heartbeat.interval}" />
+        <property name="continuationTimeout" value="${io.motown.ocpp.v15.soap.cxf.continuation.timeout}" />
     </bean>
 
     <jaxws:endpoint implementor="#centralSystemService"
