@@ -18,6 +18,7 @@ package io.motown.operatorapi.viewmodel.persistence.repositories;
 import io.motown.operatorapi.viewmodel.persistence.entities.Transaction;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.List;
 
 public class TransactionRepository {
@@ -28,17 +29,19 @@ public class TransactionRepository {
      * Find transactions by transaction id (not the auto-increment transaction.id)
      */
     public List<Transaction> findByTransactionId(String transactionId) {
-        // TODO implement
-        return null;
+        Query query = entityManager.createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t WHERE t.transactionId = :transactionId").setParameter("transactionId", transactionId);
+        return (List<Transaction>) query.getResultList();
     }
 
     public List<Transaction> findAll() {
-        //TODO implement
-        return null;
+        Query query = entityManager.createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t");
+        return (List<Transaction>) query.getResultList();
     }
 
     public void save(Transaction transaction) {
-        //TODO implement
+        entityManager.getTransaction().begin();
+        entityManager.persist(transaction);
+        entityManager.getTransaction().commit();
     }
 
     public void setEntityManager(EntityManager entityManager) {

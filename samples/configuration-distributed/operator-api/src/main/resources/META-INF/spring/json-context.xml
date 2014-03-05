@@ -28,7 +28,17 @@
         </property>
     </bean>
 
-    <jpa:repositories base-package="io.motown.operatorapi.viewmodel.persistence.repositories"/>
+    <!--<jpa:repositories base-package="io.motown.operatorapi.viewmodel.persistence.repositories"/>-->
+
+
+    <bean id="chargingStationRepository" class="io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository">
+        <property name="entityManager" ref="entityManager" />
+    </bean>
+
+    <bean id="transactionRepository" class="io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository">
+        <property name="entityManager" ref="entityManager" />
+    </bean>
+
 
     <bean class="io.motown.operatorapi.viewmodel.ChargingStationEventListener">
         <property name="repository" ref="chargingStationRepository" />
@@ -239,6 +249,8 @@
             </bean>
         </property>
     </bean>
+
+    <bean id="entityManager" factory-bean="entityManagerFactory" factory-method="createEntityManager" />
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
