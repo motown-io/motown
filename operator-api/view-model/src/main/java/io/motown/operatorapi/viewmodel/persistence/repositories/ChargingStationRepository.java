@@ -16,19 +16,35 @@
 package io.motown.operatorapi.viewmodel.persistence.repositories;
 
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import java.util.List;
 
 public class ChargingStationRepository {
 
+    private static final Logger LOG = LoggerFactory.getLogger(TransactionRepository.class);
+
     private EntityManager entityManager;
 
     public void save(ChargingStation chargingStation) {
-        entityManager.getTransaction().begin();
-        entityManager.persist(chargingStation);
-        entityManager.getTransaction().commit();
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        if (!transaction.isActive()) {
+            transaction.begin();
+        }
+
+        try {
+            entityManager.persist(chargingStation);
+            transaction.commit();
+        } catch (Exception e) {
+            LOG.error("Exception while trying to persist chargingStation.", e);
+            transaction.rollback();
+            throw e;
+        }
     }
 
     public ChargingStation findOne(String id) {
