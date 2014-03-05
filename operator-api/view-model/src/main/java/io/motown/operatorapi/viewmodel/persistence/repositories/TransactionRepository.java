@@ -16,15 +16,32 @@
 package io.motown.operatorapi.viewmodel.persistence.repositories;
 
 import io.motown.operatorapi.viewmodel.persistence.entities.Transaction;
-import org.springframework.data.jpa.repository.JpaRepository;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
-public interface TransactionRepository extends JpaRepository<Transaction, String> {
+public class TransactionRepository {
+
+    private EntityManager entityManager;
 
     /**
      * Find transactions by transaction id (not the auto-increment transaction.id)
      */
-    List<Transaction> findByTransactionId(String transactionId);
+    public List<Transaction> findByTransactionId(String transactionId) {
+        // TODO implement
+        return null;
+    }
 
+    public List<Transaction> findAll() {
+        //TODO implement
+        return null;
+    }
+
+    public void save(Transaction transaction) {
+        //TODO implement
+    }
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 }

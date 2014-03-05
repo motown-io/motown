@@ -16,7 +16,31 @@
 package io.motown.operatorapi.viewmodel.persistence.repositories;
 
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
-import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ChargingStationRepository extends JpaRepository<ChargingStation, String> {
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.util.List;
+
+public class ChargingStationRepository {
+
+    private EntityManager entityManager;
+
+    public void save(ChargingStation chargingStation) {
+        entityManager.getTransaction().begin();
+        entityManager.persist(chargingStation);
+        entityManager.getTransaction().commit();
+    }
+
+    public ChargingStation findOne(String id) {
+        return entityManager.find(ChargingStation.class, id);
+    }
+
+    public List<ChargingStation> findAll() {
+        Query query = entityManager.createQuery("SELECT cs FROM io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation AS cs");
+        return (List<ChargingStation>) query.getResultList();
+    }
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 }

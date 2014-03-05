@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2013 Motown.IO (info@motown.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:util="http://www.springframework.org/schema/util" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+
+    <bean id="random" class="java.util.Random"/>
+
+    <bean id="gson" class="io.motown.operatorapi.json.gson.GsonFactoryBean">
+        <property name="dateFormat" value="yyyy-MM-dd'T'HH:mm:ss'Z'"/>
+        <property name="typeAdapters">
+            <set>
+                <bean class="io.motown.operatorapi.json.gson.EvseIdTypeAdapter"/>
+                <bean class="io.motown.operatorapi.json.gson.TextualTokenTypeAdapter"/>
+                <bean class="io.motown.operatorapi.json.gson.CoordinatesTypeAdapter"/>
+                <bean class="io.motown.operatorapi.json.gson.AddressTypeAdapter"/>
+                <bean class="io.motown.operatorapi.json.gson.OpeningTimeTypeAdapter"/>
+                <bean class="io.motown.operatorapi.json.gson.AccessibilityTypeAdapter"/>
+            </set>
+        </property>
+    </bean>
+
+    <!--<jpa:repositories base-package="io.motown.operatorapi.viewmodel.persistence.repositories"-->
+                      <!--entity-manager-factory-ref="operatorApiEntityManagerFactory" />-->
+
+    <!--<bean class="io.motown.ocpp.viewmodel.persistence.entities.ChargingStation" />-->
+    <!--<bean class="io.motown.ocpp.viewmodel.persistence.entities.Transaction" />-->
+
+    <!--<bean id="chargingStationRepositoryOperatorApi" class="org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean">-->
+        <!--<property name="repositoryInterface" value="io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository" />-->
+        <!--<property name="entityManager">-->
+            <!--<bean class = "org.springframework.orm.jpa.support.SharedEntityManagerBean">-->
+                <!--<property name = "entityManagerFactory" ref="operatorApiEntityManagerFactory"/>-->
+            <!--</bean>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <!--<bean id="transactionRepositoryOperatorApi" class="org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean">-->
+        <!--<property name="repositoryInterface" value="io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository" />-->
+        <!--<property name="entityManager">-->
+            <!--<bean class = "org.springframework.orm.jpa.support.SharedEntityManagerBean">-->
+                <!--<property name = "entityManagerFactory" ref="operatorApiEntityManagerFactory"/>-->
+            <!--</bean>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <bean class="io.motown.operatorapi.viewmodel.ChargingStationEventListener">
+        <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        <property name="transactionRepository" ref="transactionRepositoryOperatorApi" />
+    </bean>
+
+    <bean id="chargingStationRepositoryOperatorApi" class="io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository">
+        <property name="entityManager" ref="entityManager" />
+    </bean>
+
+    <bean id="transactionRepositoryOperatorApi" class="io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository">
+        <property name="entityManager" ref="entityManager" />
+    </bean>
+
+    <bean id="jsonCommandService" class="io.motown.operatorapi.json.commands.JsonCommandService">
+        <property name="gson" ref="gson" />
+        <property name="jsonCommandHandlers" ref="jsonCommandHandlers" />
+    </bean>
+
+    <bean id="operatorApiService" class="io.motown.operatorapi.json.queries.OperatorApiService">
+        <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        <property name="transactionRepository" ref="transactionRepositoryOperatorApi" />
+    </bean>
+
+    <util:list id="jsonCommandHandlers">
+        <bean class="io.motown.operatorapi.json.commands.AddChargingStationOpeningTimesJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="gson" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.ChangeConfigurationJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="gson" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.ConfigureJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="gson" />
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.DataTransferJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="gson" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.ImproveChargingStationLocationJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="gson" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.MoveChargingStationJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="gson" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.PlaceChargingStationJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="gson" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.RegisterJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="gson" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.RequestAuthorizationListVersionJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.RequestChangeChargingStationAvailabilityJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="gson" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.RequestClearCacheJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.RequestDiagnosticsJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="gson" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.RequestReserveNowJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="gson" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.RequestResetChargingStationJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="gson" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.RequestStartTransactionJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="gson" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.RequestStopTransactionJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="gson" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.SendAuthorizationListJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="gson" />
+            <!--<property name="repository" ref="chargingStationRepositoryOperatorApi" />-->
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.SetChargingStationOpeningTimesJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="gson" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.UnlockEvseJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="gson" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.UpdateChargingStationReservableJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="gson" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
+        <bean class="io.motown.operatorapi.json.commands.UpdateFirmwareJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="gson" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
+    </util:list>
+
+    <bean id="operatorApiDomainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
+        <property name="commandBus" ref="commandBus"/>
+        <property name="gatewayInterface" value="io.motown.operatorapi.json.commands.DomainCommandGateway"/>
+    </bean>
+
+    <bean id="applicationContextProvider" class="io.motown.operatorapi.viewmodel.spring.ApplicationContextProvider" />
+
+    <bean id="asyncExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean">
+        <property name="corePoolSize" value="1"/>
+        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+    </bean>
+
+    <!-- Spring Data JPA -->
+
+    <bean id="operatorApiEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="operatorApiDataSource"/>
+        <property name="packagesToScan" value="io.motown.operatorapi.viewmodel.persistence"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="database" value="HSQL"/>
+                <property name="generateDdl" value="true"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="operatorApiTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="operatorApiEntityManagerFactory"/>
+    </bean>
+
+    <bean id="entityManager" factory-bean="operatorApiEntityManagerFactory" factory-method="createEntityManager" />
+
+    <bean id="operatorApiChargingStationRepository" class="io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository">
+        <property name="entityManager" ref="entityManager" />
+    </bean>
+
+    <bean id="operatorApiTransactionRepository" class="io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository">
+        <property name="entityManager" ref="entityManager" />
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="operatorApiEntityManagerFactory"/>
+    </bean>
+
+    <jdbc:embedded-database id="operatorApiDataSource" type="HSQL"/>
+
+    <bean id="operatorApiBaseUrl" class="java.lang.String">
+        <constructor-arg value="/api" />
+    </bean>
+
+</beans>
