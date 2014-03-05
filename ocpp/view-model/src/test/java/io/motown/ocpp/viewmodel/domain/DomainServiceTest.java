@@ -160,16 +160,18 @@ public class DomainServiceTest {
 
     @Test
     public void testDiagnosticsFileNameReceived() {
-        domainService.diagnosticsFileNameReceived(CHARGING_STATION_ID, getDiagnosticsFileName());
+        CorrelationToken correlationToken = new CorrelationToken();
+        domainService.diagnosticsFileNameReceived(CHARGING_STATION_ID, getDiagnosticsFileName(), correlationToken);
 
-        verify(gateway).send(new DiagnosticsFileNameReceivedCommand(CHARGING_STATION_ID, getDiagnosticsFileName()));
+        verify(gateway).send(new DiagnosticsFileNameReceivedCommand(CHARGING_STATION_ID, getDiagnosticsFileName()), correlationToken);
     }
 
     @Test
     public void testAuthorizationListVersionReceived() {
-        domainService.authorizationListVersionReceived(CHARGING_STATION_ID, getAuthorizationListVersion());
+        CorrelationToken correlationToken = new CorrelationToken();
+        domainService.authorizationListVersionReceived(CHARGING_STATION_ID, getAuthorizationListVersion(), correlationToken);
 
-        verify(gateway).send(new AuthorizationListVersionReceivedCommand(CHARGING_STATION_ID, getAuthorizationListVersion()));
+        verify(gateway).send(new AuthorizationListVersionReceivedCommand(CHARGING_STATION_ID, getAuthorizationListVersion()), correlationToken);
     }
 
     @Test
@@ -226,102 +228,14 @@ public class DomainServiceTest {
     }
 
     @Test
-    public void testStopTransactionStatusChanged() {
-        domainService.stopTransactionStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
-        verify(gateway).send(new StopTransactionStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
+    public void testStatusChanged() {
+        String statusMessage = "Test message";
 
-        domainService.stopTransactionStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
-        verify(gateway).send(new StopTransactionStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
-    }
+        domainService.statusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS, CORRELATION_TOKEN, statusMessage);
+        verify(gateway).send(new StatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS, statusMessage), CORRELATION_TOKEN);
 
-    @Test
-    public void testSoftResetStatusChanged() {
-        domainService.softResetStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
-        verify(gateway).send(new SoftResetStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-
-        domainService.softResetStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
-        verify(gateway).send(new SoftResetStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
-    }
-
-    @Test
-    public void testHardResetStatusChanged() {
-        domainService.hardResetStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
-        verify(gateway).send(new HardResetStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-
-        domainService.hardResetStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
-        verify(gateway).send(new HardResetStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
-    }
-
-    @Test
-    public void testStartTransactionStatusChanged() {
-        domainService.startTransactionStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
-        verify(gateway).send(new StartTransactionStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-
-        domainService.startTransactionStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
-        verify(gateway).send(new StartTransactionStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
-    }
-
-    @Test
-    public void testUnlockEvseStatusChanged() {
-        domainService.unlockEvseStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
-        verify(gateway).send(new UnlockEvseStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-
-        domainService.unlockEvseStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
-        verify(gateway).send(new UnlockEvseStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
-    }
-
-    @Test
-    public void testChangeAvailabilityToOperativeStatusChanged() {
-        domainService.changeAvailabilityToOperativeStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
-        verify(gateway).send(new ChangeAvailabilityToOperativeStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-
-        domainService.changeAvailabilityToOperativeStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
-        verify(gateway).send(new ChangeAvailabilityToOperativeStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
-    }
-
-    @Test
-    public void testDataTransferStatusChanged() {
-        domainService.dataTransferStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
-        verify(gateway).send(new DataTransferStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-
-        domainService.dataTransferStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
-        verify(gateway).send(new DataTransferStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
-    }
-
-    @Test
-    public void testChangeConfigurationStatusChanged() {
-        domainService.changeConfigurationStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
-        verify(gateway).send(new ChangeConfigurationStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-
-        domainService.changeConfigurationStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
-        verify(gateway).send(new ChangeConfigurationStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
-    }
-
-    @Test
-    public void testClearCacheStatusChanged() {
-        domainService.clearCacheStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
-        verify(gateway).send(new ClearCacheStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-
-        domainService.clearCacheStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
-        verify(gateway).send(new ClearCacheStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
-    }
-
-    @Test
-    public void testSendAuthorizationListStatusChanged() {
-        domainService.sendAuthorizationListStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
-        verify(gateway).send(new SendAuthorizationListStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-
-        domainService.sendAuthorizationListStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
-        verify(gateway).send(new SendAuthorizationListStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
-    }
-
-    @Test
-    public void testChangeAvailabilityToInoperativeStatusChanged() {
-        domainService.changeAvailabilityToInoperativeStatusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS);
-        verify(gateway).send(new ChangeAvailabilityToInoperativeStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-
-        domainService.changeAvailabilityToInoperativeStatusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE);
-        verify(gateway).send(new ChangeAvailabilityToInoperativeStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE));
+        domainService.statusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE, CORRELATION_TOKEN, statusMessage);
+        verify(gateway).send(new StatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE, statusMessage), CORRELATION_TOKEN);
     }
 
     @Test
@@ -443,13 +357,6 @@ public class DomainServiceTest {
 
         assertNotNull(numberedReservationId.getId());
         assertNotNull(numberedReservationId.getNumber());
-    }
-
-    @Test
-    public void testReservationStatusChanged() {
-        domainService.reservationStatusChanged(CHARGING_STATION_ID, RESERVATION_ID, getReservationStatus());
-
-        verify(gateway).send(new ReservationStatusChangedCommand(CHARGING_STATION_ID, RESERVATION_ID, getReservationStatus()));
     }
 
 }

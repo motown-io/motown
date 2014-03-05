@@ -17,6 +17,7 @@ package io.motown.domain.chargingstation;
 
 import io.motown.domain.api.chargingstation.*;
 import org.axonframework.commandhandling.annotation.CommandHandler;
+import org.axonframework.domain.MetaData;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
@@ -98,37 +99,37 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
      * @param command the command which needs to be applied to the ChargingStation.
      */
     @CommandHandler
-    public void handle(StartTransactionCommand command) {
+    public void handle(StartTransactionCommand command, MetaData metaData) {
         checkCommunicationAllowed();
 
         // TODO mark socket (mentioned in command) 'in transaction' - Mark van den Bergh, December 2nd 2013
         // TODO store transaction identifier so we can validate 'stop transaction' commands? - Mark van den Bergh, December 2nd 2013
 
         if (command.getEvseId().getNumberedId() > numberOfEvses) {
-            apply(new EvseNotFoundEvent(id, command.getEvseId()));
+            apply(new EvseNotFoundEvent(id, command.getEvseId()), metaData);
             return;
         }
 
-        apply(new TransactionStartedEvent(command.getChargingStationId(), command.getTransactionId(), command.getEvseId(), command.getIdentifyingToken(), command.getMeterStart(), command.getTimestamp(), command.getAttributes()));
+        apply(new TransactionStartedEvent(command.getChargingStationId(), command.getTransactionId(), command.getEvseId(), command.getIdentifyingToken(), command.getMeterStart(), command.getTimestamp(), command.getAttributes()), metaData);
     }
 
     @CommandHandler
-    public void handle(StopTransactionCommand command) {
-        apply(new TransactionStoppedEvent(command.getChargingStationId(), command.getTransactionId(), command.getIdTag(), command.getMeterStop(), command.getTimestamp()));
+    public void handle(StopTransactionCommand command, MetaData metaData) {
+        apply(new TransactionStoppedEvent(command.getChargingStationId(), command.getTransactionId(), command.getIdTag(), command.getMeterStop(), command.getTimestamp()), metaData);
     }
 
     @CommandHandler
-    public void handle(RequestUnlockEvseCommand command) {
+    public void handle(RequestUnlockEvseCommand command, MetaData metaData) {
         checkCommunicationAllowed();
         if (command.getEvseId().getNumberedId() > numberOfEvses) {
-            apply(new EvseNotFoundEvent(id, command.getEvseId()));
+            apply(new EvseNotFoundEvent(id, command.getEvseId()), metaData);
         } else {
             if (command.getEvseId() == Evse.ALL) {
                 for (int i = 1; i <= numberOfEvses; i++) {
-                    apply(new UnlockEvseRequestedEvent(id, protocol, new EvseId(i)));
+                    apply(new UnlockEvseRequestedEvent(id, protocol, new EvseId(i)), metaData);
                 }
             } else {
-                apply(new UnlockEvseRequestedEvent(id, protocol, command.getEvseId()));
+                apply(new UnlockEvseRequestedEvent(id, protocol, command.getEvseId()), metaData);
             }
         }
     }
@@ -147,8 +148,8 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(RequestStartTransactionCommand command) {
-        apply(new StartTransactionRequestedEvent(this.id, this.protocol, command.getIdentifyingToken(), command.getEvseId()));
+    public void handle(RequestStartTransactionCommand command, MetaData metaData) {
+        apply(new StartTransactionRequestedEvent(this.id, this.protocol, command.getIdentifyingToken(), command.getEvseId()), metaData);
     }
 
     @CommandHandler
@@ -158,23 +159,23 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(RequestSoftResetChargingStationCommand command) {
-        apply(new SoftResetChargingStationRequestedEvent(this.id, this.protocol));
+    public void handle(RequestSoftResetChargingStationCommand command, MetaData metaData) {
+        apply(new SoftResetChargingStationRequestedEvent(this.id, this.protocol), metaData);
     }
 
     @CommandHandler
-    public void handle(RequestHardResetChargingStationCommand command) {
-        apply(new HardResetChargingStationRequestedEvent(this.id, this.protocol));
+    public void handle(RequestHardResetChargingStationCommand command, MetaData metaData) {
+        apply(new HardResetChargingStationRequestedEvent(this.id, this.protocol), metaData);
     }
 
     @CommandHandler
-    public void handle(RequestChangeChargingStationAvailabilityToInoperativeCommand command) {
-        apply(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(this.id, this.protocol, command.getEvseId()));
+    public void handle(RequestChangeChargingStationAvailabilityToInoperativeCommand command, MetaData metaData) {
+        apply(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(this.id, this.protocol, command.getEvseId()), metaData);
     }
 
     @CommandHandler
-    public void handle(RequestChangeChargingStationAvailabilityToOperativeCommand command) {
-        apply(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(this.id, this.protocol, command.getEvseId()));
+    public void handle(RequestChangeChargingStationAvailabilityToOperativeCommand command, MetaData metaData) {
+        apply(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(this.id, this.protocol, command.getEvseId()), metaData);
     }
 
     @CommandHandler
@@ -183,13 +184,14 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(DataTransferCommand command) {
-        apply(new DataTransferEvent(this.id, this.protocol, command.getVendorId(), command.getMessageId(), command.getData()));
+    public void handle(DataTransferCommand command, MetaData metaData) {
+        apply(new DataTransferEvent(this.id, this.protocol, command.getVendorId(), command.getMessageId(), command.getData()), metaData);
     }
 
     @CommandHandler
-    public void handle(ChangeConfigurationCommand command) {
-        apply(new ChangeConfigurationEvent(this.id, this.protocol, command.getKey(), command.getValue()));
+    public void handle(ChangeConfigurationCommand command, MetaData metaData) {
+
+        apply(new ChangeConfigurationEvent(this.id, this.protocol, command.getKey(), command.getValue()), metaData);
     }
 
     @CommandHandler
@@ -218,13 +220,8 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(RequestClearCacheCommand command) {
-        apply(new ClearCacheRequestedEvent(command.getChargingStationId(), this.protocol));
-    }
-
-    @CommandHandler
-    public void handle(ClearCacheStatusChangedCommand command){
-        apply(new ClearCacheStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
+    public void handle(RequestClearCacheCommand command, MetaData metaData) {
+        apply(new ClearCacheRequestedEvent(command.getChargingStationId(), this.protocol), metaData);
     }
 
     @CommandHandler
@@ -243,14 +240,14 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(SendAuthorizationListCommand command) {
-        apply(new SendAuthorizationListRequestedEvent(command.getChargingStationId(), this.protocol, command.getAuthorizationList(), command.getAuthorizationListVersion(), command.getAuthorizationListHash(), command.getUpdateType()));
+    public void handle(SendAuthorizationListCommand command, MetaData metaData) {
+        apply(new SendAuthorizationListRequestedEvent(command.getChargingStationId(), this.protocol, command.getAuthorizationList(), command.getAuthorizationListVersion(), command.getAuthorizationListHash(), command.getUpdateType()), metaData);
     }
 
     @CommandHandler
-    public void handle(RequestReserveNowCommand command) {
+    public void handle(RequestReserveNowCommand command, MetaData metaData) {
         if (isReservable) {
-            apply(new ReserveNowRequestedEvent(command.getChargingStationId(), this.protocol, command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), command.getParentIdentifyingToken()));
+            apply(new ReserveNowRequestedEvent(command.getChargingStationId(), this.protocol, command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), command.getParentIdentifyingToken()), metaData);
         } else {
             apply(new ReserveNowRequestedForUnreservableChargingStationEvent(command.getChargingStationId(), command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), command.getParentIdentifyingToken()));
         }
@@ -259,11 +256,6 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @CommandHandler
     public void handle(RequestCancelReservationCommand command) {
         apply(new CancelReservationRequestedEvent(command.getChargingStationId(), this.protocol, command.getReservationId()));
-    }
-
-    @CommandHandler
-    public void handle(ReservationStatusChangedCommand command) {
-        apply(new ReservationStatusChangedEvent(command.getChargingStationId(), command.getReservationId(), command.getNewStatus()));
     }
 
     @CommandHandler
@@ -282,53 +274,8 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(ChangeAvailabilityToInoperativeStatusChangedCommand command) {
-        apply(new ChangeAvailabilityToInoperativeStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
-    }
-
-    @CommandHandler
-    public void handle(ChangeAvailabilityToOperativeStatusChangedCommand command) {
-        apply(new ChangeAvailabilityToOperativeStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
-    }
-
-    @CommandHandler
-    public void handle(ChangeConfigurationStatusChangedCommand command) {
-        apply(new ChangeConfigurationStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
-    }
-
-    @CommandHandler
-    public void handle(DataTransferStatusChangedCommand command) {
-        apply(new DataTransferStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
-    }
-
-    @CommandHandler
-    public void handle(HardResetStatusChangedCommand command) {
-        apply(new HardResetStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
-    }
-
-    @CommandHandler
-    public void handle(SendAuthorizationListStatusChangedCommand command) {
-        apply(new SendAuthorizationListStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
-    }
-
-    @CommandHandler
-    public void handle(SoftResetStatusChangedCommand command) {
-        apply(new SoftResetStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
-    }
-
-    @CommandHandler
-    public void handle(StartTransactionStatusChangedCommand command) {
-        apply(new StartTransactionStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
-    }
-
-    @CommandHandler
-    public void handle(StopTransactionStatusChangedCommand command) {
-        apply(new StopTransactionStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
-    }
-
-    @CommandHandler
-    public void handle(UnlockEvseStatusChangedCommand command) {
-        apply(new UnlockEvseStatusChangedEvent(command.getChargingStationId(), command.getStatus()));
+    public void handle(StatusChangedCommand command, MetaData metaData) {
+        apply(new StatusChangedEvent(command.getChargingStationId(), command.getStatus(), command.getStatusMessage()), metaData);
     }
 
     @CommandHandler

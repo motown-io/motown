@@ -25,23 +25,27 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * {@code StatusChangedCommand} serves as a base class for commands which will inform about the resulting status of a request
  * that has been sent to the charging station.
  */
-public class StatusChangedCommand {
+public final class StatusChangedCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
     private final RequestStatus status;
 
+    private final String statusMessage;
+
     /**
      * Creates a {@code StatusChangedCommand} with an identifier and new status.
      *
-     * @param chargingStationId the identifier of the charging station.
-     * @param status            the resulting status of the request
-     * @throws NullPointerException if {@code chargingStationId} or {@code status} is {@code null}.
+     * @param chargingStationId   the identifier of the charging station.
+     * @param status              the resulting status of the request
+     * @param statusMessage       status message, to primarily inform about the cause of a failure
+     * @throws NullPointerException if {@code chargingStationId}, {@code status} or {@code statusMessage} is {@code null}.
      */
-    public StatusChangedCommand(ChargingStationId chargingStationId, RequestStatus status) {
+    public StatusChangedCommand(ChargingStationId chargingStationId, RequestStatus status, String statusMessage) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.status = checkNotNull(status);
+        this.statusMessage = checkNotNull(statusMessage);
     }
 
     /**
@@ -62,9 +66,18 @@ public class StatusChangedCommand {
         return status;
     }
 
+    /**
+     * Gets the resulting protocol specific status message.
+     *
+     * @return the message
+     */
+    public String getStatusMessage() {
+        return statusMessage;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, status);
+        return Objects.hash(chargingStationId, status, statusMessage);
     }
 
     @Override
@@ -76,6 +89,6 @@ public class StatusChangedCommand {
             return false;
         }
         final StatusChangedCommand other = (StatusChangedCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.status, other.status);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.status, other.status) && Objects.equals(this.statusMessage, other.statusMessage);
     }
 }

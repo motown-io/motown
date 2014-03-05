@@ -50,7 +50,7 @@ public class EventWaitingGateway {
         callbacks.put(correlationId, callback);
 
         if (started.compareAndSet(false, true)) {
-            eventBus.subscribe(new AnnotationEventListenerAdapter(this, eventBus));
+            eventBus.subscribe(new AnnotationEventListenerAdapter(this));
         }
 
         final CommandMessage commandMessage = asCommandMessage(command)

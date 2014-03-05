@@ -28,10 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManagerFactory;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DomainService {
 
@@ -124,12 +121,12 @@ public class DomainService {
         commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, evseId, meterValues));
     }
 
-    public void diagnosticsFileNameReceived(ChargingStationId chargingStationId, String diagnosticsFileName) {
-        commandGateway.send(new DiagnosticsFileNameReceivedCommand(chargingStationId, diagnosticsFileName));
+    public void diagnosticsFileNameReceived(ChargingStationId chargingStationId, String diagnosticsFileName, CorrelationToken correlationToken) {
+        commandGateway.send(new DiagnosticsFileNameReceivedCommand(chargingStationId, diagnosticsFileName), correlationToken);
     }
 
-    public void authorizationListVersionReceived(ChargingStationId chargingStationId, int currentVersion) {
-        commandGateway.send(new AuthorizationListVersionReceivedCommand(chargingStationId, currentVersion));
+    public void authorizationListVersionReceived(ChargingStationId chargingStationId, int currentVersion, CorrelationToken correlationToken) {
+        commandGateway.send(new AuthorizationListVersionReceivedCommand(chargingStationId, currentVersion), correlationToken);
     }
 
     public void authorize(ChargingStationId chargingStationId, String idTag, FutureEventCallback future) {
@@ -222,52 +219,8 @@ public class DomainService {
         }
     }
 
-    public void reservationStatusChanged(ChargingStationId chargingStationId, ReservationId reservationId, ReservationStatus newStatus) {
-        commandGateway.send(new ReservationStatusChangedCommand(chargingStationId, reservationId, newStatus));
-    }
-
-    public void stopTransactionStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new StopTransactionStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void softResetStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new SoftResetStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void hardResetStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new HardResetStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void startTransactionStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new StartTransactionStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void unlockEvseStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new UnlockEvseStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void changeAvailabilityToOperativeStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new ChangeAvailabilityToOperativeStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void changeAvailabilityToInoperativeStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new ChangeAvailabilityToInoperativeStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void dataTransferStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new DataTransferStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void changeConfigurationStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new ChangeConfigurationStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void clearCacheStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new ClearCacheStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void sendAuthorizationListStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new SendAuthorizationListStatusChangedCommand(chargingStationId, requestStatus));
+    public void statusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus, CorrelationToken statusCorrelationToken, String statusMessage) {
+        commandGateway.send(new StatusChangedCommand(chargingStationId, requestStatus, statusMessage), statusCorrelationToken);
     }
 
     public void setCommandGateway(DomainCommandGateway commandGateway) {

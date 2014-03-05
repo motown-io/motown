@@ -18,6 +18,7 @@ package io.motown.ocpp.viewmodel;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
+import org.axonframework.common.annotation.MetaData;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,97 +42,97 @@ public class Ocpp15RequestHandler {
     }
 
     @EventHandler
-    public void handle(StopTransactionRequestedEvent event) {
+    public void handle(StopTransactionRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.info("StopTransactionRequestedEvent");
 
         if (event.getTransactionId() instanceof NumberedTransactionId) {
             NumberedTransactionId transactionId = (NumberedTransactionId) event.getTransactionId();
             RequestStatus requestStatus = chargingStationOcpp15Client.stopTransaction(event.getChargingStationId(), transactionId.getNumber());
 
-            domainService.stopTransactionStatusChanged(event.getChargingStationId(), requestStatus);
+            domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
         } else {
             LOG.warn("StopTransactionRequestedEvent does not contain a NumberedTransactionId. Event: {}", event);
         }
     }
 
     @EventHandler
-    public void handle(SoftResetChargingStationRequestedEvent event) {
+    public void handle(SoftResetChargingStationRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.info("SoftResetChargingStationRequestedEvent");
         RequestStatus requestStatus = chargingStationOcpp15Client.softReset(event.getChargingStationId());
 
-        domainService.softResetStatusChanged(event.getChargingStationId(), requestStatus);
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
     @EventHandler
-    public void handle(HardResetChargingStationRequestedEvent event) {
+    public void handle(HardResetChargingStationRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.info("HardResetChargingStationRequestedEvent");
         RequestStatus requestStatus = chargingStationOcpp15Client.hardReset(event.getChargingStationId());
 
-        domainService.hardResetStatusChanged(event.getChargingStationId(), requestStatus);
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
     @EventHandler
-    public void handle(StartTransactionRequestedEvent event) {
+    public void handle(StartTransactionRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.info("StartTransactionRequestedEvent");
         RequestStatus requestStatus =  chargingStationOcpp15Client.startTransaction(event.getChargingStationId(), event.getIdentifyingToken(), event.getEvseId());
 
-        domainService.startTransactionStatusChanged(event.getChargingStationId(), requestStatus);
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
     @EventHandler
-    public void handle(UnlockEvseRequestedEvent event) {
+    public void handle(UnlockEvseRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.info("UnlockEvseRequestedEvent");
         RequestStatus requestStatus = chargingStationOcpp15Client.unlockConnector(event.getChargingStationId(), event.getEvseId());
 
-        domainService.unlockEvseStatusChanged(event.getChargingStationId(), requestStatus);
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
     @EventHandler
-    public void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event) {
+    public void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.info("ChangeChargingStationAvailabilityToInoperativeRequestedEvent");
         RequestStatus requestStatus = chargingStationOcpp15Client.changeAvailabilityToInoperative(event.getChargingStationId(), event.getEvseId());
 
-        domainService.changeAvailabilityToInoperativeStatusChanged(event.getChargingStationId(), requestStatus);
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
     @EventHandler
-    public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event) {
+    public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.info("ChangeChargingStationAvailabilityToOperativeRequestedEvent");
         RequestStatus requestStatus = chargingStationOcpp15Client.changeAvailabilityToOperative(event.getChargingStationId(), event.getEvseId());
 
-        domainService.changeAvailabilityToOperativeStatusChanged(event.getChargingStationId(), requestStatus);
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
     @EventHandler
-    public void handle(DataTransferEvent event) {
+    public void handle(DataTransferEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.info("DataTransferEvent");
         RequestStatus requestStatus = chargingStationOcpp15Client.dataTransfer(event.getChargingStationId(), event.getVendorId(), event.getMessageId(), event.getData());
 
-        domainService.dataTransferStatusChanged(event.getChargingStationId(), requestStatus);
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
     @EventHandler
-    public void handle(ChangeConfigurationEvent event) {
+    public void handle(ChangeConfigurationEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.info("ChangeConfigurationEvent");
         RequestStatus requestStatus = chargingStationOcpp15Client.changeConfiguration(event.getChargingStationId(), event.getKey(), event.getValue());
 
-        domainService.changeConfigurationStatusChanged(event.getChargingStationId(), requestStatus);
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
     @EventHandler
-    public void handle(DiagnosticsRequestedEvent event) {
+    public void handle(DiagnosticsRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.info("DiagnosticsRequestedEvent");
         String diagnosticsFilename = chargingStationOcpp15Client.getDiagnostics(event.getChargingStationId(), event.getUploadLocation(), event.getNumRetries(), event.getRetryInterval(), event.getPeriodStartTime(), event.getPeriodStopTime());
 
-        domainService.diagnosticsFileNameReceived(event.getChargingStationId(), diagnosticsFilename);
+        domainService.diagnosticsFileNameReceived(event.getChargingStationId(), diagnosticsFilename, statusCorrelationToken);
     }
 
     @EventHandler
-    public void handle(ClearCacheRequestedEvent event) {
+    public void handle(ClearCacheRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.info("ClearCacheRequestedEvent");
         RequestStatus requestStatus = chargingStationOcpp15Client.clearCache(event.getChargingStationId());
 
-        domainService.clearCacheStatusChanged(event.getChargingStationId(), requestStatus);
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
     @EventHandler
@@ -152,32 +153,35 @@ public class Ocpp15RequestHandler {
     }
 
     @EventHandler
-    public void handle(AuthorizationListVersionRequestedEvent event) {
+    public void handle(AuthorizationListVersionRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.info("AuthorizationListVersionRequestedEvent");
 
         int currentVersion = chargingStationOcpp15Client.getAuthorizationListVersion(event.getChargingStationId());
 
-        domainService.authorizationListVersionReceived(event.getChargingStationId(), currentVersion);
+        domainService.authorizationListVersionReceived(event.getChargingStationId(), currentVersion, statusCorrelationToken);
     }
 
     @EventHandler
-    public void handle(SendAuthorizationListRequestedEvent event) {
+    public void handle(SendAuthorizationListRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.info("SendAuthorizationListRequestedEvent");
 
         RequestStatus requestStatus = chargingStationOcpp15Client.sendAuthorizationList(event.getChargingStationId(), event.getAuthorizationListHash(), event.getAuthorizationListVersion(), event.getAuthorizationList(), event.getUpdateType());
 
-        domainService.sendAuthorizationListStatusChanged(event.getChargingStationId(), requestStatus);
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
     @EventHandler
-    public void handle(ReserveNowRequestedEvent event) {
+    public void handle(ReserveNowRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.info("ReserveNowRequestedEvent");
 
         NumberedReservationId reservationIdentifier = domainService.generateReservationIdentifier(event.getChargingStationId(), event.getProtocol());
 
-        ReservationStatus resultStatus = chargingStationOcpp15Client.reserveNow(event.getChargingStationId(), event.getEvseId(), event.getIdentifyingToken(), event.getExpiryDate(), event.getParentIdentifyingToken(), reservationIdentifier.getNumber());
+        ReservationStatus reservationStatus = chargingStationOcpp15Client.reserveNow(event.getChargingStationId(), event.getEvseId(), event.getIdentifyingToken(), event.getExpiryDate(), event.getParentIdentifyingToken(), reservationIdentifier.getNumber());
+        String reservationStatusMessage = (reservationStatus != null) ? reservationStatus.name() : "";
 
-        domainService.reservationStatusChanged(event.getChargingStationId(), reservationIdentifier, resultStatus);
+        RequestStatus requestStatus = ReservationStatus.ACCEPTED.equals(reservationStatus) ? RequestStatus.SUCCESS : RequestStatus.FAILURE;
+
+        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, reservationStatusMessage);
     }
 
     public void setChargingStationOcpp15Client(ChargingStationOcpp15Client chargingStationOcpp15Client) {

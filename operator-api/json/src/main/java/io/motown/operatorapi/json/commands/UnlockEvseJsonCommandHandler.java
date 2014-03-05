@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.RequestUnlockEvseCommand;
 import io.motown.operatorapi.viewmodel.model.UnlockEvseApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
@@ -45,7 +46,7 @@ class UnlockEvseJsonCommandHandler implements JsonCommandHandler {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
                 UnlockEvseApiCommand command = gson.fromJson(commandObject, UnlockEvseApiCommand.class);
-                commandGateway.send(new RequestUnlockEvseCommand(new ChargingStationId(chargingStationId), command.getEvseId()));
+                commandGateway.send(new RequestUnlockEvseCommand(new ChargingStationId(chargingStationId), command.getEvseId()), new CorrelationToken());
             }
         } catch (JsonSyntaxException e) {
             throw new IllegalArgumentException("Unlock evse command not able to parse the payload, is your JSON correctly formatted?", e);
