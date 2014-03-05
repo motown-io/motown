@@ -36,16 +36,19 @@ public class JsonOperatorApiApplication implements SparkApplication {
 
     private JsonCommandService commandService;
 
+    private String baseUrl;
+
     public JsonOperatorApiApplication() {
         // TODO refactor this so application context is not needed - Mark van den Bergh, Februari 26th 2014
         ApplicationContext context = ApplicationContextProvider.getApplicationContext();
         this.service = (OperatorApiService) context.getBean("operatorApiService");
         this.commandService = (JsonCommandService) context.getBean("jsonCommandService");
+        this.baseUrl = (String) (context.containsBean("operatorApiBaseUrl")?context.getBean("operatorApiBaseUrl"):"");
     }
 
     @Override
     public void init() {
-        post(new Route("/charging-stations/:chargingStationId/commands") {
+        post(new Route(baseUrl + "/charging-stations/:chargingStationId/commands") {
             @Override
             public Object handle(Request request, Response response) {
                 String chargingStationId = request.params(":chargingStationId");
@@ -56,14 +59,14 @@ public class JsonOperatorApiApplication implements SparkApplication {
                 return "";
             }
         });
-        get(new JsonTransformerRoute("/charging-stations") {
+        get(new JsonTransformerRoute(baseUrl + "/charging-stations") {
             @Override
             public Object handle(Request request, Response response) {
                 response.type("application/json");
                 return service.findAllChargingStations();
             }
         });
-        get(new JsonTransformerRoute("/transactions") {
+        get(new JsonTransformerRoute(baseUrl + "/transactions") {
             @Override
             public Object handle(Request request, Response response) {
                 response.type("application/json");
