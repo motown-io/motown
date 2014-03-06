@@ -19,6 +19,9 @@ import com.google.common.collect.ImmutableSet;
 import io.motown.vas.v10.soap.schema.ChargePoint;
 import io.motown.vas.viewmodel.model.*;
 
+import javax.persistence.EntityManager;
+import java.util.List;
+
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADDRESS;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.COORDINATES;
@@ -33,6 +36,15 @@ public class VasSoapTestUtils {
     public static final String SUBSCRIBER_IDENTITY = "MOTOWN_SUBSCRIBER";
 
     private static final String OPERATOR = "MOTOWN";
+
+    public static void deleteFromDatabase(EntityManager entityManager, Class jpaEntityClass) {
+        entityManager.getTransaction().begin();
+        List resultList = entityManager.createQuery("SELECT entity FROM " + jpaEntityClass.getName() + " as entity").getResultList();
+        for (Object obj : resultList) {
+            entityManager.remove(obj);
+        }
+        entityManager.getTransaction().commit();
+    }
 
     public static ChargingStation getConfiguredAndFilledChargingStation() {
         ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());

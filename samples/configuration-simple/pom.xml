@@ -62,11 +62,11 @@
             <artifactId>operator-api-json</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>io.motown.vas</groupId>-->
-            <!--<artifactId>vas-v10-soap</artifactId>-->
-            <!--<version>${project.version}</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>io.motown.vas</groupId>
+            <artifactId>vas-v10-soap</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

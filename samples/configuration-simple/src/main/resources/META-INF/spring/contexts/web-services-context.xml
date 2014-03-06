@@ -158,4 +158,72 @@
     <bean class="io.motown.ocpp.v12.soap.centralsystem.schema.ObjectFactory"/>
     <!-- END OF OCPP 1.2 SOAP CONFIG -->
 
+
+    <!-- START OF VAS 1.0 SOAP CONFIG -->
+    <bean id="vasWebServicesChargingStationRepository" class="io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository">
+        <property name="entityManager" ref="vasWebServicesEntityManager" />
+    </bean>
+
+    <bean id="vasWebServicesSubscriptionRepository" class="io.motown.vas.viewmodel.persistence.repostories.SubscriptionRepository">
+        <property name="entityManager" ref="vasWebServicesEntityManager" />
+    </bean>
+
+    <bean class="io.motown.vas.viewmodel.VasEventHandler">
+        <property name="chargingStationRepository" ref="vasWebServicesChargingStationRepository" />
+        <property name="configurationConversionService">
+            <bean class="io.motown.vas.viewmodel.ConfigurationConversionService" />
+        </property>
+        <property name="subscriberService">
+            <bean class="io.motown.vas.viewmodel.VasSubscriberService">
+                <property name="subscriptionRepository" ref="vasWebServicesSubscriptionRepository" />
+                <property name="executorService" ref="vasExecutorService" />
+                <property name="subscriberClient" ref="vasSubscriberSoapClient" />
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="vasSubscriberSoapClient" class="io.motown.vas.v10.soap.subscriber.VasSubscriberSoapClient">
+        <property name="proxyFactory">
+            <bean class="io.motown.vas.v10.soap.subscriber.VasSubscriberServiceProxyFactory" />
+        </property>
+        <property name="publisherIdentity" value="${io.motown.vas.v10.soap.publisher.identity}" />
+    </bean>
+
+    <bean id="vasPublisherService" class="io.motown.vas.v10.soap.publisher.MotownVasPublisherService">
+        <property name="vasConversionService">
+            <bean class="io.motown.vas.v10.soap.VasConversionService" />
+        </property>
+        <property name="chargingStationRepository" ref="vasWebServicesChargingStationRepository" />
+        <property name="subscriptionRepository" ref="vasWebServicesSubscriptionRepository" />
+    </bean>
+
+    <jaxws:endpoint implementor="#vasPublisherService"
+                    address="/vasPublisherService">
+        <jaxws:inInterceptors>
+            <ref bean="replyToInterceptor"/>
+        </jaxws:inInterceptors>
+    </jaxws:endpoint>
+
+    <bean id="vasWebServicesEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="vasWebServicesDataSource"/>
+        <property name="packagesToScan" value="io.motown.vas.viewmodel.model"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="database" value="HSQL"/>
+                <property name="generateDdl" value="true"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="vasWebServicesEntityManager" factory-bean="vasWebServicesEntityManagerFactory" factory-method="createEntityManager" />
+
+    <jdbc:embedded-database id="vasWebServicesDataSource" type="HSQL" />
+
+    <!-- executorService for pushing status changes to subscribers -->
+    <bean id="vasExecutorService" class="java.util.concurrent.Executors"
+          factory-method="newCachedThreadPool"
+          destroy-method="shutdownNow" />
+
+    <!-- END OF VAS 1.0 SOAP CONFIG -->
+
 </beans>

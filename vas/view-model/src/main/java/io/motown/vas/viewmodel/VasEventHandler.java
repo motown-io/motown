@@ -49,7 +49,7 @@ public class VasEventHandler {
             chargingStation = new ChargingStation(chargingStationId);
         }
 
-        chargingStationRepository.save(chargingStation);
+        chargingStationRepository.insert(chargingStation);
     }
 
     @EventHandler
@@ -60,7 +60,7 @@ public class VasEventHandler {
 
         if (chargingStation != null) {
             chargingStation.setRegistered(true);
-            chargingStationRepository.save(chargingStation);
+            chargingStationRepository.insert(chargingStation);
         }
     }
 
@@ -92,7 +92,7 @@ public class VasEventHandler {
         chargingStation.setChargingCapabilities(configurationConversionService.getChargingCapabilitiesFromEvses(eventEvses));
         chargingStation.setConfigured(true);
 
-        chargingStationRepository.save(chargingStation);
+        chargingStationRepository.insert(chargingStation);
     }
 
     /**
@@ -140,7 +140,7 @@ public class VasEventHandler {
         ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
         if (chargingStation != null) {
             chargingStation.setOpeningTimes(convertFromApiOpeningTimes(event.getOpeningTimes()));
-            chargingStationRepository.save(chargingStation);
+            chargingStationRepository.insert(chargingStation);
         }
     }
 
@@ -159,7 +159,7 @@ public class VasEventHandler {
                 chargingStation.setOpeningTimes(new HashSet<io.motown.vas.viewmodel.model.OpeningTime>());
             }
             chargingStation.getOpeningTimes().addAll(convertFromApiOpeningTimes(event.getOpeningTimes()));
-            chargingStationRepository.save(chargingStation);
+            chargingStationRepository.insert(chargingStation);
         }
     }
 
@@ -184,7 +184,7 @@ public class VasEventHandler {
         ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
         if (chargingStation != null) {
             chargingStation.setState(ComponentStatus.fromApiComponentStatus(event.getStatus()));
-            chargingStationRepository.save(chargingStation);
+            chargingStationRepository.insert(chargingStation);
 
             subscriberService.updateSubscribers(chargingStation, event.getTimestamp());
         }
@@ -199,7 +199,7 @@ public class VasEventHandler {
         if (chargingStation != null && event.getComponentId() instanceof EvseId) {
             io.motown.vas.viewmodel.model.Evse evse = chargingStation.getEvse( ((EvseId)event.getComponentId()).getNumberedId() );
             evse.setState(ComponentStatus.fromApiComponentStatus(event.getStatus()));
-            chargingStationRepository.save(chargingStation);
+            chargingStationRepository.insert(chargingStation);
 
             subscriberService.updateSubscribers(chargingStation, event.getTimestamp());
         }
@@ -247,7 +247,7 @@ public class VasEventHandler {
 
         if (chargingStation != null) {
             chargingStation.setReservable(reservable);
-            chargingStationRepository.save(chargingStation);
+            chargingStationRepository.insert(chargingStation);
         }
     }
 
@@ -280,7 +280,7 @@ public class VasEventHandler {
 
             chargingStation.setAccessibility(accessibility.name());
 
-            chargingStationRepository.save(chargingStation);
+            chargingStationRepository.insert(chargingStation);
         }
     }
 

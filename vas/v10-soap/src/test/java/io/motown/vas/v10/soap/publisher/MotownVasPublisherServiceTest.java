@@ -18,6 +18,7 @@ package io.motown.vas.v10.soap.publisher;
 import io.motown.vas.v10.soap.VasConversionService;
 import io.motown.vas.v10.soap.schema.*;
 import io.motown.vas.viewmodel.model.ChargingStation;
+import io.motown.vas.viewmodel.model.Subscription;
 import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository;
 import io.motown.vas.viewmodel.persistence.repostories.SubscriptionRepository;
 import org.junit.Before;
@@ -27,10 +28,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.persistence.EntityManager;
+
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.vas.v10.soap.VasSoapTestUtils.DELIVERY_ADDRESS;
-import static io.motown.vas.v10.soap.VasSoapTestUtils.OTHER_DELIVERY_ADDRESS;
-import static io.motown.vas.v10.soap.VasSoapTestUtils.SUBSCRIBER_IDENTITY;
+import static io.motown.vas.v10.soap.VasSoapTestUtils.*;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
@@ -50,10 +51,14 @@ public class MotownVasPublisherServiceTest {
     @Autowired
     private VasConversionService vasConversionService;
 
+    @Autowired
+    private EntityManager entityManager;
+
     @Before
     public void setup() {
-        chargingStationRepository.deleteAll();
-        subscriptionRepository.deleteAll();
+        entityManager.clear();
+        deleteFromDatabase(entityManager, ChargingStation.class);
+        deleteFromDatabase(entityManager, Subscription.class);
 
         service = new MotownVasPublisherService();
 
@@ -143,8 +148,8 @@ public class MotownVasPublisherServiceTest {
     @Test
     public void getChargePointInfoSubscriptionValidateResponse() {
         subscribeTestSubscriber();
-        chargingStationRepository.saveAndFlush(new ChargingStation(CHARGING_STATION_ID.getId()));
-        chargingStationRepository.saveAndFlush(new ChargingStation("SECOND_CS"));
+        chargingStationRepository.insert(new ChargingStation(CHARGING_STATION_ID.getId()));
+        chargingStationRepository.insert(new ChargingStation("SECOND_CS"));
         GetChargePointInfoRequest request = new GetChargePointInfoRequest();
 
         GetChargePointInfoResponse response = service.getChargePointInfo(request, SUBSCRIBER_IDENTITY);

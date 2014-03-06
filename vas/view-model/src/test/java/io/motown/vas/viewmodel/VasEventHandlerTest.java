@@ -29,11 +29,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.persistence.EntityManager;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static io.motown.vas.viewmodel.VasViewModelTestUtils.deleteFromDatabase;
 import static io.motown.vas.viewmodel.VasViewModelTestUtils.getRegisteredAndConfiguredChargingStation;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
@@ -53,11 +55,15 @@ public class VasEventHandlerTest {
     @Autowired
     private ConfigurationConversionService configurationConversionService;
 
+    @Autowired
+    private EntityManager entityManager;
+
     private VasSubscriberService subscriberService;
 
     @Before
     public void setUp() {
-        chargingStationRepository.deleteAll();
+        entityManager.clear();
+        deleteFromDatabase(entityManager, ChargingStation.class);
 
         eventHandler = new VasEventHandler();
 
@@ -82,7 +88,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationAcceptedEventChargingStationRegistered() {
-        chargingStationRepository.saveAndFlush(new ChargingStation(CHARGING_STATION_ID.getId()));
+        chargingStationRepository.insert(new ChargingStation(CHARGING_STATION_ID.getId()));
         assertFalse(getTestChargingStationFromRepository().isRegistered());
 
         eventHandler.handle(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
@@ -99,7 +105,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationPlacedEventCoordinatesEmptyAddress() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
 
         eventHandler.handle(new ChargingStationPlacedEvent(CHARGING_STATION_ID, COORDINATES, null, ACCESSIBILITY));
 
@@ -112,7 +118,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationPlacedEventAddressEmptyCoordinates() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
 
         eventHandler.handle(new ChargingStationPlacedEvent(CHARGING_STATION_ID, null, ADDRESS, ACCESSIBILITY));
 
@@ -128,7 +134,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationPlacedEventAddressAndCoordinates() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
 
         eventHandler.handle(new ChargingStationPlacedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY));
 
@@ -153,7 +159,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationLocationImprovedEventCoordinatesEmptyAddress() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
 
         eventHandler.handle(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, COORDINATES, null, ACCESSIBILITY));
 
@@ -166,7 +172,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationLocationImprovedEventAddressEmptyCoordinates() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
 
         eventHandler.handle(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, null, ADDRESS, ACCESSIBILITY));
 
@@ -182,7 +188,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationLocationImprovedEventAddressAndCoordinates() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
 
         eventHandler.handle(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY));
 
@@ -207,7 +213,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationMovedEventCoordinatesEmptyAddress() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
 
         eventHandler.handle(new ChargingStationMovedEvent(CHARGING_STATION_ID, COORDINATES, null, ACCESSIBILITY));
 
@@ -220,7 +226,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationMovedEventAddressEmptyCoordinates() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
 
         eventHandler.handle(new ChargingStationMovedEvent(CHARGING_STATION_ID, null, ADDRESS, ACCESSIBILITY));
 
@@ -236,7 +242,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationMovedEventAddressAndCoordinates() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
 
         eventHandler.handle(new ChargingStationMovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY));
 
@@ -261,7 +267,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationMadeReservableEventChargingStationReservable() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
 
         eventHandler.handle(new ChargingStationMadeReservableEvent(CHARGING_STATION_ID));
 
@@ -270,7 +276,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationMadeNotReservableEventChargingStationNotReservable() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
 
         eventHandler.handle(new ChargingStationMadeNotReservableEvent(CHARGING_STATION_ID));
 
@@ -295,7 +301,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationConfiguredEventChargingStationShouldBeConfigured() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
 
         eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
 
@@ -304,7 +310,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationConfiguredEventVerifyChargeMode() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
         ChargeMode expectedChargeMode = ChargeMode.fromChargingProtocol(EVSES.iterator().next().getConnectors().get(0).getChargingProtocol());
 
         eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
@@ -314,7 +320,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationConfiguredEventVerifyConnectorTypes() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
         Set<ConnectorType> expectedConnectorTypes = configurationConversionService.getConnectorTypesFromEvses(EVSES);
 
         eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
@@ -325,7 +331,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationConfiguredEventVerifyEvses() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
         Set<Evse> expectedEvses = configurationConversionService.getEvsesFromEventEvses(EVSES);
 
         eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
@@ -336,7 +342,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationConfiguredEventVerifyChargingCapabilities() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
         Set<ChargingCapability> expectedChargingCapabilities = configurationConversionService.getChargingCapabilitiesFromEvses(EVSES);
 
         eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
@@ -347,7 +353,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationOpeningTimesSetEvent() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
         eventHandler.handle(new ChargingStationOpeningTimesSetEvent(CHARGING_STATION_ID, OPENING_TIMES));
 
         ChargingStation chargingStation = getTestChargingStationFromRepository();
@@ -363,7 +369,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationOpeningTimesAddedEvent() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
         eventHandler.handle(new ChargingStationOpeningTimesAddedEvent(CHARGING_STATION_ID, OPENING_TIMES));
 
         ChargingStation chargingStation = getTestChargingStationFromRepository();
@@ -386,7 +392,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationStatusNotificationAvailableReceivedEventVerifyChargingStationState() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
         ChargingStation chargingStation = getTestChargingStationFromRepository();
         assertTrue(chargingStation.getState().equals(io.motown.vas.viewmodel.model.ComponentStatus.UNKNOWN));
 
@@ -397,7 +403,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void chargingStationStatusNotificationVerifySubscriberServiceCall() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
 
         eventHandler.handle(new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, FIVE_MINUTES_AGO, new HashMap<String, String>()));
 
@@ -420,7 +426,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void componentStatusNotificationAvailableReceivedEventVerifyEvseState() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
         ChargingStation chargingStation = getTestChargingStationFromRepository();
         assertTrue(chargingStation.getEvse(EVSE_ID.getNumberedId()).getState().equals(io.motown.vas.viewmodel.model.ComponentStatus.UNKNOWN));
 
@@ -432,7 +438,7 @@ public class VasEventHandlerTest {
 
     @Test
     public void componentStatusNotificationReceivedVerifySubscriptionServiceCall() {
-        chargingStationRepository.saveAndFlush(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
 
         eventHandler.handle(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, ComponentStatus.AVAILABLE, FIVE_MINUTES_AGO, new HashMap<String, String>()));
 

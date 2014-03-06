@@ -55,7 +55,7 @@ public class MotownVasPublisherService implements VasPublisherService {
 
             if (subscriptionRepository.findBySubscriberIdentityAndDeliveryAddress(subscriberIdentity, deliveryAddress) == null) {
                 Subscription subscription = new Subscription(subscriberIdentity, deliveryAddress);
-                subscriptionRepository.saveAndFlush(subscription);
+                subscriptionRepository.insert(subscription);
 
                 subscribeResponse.setSubscriptionId(subscription.getSubscriptionId());
                 subscribeResponse.setStatus(SubscribeStatus.ACCEPTED);

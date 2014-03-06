@@ -16,10 +16,56 @@
 package io.motown.vas.viewmodel.persistence.repostories;
 
 import io.motown.vas.viewmodel.model.ChargingStation;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public interface ChargingStationRepository extends JpaRepository<ChargingStation, String> {
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
+import java.util.List;
 
-    ChargingStation findByChargingStationId(String chargingStationId);
+public class ChargingStationRepository {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ChargingStationRepository.class);
+
+    private EntityManager entityManager;
+
+    public void insert(ChargingStation chargingStation) {
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        if (!transaction.isActive()) {
+            transaction.begin();
+        }
+
+        try {
+            entityManager.persist(chargingStation);
+            transaction.commit();
+        } finally {
+            if (transaction.isActive()) {
+                LOG.warn("Transaction is still active while it should not be, rolling back.");
+                transaction.rollback();
+            }
+        }
+    }
+
+    public ChargingStation findByChargingStationId(String chargingStationId) {
+        @SuppressWarnings("JpaQlInspection")
+        Query query = entityManager.createQuery("SELECT cs FROM io.motown.vas.viewmodel.model.ChargingStation AS cs WHERE cs.chargingStationId = :chargingStationId").setParameter("chargingStationId", chargingStationId);
+        List resultList = query.getResultList();
+        if (resultList.size() > 0) {
+            return (ChargingStation) resultList.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    public List<ChargingStation> findAll() {
+        @SuppressWarnings("JpaQlInspection")
+        Query query = entityManager.createQuery("SELECT cs FROM io.motown.vas.viewmodel.model.ChargingStation AS cs");
+        return (List<ChargingStation>) query.getResultList();
+    }
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 }
