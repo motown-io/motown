@@ -15,11 +15,10 @@
  */
 package io.motown.ochp.viewmodel;
 
-import io.motown.domain.api.chargingstation.ChargingStationAcceptedEvent;
-import io.motown.domain.api.chargingstation.ChargingStationConfiguredEvent;
-import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ochp.viewmodel.persistence.repostories.ChargingStationRepository;
+import io.motown.ochp.viewmodel.persistence.repostories.TransactionRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,13 +33,16 @@ public class OchpEventHandler {
     @Autowired
     private ChargingStationRepository chargingStationRepository;
 
+    @Autowired
+    private TransactionRepository transactionRepository;
+
     //TODO: Add eventhandlers for keeping internal OCHP state up to date - Ingo Pak, 05 Mar 2014
     
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
         LOG.info("Handling ChargingStationCreatedEvent");
         String chargingStationId = event.getChargingStationId().getId();
-        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
+        ChargingStation chargingStation = chargingStationRepository.findByChargingStationId(chargingStationId);
 
         if (chargingStation == null) {
             chargingStation = new ChargingStation(chargingStationId);
@@ -52,13 +54,11 @@ public class OchpEventHandler {
     public void handle(ChargingStationAcceptedEvent event) {
         LOG.debug("ChargingStationAcceptedEvent for [{}] received!", event.getChargingStationId());
 
-        ChargingStation chargingStation = chargingStationRepository.findOne(event.getChargingStationId().getId());
+        ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
 
         if (chargingStation != null) {
             chargingStation.setRegistered(true);
             chargingStationRepository.save(chargingStation);
-        } else {
-            LOG.error("OCHP module repo COULD NOT FIND CHARGEPOINT {} and mark it as registered", event.getChargingStationId());
         }
     }
 
@@ -67,7 +67,7 @@ public class OchpEventHandler {
         LOG.info("ChargingStationConfiguredEvent");
 
         String chargingStationId = event.getChargingStationId().getId();
-        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
+        ChargingStation chargingStation = chargingStationRepository.findByChargingStationId(chargingStationId);
 
         if (chargingStation == null) {
             LOG.warn("Received a ChargingStationConfiguredEvent for unknown charging station. Creating the chargingStation.");
@@ -80,7 +80,31 @@ public class OchpEventHandler {
         chargingStationRepository.save(chargingStation);
     }
 
+    @EventHandler
+    public void handle(TransactionStartedEvent event) {
+        //TODO: implement - Mark Manders 2014-03-06
+    }
+
+    @EventHandler
+    public void handle(TransactionStoppedEvent event) {
+        //TODO: implement - Mark Manders 2014-03-06
+    }
+
+    private ChargingStation getChargingStation(ChargingStationId chargingStationId) {
+        ChargingStation chargingStation = chargingStationRepository.findByChargingStationId(chargingStationId.getId());
+
+        if (chargingStation == null) {
+            LOG.error("Could not find charging station {}", chargingStationId);
+        }
+
+        return chargingStation;
+    }
+
     public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {
         this.chargingStationRepository = chargingStationRepository;
+    }
+
+    public void setTransactionRepository(TransactionRepository transactionRepository) {
+        this.transactionRepository = transactionRepository;
     }
 }

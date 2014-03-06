@@ -20,7 +20,9 @@ import io.motown.domain.api.chargingstation.ChargingStationConfiguredEvent;
 import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
 import io.motown.ochp.viewmodel.OchpEventHandler;
 import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
+import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 import io.motown.ochp.viewmodel.persistence.repostories.ChargingStationRepository;
+import io.motown.ochp.viewmodel.persistence.repostories.TransactionRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,25 +44,30 @@ public class OchpEventHandlerTest {
     @Autowired
     private ChargingStationRepository chargingStationRepository;
 
+    @Autowired
+    private TransactionRepository transactionRepository;
+
     @Before
     public void setUp() {
+        transactionRepository.deleteAll();
         chargingStationRepository.deleteAll();
 
         eventHandler = new OchpEventHandler();
 
         eventHandler.setChargingStationRepository(chargingStationRepository);
+        eventHandler.setTransactionRepository(transactionRepository);
     }
 
     @Test
     public void testChargingStationBootedEvent() {
-        assertNull(chargingStationRepository.findOne(CHARGING_STATION_ID.getId()));
+        assertNull(chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId()));
 
         eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID));
 
-        ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
+        ChargingStation cs = chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId());
         assertNotNull(cs);
 
-        assertEquals(cs.getId(), CHARGING_STATION_ID.getId());
+        assertEquals(cs.getChargingStationId(), CHARGING_STATION_ID.getId());
     }
 
     @Test
@@ -69,7 +76,7 @@ public class OchpEventHandlerTest {
 
         eventHandler.handle(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
 
-        ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
+        ChargingStation cs = chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId());
         assertTrue(cs.isRegistered());
     }
 
@@ -82,13 +89,13 @@ public class OchpEventHandlerTest {
     @Test
     public void testChargingStationConfiguredEvent() {
         eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID));
-        ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
+        ChargingStation cs = chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId());
         assertFalse(cs.isConfigured());
         assertNotSame(cs.getNumberOfEvses(), EVSES.size());
 
         eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
 
-        cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
+        cs = chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId());
         assertTrue(cs.isConfigured());
         assertEquals(cs.getNumberOfEvses(), EVSES.size());
     }
@@ -97,9 +104,23 @@ public class OchpEventHandlerTest {
     public void testUnknownChargingStationConfiguredEvent() {
         eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
 
-        ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
+        ChargingStation cs = chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId());
         assertTrue(cs.isConfigured());
         assertEquals(cs.getNumberOfEvses(), EVSES.size());
+    }
+
+    @Test
+    public void testTransaction() {
+        chargingStationRepository.saveAndFlush(new ChargingStation(CHARGING_STATION_ID.getId()));
+
+        ChargingStation chargingStation = chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId());
+        Transaction transaction = new Transaction(chargingStation, TRANSACTION_ID.getId());
+        transactionRepository.saveAndFlush(transaction);
+
+        Transaction transactionFromRepo = transactionRepository.findByTransactionId(TRANSACTION_ID.getId());
+
+        assertEquals(transaction, transactionFromRepo);
+        assertEquals(chargingStation, transactionFromRepo.getChargingStation());
     }
 
 }

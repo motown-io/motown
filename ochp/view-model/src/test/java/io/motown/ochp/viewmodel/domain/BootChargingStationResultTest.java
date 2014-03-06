@@ -37,4 +37,14 @@ public class BootChargingStationResultTest {
         assertEquals(result.getTimeStamp(), now);
     }
 
+    @Test
+    public void testImmutableDate() {
+        Date now = new Date();
+
+        BootChargingStationResult result = new BootChargingStationResult(true, FIVE_MINUTES, now);
+        result.getTimeStamp().setTime(FIVE_MINUTES);
+        assertEquals(now, result.getTimeStamp());
+    }
+
+
 }

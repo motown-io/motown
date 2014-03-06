@@ -18,7 +18,6 @@ package io.motown.ochp.viewmodel.domain;
 import com.google.common.collect.ImmutableMap;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
-import org.axonframework.domain.EventMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ public final class OchpViewModelTestUtils {
     }
 
     public static ChargingStation getRegisteredAndConfiguredChargingStation() {
-        ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId(), CHARGING_STATION_ADDRESS);
+        ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
         cs.setRegistered(true);
         cs.setNumberOfEvses(EVSES.size());
         cs.setConfigured(true);
@@ -47,7 +46,7 @@ public final class OchpViewModelTestUtils {
     }
 
     public static String getVendor() {
-        return "Mowotn";
+        return "Motown";
     }
 
     public static String getConfigurationKey() {

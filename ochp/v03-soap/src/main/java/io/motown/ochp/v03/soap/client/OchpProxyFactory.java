@@ -27,22 +27,30 @@ import javax.xml.ws.BindingProvider;
 @Component
 public class OchpProxyFactory {
 
+    public static final boolean AUTHENTICATION = true;
+    public static final boolean NO_AUTHENTICATION = false;
+
     /**
-     * Creates a charging station web service proxy.
+     * Creates a OCHP web service proxy.
      *
      * @param eClearingServerAddress address of the e-ClearingHouse server.
      * @return charging station web service proxy
      */
-    public Echs createOchpService(String eClearingServerAddress) {
+    public Echs createOchpService(String eClearingServerAddress, boolean forceAuthentication) {
         JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
         factory.setServiceClass(Echs.class);
 
         factory.setAddress(eClearingServerAddress);
 
+        if(forceAuthentication) {
+            factory.getInInterceptors().add(new OchpAuthenticationInterceptor());
+        }
+
         SoapBindingConfiguration conf = new SoapBindingConfiguration();
         conf.setVersion(Soap12.getInstance());
         factory.setBindingConfig(conf);
         factory.getFeatures().add(new WSAddressingFeature());
+
         Echs eClearingService = (Echs) factory.create();
 
         //Force the use of the Async transport, even for synchronous calls
@@ -50,5 +58,4 @@ public class OchpProxyFactory {
 
         return eClearingService;
     }
-
 }

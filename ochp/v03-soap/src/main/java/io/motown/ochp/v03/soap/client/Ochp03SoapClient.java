@@ -33,15 +33,17 @@ public class Ochp03SoapClient implements Ochp03Client {
     private OchpProxyFactory ochpProxyFactory;
 
     @Override
-    public String authenticate() {
+    public String authenticate(String username, String password) {
         LOG.info("OCHP authenticate");
 
         Echs ochpClientService = this.createOchpClientService();
 
-        //TODO: finish implementation - Ingo Pak, 03 Mar 2014
+        AuthenticateRequest request = new AuthenticateRequest();
+        request.setUserId(username);
+        request.setPassword(password);
         AuthenticateResponse response = ochpClientService.authenticate(new AuthenticateRequest());
 
-        return "fakeToken";
+        return response.getAuthToken();
     }
 
     public void setOchpProxyFactory(OchpProxyFactory ochpProxyFactory) {
@@ -52,7 +54,7 @@ public class Ochp03SoapClient implements Ochp03Client {
 
         //TODO: Retrieve the clearinghouse address from configuration - Ingo Pak, 03 Mar 2014
         String clearingHouseAddress = "http://localhost:8090/mockechsSOAP";
-        return ochpProxyFactory.createOchpService(clearingHouseAddress);
+        return ochpProxyFactory.createOchpService(clearingHouseAddress, OchpProxyFactory.AUTHENTICATION);
     }
 
 }

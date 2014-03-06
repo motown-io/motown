@@ -18,7 +18,7 @@ package io.motown.ochp.viewmodel.ochp;
 
 public interface Ochp03Client {
 
-    String authenticate();
+    String authenticate(String username, String password);
     
     //TODO: Add the rest of the required methods - Ingo Pak, 03 Mar 2014
 }
