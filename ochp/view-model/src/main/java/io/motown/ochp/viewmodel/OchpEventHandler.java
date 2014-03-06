@@ -18,6 +18,7 @@ package io.motown.ochp.viewmodel;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ochp.viewmodel.persistence.repostories.ChargingStationRepository;
+import io.motown.ochp.viewmodel.persistence.repostories.TransactionRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,9 @@ public class OchpEventHandler {
 
     @Autowired
     private ChargingStationRepository chargingStationRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     //TODO: Add eventhandlers for keeping internal OCHP state up to date - Ingo Pak, 05 Mar 2014
     
@@ -77,16 +81,6 @@ public class OchpEventHandler {
     }
 
     @EventHandler
-    public void handle(StartTransactionRequestedEvent event) {
-        //TODO: implement - Mark Manders 2014-03-06
-    }
-
-    @EventHandler
-    public void handle(StopTransactionRequestedEvent event) {
-        //TODO: implement - Mark Manders 2014-03-06
-    }
-
-    @EventHandler
     public void handle(TransactionStartedEvent event) {
         //TODO: implement - Mark Manders 2014-03-06
     }
@@ -108,5 +102,9 @@ public class OchpEventHandler {
 
     public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {
         this.chargingStationRepository = chargingStationRepository;
+    }
+
+    public void setTransactionRepository(TransactionRepository transactionRepository) {
+        this.transactionRepository = transactionRepository;
     }
 }

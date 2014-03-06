@@ -15,31 +15,82 @@
  */
 package io.motown.ochp.viewmodel.persistence.entities;
 
-import io.motown.domain.api.chargingstation.EvseId;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Transaction {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String transactionId;
+
     private String evseId;
+
+    @ManyToOne
+    private ChargingStation chargingStation;
+
+    private Transaction() {
+        // Private no-arg constructor for Hibernate.
+    }
+
+    public Transaction(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public Transaction(ChargingStation chargingStation, String transactionId) {
+        this.chargingStation = chargingStation;
+        this.transactionId = transactionId;
+    }
 
     public Long getId() {
         return id;
     }
 
-    public EvseId getEvseId() {
-        return new EvseId(Integer.valueOf(evseId));
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setEvseId(EvseId evseId) {
-        this.evseId = evseId.getId();
+    public String getTransactionId() {
+        return transactionId;
     }
 
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public String getEvseId() {
+        return evseId;
+    }
+
+    public void setEvseId(String evseId) {
+        this.evseId = evseId;
+    }
+
+    public ChargingStation getChargingStation() {
+        return chargingStation;
+    }
+
+    public void setChargingStation(ChargingStation chargingStation) {
+        this.chargingStation = chargingStation;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, transactionId, evseId, chargingStation);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final Transaction other = (Transaction) obj;
+        return Objects.equals(this.id, other.id) && Objects.equals(this.transactionId, other.transactionId) && Objects.equals(this.evseId, other.evseId) && Objects.equals(this.chargingStation, other.chargingStation);
+    }
 }

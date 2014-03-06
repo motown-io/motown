@@ -20,7 +20,9 @@ import io.motown.domain.api.chargingstation.ChargingStationConfiguredEvent;
 import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
 import io.motown.ochp.viewmodel.OchpEventHandler;
 import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
+import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 import io.motown.ochp.viewmodel.persistence.repostories.ChargingStationRepository;
+import io.motown.ochp.viewmodel.persistence.repostories.TransactionRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,13 +44,18 @@ public class OchpEventHandlerTest {
     @Autowired
     private ChargingStationRepository chargingStationRepository;
 
+    @Autowired
+    private TransactionRepository transactionRepository;
+
     @Before
     public void setUp() {
         chargingStationRepository.deleteAll();
+        transactionRepository.deleteAll();
 
         eventHandler = new OchpEventHandler();
 
         eventHandler.setChargingStationRepository(chargingStationRepository);
+        eventHandler.setTransactionRepository(transactionRepository);
     }
 
     @Test
@@ -100,6 +107,20 @@ public class OchpEventHandlerTest {
         ChargingStation cs = chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId());
         assertTrue(cs.isConfigured());
         assertEquals(cs.getNumberOfEvses(), EVSES.size());
+    }
+
+    @Test
+    public void testTransaction() {
+        chargingStationRepository.saveAndFlush(new ChargingStation(CHARGING_STATION_ID.getId()));
+
+        ChargingStation chargingStation = chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId());
+        Transaction transaction = new Transaction(chargingStation, TRANSACTION_ID.getId());
+        transactionRepository.saveAndFlush(transaction);
+
+        Transaction transactionFromRepo = transactionRepository.findByTransactionId(TRANSACTION_ID.getId());
+
+        assertEquals(transaction, transactionFromRepo);
+        assertEquals(chargingStation, transactionFromRepo.getChargingStation());
     }
 
 }
