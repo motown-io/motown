@@ -35,7 +35,10 @@ public class Transaction {
     private int meterStop;
 
     @Temporal(TemporalType.DATE)
-    private Date timestamp;
+    private Date timeStart;
+
+    @Temporal(TemporalType.DATE)
+    private Date timeStop;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private Map<String, String> attributes = new HashMap<>();
@@ -104,12 +107,20 @@ public class Transaction {
         this.meterStop = meterStop;
     }
 
-    public Date getTimestamp() {
-        return timestamp;
+    public Date getTimeStart() {
+        return timeStart;
     }
 
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
+    public void setTimeStart(Date timeStart) {
+        this.timeStart = timeStart;
+    }
+
+    public Date getTimeStop() {
+        return timeStop;
+    }
+
+    public void setTimeStop(Date timeStop) {
+        this.timeStop = timeStop;
     }
 
     public Map<String, String> getAttributes() {
@@ -128,13 +139,9 @@ public class Transaction {
         this.chargingStation = chargingStation;
     }
 
-    public void addAttribute(String key, String value) {
-        this.attributes.put(key, value);
-    }
-
     @Override
     public int hashCode() {
-        return Objects.hash(id, transactionId, evseId, identifyingToken, meterStart, meterStop, timestamp, attributes, chargingStation);
+        return Objects.hash(id, transactionId, evseId, identifyingToken, meterStart, meterStop, timeStart, timeStop, attributes, chargingStation);
     }
 
     @Override
@@ -146,6 +153,6 @@ public class Transaction {
             return false;
         }
         final Transaction other = (Transaction) obj;
-        return Objects.equals(this.id, other.id) && Objects.equals(this.transactionId, other.transactionId) && Objects.equals(this.evseId, other.evseId) && Objects.equals(this.identifyingToken, other.identifyingToken) && Objects.equals(this.meterStart, other.meterStart) && Objects.equals(this.meterStop, other.meterStop) && Objects.equals(this.timestamp, other.timestamp) && Objects.equals(this.attributes, other.attributes) && Objects.equals(this.chargingStation, other.chargingStation);
+        return Objects.equals(this.id, other.id) && Objects.equals(this.transactionId, other.transactionId) && Objects.equals(this.evseId, other.evseId) && Objects.equals(this.identifyingToken, other.identifyingToken) && Objects.equals(this.meterStart, other.meterStart) && Objects.equals(this.meterStop, other.meterStop) && Objects.equals(this.timeStart, other.timeStart) && Objects.equals(this.timeStop, other.timeStop) && Objects.equals(this.attributes, other.attributes) && Objects.equals(this.chargingStation, other.chargingStation);
     }
 }
