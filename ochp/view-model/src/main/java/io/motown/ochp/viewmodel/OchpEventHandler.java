@@ -15,9 +15,7 @@
  */
 package io.motown.ochp.viewmodel;
 
-import io.motown.domain.api.chargingstation.ChargingStationAcceptedEvent;
-import io.motown.domain.api.chargingstation.ChargingStationConfiguredEvent;
-import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ochp.viewmodel.persistence.repostories.ChargingStationRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -52,13 +50,11 @@ public class OchpEventHandler {
     public void handle(ChargingStationAcceptedEvent event) {
         LOG.debug("ChargingStationAcceptedEvent for [{}] received!", event.getChargingStationId());
 
-        ChargingStation chargingStation = chargingStationRepository.findByChargingStationId(event.getChargingStationId().getId());
+        ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
 
         if (chargingStation != null) {
             chargingStation.setRegistered(true);
             chargingStationRepository.save(chargingStation);
-        } else {
-            LOG.error("OCHP module repo COULD NOT FIND CHARGEPOINT {} and mark it as registered", event.getChargingStationId());
         }
     }
 
@@ -78,6 +74,36 @@ public class OchpEventHandler {
         chargingStation.setConfigured(true);
 
         chargingStationRepository.save(chargingStation);
+    }
+
+    @EventHandler
+    public void handle(StartTransactionRequestedEvent event) {
+        //TODO: implement - Mark Manders 2014-03-06
+    }
+
+    @EventHandler
+    public void handle(StopTransactionRequestedEvent event) {
+        //TODO: implement - Mark Manders 2014-03-06
+    }
+
+    @EventHandler
+    public void handle(TransactionStartedEvent event) {
+        //TODO: implement - Mark Manders 2014-03-06
+    }
+
+    @EventHandler
+    public void handle(TransactionStoppedEvent event) {
+        //TODO: implement - Mark Manders 2014-03-06
+    }
+
+    private ChargingStation getChargingStation(ChargingStationId chargingStationId) {
+        ChargingStation chargingStation = chargingStationRepository.findByChargingStationId(chargingStationId.getId());
+
+        if (chargingStation == null) {
+            LOG.error("Could not find charging station {}", chargingStationId);
+        }
+
+        return chargingStation;
     }
 
     public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {
