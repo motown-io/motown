@@ -16,13 +16,19 @@
 package io.motown.ochp.viewmodel.persistence.entities;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Objects;
 
 @Entity
 public class ChargingStation {
+
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String chargingStationId;
 
     private String ipAddress;
 
@@ -35,17 +41,16 @@ public class ChargingStation {
         // Private no-arg constructor for Hibernate.
     }
 
-    public ChargingStation(String id) {
-        this.id = id;
+    public ChargingStation(String chargingStationId) {
+        this.chargingStationId = chargingStationId;
     }
 
-    public ChargingStation(String id, String ipAddress) {
-        this.id = id;
-        this.ipAddress = ipAddress;
-    }
-
-    public String getId() {
+    public Long getId() {
         return id;
+    }
+
+    public String getChargingStationId() {
+        return chargingStationId;
     }
 
     public String getIpAddress() {
@@ -62,6 +67,14 @@ public class ChargingStation {
 
     public boolean isRegisteredAndConfigured() {
         return (this.isRegistered() && this.isConfigured());
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setChargingStationId(String chargingStationId) {
+        this.chargingStationId = chargingStationId;
     }
 
     public void setRegistered(boolean registered) {
@@ -86,7 +99,7 @@ public class ChargingStation {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ipAddress, isRegistered, isConfigured, numberOfEvses);
+        return Objects.hash(id, chargingStationId, ipAddress, isRegistered, isConfigured, numberOfEvses);
     }
 
     @Override
@@ -98,6 +111,6 @@ public class ChargingStation {
             return false;
         }
         final ChargingStation other = (ChargingStation) obj;
-        return Objects.equals(this.id, other.id) && Objects.equals(this.ipAddress, other.ipAddress) && Objects.equals(this.isRegistered, other.isRegistered) && Objects.equals(this.isConfigured, other.isConfigured) && Objects.equals(this.numberOfEvses, other.numberOfEvses);
+        return Objects.equals(this.id, other.id) && Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.ipAddress, other.ipAddress) && Objects.equals(this.isRegistered, other.isRegistered) && Objects.equals(this.isConfigured, other.isConfigured) && Objects.equals(this.numberOfEvses, other.numberOfEvses);
     }
 }

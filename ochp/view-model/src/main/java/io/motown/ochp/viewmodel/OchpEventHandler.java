@@ -40,7 +40,7 @@ public class OchpEventHandler {
     public void handle(ChargingStationCreatedEvent event) {
         LOG.info("Handling ChargingStationCreatedEvent");
         String chargingStationId = event.getChargingStationId().getId();
-        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
+        ChargingStation chargingStation = chargingStationRepository.findByChargingStationId(chargingStationId);
 
         if (chargingStation == null) {
             chargingStation = new ChargingStation(chargingStationId);
@@ -52,7 +52,7 @@ public class OchpEventHandler {
     public void handle(ChargingStationAcceptedEvent event) {
         LOG.debug("ChargingStationAcceptedEvent for [{}] received!", event.getChargingStationId());
 
-        ChargingStation chargingStation = chargingStationRepository.findOne(event.getChargingStationId().getId());
+        ChargingStation chargingStation = chargingStationRepository.findByChargingStationId(event.getChargingStationId().getId());
 
         if (chargingStation != null) {
             chargingStation.setRegistered(true);
@@ -67,7 +67,7 @@ public class OchpEventHandler {
         LOG.info("ChargingStationConfiguredEvent");
 
         String chargingStationId = event.getChargingStationId().getId();
-        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
+        ChargingStation chargingStation = chargingStationRepository.findByChargingStationId(chargingStationId);
 
         if (chargingStation == null) {
             LOG.warn("Received a ChargingStationConfiguredEvent for unknown charging station. Creating the chargingStation.");

@@ -53,14 +53,14 @@ public class OchpEventHandlerTest {
 
     @Test
     public void testChargingStationBootedEvent() {
-        assertNull(chargingStationRepository.findOne(CHARGING_STATION_ID.getId()));
+        assertNull(chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId()));
 
         eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID));
 
-        ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
+        ChargingStation cs = chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId());
         assertNotNull(cs);
 
-        assertEquals(cs.getId(), CHARGING_STATION_ID.getId());
+        assertEquals(cs.getChargingStationId(), CHARGING_STATION_ID.getId());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class OchpEventHandlerTest {
 
         eventHandler.handle(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
 
-        ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
+        ChargingStation cs = chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId());
         assertTrue(cs.isRegistered());
     }
 
@@ -82,13 +82,13 @@ public class OchpEventHandlerTest {
     @Test
     public void testChargingStationConfiguredEvent() {
         eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID));
-        ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
+        ChargingStation cs = chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId());
         assertFalse(cs.isConfigured());
         assertNotSame(cs.getNumberOfEvses(), EVSES.size());
 
         eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
 
-        cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
+        cs = chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId());
         assertTrue(cs.isConfigured());
         assertEquals(cs.getNumberOfEvses(), EVSES.size());
     }
@@ -97,7 +97,7 @@ public class OchpEventHandlerTest {
     public void testUnknownChargingStationConfiguredEvent() {
         eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
 
-        ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
+        ChargingStation cs = chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId());
         assertTrue(cs.isConfigured());
         assertEquals(cs.getNumberOfEvses(), EVSES.size());
     }
