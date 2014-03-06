@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions 
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+                  xmlns:tns="http://www.evclearinghouse.eu/service/" 
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+                  xmlns:s="http://www.w3.org/2001/XMLSchema" 
+                  name="echs" 
+                  targetNamespace="http://www.evclearinghouse.eu/service/">
+                  
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.evclearinghouse.eu/service/">
+	    <s:complexType name="Result">
+	        <s:annotation>
+	            <s:documentation>
+	                General result
+	            </s:documentation>
+	
+	        </s:annotation>
+	        <s:sequence>
+	            <s:element minOccurs="1" maxOccurs="1" name="resultCode" type="s:int">
+	                <s:annotation>
+	                    <s:documentation>
+	                        0 = ok, Any other value = error
+	                    </s:documentation>
+	                </s:annotation>
+	            </s:element>
+	
+	            <s:element minOccurs="1" maxOccurs="1" nillable="true" name="resultDescription" type="s:string">
+	                <s:annotation>
+	                    <s:documentation>
+	                        If the resultCode not equal to 0 this field contains the reason
+	                    </s:documentation>
+	                </s:annotation>
+	            </s:element>
+	        </s:sequence>
+	    </s:complexType>
+
+	    <s:element name="AuthenticateRequest">
+	    <s:complexType>
+	        <s:sequence>	
+	            <s:element minOccurs="1" maxOccurs="1" name="userId" type="s:string"/>
+	            <s:element minOccurs="1" maxOccurs="1" name="password" type="s:string"/>
+	        </s:sequence>
+	    </s:complexType>
+	    </s:element>
+
+	    <s:element name="AuthenticateResponse">
+	    <s:complexType>
+	        <s:annotation>
+	            <s:documentation>
+	                This result will be returned on a authenticate request.
+	            </s:documentation>
+	        </s:annotation>
+	        <s:sequence>
+	
+	            <s:element minOccurs="1" maxOccurs="1" nillable="false" name="resultCode" type="s:int">
+	                <s:annotation>
+	                    <s:documentation>
+	                        0 = Accepted,  Any other value = Denied
+	                    </s:documentation>
+	                </s:annotation>
+	            </s:element>
+	            <s:element minOccurs="1" maxOccurs="1" nillable="true" name="resultDescription" type="s:string">
+	                <s:annotation>
+	
+	                    <s:documentation>
+	                        If the resultCode not equal to 0 this field contains the reason
+	                    </s:documentation>
+	                </s:annotation>
+	            </s:element>
+	            <s:element minOccurs="1" maxOccurs="1" nillable="true" name="authToken" type="s:string">
+	                <s:annotation>
+	                    <s:documentation>
+	                        If the resultCode = 0 this field contains the token that should be used
+	                    </s:documentation>
+	
+	                </s:annotation>
+	            </s:element>
+	        </s:sequence>
+	    </s:complexType>
+		</s:element>
+		
+	    <s:element name="AddCDRsRequest">
+	    <s:complexType>
+	        <s:sequence>	
+	            <s:element minOccurs="1" maxOccurs="unbounded" name="cdrInfoArray" type="tns:CDRInfo"/>
+	        </s:sequence>
+	    </s:complexType>
+	    </s:element>
+
+	    <s:element name="AddCDRsResponse">
+    	<s:complexType>
+	        <s:sequence>	
+	            <s:element minOccurs="1" maxOccurs="1" name="result" type="tns:Result"/>
+	        </s:sequence>
+	    </s:complexType>
+	    </s:element>
+
+	    <s:element name="GetCDRsRequest">
+	    <s:complexType>
+	        <s:annotation>
+	            <s:documentation>
+	                Defines the GetCDRs.req.
+	            </s:documentation>	
+	        </s:annotation>
+	    </s:complexType>
+	    </s:element>
+
+	    <s:element name="GetCDRsResponse">
+	    <s:complexType>
+	        <s:annotation>
+	            <s:documentation>
+	                This result will be returned on a getCDRs request.
+	            </s:documentation>
+	        </s:annotation>
+	        <s:sequence>
+	            <s:element minOccurs="1" maxOccurs="1" name="docLink" type="s:string" />	        
+	            <s:element minOccurs="1" maxOccurs="1" name="result" type="tns:Result" />
+	            <s:element minOccurs="1" maxOccurs="unbounded" name="cdrInfoArray" type="tns:CDRInfo" />
+	        </s:sequence>
+	    </s:complexType>
+	    </s:element>    
+
+	    <s:element name="ClearCDRsRequest">
+	    <s:complexType>
+	        <s:annotation>
+	            <s:documentation>
+	                Defines the ClearCDRs.req.
+	            </s:documentation>	
+	        </s:annotation>
+	    </s:complexType>
+	    </s:element>
+
+	    <s:element name="ClearCDRsResponse">
+	    <s:complexType>
+	        <s:sequence>	
+	            <s:element minOccurs="1" maxOccurs="1" name="result" type="tns:Result"/>
+	        </s:sequence>
+	    </s:complexType>
+	    </s:element>
+
+	    <s:element name="GetRoamingAuthorisationListRequest">
+	    <s:complexType>
+	        <s:annotation>
+	            <s:documentation>
+	                Defines the GetRoamingAuthorisationList.req.
+	            </s:documentation>	
+	        </s:annotation>
+	    </s:complexType>
+	    </s:element>
+
+	    <s:complexType name="RoamingAuthorisationInfo">
+	        <s:annotation>
+	            <s:documentation>
+	                Authorized card info.
+	            </s:documentation>
+	
+	        </s:annotation>
+	        <s:sequence>
+	            <s:element minOccurs="1" maxOccurs="1" name="evcoId" type="s:string">
+	                <s:annotation>
+	                    <s:documentation>
+	                        Electric Vehicle Contract Identifier
+	                    </s:documentation>
+	                </s:annotation>
+	            </s:element>
+	
+	            <s:element minOccurs="1" maxOccurs="1" name="roamingHubId" type="s:int">
+	                <s:annotation>
+	                    <s:documentation>
+	                        0 = other, 1 = Blue Corner, 2 = e-laad, 3 = ladenetz.de, 4 = Ballast Neddam, 5 = The New Motion
+	                    </s:documentation>
+	                </s:annotation>
+	            </s:element>
+	            <s:element minOccurs="1" maxOccurs="1" name="tokenType" type="s:int">
+	                <s:annotation>
+	
+	                    <s:documentation>
+	                        0 = other, 1 = MIFARE_CL, 2 = MIFARE_DES, 3 = MSISDN
+	                    </s:documentation>
+	                </s:annotation>
+	            </s:element>
+	            <s:element minOccurs="1" maxOccurs="1" name="tokenId" type="s:string" />
+	            <s:element minOccurs="1" maxOccurs="1" name="printedNumber" type="s:string">
+	                <s:annotation>
+	                    <s:documentation>
+	
+	                        Printed on service card
+	                    </s:documentation>
+	                </s:annotation>
+	            </s:element>
+	            <s:element minOccurs="1" maxOccurs="1" name="expiryDate" type="s:string">
+	                <s:annotation>
+	                    <s:documentation>
+	                        dd/mm/yyyy
+	                    </s:documentation>
+	                </s:annotation>
+	
+	            </s:element>
+	            <s:element minOccurs="1" maxOccurs="1" name="pin" type="s:int">
+	                <s:annotation>
+	                    <s:documentation>
+	                        numeric (max. 6)
+	                    </s:documentation>
+	                </s:annotation>
+	            </s:element>
+	            <s:element minOccurs="1" maxOccurs="1" name="pinMandatory" type="s:int">
+	
+	                <s:annotation>
+	                    <s:documentation>
+	                        0 = Not mandatory, 1 = mandatory
+	                    </s:documentation>
+	                </s:annotation>
+	            </s:element>
+	            <s:element minOccurs="1" maxOccurs="1" name="tokenActivated" type="s:int">
+	                <s:annotation>
+	                    <s:documentation>
+	
+	                        0 = Deactivated, 1 = Activated
+	                    </s:documentation>
+	                </s:annotation>
+	            </s:element>
+	            <s:element minOccurs="1" maxOccurs="1" name="hash" type="s:string" />
+	        </s:sequence>
+	    </s:complexType>
+
+        <s:complexType name="ChargepointInfo">
+            <s:annotation>
+                <s:documentation>
+                    Chargepoint info.
+                </s:documentation>
+            </s:annotation>
+            <s:sequence>
+                <s:element minOccurs="1" maxOccurs="1" name="evseId" type="s:string">
+                    <s:annotation>
+                        <s:documentation>
+                            unique Alphanumeric ID number (containing charging point operator and
+                            country location)
+                        </s:documentation>
+                    </s:annotation>
+                </s:element>
+                <s:element minOccurs="1" maxOccurs="1" name="locationName" type="s:string">
+                    <s:annotation>
+                        <s:documentation>
+                            official name
+                        </s:documentation>
+                    </s:annotation>
+                </s:element>
+                <s:element minOccurs="1" maxOccurs="1" name="locationNameLang" type="s:string">
+                    <s:annotation>
+                        <s:documentation>
+                            ISO-3 language code
+                        </s:documentation>
+                    </s:annotation>
+                </s:element>
+                <s:element minOccurs="1" maxOccurs="1" name="houseNumber" type="s:string" />
+                <s:element minOccurs="1" maxOccurs="1" name="streetName" type="s:string" />
+                <s:element minOccurs="1" maxOccurs="1" name="city" type="s:string" />
+                <s:element minOccurs="1" maxOccurs="1" name="postalCode" type="s:string" />
+                <s:element minOccurs="1" maxOccurs="1" name="taLat" type="s:string">
+                    <s:annotation>
+                        <s:documentation>
+                            Lattitude (ensuring the separator is a ".")
+                        </s:documentation>
+                    </s:annotation>
+                </s:element>
+                <s:element minOccurs="1" maxOccurs="1" name="taLon" type="s:string">
+                    <s:annotation>
+                        <s:documentation>
+                            Longtitude (ensuring the separator is a ".")
+                        </s:documentation>
+                    </s:annotation>
+                </s:element>
+                <s:element minOccurs="1" maxOccurs="1" name="taLatEntranceExit" type="s:string">
+                    <s:annotation>
+                        <s:documentation>
+                            Lattitude (ensuring the separator is a ".") (entrance or exit coordinate
+                            on big parking lots)
+                        </s:documentation>
+                    </s:annotation>
+                </s:element>
+                <s:element minOccurs="1" maxOccurs="1" name="taLonEntranceExit" type="s:string">
+                    <s:annotation>
+                        <s:documentation>
+                            Longtitude (ensuring the separator is a ".") (entrance or exit coordinate
+                            on big parking lots)
+                        </s:documentation>
+                    </s:annotation>
+                </s:element>
+                <s:element minOccurs="1" maxOccurs="1" name="openingTimes" type="s:string">
+                    <s:annotation>
+                        <s:documentation>
+                            exact time domain E.g. 24hr = [(h0){d1}]  on each line of the same charging
+                            station
+                        </s:documentation>
+                    </s:annotation>
+                </s:element>
+                <s:element minOccurs="1" maxOccurs="1" name="powerOutletStatus" type="s:string">
+                    <s:annotation>
+                        <s:documentation>
+                            Available, in use, out of order
+                        </s:documentation>
+                    </s:annotation>
+                </s:element>
+                <s:element minOccurs="1" maxOccurs="1" name="energyProviderId" type="s:string">
+                    <s:annotation>
+                        <s:documentation>
+                            Company Name
+                        </s:documentation>
+                    </s:annotation>
+                </s:element>
+                <s:element minOccurs="1" maxOccurs="1" name="roamingHubId" type="s:string">
+                    <s:annotation>
+                        <s:documentation>
+                            Company Name of national roaming hubs
+                        </s:documentation>
+                    </s:annotation>
+                </s:element>
+                <s:element minOccurs="1" maxOccurs="1" name="telephoneNumber" type="s:string">
+                    <s:annotation>
+                        <s:documentation>
+                            Service hotline for charging station
+                        </s:documentation>
+                    </s:annotation>
+                </s:element>
+                <s:element minOccurs="1" maxOccurs="1" name="floorLevel" type="s:string">
+                    <s:annotation>
+                        <s:documentation>
+                            Level on which the charge station is located (in garage buildings)
+                        </s:documentation>
+                    </s:annotation>
+                </s:element>
+                <s:element minOccurs="1" maxOccurs="1" name="paymentMethod" type="s:string">
+                    <s:annotation>
+                        <s:documentation>
+                            List of available payment methods on site(RFID, QR-code, cashÉ)
+                        </s:documentation>
+                    </s:annotation>
+                </s:element>
+                <s:element minOccurs="1" maxOccurs="1" name="evChargingReceptacleType" type="s:string">
+                    <s:annotation>
+                        <s:documentation>
+                            which receptacle type is/are present for a power outlet
+                        </s:documentation>
+                    </s:annotation>
+                </s:element>
+            </s:sequence>
+        </s:complexType>
+
+	    <s:element name="GetRoamingAuthorisationListResponse">
+	    <s:complexType>
+	        <s:annotation>
+	            <s:documentation>
+	                This result will be returned on a getRoamingAuthorisationList request.
+	            </s:documentation>
+	        </s:annotation>
+	        <s:sequence>
+	            <s:element minOccurs="1" maxOccurs="1" name="result" type="tns:Result" />
+	            <s:element minOccurs="1" maxOccurs="unbounded" name="roamingAuthorisationInfoArray" type="tns:RoamingAuthorisationInfo" />	
+	        </s:sequence>
+	    </s:complexType>
+	    </s:element>    
+
+	    <s:element name="SetRoamingAuthorisationListRequest">
+	    <s:complexType>
+	        <s:sequence>	
+	            <s:element minOccurs="1" maxOccurs="unbounded" name="roamingAuthorisationInfoArray" type="tns:RoamingAuthorisationInfo" />		            
+	        </s:sequence>
+	    </s:complexType>
+	    </s:element>
+
+	    <s:element name="SetRoamingAuthorisationListResponse">
+	    <s:complexType>
+	        <s:annotation>
+	            <s:documentation>
+	                This result will be returned on a getRoamingAuthorisationList request.
+	            </s:documentation>
+	        </s:annotation>
+	        <s:sequence>
+	            <s:element minOccurs="1" maxOccurs="1" name="result" type="tns:Result" />
+	        </s:sequence>
+	    </s:complexType>
+	    </s:element>    
+
+
+	    <s:element name="GetChargepointListRequest">
+	    <s:complexType>
+	        <s:annotation>
+	            <s:documentation>
+	                Defines the GetChargepointList.req.
+	            </s:documentation>	
+	        </s:annotation>
+	    </s:complexType>
+	    </s:element>
+
+	    <s:element name="GetChargepointListResponse">
+	    <s:complexType>
+	        <s:annotation>
+	            <s:documentation>
+	                This result will be returned on a GetChargepointList request.
+	            </s:documentation>
+	        </s:annotation>
+	        <s:sequence>
+	            <s:element minOccurs="1" maxOccurs="1" name="result" type="tns:Result" />
+	            <s:element minOccurs="1" maxOccurs="unbounded" name="chargepointInfoArray" type="tns:ChargepointInfo" />	
+	        </s:sequence>
+	    </s:complexType>
+	    </s:element>    
+
+	    <s:element name="SetChargepointListRequest">
+	    <s:complexType>
+	        <s:sequence>	
+	            <s:element minOccurs="1" maxOccurs="unbounded" name="chargepointInfoArray" type="tns:ChargepointInfo" />		            
+	        </s:sequence>
+	    </s:complexType>
+	    </s:element>
+
+	    <s:element name="SetChargepointListResponse">
+	    <s:complexType>
+	        <s:annotation>
+	            <s:documentation>
+	                This result will be returned on a setChargepointList request.
+	            </s:documentation>
+	        </s:annotation>
+	        <s:sequence>
+	            <s:element minOccurs="1" maxOccurs="1" name="result" type="tns:Result" />
+	        </s:sequence>
+	    </s:complexType>
+	    </s:element>    
+	
+	    <s:complexType name="CDRInfo">
+	        <s:annotation>
+	            <s:documentation>
+	                CDR info.
+	            </s:documentation>
+	        </s:annotation>
+	        <s:sequence>
+	
+	            <s:element minOccurs="1" maxOccurs="1" name="cdrId" type="s:string" />
+	            <s:element minOccurs="1" maxOccurs="1" name="startDatetime" type="s:string" />
+	            <s:element minOccurs="1" maxOccurs="1" name="endDatetime" type="s:string" />
+	            <s:element minOccurs="1" maxOccurs="1" name="duration" type="s:string" />
+	            <s:element minOccurs="1" maxOccurs="1" name="volume" type="s:string" />
+	            <s:element minOccurs="1" maxOccurs="1" name="chargePointAddress" type="s:string" />
+	            <s:element minOccurs="1" maxOccurs="1" name="chargePointZip" type="s:string" />
+	            <s:element minOccurs="1" maxOccurs="1" name="chargePointCity" type="s:string" />
+	            <s:element minOccurs="1" maxOccurs="1" name="chargePointCountry" type="s:string" />
+	
+	            <s:element minOccurs="1" maxOccurs="1" name="chargePointType" type="s:string" />
+	            <s:element minOccurs="1" maxOccurs="1" name="productType" type="s:string" />
+	            <s:element minOccurs="1" maxOccurs="1" name="tariffType" type="s:string" />
+	            <s:element minOccurs="1" maxOccurs="1" name="authenticationId" type="s:string" />
+	            <s:element minOccurs="1" maxOccurs="1" name="evcoId" type="s:string" />
+	            <s:element minOccurs="1" maxOccurs="1" name="meterId" type="s:string" />
+	            <s:element minOccurs="1" maxOccurs="1" name="obisCode" type="s:string" />
+	            <s:element minOccurs="1" maxOccurs="1" name="chargePointId" type="s:string" />
+	            <s:element minOccurs="1" maxOccurs="1" name="serviceProviderId" type="s:string" />
+	
+	            <s:element minOccurs="1" maxOccurs="1" name="infraProviderId" type="s:string" />
+	            <s:element minOccurs="1" maxOccurs="1" name="evseId" type="s:string" />
+	        </s:sequence>
+	    </s:complexType>
+
+	    <s:element name="token" type="s:string"/>
+	    		
+    </s:schema>    
+  </wsdl:types>
+ 
+ 
+  <wsdl:message name="UserIdentityHeader">
+    <wsdl:part element="tns:token" name="UserIdentityHeader"/>
+  </wsdl:message>  
+  <wsdl:message name="AuthenticateInput">
+    <wsdl:part element="tns:AuthenticateRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="AuthenticateOutput">
+    <wsdl:part element="tns:AuthenticateResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="AddCDRsInput">
+    <wsdl:part element="tns:AddCDRsRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="AddCDRsOutput">
+    <wsdl:part element="tns:AddCDRsResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="ClearCDRsInput">
+    <wsdl:part element="tns:ClearCDRsRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="ClearCDRsOutput">
+    <wsdl:part element="tns:ClearCDRsResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="GetCDRsInput">
+    <wsdl:part element="tns:GetCDRsRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="GetCDRsOutput">
+    <wsdl:part element="tns:GetCDRsResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="GetRoamingAuthorisationListInput">
+    <wsdl:part element="tns:GetRoamingAuthorisationListRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="GetRoamingAuthorisationListOutput">
+    <wsdl:part element="tns:GetRoamingAuthorisationListResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="SetRoamingAuthorisationListInput">
+    <wsdl:part element="tns:SetRoamingAuthorisationListRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="SetRoamingAuthorisationListOutput">
+    <wsdl:part element="tns:SetRoamingAuthorisationListResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="GetChargepointListInput">
+    <wsdl:part element="tns:GetChargepointListRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="GetChargepointListOutput">
+    <wsdl:part element="tns:GetChargepointListResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="SetChargepointListInput">
+    <wsdl:part element="tns:SetChargepointListRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="SetChargepointListOutput">
+    <wsdl:part element="tns:SetChargepointListResponse" name="parameters"/>
+  </wsdl:message>
+
+  <wsdl:portType name="echs">    
+    <wsdl:operation name="Authenticate">
+      <wsdl:input message="tns:AuthenticateInput"/>
+      <wsdl:output message="tns:AuthenticateOutput"/>
+    </wsdl:operation>
+    <wsdl:operation name="AddCDRs">
+      <wsdl:input message="tns:AddCDRsInput"/>
+      <wsdl:output message="tns:AddCDRsOutput"/>
+    </wsdl:operation>
+    <wsdl:operation name="ClearCDRs">
+      <wsdl:input message="tns:ClearCDRsInput"/>
+      <wsdl:output message="tns:ClearCDRsOutput"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetCDRs">
+      <wsdl:input message="tns:GetCDRsInput"/>
+      <wsdl:output message="tns:GetCDRsOutput"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetRoamingAuthorisationList">
+      <wsdl:input message="tns:GetRoamingAuthorisationListInput"/>
+      <wsdl:output message="tns:GetRoamingAuthorisationListOutput"/>
+    </wsdl:operation>
+    <wsdl:operation name="SetRoamingAuthorisationList">
+      <wsdl:input message="tns:SetRoamingAuthorisationListInput"/>
+      <wsdl:output message="tns:SetRoamingAuthorisationListOutput"/>
+    </wsdl:operation>  
+    <wsdl:operation name="GetChargepointList">
+      <wsdl:input message="tns:GetChargepointListInput"/>
+      <wsdl:output message="tns:GetChargepointListOutput"/>
+    </wsdl:operation>        
+    <wsdl:operation name="SetChargepointList">
+      <wsdl:input message="tns:SetChargepointListInput"/>
+      <wsdl:output message="tns:SetChargepointListOutput"/>
+    </wsdl:operation>  
+  </wsdl:portType>
+  
+  <wsdl:binding name="echsSOAP" type="tns:echs">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Authenticate">
+      <soap:operation soapAction="/Authenticate"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+   <wsdl:operation name="AddCDRs">
+      <soap:operation soapAction="/AddCDRs"/>
+      <wsdl:input>
+		<soap:header use="literal" message="tns:UserIdentityHeader" part="UserIdentityHeader"/>                  
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+   <wsdl:operation name="ClearCDRs">
+      <soap:operation soapAction="ClearCDRs"/>
+      <wsdl:input>
+		<soap:header use="literal" message="tns:UserIdentityHeader" part="UserIdentityHeader"/>                  
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+   <wsdl:operation name="GetCDRs">
+      <soap:operation soapAction="GetCDRs"/>
+      <wsdl:input>
+		<soap:header use="literal" message="tns:UserIdentityHeader" part="UserIdentityHeader"/>                  
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+   <wsdl:operation name="GetRoamingAuthorisationList">
+      <soap:operation soapAction="GetRoamingAuthorisationList"/>
+      <wsdl:input>
+		<soap:header use="literal" message="tns:UserIdentityHeader" part="UserIdentityHeader"/>            
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+   <wsdl:operation name="SetRoamingAuthorisationList">
+      <soap:operation soapAction="SetRoamingAuthorisationList"/>
+      <wsdl:input>
+		<soap:header use="literal" message="tns:UserIdentityHeader" part="UserIdentityHeader"/>                  
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>    
+   <wsdl:operation name="GetChargepointList">
+      <soap:operation soapAction="GetChargepointList"/>
+      <wsdl:input>
+		<soap:header use="literal" message="tns:UserIdentityHeader" part="UserIdentityHeader"/>            
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+   <wsdl:operation name="SetChargepointList">
+      <soap:operation soapAction="SetChargepointList"/>
+      <wsdl:input>
+		<soap:header use="literal" message="tns:UserIdentityHeader" part="UserIdentityHeader"/>                  
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="echs">
+    <wsdl:port binding="tns:echsSOAP" name="echsSOAP">
+      <soap:address location="http://q.ochp.e-clearing.net/ochp/service/index.php"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
