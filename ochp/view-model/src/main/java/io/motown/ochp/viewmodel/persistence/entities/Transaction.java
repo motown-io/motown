@@ -141,7 +141,7 @@ public class Transaction {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, transactionId, evseId, identifyingToken, meterStart, meterStop, timeStart, timeStop, attributes, chargingStation);
+        return Objects.hash(id);
     }
 
     @Override
@@ -153,6 +153,6 @@ public class Transaction {
             return false;
         }
         final Transaction other = (Transaction) obj;
-        return Objects.equals(this.id, other.id) && Objects.equals(this.transactionId, other.transactionId) && Objects.equals(this.evseId, other.evseId) && Objects.equals(this.identifyingToken, other.identifyingToken) && Objects.equals(this.meterStart, other.meterStart) && Objects.equals(this.meterStop, other.meterStop) && Objects.equals(this.timeStart, other.timeStart) && Objects.equals(this.timeStop, other.timeStop) && Objects.equals(this.attributes, other.attributes) && Objects.equals(this.chargingStation, other.chargingStation);
+        return Objects.equals(this.id, other.id);
     }
 }
