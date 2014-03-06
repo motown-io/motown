@@ -16,6 +16,9 @@
 package io.motown.ochp.viewmodel.persistence.entities;
 
 import javax.persistence.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @Entity
@@ -26,8 +29,16 @@ public class Transaction {
     private Long id;
 
     private String transactionId;
-
     private String evseId;
+    private String identifyingToken;
+    private int meterStart;
+    private int meterStop;
+
+    @Temporal(TemporalType.DATE)
+    private Date timestamp;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Map<String, String> attributes = new HashMap<>();
 
     @ManyToOne
     private ChargingStation chargingStation;
@@ -69,6 +80,46 @@ public class Transaction {
         this.evseId = evseId;
     }
 
+    public String getIdentifyingToken() {
+        return identifyingToken;
+    }
+
+    public void setIdentifyingToken(String identifyingToken) {
+        this.identifyingToken = identifyingToken;
+    }
+
+    public int getMeterStart() {
+        return meterStart;
+    }
+
+    public void setMeterStart(int meterStart) {
+        this.meterStart = meterStart;
+    }
+
+    public int getMeterStop() {
+        return meterStop;
+    }
+
+    public void setMeterStop(int meterStop) {
+        this.meterStop = meterStop;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(Map<String, String> attributes) {
+        this.attributes = attributes;
+    }
+
     public ChargingStation getChargingStation() {
         return chargingStation;
     }
@@ -77,9 +128,13 @@ public class Transaction {
         this.chargingStation = chargingStation;
     }
 
+    public void addAttribute(String key, String value) {
+        this.attributes.put(key, value);
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(id, transactionId, evseId, chargingStation);
+        return Objects.hash(id, transactionId, evseId, identifyingToken, meterStart, meterStop, timestamp, attributes, chargingStation);
     }
 
     @Override
@@ -91,6 +146,6 @@ public class Transaction {
             return false;
         }
         final Transaction other = (Transaction) obj;
-        return Objects.equals(this.id, other.id) && Objects.equals(this.transactionId, other.transactionId) && Objects.equals(this.evseId, other.evseId) && Objects.equals(this.chargingStation, other.chargingStation);
+        return Objects.equals(this.id, other.id) && Objects.equals(this.transactionId, other.transactionId) && Objects.equals(this.evseId, other.evseId) && Objects.equals(this.identifyingToken, other.identifyingToken) && Objects.equals(this.meterStart, other.meterStart) && Objects.equals(this.meterStop, other.meterStop) && Objects.equals(this.timestamp, other.timestamp) && Objects.equals(this.attributes, other.attributes) && Objects.equals(this.chargingStation, other.chargingStation);
     }
 }

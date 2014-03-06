@@ -23,7 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.PROTOCOL;
 
 public final class OchpViewModelTestUtils {
 
@@ -37,12 +38,7 @@ public final class OchpViewModelTestUtils {
     }
 
     public static ChargingStation getRegisteredAndConfiguredChargingStation() {
-        ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
-        cs.setRegistered(true);
-        cs.setNumberOfEvses(EVSES.size());
-        cs.setConfigured(true);
-
-        return cs;
+        return new ChargingStation(CHARGING_STATION_ID.getId());
     }
 
     public static String getVendor() {
