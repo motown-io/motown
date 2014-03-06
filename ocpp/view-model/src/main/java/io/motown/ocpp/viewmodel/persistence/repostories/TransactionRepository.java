@@ -16,10 +16,41 @@
 package io.motown.ocpp.viewmodel.persistence.repostories;
 
 import io.motown.ocpp.viewmodel.persistence.entities.Transaction;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public interface TransactionRepository extends JpaRepository<Transaction, String> {
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 
-    Transaction findTransactionById(Long id);
+public class TransactionRepository {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ReservationIdentifierRepository.class);
+
+    private EntityManager entityManager;
+
+    public Transaction findTransactionById(Long id) {
+        return entityManager.find(Transaction.class, id);
+    }
+
+    public void insert(Transaction transaction) {
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+
+        if (!entityTransaction.isActive()) {
+            entityTransaction.begin();
+        }
+
+        try {
+            entityManager.persist(transaction);
+            entityTransaction.commit();
+        } finally {
+            if (entityTransaction.isActive()) {
+                LOG.warn("Transaction is still active while it should not be, rolling back.");
+                entityTransaction.rollback();
+            }
+        }
+    }
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 }

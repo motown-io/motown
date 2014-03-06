@@ -90,7 +90,6 @@ public class DomainService {
 
         // Keep track of the address on which we can reach the charging station
         chargingStation.setIpAddress(chargingStationAddress);
-        chargingStationRepository.save(chargingStation);
 
         Map<String, String> attributes = Maps.newHashMap();
         attributes.put(ADDRESS_KEY, chargingStationAddress);
@@ -267,7 +266,7 @@ public class DomainService {
     public NumberedReservationId generateReservationIdentifier(ChargingStationId chargingStationId, String protocolIdentifier) {
         ReservationIdentifier reservationIdentifier = new ReservationIdentifier();
 
-        reservationIdentifierRepository.saveAndFlush(reservationIdentifier);
+        reservationIdentifierRepository.insert(reservationIdentifier);
 
         /* TODO JPA's identity generator creates longs, while OCPP and Motown supports ints. Where should we translate
          * between these and how should we handle error cases? - Mark van den Bergh, Januari 7th 2013
@@ -301,7 +300,7 @@ public class DomainService {
         transaction.setEvseId(evseId);
 
         // flush to make sure the generated id is populated
-        transactionRepository.saveAndFlush(transaction);
+        transactionRepository.insert(transaction);
 
         return transaction;
     }

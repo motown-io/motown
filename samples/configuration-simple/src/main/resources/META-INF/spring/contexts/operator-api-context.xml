@@ -70,11 +70,11 @@
     </bean>
 
     <bean id="chargingStationRepositoryOperatorApi" class="io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository">
-        <property name="entityManager" ref="entityManager" />
+        <property name="entityManager" ref="jpaEntityManagerOperatorApi" />
     </bean>
 
     <bean id="transactionRepositoryOperatorApi" class="io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository">
-        <property name="entityManager" ref="entityManager" />
+        <property name="entityManager" ref="jpaEntityManagerOperatorApi" />
     </bean>
 
     <bean id="jsonCommandService" class="io.motown.operatorapi.json.commands.JsonCommandService">
@@ -221,14 +221,14 @@
         <property name="entityManagerFactory" ref="operatorApiEntityManagerFactory"/>
     </bean>
 
-    <bean id="entityManager" factory-bean="operatorApiEntityManagerFactory" factory-method="createEntityManager" />
+    <bean id="jpaEntityManagerOperatorApi" factory-bean="operatorApiEntityManagerFactory" factory-method="createEntityManager" />
 
     <bean id="operatorApiChargingStationRepository" class="io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository">
-        <property name="entityManager" ref="entityManager" />
+        <property name="entityManager" ref="jpaEntityManagerOperatorApi" />
     </bean>
 
     <bean id="operatorApiTransactionRepository" class="io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository">
-        <property name="entityManager" ref="entityManager" />
+        <property name="entityManager" ref="jpaEntityManagerOperatorApi" />
     </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">

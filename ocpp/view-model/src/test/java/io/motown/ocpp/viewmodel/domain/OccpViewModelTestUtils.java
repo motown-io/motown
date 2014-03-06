@@ -20,6 +20,7 @@ import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import org.axonframework.domain.EventMessage;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,12 @@ public final class OccpViewModelTestUtils {
 
     private OccpViewModelTestUtils() {
         // Private no-arg constructor to prevent instantiation of utility class.
+    }
+
+    public static void deleteFromDatabase(EntityManager entityManager, Class jpaEntityClass) {
+        entityManager.getTransaction().begin();
+        entityManager.createQuery("DELETE FROM " + jpaEntityClass.getName()).executeUpdate();
+        entityManager.getTransaction().commit();
     }
 
     public static ChargingStation getRegisteredAndConfiguredChargingStation() {

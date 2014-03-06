@@ -31,12 +31,12 @@
     <axon:filesystem-event-store id="eventStore" base-dir="events"/>
 
     <axon:event-sourcing-repository id="chargingStationEventRepository"
-                                    aggregate-type="io.motown.domain.chargingstation.ChargingStation" />
+                                    aggregate-type="io.motown.domain.chargingstation.ChargingStation"
+                                    event-bus="eventBus"
+                                    event-store="eventStore" />
 
     <axon:aggregate-command-handler aggregate-type="io.motown.domain.chargingstation.ChargingStation"
                                     repository="chargingStationEventRepository"
-                                    command-bus="commandBus"/>
-
-    <!--<bean class="io.motown.chargingstationconfiguration.app.ConfigurationEventListener" />-->
+                                    command-bus="commandBus" />
 
 </beans>

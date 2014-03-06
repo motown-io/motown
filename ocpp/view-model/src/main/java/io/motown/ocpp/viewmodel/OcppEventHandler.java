@@ -39,7 +39,7 @@ public class OcppEventHandler {
         if (chargingStation == null) {
             chargingStation = new ChargingStation(chargingStationId);
         }
-        chargingStationRepository.save(chargingStation);
+        chargingStationRepository.insert(chargingStation);
     }
 
     @EventHandler
@@ -50,7 +50,6 @@ public class OcppEventHandler {
 
         if (chargingStation != null) {
             chargingStation.setRegistered(true);
-            chargingStationRepository.save(chargingStation);
         } else {
             LOG.error("OCPP module repo COULD NOT FIND CHARGEPOINT {} and mark it as registered", event.getChargingStationId());
         }
@@ -66,12 +65,11 @@ public class OcppEventHandler {
         if (chargingStation == null) {
             LOG.warn("Received a ChargingStationConfiguredEvent for unknown charging station. Creating the chargingStation.");
             chargingStation = new ChargingStation(chargingStationId);
+            chargingStationRepository.insert(chargingStation);
         }
 
         chargingStation.setNumberOfEvses(event.getEvses().size());
         chargingStation.setConfigured(true);
-
-        chargingStationRepository.save(chargingStation);
     }
 
     public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {

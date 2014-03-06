@@ -16,7 +16,46 @@
 package io.motown.ocpp.viewmodel.persistence.repostories;
 
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public interface ChargingStationRepository extends JpaRepository<ChargingStation, String> {
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+
+public class ChargingStationRepository {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ChargingStationRepository.class);
+
+    private EntityManager entityManager;
+
+    public ChargingStation findOne(String id) {
+        return entityManager.find(ChargingStation.class, id);
+    }
+
+    public void insert(ChargingStation chargingStation) {
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        if (!transaction.isActive()) {
+            transaction.begin();
+        }
+
+        try {
+            entityManager.persist(chargingStation);
+            transaction.commit();
+        } catch (EntityExistsException e) {
+            // because the identifier of the charging station entity is not generated it can occur that (for example)
+            // 2 event handlers try to create the same charging station, therefore we catch this exception.
+            LOG.warn("EntityExistsException while trying to persist chargingStation, other thread created charging station [{}] before we could.", chargingStation.getId());
+        } finally {
+            if (transaction.isActive()) {
+                LOG.warn("Transaction is still active while it should not be, rolling back.");
+                transaction.rollback();
+            }
+        }
+    }
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 }

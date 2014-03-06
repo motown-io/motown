@@ -28,7 +28,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.persistence.EntityManager;
+
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static io.motown.ocpp.viewmodel.domain.OccpViewModelTestUtils.deleteFromDatabase;
 import static junit.framework.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -42,9 +45,13 @@ public class OcppEventHandlerTest {
     @Autowired
     private ChargingStationRepository chargingStationRepository;
 
+    @Autowired
+    private EntityManager entityManager;
+
     @Before
     public void setUp() {
-        chargingStationRepository.deleteAll();
+        entityManager.clear();
+        deleteFromDatabase(entityManager, ChargingStation.class);
 
         eventHandler = new OcppEventHandler();
 

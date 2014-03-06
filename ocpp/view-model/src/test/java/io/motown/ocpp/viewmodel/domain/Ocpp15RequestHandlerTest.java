@@ -18,7 +18,7 @@ package io.motown.ocpp.viewmodel.domain;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.Ocpp15RequestHandler;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
-import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
+import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.persistence.EntityManager;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,16 +41,17 @@ public class Ocpp15RequestHandlerTest {
 
     private Ocpp15RequestHandler requestHandler;
 
-    @Autowired
-    private ChargingStationRepository chargingStationRepository;
-
     private ChargingStationOcpp15Client client;
 
     private DomainService domainService;
 
+    @Autowired
+    private EntityManager entityManager;
+
     @Before
     public void setUp() {
-        chargingStationRepository.deleteAll();
+        entityManager.clear();
+        deleteFromDatabase(entityManager, ChargingStation.class);
 
         requestHandler = new Ocpp15RequestHandler();
 
