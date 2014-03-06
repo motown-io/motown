@@ -19,7 +19,6 @@ import io.motown.ochp.v03.soap.schema.Echs;
 import org.apache.cxf.binding.soap.Soap12;
 import org.apache.cxf.binding.soap.SoapBindingConfiguration;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.stereotype.Component;
 
 import javax.xml.ws.BindingProvider;
@@ -42,7 +41,6 @@ public class OchpProxyFactory {
         SoapBindingConfiguration conf = new SoapBindingConfiguration();
         conf.setVersion(Soap12.getInstance());
         factory.setBindingConfig(conf);
-        //factory.getFeatures().add(new WSAddressingFeature());
 
         Echs eClearingService = (Echs) factory.create();
 

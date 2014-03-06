@@ -68,8 +68,6 @@ public class Ochp03SoapClientTest {
     public void addCDRsVerifyTransactionToCDRInfoConversion() {
         when(echsClient.addCDRs(any(AddCDRsRequest.class), anyString())).thenReturn(getAddCDRsResponse());
 
-        ArgumentCaptor<AddCDRsRequest> addCDRsRequestArgument = ArgumentCaptor.forClass(AddCDRsRequest.class);
-
         List<Transaction> transactions = Lists.newArrayList();
         Transaction transaction = new Transaction("transactionId");
         transaction.setEvseId("evseId");
@@ -77,6 +75,7 @@ public class Ochp03SoapClientTest {
         transactions.add(transaction);
         client.addChargeDetailRecords(transactions);
 
+        ArgumentCaptor<AddCDRsRequest> addCDRsRequestArgument = ArgumentCaptor.forClass(AddCDRsRequest.class);
         verify(echsClient).addCDRs(addCDRsRequestArgument.capture(), anyString());
         CDRInfo firstCDRInfo = addCDRsRequestArgument.getValue().getCdrInfoArray().get(0);
         assertEquals(transaction.getEvseId(), firstCDRInfo.getEvseId());
