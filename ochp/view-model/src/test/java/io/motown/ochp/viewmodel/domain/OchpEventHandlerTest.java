@@ -49,8 +49,8 @@ public class OchpEventHandlerTest {
 
     @Before
     public void setUp() {
-        chargingStationRepository.deleteAll();
         transactionRepository.deleteAll();
+        chargingStationRepository.deleteAll();
 
         eventHandler = new OchpEventHandler();
 
