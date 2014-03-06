@@ -15,6 +15,8 @@
  */
 package io.motown.ochp.viewmodel.domain;
 
+import io.motown.domain.api.chargingstation.TransactionStartedEvent;
+import io.motown.domain.api.chargingstation.TransactionStoppedEvent;
 import io.motown.ochp.viewmodel.OchpEventHandler;
 import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
@@ -27,9 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.TRANSACTION_ID;
-import static org.junit.Assert.assertEquals;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static org.junit.Assert.assertNotNull;
 
 @ContextConfiguration("classpath:ochp-view-model-test-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -57,15 +58,24 @@ public class OchpEventHandlerTest {
     @Test
     public void testTransaction() {
         chargingStationRepository.saveAndFlush(new ChargingStation(CHARGING_STATION_ID.getId()));
+        transactionRepository.saveAndFlush(new Transaction(chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId()), TRANSACTION_ID.getId()));
+        assertNotNull(transactionRepository.findByTransactionId(TRANSACTION_ID.getId()));
+    }
 
-        ChargingStation chargingStation = chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId());
-        Transaction transaction = new Transaction(chargingStation, TRANSACTION_ID.getId());
-        transactionRepository.saveAndFlush(transaction);
+    @Test
+    public void testTransactionWithoutChargingStation() {
+        transactionRepository.saveAndFlush(new Transaction(TRANSACTION_ID.getId()));
+        assertNotNull(transactionRepository.findByTransactionId(TRANSACTION_ID.getId()));
+    }
 
-        Transaction transactionFromRepo = transactionRepository.findByTransactionId(TRANSACTION_ID.getId());
+    @Test
+    public void testHandleTransactionStartedEvent() {
+        eventHandler.handle(new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, METER_START, FIVE_MINUTES_AGO, CONFIGURATION_ITEMS));
+    }
 
-        assertEquals(transaction, transactionFromRepo);
-        assertEquals(chargingStation, transactionFromRepo.getChargingStation());
+    @Test
+    public void testHandleTransactionStoppedEvent() {
+        eventHandler.handle(new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, TWO_MINUTES_AGO));
     }
 
 }
