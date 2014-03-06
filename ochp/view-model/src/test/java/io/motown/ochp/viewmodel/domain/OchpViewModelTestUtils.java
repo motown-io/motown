@@ -46,7 +46,7 @@ public final class OchpViewModelTestUtils {
     }
 
     public static String getVendor() {
-        return "Mowotn";
+        return "Motown";
     }
 
     public static String getConfigurationKey() {
