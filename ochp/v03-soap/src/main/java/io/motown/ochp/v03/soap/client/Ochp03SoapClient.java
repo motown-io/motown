@@ -15,35 +15,94 @@
  */
 package io.motown.ochp.v03.soap.client;
 
-import io.motown.ochp.v03.soap.schema.AuthenticateRequest;
-import io.motown.ochp.v03.soap.schema.AuthenticateResponse;
-import io.motown.ochp.v03.soap.schema.Echs;
+import io.motown.ochp.v03.soap.schema.*;
 import io.motown.ochp.viewmodel.ochp.Ochp03Client;
+import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class Ochp03SoapClient implements Ochp03Client {
 
     private static final Logger LOG = LoggerFactory.getLogger(Ochp03SoapClient.class);
 
+    private static final int ACCEPTED = 0;
+
     @Autowired
     private OchpProxyFactory ochpProxyFactory;
 
+    @Value("${io.motown.ochp.server.address}")
+    private String serverAddress;
+
+    @Value("${io.motown.ochp.server.address}")
+    private String username;
+
+    @Value("${io.motown.ochp.server.address}")
+    private String password;
+
+    /** In memory cache to store the authentication token that is required in all webservice calls */
+    private String cachedAuthenticationToken;
+
+    /**
+     * Performs authentication in case we do not have an authentication token
+     */
+    private void forceAuthentication() {
+        if(cachedAuthenticationToken == null){
+            LOG.info("Not authenticated yet, performing OCHP authenticate");
+
+            Echs ochpClientService = this.createOchpClientService();
+
+            AuthenticateRequest request = new AuthenticateRequest();
+            request.setUserId(username);
+            request.setPassword(password);
+            AuthenticateResponse response = ochpClientService.authenticate(new AuthenticateRequest());
+
+            if(response.getResultCode() != ACCEPTED) {
+                LOG.error("Authentication of {} failed", username);
+            } else {
+                LOG.info("Authentication was successfull");
+                cachedAuthenticationToken = response.getAuthToken();
+            }
+        }
+    }
+
     @Override
-    public String authenticate(String username, String password) {
-        LOG.info("OCHP authenticate");
+    public void addChargeDetailRecords(List<Transaction> transactionList) {
+        LOG.info("OCHP addCDRs");
+        forceAuthentication();
+
+        AddCDRsRequest request = new AddCDRsRequest();
+        List<CDRInfo> cdrInfoList = request.getCdrInfoArray();
+        for(Transaction transaction : transactionList){
+            CDRInfo cdrInfo = new CDRInfo();
+            cdrInfo.setEvseId(transaction.getEvseId());
+            //TODO: Convert the rest of the transaction/chargingstation information into CDRInfo - Ingo Pak, 06 Mar 2014
+
+            cdrInfoList.add(cdrInfo);
+        }
+
+        AddCDRsResponse response = this.createOchpClientService().addCDRs(request, cachedAuthenticationToken);
+
+        if(response.getResult() == null || response.getResult().getResultCode() != ACCEPTED) {
+            LOG.error("Failed to add the CDR's");
+        }
+    }
+
+    @Override
+    public List getChargePointList() {
+        LOG.info("OCHP getChargePointList");
+        forceAuthentication();
 
         Echs ochpClientService = this.createOchpClientService();
 
-        AuthenticateRequest request = new AuthenticateRequest();
-        request.setUserId(username);
-        request.setPassword(password);
-        AuthenticateResponse response = ochpClientService.authenticate(new AuthenticateRequest());
+        GetChargepointListResponse response = ochpClientService.getChargepointList(new GetChargepointListRequest(), cachedAuthenticationToken);
 
-        return response.getAuthToken();
+        return response.getChargepointInfoArray();
     }
 
     public void setOchpProxyFactory(OchpProxyFactory ochpProxyFactory) {
@@ -51,10 +110,7 @@ public class Ochp03SoapClient implements Ochp03Client {
     }
 
     private Echs createOchpClientService() {
-
-        //TODO: Retrieve the clearinghouse address from configuration - Ingo Pak, 03 Mar 2014
-        String clearingHouseAddress = "http://localhost:8090/mockechsSOAP";
-        return ochpProxyFactory.createOchpService(clearingHouseAddress, OchpProxyFactory.AUTHENTICATION);
+        return ochpProxyFactory.createOchpService(this.serverAddress);
     }
 
 }

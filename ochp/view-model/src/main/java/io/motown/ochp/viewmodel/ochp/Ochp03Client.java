@@ -16,9 +16,13 @@
 
 package io.motown.ochp.viewmodel.ochp;
 
+import io.motown.ochp.viewmodel.persistence.entities.Transaction;
+
+import java.util.List;
+
 public interface Ochp03Client {
 
-    String authenticate(String username, String password);
-    
-    //TODO: Add the rest of the required methods - Ingo Pak, 03 Mar 2014
+    List getChargePointList();
+
+    void addChargeDetailRecords(List<Transaction> transactionList);
 }

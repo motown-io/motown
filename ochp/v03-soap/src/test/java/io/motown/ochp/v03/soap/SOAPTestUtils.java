@@ -15,6 +15,9 @@
  */
 package io.motown.ochp.v03.soap;
 
+import com.google.common.collect.Lists;
+import io.motown.ochp.v03.soap.schema.*;
+
 import java.util.*;
 
 public final class SOAPTestUtils {
@@ -25,6 +28,39 @@ public final class SOAPTestUtils {
      * Private no-arg constructor to prevent instantiation of utility class.
      */
     private SOAPTestUtils() {
+    }
+
+    public static AuthenticateResponse getAuthenticateSuccessResponse(){
+        AuthenticateResponse response = new AuthenticateResponse();
+        response.setResultCode(0);
+        response.setAuthToken("token1234");
+
+        return response;
+    }
+
+    public static AuthenticateResponse getAuthenticateFailureResponse(){
+        AuthenticateResponse response = new AuthenticateResponse();
+        response.setResultCode(1);
+        response.setAuthToken(null);
+
+        return response;
+    }
+
+    public static AddCDRsResponse getAddCDRsResponse(){
+        AddCDRsResponse response = new AddCDRsResponse();
+        Result result = new Result();
+        result.setResultCode(0);
+        response.setResult(result);
+
+        return response;
+    }
+
+    public static GetChargepointListResponse getChargepointListResponse(){
+        GetChargepointListResponse response = new GetChargepointListResponse();
+        List<ChargepointInfo> chargepoints = response.getChargepointInfoArray();
+        chargepoints.add(new ChargepointInfo());
+        chargepoints.add(new ChargepointInfo());
+        return response;
     }
 
     /**

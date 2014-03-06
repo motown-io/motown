@@ -27,29 +27,22 @@ import javax.xml.ws.BindingProvider;
 @Component
 public class OchpProxyFactory {
 
-    public static final boolean AUTHENTICATION = true;
-    public static final boolean NO_AUTHENTICATION = false;
-
     /**
      * Creates a OCHP web service proxy.
      *
      * @param eClearingServerAddress address of the e-ClearingHouse server.
      * @return charging station web service proxy
      */
-    public Echs createOchpService(String eClearingServerAddress, boolean forceAuthentication) {
+    public Echs createOchpService(String eClearingServerAddress) {
         JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
         factory.setServiceClass(Echs.class);
 
         factory.setAddress(eClearingServerAddress);
 
-        if(forceAuthentication) {
-            factory.getInInterceptors().add(new OchpAuthenticationInterceptor());
-        }
-
         SoapBindingConfiguration conf = new SoapBindingConfiguration();
         conf.setVersion(Soap12.getInstance());
         factory.setBindingConfig(conf);
-        factory.getFeatures().add(new WSAddressingFeature());
+        //factory.getFeatures().add(new WSAddressingFeature());
 
         Echs eClearingService = (Echs) factory.create();
 
