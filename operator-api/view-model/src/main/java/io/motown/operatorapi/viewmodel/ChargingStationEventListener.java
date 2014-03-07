@@ -23,13 +23,10 @@ import io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepos
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
 
-@Component
 public class ChargingStationEventListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(ChargingStationEventListener.class);
@@ -130,12 +127,10 @@ public class ChargingStationEventListener {
         return chargingStation != null;
     }
 
-    @Autowired
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
     }
 
-    @Autowired
     public void setTransactionRepository(TransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
     }

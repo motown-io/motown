@@ -20,15 +20,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ConfigureChargingStationCommand;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * Json command handler for the 'Configure' command.
  */
-@Component
 class ConfigureJsonCommandHandler implements JsonCommandHandler {
 
     private static final String COMMAND_NAME = "Configure";
@@ -75,12 +70,10 @@ class ConfigureJsonCommandHandler implements JsonCommandHandler {
         }
     }
 
-    @Autowired
     public void setGson(Gson gson) {
         this.gson = gson;
     }
 
-    @Resource(name = "domainCommandGateway")
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }

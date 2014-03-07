@@ -23,7 +23,6 @@ import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository
 import io.motown.vas.viewmodel.persistence.repostories.SubscriptionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.jws.WebParam;
 import java.util.List;
@@ -37,15 +36,13 @@ import java.util.List;
 public class MotownVasPublisherService implements VasPublisherService {
 
     private static final Logger LOG = LoggerFactory.getLogger(MotownVasPublisherService.class);
+
     public static final String VAS_NAMESPACE = "urn://Vas/Cs/2010/12/";
 
-    @Autowired
     private SubscriptionRepository subscriptionRepository;
 
-    @Autowired
     private ChargingStationRepository chargingStationRepository;
 
-    @Autowired
     private VasConversionService vasConversionService;
 
     @Override
@@ -58,7 +55,7 @@ public class MotownVasPublisherService implements VasPublisherService {
 
             if (subscriptionRepository.findBySubscriberIdentityAndDeliveryAddress(subscriberIdentity, deliveryAddress) == null) {
                 Subscription subscription = new Subscription(subscriberIdentity, deliveryAddress);
-                subscriptionRepository.saveAndFlush(subscription);
+                subscriptionRepository.insert(subscription);
 
                 subscribeResponse.setSubscriptionId(subscription.getSubscriptionId());
                 subscribeResponse.setStatus(SubscribeStatus.ACCEPTED);

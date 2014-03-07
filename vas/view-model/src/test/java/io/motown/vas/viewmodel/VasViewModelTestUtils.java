@@ -21,6 +21,7 @@ import io.motown.vas.viewmodel.model.ComponentStatus;
 import io.motown.vas.viewmodel.model.Evse;
 import io.motown.vas.viewmodel.model.Subscription;
 
+import javax.persistence.EntityManager;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +32,15 @@ public final class VasViewModelTestUtils {
 
     private VasViewModelTestUtils() {
         // Private no-arg constructor to prevent instantiation of utility class.
+    }
+
+    public static void deleteFromDatabase(EntityManager entityManager, Class jpaEntityClass) {
+        entityManager.getTransaction().begin();
+        List resultList = entityManager.createQuery("SELECT entity FROM " + jpaEntityClass.getName() + " as entity").getResultList();
+        for (Object obj : resultList) {
+            entityManager.remove(obj);
+        }
+        entityManager.getTransaction().commit();
     }
 
     public static List<Subscription> SUBSCRIPTIONS = ImmutableList.<Subscription>builder()

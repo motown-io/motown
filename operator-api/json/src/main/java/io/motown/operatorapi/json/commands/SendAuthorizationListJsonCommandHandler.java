@@ -19,18 +19,11 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import io.motown.domain.api.chargingstation.AuthorizationListUpdateType;
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.IdentifyingToken;
-import io.motown.domain.api.chargingstation.SendAuthorizationListCommand;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.operatorapi.viewmodel.model.SendAuthorizationListApiCommand;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 
-@Component
 class SendAuthorizationListJsonCommandHandler implements JsonCommandHandler {
 
     private static final String COMMAND_NAME = "SendAuthorizationList";
@@ -55,19 +48,18 @@ class SendAuthorizationListJsonCommandHandler implements JsonCommandHandler {
 
             AuthorizationListUpdateType updateType = AuthorizationListUpdateType.valueOf(command.getUpdateType());
 
+            // TODO other command handlers check if a charging station exists in the repository, why is that not done here? - Mark van den Bergh, Februari 26th 2014
             // TODO enable usage of hash in API - Dennis Laumen, January 13th 2014
-            commandGateway.send(new SendAuthorizationListCommand(new ChargingStationId(chargingStationId), authorizationList, command.getListVersion(), "", updateType));
+            commandGateway.send(new SendAuthorizationListCommand(new ChargingStationId(chargingStationId), authorizationList, command.getListVersion(), "", updateType), new CorrelationToken());
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("SendAuthorizationList command not able to parse the payload, is your json correctly formatted ?", ex);
         }
     }
 
-    @Resource(name = "domainCommandGateway")
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
 
-    @Autowired
     public void setGson(Gson gson) {
         this.gson = gson;
     }

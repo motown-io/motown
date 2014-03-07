@@ -29,7 +29,7 @@
 
     <groupId>io.motown.domain</groupId>
     <artifactId>domain-app</artifactId>
-    <packaging>war</packaging>
+    <!--<packaging>war</packaging>-->
 
     <properties>
         <jetty.port>8080</jetty.port>

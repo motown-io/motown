@@ -16,7 +16,47 @@
 package io.motown.operatorapi.viewmodel.persistence.repositories;
 
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public interface ChargingStationRepository extends JpaRepository<ChargingStation, String> {
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
+import java.util.List;
+
+public class ChargingStationRepository {
+
+    private static final Logger LOG = LoggerFactory.getLogger(TransactionRepository.class);
+
+    private EntityManager entityManager;
+
+    public void save(ChargingStation chargingStation) {
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        if (!transaction.isActive()) {
+            transaction.begin();
+        }
+
+        try {
+            entityManager.persist(chargingStation);
+            transaction.commit();
+        } catch (Exception e) {
+            LOG.error("Exception while trying to persist chargingStation.", e);
+            transaction.rollback();
+            throw e;
+        }
+    }
+
+    public ChargingStation findOne(String id) {
+        return entityManager.find(ChargingStation.class, id);
+    }
+
+    public List<ChargingStation> findAll() {
+        Query query = entityManager.createQuery("SELECT cs FROM io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation AS cs");
+        return (List<ChargingStation>) query.getResultList();
+    }
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 }

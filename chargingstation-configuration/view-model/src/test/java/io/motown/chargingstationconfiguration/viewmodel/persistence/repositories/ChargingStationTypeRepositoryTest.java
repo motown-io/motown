@@ -21,15 +21,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.Set;
 
-import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.getChargingStationTypes;
-import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.getManufacturerWithConfiguration;
+import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -45,12 +45,13 @@ public class ChargingStationTypeRepositoryTest {
     private ChargingStationTypeRepository chargingStationTypeRepository;
 
     @Autowired
-    private ManufacturerRepository manufacturerRepository;
+    private EntityManager entityManager;
 
     @Before
     public void setUp() {
-        chargingStationTypeRepository.deleteAll();
-        manufacturerRepository.deleteAll();
+        entityManager.clear();
+        deleteFromDatabase(entityManager, ChargingStationType.class);
+        deleteFromDatabase(entityManager, Manufacturer.class);
     }
 
     @Test
@@ -59,7 +60,7 @@ public class ChargingStationTypeRepositoryTest {
         String manufacturerCode = MANUFACTURER_CODE;
 
         Manufacturer manufacturer = getManufacturerWithConfiguration(manufacturerCode, typeCode);
-        manufacturerRepository.saveAndFlush(manufacturer);
+        insertIntoDatabase(entityManager, manufacturer);
 
         List<ChargingStationType> chargingStationTypes = chargingStationTypeRepository.findByCodeAndManufacturerCode(TYPE_CODE, MANUFACTURER_CODE);
 
@@ -72,17 +73,17 @@ public class ChargingStationTypeRepositoryTest {
         assertNotNull(chargingStationType.getEvses().iterator().next().getConnectors().iterator().next());
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
+    @Test(expected = PersistenceException.class)
     public void testUniquenessOfManufacturerAndChargingStationType() {
         String typeCode = TYPE_CODE;
         String manufacturerCode = MANUFACTURER_CODE;
 
         Manufacturer manufacturer = getManufacturerWithConfiguration(manufacturerCode, typeCode);
-        manufacturerRepository.saveAndFlush(manufacturer);
+        insertIntoDatabase(entityManager, manufacturer);
 
         Set<ChargingStationType> chargingStationTypes = getChargingStationTypes(manufacturer, TYPE_CODE);
         for (ChargingStationType type : chargingStationTypes) {
-            chargingStationTypeRepository.saveAndFlush(type);
+            insertIntoDatabase(entityManager, type);
         }
     }
 

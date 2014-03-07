@@ -16,7 +16,37 @@
 package io.motown.ocpp.viewmodel.persistence.repostories;
 
 import io.motown.ocpp.viewmodel.persistence.entities.ReservationIdentifier;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public interface ReservationIdentifierRepository extends JpaRepository<ReservationIdentifier, String> {
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+
+public class ReservationIdentifierRepository {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ReservationIdentifierRepository.class);
+
+    private EntityManager entityManager;
+
+    public void insert(ReservationIdentifier reservationIdentifier) {
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        if (!transaction.isActive()) {
+            transaction.begin();
+        }
+
+        try {
+            entityManager.persist(reservationIdentifier);
+            transaction.commit();
+        } finally {
+            if (transaction.isActive()) {
+                LOG.warn("Transaction is still active while it should not be, rolling back.");
+                transaction.rollback();
+            }
+        }
+    }
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 }

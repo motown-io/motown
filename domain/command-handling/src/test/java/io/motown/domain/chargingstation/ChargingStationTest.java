@@ -409,10 +409,11 @@ public class ChargingStationTest {
     }
 
     @Test
-    public void testReservationStatusChanged() {
+    public void testStatusChanged() {
+        String statusMessage = "Test message";
         fixture.given(CHARGING_STATION)
-                .when(new ReservationStatusChangedCommand(CHARGING_STATION_ID, RESERVATION_ID, ReservationStatus.OCCUPIED))
-                .expectEvents(new ReservationStatusChangedEvent(CHARGING_STATION_ID, RESERVATION_ID, ReservationStatus.OCCUPIED));
+                .when(new StatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS, statusMessage))
+                .expectEvents(new StatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS, statusMessage));
     }
 
     @Test
@@ -443,27 +444,6 @@ public class ChargingStationTest {
     }
 
     @Test
-    public void testClearCacheRequestStatusChanged() {
-        fixture.given(CHARGING_STATION)
-                .when(new ClearCacheStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
-                .expectEvents(new ClearCacheStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-    }
-
-    @Test
-    public void testChangeAvailabilityToInoperativeStatusChanged() {
-        fixture.given(CHARGING_STATION)
-                .when(new ChangeAvailabilityToInoperativeStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
-                .expectEvents(new ChangeAvailabilityToInoperativeStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-    }
-
-    @Test
-    public void testChangeAvailabilityToOperativeStatusChanged() {
-        fixture.given(CHARGING_STATION)
-                .when(new ChangeAvailabilityToOperativeStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
-                .expectEvents(new ChangeAvailabilityToOperativeStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-    }
-
-    @Test
     public void testChangeConfiguration() {
         String configKey = "heartbeatInterval";
         String configValue = "800";
@@ -473,67 +453,11 @@ public class ChargingStationTest {
     }
 
     @Test
-    public void testChangeConfigurationStatusChanged() {
-        fixture.given(CHARGING_STATION)
-                .when(new ChangeConfigurationStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
-                .expectEvents(new ChangeConfigurationStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-    }
-
-    @Test
-    public void testDataTransferStatusChanged() {
-        fixture.given(CHARGING_STATION)
-                .when(new DataTransferStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
-                .expectEvents(new DataTransferStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-    }
-
-    @Test
-    public void testHardResetStatusChanged() {
-        fixture.given(CHARGING_STATION)
-                .when(new HardResetStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
-                .expectEvents(new HardResetStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-    }
-
-    @Test
-    public void testSendAuthorizationListStatusChanged() {
-        fixture.given(CHARGING_STATION)
-                .when(new SendAuthorizationListStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
-                .expectEvents(new SendAuthorizationListStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-    }
-
-    @Test
-    public void testSoftResetStatusChanged() {
-        fixture.given(CHARGING_STATION)
-                .when(new SoftResetStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
-                .expectEvents(new SoftResetStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-    }
-
-    @Test
-    public void testStartTransactionStatusChangedCommand() {
-        fixture.given(CHARGING_STATION)
-                .when(new StartTransactionStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
-                .expectEvents(new StartTransactionStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-    }
-
-    @Test
     public void testStopTransaction() {
         Date now = new Date();
         fixture.given(CHARGING_STATION)
                 .when(new StopTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, now))
                 .expectEvents(new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, now));
-    }
-
-    @Test
-    public void testStopTransactionStatusChanged() {
-        fixture.given(CHARGING_STATION)
-                .when(new StopTransactionStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
-                .expectEvents(new StopTransactionStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
-    }
-
-    @Test
-    public void testUnlockEvseStatusChanged() {
-        fixture.given(CHARGING_STATION)
-                .when(new UnlockEvseStatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS))
-                .expectEvents(new UnlockEvseStatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS));
     }
 
     @Test

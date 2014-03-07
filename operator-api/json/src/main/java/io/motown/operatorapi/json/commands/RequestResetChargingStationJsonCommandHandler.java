@@ -19,17 +19,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.RequestHardResetChargingStationCommand;
 import io.motown.domain.api.chargingstation.RequestSoftResetChargingStationCommand;
 import io.motown.operatorapi.viewmodel.model.RequestResetChargingStationApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-
-@Component
 class RequestResetChargingStationJsonCommandHandler implements JsonCommandHandler {
 
     private static final String COMMAND_NAME = "ResetChargingStation";
@@ -53,9 +49,9 @@ class RequestResetChargingStationJsonCommandHandler implements JsonCommandHandle
                 RequestResetChargingStationApiCommand command = gson.fromJson(commandObject, RequestResetChargingStationApiCommand.class);
 
                 if("hard".equalsIgnoreCase(command.getType())) {
-                    commandGateway.send(new RequestHardResetChargingStationCommand(new ChargingStationId(chargingStationId)));
+                    commandGateway.send(new RequestHardResetChargingStationCommand(new ChargingStationId(chargingStationId)), new CorrelationToken());
                 } else {
-                    commandGateway.send(new RequestSoftResetChargingStationCommand(new ChargingStationId(chargingStationId)));
+                    commandGateway.send(new RequestSoftResetChargingStationCommand(new ChargingStationId(chargingStationId)), new CorrelationToken());
                 }
             }
         } catch (JsonSyntaxException ex) {
@@ -64,17 +60,14 @@ class RequestResetChargingStationJsonCommandHandler implements JsonCommandHandle
 
     }
 
-    @Resource(name = "domainCommandGateway")
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
 
-    @Autowired
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
     }
 
-    @Autowired
     public void setGson(Gson gson) {
         this.gson = gson;
     }

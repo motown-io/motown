@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2013 Motown.IO (info@motown.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jaxws="http://cxf.apache.org/jaxws" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	                    http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <import resource="classpath:META-INF/cxf/cxf.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+    <import resource="classpath:META-INF/soap-config.xml" />
+    <import resource="classpath:META-INF/spring/view-model-config.xml" />
+
+    <context:property-placeholder location="classpath:configViewModel.properties"
+                                  ignore-resource-not-found="true"
+                                  ignore-unresolvable="true"/>
+
+    <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
+
+    <!-- Interceptor that adds the messageId if not present, as CXF requires the WS-Addressing messageId header to be present, while according to the spec this is only requierd when using the replyTo or faultTo WSA headers -->
+    <bean id="headerInterceptor" class="io.motown.ocpp.soaputils.interceptor.MessageIdHeaderInterceptor"/>
+
+    <bean id="replyToInterceptor" class="io.motown.ocpp.soaputils.interceptor.ReplyToHeaderInInterceptor"/>
+
+    <bean id="centralSystemService" class="io.motown.ocpp.v12.soap.centralsystem.MotownCentralSystemService">
+        <property name="domainService" ref="domainService" />
+        <property name="continuationTimeout" value="${io.motown.ocpp.v12.soap.cxf.continuation.timeout}" />
+    </bean>
+
+    <jaxws:endpoint implementor="#centralSystemService"
+                    address="/centralSystemService">
+        <jaxws:inInterceptors>
+            <ref bean="replyToInterceptor"/>
+        </jaxws:inInterceptors>
+    </jaxws:endpoint>
+
+    <bean id="chargingStationProxyFactory" class="io.motown.ocpp.v12.soap.chargepoint.ChargingStationProxyFactory" />
+
+    <bean id="ocpp12SoapClient" class="io.motown.ocpp.v12.soap.chargepoint.ChargingStationOcpp12SoapClient">
+        <property name="domainService" ref="domainService" />
+        <property name="chargingStationProxyFactory" ref="chargingStationProxyFactory" />
+    </bean>
+
+    <bean class="io.motown.ocpp.viewmodel.Ocpp12RequestHandler">
+        <property name="domainService" ref="domainService" />
+        <property name="chargingStationOcpp12Client" ref="ocpp12SoapClient" />
+    </bean>
+
+    <bean class="io.motown.ocpp.v12.soap.centralsystem.schema.ObjectFactory"/>
+
+    <!--<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">-->
+    <!--<property name="corePoolSize" value="5" />-->
+    <!--<property name="maxPoolSize" value="10" />-->
+    <!--<property name="queueCapacity" value="25" />-->
+    <!--</bean>-->
+
+</beans>

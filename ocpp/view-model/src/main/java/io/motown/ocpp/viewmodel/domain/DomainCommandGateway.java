@@ -17,6 +17,7 @@ package io.motown.ocpp.viewmodel.domain;
 
 import io.motown.domain.api.chargingstation.*;
 import org.axonframework.commandhandling.CommandCallback;
+import org.axonframework.common.annotation.MetaData;
 
 import java.util.concurrent.TimeUnit;
 
@@ -38,40 +39,18 @@ interface DomainCommandGateway {
 
     void send(ProcessMeterValueCommand command);
 
-    void send(DiagnosticsFileNameReceivedCommand command);
+    void send(DiagnosticsFileNameReceivedCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
     void send(UpdateDiagnosticsUploadStatusCommand command);
 
     void send(UpdateFirmwareStatusCommand command);
 
-    void send(AuthorizationListVersionReceivedCommand command);
+    void send(AuthorizationListVersionReceivedCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
     void send(IncomingDataTransferCommand command);
 
-    void send(ReservationStatusChangedCommand command);
-
     void send(StatusNotificationCommand command);
 
-    void send(ClearCacheStatusChangedCommand command);
-
-    void send(StopTransactionStatusChangedCommand command);
-
-    void send(SoftResetStatusChangedCommand command);
-
-    void send(HardResetStatusChangedCommand command);
-
-    void send(StartTransactionStatusChangedCommand command);
-
-    void send(UnlockEvseStatusChangedCommand command);
-
-    void send(ChangeAvailabilityToOperativeStatusChangedCommand command);
-
-    void send(ChangeAvailabilityToInoperativeStatusChangedCommand command);
-
-    void send(DataTransferStatusChangedCommand command);
-
-    void send(ChangeConfigurationStatusChangedCommand command);
-
-    void send(SendAuthorizationListStatusChangedCommand command);
+    void send(StatusChangedCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 }
 

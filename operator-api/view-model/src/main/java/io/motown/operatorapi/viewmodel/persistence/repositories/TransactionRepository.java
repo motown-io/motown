@@ -16,15 +16,53 @@
 package io.motown.operatorapi.viewmodel.persistence.repositories;
 
 import io.motown.operatorapi.viewmodel.persistence.entities.Transaction;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 import java.util.List;
 
-public interface TransactionRepository extends JpaRepository<Transaction, String> {
+public class TransactionRepository {
+
+    private static final Logger LOG = LoggerFactory.getLogger(TransactionRepository.class);
+
+    private EntityManager entityManager;
 
     /**
      * Find transactions by transaction id (not the auto-increment transaction.id)
      */
-    List<Transaction> findByTransactionId(String transactionId);
+    public List<Transaction> findByTransactionId(String transactionId) {
+        @SuppressWarnings("JpaQlInspection")
+        Query query = entityManager.createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t WHERE t.transactionId = :transactionId").setParameter("transactionId", transactionId);
+        return (List<Transaction>) query.getResultList();
+    }
 
+    public List<Transaction> findAll() {
+        @SuppressWarnings("JpaQlInspection")
+        Query query = entityManager.createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t");
+        return (List<Transaction>) query.getResultList();
+    }
+
+    public void save(Transaction transaction) {
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+
+        if (!entityTransaction.isActive()) {
+            entityTransaction.begin();
+        }
+
+        try {
+            entityManager.persist(transaction);
+            entityTransaction.commit();
+        } catch (Exception e) {
+            LOG.error("Exception while trying to persist transaction.", e);
+            entityTransaction.rollback();
+            throw e;
+        }
+    }
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 }

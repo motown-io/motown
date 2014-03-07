@@ -23,15 +23,11 @@ import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepositor
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class OcppEventHandler {
     
     private static final Logger LOG = LoggerFactory.getLogger(io.motown.ocpp.viewmodel.OcppEventHandler.class);
 
-    @Autowired
     private ChargingStationRepository chargingStationRepository;
 
     @EventHandler
@@ -43,7 +39,7 @@ public class OcppEventHandler {
         if (chargingStation == null) {
             chargingStation = new ChargingStation(chargingStationId);
         }
-        chargingStationRepository.save(chargingStation);
+        chargingStationRepository.insert(chargingStation);
     }
 
     @EventHandler
@@ -54,7 +50,6 @@ public class OcppEventHandler {
 
         if (chargingStation != null) {
             chargingStation.setRegistered(true);
-            chargingStationRepository.save(chargingStation);
         } else {
             LOG.error("OCPP module repo COULD NOT FIND CHARGEPOINT {} and mark it as registered", event.getChargingStationId());
         }
@@ -70,12 +65,11 @@ public class OcppEventHandler {
         if (chargingStation == null) {
             LOG.warn("Received a ChargingStationConfiguredEvent for unknown charging station. Creating the chargingStation.");
             chargingStation = new ChargingStation(chargingStationId);
+            chargingStationRepository.insert(chargingStation);
         }
 
         chargingStation.setNumberOfEvses(event.getEvses().size());
         chargingStation.setConfigured(true);
-
-        chargingStationRepository.save(chargingStation);
     }
 
     public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {

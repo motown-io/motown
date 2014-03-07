@@ -28,6 +28,11 @@ public final class EvseId implements ComponentId {
 
     private final String id;
 
+    private EvseId() {
+        // Private no-arg constructor for Hibernate.
+        this(1);
+    }
+
     /**
      * Creates a evse identifier.
      *

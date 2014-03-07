@@ -18,15 +18,11 @@ package io.motown.operatorapi.json.commands;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-@Service
 public class JsonCommandService {
 
     private static final int COMMAND_ARRAY_SIZE = 2;
@@ -62,12 +58,10 @@ public class JsonCommandService {
         throw new IllegalArgumentException("No command handler is configured for handling [" + commandName + "].");
     }
 
-    @Autowired
     public void setGson(Gson gson) {
         this.gson = gson;
     }
 
-    @Resource(name = "jsonCommandHandlers")
     public void setJsonCommandHandlers(List<JsonCommandHandler> jsonCommandHandlers) {
         this.jsonCommandHandlers = jsonCommandHandlers;
     }

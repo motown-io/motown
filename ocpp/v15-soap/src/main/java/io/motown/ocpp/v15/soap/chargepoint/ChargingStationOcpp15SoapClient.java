@@ -22,22 +22,17 @@ import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@Component
 public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Client {
 
     private static final Logger LOG = LoggerFactory.getLogger(ChargingStationOcpp15SoapClient.class);
 
-    @Autowired
     private DomainService domainService;
 
-    @Autowired
     private ChargingStationProxyFactory chargingStationProxyFactory;
 
     private IdentifyingTokenConverterService identifyingTokenConverterService;

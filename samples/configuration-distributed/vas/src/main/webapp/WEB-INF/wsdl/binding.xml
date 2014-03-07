@@ -1,0 +1,120 @@
+<!--
+Copyright Logica 2010
+
+All rights reserved. This document is protected by international copyright law and may not be reprinted,
+reproduced, copied or utilised in whole or in part by any means including electronic, mechanical,
+or other means without the prior written consent of Logica.
+
+
+Whilst reasonable care has been taken by Logica to ensure the information contained herein is
+reasonably accurate, Logica shall not, under any circumstances be liable for any loss or damage
+(direct or consequential) suffered by any party as a result of the contents of this publication or
+the reliance of any party thereon or any inaccuracy or omission therein. The information in this
+document is therefore provided on an "as is" basis without warranty and is subject to change
+without further notice and cannot be construed as a commitment by Logica.
+
+
+The products mentioned in this document are identified by the names, trademarks, service marks and
+logos of their respective companies or organisations and may not be used in any advertising or publicity
+or in any other way whatsoever without the prior written consent of those companies or organisations
+and Logica.
+-->
+<jaxb:bindings version="2.0"
+               xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <jxb:globalBindings xmlns:jxb="http://java.sun.com/xml/ns/jaxb" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+        <jxb:javaType name="java.util.Date" xmlType="xs:dateTime"
+                      parseMethod="org.apache.cxf.tools.common.DataTypeAdapter.parseDateTime"
+                      printMethod="org.apache.cxf.tools.common.DataTypeAdapter.printDateTime"/>
+    </jxb:globalBindings>
+
+    <jaxb:bindings schemaLocation="VasTypes.xsd">
+        <jaxb:bindings node="//xs:simpleType[@name='ConnectorType']/xs:restriction/xs:enumeration[@value='60309Industrial2PDc']">
+            <jaxb:typesafeEnumMember name="_60309Industrial2PDc" >
+                <jaxb:javadoc>[Converted from 60309Industrial2PDc to _60309Industrial2PDc] 60309 - industrial 2P (DC).</jaxb:javadoc>
+            </jaxb:typesafeEnumMember>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xs:simpleType[@name='ConnectorType']/xs:restriction/xs:enumeration[@value='60309IndustrialPneAc']">
+            <jaxb:typesafeEnumMember name="_60309IndustrialPneAc" >
+                <jaxb:javadoc>[Converted from 60309IndustrialPneAc to _60309IndustrialPneAc] 60309 - industrial P + N int  + E (AC).</jaxb:javadoc>
+            </jaxb:typesafeEnumMember>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xs:simpleType[@name='ConnectorType']/xs:restriction/xs:enumeration[@value='60309Industrial3PEAc']">
+            <jaxb:typesafeEnumMember name="_60309Industrial3PEAc" >
+                <jaxb:javadoc>[Converted from 60309Industrial3PEAc to _60309Industrial3PEAc] 60309 - industrial 3P + E (AC).</jaxb:javadoc>
+            </jaxb:typesafeEnumMember>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xs:simpleType[@name='ConnectorType']/xs:restriction/xs:enumeration[@value='60309Industrial3PENAc']">
+            <jaxb:typesafeEnumMember name="_60309Industrial3PENAc" >
+                <jaxb:javadoc>[Converted from 60309Industrial3PENAc to _60309Industrial3PENAc] 60309 - industrial 3P + E + N (AC).</jaxb:javadoc>
+            </jaxb:typesafeEnumMember>
+        </jaxb:bindings>
+
+
+        <jaxb:bindings node="//xs:simpleType[@name='ChargingCapability']/xs:restriction/xs:enumeration[@value='120V1Phase10A']">
+            <jaxb:typesafeEnumMember name="_120V1Phase10A" >
+                <jaxb:javadoc>[Converted from 120V1Phase10A to _120V1Phase10A] 100-120V 1 phase 10A.</jaxb:javadoc>
+            </jaxb:typesafeEnumMember>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xs:simpleType[@name='ChargingCapability']/xs:restriction/xs:enumeration[@value='120V1Phase12A']">
+            <jaxb:typesafeEnumMember name="_120V1Phase12A" >
+                <jaxb:javadoc>[Converted from 120V1Phase12A to _120V1Phase12A] 100-120V 1 phase 12A.</jaxb:javadoc>
+            </jaxb:typesafeEnumMember>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xs:simpleType[@name='ChargingCapability']/xs:restriction/xs:enumeration[@value='120V1Phase16A']">
+            <jaxb:typesafeEnumMember name="_120V1Phase16A" >
+                <jaxb:javadoc>[Converted from 120V1Phase16A to _120V1Phase16A] 100-120V 1 phase 16A.</jaxb:javadoc>
+            </jaxb:typesafeEnumMember>
+        </jaxb:bindings>
+
+        <jaxb:bindings node="//xs:simpleType[@name='ChargingCapability']/xs:restriction/xs:enumeration[@value='240V1Phase10A']">
+            <jaxb:typesafeEnumMember name="_240V1Phase10A" >
+                <jaxb:javadoc>[Converted from 240V1Phase10A to _240V1Phase10A] 200-240V 1 phase 10A.</jaxb:javadoc>
+            </jaxb:typesafeEnumMember>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xs:simpleType[@name='ChargingCapability']/xs:restriction/xs:enumeration[@value='240V1Phase12A']">
+            <jaxb:typesafeEnumMember name="_240V1Phase12A" >
+                <jaxb:javadoc>[Converted from 240V1Phase12A to _240V1Phase12A] 200-240V 1 phase 12A.</jaxb:javadoc>
+            </jaxb:typesafeEnumMember>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xs:simpleType[@name='ChargingCapability']/xs:restriction/xs:enumeration[@value='240V1Phase16A']">
+            <jaxb:typesafeEnumMember name="_240V1Phase16A" >
+                <jaxb:javadoc>[Converted from 240V1Phase16A to _240V1Phase16A] 200-240V 1 phase 16A.</jaxb:javadoc>
+            </jaxb:typesafeEnumMember>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xs:simpleType[@name='ChargingCapability']/xs:restriction/xs:enumeration[@value='240V1Phase32A']">
+            <jaxb:typesafeEnumMember name="_240V1Phase32A" >
+                <jaxb:javadoc>[Converted from 240V1Phase32A to _240V1Phase32A] 200-240V 1 phase 32A.</jaxb:javadoc>
+            </jaxb:typesafeEnumMember>
+        </jaxb:bindings>
+
+        <jaxb:bindings node="//xs:simpleType[@name='ChargingCapability']/xs:restriction/xs:enumeration[@value='240V3Phase16A']">
+            <jaxb:typesafeEnumMember name="_240V3Phase16A" >
+                <jaxb:javadoc>[Converted from 240V3Phase16A to _240V3Phase16A] 200-240V 3 phase 16A.</jaxb:javadoc>
+            </jaxb:typesafeEnumMember>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xs:simpleType[@name='ChargingCapability']/xs:restriction/xs:enumeration[@value='240V3Phase32A']">
+            <jaxb:typesafeEnumMember name="_240V3Phase32A" >
+                <jaxb:javadoc>[Converted from 240V3Phase32A to _240V3Phase32A] 200-240V 3 phase 32A.</jaxb:javadoc>
+            </jaxb:typesafeEnumMember>
+        </jaxb:bindings>
+
+        <jaxb:bindings node="//xs:simpleType[@name='ChargingCapability']/xs:restriction/xs:enumeration[@value='480V3Phase16A']">
+            <jaxb:typesafeEnumMember name="_480V3Phase16A" >
+                <jaxb:javadoc>[Converted from 480V3Phase16A to _480V3Phase16A] 380-480V 3 phase 16A.</jaxb:javadoc>
+            </jaxb:typesafeEnumMember>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xs:simpleType[@name='ChargingCapability']/xs:restriction/xs:enumeration[@value='480V3Phase32A']">
+            <jaxb:typesafeEnumMember name="_480V3Phase32A" >
+                <jaxb:javadoc>[Converted from 480V3Phase32A to _480V3Phase32A] 380-480V 3 phase 32A.</jaxb:javadoc>
+            </jaxb:typesafeEnumMember>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xs:simpleType[@name='ChargingCapability']/xs:restriction/xs:enumeration[@value='480V3Phase63A']">
+            <jaxb:typesafeEnumMember name="_480V3Phase63A" >
+                <jaxb:javadoc>[Converted from 480V3Phase63A to _480V3Phase63A] 380-480V 3 phase 63A.</jaxb:javadoc>
+            </jaxb:typesafeEnumMember>
+        </jaxb:bindings>
+    </jaxb:bindings>
+
+</jaxb:bindings>

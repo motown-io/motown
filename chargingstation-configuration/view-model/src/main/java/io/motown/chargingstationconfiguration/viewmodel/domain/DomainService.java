@@ -20,18 +20,14 @@ import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Con
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository;
 import io.motown.domain.api.chargingstation.EvseId;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Service
 public class DomainService {
 
-    @Autowired
     private ChargingStationTypeRepository chargingStationTypeRepository;
 
     /**

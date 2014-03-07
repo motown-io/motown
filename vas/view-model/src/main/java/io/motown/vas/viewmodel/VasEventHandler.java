@@ -23,25 +23,19 @@ import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Component
 public class VasEventHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(io.motown.vas.viewmodel.VasEventHandler.class);
     private static final int MINUTES_IN_HOUR = 60;
 
-    @Autowired
     private ChargingStationRepository chargingStationRepository;
 
-    @Autowired
     private ConfigurationConversionService configurationConversionService;
 
-    @Autowired
     private VasSubscriberService subscriberService;
 
     @EventHandler
@@ -55,7 +49,7 @@ public class VasEventHandler {
             chargingStation = new ChargingStation(chargingStationId);
         }
 
-        chargingStationRepository.save(chargingStation);
+        chargingStationRepository.insert(chargingStation);
     }
 
     @EventHandler
@@ -66,7 +60,7 @@ public class VasEventHandler {
 
         if (chargingStation != null) {
             chargingStation.setRegistered(true);
-            chargingStationRepository.save(chargingStation);
+            chargingStationRepository.insert(chargingStation);
         }
     }
 
@@ -98,7 +92,7 @@ public class VasEventHandler {
         chargingStation.setChargingCapabilities(configurationConversionService.getChargingCapabilitiesFromEvses(eventEvses));
         chargingStation.setConfigured(true);
 
-        chargingStationRepository.save(chargingStation);
+        chargingStationRepository.insert(chargingStation);
     }
 
     /**
@@ -146,7 +140,7 @@ public class VasEventHandler {
         ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
         if (chargingStation != null) {
             chargingStation.setOpeningTimes(convertFromApiOpeningTimes(event.getOpeningTimes()));
-            chargingStationRepository.save(chargingStation);
+            chargingStationRepository.insert(chargingStation);
         }
     }
 
@@ -165,7 +159,7 @@ public class VasEventHandler {
                 chargingStation.setOpeningTimes(new HashSet<io.motown.vas.viewmodel.model.OpeningTime>());
             }
             chargingStation.getOpeningTimes().addAll(convertFromApiOpeningTimes(event.getOpeningTimes()));
-            chargingStationRepository.save(chargingStation);
+            chargingStationRepository.insert(chargingStation);
         }
     }
 
@@ -190,7 +184,7 @@ public class VasEventHandler {
         ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
         if (chargingStation != null) {
             chargingStation.setState(ComponentStatus.fromApiComponentStatus(event.getStatus()));
-            chargingStationRepository.save(chargingStation);
+            chargingStationRepository.insert(chargingStation);
 
             subscriberService.updateSubscribers(chargingStation, event.getTimestamp());
         }
@@ -205,7 +199,7 @@ public class VasEventHandler {
         if (chargingStation != null && event.getComponentId() instanceof EvseId) {
             io.motown.vas.viewmodel.model.Evse evse = chargingStation.getEvse( ((EvseId)event.getComponentId()).getNumberedId() );
             evse.setState(ComponentStatus.fromApiComponentStatus(event.getStatus()));
-            chargingStationRepository.save(chargingStation);
+            chargingStationRepository.insert(chargingStation);
 
             subscriberService.updateSubscribers(chargingStation, event.getTimestamp());
         }
@@ -253,7 +247,7 @@ public class VasEventHandler {
 
         if (chargingStation != null) {
             chargingStation.setReservable(reservable);
-            chargingStationRepository.save(chargingStation);
+            chargingStationRepository.insert(chargingStation);
         }
     }
 
@@ -286,7 +280,7 @@ public class VasEventHandler {
 
             chargingStation.setAccessibility(accessibility.name());
 
-            chargingStationRepository.save(chargingStation);
+            chargingStationRepository.insert(chargingStation);
         }
     }
 

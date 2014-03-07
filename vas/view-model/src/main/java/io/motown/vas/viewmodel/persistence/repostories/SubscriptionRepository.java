@@ -16,18 +16,96 @@
 package io.motown.vas.viewmodel.persistence.repostories;
 
 import io.motown.vas.viewmodel.model.Subscription;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 import java.util.List;
 
-public interface SubscriptionRepository extends JpaRepository<Subscription, String> {
+public class SubscriptionRepository {
 
-    Subscription findById(Long id);
+    private static final Logger LOG = LoggerFactory.getLogger(SubscriptionRepository.class);
 
-    Subscription findBySubscriptionId(String subscriptionId);
+    private EntityManager entityManager;
 
-    Subscription findBySubscriberIdentityAndDeliveryAddress(String subscriberIdentity, String deliveryAddress);
+    public void insert(Subscription subscription) {
+        EntityTransaction transaction = entityManager.getTransaction();
 
-    List<Subscription> findBySubscriberIdentity(String subscriberIdentity);
+        if (!transaction.isActive()) {
+            transaction.begin();
+        }
+
+        try {
+            entityManager.persist(subscription);
+            transaction.commit();
+        } finally {
+            if (transaction.isActive()) {
+                LOG.warn("Transaction is still active while it should not be, rolling back.");
+                transaction.rollback();
+            }
+        }
+    }
+
+    public void delete(Subscription subscription) {
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        if (!transaction.isActive()) {
+            transaction.begin();
+        }
+
+        try {
+            entityManager.remove(subscription);
+            transaction.commit();
+        } finally {
+            if (transaction.isActive()) {
+                LOG.warn("Transaction is still active while it should not be, rolling back.");
+                transaction.rollback();
+            }
+        }
+    }
+
+    public Subscription findById(Long id) {
+        return entityManager.find(Subscription.class, id);
+    }
+
+    public Subscription findBySubscriptionId(String subscriptionId) {
+        @SuppressWarnings("JpaQlInspection")
+        Query query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriptionId = :subscriptionId").setParameter("subscriptionId", subscriptionId);
+        List resultList = query.getResultList();
+        if (resultList.size() > 0) {
+            return (Subscription) resultList.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    public Subscription findBySubscriberIdentityAndDeliveryAddress(String subscriberIdentity, String deliveryAddress) {
+        @SuppressWarnings("JpaQlInspection")
+        Query query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriberIdentity = :subscriberIdentity AND s.deliveryAddress = :deliveryAddress").setParameter("subscriberIdentity", subscriberIdentity).setParameter("deliveryAddress", deliveryAddress);
+        List resultList = query.getResultList();
+        if (resultList.size() > 0) {
+            return (Subscription) resultList.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    public List<Subscription> findBySubscriberIdentity(String subscriberIdentity) {
+        @SuppressWarnings("JpaQlInspection")
+        Query query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriberIdentity = :subscriberIdentity").setParameter("subscriberIdentity", subscriberIdentity);
+        return (List<Subscription>) query.getResultList();
+    }
+
+    public List<Subscription> findAll() {
+        @SuppressWarnings("JpaQlInspection")
+        Query query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s");
+        return (List<Subscription>) query.getResultList();
+    }
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
 }

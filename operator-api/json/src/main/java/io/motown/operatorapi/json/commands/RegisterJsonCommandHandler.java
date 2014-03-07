@@ -24,12 +24,7 @@ import io.motown.domain.api.chargingstation.ConfigureChargingStationCommand;
 import io.motown.domain.api.chargingstation.CreateAndAcceptChargingStationCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-
-@Component
 class RegisterJsonCommandHandler implements JsonCommandHandler {
 
     private static final String COMMAND_NAME = "Register";
@@ -37,6 +32,7 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
     private DomainCommandGateway commandGateway;
 
     private Gson gson;
+
     private ChargingStationRepository repository;
 
     @Override
@@ -64,17 +60,14 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
         }
     }
 
-    @Resource(name = "domainCommandGateway")
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
 
-    @Autowired
     public void setGson(Gson gson) {
         this.gson = gson;
     }
 
-    @Autowired
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
     }

@@ -23,21 +23,15 @@ import io.motown.vas.viewmodel.model.Subscription;
 import io.motown.vas.viewmodel.vas.SubscriberClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 public class VasSubscriberSoapClient implements SubscriberClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(VasSubscriberSoapClient.class);
 
-    @Value("${io.motown.vas.v10.soap.publisher.identity}")
     private String publisherIdentity;
 
-    @Autowired
     private VasSubscriberServiceProxyFactory proxyFactory;
 
     @Override

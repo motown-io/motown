@@ -26,18 +26,10 @@ import io.motown.ocpp.viewmodel.persistence.repostories.TransactionRepository;
 import org.axonframework.commandhandling.gateway.EventWaitingGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-@Service
 public class DomainService {
 
     private static final Logger LOG = LoggerFactory.getLogger(DomainService.class);
@@ -59,25 +51,18 @@ public class DomainService {
 
     public static final String RESERVATION_ID_KEY = "reservationId";
 
-    @Resource(name = "domainCommandGateway")
     private DomainCommandGateway commandGateway;
 
-    @Autowired
     private ChargingStationRepository chargingStationRepository;
 
-    @Autowired
     private TransactionRepository transactionRepository;
 
-    @Autowired
     private ReservationIdentifierRepository reservationIdentifierRepository;
 
-    @Autowired
     private EntityManagerFactory entityManagerFactory;
 
-    @Value("${io.motown.ocpp.viewmodel.heartbeat.interval}")
     private int heartbeatInterval;
 
-    @Autowired
     private EventWaitingGateway eventWaitingGateway;
 
     public BootChargingStationResult bootChargingStation(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model,
@@ -105,7 +90,6 @@ public class DomainService {
 
         // Keep track of the address on which we can reach the charging station
         chargingStation.setIpAddress(chargingStationAddress);
-        chargingStationRepository.save(chargingStation);
 
         Map<String, String> attributes = Maps.newHashMap();
         attributes.put(ADDRESS_KEY, chargingStationAddress);
@@ -136,12 +120,12 @@ public class DomainService {
         commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, evseId, meterValues));
     }
 
-    public void diagnosticsFileNameReceived(ChargingStationId chargingStationId, String diagnosticsFileName) {
-        commandGateway.send(new DiagnosticsFileNameReceivedCommand(chargingStationId, diagnosticsFileName));
+    public void diagnosticsFileNameReceived(ChargingStationId chargingStationId, String diagnosticsFileName, CorrelationToken correlationToken) {
+        commandGateway.send(new DiagnosticsFileNameReceivedCommand(chargingStationId, diagnosticsFileName), correlationToken);
     }
 
-    public void authorizationListVersionReceived(ChargingStationId chargingStationId, int currentVersion) {
-        commandGateway.send(new AuthorizationListVersionReceivedCommand(chargingStationId, currentVersion));
+    public void authorizationListVersionReceived(ChargingStationId chargingStationId, int currentVersion, CorrelationToken correlationToken) {
+        commandGateway.send(new AuthorizationListVersionReceivedCommand(chargingStationId, currentVersion), correlationToken);
     }
 
     public void authorize(ChargingStationId chargingStationId, String idTag, FutureEventCallback future) {
@@ -234,52 +218,8 @@ public class DomainService {
         }
     }
 
-    public void reservationStatusChanged(ChargingStationId chargingStationId, ReservationId reservationId, ReservationStatus newStatus) {
-        commandGateway.send(new ReservationStatusChangedCommand(chargingStationId, reservationId, newStatus));
-    }
-
-    public void stopTransactionStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new StopTransactionStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void softResetStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new SoftResetStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void hardResetStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new HardResetStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void startTransactionStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new StartTransactionStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void unlockEvseStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new UnlockEvseStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void changeAvailabilityToOperativeStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new ChangeAvailabilityToOperativeStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void changeAvailabilityToInoperativeStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new ChangeAvailabilityToInoperativeStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void dataTransferStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new DataTransferStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void changeConfigurationStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new ChangeConfigurationStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void clearCacheStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new ClearCacheStatusChangedCommand(chargingStationId, requestStatus));
-    }
-
-    public void sendAuthorizationListStatusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus) {
-        commandGateway.send(new SendAuthorizationListStatusChangedCommand(chargingStationId, requestStatus));
+    public void statusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus, CorrelationToken statusCorrelationToken, String statusMessage) {
+        commandGateway.send(new StatusChangedCommand(chargingStationId, requestStatus, statusMessage), statusCorrelationToken);
     }
 
     public void setCommandGateway(DomainCommandGateway commandGateway) {
@@ -306,6 +246,10 @@ public class DomainService {
         this.entityManagerFactory = entityManagerFactory;
     }
 
+    public void setHeartbeatInterval(int heartbeatInterval) {
+        this.heartbeatInterval = heartbeatInterval;
+    }
+
     public String retrieveChargingStationAddress(ChargingStationId id) {
         ChargingStation chargingStation = chargingStationRepository.findOne(id.getId());
 
@@ -322,7 +266,7 @@ public class DomainService {
     public NumberedReservationId generateReservationIdentifier(ChargingStationId chargingStationId, String protocolIdentifier) {
         ReservationIdentifier reservationIdentifier = new ReservationIdentifier();
 
-        reservationIdentifierRepository.saveAndFlush(reservationIdentifier);
+        reservationIdentifierRepository.insert(reservationIdentifier);
 
         /* TODO JPA's identity generator creates longs, while OCPP and Motown supports ints. Where should we translate
          * between these and how should we handle error cases? - Mark van den Bergh, Januari 7th 2013
@@ -356,7 +300,7 @@ public class DomainService {
         transaction.setEvseId(evseId);
 
         // flush to make sure the generated id is populated
-        transactionRepository.saveAndFlush(transaction);
+        transactionRepository.insert(transaction);
 
         return transaction;
     }

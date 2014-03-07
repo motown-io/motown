@@ -18,12 +18,10 @@ package io.motown.vas.viewmodel;
 import io.motown.domain.api.chargingstation.Connector;
 import io.motown.domain.api.chargingstation.Evse;
 import io.motown.vas.viewmodel.model.*;
-import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Service
 public class ConfigurationConversionService {
 
     /**

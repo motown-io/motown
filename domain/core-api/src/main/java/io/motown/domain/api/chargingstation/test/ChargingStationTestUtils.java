@@ -71,6 +71,11 @@ public final class ChargingStationTestUtils {
     public static final String CORRELATION_ID = "d0052460-93d2-11e3-baa8-0800200c9a66";
 
     /**
+     * The default status correlation identifier used to correlate status commands and events.
+     */
+    public static final CorrelationToken CORRELATION_TOKEN = new CorrelationToken();
+
+    /**
      * The timestamp in milliseconds two minutes ago.
      * <p/>
      * Note: this is a constant. This means this timestamp isn't two minutes ago from the time you use but two minutes

@@ -17,17 +17,13 @@ package io.motown.identificationauthorization.app;
 
 import io.motown.domain.api.chargingstation.IdentifyingToken;
 import io.motown.identificationauthorization.pluginapi.AuthenticationProvider;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
-@Service
 public class IdentificationAuthorizationService {
 
     private Set<AuthenticationProvider> providers;
 
-    @Autowired
     public void setProviders(Set<AuthenticationProvider> providers) {
         this.providers = providers;
     }

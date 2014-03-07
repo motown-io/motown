@@ -19,7 +19,6 @@ import io.motown.vas.v10.soap.schema.*;
 import io.motown.vas.viewmodel.model.*;
 import io.motown.vas.viewmodel.model.ChargingCapability;
 import io.motown.vas.viewmodel.model.ConnectorType;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,6 @@ import java.util.Set;
 /**
  * Service that translates our VAS representation into the webservice representation
  */
-@Component
 public class VasConversionService {
 
     /**

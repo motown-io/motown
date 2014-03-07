@@ -56,7 +56,7 @@ public class CreateChargingStationCommandCallbackTest {
         createChargingStationCommandCallback.onSuccess(new Object());
 
         verify(domainService).bootChargingStation(CHARGING_STATION_ID, CHARGING_STATION_ADDRESS, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
-        verify(chargingStationRepository).save(new ChargingStation(CHARGING_STATION_ID.getId()));
+        verify(chargingStationRepository).insert(new ChargingStation(CHARGING_STATION_ID.getId()));
     }
 
     @Test

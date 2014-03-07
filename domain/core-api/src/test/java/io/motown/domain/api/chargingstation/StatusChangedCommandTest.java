@@ -23,11 +23,11 @@ public class StatusChangedCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new StatusChangedCommand(null, RequestStatus.SUCCESS);
+        new StatusChangedCommand(null, RequestStatus.SUCCESS, "Test message");
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithoutStatus() {
-        new StatusChangedCommand(CHARGING_STATION_ID, null);
+        new StatusChangedCommand(CHARGING_STATION_ID, null, "Test message");
     }
 }
