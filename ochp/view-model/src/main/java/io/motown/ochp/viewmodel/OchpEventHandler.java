@@ -74,6 +74,11 @@ public class OchpEventHandler {
         }
     }
 
+    /**
+     * Get a charging station from the repository based on the charging station id.
+     * @param chargingStationId The identifier of the charging station.
+     * @return The charging station.
+     */
     private ChargingStation getChargingStation(ChargingStationId chargingStationId) {
         ChargingStation chargingStation = chargingStationRepository.findByChargingStationId(chargingStationId.getId());
 
@@ -84,6 +89,11 @@ public class OchpEventHandler {
         return chargingStation;
     }
 
+    /**
+     * Get a transaction from the repository based on the transaction id.
+     * @param transactionId The identifier of the transaction.
+     * @return The transaction.
+     */
     private Transaction getTransaction(TransactionId transactionId) {
         Transaction transaction = transactionRepository.findByTransactionId(transactionId.getId());
 

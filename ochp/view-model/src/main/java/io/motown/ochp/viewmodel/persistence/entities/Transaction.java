@@ -34,10 +34,10 @@ public class Transaction {
     private int meterStart;
     private int meterStop;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date timeStart;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date timeStop;
 
     @ElementCollection(fetch = FetchType.EAGER)

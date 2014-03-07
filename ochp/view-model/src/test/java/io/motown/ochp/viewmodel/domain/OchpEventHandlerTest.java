@@ -30,7 +30,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @ContextConfiguration("classpath:ochp-view-model-test-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -58,14 +58,20 @@ public class OchpEventHandlerTest {
     @Test
     public void testTransaction() {
         chargingStationRepository.saveAndFlush(new ChargingStation(CHARGING_STATION_ID.getId()));
-        transactionRepository.saveAndFlush(new Transaction(chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId()), TRANSACTION_ID.getId()));
-        assertNotNull(transactionRepository.findByTransactionId(TRANSACTION_ID.getId()));
+        Transaction transaction = new Transaction(chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId()), TRANSACTION_ID.getId());
+        transactionRepository.saveAndFlush(transaction);
+        Transaction transactionFromRepo = transactionRepository.findByTransactionId(TRANSACTION_ID.getId());
+        assertNotNull(transactionFromRepo);
+        assertEquals(transaction, transactionFromRepo);
     }
 
     @Test
     public void testTransactionWithoutChargingStation() {
-        transactionRepository.saveAndFlush(new Transaction(TRANSACTION_ID.getId()));
-        assertNotNull(transactionRepository.findByTransactionId(TRANSACTION_ID.getId()));
+        Transaction transaction = new Transaction(TRANSACTION_ID.getId());
+        transactionRepository.saveAndFlush(transaction);
+        Transaction transactionFromRepo = transactionRepository.findByTransactionId(TRANSACTION_ID.getId());
+        assertNotNull(transactionFromRepo);
+        assertEquals(transaction, transactionFromRepo);
     }
 
     @Test
@@ -76,6 +82,71 @@ public class OchpEventHandlerTest {
     @Test
     public void testHandleTransactionStoppedEvent() {
         eventHandler.handle(new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, TWO_MINUTES_AGO));
+    }
+
+    @Test
+    public void testStartStopTransaction() {
+        ChargingStation chargingStation = new ChargingStation(CHARGING_STATION_ID.getId());
+        chargingStationRepository.saveAndFlush(chargingStation);
+
+        eventHandler.handle(new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, METER_START, FIVE_MINUTES_AGO, CONFIGURATION_ITEMS));
+        Transaction transaction = transactionRepository.findByTransactionId(TRANSACTION_ID.getId());
+        assertNotNull(transaction);
+        assertEquals(TRANSACTION_ID.getId(), transaction.getTransactionId());
+        assertEquals(EVSE_ID.getId(), transaction.getEvseId());
+        assertEquals(IDENTIFYING_TOKEN.getToken(), transaction.getIdentifyingToken());
+        assertEquals(METER_START, transaction.getMeterStart());
+        assertEquals(FIVE_MINUTES_AGO.getTime(), transaction.getTimeStart().getTime());
+        assertTrue(transaction.getTimeStart().compareTo(FIVE_MINUTES_AGO) == 0);
+        assertEquals(CONFIGURATION_ITEMS, transaction.getAttributes());
+        assertEquals(chargingStation, transaction.getChargingStation());
+
+        eventHandler.handle(new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, TWO_MINUTES_AGO));
+        Transaction transactionStopped = transactionRepository.findByTransactionId(TRANSACTION_ID.getId());
+        assertNotNull(transactionStopped);
+        assertEquals(TRANSACTION_ID.getId(), transactionStopped.getTransactionId());
+        assertEquals(EVSE_ID.getId(), transactionStopped.getEvseId());
+        assertEquals(IDENTIFYING_TOKEN.getToken(), transactionStopped.getIdentifyingToken());
+        assertEquals(METER_START, transactionStopped.getMeterStart());
+        assertEquals(FIVE_MINUTES_AGO.getTime(), transactionStopped.getTimeStart().getTime());
+        assertTrue(transactionStopped.getTimeStart().compareTo(FIVE_MINUTES_AGO) == 0);
+        assertEquals(CONFIGURATION_ITEMS, transactionStopped.getAttributes());
+        assertEquals(chargingStation, transactionStopped.getChargingStation());
+        assertEquals(METER_STOP, transactionStopped.getMeterStop());
+        assertEquals(TWO_MINUTES_AGO.getTime(), transactionStopped.getTimeStop().getTime());
+        assertTrue(transactionStopped.getTimeStop().compareTo(TWO_MINUTES_AGO) == 0);
+        assertEquals(transaction, transactionStopped);
+    }
+
+    @Test
+    public void testStartStopTransactionWithoutChargingStation() {
+        eventHandler.handle(new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, METER_START, FIVE_MINUTES_AGO, CONFIGURATION_ITEMS));
+        Transaction transaction = transactionRepository.findByTransactionId(TRANSACTION_ID.getId());
+        assertNotNull(transaction);
+        assertEquals(TRANSACTION_ID.getId(), transaction.getTransactionId());
+        assertEquals(EVSE_ID.getId(), transaction.getEvseId());
+        assertEquals(IDENTIFYING_TOKEN.getToken(), transaction.getIdentifyingToken());
+        assertEquals(METER_START, transaction.getMeterStart());
+        assertEquals(FIVE_MINUTES_AGO.getTime(), transaction.getTimeStart().getTime());
+        assertTrue(transaction.getTimeStart().compareTo(FIVE_MINUTES_AGO) == 0);
+        assertEquals(CONFIGURATION_ITEMS, transaction.getAttributes());
+        assertNull(transaction.getChargingStation());
+
+        eventHandler.handle(new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, TWO_MINUTES_AGO));
+        Transaction transactionStopped = transactionRepository.findByTransactionId(TRANSACTION_ID.getId());
+        assertNotNull(transactionStopped);
+        assertEquals(TRANSACTION_ID.getId(), transactionStopped.getTransactionId());
+        assertEquals(EVSE_ID.getId(), transactionStopped.getEvseId());
+        assertEquals(IDENTIFYING_TOKEN.getToken(), transactionStopped.getIdentifyingToken());
+        assertEquals(METER_START, transactionStopped.getMeterStart());
+        assertEquals(FIVE_MINUTES_AGO.getTime(), transactionStopped.getTimeStart().getTime());
+        assertTrue(transactionStopped.getTimeStart().compareTo(FIVE_MINUTES_AGO) == 0);
+        assertEquals(CONFIGURATION_ITEMS, transactionStopped.getAttributes());
+        assertNull(transactionStopped.getChargingStation());
+        assertEquals(METER_STOP, transactionStopped.getMeterStop());
+        assertEquals(TWO_MINUTES_AGO.getTime(), transactionStopped.getTimeStop().getTime());
+        assertTrue(transactionStopped.getTimeStop().compareTo(TWO_MINUTES_AGO) == 0);
+        assertEquals(transaction, transactionStopped);
     }
 
 }
