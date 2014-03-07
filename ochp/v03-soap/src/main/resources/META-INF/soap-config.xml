@@ -36,7 +36,6 @@
 
     <context:component-scan base-package="io.motown.ochp.v03.soap"/>
 
-    <bean class="io.motown.ochp.viewmodel.Ochp03RequestHandler"/>
     <bean class="io.motown.ochp.v03.soap.client.OchpProxyFactory"/>
 
     <rabbit:connection-factory id="amqpConnection"
