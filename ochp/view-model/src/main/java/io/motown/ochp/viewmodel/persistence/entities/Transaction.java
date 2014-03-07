@@ -28,6 +28,7 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String transactionId;
     private String evseId;
     private String identifyingToken;

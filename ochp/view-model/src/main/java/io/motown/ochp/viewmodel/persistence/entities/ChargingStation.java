@@ -15,10 +15,7 @@
  */
 package io.motown.ochp.viewmodel.persistence.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -28,6 +25,7 @@ public class ChargingStation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String chargingStationId;
 
     private ChargingStation() {

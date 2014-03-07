@@ -26,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -147,6 +148,22 @@ public class OchpEventHandlerTest {
         assertEquals(TWO_MINUTES_AGO.getTime(), transactionStopped.getTimeStop().getTime());
         assertTrue(transactionStopped.getTimeStop().compareTo(TWO_MINUTES_AGO) == 0);
         assertEquals(transaction, transactionStopped);
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    public void testDuplicateTransactionId() {
+        Transaction transaction = new Transaction(TRANSACTION_ID.getId());
+        transactionRepository.saveAndFlush(transaction);
+        transaction = new Transaction(TRANSACTION_ID.getId());
+        transactionRepository.saveAndFlush(transaction);
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    public void testDuplicateChargingStationId() {
+        ChargingStation chargingStation = new ChargingStation(CHARGING_STATION_ID.getId());
+        chargingStationRepository.saveAndFlush(chargingStation);
+        chargingStation = new ChargingStation(CHARGING_STATION_ID.getId());
+        chargingStationRepository.saveAndFlush(chargingStation);
     }
 
 }
