@@ -15,11 +15,19 @@
  */
 package io.motown.ochp.viewmodel.persistence.repostories;
 
+import io.motown.ochp.viewmodel.persistence.TransactionStatus;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface TransactionRepository extends JpaRepository<Transaction, String> {
 
     Transaction findByTransactionId(String transactionId);
+
+    @Query("select t from Transaction t where t.status = :status")
+    List<Transaction> findTransactionsByStatus(@Param("status") TransactionStatus status);
 
 }

@@ -31,6 +31,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static org.junit.Assert.*;
 
@@ -169,6 +172,33 @@ public class OchpEventHandlerTest {
         chargingStationRepository.saveAndFlush(chargingStation);
         chargingStation = new ChargingStation(CHARGING_STATION_ID.getId());
         chargingStationRepository.saveAndFlush(chargingStation);
+    }
+
+    @Test
+    public void testFindTransactionsByStatus() {
+        Transaction t1 = new Transaction("t1");
+        t1.setStatus(TransactionStatus.STARTED);
+        Transaction t2 = new Transaction("t2");
+        t2.setStatus(TransactionStatus.STARTED);
+        Transaction t3 = new Transaction("t3");
+        t3.setStatus(TransactionStatus.STOPPED);
+        Transaction t4 = new Transaction("t4");
+        t4.setStatus(TransactionStatus.STOPPED);
+        Transaction t5 = new Transaction("t5");
+        t5.setStatus(TransactionStatus.STOPPED);
+
+        List<Transaction> startedTransactions = Arrays.asList(t1, t2);
+        List<Transaction> stoppedTransactions = Arrays.asList(t3, t4, t5);
+        transactionRepository.save(startedTransactions);
+        transactionRepository.save(stoppedTransactions);
+
+        List<Transaction> startedTransactionsFromRepo = transactionRepository.findTransactionsByStatus(TransactionStatus.STARTED);
+        List<Transaction> stoppedTransactionsFromRepo = transactionRepository.findTransactionsByStatus(TransactionStatus.STOPPED);
+
+        assertEquals(startedTransactions.size(), startedTransactionsFromRepo.size());
+        assertEquals(stoppedTransactions.size(), stoppedTransactionsFromRepo.size());
+        assertArrayEquals(startedTransactions.toArray(), startedTransactionsFromRepo.toArray());
+        assertArrayEquals(stoppedTransactions.toArray(), stoppedTransactionsFromRepo.toArray());
     }
 
 }
