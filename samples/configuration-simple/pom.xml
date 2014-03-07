@@ -42,11 +42,11 @@
             <!--<artifactId>chargingstation-configuration-app</artifactId>-->
             <!--<version>${project.version}</version>-->
         <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>io.motown.identification-authorization</groupId>-->
-            <!--<artifactId>identification-authorization-app</artifactId>-->
-            <!--<version>${project.version}</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>io.motown.identification-authorization</groupId>
+            <artifactId>identification-authorization-app</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.motown.ocpp</groupId>
             <artifactId>ocpp-v15-soap</artifactId>

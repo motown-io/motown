@@ -33,4 +33,6 @@
 
     <import resource="contexts/operator-api-context.xml" />
 
+    <import resource="contexts/identification-authorization-context.xml" />
+
 </beans>
