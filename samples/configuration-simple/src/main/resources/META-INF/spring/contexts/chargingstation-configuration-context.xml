@@ -31,7 +31,6 @@
         <property name="chargingStationTypeRepository" ref="chargingStationRepositoryChargingStationConfiguration" />
     </bean>
 
-
     <bean id="chargingStationRepositoryChargingStationConfiguration" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository">
         <property name="entityManager" ref="jpaEntityManagerChargingStationConfiguration" />
     </bean>
