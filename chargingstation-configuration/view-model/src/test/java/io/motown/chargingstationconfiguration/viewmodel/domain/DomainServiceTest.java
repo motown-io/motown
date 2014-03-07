@@ -15,9 +15,9 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.domain;
 
+import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Manufacturer;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository;
-import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ManufacturerRepository;
 import io.motown.domain.api.chargingstation.Evse;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,9 +26,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.persistence.EntityManager;
 import java.util.Set;
 
+import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.deleteFromDatabase;
 import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.getManufacturerWithConfiguration;
+import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.insertIntoDatabase;
 import static org.junit.Assert.assertEquals;
 
 @ContextConfiguration("classpath:chargingstation-configuration-view-model-test-context.xml")
@@ -45,12 +48,13 @@ public class DomainServiceTest {
     private ChargingStationTypeRepository chargingStationTypeRepository;
 
     @Autowired
-    private ManufacturerRepository manufacturerRepository;
+    private EntityManager entityManager;
 
     @Before
     public void setUp() {
-        chargingStationTypeRepository.deleteAll();
-        manufacturerRepository.deleteAll();
+        entityManager.clear();
+        deleteFromDatabase(entityManager, ChargingStationType.class);
+        deleteFromDatabase(entityManager, Manufacturer.class);
 
         domainService = new DomainService();
         domainService.setChargingStationTypeRepository(chargingStationTypeRepository);
@@ -59,7 +63,7 @@ public class DomainServiceTest {
     @Test
     public void testGetEvsesForExistingManufacturerAndModel() {
         Manufacturer manufacturer = getManufacturerWithConfiguration(VENDOR, MODEL);
-        manufacturerRepository.saveAndFlush(manufacturer);
+        insertIntoDatabase(entityManager, manufacturer);
 
         Set<Evse> evses = domainService.getEvses(VENDOR, MODEL);
         assertEquals(manufacturer.getChargingStationTypes().iterator().next().getEvses().size(), evses.size());
@@ -72,7 +76,7 @@ public class DomainServiceTest {
     @Test
     public void testGetEvsesForNonExistingManufacturerAndModel() {
         Manufacturer manufacturer = getManufacturerWithConfiguration(VENDOR, MODEL);
-        manufacturerRepository.saveAndFlush(manufacturer);
+        insertIntoDatabase(entityManager, manufacturer);
 
         Set<Evse> evses = domainService.getEvses(UNKNOWN_VENDOR, UNKNOWN_MODEL);
 
@@ -82,7 +86,7 @@ public class DomainServiceTest {
     @Test
     public void testGetEvsesForExistingManufacturerAndNonExistingModel() {
         Manufacturer manufacturer = getManufacturerWithConfiguration(VENDOR, MODEL);
-        manufacturerRepository.saveAndFlush(manufacturer);
+        insertIntoDatabase(entityManager, manufacturer);
 
         Set<Evse> evses = domainService.getEvses(VENDOR, UNKNOWN_MODEL);
 
@@ -92,7 +96,7 @@ public class DomainServiceTest {
     @Test
     public void testGetEvsesForNonExistingManufacturerAndExistingModel() {
         Manufacturer manufacturer = getManufacturerWithConfiguration(VENDOR, MODEL);
-        manufacturerRepository.saveAndFlush(manufacturer);
+        insertIntoDatabase(entityManager, manufacturer);
 
         Set<Evse> evses = domainService.getEvses(UNKNOWN_VENDOR, MODEL);
 

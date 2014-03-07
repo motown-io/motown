@@ -23,7 +23,10 @@ import io.motown.domain.api.chargingstation.ChargingProtocol;
 import io.motown.domain.api.chargingstation.ConnectorType;
 import io.motown.domain.api.chargingstation.Current;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public final class TestUtils {
@@ -35,6 +38,41 @@ public final class TestUtils {
 
     private TestUtils() {
         // Private no-arg constructor to prevent instantiation of utility class.
+    }
+
+    public static void deleteFromDatabase(EntityManager entityManager, Class jpaEntityClass) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        if (!transaction.isActive()) {
+            transaction.begin();
+        }
+
+        try {
+            List resultList = entityManager.createQuery("SELECT entity FROM " + jpaEntityClass.getName() + " as entity").getResultList();
+            for (Object obj : resultList) {
+                entityManager.remove(obj);
+            }
+            transaction.commit();
+        } finally {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+        }
+    }
+
+    public static void insertIntoDatabase(EntityManager entityManager, Object entity) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        if (!transaction.isActive()) {
+            transaction.begin();
+        }
+
+        try {
+            entityManager.persist(entity);
+            transaction.commit();
+        } finally {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+        }
     }
 
     public static Manufacturer getManufacturerWithConfiguration(String vendor, String model) {

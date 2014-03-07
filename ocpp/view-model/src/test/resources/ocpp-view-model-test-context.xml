@@ -10,7 +10,7 @@
 
     <context:property-placeholder location="classpath:configViewModel.properties" />
 
-    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <bean id="entityManagerFactoryOcppViewModel" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="packagesToScan" value="io.motown.ocpp.viewmodel.persistence"/>
         <property name="jpaVendorAdapter">
@@ -21,22 +21,22 @@
         </property>
     </bean>
 
-    <bean id="entityManager" factory-bean="entityManagerFactory" factory-method="createEntityManager" />
+    <bean id="entityManagerOcppViewModel" factory-bean="entityManagerFactoryOcppViewModel" factory-method="createEntityManager" />
 
     <bean id="chargingStationRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository">
-        <property name="entityManager" ref="entityManager" />
+        <property name="entityManager" ref="entityManagerOcppViewModel" />
     </bean>
 
     <bean id="reservationIdentifierRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repostories.ReservationIdentifierRepository">
-        <property name="entityManager" ref="entityManager" />
+        <property name="entityManager" ref="entityManagerOcppViewModel" />
     </bean>
 
     <bean id="transactionRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repostories.TransactionRepository">
-        <property name="entityManager" ref="entityManager" />
+        <property name="entityManager" ref="entityManagerOcppViewModel" />
     </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        <property name="entityManagerFactory" ref="entityManagerFactoryOcppViewModel"/>
     </bean>
 
     <jdbc:embedded-database id="dataSource" type="HSQL"/>

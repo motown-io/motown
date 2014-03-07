@@ -35,4 +35,6 @@
 
     <import resource="contexts/identification-authorization-context.xml" />
 
+    <import resource="contexts/chargingstation-configuration-context.xml" />
+
 </beans>

@@ -37,11 +37,11 @@
             <artifactId>domain-app</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>io.motown.chargingstation-configuration</groupId>-->
-            <!--<artifactId>chargingstation-configuration-app</artifactId>-->
-            <!--<version>${project.version}</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>io.motown.chargingstation-configuration</groupId>
+            <artifactId>chargingstation-configuration-app</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.motown.identification-authorization</groupId>
             <artifactId>identification-authorization-app</artifactId>

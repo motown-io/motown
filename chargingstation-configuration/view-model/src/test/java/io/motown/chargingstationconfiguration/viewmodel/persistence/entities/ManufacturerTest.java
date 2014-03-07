@@ -13,39 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.chargingstationconfiguration.viewmodel.persistence.repositories;
+package io.motown.chargingstationconfiguration.viewmodel.persistence.entities;
 
-import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Manufacturer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
+
+import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.deleteFromDatabase;
+import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.insertIntoDatabase;
+
 @ContextConfiguration("classpath:chargingstation-configuration-view-model-test-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class ManufacturerRepositoryTest {
+public class ManufacturerTest {
 
     @Autowired
-    private ManufacturerRepository manufacturerRepository;
+    private EntityManager entityManager;
 
     @Before
     public void setUp() {
-        manufacturerRepository.deleteAll();
+        entityManager.clear();
+        deleteFromDatabase(entityManager, Manufacturer.class);
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
+    @Test(expected = PersistenceException.class)
     public void testManufacturerCodeUnique() {
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setCode("MOTOWN");
 
-        manufacturerRepository.saveAndFlush(manufacturer);
+        insertIntoDatabase(entityManager, manufacturer);
 
         manufacturer = new Manufacturer();
         manufacturer.setCode("MOTOWN");
-        manufacturerRepository.saveAndFlush(manufacturer);
+        insertIntoDatabase(entityManager, manufacturer);
     }
 
 }

@@ -16,14 +16,22 @@
 package io.motown.chargingstationconfiguration.viewmodel.persistence.repositories;
 
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.List;
 
-public interface ChargingStationTypeRepository extends JpaRepository<ChargingStationType, Long> {
+public class ChargingStationTypeRepository {
 
-    @Query("select cst from ChargingStationType cst where UPPER(cst.code) = UPPER(?1) and UPPER(cst.manufacturer.code) = UPPER(?2)")
-    List<ChargingStationType> findByCodeAndManufacturerCode(String code, String manufacturerCode);
+    private EntityManager entityManager;
 
+    public List<ChargingStationType> findByCodeAndManufacturerCode(String code, String manufacturerCode) {
+        @SuppressWarnings("JpaQlInspection")
+        Query query = entityManager.createQuery("SELECT cst FROM ChargingStationType AS cst where UPPER(cst.code) = UPPER(:code) and UPPER(cst.manufacturer.code) = UPPER(:manufacturerCode)").setParameter("code", code).setParameter("manufacturerCode", manufacturerCode);
+        return (List<ChargingStationType>) query.getResultList();
+    }
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 }
