@@ -28,16 +28,17 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String transactionId;
     private String evseId;
     private String identifyingToken;
     private int meterStart;
     private int meterStop;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date timeStart;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date timeStop;
 
     @ElementCollection(fetch = FetchType.EAGER)
