@@ -57,4 +57,9 @@ public class TransactionStartedEventTest {
         event.getTimestamp().setTime(TWO_MINUTES_AGO.getTime());
         assertEquals(now, event.getTimestamp());
     }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testImmutableMap() {
+        new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 1, new Date(), CONFIGURATION_ITEMS).getAttributes().put("key", "value");
+    }
 }
