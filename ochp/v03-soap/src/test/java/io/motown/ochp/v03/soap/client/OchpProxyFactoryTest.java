@@ -26,7 +26,7 @@ public class OchpProxyFactoryTest {
 
     @Test
     public void createOchpProxyVerifyReturnValue() {
-        Echs echsService = factory.createOchpService("http://localhost", OchpProxyFactory.NO_AUTHENTICATION );
+        Echs echsService = factory.createOchpService("http://localhost");
 
         assertNotNull(echsService);
     }

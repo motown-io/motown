@@ -15,37 +15,71 @@
  */
 package io.motown.ochp.v03.soap.client;
 
-import io.motown.ochp.v03.soap.schema.Echs;
+import com.google.common.collect.Lists;
+import io.motown.domain.api.chargingstation.RequestStatus;
+import io.motown.ochp.v03.soap.schema.*;
+import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.springframework.test.annotation.DirtiesContext;
 
+import java.util.List;
+
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static org.jgroups.util.Util.*;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
+import static io.motown.ochp.v03.soap.SOAPTestUtils.*;
+
 public class Ochp03SoapClientTest {
+
+    private Echs echsClient;
 
     private Ochp03SoapClient client;
 
     @Before
     public void setUp() {
         OchpProxyFactory ochpClientProxyFactory = mock(OchpProxyFactory.class);
-        Echs ochp03SoapClient = mock(Echs.class);
-
-        when(ochpClientProxyFactory.createOchpService(anyString(), anyBoolean())).thenReturn(ochp03SoapClient);
+        echsClient = mock(Echs.class);
+        when(ochpClientProxyFactory.createOchpService(anyString())).thenReturn(echsClient);
+        when(echsClient.authenticate(any(AuthenticateRequest.class))).thenReturn(getAuthenticateSuccessResponse());
 
         client = new Ochp03SoapClient();
         client.setOchpProxyFactory(ochpClientProxyFactory);
     }
 
-    //TODO: Add tests - Ingo Pak, 05 Mar 2014
-//    @Test
-//    public void authenticateVerifyReturnValue() {
-//        when(client.authenticate()).thenReturn("token123");
-//
-//        String authenticationToken = client.authenticate();
-//
-//        assertNotNull(authenticationToken);
-//    }
+    @DirtiesContext //Resets the spring context to simulate a fresh startup where there is no authenticationtoken
+    @Test
+    public void verifyInitialAuthentication() {
+        when(echsClient.getChargepointList(any(GetChargepointListRequest.class), anyString())).thenReturn(getChargepointListResponse());
+
+        //Call twice in order to verify if authentication only takes place at first call
+        client.getChargePointList();
+        client.getChargePointList();
+
+        verify(echsClient, times(1)).authenticate(any(AuthenticateRequest.class));
+        verify(echsClient, times(2)).getChargepointList(any(GetChargepointListRequest.class), anyString());
+    }
+
+    @Test
+    public void addCDRsVerifyTransactionToCDRInfoConversion() {
+        when(echsClient.addCDRs(any(AddCDRsRequest.class), anyString())).thenReturn(getAddCDRsResponse());
+
+        List<Transaction> transactions = Lists.newArrayList();
+        Transaction transaction = new Transaction("transactionId");
+        transaction.setEvseId("evseId");
+        //TODO: add the rest of the parameters to see if they are correctly converted - Ingo Pak, 06 Mar 2014
+        transactions.add(transaction);
+        client.addChargeDetailRecords(transactions);
+
+        ArgumentCaptor<AddCDRsRequest> addCDRsRequestArgument = ArgumentCaptor.forClass(AddCDRsRequest.class);
+        verify(echsClient).addCDRs(addCDRsRequestArgument.capture(), anyString());
+        CDRInfo firstCDRInfo = addCDRsRequestArgument.getValue().getCdrInfoArray().get(0);
+        assertEquals(transaction.getEvseId(), firstCDRInfo.getEvseId());
+        //TODO: verify the rest of the parameters to see if they are correctly converted - Ingo Pak, 06 Mar 2014
+    }
 
 }

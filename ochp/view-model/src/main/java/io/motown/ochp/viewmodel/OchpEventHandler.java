@@ -15,8 +15,12 @@
  */
 package io.motown.ochp.viewmodel;
 
-import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.TransactionId;
+import io.motown.domain.api.chargingstation.TransactionStartedEvent;
+import io.motown.domain.api.chargingstation.TransactionStoppedEvent;
 import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
+import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 import io.motown.ochp.viewmodel.persistence.repostories.ChargingStationRepository;
 import io.motown.ochp.viewmodel.persistence.repostories.TransactionRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -39,65 +43,55 @@ public class OchpEventHandler {
     //TODO: Add eventhandlers for keeping internal OCHP state up to date - Ingo Pak, 05 Mar 2014
     
     @EventHandler
-    public void handle(ChargingStationCreatedEvent event) {
-        LOG.info("Handling ChargingStationCreatedEvent");
-        String chargingStationId = event.getChargingStationId().getId();
-        ChargingStation chargingStation = chargingStationRepository.findByChargingStationId(chargingStationId);
-
-        if (chargingStation == null) {
-            chargingStation = new ChargingStation(chargingStationId);
-        }
-        chargingStationRepository.save(chargingStation);
-    }
-
-    @EventHandler
-    public void handle(ChargingStationAcceptedEvent event) {
-        LOG.debug("ChargingStationAcceptedEvent for [{}] received!", event.getChargingStationId());
-
-        ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
-
-        if (chargingStation != null) {
-            chargingStation.setRegistered(true);
-            chargingStationRepository.save(chargingStation);
-        }
-    }
-
-    @EventHandler
-    public void handle(ChargingStationConfiguredEvent event) {
-        LOG.info("ChargingStationConfiguredEvent");
-
-        String chargingStationId = event.getChargingStationId().getId();
-        ChargingStation chargingStation = chargingStationRepository.findByChargingStationId(chargingStationId);
-
-        if (chargingStation == null) {
-            LOG.warn("Received a ChargingStationConfiguredEvent for unknown charging station. Creating the chargingStation.");
-            chargingStation = new ChargingStation(chargingStationId);
-        }
-
-        chargingStation.setNumberOfEvses(event.getEvses().size());
-        chargingStation.setConfigured(true);
-
-        chargingStationRepository.save(chargingStation);
-    }
-
-    @EventHandler
     public void handle(TransactionStartedEvent event) {
-        //TODO: implement - Mark Manders 2014-03-06
+        ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
+        Transaction transaction;
+
+        if (chargingStation == null) {
+            transaction = new Transaction(event.getTransactionId().getId());
+        } else {
+            transaction = new Transaction(chargingStation, event.getTransactionId().getId());
+        }
+
+        transaction.setEvseId(event.getEvseId().getId());
+        transaction.setIdentifyingToken(event.getIdentifyingToken().getToken());
+        transaction.setMeterStart(event.getMeterStart());
+        transaction.setTimeStart(event.getTimestamp());
+        transaction.setAttributes(event.getAttributes());
+
+        transactionRepository.save(transaction);
     }
 
     @EventHandler
     public void handle(TransactionStoppedEvent event) {
-        //TODO: implement - Mark Manders 2014-03-06
+        Transaction transaction = getTransaction(event.getTransactionId());
+
+        if (transaction != null) {
+            transaction.setMeterStop(event.getMeterStop());
+            transaction.setTimeStop(event.getTimestamp());
+
+            transactionRepository.save(transaction);
+        }
     }
 
     private ChargingStation getChargingStation(ChargingStationId chargingStationId) {
         ChargingStation chargingStation = chargingStationRepository.findByChargingStationId(chargingStationId.getId());
 
         if (chargingStation == null) {
-            LOG.error("Could not find charging station {}", chargingStationId);
+            LOG.error("Could not find charging station '{}'", chargingStationId);
         }
 
         return chargingStation;
+    }
+
+    private Transaction getTransaction(TransactionId transactionId) {
+        Transaction transaction = transactionRepository.findByTransactionId(transactionId.getId());
+
+        if (transaction == null) {
+            LOG.error("Could not find transaction '{}'", transactionId);
+        }
+
+        return transaction;
     }
 
     public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {
