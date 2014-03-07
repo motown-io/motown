@@ -15,6 +15,8 @@
  */
 package io.motown.ochp.viewmodel.persistence.entities;
 
+import io.motown.ochp.viewmodel.persistence.TransactionStatus;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,6 +48,9 @@ public class Transaction {
 
     @ManyToOne
     private ChargingStation chargingStation;
+
+    @Enumerated(EnumType.STRING)
+    private TransactionStatus status;
 
     private Transaction() {
         // Private no-arg constructor for Hibernate.
@@ -138,6 +143,14 @@ public class Transaction {
 
     public void setChargingStation(ChargingStation chargingStation) {
         this.chargingStation = chargingStation;
+    }
+
+    public TransactionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TransactionStatus status) {
+        this.status = status;
     }
 
     @Override

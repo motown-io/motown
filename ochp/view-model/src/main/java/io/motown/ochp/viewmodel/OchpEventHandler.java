@@ -19,6 +19,7 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.TransactionId;
 import io.motown.domain.api.chargingstation.TransactionStartedEvent;
 import io.motown.domain.api.chargingstation.TransactionStoppedEvent;
+import io.motown.ochp.viewmodel.persistence.TransactionStatus;
 import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 import io.motown.ochp.viewmodel.persistence.repostories.ChargingStationRepository;
@@ -58,6 +59,7 @@ public class OchpEventHandler {
         transaction.setMeterStart(event.getMeterStart());
         transaction.setTimeStart(event.getTimestamp());
         transaction.setAttributes(event.getAttributes());
+        transaction.setStatus(TransactionStatus.STARTED);
 
         transactionRepository.save(transaction);
     }
@@ -69,6 +71,7 @@ public class OchpEventHandler {
         if (transaction != null) {
             transaction.setMeterStop(event.getMeterStop());
             transaction.setTimeStop(event.getTimestamp());
+            transaction.setStatus(TransactionStatus.STOPPED);
 
             transactionRepository.save(transaction);
         }

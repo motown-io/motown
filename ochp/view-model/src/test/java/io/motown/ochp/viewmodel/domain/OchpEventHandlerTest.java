@@ -18,6 +18,7 @@ package io.motown.ochp.viewmodel.domain;
 import io.motown.domain.api.chargingstation.TransactionStartedEvent;
 import io.motown.domain.api.chargingstation.TransactionStoppedEvent;
 import io.motown.ochp.viewmodel.OchpEventHandler;
+import io.motown.ochp.viewmodel.persistence.TransactionStatus;
 import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 import io.motown.ochp.viewmodel.persistence.repostories.ChargingStationRepository;
@@ -100,6 +101,7 @@ public class OchpEventHandlerTest {
         assertEquals(FIVE_MINUTES_AGO.getTime(), transaction.getTimeStart().getTime());
         assertTrue(transaction.getTimeStart().compareTo(FIVE_MINUTES_AGO) == 0);
         assertEquals(CONFIGURATION_ITEMS, transaction.getAttributes());
+        assertEquals(TransactionStatus.STARTED, transaction.getStatus());
         assertEquals(chargingStation, transaction.getChargingStation());
 
         eventHandler.handle(new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, TWO_MINUTES_AGO));
@@ -116,6 +118,7 @@ public class OchpEventHandlerTest {
         assertEquals(METER_STOP, transactionStopped.getMeterStop());
         assertEquals(TWO_MINUTES_AGO.getTime(), transactionStopped.getTimeStop().getTime());
         assertTrue(transactionStopped.getTimeStop().compareTo(TWO_MINUTES_AGO) == 0);
+        assertEquals(TransactionStatus.STOPPED, transactionStopped.getStatus());
         assertEquals(transaction, transactionStopped);
     }
 
@@ -131,6 +134,7 @@ public class OchpEventHandlerTest {
         assertEquals(FIVE_MINUTES_AGO.getTime(), transaction.getTimeStart().getTime());
         assertTrue(transaction.getTimeStart().compareTo(FIVE_MINUTES_AGO) == 0);
         assertEquals(CONFIGURATION_ITEMS, transaction.getAttributes());
+        assertEquals(TransactionStatus.STARTED, transaction.getStatus());
         assertNull(transaction.getChargingStation());
 
         eventHandler.handle(new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, TWO_MINUTES_AGO));
@@ -147,6 +151,7 @@ public class OchpEventHandlerTest {
         assertEquals(METER_STOP, transactionStopped.getMeterStop());
         assertEquals(TWO_MINUTES_AGO.getTime(), transactionStopped.getTimeStop().getTime());
         assertTrue(transactionStopped.getTimeStop().compareTo(TWO_MINUTES_AGO) == 0);
+        assertEquals(TransactionStatus.STOPPED, transactionStopped.getStatus());
         assertEquals(transaction, transactionStopped);
     }
 
