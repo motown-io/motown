@@ -29,7 +29,6 @@
 
     <groupId>io.motown.operator-api</groupId>
     <artifactId>operator-api-json</artifactId>
-    <!--<packaging>war</packaging>-->
 
     <properties>
         <jetty.port>8081</jetty.port>

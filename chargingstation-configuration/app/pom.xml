@@ -30,7 +30,6 @@
 
     <groupId>io.motown.chargingstation-configuration</groupId>
     <artifactId>chargingstation-configuration-app</artifactId>
-    <!--<packaging>war</packaging>-->
 
     <dependencies>
         <dependency>

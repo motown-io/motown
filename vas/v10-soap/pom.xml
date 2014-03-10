@@ -29,7 +29,6 @@
 
     <groupId>io.motown.vas</groupId>
     <artifactId>vas-v10-soap</artifactId>
-    <!--<packaging>war</packaging>-->
 
     <properties>
         <jetty.port>8084</jetty.port>
