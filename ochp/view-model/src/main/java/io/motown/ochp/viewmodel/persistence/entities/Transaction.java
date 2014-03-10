@@ -114,19 +114,19 @@ public class Transaction {
     }
 
     public Date getTimeStart() {
-        return timeStart;
+        return timeStart != null ? new Date(timeStart.getTime()) : null;
     }
 
     public void setTimeStart(Date timeStart) {
-        this.timeStart = timeStart;
+        this.timeStart = timeStart != null ? new Date(timeStart.getTime()) : null;
     }
 
     public Date getTimeStop() {
-        return timeStop;
+        return timeStop != null ? new Date(timeStop.getTime()) : null;
     }
 
     public void setTimeStop(Date timeStop) {
-        this.timeStop = timeStop;
+        this.timeStop = timeStop != null ? new Date(timeStop.getTime()) : null;
     }
 
     public Map<String, String> getAttributes() {
