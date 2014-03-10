@@ -16,12 +16,12 @@
 
 package io.motown.vas.v10.soap.interceptor;
 
-import com.sun.org.apache.xerces.internal.dom.*;
 import org.apache.cxf.binding.soap.SoapHeader;
 import org.apache.cxf.headers.Header;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.phase.AbstractPhaseInterceptor;
 import org.apache.cxf.phase.Phase;
+import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
@@ -49,11 +49,11 @@ public class MessageIdHeaderInterceptor extends AbstractPhaseInterceptor<Message
 
         // if the header doesn't exist and we have at least one header to access 'owner document' we can create and add our own MessageID header
         if(!messageIdHeaderExists(headers) && headers.size() > 0) {
-            ElementNSImpl existingHeaderElement = (ElementNSImpl) headers.get(0).getObject();
+            Element existingHeaderElement = (Element) headers.get(0).getObject();
 
             // use the existing header element to create our own MessageID header with random UUID
-            ElementImpl element = new LocalElementNSImpl((DocumentImpl) existingHeaderElement.getOwnerDocument(), NAMESPACE_URI, QUALIFIED_NAME, LOCAL_NAME);
-            element.appendChild(new TextImpl((DocumentImpl) existingHeaderElement.getOwnerDocument(), "uuid:" + UUID.randomUUID().toString()));
+            Element element = existingHeaderElement.getOwnerDocument().createElementNS(NAMESPACE_URI, QUALIFIED_NAME);
+            element.appendChild(existingHeaderElement.getOwnerDocument().createTextNode("uuid:" + UUID.randomUUID().toString()));
 
             QName qname = new QName(NAMESPACE_URI, LOCAL_NAME);
             SoapHeader header = new SoapHeader(qname, element);
@@ -78,17 +78,6 @@ public class MessageIdHeaderInterceptor extends AbstractPhaseInterceptor<Message
             }
         }
         return false;
-    }
-
-    /**
-     * Because all constructors on ElementNSImpl are protected we extend it so we can initiate it locally.
-     */
-    private static class LocalElementNSImpl extends ElementNSImpl {
-
-        protected LocalElementNSImpl(CoreDocumentImpl ownerDocument, String namespaceURI, String qualifiedName, String localName) {
-            super(ownerDocument, namespaceURI, qualifiedName, localName);
-        }
-
     }
 
 }

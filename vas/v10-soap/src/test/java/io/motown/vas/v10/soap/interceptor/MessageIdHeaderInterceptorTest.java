@@ -15,19 +15,21 @@
  */
 package io.motown.vas.v10.soap.interceptor;
 
-import com.sun.org.apache.xerces.internal.dom.DocumentImpl;
-import com.sun.org.apache.xerces.internal.dom.ElementNSImpl;
 import org.apache.cxf.binding.soap.SoapHeader;
 import org.apache.cxf.headers.Header;
 import org.apache.cxf.message.Message;
 import org.junit.Before;
 import org.junit.Test;
+import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.SOAPHeader;
 import java.util.ArrayList;
 
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -84,8 +86,12 @@ public class MessageIdHeaderInterceptorTest {
         // lots of stubbing here because of specific type casting in the tested functionality
         SoapHeader soapHeader = mock(SoapHeader.class);
         when(soapHeader.getName()).thenReturn(new QName(OTHER_HEADER_LOCAL_NAME));
-        ElementNSImpl element = mock(ElementNSImpl.class);
-        when(element.getOwnerDocument()).thenReturn(new DocumentImpl());
+        Element element = mock(Element.class);
+        try {
+            when(element.getOwnerDocument()).thenReturn(DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument());
+        } catch (ParserConfigurationException e) {
+            fail();
+        }
         when(soapHeader.getObject()).thenReturn(element);
         ArrayList<SoapHeader> soapHeaders = new ArrayList<>();
         soapHeaders.add(soapHeader);
@@ -96,9 +102,9 @@ public class MessageIdHeaderInterceptorTest {
         assertEquals(2, soapHeaders.size());
         SoapHeader messageIdHeader = soapHeaders.get(1);
         assertEquals(Header.Direction.DIRECTION_IN, messageIdHeader.getDirection());
-        assertEquals(MESSAGE_ID_LOCAL_NAME, ((ElementNSImpl) messageIdHeader.getObject()).getLocalName());
+        assertEquals(MESSAGE_ID_LOCAL_NAME, ((Element) messageIdHeader.getObject()).getLocalName());
         // generated message id value (UUID) is stored here:
-        assertNotNull(((ElementNSImpl) messageIdHeader.getObject()).getFirstChild().getNodeValue());
+        assertNotNull(((Element) messageIdHeader.getObject()).getFirstChild().getNodeValue());
     }
 
 }
