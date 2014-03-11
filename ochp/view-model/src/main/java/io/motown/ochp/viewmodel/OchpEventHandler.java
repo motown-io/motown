@@ -15,10 +15,7 @@
  */
 package io.motown.ochp.viewmodel;
 
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.TransactionId;
-import io.motown.domain.api.chargingstation.TransactionStartedEvent;
-import io.motown.domain.api.chargingstation.TransactionStoppedEvent;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.ochp.viewmodel.persistence.TransactionStatus;
 import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
@@ -49,6 +46,7 @@ public class OchpEventHandler {
             transaction = new Transaction(chargingStation, event.getTransactionId().getId());
         }
 
+        transaction.setIdentificationId(event.getIdentifyingToken().getToken());
         transaction.setEvseId(event.getEvseId().getId());
         transaction.setIdentifyingToken(event.getIdentifyingToken().getToken());
         transaction.setMeterStart(event.getMeterStart());

@@ -32,6 +32,7 @@ public class Transaction {
 
     @Column(unique = true)
     private String transactionId;
+    private String identificationId;
     private String evseId;
     private String identifyingToken;
     private int meterStart;
@@ -79,6 +80,14 @@ public class Transaction {
 
     public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
+    }
+
+    public String getIdentificationId() {
+        return identificationId;
+    }
+
+    public void setIdentificationId(String identificationId) {
+        this.identificationId = identificationId;
     }
 
     public String getEvseId() {
