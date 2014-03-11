@@ -15,8 +15,10 @@
  */
 package io.motown.ochp.v03.soap.client;
 
+import io.motown.ochp.util.DateFormatter;
 import io.motown.ochp.v03.soap.schema.*;
 import io.motown.ochp.viewmodel.ochp.Ochp03Client;
+import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,10 +77,31 @@ public class Ochp03SoapClient implements Ochp03Client {
         AddCDRsRequest request = new AddCDRsRequest();
         List<CDRInfo> cdrInfoList = request.getCdrInfoArray();
         for(Transaction transaction : transactionList){
-            CDRInfo cdrInfo = new CDRInfo();
-            cdrInfo.setEvseId(transaction.getEvseId());
-            //TODO: Convert the rest of the transaction/chargingstation information into CDRInfo - Ingo Pak, 06 Mar 2014
+            ChargingStation chargingStation = transaction.getChargingStation();
 
+            CDRInfo cdrInfo = new CDRInfo();
+            cdrInfo.setAuthenticationId(transaction.getIdentificationId());
+            cdrInfo.setCdrId(transaction.getTransactionId());
+            cdrInfo.setEvseId(transaction.getEvseId());
+            cdrInfo.setDuration(DateFormatter.formatDuration(transaction.getTimeStart(), transaction.getTimeStop()));
+            cdrInfo.setStartDatetime(DateFormatter.toISO8601(transaction.getTimeStart()));
+            cdrInfo.setEndDatetime(DateFormatter.toISO8601(transaction.getTimeStop()));
+            cdrInfo.setChargePointId(chargingStation.getChargingStationId());
+            cdrInfo.setVolume(String.format("%.4f", transaction.getVolume()));
+/* TODO: Decide if the fields below will be provided - Ingo Pak, 11 Mar 2014
+            cdrInfo.setChargePointAddress();
+            cdrInfo.setChargePointCity();
+            cdrInfo.setChargePointZip();
+            cdrInfo.setChargePointCountry();
+            cdrInfo.setChargePointType();
+            cdrInfo.setInfraProviderId();
+            cdrInfo.setMeterId(); //identification of the physical energy meter
+            cdrInfo.setObisCode(); //object identification of the register in the meter (IEC 62056-61 eg. 1-1:1.8.0)
+            cdrInfo.setProductType(); //identifies the type of product that is delivered
+            cdrInfo.setTariffType();
+            cdrInfo.setServiceProviderId();
+            cdrInfo.setEvcoId(); //identifies a customer in the electric mobility charging context (http://data.fir.de/projektseiten/emobility-ids/)
+*/
             cdrInfoList.add(cdrInfo);
         }
 
@@ -108,5 +131,4 @@ public class Ochp03SoapClient implements Ochp03Client {
     private Echs createOchpClientService() {
         return ochpProxyFactory.createOchpService(this.serverAddress);
     }
-
 }

@@ -16,20 +16,21 @@
 package io.motown.ochp.v03.soap.client;
 
 import com.google.common.collect.Lists;
-import io.motown.domain.api.chargingstation.RequestStatus;
+import io.motown.ochp.util.DateFormatter;
 import io.motown.ochp.v03.soap.schema.*;
+import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static org.jgroups.util.Util.*;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 import static io.motown.ochp.v03.soap.SOAPTestUtils.*;
@@ -68,17 +69,33 @@ public class Ochp03SoapClientTest {
     public void addCDRsVerifyTransactionToCDRInfoConversion() {
         when(echsClient.addCDRs(any(AddCDRsRequest.class), anyString())).thenReturn(getAddCDRsResponse());
 
+        Date now = new Date();
+
         List<Transaction> transactions = Lists.newArrayList();
         Transaction transaction = new Transaction("transactionId");
         transaction.setEvseId("evseId");
+        transaction.setIdentificationId("identificationId");
+        transaction.setTransactionId("transactionId");
+        transaction.setTimeStart(new Date(now.getTime() - TimeUnit.MINUTES.toMillis(80)));
+        transaction.setTimeStop(now);
+        transaction.setMeterStart(12);
+        transaction.setMeterStop(34);
+        transaction.setChargingStation(new ChargingStation("chargingStationId"));
         //TODO: add the rest of the parameters to see if they are correctly converted - Ingo Pak, 06 Mar 2014
+
         transactions.add(transaction);
         client.addChargeDetailRecords(transactions);
 
         ArgumentCaptor<AddCDRsRequest> addCDRsRequestArgument = ArgumentCaptor.forClass(AddCDRsRequest.class);
         verify(echsClient).addCDRs(addCDRsRequestArgument.capture(), anyString());
+        //test duration and volume
         CDRInfo firstCDRInfo = addCDRsRequestArgument.getValue().getCdrInfoArray().get(0);
         assertEquals(transaction.getEvseId(), firstCDRInfo.getEvseId());
+        assertEquals(transaction.getIdentificationId(), firstCDRInfo.getAuthenticationId());
+        assertEquals(transaction.getTransactionId(), firstCDRInfo.getCdrId());
+        assertEquals(DateFormatter.toISO8601(transaction.getTimeStart()), firstCDRInfo.getStartDatetime());
+        assertEquals(DateFormatter.formatDuration(transaction.getTimeStart(), transaction.getTimeStop()), firstCDRInfo.getDuration());
+        assertEquals(DateFormatter.formatDuration(transaction.getTimeStart(), transaction.getTimeStop()), firstCDRInfo.getDuration());
         //TODO: verify the rest of the parameters to see if they are correctly converted - Ingo Pak, 06 Mar 2014
     }
 

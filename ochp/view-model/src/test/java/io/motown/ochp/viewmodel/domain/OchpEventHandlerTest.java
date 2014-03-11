@@ -15,6 +15,7 @@
  */
 package io.motown.ochp.viewmodel.domain;
 
+import io.motown.domain.api.chargingstation.ChargingStationAcceptedEvent;
 import io.motown.domain.api.chargingstation.TransactionStartedEvent;
 import io.motown.domain.api.chargingstation.TransactionStoppedEvent;
 import io.motown.ochp.viewmodel.OchpEventHandler;
@@ -87,6 +88,11 @@ public class OchpEventHandlerTest {
     @Test
     public void testHandleTransactionStoppedEvent() {
         eventHandler.handle(new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, TWO_MINUTES_AGO));
+    }
+
+    @Test
+    public void testHandleChargingStationAcceptedEvent() {
+        eventHandler.handle(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
     }
 
     @Test
@@ -201,6 +207,14 @@ public class OchpEventHandlerTest {
         assertArrayEquals(stoppedTransactions.toArray(), stoppedTransactionsFromRepo.toArray());
     }
 
+    @Test
+    public void testChargingStation() {
+        ChargingStation chargingStation = new ChargingStation(CHARGING_STATION_ID.getId());
+        chargingStationRepository.save(chargingStation);
 
+        ChargingStation chargingStationFromRepo = chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId());
+        assertNotNull(chargingStationFromRepo);
+        assertEquals(chargingStation, chargingStationFromRepo);
+    }
 
 }

@@ -162,6 +162,15 @@ public class Transaction {
         this.status = status;
     }
 
+    /**
+     * Returns the volume in kWh that has been delivered during this transaction
+     * @return float containing the volume
+     */
+    public float getVolume() {
+        float volume = (this.meterStop - this.meterStart) / 1000;
+        return volume;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id);
