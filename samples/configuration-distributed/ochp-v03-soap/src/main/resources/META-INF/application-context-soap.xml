@@ -27,14 +27,26 @@
     <import resource="classpath:META-INF/cxf/cxf.xml"/>
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
 
-    <context:property-placeholder location="classpath:config.properties"
+    <import resource="classpath:META-INF/soap-config.xml"/>
+    <import resource="classpath:META-INF/spring/view-model-config.xml"/>
+
+    <context:property-placeholder location="classpath:configViewModel.properties"
                                   ignore-resource-not-found="true"
                                   ignore-unresolvable="true"/>
 
     <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
 
+    <bean id="ochpProxyFactory" class="io.motown.ochp.v03.soap.client.OchpProxyFactory"/>
+
+    <bean id="ochp03SoapClient" class="io.motown.ochp.v03.soap.client.Ochp03SoapClient">
+        <property name="ochpProxyFactory" ref="ochpProxyFactory"/>
+    </bean>
+
     <!-- OCHP task scheduling -->
-    <bean id="ochpSchedulingService" class="io.motown.ochp.v03.soap.client.OchpSchedulingService" />
+    <bean id="ochpSchedulingService" class="io.motown.ochp.v03.soap.client.OchpSchedulingService">
+        <property name="ochp03SoapClient" ref="ochp03SoapClient"/>
+        <property name="transactionRepository" ref="transactionRepository"/>
+    </bean>
     <task:scheduled-tasks>
         <task:scheduled ref="ochpSchedulingService" method="executeAddCDRs" cron="${io.motown.ochp.addcdrs.cron}"></task:scheduled>
     </task:scheduled-tasks>

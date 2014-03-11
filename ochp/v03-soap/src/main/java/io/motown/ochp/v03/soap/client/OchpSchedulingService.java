@@ -21,7 +21,6 @@ import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 import io.motown.ochp.viewmodel.persistence.repostories.TransactionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -29,10 +28,8 @@ public class OchpSchedulingService {
 
     private static final Logger LOG = LoggerFactory.getLogger(OchpSchedulingService.class);
 
-    @Autowired
     private Ochp03SoapClient ochp03SoapClient;
 
-    @Autowired
     private TransactionRepository transactionRepository;
 
     public void executeGetChargingStationList() {
@@ -54,4 +51,11 @@ public class OchpSchedulingService {
         }
     }
 
+    public void setOchp03SoapClient(Ochp03SoapClient ochp03SoapClient) {
+        this.ochp03SoapClient = ochp03SoapClient;
+    }
+
+    public void setTransactionRepository(TransactionRepository transactionRepository) {
+        this.transactionRepository = transactionRepository;
+    }
 }

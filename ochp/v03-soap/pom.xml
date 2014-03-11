@@ -29,7 +29,6 @@
 
     <groupId>io.motown.ochp</groupId>
     <artifactId>ochp-v03-soap</artifactId>
-    <packaging>war</packaging>
 
     <properties>
         <jetty.port>8085</jetty.port>

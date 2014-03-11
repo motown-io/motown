@@ -22,54 +22,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>motown-io</artifactId>
+        <artifactId>samples-configuration-distributed</artifactId>
         <groupId>io.motown</groupId>
         <version>0.1.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>samples-configuration-simple</artifactId>
+    <artifactId>samples-configuration-distributed-ochp-v03-soap</artifactId>
     <packaging>war</packaging>
 
     <dependencies>
         <dependency>
-            <groupId>io.motown.domain</groupId>
-            <artifactId>domain-app</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.motown.chargingstation-configuration</groupId>
-            <artifactId>chargingstation-configuration-app</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.motown.identification-authorization</groupId>
-            <artifactId>identification-authorization-app</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>io.motown.ochp</groupId>
             <artifactId>ochp-v03-soap</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.motown.ocpp</groupId>
-            <artifactId>ocpp-v15-soap</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.motown.ocpp</groupId>
-            <artifactId>ocpp-v12-soap</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.motown.operator-api</groupId>
-            <artifactId>operator-api-json</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.motown.vas</groupId>
-            <artifactId>vas-v10-soap</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
@@ -90,8 +54,6 @@
                         <exclude>src/test/resources/**</exclude>
                         <exclude>src/main/resources/**</exclude>
                         <exclude>src/main/webapp/WEB-INF/wsdl/**</exclude>
-                        <exclude>src/main/webapp/css/libs/**</exclude>
-                        <exclude>src/main/webapp/js/libs/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>

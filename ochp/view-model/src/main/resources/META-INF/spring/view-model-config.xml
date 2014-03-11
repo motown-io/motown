@@ -3,26 +3,20 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:axon="http://www.axonframework.org/schema/core"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xsi:schemaLocation="http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
                            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
-
-                           http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd">
+                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd">
 
     <context:property-placeholder location="classpath:configViewModel.properties"
                                   ignore-resource-not-found="true"
                                   ignore-unresolvable="true"/>
 
-    <context:component-scan base-package="io.motown.ochp.viewmodel">
-        <!--
-         The specific OCHP RequestHandlers are excluded here, as the one to use is configured on application level for specific OCHP version handling
-         TODO: Decide if this is the way to go, or move RequestHandlers to the specific OCHP application layer
-        -->
-        <context:exclude-filter type="regex" expression="io\.motown\.ochp\.viewmodel\.Ochp.*RequestHandler"/>
-    </context:component-scan>
+    <bean class="io.motown.ochp.viewmodel.OchpEventHandler">
+        <property name="chargingStationRepository" ref="chargingStationRepository"/>
+        <property name="transactionRepository" ref="transactionRepository"/>
+    </bean>
 
     <bean id="beanValidationInterceptor" class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor"/>
 
@@ -66,7 +60,15 @@
         </property>
     </bean>
 
-    <jpa:repositories base-package="io.motown.ochp.viewmodel.persistence.repostories"/>
+    <bean id="jpaEntityManager" factory-bean="entityManagerFactory" factory-method="createEntityManager"/>
+
+    <bean id="chargingStationRepository" class="io.motown.ochp.viewmodel.persistence.repostories.ChargingStationRepository">
+        <property name="entityManager" ref="jpaEntityManager"/>
+    </bean>
+
+    <bean id="transactionRepository" class="io.motown.ochp.viewmodel.persistence.repostories.TransactionRepository">
+        <property name="entityManager" ref="jpaEntityManager"/>
+    </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>

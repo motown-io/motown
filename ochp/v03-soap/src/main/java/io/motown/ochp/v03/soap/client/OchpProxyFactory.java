@@ -19,11 +19,9 @@ import io.motown.ochp.v03.soap.schema.Echs;
 import org.apache.cxf.binding.soap.Soap12;
 import org.apache.cxf.binding.soap.SoapBindingConfiguration;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.springframework.stereotype.Component;
 
 import javax.xml.ws.BindingProvider;
 
-@Component
 public class OchpProxyFactory {
 
     /**

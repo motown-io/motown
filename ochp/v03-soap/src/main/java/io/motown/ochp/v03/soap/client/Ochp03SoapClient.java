@@ -20,20 +20,16 @@ import io.motown.ochp.viewmodel.ochp.Ochp03Client;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 public class Ochp03SoapClient implements Ochp03Client {
 
     private static final Logger LOG = LoggerFactory.getLogger(Ochp03SoapClient.class);
 
     private static final int ACCEPTED = 0;
 
-    @Autowired
     private OchpProxyFactory ochpProxyFactory;
 
     @Value("${io.motown.ochp.server.address}")

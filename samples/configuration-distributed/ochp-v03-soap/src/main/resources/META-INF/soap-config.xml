@@ -34,10 +34,6 @@
 
     <axon:annotation-config/>
 
-    <context:component-scan base-package="io.motown.ochp.v03.soap"/>
-
-    <bean class="io.motown.ochp.v03.soap.client.OchpProxyFactory"/>
-
     <rabbit:connection-factory id="amqpConnection"
                                username="${io.motown.ochp.v03.soap.eventbus.amqp.rabbit.username}"
                                password="${io.motown.ochp.v03.soap.eventbus.amqp.rabbit.password}"
