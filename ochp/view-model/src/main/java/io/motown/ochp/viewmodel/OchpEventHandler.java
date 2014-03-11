@@ -70,6 +70,21 @@ public class OchpEventHandler {
         }
     }
 
+    @EventHandler
+    public void handle(ChargingStationAcceptedEvent event) {
+        ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
+
+        if (chargingStation == null) {
+            String chargingStationId = event.getChargingStationId().getId();
+            LOG.info("Storing chargingstation with chargingStationId {}", chargingStationId);
+
+            chargingStation = new ChargingStation(chargingStationId);
+            chargingStationRepository.save(chargingStation);
+        } else {
+            LOG.warn("Received a ChargingStationAcceptedEvent for an already accepted charging station. Skipping the creation of the chargingStation.");
+        }
+    }
+
     /**
      * Get a charging station from the repository based on the charging station id.
      * @param chargingStationId The identifier of the charging station.
