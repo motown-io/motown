@@ -27,18 +27,13 @@ import io.motown.ochp.viewmodel.persistence.repostories.TransactionRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class OchpEventHandler {
     
     private static final Logger LOG = LoggerFactory.getLogger(io.motown.ochp.viewmodel.OchpEventHandler.class);
 
-    @Autowired
     private ChargingStationRepository chargingStationRepository;
 
-    @Autowired
     private TransactionRepository transactionRepository;
 
     //TODO: Add eventhandlers for keeping internal OCHP state up to date - Ingo Pak, 05 Mar 2014

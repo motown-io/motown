@@ -26,7 +26,7 @@ import java.util.List;
 
 public class ChargingStationRepository {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TransactionRepository.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChargingStationRepository.class);
 
     private EntityManager entityManager;
 

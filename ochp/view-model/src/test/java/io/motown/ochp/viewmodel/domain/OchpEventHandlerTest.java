@@ -27,10 +27,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.persistence.PersistenceException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,9 +62,9 @@ public class OchpEventHandlerTest {
 
     @Test
     public void testTransaction() {
-        chargingStationRepository.saveAndFlush(new ChargingStation(CHARGING_STATION_ID.getId()));
+        chargingStationRepository.save(new ChargingStation(CHARGING_STATION_ID.getId()));
         Transaction transaction = new Transaction(chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId()), TRANSACTION_ID.getId());
-        transactionRepository.saveAndFlush(transaction);
+        transactionRepository.save(transaction);
         Transaction transactionFromRepo = transactionRepository.findByTransactionId(TRANSACTION_ID.getId());
         assertNotNull(transactionFromRepo);
         assertEquals(transaction, transactionFromRepo);
@@ -73,7 +73,7 @@ public class OchpEventHandlerTest {
     @Test
     public void testTransactionWithoutChargingStation() {
         Transaction transaction = new Transaction(TRANSACTION_ID.getId());
-        transactionRepository.saveAndFlush(transaction);
+        transactionRepository.save(transaction);
         Transaction transactionFromRepo = transactionRepository.findByTransactionId(TRANSACTION_ID.getId());
         assertNotNull(transactionFromRepo);
         assertEquals(transaction, transactionFromRepo);
@@ -92,7 +92,7 @@ public class OchpEventHandlerTest {
     @Test
     public void testStartStopTransaction() {
         ChargingStation chargingStation = new ChargingStation(CHARGING_STATION_ID.getId());
-        chargingStationRepository.saveAndFlush(chargingStation);
+        chargingStationRepository.save(chargingStation);
 
         eventHandler.handle(new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, METER_START, FIVE_MINUTES_AGO, CONFIGURATION_ITEMS));
         Transaction transaction = transactionRepository.findByTransactionId(TRANSACTION_ID.getId());
@@ -158,20 +158,20 @@ public class OchpEventHandlerTest {
         assertEquals(transaction, transactionStopped);
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
+    @Test(expected = PersistenceException.class)
     public void testDuplicateTransactionId() {
         Transaction transaction = new Transaction(TRANSACTION_ID.getId());
-        transactionRepository.saveAndFlush(transaction);
+        transactionRepository.save(transaction);
         transaction = new Transaction(TRANSACTION_ID.getId());
-        transactionRepository.saveAndFlush(transaction);
+        transactionRepository.save(transaction);
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
+    @Test(expected = PersistenceException.class)
     public void testDuplicateChargingStationId() {
         ChargingStation chargingStation = new ChargingStation(CHARGING_STATION_ID.getId());
-        chargingStationRepository.saveAndFlush(chargingStation);
+        chargingStationRepository.save(chargingStation);
         chargingStation = new ChargingStation(CHARGING_STATION_ID.getId());
-        chargingStationRepository.saveAndFlush(chargingStation);
+        chargingStationRepository.save(chargingStation);
     }
 
     @Test
@@ -200,5 +200,7 @@ public class OchpEventHandlerTest {
         assertArrayEquals(startedTransactions.toArray(), startedTransactionsFromRepo.toArray());
         assertArrayEquals(stoppedTransactions.toArray(), stoppedTransactionsFromRepo.toArray());
     }
+
+
 
 }
