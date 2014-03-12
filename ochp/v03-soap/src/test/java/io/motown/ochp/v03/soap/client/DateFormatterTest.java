@@ -43,7 +43,6 @@ public class DateFormatterTest {
 
         cal.set(year, month, day, hour, minute, seconds);
         String formattedDate = DateFormatter.toISO8601(cal.getTime());
-        System.out.println("Formatted: " + formattedDate);
         assertEquals(formattedDate, "2014-03-21T17:18:09+01:00");
     }
 
@@ -58,7 +57,6 @@ public class DateFormatterTest {
         Date past = new Date(now.getTime() -  duration);
 
         String formattedDuration = DateFormatter.formatDuration(past, now);
-        System.out.println("duration="+duration + " formatted="+formattedDuration);
         Assert.assertEquals(formattedDuration, "10:31:09");
     }
 
@@ -70,7 +68,6 @@ public class DateFormatterTest {
         Date past = new Date(now.getTime() -  duration);
 
         String formattedDuration = DateFormatter.formatDuration(past, now);
-        System.out.println("duration="+duration + " formatted="+formattedDuration);
         Assert.assertEquals(formattedDuration, "00:00:00");
     }
 
@@ -85,7 +82,6 @@ public class DateFormatterTest {
         Date past = new Date(now.getTime() -  duration);
 
         String formattedDuration = DateFormatter.formatDuration(past, now);
-        System.out.println("duration="+duration + " formatted="+formattedDuration);
         Assert.assertEquals(formattedDuration, "100:31:09");
     }
 }
