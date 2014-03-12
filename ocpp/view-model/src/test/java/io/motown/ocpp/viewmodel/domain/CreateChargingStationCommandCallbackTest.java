@@ -48,14 +48,14 @@ public class CreateChargingStationCommandCallbackTest {
         DomainCommandGateway gateway = mock(DomainCommandGateway.class);
         domainService.setCommandGateway(gateway);
 
-        createChargingStationCommandCallback = new CreateChargingStationCommandCallback(CHARGING_STATION_ID, CHARGING_STATION_ADDRESS, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber(), chargingStationRepository, domainService);
+        createChargingStationCommandCallback = new CreateChargingStationCommandCallback(CHARGING_STATION_ID, CHARGING_STATION_ADDRESS, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER, getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber(), chargingStationRepository, domainService);
     }
 
     @Test
     public void testOnSuccess() {
         createChargingStationCommandCallback.onSuccess(new Object());
 
-        verify(domainService).bootChargingStation(CHARGING_STATION_ID, CHARGING_STATION_ADDRESS, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
+        verify(domainService).bootChargingStation(CHARGING_STATION_ID, CHARGING_STATION_ADDRESS, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER, getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
         verify(chargingStationRepository).insert(new ChargingStation(CHARGING_STATION_ID.getId()));
     }
 

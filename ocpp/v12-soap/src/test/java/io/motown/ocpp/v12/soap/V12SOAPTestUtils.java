@@ -44,21 +44,9 @@ public final class V12SOAPTestUtils {
 
     public static final Date RETRIEVED_DATE = getFixedDate();
 
-    public static final Date EXPIRY_DATE = getFixedDate();
-
-    public static final String AUTH_LIST_HASH = "hash";
-
-    public static final int LIST_VERSION = 3;
-
-    public static final String STATUS_NOTIFICATION_ERROR_INFO = "error info";
-
-    public static final String STATUS_NOTIFICATION_VENDOR_ERROR_CODE = "007";
-
     public static final Integer HEARTBEAT_INTERVAL = 900;
 
     public static final String PROTOCOL_IDENTIFIER = "OCPPS12";
-
-    public static final String CHARGING_STATION_SERIAL_NUMBER = "SN001";
 
     public static final String CHARGING_STATION_FIRMWARE_VERSION = "FW001";
 

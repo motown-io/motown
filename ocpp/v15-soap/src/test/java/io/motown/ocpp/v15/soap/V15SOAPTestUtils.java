@@ -60,8 +60,6 @@ public final class V15SOAPTestUtils {
 
     public static final String PROTOCOL_IDENTIFIER = "OCPPS15";
 
-    public static final String CHARGING_STATION_SERIAL_NUMBER = "SN001";
-
     public static final String CHARGING_STATION_FIRMWARE_VERSION = "FW001";
 
     public static final String CHARGING_STATION_ICCID = "ICCID";

@@ -85,6 +85,8 @@
         <commons-dbcp.version>1.4</commons-dbcp.version>
         <sonar-maven-plugin.version>2.2</sonar-maven-plugin.version>
         <joda-time.version>2.1</joda-time.version>
+        <atmosphere.version>2.1.0</atmosphere.version>
+        <json-schema-validator.version>2.1.7</json-schema-validator.version>
     </properties>
 
     <dependencyManagement>
@@ -323,6 +325,16 @@
                 <artifactId>equalsverifier</artifactId>
                 <version>1.4</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.atmosphere</groupId>
+                <artifactId>atmosphere-runtime</artifactId>
+                <version>${atmosphere.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.fge</groupId>
+                <artifactId>json-schema-validator</artifactId>
+                <version>${json-schema-validator.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

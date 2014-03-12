@@ -43,6 +43,7 @@ public class DomainService {
     public static final String MODEL_KEY = "model";
     public static final String ADDRESS_KEY = "address";
     public static final String CHARGING_STATION_SERIALNUMBER_KEY = "chargingStationSerialNumber";
+    public static final String CHARGE_BOX_SERIALNUMBER_KEY = "chargeBoxSerialNumber";
     public static final String FIRMWARE_VERSION_KEY = "firmwareVersion";
     public static final String ICCID_KEY = "iccid";
     public static final String IMSI_KEY = "imsi";
@@ -66,7 +67,7 @@ public class DomainService {
     private EventWaitingGateway eventWaitingGateway;
 
     public BootChargingStationResult bootChargingStation(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model,
-                                                         String protocol, String chargingStationSerialNumber, String firmwareVersion, String iccid,
+                                                         String protocol, String chargingStationSerialNumber, String chargeBoxSerialNumber, String firmwareVersion, String iccid,
                                                          String imsi, String meterType, String meterSerialNumber) {
         // In case there is no charging station address specified there is no point in continuing, since we will not be able to reach the charging station later on
         if (chargingStationAddress == null || chargingStationAddress.isEmpty()) {
@@ -81,7 +82,7 @@ public class DomainService {
             LOG.debug("Not a known charging station on boot notification, we send a CreateChargingStationCommand.");
 
             commandGateway.send(new CreateChargingStationCommand(chargingStationId), new CreateChargingStationCommandCallback(
-                    chargingStationId, chargingStationAddress, vendor, model, protocol, chargingStationSerialNumber, firmwareVersion, iccid,
+                    chargingStationId, chargingStationAddress, vendor, model, protocol, chargingStationSerialNumber, chargeBoxSerialNumber, firmwareVersion, iccid,
                     imsi, meterType, meterSerialNumber, chargingStationRepository, this));
 
             // we didn't know the charging station when this bootNotification occurred so we reject it.
@@ -97,6 +98,7 @@ public class DomainService {
         addAttributeIfNotNull(attributes, VENDOR_KEY, vendor);
         addAttributeIfNotNull(attributes, MODEL_KEY, model);
         addAttributeIfNotNull(attributes, CHARGING_STATION_SERIALNUMBER_KEY, chargingStationSerialNumber);
+        addAttributeIfNotNull(attributes, CHARGE_BOX_SERIALNUMBER_KEY, chargeBoxSerialNumber);
         addAttributeIfNotNull(attributes, FIRMWARE_VERSION_KEY, firmwareVersion);
         addAttributeIfNotNull(attributes, ICCID_KEY, iccid);
         addAttributeIfNotNull(attributes, IMSI_KEY, imsi);

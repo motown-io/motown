@@ -112,6 +112,16 @@ public final class ChargingStationTestUtils {
     public static final String CHARGING_STATION_MODEL = "WIDGET";
 
     /**
+     * The default charging station serial number.
+     */
+    public static final String CHARGING_STATION_SERIAL_NUMBER = "SN001";
+
+    /**
+     * The default charging station serial number.
+     */
+    public static final String CHARGE_BOX_SERIAL_NUMBER = "CB_SN001";
+
+    /**
      * The default data transfer vendor.
      */
     public static final String DATA_TRANSFER_VENDOR = "ACME_CORP";

@@ -97,7 +97,7 @@ public class DomainServiceTest {
 
     @Test
     public void testBootUnknownChargingStation() {
-        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(CHARGING_STATION_ID, CHARGING_STATION_ADDRESS, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
+        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(CHARGING_STATION_ID, CHARGING_STATION_ADDRESS, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER, getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
         assertFalse(bootChargingStationResult.isAccepted());
 
         verify(gateway).send(eq(new CreateChargingStationCommand(CHARGING_STATION_ID)), any(CommandCallback.class));
@@ -105,10 +105,10 @@ public class DomainServiceTest {
 
     @Test
     public void testBootNullAndEmptyChargingStationAddress() {
-        BootChargingStationResult result = domainService.bootChargingStation(CHARGING_STATION_ID, null, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
+        BootChargingStationResult result = domainService.bootChargingStation(CHARGING_STATION_ID, null, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER, getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
         assertFalse(result.isAccepted());
 
-        result = domainService.bootChargingStation(CHARGING_STATION_ID, "", CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
+        result = domainService.bootChargingStation(CHARGING_STATION_ID, "", CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER, getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
         assertFalse(result.isAccepted());
     }
 
@@ -120,14 +120,15 @@ public class DomainServiceTest {
         cs.setConfigured(true);
         chargingStationRepository.insert(cs);
 
-        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(CHARGING_STATION_ID, CHARGING_STATION_ADDRESS, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, getChargingStationSerialNumber(), getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
+        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(CHARGING_STATION_ID, CHARGING_STATION_ADDRESS, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER, getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber());
         assertTrue(bootChargingStationResult.isAccepted());
 
         Map<String, String> attributes = Maps.newHashMap();
         attributes.put("vendor", CHARGING_STATION_VENDOR);
         attributes.put("model", CHARGING_STATION_MODEL);
         attributes.put("address", CHARGING_STATION_ADDRESS);
-        attributes.put("chargingStationSerialNumber", getChargingStationSerialNumber());
+        attributes.put("chargingStationSerialNumber", CHARGING_STATION_SERIAL_NUMBER);
+        attributes.put("chargeBoxSerialNumber", CHARGE_BOX_SERIAL_NUMBER);
         attributes.put("firmwareVersion", getFirmwareVersion());
         attributes.put("iccid", getIccid());
         attributes.put("imsi", getImsi());
