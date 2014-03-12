@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import static org.jgroups.util.Util.assertEquals;
 
@@ -36,12 +37,11 @@ public class DateFormatterTest {
         int minute=18;
         int seconds=9;
 
-        GregorianCalendar cal = new GregorianCalendar();
-        cal.set(year, month, day, hour, minute, seconds);
-
-        //Fixate the default JodaTime timezone for this test
+        //Fixate the timezone for this test
         DateTimeZone.setDefault(DateTimeZone.forID("Europe/Amsterdam"));
+        GregorianCalendar cal = new GregorianCalendar(TimeZone.getTimeZone("Europe/Amsterdam"));
 
+        cal.set(year, month, day, hour, minute, seconds);
         String formattedDate = DateFormatter.toISO8601(cal.getTime());
         System.out.println("Formatted: " + formattedDate);
         assertEquals(formattedDate, "2014-03-21T17:18:09+01:00");
