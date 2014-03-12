@@ -31,7 +31,7 @@
     </bean>
 
     <bean class="io.motown.ocpp.viewmodel.Ocpp15RequestHandler">
-        <property name="domainService" ref="domainService" />
+        <property name="domainService" ref="ocppDomainService" />
         <property name="chargingStationOcpp15Client" ref="ocpp15SoapClient" />
     </bean>
 
@@ -46,8 +46,11 @@
     <!-- START OF OCPP 1.5 CONFIG -->
 
     <bean id="centralSystemServiceOcpp15" class="io.motown.ocpp.v15.soap.centralsystem.MotownCentralSystemService">
-        <property name="domainService" ref="domainService" />
+        <property name="domainService" ref="ocppDomainService" />
         <property name="continuationTimeout" value="${io.motown.ocpp.v15.soap.cxf.continuation.timeout}" />
+        <property name="soapHeaderReader">
+            <bean class="io.motown.ocpp.soaputils.header.SoapHeaderReader" />
+        </property>
     </bean>
 
     <jaxws:endpoint implementor="#centralSystemServiceOcpp15"
@@ -60,7 +63,7 @@
     <bean id="chargingStationOcpp15ProxyFactory" class="io.motown.ocpp.v15.soap.chargepoint.ChargingStationProxyFactory" />
 
     <bean id="ocpp15SoapClient" class="io.motown.ocpp.v15.soap.chargepoint.ChargingStationOcpp15SoapClient">
-        <property name="domainService" ref="domainService" />
+        <property name="domainService" ref="ocppDomainService" />
         <property name="chargingStationProxyFactory" ref="chargingStationOcpp15ProxyFactory" />
         <property name="identifyingTokenConverterService">
             <bean class="io.motown.ocpp.v15.soap.chargepoint.IdentifyingTokenConverterService" />
@@ -69,7 +72,7 @@
 
     <bean class="io.motown.ocpp.v15.soap.centralsystem.schema.ObjectFactory"/>
 
-    <bean id="domainService" class="io.motown.ocpp.viewmodel.domain.DomainService">
+    <bean id="ocppDomainService" class="io.motown.ocpp.viewmodel.domain.DomainService">
         <property name="chargingStationRepository" ref="chargingStationRepositoryOcppWebServices" />
         <property name="commandGateway" ref="domainCommandGateway" />
         <property name="eventWaitingGateway" ref="eventWaitingGateway" />
@@ -132,8 +135,11 @@
 
     <!-- OCPP 1.2 SOAP CONFIG -->
     <bean id="centralSystemServiceOcpp12" class="io.motown.ocpp.v12.soap.centralsystem.MotownCentralSystemService">
-        <property name="domainService" ref="domainService" />
+        <property name="domainService" ref="ocppDomainService" />
         <property name="continuationTimeout" value="${io.motown.ocpp.v12.soap.cxf.continuation.timeout}" />
+        <property name="soapHeaderReader">
+            <bean class="io.motown.ocpp.soaputils.header.SoapHeaderReader" />
+        </property>
     </bean>
 
     <jaxws:endpoint implementor="#centralSystemServiceOcpp12"
@@ -146,12 +152,12 @@
     <bean id="chargingStationOcpp12ProxyFactory" class="io.motown.ocpp.v12.soap.chargepoint.ChargingStationProxyFactory" />
 
     <bean id="ocpp12SoapClient" class="io.motown.ocpp.v12.soap.chargepoint.ChargingStationOcpp12SoapClient">
-        <property name="domainService" ref="domainService" />
+        <property name="domainService" ref="ocppDomainService" />
         <property name="chargingStationProxyFactory" ref="chargingStationOcpp12ProxyFactory" />
     </bean>
 
     <bean class="io.motown.ocpp.viewmodel.Ocpp12RequestHandler">
-        <property name="domainService" ref="domainService" />
+        <property name="domainService" ref="ocppDomainService" />
         <property name="chargingStationOcpp12Client" ref="ocpp12SoapClient" />
     </bean>
 

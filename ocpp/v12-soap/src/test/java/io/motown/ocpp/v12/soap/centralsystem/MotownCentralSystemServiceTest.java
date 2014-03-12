@@ -17,6 +17,7 @@ package io.motown.ocpp.v12.soap.centralsystem;
 
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.chargingstation.MeterValue;
+import io.motown.ocpp.soaputils.header.SoapHeaderReader;
 import io.motown.ocpp.v12.soap.V12SOAPTestUtils;
 import io.motown.ocpp.v12.soap.centralsystem.schema.*;
 import io.motown.ocpp.v12.soap.centralsystem.schema.FirmwareStatus;
@@ -26,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,9 +46,15 @@ public class MotownCentralSystemServiceTest {
 
     private DomainService domainService;
 
+    private SoapHeaderReader soapHeaderReader;
+
     @Before
     public void setup() {
         motownCentralSystemService = new MotownCentralSystemService();
+
+        soapHeaderReader = mock(SoapHeaderReader.class);
+        when(soapHeaderReader.getChargingStationAddress(any(MessageContext.class))).thenReturn(LOCALHOST);
+        motownCentralSystemService.setSoapHeaderReader(soapHeaderReader);
 
         domainService = mock(DomainService.class);
         motownCentralSystemService.setDomainService(domainService);
@@ -100,6 +108,18 @@ public class MotownCentralSystemServiceTest {
     }
 
     @Test
+    public void bootNotificationNoAddressVerifyResponse() {
+        when(soapHeaderReader.getChargingStationAddress(any(MessageContext.class))).thenReturn("");
+        BootNotificationRequest request = new BootNotificationRequest();
+
+        BootNotificationResponse response = motownCentralSystemService.bootNotification(request, CHARGING_STATION_ID.getId());
+
+        assertEquals(response.getStatus(), RegistrationStatus.REJECTED);
+        assertNotNull(response.getCurrentTime());
+        assertNotNull(response.getHeartbeatInterval());
+    }
+
+    @Test
     public void bootNotificationAcceptedVerifyResponse() {
         BootNotificationRequest request = new BootNotificationRequest();
         Date now = new Date();
@@ -140,14 +160,13 @@ public class MotownCentralSystemServiceTest {
         request.setMeterType(CHARGING_STATION_METER_TYPE);
         request.setMeterSerialNumber(CHARGING_STATION_METER_SERIAL_NUMBER);
 
-        String addressWillNotBeResolved = "";
         Date now = new Date();
         BootChargingStationResult result = new BootChargingStationResult(true, HEARTBEAT_INTERVAL, now);
         when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(result);
 
         motownCentralSystemService.bootNotification(request, CHARGING_STATION_ID.getId());
 
-        verify(domainService).bootChargingStation(CHARGING_STATION_ID, addressWillNotBeResolved, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL_IDENTIFIER, CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER,
+        verify(domainService).bootChargingStation(CHARGING_STATION_ID, LOCALHOST, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL_IDENTIFIER, CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER,
                 CHARGING_STATION_FIRMWARE_VERSION, CHARGING_STATION_ICCID, CHARGING_STATION_IMSI, CHARGING_STATION_METER_TYPE, CHARGING_STATION_METER_SERIAL_NUMBER);
     }
 

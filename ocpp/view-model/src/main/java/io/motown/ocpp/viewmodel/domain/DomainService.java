@@ -69,12 +69,6 @@ public class DomainService {
     public BootChargingStationResult bootChargingStation(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model,
                                                          String protocol, String chargingStationSerialNumber, String chargeBoxSerialNumber, String firmwareVersion, String iccid,
                                                          String imsi, String meterType, String meterSerialNumber) {
-        // In case there is no charging station address specified there is no point in continuing, since we will not be able to reach the charging station later on
-        if (chargingStationAddress == null || chargingStationAddress.isEmpty()) {
-            LOG.error("Rejecting bootnotification, no charging station address has been specified.");
-            return new BootChargingStationResult(false, heartbeatInterval, new Date());
-        }
-
         // Check if we already know the charging station, or have to create one
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
 
@@ -93,8 +87,8 @@ public class DomainService {
         chargingStation.setIpAddress(chargingStationAddress);
 
         Map<String, String> attributes = Maps.newHashMap();
-        attributes.put(ADDRESS_KEY, chargingStationAddress);
 
+        addAttributeIfNotNull(attributes, ADDRESS_KEY, chargingStationAddress);
         addAttributeIfNotNull(attributes, VENDOR_KEY, vendor);
         addAttributeIfNotNull(attributes, MODEL_KEY, model);
         addAttributeIfNotNull(attributes, CHARGING_STATION_SERIALNUMBER_KEY, chargingStationSerialNumber);

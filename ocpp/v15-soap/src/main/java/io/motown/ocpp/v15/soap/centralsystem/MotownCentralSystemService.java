@@ -18,22 +18,17 @@ package io.motown.ocpp.v15.soap.centralsystem;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.chargingstation.MeterValue;
 import io.motown.ocpp.soaputils.async.*;
+import io.motown.ocpp.soaputils.header.SoapHeaderReader;
 import io.motown.ocpp.v15.soap.centralsystem.schema.*;
 import io.motown.ocpp.v15.soap.centralsystem.schema.FirmwareStatus;
 import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import org.apache.cxf.headers.Header;
-import org.apache.cxf.helpers.CastUtils;
-import org.apache.cxf.jaxws.context.WrappedMessageContext;
-import org.apache.cxf.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
 
 import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
-import javax.xml.ws.handler.MessageContext;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -51,12 +46,16 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
 
     private static final String PROTOCOL_IDENTIFIER = "OCPPS15";
 
+    private int heartbeatIntervalFallback = 900;
+
     /**
      * Timeout in milliseconds for the continuation suspend functionality
      */
     private int continuationTimeout;
 
     private DomainService domainService;
+
+    private SoapHeaderReader soapHeaderReader;
 
     @Resource
     private WebServiceContext context;
@@ -110,7 +109,16 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
     public BootNotificationResponse bootNotification(BootNotificationRequest request, String chargeBoxIdentity) {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
-        String chargingStationAddress = getChargingStationAddress(context.getMessageContext());
+        String chargingStationAddress = soapHeaderReader.getChargingStationAddress(context.getMessageContext());
+        if(chargingStationAddress == null || chargingStationAddress.isEmpty()) {
+            BootNotificationResponse response = new BootNotificationResponse();
+            response.setStatus(RegistrationStatus.REJECTED);
+            response.setHeartbeatInterval(heartbeatIntervalFallback);
+            response.setCurrentTime(new Date());
+
+            return response;
+        }
+
         BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel(), PROTOCOL_IDENTIFIER,
                 request.getChargePointSerialNumber(), request.getChargeBoxSerialNumber(), request.getFirmwareVersion(), request.getIccid(), request.getImsi(), request.getMeterType(), request.getMeterSerialNumber());
 
@@ -245,31 +253,12 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         this.continuationTimeout = continuationTimeout;
     }
 
-    /**
-     * Gets the charging station address from the SOAP "From" header.
-     *
-     * @param messageContext the message context
-     * @return charging station address, or empty string if From header is empty or doesn't exist.
-     */
-    private String getChargingStationAddress(MessageContext messageContext) {
-        if (!(messageContext instanceof WrappedMessageContext)) {
-            LOG.warn("Unable to get message context, or message context is not the right type.");
-            return "";
-        }
+    public void setHeartbeatIntervalFallback(int heartbeatIntervalFallback) {
+        this.heartbeatIntervalFallback = heartbeatIntervalFallback;
+    }
 
-        Message message = ((WrappedMessageContext) messageContext).getWrappedMessage();
-        List<Header> headers = CastUtils.cast((List<?>) message.get(Header.HEADER_LIST));
-
-        for (Header h : headers) {
-            Element n = (Element) h.getObject();
-
-            if (n.getLocalName().equals("From")) {
-                return n.getTextContent();
-            }
-        }
-
-        LOG.warn("No 'From' header found in request. Not able to determine charging station address.");
-        return "";
+    public void setSoapHeaderReader(SoapHeaderReader soapHeaderReader) {
+        this.soapHeaderReader = soapHeaderReader;
     }
 
     /**

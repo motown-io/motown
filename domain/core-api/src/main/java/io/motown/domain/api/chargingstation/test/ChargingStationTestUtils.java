@@ -162,6 +162,11 @@ public final class ChargingStationTestUtils {
     public static final ChargingStationId UNKNOWN_CHARGING_STATION_ID = new ChargingStationId("DT-112");
 
     /**
+     * Ip address of localhost.
+     */
+    public static final String LOCALHOST = "127.0.0.1";
+
+    /**
      * The default reservation identifier.
      */
     public static final NumberedReservationId RESERVATION_ID = new NumberedReservationId(CHARGING_STATION_ID, PROTOCOL, 1);

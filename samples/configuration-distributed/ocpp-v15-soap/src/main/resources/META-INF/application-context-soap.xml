@@ -42,6 +42,9 @@
     <bean id="centralSystemService" class="io.motown.ocpp.v15.soap.centralsystem.MotownCentralSystemService">
         <property name="domainService" ref="domainService" />
         <property name="continuationTimeout" value="${io.motown.ocpp.v15.soap.cxf.continuation.timeout}" />
+        <property name="soapHeaderReader">
+            <bean class="io.motown.ocpp.soaputils.header.SoapHeaderReader" />
+        </property>
     </bean>
 
     <jaxws:endpoint implementor="#centralSystemService"
