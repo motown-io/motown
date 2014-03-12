@@ -16,13 +16,21 @@
 package io.motown.ochp.util;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.Hours;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class DateFormatter {
+public final class DateFormatter {
+
+    /**
+     * Private no-arg constructor to prevent instantiation of this utility class.
+     */
+    private DateFormatter() {
+    }
 
     public static String toISO8601 (Date date){
         DateTime dateTime = new DateTime(date);
@@ -44,8 +52,8 @@ public class DateFormatter {
             duration = stop.getTime() - start.getTime();
         }
 
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(duration) % 60;
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(duration) % 60;
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(duration) % DateTimeConstants.SECONDS_PER_MINUTE;
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(duration) % DateTimeConstants.MINUTES_PER_HOUR;
         long hours = TimeUnit.MILLISECONDS.toHours(duration);
 
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);

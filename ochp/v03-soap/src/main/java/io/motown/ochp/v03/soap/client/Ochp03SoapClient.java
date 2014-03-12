@@ -87,7 +87,7 @@ public class Ochp03SoapClient implements Ochp03Client {
             cdrInfo.setStartDatetime(DateFormatter.toISO8601(transaction.getTimeStart()));
             cdrInfo.setEndDatetime(DateFormatter.toISO8601(transaction.getTimeStop()));
             cdrInfo.setChargePointId(chargingStation.getChargingStationId());
-            cdrInfo.setVolume(String.format("%.4f", transaction.getVolume()));
+            cdrInfo.setVolume(String.format("%.4f", transaction.calculateVolume()));
 /* TODO: Decide if the fields below will be provided - Ingo Pak, 11 Mar 2014
             cdrInfo.setChargePointAddress();
             cdrInfo.setChargePointCity();
