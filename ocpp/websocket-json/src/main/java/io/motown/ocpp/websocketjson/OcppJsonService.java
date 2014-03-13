@@ -20,7 +20,10 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.request.BootNotificationRequest;
+import io.motown.ocpp.websocketjson.request.DataTransferRequest;
 import io.motown.ocpp.websocketjson.response.BootNotificationResponse;
+import io.motown.ocpp.websocketjson.response.DataTransferResponse;
+import io.motown.ocpp.websocketjson.response.DataTransferStatus;
 import io.motown.ocpp.websocketjson.response.RegistrationStatus;
 import io.motown.ocpp.websocketjson.schema.SchemaValidator;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
@@ -59,27 +62,40 @@ public class OcppJsonService {
     }
 
     private WampMessage processWampMessage(ChargingStationId chargingStationId, WampMessage wampMessage) {
-        BootNotificationResponse result = null;
+        Object result;
 
         switch (wampMessage.getProcUri().toLowerCase()) {
             case "bootnotification":
                 result = processBootNotification(chargingStationId, wampMessage.getPayloadAsString());
                 break;
-            //TODO other messages
+            case "datatransfer":
+                result = processDataTransfer(chargingStationId, wampMessage.getPayloadAsString());
+                break;
+            default:
+                LOG.error("Unknown ProcUri: " + wampMessage.getProcUri());
+                return null;
         }
 
         return new WampMessage(WampMessage.CALL_RESULT, wampMessage.getCallId(), result);
     }
 
     private BootNotificationResponse processBootNotification(ChargingStationId chargingStationId, String payload) {
-        BootNotificationRequest bootNotificationRequest = gson.fromJson(payload, BootNotificationRequest.class);
+        BootNotificationRequest request = gson.fromJson(payload, BootNotificationRequest.class);
 
-        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(chargingStationId, null, bootNotificationRequest.getChargePointVendor(),
-                bootNotificationRequest.getChargePointModel(), PROTOCOL_IDENTIFIER, bootNotificationRequest.getChargePointSerialNumber(), bootNotificationRequest.getChargeBoxSerialNumber(),
-                bootNotificationRequest.getFirmwareVersion(), bootNotificationRequest.getIccid(), bootNotificationRequest.getImsi(), bootNotificationRequest.getMeterType(),
-                bootNotificationRequest.getMeterSerialNumber());
+        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(chargingStationId, null, request.getChargePointVendor(),
+                request.getChargePointModel(), PROTOCOL_IDENTIFIER, request.getChargePointSerialNumber(), request.getChargeBoxSerialNumber(),
+                request.getFirmwareVersion(), request.getIccid(), request.getImsi(), request.getMeterType(),
+                request.getMeterSerialNumber());
 
         return new BootNotificationResponse(bootChargingStationResult.isAccepted()?RegistrationStatus.ACCEPTED:RegistrationStatus.REJECTED, bootChargingStationResult.getTimeStamp(), bootChargingStationResult.getHeartbeatInterval());
+    }
+
+    private DataTransferResponse processDataTransfer(ChargingStationId chargingStationId, String payload) {
+        DataTransferRequest request = gson.fromJson(payload, DataTransferRequest.class);
+
+        domainService.dataTransfer(chargingStationId, request.getData(), request.getVendorId(), request.getMessageId());
+
+        return new DataTransferResponse(DataTransferStatus.ACCEPTED, null);
     }
 
     public void setWampMessageParser(WampMessageParser wampMessageParser) {

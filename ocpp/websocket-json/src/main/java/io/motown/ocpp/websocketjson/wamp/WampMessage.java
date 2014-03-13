@@ -37,22 +37,31 @@ public class WampMessage {
     private String errorDescription;
     private String errorDetails;
 
+    private static final int CALL_PROC_URI_INDEX = 2;
+    private static final int CALL_PAYLOAD_INDEX = 3;
+    private static final int CALL_RESULT_PAYLOAD_INDEX = 2;
+    private static final int CALL_ERROR_ERROR_CODE_INDEX = 2;
+    private static final int CALL_ERROR_ERROR_DESCRIPTION_INDEX = 3;
+    private static final int CALL_ERROR_ERROR_DETAILS_INDEX = 4;
+
     public WampMessage(List<Object> list) {
         messageType = ((Double) list.get(0)).intValue();
         callId = list.get(1).toString();
 
         switch (messageType) {
             case CALL:
-                procUri = list.get(2).toString();
-                payload = list.get(3);
+                procUri = list.get(CALL_PROC_URI_INDEX).toString();
+                payload = list.get(CALL_PAYLOAD_INDEX);
                 break;
             case CALL_RESULT:
-                payload = list.get(2).toString();
+                payload = list.get(CALL_RESULT_PAYLOAD_INDEX).toString();
                 break;
             case CALL_ERROR:
-                errorCode = list.get(2).toString();
-                errorDescription = list.get(3).toString();
-                errorDetails = list.get(4).toString();
+                errorCode = list.get(CALL_ERROR_ERROR_CODE_INDEX).toString();
+                errorDescription = list.get(CALL_ERROR_ERROR_DESCRIPTION_INDEX).toString();
+                errorDetails = list.get(CALL_ERROR_ERROR_DETAILS_INDEX).toString();
+                break;
+            default:
                 break;
         }
     }
@@ -96,6 +105,8 @@ public class WampMessage {
                 target.add(getErrorCode());
                 target.add(getErrorDescription());
                 target.add(getErrorDetails());
+                break;
+            default:
                 break;
         }
 
