@@ -27,7 +27,9 @@ public class BootNotificationResponse {
 
     public BootNotificationResponse(RegistrationStatus status, Date currentTime, int heartbeatInterval) {
         this.status = status;
-        this.currentTime = currentTime;
+        if(currentTime != null) {
+            this.currentTime = new Date(currentTime.getTime());
+        }
         this.heartbeatInterval = heartbeatInterval;
     }
 
@@ -36,7 +38,7 @@ public class BootNotificationResponse {
     }
 
     public Date getCurrentTime() {
-        return currentTime;
+        return currentTime != null ? new Date(currentTime.getTime()) : null;
     }
 
     public int getHeartbeatInterval() {
