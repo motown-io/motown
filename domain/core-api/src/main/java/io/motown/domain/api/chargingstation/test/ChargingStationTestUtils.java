@@ -122,6 +122,31 @@ public final class ChargingStationTestUtils {
     public static final String CHARGE_BOX_SERIAL_NUMBER = "CB_SN001";
 
     /**
+     * The default firmware version.
+     */
+    public static final String FIRMWARE_VERSION = "0.0.1";
+
+    /**
+     * The default ICCID.
+     */
+    public static final String ICCID = "iccid";
+
+    /**
+     * The default IMSI.
+     */
+    public static final String IMSI = "imsi";
+
+    /**
+     * The default meter type.
+     */
+    public static final String METER_TYPE = "meterType";
+
+    /**
+     * The default meter serial number.
+     */
+    public static final String METER_SERIAL_NUMBER = "SN002";
+
+    /**
      * The default data transfer vendor.
      */
     public static final String DATA_TRANSFER_VENDOR = "ACME_CORP";

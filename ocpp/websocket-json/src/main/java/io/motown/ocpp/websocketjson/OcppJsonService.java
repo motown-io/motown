@@ -1,0 +1,100 @@
+/**
+ * Copyright (C) 2013 Motown.IO (info@motown.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.motown.ocpp.websocketjson;
+
+import com.google.gson.Gson;
+import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
+import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.request.BootNotificationRequest;
+import io.motown.ocpp.websocketjson.response.BootNotificationResponse;
+import io.motown.ocpp.websocketjson.response.RegistrationStatus;
+import io.motown.ocpp.websocketjson.schema.SchemaValidator;
+import io.motown.ocpp.websocketjson.wamp.WampMessage;
+import io.motown.ocpp.websocketjson.wamp.WampMessageParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Reader;
+
+public class OcppJsonService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(OcppJsonService.class);
+
+    private WampMessageParser wampMessageParser;
+
+    private SchemaValidator schemaValidator;
+
+    private DomainService domainService;
+
+    private Gson gson;
+
+    // TODO ocppj 1.2?
+    public static final String PROTOCOL_IDENTIFIER = "OCPPJ15";
+
+    public String handleMessage(ChargingStationId chargingStationId, Reader reader) {
+        WampMessage wampMessage = wampMessageParser.parseMessage(reader);
+
+        LOG.info("Received call from [{}]: {}", chargingStationId.getId(), wampMessage.getPayloadAsString());
+
+        if (!schemaValidator.isValidRequest(wampMessage.getPayloadAsString(), wampMessage.getProcUri())) {
+            LOG.error("Cannot continue processing invalid request for [{}].", chargingStationId.getId());
+            return null;
+        }
+
+        return processWampMessage(chargingStationId, wampMessage).toJson(gson);
+    }
+
+    private WampMessage processWampMessage(ChargingStationId chargingStationId, WampMessage wampMessage) {
+        BootNotificationResponse result = null;
+
+        switch (wampMessage.getProcUri()) {
+            case "BootNotification":
+                result = processBootNotification(chargingStationId, wampMessage.getPayloadAsString());
+                break;
+            //TODO other messages
+        }
+
+        return new WampMessage(WampMessage.CALL_RESULT, wampMessage.getCallId(), result);
+    }
+
+    private BootNotificationResponse processBootNotification(ChargingStationId chargingStationId, String payload) {
+        BootNotificationRequest bootNotificationRequest = gson.fromJson(payload, BootNotificationRequest.class);
+
+        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(chargingStationId, null, bootNotificationRequest.getChargePointVendor(),
+                bootNotificationRequest.getChargePointModel(), PROTOCOL_IDENTIFIER, bootNotificationRequest.getChargePointSerialNumber(), bootNotificationRequest.getChargeBoxSerialNumber(),
+                bootNotificationRequest.getFirmwareVersion(), bootNotificationRequest.getIccid(), bootNotificationRequest.getImsi(), bootNotificationRequest.getMeterType(),
+                bootNotificationRequest.getMeterSerialNumber());
+
+        return new BootNotificationResponse(bootChargingStationResult.isAccepted()?RegistrationStatus.ACCEPTED:RegistrationStatus.REJECTED, bootChargingStationResult.getTimeStamp(), bootChargingStationResult.getHeartbeatInterval());
+    }
+
+    public void setWampMessageParser(WampMessageParser wampMessageParser) {
+        this.wampMessageParser = wampMessageParser;
+    }
+
+    public void setSchemaValidator(SchemaValidator schemaValidator) {
+        this.schemaValidator = schemaValidator;
+    }
+
+    public void setDomainService(DomainService domainService) {
+        this.domainService = domainService;
+    }
+
+    public void setGson(Gson gson) {
+        this.gson = gson;
+    }
+}
