@@ -61,8 +61,8 @@ public class OcppJsonService {
     private WampMessage processWampMessage(ChargingStationId chargingStationId, WampMessage wampMessage) {
         BootNotificationResponse result = null;
 
-        switch (wampMessage.getProcUri()) {
-            case "BootNotification":
+        switch (wampMessage.getProcUri().toLowerCase()) {
+            case "bootnotification":
                 result = processBootNotification(chargingStationId, wampMessage.getPayloadAsString());
                 break;
             //TODO other messages
