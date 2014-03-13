@@ -16,6 +16,7 @@
     <bean class="io.motown.ochp.viewmodel.OchpEventHandler">
         <property name="chargingStationRepository" ref="chargingStationRepository"/>
         <property name="transactionRepository" ref="transactionRepository"/>
+        <property name="identificationRepository" ref="identificationRepository"/>
     </bean>
 
     <bean id="beanValidationInterceptor" class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor"/>
@@ -67,6 +68,10 @@
     </bean>
 
     <bean id="transactionRepository" class="io.motown.ochp.viewmodel.persistence.repostories.TransactionRepository">
+        <property name="entityManager" ref="jpaEntityManager"/>
+    </bean>
+
+    <bean id="identificationRepository" class="io.motown.ochp.viewmodel.persistence.repostories.IdentificationRepository">
         <property name="entityManager" ref="jpaEntityManager"/>
     </bean>
 

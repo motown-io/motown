@@ -16,6 +16,7 @@
 
 package io.motown.ochp.viewmodel.ochp;
 
+import io.motown.ochp.viewmodel.persistence.entities.Identification;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 
 import java.util.List;
@@ -25,4 +26,6 @@ public interface Ochp03Client {
     List getChargePointList();
 
     void addChargeDetailRecords(List<Transaction> transactionList);
+
+    void sendAuthorizationInformation(List<Identification> identifications);
 }

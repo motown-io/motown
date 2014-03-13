@@ -18,8 +18,10 @@ package io.motown.ochp.viewmodel;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ochp.viewmodel.persistence.TransactionStatus;
 import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
+import io.motown.ochp.viewmodel.persistence.entities.Identification;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 import io.motown.ochp.viewmodel.persistence.repostories.ChargingStationRepository;
+import io.motown.ochp.viewmodel.persistence.repostories.IdentificationRepository;
 import io.motown.ochp.viewmodel.persistence.repostories.TransactionRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
@@ -32,6 +34,8 @@ public class OchpEventHandler {
     private ChargingStationRepository chargingStationRepository;
 
     private TransactionRepository transactionRepository;
+
+    private IdentificationRepository identificationRepository;
 
     //TODO: Add eventhandlers for keeping internal OCHP state up to date - Ingo Pak, 05 Mar 2014
     
@@ -85,6 +89,24 @@ public class OchpEventHandler {
         }
     }
 
+    @EventHandler
+    public void handle(AuthorizationResultEvent event) {
+        String identificationToken = event.getIdentifyingToken().getToken();
+        AuthorizationResultStatus status = event.getAuthenticationStatus();
+
+        Identification identification = identificationRepository.findByIdentificationId(identificationToken);
+
+        if (identification == null) {
+            LOG.info("Storing identification {} with status {}", identificationToken, status);
+            identification = new Identification(identificationToken, status);
+        } else {
+            LOG.info("Updating identification {} status to {}", identificationToken, status);
+            identification.setAuthorizationStatus(status);
+        }
+
+        identificationRepository.save(identification);
+    }
+
     /**
      * Get a charging station from the repository based on the charging station id.
      * @param chargingStationId The identifier of the charging station.
@@ -121,5 +143,9 @@ public class OchpEventHandler {
 
     public void setTransactionRepository(TransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
+    }
+
+    public void setIdentificationRepository(IdentificationRepository identificationRepository) {
+        this.identificationRepository = identificationRepository;
     }
 }

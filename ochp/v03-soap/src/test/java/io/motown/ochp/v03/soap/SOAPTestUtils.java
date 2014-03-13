@@ -55,6 +55,15 @@ public final class SOAPTestUtils {
         return response;
     }
 
+    public static SetRoamingAuthorisationListResponse getSetRoamingAuthorisationListResponse(){
+        SetRoamingAuthorisationListResponse response = new SetRoamingAuthorisationListResponse();
+        Result result = new Result();
+        result.setResultCode(0);
+        response.setResult(result);
+
+        return response;
+    }
+
     public static GetChargepointListResponse getChargepointListResponse(){
         GetChargepointListResponse response = new GetChargepointListResponse();
         List<ChargepointInfo> chargepoints = response.getChargepointInfoArray();

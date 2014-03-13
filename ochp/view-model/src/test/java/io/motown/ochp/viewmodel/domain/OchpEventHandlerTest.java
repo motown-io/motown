@@ -15,14 +15,14 @@
  */
 package io.motown.ochp.viewmodel.domain;
 
-import io.motown.domain.api.chargingstation.ChargingStationAcceptedEvent;
-import io.motown.domain.api.chargingstation.TransactionStartedEvent;
-import io.motown.domain.api.chargingstation.TransactionStoppedEvent;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.ochp.viewmodel.OchpEventHandler;
 import io.motown.ochp.viewmodel.persistence.TransactionStatus;
 import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
+import io.motown.ochp.viewmodel.persistence.entities.Identification;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 import io.motown.ochp.viewmodel.persistence.repostories.ChargingStationRepository;
+import io.motown.ochp.viewmodel.persistence.repostories.IdentificationRepository;
 import io.motown.ochp.viewmodel.persistence.repostories.TransactionRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,15 +50,20 @@ public class OchpEventHandlerTest {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Autowired
+    private IdentificationRepository identificationRepository;
+
     @Before
     public void setUp() {
         transactionRepository.deleteAll();
         chargingStationRepository.deleteAll();
+        identificationRepository.deleteAll();
 
         eventHandler = new OchpEventHandler();
 
         eventHandler.setChargingStationRepository(chargingStationRepository);
         eventHandler.setTransactionRepository(transactionRepository);
+        eventHandler.setIdentificationRepository(identificationRepository);
     }
 
     @Test
@@ -93,6 +98,23 @@ public class OchpEventHandlerTest {
     @Test
     public void testHandleChargingStationAcceptedEvent() {
         eventHandler.handle(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
+    }
+
+    @Test
+    public void testHandleAuthorizationResultEvent() {
+        eventHandler.handle(new AuthorizationResultEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, AuthorizationResultStatus.ACCEPTED));
+    }
+
+    @Test
+    public void testHandleAuthorizationResultEventUpdateToInvalid() {
+        Identification identification = new Identification(IDENTIFYING_TOKEN.getToken(), AuthorizationResultStatus.ACCEPTED);
+        identificationRepository.save(identification);
+
+        eventHandler.handle(new AuthorizationResultEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, AuthorizationResultStatus.INVALID));
+
+        Identification identificationFromRepo = identificationRepository.findByIdentificationId(IDENTIFYING_TOKEN.getToken());
+        assertNotNull(identificationFromRepo);
+        assertTrue(AuthorizationResultStatus.INVALID.equals(identificationFromRepo.getAuthorizationStatus()));
     }
 
     @Test
@@ -208,13 +230,23 @@ public class OchpEventHandlerTest {
     }
 
     @Test
-    public void testChargingStation() {
+    public void testChargingStationRetrieval() {
         ChargingStation chargingStation = new ChargingStation(CHARGING_STATION_ID.getId());
         chargingStationRepository.save(chargingStation);
 
         ChargingStation chargingStationFromRepo = chargingStationRepository.findByChargingStationId(CHARGING_STATION_ID.getId());
         assertNotNull(chargingStationFromRepo);
         assertEquals(chargingStation, chargingStationFromRepo);
+    }
+
+    @Test
+    public void testIdentificationRetrieval() {
+        Identification identification = new Identification(IDENTIFYING_TOKEN.getToken(), AuthorizationResultStatus.ACCEPTED);
+        identificationRepository.save(identification);
+
+        Identification identificationFromRepo = identificationRepository.findByIdentificationId(IDENTIFYING_TOKEN.getToken());
+        assertNotNull(identificationFromRepo);
+        assertEquals(identification, identificationFromRepo);
     }
 
 }

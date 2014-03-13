@@ -16,8 +16,11 @@
 
 package io.motown.ochp.v03.soap.client;
 
+import io.motown.domain.api.chargingstation.IdentifyingToken;
 import io.motown.ochp.viewmodel.persistence.TransactionStatus;
+import io.motown.ochp.viewmodel.persistence.entities.Identification;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
+import io.motown.ochp.viewmodel.persistence.repostories.IdentificationRepository;
 import io.motown.ochp.viewmodel.persistence.repostories.TransactionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +34,8 @@ public class OchpSchedulingService {
     private Ochp03SoapClient ochp03SoapClient;
 
     private TransactionRepository transactionRepository;
+
+    private IdentificationRepository identificationRepository;
 
     public void executeGetChargingStationList() {
         ochp03SoapClient.getChargePointList();
@@ -49,6 +54,14 @@ public class OchpSchedulingService {
         } else {
             LOG.info("No action required, there are no new CDR(s) to add");
         }
+    }
+
+    public void executeSetRoamingAuthorizationList() {
+        LOG.info("Executing set roaming authorisation list");
+
+        List<Identification> identifications = identificationRepository.all();
+
+        ochp03SoapClient.sendAuthorizationInformation(identifications);
     }
 
     public void setOchp03SoapClient(Ochp03SoapClient ochp03SoapClient) {

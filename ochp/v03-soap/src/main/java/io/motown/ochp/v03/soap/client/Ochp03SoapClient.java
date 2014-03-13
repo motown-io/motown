@@ -15,10 +15,12 @@
  */
 package io.motown.ochp.v03.soap.client;
 
+import io.motown.domain.api.chargingstation.AuthorizationResultStatus;
 import io.motown.ochp.util.DateFormatter;
 import io.motown.ochp.v03.soap.schema.*;
 import io.motown.ochp.viewmodel.ochp.Ochp03Client;
 import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
+import io.motown.ochp.viewmodel.persistence.entities.Identification;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +33,9 @@ public class Ochp03SoapClient implements Ochp03Client {
     private static final Logger LOG = LoggerFactory.getLogger(Ochp03SoapClient.class);
 
     private static final int ACCEPTED = 0;
+
+    private static final int DEACTIVATED = 0;
+    private static final int ACTIVATED = 1;
 
     private OchpProxyFactory ochpProxyFactory;
 
@@ -71,7 +76,7 @@ public class Ochp03SoapClient implements Ochp03Client {
 
     @Override
     public void addChargeDetailRecords(List<Transaction> transactionList) {
-        LOG.info("OCHP addCDRs");
+        LOG.info("Add {} CDRs");
         forceAuthentication();
 
         AddCDRsRequest request = new AddCDRsRequest();
@@ -108,7 +113,40 @@ public class Ochp03SoapClient implements Ochp03Client {
         AddCDRsResponse response = this.createOchpClientService().addCDRs(request, cachedAuthenticationToken);
 
         if(response.getResult() == null || response.getResult().getResultCode() != ACCEPTED) {
-            LOG.error("Failed to add the CDR's");
+            LOG.error("Failed to add the CDR's: {}", response.getResult().getResultDescription());
+        }
+    }
+
+    /**
+     * Sends the complete list of known identification tokens
+     * @param identifications
+     */
+    @Override
+    public void sendAuthorizationInformation(List<Identification> identifications) {
+        LOG.info("Send authorisation list");
+        forceAuthentication();
+
+        SetRoamingAuthorisationListRequest request = new SetRoamingAuthorisationListRequest();
+        List<RoamingAuthorisationInfo> roamingAuthorisationList = request.getRoamingAuthorisationInfoArray();
+
+        for (Identification identification : identifications){
+            RoamingAuthorisationInfo authorisationInfo = new RoamingAuthorisationInfo();
+            //TODO: Spec is unclear if tokenId or evcoId(emtId) should be used - Ingo Pak, 13 Mar 2014
+            authorisationInfo.setEvcoId(identification.getIdentificationId());
+            authorisationInfo.setTokenId(identification.getIdentificationId());
+            if(AuthorizationResultStatus.ACCEPTED.equals(identification.getAuthorizationStatus())) {
+                authorisationInfo.setTokenActivated(ACTIVATED);
+            } else {
+                authorisationInfo.setTokenActivated(DEACTIVATED);
+            }
+
+            roamingAuthorisationList.add(authorisationInfo);
+        }
+
+        SetRoamingAuthorisationListResponse response = this.createOchpClientService().setRoamingAuthorisationList(request, cachedAuthenticationToken);
+
+        if(response.getResult() != null && response.getResult().getResultCode() != ACCEPTED) {
+            LOG.error("Failed to send the roaming authorisation list: {}", response.getResult().getResultDescription());
         }
     }
 

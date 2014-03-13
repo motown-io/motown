@@ -16,15 +16,18 @@
 package io.motown.ochp.v03.soap.client;
 
 import com.google.common.collect.Lists;
+import io.motown.domain.api.chargingstation.AuthorizationResultStatus;
 import io.motown.ochp.util.DateFormatter;
 import io.motown.ochp.v03.soap.schema.*;
 import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
+import io.motown.ochp.viewmodel.persistence.entities.Identification;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.awt.*;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -88,7 +91,6 @@ public class Ochp03SoapClientTest {
 
         ArgumentCaptor<AddCDRsRequest> addCDRsRequestArgument = ArgumentCaptor.forClass(AddCDRsRequest.class);
         verify(echsClient).addCDRs(addCDRsRequestArgument.capture(), anyString());
-        //test duration and volume
         CDRInfo firstCDRInfo = addCDRsRequestArgument.getValue().getCdrInfoArray().get(0);
         assertEquals(transaction.getEvseId(), firstCDRInfo.getEvseId());
         assertEquals(transaction.getIdentificationId(), firstCDRInfo.getAuthenticationId());
@@ -97,6 +99,23 @@ public class Ochp03SoapClientTest {
         assertEquals(DateFormatter.formatDuration(transaction.getTimeStart(), transaction.getTimeStop()), firstCDRInfo.getDuration());
         assertEquals(DateFormatter.formatDuration(transaction.getTimeStart(), transaction.getTimeStop()), firstCDRInfo.getDuration());
         //TODO: verify the rest of the parameters to see if they are correctly converted - Ingo Pak, 06 Mar 2014
+    }
+
+    @Test
+    public void sendRoamingAuthenticationList() {
+        when(echsClient.setRoamingAuthorisationList(any(SetRoamingAuthorisationListRequest.class), anyString())).thenReturn(getSetRoamingAuthorisationListResponse());
+
+        List<Identification> identifications = Lists.newArrayList();
+        Identification identification = new Identification("idToken123", AuthorizationResultStatus.ACCEPTED);
+        identifications.add(identification);
+        client.sendAuthorizationInformation(identifications);
+
+        ArgumentCaptor<SetRoamingAuthorisationListRequest> authorisationListRequestCaptor = ArgumentCaptor.forClass(SetRoamingAuthorisationListRequest.class);
+        verify(echsClient).setRoamingAuthorisationList(authorisationListRequestCaptor.capture(), anyString());
+
+        RoamingAuthorisationInfo firstRoamingAuthorisationInfo = authorisationListRequestCaptor.getValue().getRoamingAuthorisationInfoArray().get(0);
+        assertEquals(identification.getIdentificationId(), firstRoamingAuthorisationInfo.getTokenId());
+        assertEquals(1, firstRoamingAuthorisationInfo.getTokenActivated());
     }
 
 }

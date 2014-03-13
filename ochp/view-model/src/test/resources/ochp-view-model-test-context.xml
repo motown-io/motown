@@ -31,6 +31,10 @@
         <property name="entityManager" ref="entityManager"/>
     </bean>
 
+    <bean class="io.motown.ochp.viewmodel.persistence.repostories.IdentificationRepository">
+        <property name="entityManager" ref="entityManager"/>
+    </bean>
+
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
