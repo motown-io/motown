@@ -50,7 +50,7 @@ public class SchemaValidator {
 
         if(schema == null) {
             try {
-                JsonNode fstabSchema = JsonLoader.fromResource("/schemas/" + procUri + ".json");
+                JsonNode fstabSchema = JsonLoader.fromResource("/schemas/" + procUri.toLowerCase() + ".json");
 
                 schema = factory.getJsonSchema(fstabSchema);
 
