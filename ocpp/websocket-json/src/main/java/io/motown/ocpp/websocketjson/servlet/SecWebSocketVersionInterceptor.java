@@ -28,6 +28,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +44,8 @@ public class SecWebSocketVersionInterceptor implements Filter {
     private static final String PROTOCOL_SEPARATOR = ",";
 
     private List<String> supportedProtocols = new ArrayList<>();
+
+    private static final String URL_ENCODER_ENCODING = "UTF-8";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -63,7 +67,7 @@ public class SecWebSocketVersionInterceptor implements Filter {
 
             if(header != null && !header.isEmpty()) {
                 if(supportedProtocols.contains(header.toLowerCase())) {
-                    HttpServletResponse.class.cast(response).addHeader(SEC_WEB_SOCKET_PROTOCOL_HEADER, header);
+                    HttpServletResponse.class.cast(response).addHeader(SEC_WEB_SOCKET_PROTOCOL_HEADER, URLEncoder.encode(header, URL_ENCODER_ENCODING));
                 } else {
                     LOG.warn("Invalid websocket protocol [{}] received.", header);
                     HttpServletResponse.class.cast(response).sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "Websocket protocol not supported");
