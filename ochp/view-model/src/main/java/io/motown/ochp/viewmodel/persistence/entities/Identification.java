@@ -16,12 +16,11 @@
 package io.motown.ochp.viewmodel.persistence.entities;
 
 import io.motown.domain.api.chargingstation.AuthorizationResultStatus;
-import io.motown.ochp.viewmodel.persistence.TransactionStatus;
 
-import javax.persistence.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
 import java.util.Objects;
 
 @Entity

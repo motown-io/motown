@@ -16,7 +16,6 @@
 
 package io.motown.ochp.v03.soap.client;
 
-import io.motown.domain.api.chargingstation.IdentifyingToken;
 import io.motown.ochp.viewmodel.persistence.TransactionStatus;
 import io.motown.ochp.viewmodel.persistence.entities.Identification;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
