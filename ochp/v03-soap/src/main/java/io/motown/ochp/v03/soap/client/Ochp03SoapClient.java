@@ -131,7 +131,7 @@ public class Ochp03SoapClient implements Ochp03Client {
 
         for (Identification identification : identifications){
             RoamingAuthorisationInfo authorisationInfo = new RoamingAuthorisationInfo();
-            //TODO: Spec is unclear if tokenId or evcoId(emtId) should be used - Ingo Pak, 13 Mar 2014
+            //TODO: Spec is unclear if tokenId or evcoId(emtId) should be used, and which information is optional - Ingo Pak, 13 Mar 2014
             authorisationInfo.setEvcoId(identification.getIdentificationId());
             authorisationInfo.setTokenId(identification.getIdentificationId());
             if(AuthorizationResultStatus.ACCEPTED.equals(identification.getAuthorizationStatus())) {

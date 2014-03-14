@@ -49,6 +49,7 @@
     </bean>
     <task:scheduled-tasks>
         <task:scheduled ref="ochpSchedulingService" method="executeAddCDRs" cron="${io.motown.ochp.addcdrs.cron}"></task:scheduled>
+        <task:scheduled ref="ochpSchedulingService" method="executeSetRoamingAuthorizationList" cron="${io.motown.ochp.setauthorizationlist.cron}"></task:scheduled>
     </task:scheduled-tasks>
 
 </beans>
