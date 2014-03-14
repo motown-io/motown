@@ -28,6 +28,8 @@ public class GsonFactoryBean implements FactoryBean<Gson> {
 
     private Set<TypeAdapterSerializer<?>> typeAdapterSerializers;
 
+    private Set<TypeAdapterDeserializer<?>> typeAdapterDeserializers;
+
     @Override
     public Gson getObject() {
         GsonBuilder builder = new GsonBuilder();
@@ -37,6 +39,10 @@ public class GsonFactoryBean implements FactoryBean<Gson> {
         }
 
         for (TypeAdapterSerializer<?> typeAdapter : typeAdapterSerializers) {
+            builder.registerTypeAdapter(typeAdapter.getAdaptedType(), typeAdapter);
+        }
+
+        for (TypeAdapterDeserializer<?> typeAdapter : typeAdapterDeserializers) {
             builder.registerTypeAdapter(typeAdapter.getAdaptedType(), typeAdapter);
         }
 
@@ -59,5 +65,9 @@ public class GsonFactoryBean implements FactoryBean<Gson> {
 
     public void setTypeAdapterSerializers(Set<TypeAdapterSerializer<?>> typeAdapterSerializers) {
         this.typeAdapterSerializers = typeAdapterSerializers;
+    }
+
+    public void setTypeAdapterDeserializers(Set<TypeAdapterDeserializer<?>> typeAdapterDeserializers) {
+        this.typeAdapterDeserializers = typeAdapterDeserializers;
     }
 }

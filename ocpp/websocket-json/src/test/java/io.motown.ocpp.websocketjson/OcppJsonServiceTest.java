@@ -19,12 +19,10 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.gson.DataTransferStatusTypeAdapterSerializer;
-import io.motown.ocpp.websocketjson.gson.GsonFactoryBean;
-import io.motown.ocpp.websocketjson.gson.RegistrationStatusTypeAdapterSerializer;
-import io.motown.ocpp.websocketjson.gson.TypeAdapterSerializer;
+import io.motown.ocpp.websocketjson.gson.*;
 import io.motown.ocpp.websocketjson.request.BootNotificationRequest;
 import io.motown.ocpp.websocketjson.request.DataTransferRequest;
+import io.motown.ocpp.websocketjson.request.DiagnosticsStatus;
 import io.motown.ocpp.websocketjson.response.DataTransferStatus;
 import io.motown.ocpp.websocketjson.response.RegistrationStatus;
 import io.motown.ocpp.websocketjson.schema.SchemaValidator;
@@ -71,6 +69,11 @@ public class OcppJsonServiceTest {
                 .add(new DataTransferStatusTypeAdapterSerializer())
                 .build();
         gsonFactoryBean.setTypeAdapterSerializers(typeAdapterSerializers);
+
+        Set<TypeAdapterDeserializer<?>> typeAdapterDeserializers = ImmutableSet.<TypeAdapterDeserializer<?>>builder()
+                .add(new DiagnosticsStatusTypeAdapterDeserializer())
+                .build();
+        gsonFactoryBean.setTypeAdapterDeserializers(typeAdapterDeserializers);
 
         gson = gsonFactoryBean.getObject();
 
@@ -139,6 +142,27 @@ public class OcppJsonServiceTest {
         when(schemaValidator.isValidRequest(anyString(), anyString())).thenReturn(false);
 
         String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(wampMessage.toJson(gson)));
+
+        assertNull(response);
+    }
+
+    @Test
+    public void handleDiagnosticsStatusNotification() {
+        String callId = UUID.randomUUID().toString();
+        String request = String.format("[%d,\"%s\",\"DiagnosticsStatusNotification\",{\"status\":\"%s\"}]", WampMessage.CALL, callId, DiagnosticsStatus.UPLOADED.value());
+
+        String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
+
+        assertEquals(String.format("[%d,\"%s\",{}]", WampMessage.CALL_RESULT, callId), response);
+    }
+
+    @Test
+    public void handleInvalidDiagnosticsStatusNotification() {
+        String callId = UUID.randomUUID().toString();
+        String request = String.format("[%d,\"%s\",\"DiagnosticsStatusNotification\",{\"status\":\"%s\"}]", WampMessage.CALL, callId, DiagnosticsStatus.UPLOADED);
+        when(schemaValidator.isValidRequest(anyString(), anyString())).thenReturn(false);
+
+        String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
 
         assertNull(response);
     }

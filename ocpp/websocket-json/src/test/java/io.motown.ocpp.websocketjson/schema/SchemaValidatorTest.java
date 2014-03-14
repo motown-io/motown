@@ -31,7 +31,6 @@ public class SchemaValidatorTest {
         assertFalse(validRequest);
     }
 
-
     @Test
     public void validateValidBootNotification() {
         SchemaValidator validator = new SchemaValidator();
@@ -46,6 +45,42 @@ public class SchemaValidatorTest {
         SchemaValidator validator = new SchemaValidator();
 
         boolean validRequest = validator.isValidRequest("{\"chargePointModel\":\"NQC-ACDC\",\"chargePointSerialNumber\":\"gir.vat.mx.000e48\",\"chargeBoxSerialNumber\":\"gir.vat.mx.000e48\",\"firmwareVersion\":\"1.0.49\",\"iccid\":\"\",\"imsi\":\"\",\"meterType\":\"DBT NQC-ACDC\",\"meterSerialNumber\":\"gir.vat.mx.000e48\"}", "BootNotification");
+
+        assertFalse(validRequest);
+    }
+
+    @Test
+    public void validateValidDataTransfer() {
+        SchemaValidator validator = new SchemaValidator();
+
+        boolean validRequest = validator.isValidRequest("{\"vendorId\": \"fr.tm.cnr\",\"messageId\": \"GetChargeInstruction\",\"data\": \"\"}", "DataTransfer");
+
+        assertTrue(validRequest);
+    }
+
+    @Test
+    public void validateInvalidDataTransfer() {
+        SchemaValidator validator = new SchemaValidator();
+
+        boolean validRequest = validator.isValidRequest("{\"messageId\": \"GetChargeInstruction\",\"data\": \"\"}", "DataTransfer");
+
+        assertFalse(validRequest);
+    }
+
+    @Test
+    public void validateValidDiagnosticsStatusNotification() {
+        SchemaValidator validator = new SchemaValidator();
+
+        boolean validRequest = validator.isValidRequest("{\"status\": \"Uploaded\"}", "DiagnosticsStatusNotification");
+
+        assertTrue(validRequest);
+    }
+
+    @Test
+    public void validateInvalidDiagnosticsStatusNotification() {
+        SchemaValidator validator = new SchemaValidator();
+
+        boolean validRequest = validator.isValidRequest("{\"status\": \"UPLOADED\"}", "DiagnosticsStatusNotification");
 
         assertFalse(validRequest);
     }

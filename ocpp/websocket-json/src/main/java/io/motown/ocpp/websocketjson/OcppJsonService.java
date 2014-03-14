@@ -21,10 +21,9 @@ import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.request.BootNotificationRequest;
 import io.motown.ocpp.websocketjson.request.DataTransferRequest;
-import io.motown.ocpp.websocketjson.response.BootNotificationResponse;
-import io.motown.ocpp.websocketjson.response.DataTransferResponse;
-import io.motown.ocpp.websocketjson.response.DataTransferStatus;
-import io.motown.ocpp.websocketjson.response.RegistrationStatus;
+import io.motown.ocpp.websocketjson.request.DiagnosticsStatus;
+import io.motown.ocpp.websocketjson.request.DiagnosticsStatusNotificationRequest;
+import io.motown.ocpp.websocketjson.response.*;
 import io.motown.ocpp.websocketjson.schema.SchemaValidator;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import io.motown.ocpp.websocketjson.wamp.WampMessageParser;
@@ -73,6 +72,9 @@ public class OcppJsonService {
             case "datatransfer":
                 result = processDataTransfer(chargingStationId, wampMessage.getPayloadAsString());
                 break;
+            case "diagnosticsstatusnotification":
+                result = processDiagnosticsStatusNotification(chargingStationId, wampMessage.getPayloadAsString());
+                break;
             default:
                 LOG.error("Unknown ProcUri: " + wampMessage.getProcUri());
                 return null;
@@ -98,6 +100,14 @@ public class OcppJsonService {
         domainService.dataTransfer(chargingStationId, request.getData(), request.getVendorId(), request.getMessageId());
 
         return new DataTransferResponse(DataTransferStatus.ACCEPTED, null);
+    }
+
+    private Object processDiagnosticsStatusNotification(ChargingStationId chargingStationId, String payload) {
+        DiagnosticsStatusNotificationRequest request = gson.fromJson(payload, DiagnosticsStatusNotificationRequest.class);
+
+        domainService.diagnosticsUploadStatusUpdate(chargingStationId, request.getStatus().equals(DiagnosticsStatus.UPLOADED));
+
+        return new DiagnosticsStatusNotificationResponse();
     }
 
     public void setWampMessageParser(WampMessageParser wampMessageParser) {

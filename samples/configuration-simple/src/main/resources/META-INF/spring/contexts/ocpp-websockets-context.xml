@@ -30,6 +30,11 @@
                 <bean class="io.motown.ocpp.websocketjson.gson.DataTransferStatusTypeAdapterSerializer"/>
             </set>
         </property>
+        <property name="typeAdapterDeserializers">
+            <set>
+                <bean class="io.motown.ocpp.websocketjson.gson.DiagnosticsStatusTypeAdapterDeserializer"/>
+            </set>
+        </property>
     </bean>
 
     <bean class="io.motown.ocpp.websocketjson.OcppJsonService">
