@@ -15,21 +15,17 @@
  */
 package io.motown.ocpp.soaputils.interceptor;
 
-import com.sun.org.apache.xerces.internal.dom.DocumentImpl;
-import com.sun.org.apache.xerces.internal.dom.ElementNSImpl;
 import org.apache.cxf.binding.soap.SoapHeader;
 import org.apache.cxf.headers.Header;
 import org.apache.cxf.message.Message;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.SOAPHeader;
-
 import java.util.ArrayList;
 
 import static junit.framework.Assert.assertNotNull;
