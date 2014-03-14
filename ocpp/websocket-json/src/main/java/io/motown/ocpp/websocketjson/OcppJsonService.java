@@ -58,7 +58,9 @@ public class OcppJsonService {
             return null;
         }
 
-        return processWampMessage(chargingStationId, wampMessage).toJson(gson);
+        WampMessage processedMessage = processWampMessage(chargingStationId, wampMessage);
+
+        return processedMessage != null ? processedMessage.toJson(gson) : null;
     }
 
     private WampMessage processWampMessage(ChargingStationId chargingStationId, WampMessage wampMessage) {

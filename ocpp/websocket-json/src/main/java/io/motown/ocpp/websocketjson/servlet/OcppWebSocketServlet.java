@@ -73,7 +73,9 @@ public class OcppWebSocketServlet extends WebSocketStreamingHandlerAdapter {
 
         String result = ocppJsonService.handleMessage(new ChargingStationId(chargingStationId), reader);
 
-        webSocket.write(result);
+        if (result != null) {
+            webSocket.write(result);
+        }
     }
 
     public void setOcppJsonService(OcppJsonService ocppJsonService) {

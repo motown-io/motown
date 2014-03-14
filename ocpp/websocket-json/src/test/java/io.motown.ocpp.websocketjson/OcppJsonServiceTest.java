@@ -19,10 +19,13 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.gson.DataTransferStatusTypeAdapterSerializer;
 import io.motown.ocpp.websocketjson.gson.GsonFactoryBean;
 import io.motown.ocpp.websocketjson.gson.RegistrationStatusTypeAdapterSerializer;
 import io.motown.ocpp.websocketjson.gson.TypeAdapterSerializer;
 import io.motown.ocpp.websocketjson.request.BootNotificationRequest;
+import io.motown.ocpp.websocketjson.request.DataTransferRequest;
+import io.motown.ocpp.websocketjson.response.DataTransferStatus;
 import io.motown.ocpp.websocketjson.response.RegistrationStatus;
 import io.motown.ocpp.websocketjson.schema.SchemaValidator;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
@@ -65,6 +68,7 @@ public class OcppJsonServiceTest {
         gsonFactoryBean.setDateFormat(dateFormat);
         Set<TypeAdapterSerializer<?>> typeAdapterSerializers = ImmutableSet.<TypeAdapterSerializer<?>>builder()
                 .add(new RegistrationStatusTypeAdapterSerializer())
+                .add(new DataTransferStatusTypeAdapterSerializer())
                 .build();
         gsonFactoryBean.setTypeAdapterSerializers(typeAdapterSerializers);
 
@@ -77,6 +81,15 @@ public class OcppJsonServiceTest {
         service.setGson(gson);
         service.setSchemaValidator(schemaValidator);
         service.setWampMessageParser(new WampMessageParser());
+    }
+
+    @Test
+    public void handleUnknownProcUri() {
+        String request = String.format("[%d,%s,%s,%s]", WampMessage.CALL, UUID.randomUUID().toString(), "UnknownProcUri", "{\"request\":\"invalid\"}");
+
+        String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
+
+        assertNull(response);
     }
 
     @Test
@@ -99,6 +112,30 @@ public class OcppJsonServiceTest {
     public void handleInvalidBootNotification() {
         BootNotificationRequest request = new BootNotificationRequest(CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER, FIRMWARE_VERSION, ICCID, IMSI, METER_TYPE, METER_SERIAL_NUMBER);
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, UUID.randomUUID().toString(), "BootNotification", request);
+        when(schemaValidator.isValidRequest(anyString(), anyString())).thenReturn(false);
+
+        String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(wampMessage.toJson(gson)));
+
+        assertNull(response);
+    }
+
+    @Test
+    public void handleDataTransfer() {
+        String messageId = "GetChargeInstruction";
+        String data = "";
+        DataTransferRequest request = new DataTransferRequest(CHARGING_STATION_VENDOR, messageId, data);
+        String callId = UUID.randomUUID().toString();
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, callId, "DataTransfer", request);
+
+        String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(wampMessage.toJson(gson)));
+
+        assertEquals(String.format("[%d,\"%s\",{\"status\":\"%s\"}]", WampMessage.CALL_RESULT, callId, DataTransferStatus.ACCEPTED.value()), response);
+    }
+
+    @Test
+    public void handleInvalidDataTransfer() {
+        DataTransferRequest request = new DataTransferRequest(CHARGING_STATION_VENDOR, "GetChargeInstruction", "");
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, UUID.randomUUID().toString(), "DataTransfer", request);
         when(schemaValidator.isValidRequest(anyString(), anyString())).thenReturn(false);
 
         String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(wampMessage.toJson(gson)));

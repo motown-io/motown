@@ -27,9 +27,7 @@ import java.io.Reader;
 import java.io.StringReader;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class OcppWebSocketServletTest {
 
@@ -70,7 +68,29 @@ public class OcppWebSocketServletTest {
         ocppWebSocketServlet.onTextStream(getMockWebSocket(), reader);
 
         verify(ocppJsonService).handleMessage(CHARGING_STATION_ID, reader);
-
     }
 
+    @Test
+    public void onTextStreamNullResponseNoSocketWrite() throws IOException {
+        Reader reader = new StringReader("content");
+        String jsonServiceResponse = null;
+        when(ocppJsonService.handleMessage(CHARGING_STATION_ID, reader)).thenReturn(jsonServiceResponse);
+        WebSocket mockWebSocket = getMockWebSocket();
+
+        ocppWebSocketServlet.onTextStream(mockWebSocket, reader);
+
+        verify(mockWebSocket, never()).write(anyString());
+    }
+
+    @Test
+    public void onTextStreamNotNullResponseSocketWrite() throws IOException {
+        Reader reader = new StringReader("content");
+        String jsonServiceResponse = "response";
+        when(ocppJsonService.handleMessage(CHARGING_STATION_ID, reader)).thenReturn(jsonServiceResponse);
+        WebSocket mockWebSocket = getMockWebSocket();
+
+        ocppWebSocketServlet.onTextStream(mockWebSocket, reader);
+
+        verify(mockWebSocket).write(jsonServiceResponse);
+    }
 }

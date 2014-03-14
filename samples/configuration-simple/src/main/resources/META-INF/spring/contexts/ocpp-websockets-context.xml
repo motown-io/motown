@@ -27,6 +27,7 @@
         <property name="typeAdapterSerializers">
             <set>
                 <bean class="io.motown.ocpp.websocketjson.gson.RegistrationStatusTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.DataTransferStatusTypeAdapterSerializer"/>
             </set>
         </property>
     </bean>
