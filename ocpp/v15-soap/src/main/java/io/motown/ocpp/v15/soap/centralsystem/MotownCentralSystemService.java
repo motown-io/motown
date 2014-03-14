@@ -46,7 +46,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
 
     private static final String PROTOCOL_IDENTIFIER = "OCPPS15";
 
-    private int heartbeatIntervalFallback = 900;
+    private int heartbeatIntervalFallback;
 
     /**
      * Timeout in milliseconds for the continuation suspend functionality

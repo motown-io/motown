@@ -46,7 +46,7 @@ public class MotownCentralSystemService implements CentralSystemService {
 
     private static final String PROTOCOL_IDENTIFIER = "OCPPS12";
 
-    private int heartbeatIntervalFallback = 900;
+    private int heartbeatIntervalFallback;
 
     /**
      * Timeout in milliseconds for the continuation suspend functionality

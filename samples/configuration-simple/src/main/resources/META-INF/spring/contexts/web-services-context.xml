@@ -48,6 +48,7 @@
     <bean id="centralSystemServiceOcpp15" class="io.motown.ocpp.v15.soap.centralsystem.MotownCentralSystemService">
         <property name="domainService" ref="ocppDomainService" />
         <property name="continuationTimeout" value="${io.motown.ocpp.v15.soap.cxf.continuation.timeout}" />
+        <property name="heartbeatIntervalFallback" value="${io.motown.ocpp.viewmodel.heartbeat.interval}" />
         <property name="soapHeaderReader">
             <bean class="io.motown.ocpp.soaputils.header.SoapHeaderReader" />
         </property>
@@ -92,8 +93,6 @@
         <property name="gatewayInterface" value="io.motown.ocpp.viewmodel.configuration.ConfigurationCommandGateway"/>
     </bean>
 
-    <!--<jpa:repositories base-package="io.motown.ocpp.viewmodel.persistence.repostories" entity-manager-factory-ref="entityManagerFactory" />-->
-
     <bean id="chargingStationRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository">
         <property name="entityManager" ref="jpaEntityManagerOcppWebServices" />
     </bean>
@@ -137,6 +136,7 @@
     <bean id="centralSystemServiceOcpp12" class="io.motown.ocpp.v12.soap.centralsystem.MotownCentralSystemService">
         <property name="domainService" ref="ocppDomainService" />
         <property name="continuationTimeout" value="${io.motown.ocpp.v12.soap.cxf.continuation.timeout}" />
+        <property name="heartbeatIntervalFallback" value="${io.motown.ocpp.viewmodel.heartbeat.interval}" />
         <property name="soapHeaderReader">
             <bean class="io.motown.ocpp.soaputils.header.SoapHeaderReader" />
         </property>
