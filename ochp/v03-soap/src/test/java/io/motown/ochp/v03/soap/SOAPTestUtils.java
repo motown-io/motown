@@ -15,10 +15,12 @@
  */
 package io.motown.ochp.v03.soap;
 
-import com.google.common.collect.Lists;
 import io.motown.ochp.v03.soap.schema.*;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 public final class SOAPTestUtils {
 
@@ -69,6 +71,14 @@ public final class SOAPTestUtils {
         List<ChargepointInfo> chargepoints = response.getChargepointInfoArray();
         chargepoints.add(new ChargepointInfo());
         chargepoints.add(new ChargepointInfo());
+        return response;
+    }
+
+    public static SetChargepointListResponse getSetChargepointListResponse() {
+        SetChargepointListResponse response = new SetChargepointListResponse();
+        Result result = new Result();
+        result.setResultCode(0);
+        response.setResult(result);
         return response;
     }
 

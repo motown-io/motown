@@ -27,16 +27,15 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.awt.*;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import static org.jgroups.util.Util.*;
+import static io.motown.ochp.v03.soap.SOAPTestUtils.*;
+import static org.jgroups.util.Util.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
-
-import static io.motown.ochp.v03.soap.SOAPTestUtils.*;
 
 public class Ochp03SoapClientTest {
 
@@ -116,6 +115,22 @@ public class Ochp03SoapClientTest {
         RoamingAuthorisationInfo firstRoamingAuthorisationInfo = authorisationListRequestCaptor.getValue().getRoamingAuthorisationInfoArray().get(0);
         assertEquals(identification.getIdentificationId(), firstRoamingAuthorisationInfo.getTokenId());
         assertEquals(1, firstRoamingAuthorisationInfo.getTokenActivated());
+    }
+
+    @Test
+    public void testSendChargePointList() {
+        when(echsClient.setChargepointList(any(SetChargepointListRequest.class), anyString())).thenReturn(getSetChargepointListResponse());
+
+        List<ChargingStation> chargingStations = Lists.newArrayList();
+        ChargingStation chargingStation = new ChargingStation(UUID.randomUUID().toString());
+        chargingStations.add(chargingStation);
+        client.sendChargePointList(chargingStations);
+
+        ArgumentCaptor<SetChargepointListRequest> chargepointListRequestCaptor = ArgumentCaptor.forClass(SetChargepointListRequest.class);
+        verify(echsClient).setChargepointList(chargepointListRequestCaptor.capture(), anyString());
+
+        ChargepointInfo firstChargepointInfo = chargepointListRequestCaptor.getValue().getChargepointInfoArray().get(0);
+        assertEquals(chargingStation.getChargingStationId(), firstChargepointInfo.getEvseId());
     }
 
 }

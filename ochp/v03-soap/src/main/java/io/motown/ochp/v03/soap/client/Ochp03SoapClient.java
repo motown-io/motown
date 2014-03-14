@@ -162,6 +162,33 @@ public class Ochp03SoapClient implements Ochp03Client {
         return response.getChargepointInfoArray();
     }
 
+    /**
+     * Sends the complete list of charging stations
+     * @param chargingStations the list of charging stations
+     */
+    @Override
+    public void sendChargePointList(List<ChargingStation> chargingStations) {
+        LOG.info("Send charge point list");
+        forceAuthentication();
+
+        SetChargepointListRequest request = new SetChargepointListRequest();
+        List<ChargepointInfo> chargepointInfoList = request.getChargepointInfoArray();
+
+        for (ChargingStation chargingStation : chargingStations) {
+            ChargepointInfo chargepointInfo = new ChargepointInfo();
+            chargepointInfo.setEvseId(chargingStation.getChargingStationId());
+            //TODO: add more fields to chargepointInfo - Mark Manders 2014-03-14
+
+            chargepointInfoList.add(chargepointInfo);
+        }
+
+        SetChargepointListResponse response = createOchpClientService().setChargepointList(request, cachedAuthenticationToken);
+
+        if (response.getResult() != null && response.getResult().getResultCode() != ACCEPTED) {
+            LOG.error("Failed to send the charge point list: {}", response.getResult().getResultDescription());
+        }
+    }
+
     public void setOchpProxyFactory(OchpProxyFactory ochpProxyFactory) {
         this.ochpProxyFactory = ochpProxyFactory;
     }

@@ -16,6 +16,7 @@
 
 package io.motown.ochp.viewmodel.ochp;
 
+import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ochp.viewmodel.persistence.entities.Identification;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 
@@ -28,4 +29,6 @@ public interface Ochp03Client {
     void addChargeDetailRecords(List<Transaction> transactionList);
 
     void sendAuthorizationInformation(List<Identification> identifications);
+
+    void sendChargePointList(List<ChargingStation> chargingStations);
 }
