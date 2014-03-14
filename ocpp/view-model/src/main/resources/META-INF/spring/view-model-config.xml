@@ -13,6 +13,14 @@
                                   ignore-resource-not-found="true"
                                   ignore-unresolvable="true"/>
 
+    <bean class="io.motown.ocpp.viewmodel.OcppEventHandler">
+        <property name="chargingStationRepository">
+            <bean class="io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository">
+                <property name="entityManager" ref="jpaEntityManager" />
+            </bean>
+        </property>
+    </bean>
+
     <bean id="domainService" class="io.motown.ocpp.viewmodel.domain.DomainService">
         <property name="chargingStationRepository" ref="chargingStationRepositoryOcppWebServices" />
         <property name="commandGateway" ref="domainCommandGateway" />

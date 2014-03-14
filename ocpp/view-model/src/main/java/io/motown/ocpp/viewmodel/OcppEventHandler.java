@@ -16,6 +16,7 @@
 package io.motown.ocpp.viewmodel;
 
 import io.motown.domain.api.chargingstation.ChargingStationAcceptedEvent;
+import io.motown.domain.api.chargingstation.ChargingStationBootedEvent;
 import io.motown.domain.api.chargingstation.ChargingStationConfiguredEvent;
 import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
@@ -40,6 +41,19 @@ public class OcppEventHandler {
             chargingStation = new ChargingStation(chargingStationId);
         }
         chargingStationRepository.insert(chargingStation);
+    }
+
+    @EventHandler
+    public void handle(ChargingStationBootedEvent event) {
+        LOG.info("Handling ChargingStationBootedEvent");
+
+        ChargingStation chargingStation = chargingStationRepository.findOne(event.getChargingStationId().getId());
+
+        if (chargingStation != null) {
+            chargingStation.setProtocol(event.getProtocol());
+        } else {
+            LOG.error("OCPP module repo could not find charging station {} and set the protocol", event.getChargingStationId());
+        }
     }
 
     @EventHandler

@@ -31,6 +31,8 @@ public class ChargingStation {
 
     private int numberOfEvses;
 
+    private String protocol;
+
     private ChargingStation() {
         // Private no-arg constructor for Hibernate.
     }
@@ -84,9 +86,17 @@ public class ChargingStation {
         this.numberOfEvses = numberOfEvses;
     }
 
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(id, ipAddress, isRegistered, isConfigured, numberOfEvses);
+        return Objects.hash(id, ipAddress, isRegistered, isConfigured, numberOfEvses, protocol);
     }
 
     @Override
@@ -98,6 +108,6 @@ public class ChargingStation {
             return false;
         }
         final ChargingStation other = (ChargingStation) obj;
-        return Objects.equals(this.id, other.id) && Objects.equals(this.ipAddress, other.ipAddress) && Objects.equals(this.isRegistered, other.isRegistered) && Objects.equals(this.isConfigured, other.isConfigured) && Objects.equals(this.numberOfEvses, other.numberOfEvses);
+        return Objects.equals(this.id, other.id) && Objects.equals(this.ipAddress, other.ipAddress) && Objects.equals(this.isRegistered, other.isRegistered) && Objects.equals(this.isConfigured, other.isConfigured) && Objects.equals(this.numberOfEvses, other.numberOfEvses) && Objects.equals(this.protocol, other.protocol);
     }
 }

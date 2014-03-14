@@ -18,9 +18,11 @@ package io.motown.ocpp.viewmodel.domain;
 import io.motown.domain.api.chargingstation.ChargingStationAcceptedEvent;
 import io.motown.domain.api.chargingstation.ChargingStationConfiguredEvent;
 import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
+import io.motown.domain.api.chargingstation.UnconfiguredChargingStationBootedEvent;
 import io.motown.ocpp.viewmodel.OcppEventHandler;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
+import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,7 +61,7 @@ public class OcppEventHandlerTest {
     }
 
     @Test
-    public void testChargingStationBootedEvent() {
+    public void chargingStationCreatedEvent() {
         assertNull(chargingStationRepository.findOne(CHARGING_STATION_ID.getId()));
 
         eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID));
@@ -71,7 +73,19 @@ public class OcppEventHandlerTest {
     }
 
     @Test
-    public void testChargingStationAcceptedEvent() {
+    public void chargingStationBootedEvent() {
+        eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID));
+        ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
+        Assert.assertNull(cs.getProtocol());
+
+        eventHandler.handle(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES));
+
+        cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
+        Assert.assertEquals(PROTOCOL, cs.getProtocol());
+    }
+
+    @Test
+    public void chargingStationAcceptedEvent() {
         eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID));
 
         eventHandler.handle(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
@@ -81,13 +95,13 @@ public class OcppEventHandlerTest {
     }
 
     @Test
-    public void testUnknownChargingStationAcceptedEvent() {
+    public void unknownChargingStationAcceptedEvent() {
         // no exception expected on unknown charging station
         eventHandler.handle(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
     }
 
     @Test
-    public void testChargingStationConfiguredEvent() {
+    public void chargingStationConfiguredEvent() {
         eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID));
         ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
         assertFalse(cs.isConfigured());
@@ -101,7 +115,7 @@ public class OcppEventHandlerTest {
     }
 
     @Test
-    public void testUnknownChargingStationConfiguredEvent() {
+    public void unknownChargingStationConfiguredEvent() {
         eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
 
         ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
