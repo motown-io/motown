@@ -15,12 +15,14 @@
  */
 package io.motown.ocpp.websocketjson;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.gson.GsonFactoryBean;
+import io.motown.ocpp.websocketjson.gson.RegistrationStatusTypeAdapterSerializer;
+import io.motown.ocpp.websocketjson.gson.TypeAdapterSerializer;
 import io.motown.ocpp.websocketjson.request.BootNotificationRequest;
-import io.motown.ocpp.websocketjson.response.BootNotificationResponse;
 import io.motown.ocpp.websocketjson.response.RegistrationStatus;
 import io.motown.ocpp.websocketjson.schema.SchemaValidator;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
@@ -29,7 +31,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.StringReader;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
@@ -49,15 +53,22 @@ public class OcppJsonServiceTest {
 
     private Gson gson;
 
+    private String dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
     @Before
     public void setup() {
         schemaValidator = mock(SchemaValidator.class);
-        // by default all requests are valid
+        // for this tests all requests are valid
         when(schemaValidator.isValidRequest(anyString(), anyString())).thenReturn(true);
 
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        gson = gsonBuilder.create();
+        GsonFactoryBean gsonFactoryBean = new GsonFactoryBean();
+        gsonFactoryBean.setDateFormat(dateFormat);
+        Set<TypeAdapterSerializer<?>> typeAdapterSerializers = ImmutableSet.<TypeAdapterSerializer<?>>builder()
+                .add(new RegistrationStatusTypeAdapterSerializer())
+                .build();
+        gsonFactoryBean.setTypeAdapterSerializers(typeAdapterSerializers);
+
+        gson = gsonFactoryBean.getObject();
 
         domainService = mock(DomainService.class);
 
@@ -72,7 +83,8 @@ public class OcppJsonServiceTest {
     public void handleBootNotification() {
         BootNotificationRequest request = new BootNotificationRequest(CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER, FIRMWARE_VERSION, ICCID, IMSI, METER_TYPE, METER_SERIAL_NUMBER);
         Date now = new Date();
-        BootChargingStationResult bootResult = new BootChargingStationResult(true, 900, now);
+        int heartbeatInterval = 900;
+        BootChargingStationResult bootResult = new BootChargingStationResult(true, heartbeatInterval, now);
         when(domainService.bootChargingStation(CHARGING_STATION_ID, null, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, OcppJsonService.PROTOCOL_IDENTIFIER, CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER, FIRMWARE_VERSION, ICCID, IMSI, METER_TYPE, METER_SERIAL_NUMBER))
                 .thenReturn(bootResult);
         String callId = UUID.randomUUID().toString();
@@ -80,7 +92,7 @@ public class OcppJsonServiceTest {
 
         String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(wampMessage.toJson(gson)));
 
-        assertEquals(new WampMessage(WampMessage.CALL_RESULT, callId, new BootNotificationResponse(RegistrationStatus.ACCEPTED, now, 900)).toJson(gson), response);
+        assertEquals(String.format("[%d,\"%s\",{\"status\":\"%s\",\"currentTime\":\"%s\",\"heartbeatInterval\":%d}]", WampMessage.CALL_RESULT, callId, RegistrationStatus.ACCEPTED.value(), new SimpleDateFormat(dateFormat).format(now), heartbeatInterval), response);
     }
 
     @Test
