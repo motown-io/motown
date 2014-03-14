@@ -23,7 +23,7 @@ import java.lang.reflect.Type;
 public class DiagnosticsStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<DiagnosticsStatus> {
 
     @Override
-    public DiagnosticsStatus deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    public DiagnosticsStatus deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
         return DiagnosticsStatus.fromValue(jsonElement.getAsString());
     }
 
