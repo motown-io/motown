@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.viewmodel.domain;
+package io.motown.ocpp.v12.soap.chargepoint;
 
 import io.motown.domain.api.chargingstation.*;
-import io.motown.ocpp.viewmodel.Ocpp12RequestHandler;
+import io.motown.ocpp.v12.soap.V12SOAPTestUtils;
+import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp12Client;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import org.junit.Before;
@@ -32,10 +33,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
-import static io.motown.ocpp.viewmodel.domain.OccpViewModelTestUtils.*;
 import static org.mockito.Mockito.*;
 
-@ContextConfiguration("classpath:ocpp-view-model-test-context.xml")
+@ContextConfiguration("classpath:ocpp-12-test-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class Ocpp12RequestHandlerTest {
 
@@ -49,7 +49,7 @@ public class Ocpp12RequestHandlerTest {
     @Before
     public void setUp() {
         entityManager.clear();
-        deleteFromDatabase(entityManager, ChargingStation.class);
+        V12SOAPTestUtils.deleteFromDatabase(entityManager, ChargingStation.class);
 
         requestHandler = new Ocpp12RequestHandler();
 
@@ -128,9 +128,9 @@ public class Ocpp12RequestHandlerTest {
 
     @Test
     public void testChangeConfigurationEvent() {
-        requestHandler.handle(new ChangeConfigurationEvent(CHARGING_STATION_ID, PROTOCOL, getConfigurationKey(), getConfigurationValue()), CORRELATION_TOKEN);
+        requestHandler.handle(new ChangeConfigurationEvent(CHARGING_STATION_ID, PROTOCOL, V12SOAPTestUtils.getConfigurationKey(), V12SOAPTestUtils.getConfigurationValue()), CORRELATION_TOKEN);
 
-        verify(client).changeConfiguration(CHARGING_STATION_ID, getConfigurationKey(), getConfigurationValue());
+        verify(client).changeConfiguration(CHARGING_STATION_ID, V12SOAPTestUtils.getConfigurationKey(), V12SOAPTestUtils.getConfigurationValue());
     }
 
     @Test
@@ -144,13 +144,13 @@ public class Ocpp12RequestHandlerTest {
     public void testFirmwareUpdateRequestedEvent() {
         Date retrievedDate = new Date();
         Map<String, String> attributes = new HashMap<>();
-        requestHandler.handle(new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, getFirmwareUpdateLocation(), retrievedDate, attributes));
+        requestHandler.handle(new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, V12SOAPTestUtils.getFirmwareUpdateLocation(), retrievedDate, attributes));
 
-        verify(client).updateFirmware(CHARGING_STATION_ID, getFirmwareUpdateLocation(), retrievedDate, null, null);
+        verify(client).updateFirmware(CHARGING_STATION_ID, V12SOAPTestUtils.getFirmwareUpdateLocation(), retrievedDate, null, null);
 
-        requestHandler.handle(new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, getFirmwareUpdateLocation(), retrievedDate, getUpdateFirmwareAttributes(Integer.toString(NUMBER_OF_RETRIES), Integer.toString(RETRY_INTERVAL))));
+        requestHandler.handle(new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, V12SOAPTestUtils.getFirmwareUpdateLocation(), retrievedDate, V12SOAPTestUtils.getUpdateFirmwareAttributes(Integer.toString(V12SOAPTestUtils.NUMBER_OF_RETRIES), Integer.toString(V12SOAPTestUtils.RETRY_INTERVAL))));
 
-        verify(client).updateFirmware(CHARGING_STATION_ID, getFirmwareUpdateLocation(), retrievedDate, NUMBER_OF_RETRIES, RETRY_INTERVAL);
+        verify(client).updateFirmware(CHARGING_STATION_ID, V12SOAPTestUtils.getFirmwareUpdateLocation(), retrievedDate, V12SOAPTestUtils.NUMBER_OF_RETRIES, V12SOAPTestUtils.RETRY_INTERVAL);
     }
 
 }

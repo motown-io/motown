@@ -65,9 +65,19 @@
         </property>
     </bean>
 
-    <bean class="io.motown.ocpp.viewmodel.Ocpp15RequestHandler">
-        <property name="domainService" ref="domainService" />
-        <property name="chargingStationOcpp15Client" ref="ocpp15SoapClient" />
+
+    <bean class="io.motown.ocpp.viewmodel.OcppRequestEventHandler">
+        <property name="chargingStationRepository" ref="chargingStationRepositoryOcppWebServices" />
+        <property name="requestHandlers">
+            <map>
+                <entry key="OCPPS15">
+                    <bean class="io.motown.ocpp.v15.soap.chargepoint.Ocpp15RequestHandler">
+                        <property name="domainService" ref="domainService" />
+                        <property name="chargingStationOcpp15Client" ref="ocpp15SoapClient" />
+                    </bean>
+                </entry>
+            </map>
+        </property>
     </bean>
 
     <bean class="io.motown.ocpp.v15.soap.centralsystem.schema.ObjectFactory"/>

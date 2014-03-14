@@ -13,27 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.viewmodel;
+package io.motown.ocpp.v15.soap.chargepoint;
 
 import io.motown.domain.api.chargingstation.*;
+import io.motown.ocpp.viewmodel.OcppRequestHandler;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
-import org.axonframework.common.annotation.MetaData;
-import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-public class Ocpp15RequestHandler {
+public class Ocpp15RequestHandler implements OcppRequestHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(io.motown.ocpp.viewmodel.Ocpp15RequestHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Ocpp15RequestHandler.class);
 
     private DomainService domainService;
 
     private ChargingStationOcpp15Client chargingStationOcpp15Client;
 
-    @EventHandler
+    public static final String PROTOCOL_IDENTIFIER = "OCPPS15";
+
+    @Override
     public void handle(ConfigurationRequestedEvent event) {
         LOG.info("Handling ConfigurationRequestedEvent");
         Map<String, String> configurationItems = chargingStationOcpp15Client.getConfiguration(event.getChargingStationId());
@@ -41,8 +42,8 @@ public class Ocpp15RequestHandler {
         domainService.configureChargingStation(event.getChargingStationId(), configurationItems);
     }
 
-    @EventHandler
-    public void handle(StopTransactionRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    @Override
+    public void handle(StopTransactionRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("StopTransactionRequestedEvent");
 
         if (event.getTransactionId() instanceof NumberedTransactionId) {
@@ -55,87 +56,87 @@ public class Ocpp15RequestHandler {
         }
     }
 
-    @EventHandler
-    public void handle(SoftResetChargingStationRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    @Override
+    public void handle(SoftResetChargingStationRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("SoftResetChargingStationRequestedEvent");
         RequestStatus requestStatus = chargingStationOcpp15Client.softReset(event.getChargingStationId());
 
         domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
-    @EventHandler
-    public void handle(HardResetChargingStationRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    @Override
+    public void handle(HardResetChargingStationRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("HardResetChargingStationRequestedEvent");
         RequestStatus requestStatus = chargingStationOcpp15Client.hardReset(event.getChargingStationId());
 
         domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
-    @EventHandler
-    public void handle(StartTransactionRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    @Override
+    public void handle(StartTransactionRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("StartTransactionRequestedEvent");
         RequestStatus requestStatus =  chargingStationOcpp15Client.startTransaction(event.getChargingStationId(), event.getIdentifyingToken(), event.getEvseId());
 
         domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
-    @EventHandler
-    public void handle(UnlockEvseRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    @Override
+    public void handle(UnlockEvseRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("UnlockEvseRequestedEvent");
         RequestStatus requestStatus = chargingStationOcpp15Client.unlockConnector(event.getChargingStationId(), event.getEvseId());
 
         domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
-    @EventHandler
-    public void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    @Override
+    public void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("ChangeChargingStationAvailabilityToInoperativeRequestedEvent");
         RequestStatus requestStatus = chargingStationOcpp15Client.changeAvailabilityToInoperative(event.getChargingStationId(), event.getEvseId());
 
         domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
-    @EventHandler
-    public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    @Override
+    public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("ChangeChargingStationAvailabilityToOperativeRequestedEvent");
         RequestStatus requestStatus = chargingStationOcpp15Client.changeAvailabilityToOperative(event.getChargingStationId(), event.getEvseId());
 
         domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
-    @EventHandler
-    public void handle(DataTransferEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    @Override
+    public void handle(DataTransferEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("DataTransferEvent");
         RequestStatus requestStatus = chargingStationOcpp15Client.dataTransfer(event.getChargingStationId(), event.getVendorId(), event.getMessageId(), event.getData());
 
         domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
-    @EventHandler
-    public void handle(ChangeConfigurationEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    @Override
+    public void handle(ChangeConfigurationEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("ChangeConfigurationEvent");
         RequestStatus requestStatus = chargingStationOcpp15Client.changeConfiguration(event.getChargingStationId(), event.getKey(), event.getValue());
 
         domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
-    @EventHandler
-    public void handle(DiagnosticsRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    @Override
+    public void handle(DiagnosticsRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("DiagnosticsRequestedEvent");
         String diagnosticsFilename = chargingStationOcpp15Client.getDiagnostics(event.getChargingStationId(), event.getUploadLocation(), event.getNumRetries(), event.getRetryInterval(), event.getPeriodStartTime(), event.getPeriodStopTime());
 
         domainService.diagnosticsFileNameReceived(event.getChargingStationId(), diagnosticsFilename, statusCorrelationToken);
     }
 
-    @EventHandler
-    public void handle(ClearCacheRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    @Override
+    public void handle(ClearCacheRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("ClearCacheRequestedEvent");
         RequestStatus requestStatus = chargingStationOcpp15Client.clearCache(event.getChargingStationId());
 
         domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
-    @EventHandler
+    @Override
     public void handle(FirmwareUpdateRequestedEvent event) {
         LOG.info("FirmwareUpdateRequestedEvent");
         Map<String,String> attributes = event.getAttributes();
@@ -152,8 +153,8 @@ public class Ocpp15RequestHandler {
         chargingStationOcpp15Client.updateFirmware(event.getChargingStationId(), event.getUpdateLocation(), event.getRetrieveDate(), numRetries, retryInterval);
     }
 
-    @EventHandler
-    public void handle(AuthorizationListVersionRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    @Override
+    public void handle(AuthorizationListVersionRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("AuthorizationListVersionRequestedEvent");
 
         int currentVersion = chargingStationOcpp15Client.getAuthorizationListVersion(event.getChargingStationId());
@@ -161,8 +162,8 @@ public class Ocpp15RequestHandler {
         domainService.authorizationListVersionReceived(event.getChargingStationId(), currentVersion, statusCorrelationToken);
     }
 
-    @EventHandler
-    public void handle(SendAuthorizationListRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    @Override
+    public void handle(SendAuthorizationListRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("SendAuthorizationListRequestedEvent");
 
         RequestStatus requestStatus = chargingStationOcpp15Client.sendAuthorizationList(event.getChargingStationId(), event.getAuthorizationListHash(), event.getAuthorizationListVersion(), event.getAuthorizationList(), event.getUpdateType());
@@ -170,8 +171,8 @@ public class Ocpp15RequestHandler {
         domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
     }
 
-    @EventHandler
-    public void handle(ReserveNowRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    @Override
+    public void handle(ReserveNowRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("ReserveNowRequestedEvent");
 
         NumberedReservationId reservationIdentifier = domainService.generateReservationIdentifier(event.getChargingStationId(), event.getProtocol());

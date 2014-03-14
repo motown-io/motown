@@ -15,12 +15,13 @@
  */
 package io.motown.ocpp.v12.soap;
 
+import com.google.common.collect.ImmutableMap;
 import io.motown.ocpp.v12.soap.chargepoint.schema.*;
 
+import javax.persistence.EntityManager;
 import java.util.*;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.FIVE_MINUTES_AGO;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.METER_STOP;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public final class V12SOAPTestUtils {
 
@@ -127,6 +128,31 @@ public final class V12SOAPTestUtils {
         return meterValues;
     }
 
+
+    public static void deleteFromDatabase(EntityManager entityManager, Class jpaEntityClass) {
+        entityManager.getTransaction().begin();
+        entityManager.createQuery("DELETE FROM " + jpaEntityClass.getName()).executeUpdate();
+        entityManager.getTransaction().commit();
+    }
+
+    public static String getConfigurationKey() {
+        return "configKey";
+    }
+
+    public static String getConfigurationValue() {
+        return "configValue";
+    }
+
+    public static String getFirmwareUpdateLocation() {
+        return "ftp://test";
+    }
+
+    public static Map<String, String> getUpdateFirmwareAttributes(String numberOfRetries, String retryInterval) {
+        return ImmutableMap.<String, String>builder()
+                .put("NUM_RETRIES", numberOfRetries)
+                .put("RETRY_INTERVAL", retryInterval)
+                .build();
+    }
 
     /**
      * Creates a fixed date so it can be compared to an instance of this method created later in time.

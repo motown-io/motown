@@ -15,10 +15,13 @@
  */
 package io.motown.ocpp.v15.soap;
 
-import io.motown.domain.api.chargingstation.MeterValue;
+import com.google.common.collect.ImmutableMap;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.v15.soap.centralsystem.schema.TransactionData;
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
+import io.motown.ocpp.v15.soap.chargepoint.schema.ReservationStatus;
 
+import javax.persistence.EntityManager;
 import java.util.*;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.FIVE_MINUTES_AGO;
@@ -76,6 +79,38 @@ public final class V15SOAPTestUtils {
     private V15SOAPTestUtils() {
     }
 
+    public static void deleteFromDatabase(EntityManager entityManager, Class jpaEntityClass) {
+        entityManager.getTransaction().begin();
+        entityManager.createQuery("DELETE FROM " + jpaEntityClass.getName()).executeUpdate();
+        entityManager.getTransaction().commit();
+    }
+
+    public static String getConfigurationValue() {
+        return "configValue";
+    }
+
+    public static Map<String, String> getUpdateFirmwareAttributes(String numberOfRetries, String retryInterval) {
+        return ImmutableMap.<String, String>builder()
+                .put("NUM_RETRIES", numberOfRetries)
+                .put("RETRY_INTERVAL", retryInterval)
+                .build();
+    }
+
+    public static Integer getAuthorizationListVersion() {
+        return 1;
+    }
+
+    public static AuthorizationListUpdateType getAuthorizationListUpdateType() {
+        return AuthorizationListUpdateType.DIFFERENTIAL;
+    }
+
+    public static List<IdentifyingToken> getAuthorizationList() {
+        List<IdentifyingToken> list = new ArrayList<>();
+        list.add(new TextualToken("1"));
+        list.add(new TextualToken("2"));
+        return list;
+    }
+
     public static GetConfigurationResponse getGetConfigurationResponse() {
         GetConfigurationResponse response = new GetConfigurationResponse();
 
@@ -84,6 +119,18 @@ public final class V15SOAPTestUtils {
         response.getConfigurationKey().add(getKeyValue("ResetRetries", "5"));
 
         return response;
+    }
+
+    public static String getFirmwareUpdateLocation() {
+        return "ftp://test";
+    }
+
+    public static String getAuthorizationListHash() {
+        return "hash";
+    }
+
+    public static String getConfigurationKey() {
+        return "configKey";
     }
 
     public static KeyValue getKeyValue(String key, String value) {

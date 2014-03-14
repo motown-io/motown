@@ -62,9 +62,19 @@
         <property name="chargingStationProxyFactory" ref="chargingStationProxyFactory" />
     </bean>
 
-    <bean class="io.motown.ocpp.viewmodel.Ocpp12RequestHandler">
-        <property name="domainService" ref="domainService" />
-        <property name="chargingStationOcpp12Client" ref="ocpp12SoapClient" />
+
+    <bean class="io.motown.ocpp.viewmodel.OcppRequestEventHandler">
+        <property name="chargingStationRepository" ref="chargingStationRepositoryOcppWebServices" />
+        <property name="requestHandlers">
+            <map>
+                <entry key="OCPPS12">
+                    <bean class="io.motown.ocpp.v12.soap.chargepoint.Ocpp12RequestHandler">
+                        <property name="domainService" ref="domainService" />
+                        <property name="chargingStationOcpp12Client" ref="ocpp12SoapClient" />
+                    </bean>
+                </entry>
+            </map>
+        </property>
     </bean>
 
     <bean class="io.motown.ocpp.v12.soap.centralsystem.schema.ObjectFactory"/>

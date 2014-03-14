@@ -30,9 +30,24 @@
         <property name="chargingStationRepository" ref="chargingStationRepositoryOcppWebServices" />
     </bean>
 
-    <bean class="io.motown.ocpp.viewmodel.Ocpp15RequestHandler">
-        <property name="domainService" ref="ocppDomainService" />
-        <property name="chargingStationOcpp15Client" ref="ocpp15SoapClient" />
+    <bean class="io.motown.ocpp.viewmodel.OcppRequestEventHandler">
+        <property name="chargingStationRepository" ref="chargingStationRepositoryOcppWebServices" />
+        <property name="requestHandlers">
+            <map>
+                <entry key="OCPPS15">
+                    <bean class="io.motown.ocpp.v15.soap.chargepoint.Ocpp15RequestHandler">
+                        <property name="domainService" ref="ocppDomainService" />
+                        <property name="chargingStationOcpp15Client" ref="ocpp15SoapClient" />
+                    </bean>
+                </entry>
+                <entry key="OCPPS12">
+                    <bean class="io.motown.ocpp.v12.soap.chargepoint.Ocpp12RequestHandler">
+                        <property name="domainService" ref="ocppDomainService" />
+                        <property name="chargingStationOcpp12Client" ref="ocpp12SoapClient" />
+                    </bean>
+                </entry>
+            </map>
+        </property>
     </bean>
 
     <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
@@ -41,7 +56,6 @@
     <bean id="headerInterceptor" class="io.motown.ocpp.soaputils.interceptor.MessageIdHeaderInterceptor"/>
 
     <bean id="replyToInterceptor" class="io.motown.ocpp.soaputils.interceptor.ReplyToHeaderInInterceptor"/>
-
 
     <!-- START OF OCPP 1.5 CONFIG -->
 
@@ -154,11 +168,6 @@
     <bean id="ocpp12SoapClient" class="io.motown.ocpp.v12.soap.chargepoint.ChargingStationOcpp12SoapClient">
         <property name="domainService" ref="ocppDomainService" />
         <property name="chargingStationProxyFactory" ref="chargingStationOcpp12ProxyFactory" />
-    </bean>
-
-    <bean class="io.motown.ocpp.viewmodel.Ocpp12RequestHandler">
-        <property name="domainService" ref="ocppDomainService" />
-        <property name="chargingStationOcpp12Client" ref="ocpp12SoapClient" />
     </bean>
 
     <bean class="io.motown.ocpp.v12.soap.centralsystem.schema.ObjectFactory"/>

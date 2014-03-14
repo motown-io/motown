@@ -80,31 +80,8 @@ public final class OccpViewModelTestUtils {
                 .build();
     }
 
-    public static List<IdentifyingToken> getAuthorizationList() {
-        List<IdentifyingToken> list = new ArrayList<>();
-        list.add(new TextualToken("1"));
-        list.add(new TextualToken("2"));
-        return list;
-    }
-
     public static Integer getAuthorizationListVersion() {
         return 1;
-    }
-
-    public static String getAuthorizationListHash() {
-        return "hash";
-    }
-
-    public static AuthorizationListUpdateType getAuthorizationListUpdateType() {
-        return AuthorizationListUpdateType.DIFFERENTIAL;
-    }
-
-    public static ReservationStatus getReservationStatus() {
-        return ReservationStatus.UNAVAILABLE;
-    }
-
-    public static String getChargingStationSerialNumber() {
-        return "serialNumber";
     }
 
     public static String getFirmwareVersion() {
