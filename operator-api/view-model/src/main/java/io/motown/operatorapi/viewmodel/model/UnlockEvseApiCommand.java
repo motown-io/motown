@@ -18,6 +18,7 @@ package io.motown.operatorapi.viewmodel.model;
 import io.motown.domain.api.chargingstation.EvseId;
 
 public class UnlockEvseApiCommand implements ApiCommand {
+
     private EvseId evseId;
 
     public UnlockEvseApiCommand() {

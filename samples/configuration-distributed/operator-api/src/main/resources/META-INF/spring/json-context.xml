@@ -3,14 +3,17 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:axon="http://www.axonframework.org/schema/core"
        xmlns:util="http://www.springframework.org/schema/util"
-       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xmlns:rabbit="http://www.springframework.org/schema/rabbit"
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xmlns:axon-amqp="http://www.axonframework.org/schema/amqp"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
                            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd http://www.axonframework.org/schema/amqp http://www.axonframework.org/schema/axon-amqp.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                           http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
+                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+                           http://www.axonframework.org/schema/amqp http://www.axonframework.org/schema/axon-amqp.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <bean id="random" class="java.util.Random"/>
 
@@ -27,9 +30,6 @@
             </set>
         </property>
     </bean>
-
-    <!--<jpa:repositories base-package="io.motown.operatorapi.viewmodel.persistence.repositories"/>-->
-
 
     <bean id="chargingStationRepository" class="io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository">
         <property name="entityManager" ref="entityManager" />
