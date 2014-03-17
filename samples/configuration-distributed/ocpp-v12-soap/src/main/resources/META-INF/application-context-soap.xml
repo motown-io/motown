@@ -68,7 +68,7 @@
         <property name="requestHandlers">
             <map>
                 <entry key="OCPPS12">
-                    <bean class="io.motown.ocpp.v12.soap.chargepoint.Ocpp12RequestHandler">
+                    <bean class="io.motown.ocpp.v12.soap.Ocpp12RequestHandler">
                         <property name="domainService" ref="domainService" />
                         <property name="chargingStationOcpp12Client" ref="ocpp12SoapClient" />
                     </bean>

@@ -99,7 +99,7 @@
 
     <axon:cluster id="ocppRequestCluster">
         <axon:selectors>
-            <axon:class-name-matches pattern="io.motown.ocpp.v15.soap.chargepoint.Ocpp15RequestHandler"/>
+            <axon:class-name-matches pattern="io.motown.ocpp.v15.soap.Ocpp15RequestHandler"/>
         </axon:selectors>
         <axon:meta-data>
             <entry key="AMQP.Config">

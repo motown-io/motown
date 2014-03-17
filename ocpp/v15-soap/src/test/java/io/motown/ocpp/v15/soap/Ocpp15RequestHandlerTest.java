@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.v12.soap.chargepoint;
+package io.motown.ocpp.v15.soap;
 
 import io.motown.domain.api.chargingstation.*;
-import io.motown.ocpp.v12.soap.V12SOAPTestUtils;
+import io.motown.ocpp.v15.soap.Ocpp15RequestHandler;
+import io.motown.ocpp.v15.soap.V15SOAPTestUtils;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp12Client;
+import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,13 +36,15 @@ import java.util.Map;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static org.mockito.Mockito.*;
 
-@ContextConfiguration("classpath:ocpp-12-test-context.xml")
+@ContextConfiguration("classpath:ocpp-15-test-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class Ocpp12RequestHandlerTest {
+public class Ocpp15RequestHandlerTest {
 
-    private Ocpp12RequestHandler requestHandler;
+    private Ocpp15RequestHandler requestHandler;
 
-    private ChargingStationOcpp12Client client;
+    private ChargingStationOcpp15Client client;
+
+    private DomainService domainService;
 
     @Autowired
     private EntityManager entityManager;
@@ -49,16 +52,23 @@ public class Ocpp12RequestHandlerTest {
     @Before
     public void setUp() {
         entityManager.clear();
-        V12SOAPTestUtils.deleteFromDatabase(entityManager, ChargingStation.class);
+        V15SOAPTestUtils.deleteFromDatabase(entityManager, ChargingStation.class);
 
-        requestHandler = new Ocpp12RequestHandler();
+        requestHandler = new Ocpp15RequestHandler();
 
-        DomainService domainService = mock(DomainService.class);
+        domainService = mock(DomainService.class);
         when(domainService.generateReservationIdentifier(any(ChargingStationId.class), any(String.class))).thenReturn(new NumberedReservationId(CHARGING_STATION_ID, PROTOCOL, 1));
         requestHandler.setDomainService(domainService);
 
-        client = mock(ChargingStationOcpp12Client.class);
-        requestHandler.setChargingStationOcpp12Client(client);
+        client = mock(ChargingStationOcpp15Client.class);
+        requestHandler.setChargingStationOcpp15Client(client);
+    }
+
+    @Test
+    public void testConfigurationRequestedEvent() {
+        requestHandler.handle(new ConfigurationRequestedEvent(CHARGING_STATION_ID, PROTOCOL));
+
+        verify(client).getConfiguration(CHARGING_STATION_ID);
     }
 
     @Test
@@ -127,10 +137,25 @@ public class Ocpp12RequestHandlerTest {
     }
 
     @Test
-    public void testChangeConfigurationEvent() {
-        requestHandler.handle(new ChangeConfigurationEvent(CHARGING_STATION_ID, PROTOCOL, V12SOAPTestUtils.getConfigurationKey(), V12SOAPTestUtils.getConfigurationValue()), CORRELATION_TOKEN);
+    public void testReserveNowRequestedEvent() {
+        Date expiryDate = new Date();
+        requestHandler.handle(new ReserveNowRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, null), CORRELATION_TOKEN);
 
-        verify(client).changeConfiguration(CHARGING_STATION_ID, V12SOAPTestUtils.getConfigurationKey(), V12SOAPTestUtils.getConfigurationValue());
+        verify(client).reserveNow(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, null, RESERVATION_ID.getNumber());
+    }
+
+    @Test
+    public void testDataTransferEvent() {
+        requestHandler.handle(new DataTransferEvent(CHARGING_STATION_ID, PROTOCOL, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA), CORRELATION_TOKEN);
+
+        verify(client).dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
+    }
+
+    @Test
+    public void testChangeConfigurationEvent() {
+        requestHandler.handle(new ChangeConfigurationEvent(CHARGING_STATION_ID, PROTOCOL, V15SOAPTestUtils.getConfigurationKey(), V15SOAPTestUtils.getConfigurationValue()), CORRELATION_TOKEN);
+
+        verify(client).changeConfiguration(CHARGING_STATION_ID, V15SOAPTestUtils.getConfigurationKey(), V15SOAPTestUtils.getConfigurationValue());
     }
 
     @Test
@@ -144,13 +169,30 @@ public class Ocpp12RequestHandlerTest {
     public void testFirmwareUpdateRequestedEvent() {
         Date retrievedDate = new Date();
         Map<String, String> attributes = new HashMap<>();
-        requestHandler.handle(new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, V12SOAPTestUtils.getFirmwareUpdateLocation(), retrievedDate, attributes));
+        requestHandler.handle(new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, V15SOAPTestUtils.getFirmwareUpdateLocation(), retrievedDate, attributes));
 
-        verify(client).updateFirmware(CHARGING_STATION_ID, V12SOAPTestUtils.getFirmwareUpdateLocation(), retrievedDate, null, null);
+        verify(client).updateFirmware(CHARGING_STATION_ID, V15SOAPTestUtils.getFirmwareUpdateLocation(), retrievedDate, null, null);
 
-        requestHandler.handle(new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, V12SOAPTestUtils.getFirmwareUpdateLocation(), retrievedDate, V12SOAPTestUtils.getUpdateFirmwareAttributes(Integer.toString(V12SOAPTestUtils.NUMBER_OF_RETRIES), Integer.toString(V12SOAPTestUtils.RETRY_INTERVAL))));
+        requestHandler.handle(new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, V15SOAPTestUtils.getFirmwareUpdateLocation(), retrievedDate, V15SOAPTestUtils.getUpdateFirmwareAttributes(Integer.toString(V15SOAPTestUtils.NUMBER_OF_RETRIES), Integer.toString(V15SOAPTestUtils.RETRY_INTERVAL))));
 
-        verify(client).updateFirmware(CHARGING_STATION_ID, V12SOAPTestUtils.getFirmwareUpdateLocation(), retrievedDate, V12SOAPTestUtils.NUMBER_OF_RETRIES, V12SOAPTestUtils.RETRY_INTERVAL);
+        verify(client).updateFirmware(CHARGING_STATION_ID, V15SOAPTestUtils.getFirmwareUpdateLocation(), retrievedDate, V15SOAPTestUtils.NUMBER_OF_RETRIES, V15SOAPTestUtils.RETRY_INTERVAL);
+    }
+
+    @Test
+    public void testAuthorizationListVersionRequestedEvent() {
+        CorrelationToken correlationToken = new CorrelationToken();
+
+        when(client.getAuthorizationListVersion(CHARGING_STATION_ID)).thenReturn(V15SOAPTestUtils.LIST_VERSION);
+        requestHandler.handle(new AuthorizationListVersionRequestedEvent(CHARGING_STATION_ID, PROTOCOL), correlationToken);
+
+        verify(domainService).authorizationListVersionReceived(CHARGING_STATION_ID, V15SOAPTestUtils.LIST_VERSION, correlationToken);
+    }
+
+    @Test
+    public void testSendAuthorizationListRequestedEvent() {
+        requestHandler.handle(new SendAuthorizationListRequestedEvent(CHARGING_STATION_ID, PROTOCOL, V15SOAPTestUtils.getAuthorizationList(), V15SOAPTestUtils.getAuthorizationListVersion(), V15SOAPTestUtils.getAuthorizationListHash(), V15SOAPTestUtils.getAuthorizationListUpdateType()), CORRELATION_TOKEN);
+
+        verify(client).sendAuthorizationList(CHARGING_STATION_ID, V15SOAPTestUtils.getAuthorizationListHash(), V15SOAPTestUtils.getAuthorizationListVersion(), V15SOAPTestUtils.getAuthorizationList(), V15SOAPTestUtils.getAuthorizationListUpdateType());
     }
 
 }

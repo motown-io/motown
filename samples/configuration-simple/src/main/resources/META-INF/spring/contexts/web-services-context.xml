@@ -35,13 +35,13 @@
         <property name="requestHandlers">
             <map>
                 <entry key="OCPPS15">
-                    <bean class="io.motown.ocpp.v15.soap.chargepoint.Ocpp15RequestHandler">
+                    <bean class="io.motown.ocpp.v15.soap.Ocpp15RequestHandler">
                         <property name="domainService" ref="ocppDomainService" />
                         <property name="chargingStationOcpp15Client" ref="ocpp15SoapClient" />
                     </bean>
                 </entry>
                 <entry key="OCPPS12">
-                    <bean class="io.motown.ocpp.v12.soap.chargepoint.Ocpp12RequestHandler">
+                    <bean class="io.motown.ocpp.v12.soap.Ocpp12RequestHandler">
                         <property name="domainService" ref="ocppDomainService" />
                         <property name="chargingStationOcpp12Client" ref="ocpp12SoapClient" />
                     </bean>
