@@ -83,14 +83,6 @@
                 <configuration>
                     <path>/</path>
                 </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <phase>compile</phase>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
