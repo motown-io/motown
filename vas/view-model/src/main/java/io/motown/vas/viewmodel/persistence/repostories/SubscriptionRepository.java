@@ -24,6 +24,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import java.util.List;
 
+@SuppressWarnings("JpaQlInspection")
 public class SubscriptionRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(SubscriptionRepository.class);
@@ -71,7 +72,6 @@ public class SubscriptionRepository {
     }
 
     public Subscription findBySubscriptionId(String subscriptionId) {
-        @SuppressWarnings("JpaQlInspection")
         Query query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriptionId = :subscriptionId").setParameter("subscriptionId", subscriptionId);
         List resultList = query.getResultList();
         if (resultList.size() > 0) {
@@ -82,7 +82,6 @@ public class SubscriptionRepository {
     }
 
     public Subscription findBySubscriberIdentityAndDeliveryAddress(String subscriberIdentity, String deliveryAddress) {
-        @SuppressWarnings("JpaQlInspection")
         Query query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriberIdentity = :subscriberIdentity AND s.deliveryAddress = :deliveryAddress").setParameter("subscriberIdentity", subscriberIdentity).setParameter("deliveryAddress", deliveryAddress);
         List resultList = query.getResultList();
         if (resultList.size() > 0) {
@@ -93,13 +92,11 @@ public class SubscriptionRepository {
     }
 
     public List<Subscription> findBySubscriberIdentity(String subscriberIdentity) {
-        @SuppressWarnings("JpaQlInspection")
         Query query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriberIdentity = :subscriberIdentity").setParameter("subscriberIdentity", subscriberIdentity);
         return (List<Subscription>) query.getResultList();
     }
 
     public List<Subscription> findAll() {
-        @SuppressWarnings("JpaQlInspection")
         Query query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s");
         return (List<Subscription>) query.getResultList();
     }
