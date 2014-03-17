@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.util.Date;
 import java.util.List;
 
 public class TransactionRepository {
@@ -96,6 +97,13 @@ public class TransactionRepository {
     public List<Transaction> findTransactionsByStatus(TransactionStatus status) {
         return entityManager.createQuery("SELECT t FROM Transaction t WHERE t.status = :status", Transaction.class)
                 .setParameter("status", status)
+                .getResultList();
+    }
+
+    public List<Transaction> findTransactionsByStatusAndTimeSynced(TransactionStatus status, Date timeSynced) {
+        return entityManager.createQuery("SELECT t FROM Transaction t WHERE t.status = :status AND t.timeSynced = :timeSynced", Transaction.class)
+                .setParameter("status", status)
+                .setParameter("timeSynced", timeSynced)
                 .getResultList();
     }
 

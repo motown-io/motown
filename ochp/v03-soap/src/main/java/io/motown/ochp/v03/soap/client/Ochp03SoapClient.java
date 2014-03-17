@@ -84,7 +84,7 @@ public class Ochp03SoapClient implements Ochp03Client {
 
     @Override
     public void addChargeDetailRecords(List<Transaction> transactionList) {
-        LOG.info("Add {} CDRs");
+        LOG.info("Add CDRs");
         forceAuthentication();
 
         AddCDRsRequest request = new AddCDRsRequest();

@@ -43,13 +43,9 @@ public class OchpSchedulingService {
     public void executeAddCDRs() {
         LOG.info("Executing scheduled task addCDRs");
 
-        List<Transaction> completedTransactions = transactionRepository.findTransactionsByStatus(TransactionStatus.STOPPED);
-        if(completedTransactions != null && !completedTransactions.isEmpty()){
-            ochp03SoapClient.addChargeDetailRecords(completedTransactions);
-
-            //TODO: Probably have to mark the sent transactions as synchronized - Ingo Pak, 07 Mar 2014
-
-            LOG.info("Added {} CDR(s)", completedTransactions.size());
+        List<Transaction> unsyncedTransactions = transactionRepository.findTransactionsByStatusAndTimeSynced(TransactionStatus.STOPPED, null);
+        if(unsyncedTransactions != null && !unsyncedTransactions.isEmpty()) {
+            ochp03SoapClient.addChargeDetailRecords(unsyncedTransactions);
         } else {
             LOG.info("No action required, there are no new CDR(s) to add");
         }
