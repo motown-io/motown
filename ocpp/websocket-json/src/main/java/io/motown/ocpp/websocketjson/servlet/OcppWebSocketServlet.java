@@ -25,16 +25,9 @@ import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
 
 @WebSocketHandlerService
 public class OcppWebSocketServlet extends WebSocketStreamingHandlerAdapter {
-
-    /**
-     * Map of sockets, key is charging station identifier.
-     */
-    private Map<String, WebSocket> sockets = new HashMap<>();
 
     private OcppJsonService ocppJsonService;
 
@@ -53,7 +46,7 @@ public class OcppWebSocketServlet extends WebSocketStreamingHandlerAdapter {
     public void onOpen(WebSocket webSocket) throws IOException {
         String chargingStationIdentifier = determineIdentifier(webSocket);
 
-        sockets.put(chargingStationIdentifier, webSocket);
+        ocppJsonService.addWebSocket(chargingStationIdentifier, webSocket);
 
 //        webSocket.resource().addEventListener(new WebSocketEventListenerAdapter() {
 //            @Override

@@ -46,6 +46,11 @@
                         <property name="chargingStationOcpp12Client" ref="ocpp12SoapClient" />
                     </bean>
                 </entry>
+                <entry key="OCPPJ15">
+                    <bean class="io.motown.ocpp.websocketjson.OcppWebSocketRequestHandler">
+                        <property name="ocppJsonService" ref="ocppJsonService" />
+                    </bean>
+                </entry>
             </map>
         </property>
     </bean>

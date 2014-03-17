@@ -33,11 +33,12 @@
         <property name="typeAdapterDeserializers">
             <set>
                 <bean class="io.motown.ocpp.websocketjson.gson.DiagnosticsStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.UnlockStatusTypeAdapterDeserializer"/>
             </set>
         </property>
     </bean>
 
-    <bean class="io.motown.ocpp.websocketjson.OcppJsonService">
+    <bean id="ocppJsonService" class="io.motown.ocpp.websocketjson.OcppJsonService">
         <property name="domainService" ref="ocppDomainService" />
         <property name="schemaValidator">
             <bean class="io.motown.ocpp.websocketjson.schema.SchemaValidator" />

@@ -15,33 +15,40 @@
  */
 package io.motown.ocpp.websocketjson;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
+import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.gson.*;
-import io.motown.ocpp.websocketjson.request.BootNotificationRequest;
-import io.motown.ocpp.websocketjson.request.DataTransferRequest;
-import io.motown.ocpp.websocketjson.request.DiagnosticsStatus;
-import io.motown.ocpp.websocketjson.response.DataTransferStatus;
-import io.motown.ocpp.websocketjson.response.RegistrationStatus;
+import io.motown.ocpp.websocketjson.request.chargingstation.BootNotificationRequest;
+import io.motown.ocpp.websocketjson.request.chargingstation.DataTransferRequest;
+import io.motown.ocpp.websocketjson.request.chargingstation.DiagnosticsStatus;
+import io.motown.ocpp.websocketjson.response.centralsystem.DataTransferStatus;
+import io.motown.ocpp.websocketjson.response.centralsystem.RegistrationStatus;
+import io.motown.ocpp.websocketjson.response.chargingstation.UnlockStatus;
+import io.motown.ocpp.websocketjson.response.handler.ResponseHandler;
+import io.motown.ocpp.websocketjson.response.handler.UnlockConnectorResponseHandler;
 import io.motown.ocpp.websocketjson.schema.SchemaValidator;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import io.motown.ocpp.websocketjson.wamp.WampMessageParser;
+import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Set;
 import java.util.UUID;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.DATE_FORMAT;
+import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
+import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class OcppJsonServiceTest {
@@ -54,28 +61,13 @@ public class OcppJsonServiceTest {
 
     private Gson gson;
 
-    private String dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-
     @Before
     public void setup() {
         schemaValidator = mock(SchemaValidator.class);
         // for this tests all requests are valid
         when(schemaValidator.isValidRequest(anyString(), anyString())).thenReturn(true);
 
-        GsonFactoryBean gsonFactoryBean = new GsonFactoryBean();
-        gsonFactoryBean.setDateFormat(dateFormat);
-        Set<TypeAdapterSerializer<?>> typeAdapterSerializers = ImmutableSet.<TypeAdapterSerializer<?>>builder()
-                .add(new RegistrationStatusTypeAdapterSerializer())
-                .add(new DataTransferStatusTypeAdapterSerializer())
-                .build();
-        gsonFactoryBean.setTypeAdapterSerializers(typeAdapterSerializers);
-
-        Set<TypeAdapterDeserializer<?>> typeAdapterDeserializers = ImmutableSet.<TypeAdapterDeserializer<?>>builder()
-                .add(new DiagnosticsStatusTypeAdapterDeserializer())
-                .build();
-        gsonFactoryBean.setTypeAdapterDeserializers(typeAdapterDeserializers);
-
-        gson = gsonFactoryBean.getObject();
+        gson = getGson();
 
         domainService = mock(DomainService.class);
 
@@ -108,7 +100,7 @@ public class OcppJsonServiceTest {
 
         String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(wampMessage.toJson(gson)));
 
-        assertEquals(String.format("[%d,\"%s\",{\"status\":\"%s\",\"currentTime\":\"%s\",\"heartbeatInterval\":%d}]", WampMessage.CALL_RESULT, callId, RegistrationStatus.ACCEPTED.value(), new SimpleDateFormat(dateFormat).format(now), heartbeatInterval), response);
+        assertEquals(String.format("[%d,\"%s\",{\"status\":\"%s\",\"currentTime\":\"%s\",\"heartbeatInterval\":%d}]", WampMessage.CALL_RESULT, callId, RegistrationStatus.ACCEPTED.value(), new SimpleDateFormat(DATE_FORMAT).format(now), heartbeatInterval), response);
     }
 
     @Test
@@ -165,6 +157,52 @@ public class OcppJsonServiceTest {
         String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
 
         assertNull(response);
+    }
+
+    @Test
+    public void unlockEvseRequestVerifySocketWrite() throws IOException {
+        WebSocket webSocket = getMockWebSocket();
+        service.addWebSocket(CHARGING_STATION_ID.getId(), webSocket);
+        service.unlockEvse(CHARGING_STATION_ID, EVSE_ID, new CorrelationToken());
+
+        verify(webSocket).write(anyString());
+    }
+
+    @Test
+    public void unlockEvseRequestNoSocket() throws IOException {
+        // no exception
+        service.unlockEvse(CHARGING_STATION_ID, EVSE_ID, new CorrelationToken());
+    }
+
+    @Test
+    public void unlockEvseRequestSocketIoExceptionNoExceptionThrown() throws IOException {
+        WebSocket webSocket = getMockWebSocket();
+        when(webSocket.write(anyString())).thenThrow(new IOException());
+        service.addWebSocket(CHARGING_STATION_ID.getId(), webSocket);
+
+        // no exception
+        service.unlockEvse(CHARGING_STATION_ID, EVSE_ID, new CorrelationToken());
+    }
+
+    @Test
+    public void handleUnlockEvseResponse() {
+        String callId = UUID.randomUUID().toString();
+        String request = String.format("[%d,\"%s\",{\"status\":\"%s\"}]", WampMessage.CALL_RESULT, callId, UnlockStatus.ACCEPTED.value());
+        ResponseHandler responseHandler = mock(UnlockConnectorResponseHandler.class);
+        service.addResponseHandler(callId, responseHandler);
+
+        service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
+
+        verify(responseHandler).handle(CHARGING_STATION_ID, new WampMessageParser().parseMessage(new StringReader(request)), gson, domainService);
+    }
+
+    @Test
+    public void handleUnlockEvseResponseNoHandler() {
+        String callId = UUID.randomUUID().toString();
+        String request = String.format("[%d,\"%s\",{\"status\":\"%s\"}]", WampMessage.CALL_RESULT, callId, UnlockStatus.ACCEPTED.value());
+
+        // no exceptions
+        service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
     }
 
 }

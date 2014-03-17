@@ -16,8 +16,6 @@
 package io.motown.ocpp.websocketjson.servlet;
 
 import io.motown.ocpp.websocketjson.OcppJsonService;
-import org.atmosphere.cpr.AtmosphereRequest;
-import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +25,7 @@ import java.io.Reader;
 import java.io.StringReader;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
 import static org.mockito.Mockito.*;
 
 public class OcppWebSocketServletTest {
@@ -40,20 +39,6 @@ public class OcppWebSocketServletTest {
         ocppJsonService = mock(OcppJsonService.class);
         ocppWebSocketServlet = new OcppWebSocketServlet(ocppJsonService);
         ocppWebSocketServlet.setOcppJsonService(ocppJsonService);
-    }
-
-    private WebSocket getMockWebSocket() {
-        WebSocket webSocket = mock(WebSocket.class);
-
-        AtmosphereRequest request = mock(AtmosphereRequest.class);
-        when(request.getRequestURI()).thenReturn("/websockets/" + CHARGING_STATION_ID.getId());
-        when(request.getServletPath()).thenReturn("/websockets");
-
-        AtmosphereResource resource = mock(AtmosphereResource.class);
-        when(resource.getRequest()).thenReturn(request);
-
-        when(webSocket.resource()).thenReturn(resource);
-        return webSocket;
     }
 
     @Test
