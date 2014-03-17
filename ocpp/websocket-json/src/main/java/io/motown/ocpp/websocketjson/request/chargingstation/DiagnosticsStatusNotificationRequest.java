@@ -13,31 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.request;
+package io.motown.ocpp.websocketjson.request.chargingstation;
 
-public class DataTransferRequest {
+public class DiagnosticsStatusNotificationRequest {
 
-    private String vendorId;
+    private DiagnosticsStatus status;
 
-    private String messageId;
-
-    private String data;
-
-    public DataTransferRequest(String vendorId, String messageId, String data) {
-        this.vendorId = vendorId;
-        this.messageId = messageId;
-        this.data = data;
+    public DiagnosticsStatusNotificationRequest(DiagnosticsStatus status) {
+        this.status = status;
     }
 
-    public String getVendorId() {
-        return vendorId;
+    public DiagnosticsStatus getStatus() {
+        return status;
     }
 
-    public String getMessageId() {
-        return messageId;
-    }
-
-    public String getData() {
-        return data;
-    }
 }

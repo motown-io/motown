@@ -13,7 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.response;
+package io.motown.ocpp.websocketjson.response.centralsystem;
 
-public class DiagnosticsStatusNotificationResponse {
+public enum RegistrationStatus {
+
+    ACCEPTED("Accepted"),
+    REJECTED("Rejected");
+
+    private final String value;
+
+    RegistrationStatus(String v) {
+        value = v;
+    }
+
+    public String value() {
+        return value;
+    }
+
 }

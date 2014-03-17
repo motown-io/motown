@@ -13,25 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.response;
+package io.motown.ocpp.websocketjson.request.chargingstation;
 
-public class DataTransferResponse {
+public enum DiagnosticsStatus {
 
-    private DataTransferStatus status;
+    UPLOADED("Uploaded"),
+    UPLOAD_FAILED("UploadFailed");
 
-    private String data;
+    private final String value;
 
-    public DataTransferResponse(DataTransferStatus status, String data) {
-        this.status = status;
-        this.data = data;
+    DiagnosticsStatus(String v) {
+        value = v;
     }
 
-    public DataTransferStatus getStatus() {
-        return status;
+    public String value() {
+        return value;
     }
 
-    public String getData() {
-        return data;
+    public static DiagnosticsStatus fromValue(String v) {
+        for (DiagnosticsStatus c: DiagnosticsStatus.values()) {
+            if (c.value.equals(v)) {
+                return c;
+            }
+        }
+        throw new IllegalArgumentException(v);
     }
 
 }

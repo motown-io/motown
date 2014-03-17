@@ -13,21 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.response;
+package io.motown.ocpp.websocketjson.request.chargingstation;
 
-public enum RegistrationStatus {
+public class DataTransferRequest {
 
-    ACCEPTED("Accepted"),
-    REJECTED("Rejected");
+    private String vendorId;
 
-    private final String value;
+    private String messageId;
 
-    RegistrationStatus(String v) {
-        value = v;
+    private String data;
+
+    public DataTransferRequest(String vendorId, String messageId, String data) {
+        this.vendorId = vendorId;
+        this.messageId = messageId;
+        this.data = data;
     }
 
-    public String value() {
-        return value;
+    public String getVendorId() {
+        return vendorId;
     }
 
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public String getData() {
+        return data;
+    }
 }

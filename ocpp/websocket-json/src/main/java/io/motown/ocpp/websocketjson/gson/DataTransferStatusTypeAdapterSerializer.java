@@ -18,7 +18,7 @@ package io.motown.ocpp.websocketjson.gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
-import io.motown.ocpp.websocketjson.response.DataTransferStatus;
+import io.motown.ocpp.websocketjson.response.centralsystem.DataTransferStatus;
 
 import java.lang.reflect.Type;
 

@@ -13,33 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.response;
+package io.motown.ocpp.websocketjson.response.centralsystem;
 
-public enum DataTransferStatus {
+public class DataTransferResponse {
 
-    ACCEPTED("Accepted"),
-    REJECTED("Rejected"),
-    UNKNOWN_MESSAGE_ID("UnknownMessageId"),
-    UNKNOWN_VENDOR_ID("UnknownVendorId");
+    private DataTransferStatus status;
 
-    private final String value;
+    private String data;
 
-    DataTransferStatus(String v) {
-        value = v;
+    public DataTransferResponse(DataTransferStatus status, String data) {
+        this.status = status;
+        this.data = data;
     }
 
-    public String value() {
-        return value;
+    public DataTransferStatus getStatus() {
+        return status;
     }
 
-    public static DataTransferStatus fromValue(String v) {
-        for (DataTransferStatus c: DataTransferStatus.values()) {
-            if (c.value.equals(v)) {
-                return c;
-            }
-        }
-        throw new IllegalArgumentException(v);
+    public String getData() {
+        return data;
     }
-
 
 }

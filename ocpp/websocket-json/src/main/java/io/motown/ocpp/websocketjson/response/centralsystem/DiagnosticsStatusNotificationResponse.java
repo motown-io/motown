@@ -13,30 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.request;
+package io.motown.ocpp.websocketjson.response.centralsystem;
 
-public enum DiagnosticsStatus {
-
-    UPLOADED("Uploaded"),
-    UPLOAD_FAILED("UploadFailed");
-
-    private final String value;
-
-    DiagnosticsStatus(String v) {
-        value = v;
-    }
-
-    public String value() {
-        return value;
-    }
-
-    public static DiagnosticsStatus fromValue(String v) {
-        for (DiagnosticsStatus c: DiagnosticsStatus.values()) {
-            if (c.value.equals(v)) {
-                return c;
-            }
-        }
-        throw new IllegalArgumentException(v);
-    }
-
+public class DiagnosticsStatusNotificationResponse {
 }

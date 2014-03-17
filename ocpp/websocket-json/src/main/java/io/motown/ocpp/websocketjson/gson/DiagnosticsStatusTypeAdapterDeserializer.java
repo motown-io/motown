@@ -16,7 +16,7 @@
 package io.motown.ocpp.websocketjson.gson;
 
 import com.google.gson.*;
-import io.motown.ocpp.websocketjson.request.DiagnosticsStatus;
+import io.motown.ocpp.websocketjson.request.chargingstation.DiagnosticsStatus;
 
 import java.lang.reflect.Type;
 

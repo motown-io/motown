@@ -16,7 +16,7 @@
 package io.motown.ocpp.websocketjson.gson;
 
 import com.google.gson.*;
-import io.motown.ocpp.websocketjson.response.RegistrationStatus;
+import io.motown.ocpp.websocketjson.response.centralsystem.RegistrationStatus;
 
 import java.lang.reflect.Type;
 
