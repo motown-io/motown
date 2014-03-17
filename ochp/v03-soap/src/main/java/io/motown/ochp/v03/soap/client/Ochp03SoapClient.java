@@ -24,10 +24,12 @@ import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ochp.viewmodel.persistence.entities.Identification;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 import io.motown.ochp.viewmodel.persistence.repostories.ChargingStationRepository;
+import io.motown.ochp.viewmodel.persistence.repostories.TransactionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.Date;
 import java.util.List;
 
 public class Ochp03SoapClient implements Ochp03Client {
@@ -42,6 +44,8 @@ public class Ochp03SoapClient implements Ochp03Client {
     private OchpProxyFactory ochpProxyFactory;
 
     private ChargingStationRepository chargingStationRepository;
+
+    private TransactionRepository transactionRepository;
 
     @Value("${io.motown.ochp.server.address}")
     private String serverAddress;
@@ -97,20 +101,20 @@ public class Ochp03SoapClient implements Ochp03Client {
             cdrInfo.setEndDatetime(DateFormatter.toISO8601(transaction.getTimeStop()));
             cdrInfo.setChargePointId(chargingStation.getChargingStationId());
             cdrInfo.setVolume(String.format("%.4f", transaction.calculateVolume()));
-/* TODO: Decide if the fields below will be provided - Ingo Pak, 11 Mar 2014
-            cdrInfo.setChargePointAddress();
-            cdrInfo.setChargePointCity();
-            cdrInfo.setChargePointZip();
-            cdrInfo.setChargePointCountry();
-            cdrInfo.setChargePointType();
-            cdrInfo.setInfraProviderId();
-            cdrInfo.setMeterId(); //identification of the physical energy meter
-            cdrInfo.setObisCode(); //object identification of the register in the meter (IEC 62056-61 eg. 1-1:1.8.0)
-            cdrInfo.setProductType(); //identifies the type of product that is delivered
-            cdrInfo.setTariffType();
-            cdrInfo.setServiceProviderId();
-            cdrInfo.setEvcoId(); //identifies a customer in the electric mobility charging context (http://data.fir.de/projektseiten/emobility-ids/)
-*/
+// TODO: Decide if the fields below will be provided - Ingo Pak, 11 Mar 2014
+            cdrInfo.setChargePointAddress("");
+            cdrInfo.setChargePointCity("");
+            cdrInfo.setChargePointZip("");
+            cdrInfo.setChargePointCountry("");
+            cdrInfo.setChargePointType("");
+            cdrInfo.setInfraProviderId("");
+            cdrInfo.setMeterId(""); //identification of the physical energy meter
+            cdrInfo.setObisCode(""); //object identification of the register in the meter (IEC 62056-61 eg. 1-1:1.8.0)
+            cdrInfo.setProductType(""); //identifies the type of product that is delivered
+            cdrInfo.setTariffType("");
+            cdrInfo.setServiceProviderId("");
+            cdrInfo.setEvcoId(""); //identifies a customer in the electric mobility charging context (http://data.fir.de/projektseiten/emobility-ids/)
+
             cdrInfoList.add(cdrInfo);
         }
 
@@ -118,6 +122,13 @@ public class Ochp03SoapClient implements Ochp03Client {
 
         if(response.getResult() == null || response.getResult().getResultCode() != ACCEPTED) {
             LOG.error("Failed to add the CDR's: {}", response.getResult().getResultDescription());
+        } else {
+            LOG.info("Successfully added CDR's, marking them synced");
+            Date syncTime = new Date();
+            for (Transaction transaction : transactionList) {
+                transaction.setTimeSynced(syncTime);
+            }
+            transactionRepository.save(transactionList);
         }
     }
 
@@ -260,6 +271,10 @@ public class Ochp03SoapClient implements Ochp03Client {
 
     public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {
         this.chargingStationRepository = chargingStationRepository;
+    }
+
+    public void setTransactionRepository(TransactionRepository transactionRepository) {
+        this.transactionRepository = transactionRepository;
     }
 
     private Echs createOchpClientService() {

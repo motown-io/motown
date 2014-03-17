@@ -23,6 +23,7 @@ import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ochp.viewmodel.persistence.entities.Identification;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 import io.motown.ochp.viewmodel.persistence.repostories.ChargingStationRepository;
+import io.motown.ochp.viewmodel.persistence.repostories.TransactionRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -34,8 +35,9 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static io.motown.ochp.v03.soap.SOAPTestUtils.*;
-import static org.jgroups.util.Util.assertEquals;
-import static org.jgroups.util.Util.assertNotNull;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -45,6 +47,8 @@ public class Ochp03SoapClientTest {
 
     private Ochp03SoapClient client;
 
+    private TransactionRepository transactionRepository;
+
     @Before
     public void setUp() {
         OchpProxyFactory ochpClientProxyFactory = mock(OchpProxyFactory.class);
@@ -52,11 +56,13 @@ public class Ochp03SoapClientTest {
         when(ochpClientProxyFactory.createOchpService(anyString())).thenReturn(echsClient);
         when(echsClient.authenticate(any(AuthenticateRequest.class))).thenReturn(getAuthenticateSuccessResponse());
 
+        transactionRepository = mock(TransactionRepository.class);
+
         ChargingStationRepository chargingStationRepository = mock(ChargingStationRepository.class);
         ChargingStation chargingStation = mock(ChargingStation.class);
         when(chargingStationRepository.findByChargingStationId(anyString())).thenReturn(chargingStation);
-
         client = new Ochp03SoapClient();
+        client.setTransactionRepository(transactionRepository);
         client.setOchpProxyFactory(ochpClientProxyFactory);
         client.setChargingStationRepository(chargingStationRepository);
     }
@@ -103,7 +109,7 @@ public class Ochp03SoapClientTest {
 
     @Test
     public void addCDRsVerifyTransactionToCDRInfoConversion() {
-        when(echsClient.addCDRs(any(AddCDRsRequest.class), anyString())).thenReturn(getAddCDRsResponse());
+        when(echsClient.addCDRs(any(AddCDRsRequest.class), anyString())).thenReturn(getAddCDRsSuccessResponse());
 
         Date now = new Date();
 
@@ -131,7 +137,23 @@ public class Ochp03SoapClientTest {
         assertEquals(DateFormatter.toISO8601(transaction.getTimeStart()), firstCDRInfo.getStartDatetime());
         assertEquals(DateFormatter.formatDuration(transaction.getTimeStart(), transaction.getTimeStop()), firstCDRInfo.getDuration());
         assertEquals(DateFormatter.formatDuration(transaction.getTimeStart(), transaction.getTimeStop()), firstCDRInfo.getDuration());
+        verify(transactionRepository, atLeast(1)).save(transactions);
+        assertNotNull(transaction.getTimeSynced());
         //TODO: verify the rest of the parameters to see if they are correctly converted - Ingo Pak, 06 Mar 2014
+    }
+
+    @Test
+    public void addCDRsVerifyNoSyncTimeStampUponFailure() {
+        when(echsClient.addCDRs(any(AddCDRsRequest.class), anyString())).thenReturn(getAddCDRsFailedResponse());
+
+        List<Transaction> transactions = Lists.newArrayList();
+        Transaction transaction = new Transaction("transactionId");
+        transaction.setChargingStation(new ChargingStation("chargingStationId"));
+        transactions.add(transaction);
+
+        client.addChargeDetailRecords(transactions);
+
+        assertNull(transaction.getTimeSynced());
     }
 
     @Test

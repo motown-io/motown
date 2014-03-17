@@ -43,7 +43,7 @@ public class DateFormatterTest {
     @Test
     public void formatDateToAndFromISO8601String() {
         int year=2014;
-        int month=2;
+        int month=Calendar.MARCH;
         int day=21;
         int hour=17;
         int minute=18;

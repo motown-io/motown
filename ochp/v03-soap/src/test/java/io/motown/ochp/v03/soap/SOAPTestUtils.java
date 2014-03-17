@@ -51,10 +51,19 @@ public final class SOAPTestUtils {
         return response;
     }
 
-    public static AddCDRsResponse getAddCDRsResponse(){
+    public static AddCDRsResponse getAddCDRsSuccessResponse(){
         AddCDRsResponse response = new AddCDRsResponse();
         Result result = new Result();
         result.setResultCode(0);
+        response.setResult(result);
+
+        return response;
+    }
+
+    public static AddCDRsResponse getAddCDRsFailedResponse(){
+        AddCDRsResponse response = new AddCDRsResponse();
+        Result result = new Result();
+        result.setResultCode(1);
         response.setResult(result);
 
         return response;

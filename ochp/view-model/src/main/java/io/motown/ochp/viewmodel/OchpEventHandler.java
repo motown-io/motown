@@ -37,8 +37,6 @@ public class OchpEventHandler {
 
     private IdentificationRepository identificationRepository;
 
-    //TODO: Add eventhandlers for keeping internal OCHP state up to date - Ingo Pak, 05 Mar 2014
-    
     @EventHandler
     public void handle(TransactionStartedEvent event) {
         ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
@@ -88,6 +86,8 @@ public class OchpEventHandler {
             LOG.warn("Received a ChargingStationAcceptedEvent for an already accepted charging station. Skipping the creation of the chargingStation.");
         }
     }
+
+    //TODO: Listen to ChargingStationLocationChangedEvent event in order to obtain the address information - Ingo Pak, 17 Mar 2014
 
     @EventHandler
     public void handle(AuthorizationResultEvent event) {

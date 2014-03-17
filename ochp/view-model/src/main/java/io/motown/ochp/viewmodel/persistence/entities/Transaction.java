@@ -40,6 +40,10 @@ public class Transaction {
     private int meterStart;
     private int meterStop;
 
+    /** Indicator for the transaction being synchronised with ECHS */
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date timeSynced;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date timeStart;
 
@@ -162,6 +166,14 @@ public class Transaction {
 
     public void setStatus(TransactionStatus status) {
         this.status = status;
+    }
+
+    public Date getTimeSynced() {
+        return timeSynced;
+    }
+
+    public void setTimeSynced(Date timeSynced) {
+        this.timeSynced = timeSynced;
     }
 
     /**
