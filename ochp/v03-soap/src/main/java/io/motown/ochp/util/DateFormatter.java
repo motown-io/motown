@@ -53,13 +53,6 @@ public final class DateFormatter {
      */
     public static Date fromISO8601 (String dateString){
         DateTimeFormatter fmt = createISO8601Formatter();
-
-        DateTime dateTime = fmt.parseDateTime(dateString);
-
-        if (dateTime != null){
-            Date date = dateTime.toDate();
-        }
-
         return fmt.parseDateTime(dateString).toDate();
     }
 
