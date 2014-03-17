@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class WampMessage {
 
@@ -142,7 +143,27 @@ public class WampMessage {
     }
 
     public String getPayloadAsString() {
-        return new Gson().toJson(payload);
+        if (payload instanceof String) {
+            return (String) payload;
+        } else {
+            return new Gson().toJson(payload);
+        }
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(messageType, callId, procUri, payload, errorCode, errorDescription, errorDetails);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final WampMessage other = (WampMessage) obj;
+        return Objects.equals(this.messageType, other.messageType) && Objects.equals(this.callId, other.callId) && Objects.equals(this.procUri, other.procUri) && Objects.equals(this.payload, other.payload) && Objects.equals(this.errorCode, other.errorCode) && Objects.equals(this.errorDescription, other.errorDescription) && Objects.equals(this.errorDetails, other.errorDetails);
+    }
 }
