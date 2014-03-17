@@ -20,6 +20,6 @@ import io.motown.ocpp.websocketjson.response.centralsystem.CentralSystemResponse
 
 public interface RequestHandler {
 
-    public CentralSystemResponse handleRequest(ChargingStationId chargingStationId, String payload);
+    CentralSystemResponse handleRequest(ChargingStationId chargingStationId, String payload);
 
 }
