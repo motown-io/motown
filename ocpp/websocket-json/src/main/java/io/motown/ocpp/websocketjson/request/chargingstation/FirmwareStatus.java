@@ -13,28 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.wamp;
+package io.motown.ocpp.websocketjson.request.chargingstation;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+public enum FirmwareStatus {
 
-import java.io.Reader;
-import java.lang.reflect.Type;
-import java.util.List;
+    DOWNLOADED("Downloaded"),
+    DOWNLOAD_FAILED("DownloadFailed"),
+    INSTALLATION_FAILED("InstallationFailed"),
+    INSTALLED("Installed");
 
-public class WampMessageParser {
+    private final String value;
 
-    private Gson gson;
-
-    public WampMessageParser(Gson gson) {
-        this.gson = gson;
+    FirmwareStatus(String v) {
+        value = v;
     }
 
-    public WampMessage parseMessage(Reader reader) {
-        Type listType = new TypeToken<List<Object>>() {}.getType();
-        List<Object> wampMessage = gson.fromJson(reader, listType);
+    public String value() {
+        return value;
+    }
 
-        return new WampMessage(wampMessage);
+    public static FirmwareStatus fromValue(String v) {
+        for (FirmwareStatus c: FirmwareStatus.values()) {
+            if (c.value.equals(v)) {
+                return c;
+            }
+        }
+        throw new IllegalArgumentException(v);
     }
 
 }

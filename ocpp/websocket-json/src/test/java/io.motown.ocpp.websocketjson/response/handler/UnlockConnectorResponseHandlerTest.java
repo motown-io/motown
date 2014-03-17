@@ -49,7 +49,7 @@ public class UnlockConnectorResponseHandlerTest {
         String token = UUID.randomUUID().toString();
         CorrelationToken correlationToken = new CorrelationToken(token);
         UnlockConnectorResponseHandler handler = new UnlockConnectorResponseHandler(correlationToken);
-        WampMessage message = new WampMessageParser().parseMessage(new StringReader(String.format("[%d,\"%s\",{\"status\":\"Accepted\"}]", WampMessage.CALL_RESULT, token)));
+        WampMessage message = new WampMessageParser(gson).parseMessage(new StringReader(String.format("[%d,\"%s\",{\"status\":\"Accepted\"}]", WampMessage.CALL_RESULT, token)));
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService);
 

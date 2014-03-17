@@ -22,6 +22,7 @@ import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.request.chargingstation.BootNotificationRequest;
 import io.motown.ocpp.websocketjson.request.chargingstation.DataTransferRequest;
 import io.motown.ocpp.websocketjson.request.chargingstation.DiagnosticsStatus;
+import io.motown.ocpp.websocketjson.request.chargingstation.FirmwareStatus;
 import io.motown.ocpp.websocketjson.response.centralsystem.DataTransferStatus;
 import io.motown.ocpp.websocketjson.response.centralsystem.RegistrationStatus;
 import io.motown.ocpp.websocketjson.response.chargingstation.UnlockStatus;
@@ -44,6 +45,7 @@ import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.DATE_FORMAT;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
@@ -75,7 +77,7 @@ public class OcppJsonServiceTest {
         service.setDomainService(domainService);
         service.setGson(gson);
         service.setSchemaValidator(schemaValidator);
-        service.setWampMessageParser(new WampMessageParser());
+        service.setWampMessageParser(new WampMessageParser(gson));
     }
 
     @Test
@@ -160,6 +162,48 @@ public class OcppJsonServiceTest {
     }
 
     @Test
+    public void handleFirmwareStatusNotification() {
+        String callId = UUID.randomUUID().toString();
+        String request = String.format("[%d,\"%s\",\"FirmwareStatusNotification\",{\"status\":\"%s\"}]", WampMessage.CALL, callId, FirmwareStatus.DOWNLOADED.value());
+
+        String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
+
+        assertEquals(String.format("[%d,\"%s\",{}]", WampMessage.CALL_RESULT, callId), response);
+    }
+
+    @Test
+    public void handleInvalidFirmwareStatusNotification() {
+        String callId = UUID.randomUUID().toString();
+        String request = String.format("[%d,\"%s\",\"FirmwareStatusNotification\",{\"status\":\"%s\"}]", WampMessage.CALL, callId, FirmwareStatus.DOWNLOADED);
+        when(schemaValidator.isValidRequest(anyString(), anyString())).thenReturn(false);
+
+        String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
+
+        assertNull(response);
+    }
+
+    @Test
+    public void handleHeartbeat() {
+        String callId = UUID.randomUUID().toString();
+        String request = String.format("[%d,\"%s\",\"Heartbeat\",{}]", WampMessage.CALL, callId);
+
+        String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
+
+//        assertNotNull(gson.fromJson(new WampMessageParser(gson).parseMessage(new StringReader(response)).getPayloadAsString(), HeartbeatResponse.class).getCurrentTime());
+        assertNotNull(response);
+    }
+
+    @Test
+    public void handleInvalidHeartbeat() {
+        String request = String.format("[%d,\"%s\",\"Heartbeat\",[]]", WampMessage.CALL, UUID.randomUUID().toString());
+        when(schemaValidator.isValidRequest(anyString(), anyString())).thenReturn(false);
+
+        String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
+
+        assertNull(response);
+    }
+
+    @Test
     public void unlockEvseRequestVerifySocketWrite() throws IOException {
         WebSocket webSocket = getMockWebSocket();
         service.addWebSocket(CHARGING_STATION_ID.getId(), webSocket);
@@ -193,7 +237,7 @@ public class OcppJsonServiceTest {
 
         service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
 
-        verify(responseHandler).handle(CHARGING_STATION_ID, new WampMessageParser().parseMessage(new StringReader(request)), gson, domainService);
+        verify(responseHandler).handle(CHARGING_STATION_ID, new WampMessageParser(gson).parseMessage(new StringReader(request)), gson, domainService);
     }
 
     @Test

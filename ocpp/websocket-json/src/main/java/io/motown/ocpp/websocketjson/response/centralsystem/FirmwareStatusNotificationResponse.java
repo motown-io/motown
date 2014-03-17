@@ -13,28 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.wamp;
+package io.motown.ocpp.websocketjson.response.centralsystem;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.io.Reader;
-import java.lang.reflect.Type;
-import java.util.List;
-
-public class WampMessageParser {
-
-    private Gson gson;
-
-    public WampMessageParser(Gson gson) {
-        this.gson = gson;
-    }
-
-    public WampMessage parseMessage(Reader reader) {
-        Type listType = new TypeToken<List<Object>>() {}.getType();
-        List<Object> wampMessage = gson.fromJson(reader, listType);
-
-        return new WampMessage(wampMessage);
-    }
-
+public class FirmwareStatusNotificationResponse implements CentralSystemResponse {
 }

@@ -44,6 +44,7 @@ public class OcppWebSocketJsonTestUtils {
         Set<TypeAdapterDeserializer<?>> typeAdapterDeserializers = ImmutableSet.<TypeAdapterDeserializer<?>>builder()
                 .add(new DiagnosticsStatusTypeAdapterDeserializer())
                 .add(new UnlockStatusTypeAdapterDeserializer())
+                .add(new FirmwareStatusTypeAdapterDeserializer())
                 .build();
         gsonFactoryBean.setTypeAdapterDeserializers(typeAdapterDeserializers);
 

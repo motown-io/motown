@@ -13,28 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.wamp;
+package io.motown.ocpp.websocketjson.request.chargingstation;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+public class FirmwareStatusNotificationRequest {
 
-import java.io.Reader;
-import java.lang.reflect.Type;
-import java.util.List;
+    private FirmwareStatus status;
 
-public class WampMessageParser {
-
-    private Gson gson;
-
-    public WampMessageParser(Gson gson) {
-        this.gson = gson;
+    public FirmwareStatusNotificationRequest(FirmwareStatus status) {
+        this.status = status;
     }
 
-    public WampMessage parseMessage(Reader reader) {
-        Type listType = new TypeToken<List<Object>>() {}.getType();
-        List<Object> wampMessage = gson.fromJson(reader, listType);
-
-        return new WampMessage(wampMessage);
+    public FirmwareStatus getStatus() {
+        return status;
     }
 
 }

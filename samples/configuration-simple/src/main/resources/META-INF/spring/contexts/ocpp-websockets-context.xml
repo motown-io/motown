@@ -34,6 +34,7 @@
             <set>
                 <bean class="io.motown.ocpp.websocketjson.gson.DiagnosticsStatusTypeAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.UnlockStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.FirmwareStatusTypeAdapterDeserializer"/>
             </set>
         </property>
     </bean>
@@ -44,7 +45,9 @@
             <bean class="io.motown.ocpp.websocketjson.schema.SchemaValidator" />
         </property>
         <property name="wampMessageParser">
-            <bean class="io.motown.ocpp.websocketjson.wamp.WampMessageParser" />
+            <bean class="io.motown.ocpp.websocketjson.wamp.WampMessageParser">
+                <constructor-arg name="gson" ref="gson"/>
+            </bean>
         </property>
         <property name="gson" ref="gson" />
     </bean>

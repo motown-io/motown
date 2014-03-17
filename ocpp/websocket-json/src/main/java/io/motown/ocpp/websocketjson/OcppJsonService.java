@@ -21,10 +21,8 @@ import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.EvseId;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.request.chargingstation.*;
-import io.motown.ocpp.websocketjson.request.handler.DiagnosticsStatusNotificationRequestHandler;
+import io.motown.ocpp.websocketjson.request.handler.*;
 import io.motown.ocpp.websocketjson.response.centralsystem.*;
-import io.motown.ocpp.websocketjson.request.handler.BootNotificationRequestHandler;
-import io.motown.ocpp.websocketjson.request.handler.DataTransferRequestHandler;
 import io.motown.ocpp.websocketjson.response.handler.ResponseHandler;
 import io.motown.ocpp.websocketjson.response.handler.UnlockConnectorResponseHandler;
 import io.motown.ocpp.websocketjson.schema.SchemaValidator;
@@ -120,22 +118,30 @@ public class OcppJsonService {
     }
 
     private WampMessage processWampMessage(ChargingStationId chargingStationId, WampMessage wampMessage) {
-        CentralSystemResponse result;
+        RequestHandler requestHandler;
 
         switch (wampMessage.getProcUri().toLowerCase()) {
             case "bootnotification":
-                result = new BootNotificationRequestHandler(gson, domainService).handleRequest(chargingStationId, wampMessage.getPayloadAsString());
+                requestHandler = new BootNotificationRequestHandler(gson, domainService);
                 break;
             case "datatransfer":
-                result = new DataTransferRequestHandler(gson, domainService).handleRequest(chargingStationId, wampMessage.getPayloadAsString());
+                requestHandler = new DataTransferRequestHandler(gson, domainService);
                 break;
             case "diagnosticsstatusnotification":
-                result = new DiagnosticsStatusNotificationRequestHandler(gson, domainService).handleRequest(chargingStationId, wampMessage.getPayloadAsString());
+                requestHandler = new DiagnosticsStatusNotificationRequestHandler(gson, domainService);
+                break;
+            case "firmwarestatusnotification":
+                requestHandler = new FirmwareStatusNotificationRequestHandler(gson, domainService);
+                break;
+            case "heartbeat":
+                requestHandler = new HeartbeatRequestHandler(domainService);
                 break;
             default:
                 LOG.error("Unknown ProcUri: " + wampMessage.getProcUri());
                 return null;
         }
+
+        CentralSystemResponse result = requestHandler.handleRequest(chargingStationId, wampMessage.getPayloadAsString());
 
         return new WampMessage(WampMessage.CALL_RESULT, wampMessage.getCallId(), result);
     }
