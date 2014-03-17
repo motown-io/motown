@@ -170,8 +170,12 @@ public class Ochp03SoapClient implements Ochp03Client {
                 transaction.setIdentificationId(cdr.getAuthenticationId());
                 transaction.setTransactionId(cdr.getCdrId());
                 transaction.setEvseId(cdr.getEvseId());
-                //TODO: Parse date ISO8601 string to date - Ingo Pak, 14 Mar 2014 -> transaction.setTimeStart(cdr.getStartDatetime());
-                //TODO: Parse date ISO8601 string to date - Ingo Pak, 14 Mar 2014 -> transaction.setTimeStop(cdr.getEndDatetime());
+                if(cdr.getStartDatetime() != null) {
+                    transaction.setTimeStart(DateFormatter.fromISO8601(cdr.getStartDatetime()));
+                }
+                if(cdr.getEndDatetime() != null) {
+                    transaction.setTimeStop(DateFormatter.fromISO8601(cdr.getEndDatetime()));
+                }
                 transaction.setChargingStation(chargingStationRepository.findByChargingStationId(cdr.getChargePointId()));
                 //transaction setMeterStart(0) //TODO: No meterstart is present, only volume, convert our meterstart and meterstop to a volume - Ingo Pak, 14 Mar 2014
                 //transaction setMeterStop(Integer parseInt(cdr getVolume()))  //TODO: Converting a string that holds a float into an integer is no good, see previous todo - Ingo Pak, 14 Mar 2014

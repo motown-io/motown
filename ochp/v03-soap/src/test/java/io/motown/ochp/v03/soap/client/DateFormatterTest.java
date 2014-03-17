@@ -18,32 +18,51 @@ package io.motown.ochp.v03.soap.client;
 import io.motown.ochp.util.DateFormatter;
 import junit.framework.Assert;
 import org.joda.time.DateTimeZone;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import static org.jgroups.util.Util.assertEquals;
+import static org.jgroups.util.Util.assertTrue;
 
 public class DateFormatterTest {
 
+    private GregorianCalendar cal;
+
+    @Before
+    public void setup() {
+        //Fixate the timezone for these tests
+        DateTimeZone.setDefault(DateTimeZone.forID("Europe/Amsterdam"));
+        cal = new GregorianCalendar(TimeZone.getTimeZone("Europe/Amsterdam"));
+    }
+
     @Test
-    public void formatDateToISO8601() {
+    public void formatDateToAndFromISO8601String() {
         int year=2014;
         int month=2;
         int day=21;
         int hour=17;
         int minute=18;
         int seconds=9;
+        int millis=0;
 
-        //Fixate the timezone for this test
-        DateTimeZone.setDefault(DateTimeZone.forID("Europe/Amsterdam"));
-        GregorianCalendar cal = new GregorianCalendar(TimeZone.getTimeZone("Europe/Amsterdam"));
+        String expectedOutput = "2014-03-21T17:18:09+01:00";
 
         cal.set(year, month, day, hour, minute, seconds);
-        String formattedDate = DateFormatter.toISO8601(cal.getTime());
-        assertEquals(formattedDate, "2014-03-21T17:18:09+01:00");
+        cal.set(Calendar.MILLISECOND, millis);
+        Date date = cal.getTime();
+
+        //Formatting Date to String
+        String formattedDate = DateFormatter.toISO8601(date);
+        assertEquals(formattedDate, expectedOutput);
+
+        //Formatting String to Date
+        Date reFormattedDate = DateFormatter.fromISO8601(expectedOutput);
+        assertTrue(reFormattedDate.getTime() == date.getTime());
     }
 
     @Test

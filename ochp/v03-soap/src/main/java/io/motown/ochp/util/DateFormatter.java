@@ -31,10 +31,36 @@ public final class DateFormatter {
     private DateFormatter() {
     }
 
+    private static DateTimeFormatter createISO8601Formatter() {
+        return ISODateTimeFormat.dateTimeNoMillis();
+    }
+
+    /**
+     * Formats a date into an ISO8601 string
+     * @param date
+     * @return ISO8601 string
+     */
     public static String toISO8601 (Date date){
         DateTime dateTime = new DateTime(date);
-        DateTimeFormatter fmt = ISODateTimeFormat.dateTimeNoMillis();
+        DateTimeFormatter fmt = createISO8601Formatter();
         return fmt.print(dateTime);
+    }
+
+    /**
+     * Formats an ISO8601 string into a Date
+     * @param dateString
+     * @return Date
+     */
+    public static Date fromISO8601 (String dateString){
+        DateTimeFormatter fmt = createISO8601Formatter();
+
+        DateTime dateTime = fmt.parseDateTime(dateString);
+
+        if (dateTime != null){
+            Date date = dateTime.toDate();
+        }
+
+        return fmt.parseDateTime(dateString).toDate();
     }
 
     /**

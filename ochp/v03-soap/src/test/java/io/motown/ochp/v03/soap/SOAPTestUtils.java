@@ -66,7 +66,13 @@ public final class SOAPTestUtils {
         result.setResultCode(0);
         response.setResult(result);
 
-        response.getCdrInfoArray().add(new CDRInfo());
+        CDRInfo cdrInfo = new CDRInfo();
+        cdrInfo.setCdrId("ID1234");
+        cdrInfo.setAuthenticationId("AUTH1234");
+        cdrInfo.setStartDatetime("2014-03-21T17:18:09+01:00");
+        cdrInfo.setEndDatetime("2014-03-21T16:10:38+01:00");
+        cdrInfo.setVolume("10");
+        response.getCdrInfoArray().add(cdrInfo);
 
         return response;
     }
