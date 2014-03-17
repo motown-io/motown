@@ -124,13 +124,13 @@ public class OcppJsonService {
 
         switch (wampMessage.getProcUri().toLowerCase()) {
             case "bootnotification":
-                result = new BootNotificationRequestHandler().handleRequest(chargingStationId, wampMessage.getPayloadAsString(), gson, domainService);
+                result = new BootNotificationRequestHandler(gson, domainService).handleRequest(chargingStationId, wampMessage.getPayloadAsString());
                 break;
             case "datatransfer":
-                result = new DataTransferRequestHandler().handleRequest(chargingStationId, wampMessage.getPayloadAsString(), gson, domainService);
+                result = new DataTransferRequestHandler(gson, domainService).handleRequest(chargingStationId, wampMessage.getPayloadAsString());
                 break;
             case "diagnosticsstatusnotification":
-                result = new DiagnosticsStatusNotificationRequestHandler().handleRequest(chargingStationId, wampMessage.getPayloadAsString(), gson, domainService);
+                result = new DiagnosticsStatusNotificationRequestHandler(gson, domainService).handleRequest(chargingStationId, wampMessage.getPayloadAsString());
                 break;
             default:
                 LOG.error("Unknown ProcUri: " + wampMessage.getProcUri());

@@ -26,8 +26,17 @@ import io.motown.ocpp.websocketjson.response.centralsystem.RegistrationStatus;
 
 public class BootNotificationRequestHandler implements RequestHandler {
 
+    private Gson gson;
+
+    private DomainService domainService;
+
+    public BootNotificationRequestHandler(Gson gson, DomainService domainService) {
+        this.gson = gson;
+        this.domainService = domainService;
+    }
+
     @Override
-    public BootNotificationResponse handleRequest(ChargingStationId chargingStationId, String payload, Gson gson, DomainService domainService) {
+    public BootNotificationResponse handleRequest(ChargingStationId chargingStationId, String payload) {
         BootNotificationRequest request = gson.fromJson(payload, BootNotificationRequest.class);
 
         BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(chargingStationId, null, request.getChargePointVendor(),

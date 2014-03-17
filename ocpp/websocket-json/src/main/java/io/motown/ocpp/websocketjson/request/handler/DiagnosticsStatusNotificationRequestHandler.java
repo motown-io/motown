@@ -24,8 +24,17 @@ import io.motown.ocpp.websocketjson.response.centralsystem.DiagnosticsStatusNoti
 
 public class DiagnosticsStatusNotificationRequestHandler implements RequestHandler {
 
+    private Gson gson;
+
+    private DomainService domainService;
+
+    public DiagnosticsStatusNotificationRequestHandler(Gson gson, DomainService domainService) {
+        this.gson = gson;
+        this.domainService = domainService;
+    }
+
     @Override
-    public DiagnosticsStatusNotificationResponse handleRequest(ChargingStationId chargingStationId, String payload, Gson gson, DomainService domainService) {
+    public DiagnosticsStatusNotificationResponse handleRequest(ChargingStationId chargingStationId, String payload) {
         DiagnosticsStatusNotificationRequest request = gson.fromJson(payload, DiagnosticsStatusNotificationRequest.class);
 
         domainService.diagnosticsUploadStatusUpdate(chargingStationId, request.getStatus().equals(DiagnosticsStatus.UPLOADED));

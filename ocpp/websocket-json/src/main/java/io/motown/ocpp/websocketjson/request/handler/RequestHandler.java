@@ -15,13 +15,11 @@
  */
 package io.motown.ocpp.websocketjson.request.handler;
 
-import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.response.centralsystem.CentralSystemResponse;
 
 public interface RequestHandler {
 
-    public CentralSystemResponse handleRequest(ChargingStationId chargingStationId, String payload, Gson gson, DomainService domainService);
+    public CentralSystemResponse handleRequest(ChargingStationId chargingStationId, String payload);
 
 }

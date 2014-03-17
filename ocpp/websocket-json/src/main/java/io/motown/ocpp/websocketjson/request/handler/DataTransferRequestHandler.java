@@ -24,8 +24,17 @@ import io.motown.ocpp.websocketjson.response.centralsystem.DataTransferStatus;
 
 public class DataTransferRequestHandler implements RequestHandler {
 
+    private Gson gson;
+
+    private DomainService domainService;
+
+    public DataTransferRequestHandler(Gson gson, DomainService domainService) {
+        this.gson = gson;
+        this.domainService = domainService;
+    }
+
     @Override
-    public DataTransferResponse handleRequest(ChargingStationId chargingStationId, String payload, Gson gson, DomainService domainService) {
+    public DataTransferResponse handleRequest(ChargingStationId chargingStationId, String payload) {
         DataTransferRequest request = gson.fromJson(payload, DataTransferRequest.class);
 
         domainService.dataTransfer(chargingStationId, request.getData(), request.getVendorId(), request.getMessageId());
