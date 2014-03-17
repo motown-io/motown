@@ -17,7 +17,7 @@ package io.motown.ocpp.websocketjson.response.centralsystem;
 
 import java.util.Date;
 
-public class BootNotificationResponse {
+public class BootNotificationResponse implements CentralSystemResponse {
 
     private RegistrationStatus status;
 

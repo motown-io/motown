@@ -19,10 +19,12 @@ import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.EvseId;
-import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.request.chargingstation.*;
+import io.motown.ocpp.websocketjson.request.handler.DiagnosticsStatusNotificationRequestHandler;
 import io.motown.ocpp.websocketjson.response.centralsystem.*;
+import io.motown.ocpp.websocketjson.request.handler.BootNotificationRequestHandler;
+import io.motown.ocpp.websocketjson.request.handler.DataTransferRequestHandler;
 import io.motown.ocpp.websocketjson.response.handler.ResponseHandler;
 import io.motown.ocpp.websocketjson.response.handler.UnlockConnectorResponseHandler;
 import io.motown.ocpp.websocketjson.schema.SchemaValidator;
@@ -118,17 +120,17 @@ public class OcppJsonService {
     }
 
     private WampMessage processWampMessage(ChargingStationId chargingStationId, WampMessage wampMessage) {
-        Object result;
+        CentralSystemResponse result;
 
         switch (wampMessage.getProcUri().toLowerCase()) {
             case "bootnotification":
-                result = processBootNotification(chargingStationId, wampMessage.getPayloadAsString());
+                result = new BootNotificationRequestHandler().handleRequest(chargingStationId, wampMessage.getPayloadAsString(), gson, domainService);
                 break;
             case "datatransfer":
-                result = processDataTransfer(chargingStationId, wampMessage.getPayloadAsString());
+                result = new DataTransferRequestHandler().handleRequest(chargingStationId, wampMessage.getPayloadAsString(), gson, domainService);
                 break;
             case "diagnosticsstatusnotification":
-                result = processDiagnosticsStatusNotification(chargingStationId, wampMessage.getPayloadAsString());
+                result = new DiagnosticsStatusNotificationRequestHandler().handleRequest(chargingStationId, wampMessage.getPayloadAsString(), gson, domainService);
                 break;
             default:
                 LOG.error("Unknown ProcUri: " + wampMessage.getProcUri());
@@ -138,32 +140,6 @@ public class OcppJsonService {
         return new WampMessage(WampMessage.CALL_RESULT, wampMessage.getCallId(), result);
     }
 
-    private BootNotificationResponse processBootNotification(ChargingStationId chargingStationId, String payload) {
-        BootNotificationRequest request = gson.fromJson(payload, BootNotificationRequest.class);
-
-        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(chargingStationId, null, request.getChargePointVendor(),
-                request.getChargePointModel(), PROTOCOL_IDENTIFIER, request.getChargePointSerialNumber(), request.getChargeBoxSerialNumber(),
-                request.getFirmwareVersion(), request.getIccid(), request.getImsi(), request.getMeterType(),
-                request.getMeterSerialNumber());
-
-        return new BootNotificationResponse(bootChargingStationResult.isAccepted()? RegistrationStatus.ACCEPTED:RegistrationStatus.REJECTED, bootChargingStationResult.getTimeStamp(), bootChargingStationResult.getHeartbeatInterval());
-    }
-
-    private DataTransferResponse processDataTransfer(ChargingStationId chargingStationId, String payload) {
-        DataTransferRequest request = gson.fromJson(payload, DataTransferRequest.class);
-
-        domainService.dataTransfer(chargingStationId, request.getData(), request.getVendorId(), request.getMessageId());
-
-        return new DataTransferResponse(DataTransferStatus.ACCEPTED, null);
-    }
-
-    private Object processDiagnosticsStatusNotification(ChargingStationId chargingStationId, String payload) {
-        DiagnosticsStatusNotificationRequest request = gson.fromJson(payload, DiagnosticsStatusNotificationRequest.class);
-
-        domainService.diagnosticsUploadStatusUpdate(chargingStationId, request.getStatus().equals(DiagnosticsStatus.UPLOADED));
-
-        return new DiagnosticsStatusNotificationResponse();
-    }
 
     public void setWampMessageParser(WampMessageParser wampMessageParser) {
         this.wampMessageParser = wampMessageParser;

@@ -15,23 +15,5 @@
  */
 package io.motown.ocpp.websocketjson.response.centralsystem;
 
-public class DataTransferResponse implements CentralSystemResponse {
-
-    private DataTransferStatus status;
-
-    private String data;
-
-    public DataTransferResponse(DataTransferStatus status, String data) {
-        this.status = status;
-        this.data = data;
-    }
-
-    public DataTransferStatus getStatus() {
-        return status;
-    }
-
-    public String getData() {
-        return data;
-    }
-
+public interface CentralSystemResponse {
 }

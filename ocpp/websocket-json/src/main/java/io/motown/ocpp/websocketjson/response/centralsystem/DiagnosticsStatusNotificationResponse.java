@@ -15,5 +15,5 @@
  */
 package io.motown.ocpp.websocketjson.response.centralsystem;
 
-public class DiagnosticsStatusNotificationResponse {
+public class DiagnosticsStatusNotificationResponse implements CentralSystemResponse {
 }

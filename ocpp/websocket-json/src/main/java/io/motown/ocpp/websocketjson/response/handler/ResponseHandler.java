@@ -25,7 +25,7 @@ public abstract class ResponseHandler {
 
     private CorrelationToken correlationToken;
 
-    abstract public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService);
+    public abstract void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService);
 
     CorrelationToken getCorrelationToken() {
         return correlationToken;

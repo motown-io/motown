@@ -13,25 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.response.centralsystem;
+package io.motown.ocpp.websocketjson.request.handler;
 
-public class DataTransferResponse implements CentralSystemResponse {
+import com.google.gson.Gson;
+import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.response.centralsystem.CentralSystemResponse;
 
-    private DataTransferStatus status;
+public interface RequestHandler {
 
-    private String data;
-
-    public DataTransferResponse(DataTransferStatus status, String data) {
-        this.status = status;
-        this.data = data;
-    }
-
-    public DataTransferStatus getStatus() {
-        return status;
-    }
-
-    public String getData() {
-        return data;
-    }
+    public CentralSystemResponse handleRequest(ChargingStationId chargingStationId, String payload, Gson gson, DomainService domainService);
 
 }
