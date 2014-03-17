@@ -22,6 +22,7 @@ import io.motown.ochp.v03.soap.schema.*;
 import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ochp.viewmodel.persistence.entities.Identification;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
+import io.motown.ochp.viewmodel.persistence.repostories.ChargingStationRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -34,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 
 import static io.motown.ochp.v03.soap.SOAPTestUtils.*;
 import static org.jgroups.util.Util.assertEquals;
+import static org.jgroups.util.Util.assertNotNull;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -50,8 +52,13 @@ public class Ochp03SoapClientTest {
         when(ochpClientProxyFactory.createOchpService(anyString())).thenReturn(echsClient);
         when(echsClient.authenticate(any(AuthenticateRequest.class))).thenReturn(getAuthenticateSuccessResponse());
 
+        ChargingStationRepository chargingStationRepository = mock(ChargingStationRepository.class);
+        ChargingStation chargingStation = mock(ChargingStation.class);
+        when(chargingStationRepository.findByChargingStationId(anyString())).thenReturn(chargingStation);
+
         client = new Ochp03SoapClient();
         client.setOchpProxyFactory(ochpClientProxyFactory);
+        client.setChargingStationRepository(chargingStationRepository);
     }
 
     @DirtiesContext //Resets the spring context to simulate a fresh startup where there is no authenticationtoken
@@ -65,6 +72,33 @@ public class Ochp03SoapClientTest {
 
         verify(echsClient, times(1)).authenticate(any(AuthenticateRequest.class));
         verify(echsClient, times(2)).getChargepointList(any(GetChargepointListRequest.class), anyString());
+    }
+
+    @Test
+    public void testGetChargepointList() {
+        when(echsClient.getChargepointList(any(GetChargepointListRequest.class), anyString())).thenReturn(getChargepointListResponse());
+
+        List<ChargingStation> chargingStations = client.getChargePointList();
+
+        assertNotNull(chargingStations);
+    }
+
+    @Test
+    public void testGetRoamingAuthorizationList() {
+        when(echsClient.getRoamingAuthorisationList(any(GetRoamingAuthorisationListRequest.class), anyString())).thenReturn(getRoamingAuthorisationListResponse());
+
+        List<Identification> identifications = client.getRoamingAuthorizationList();
+
+        assertNotNull(identifications);
+    }
+
+    @Test
+    public void testGetTransactionList() {
+        when(echsClient.getCDRs(any(GetCDRsRequest.class), anyString())).thenReturn(getCDRsResponse());
+
+        List<Transaction> transactions = client.getTransactionList();
+
+        assertNotNull(transactions);
     }
 
     @Test

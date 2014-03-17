@@ -40,6 +40,7 @@
 
     <bean id="ochp03SoapClient" class="io.motown.ochp.v03.soap.client.Ochp03SoapClient">
         <property name="ochpProxyFactory" ref="ochpProxyFactory"/>
+        <property name="chargingStationRepository" ref="chargingStationRepository"/>
     </bean>
 
     <!-- OCHP task scheduling -->

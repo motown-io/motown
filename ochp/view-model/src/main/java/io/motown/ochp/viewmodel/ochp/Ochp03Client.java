@@ -24,7 +24,11 @@ import java.util.List;
 
 public interface Ochp03Client {
 
-    List getChargePointList();
+    List<Transaction> getTransactionList();
+
+    List<ChargingStation> getChargePointList();
+
+    List<Identification> getRoamingAuthorizationList();
 
     void addChargeDetailRecords(List<Transaction> transactionList);
 

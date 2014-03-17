@@ -26,6 +26,9 @@ public final class SOAPTestUtils {
 
     public static final String CONFIGURATION_VALUE = "900";
 
+    public static final int SUCCESS = 0;
+    public static final int FAILURE = 1;
+
     /**
      * Private no-arg constructor to prevent instantiation of utility class.
      */
@@ -57,6 +60,17 @@ public final class SOAPTestUtils {
         return response;
     }
 
+    public static GetCDRsResponse getCDRsResponse(){
+        GetCDRsResponse response = new GetCDRsResponse();
+        Result result = new Result();
+        result.setResultCode(0);
+        response.setResult(result);
+
+        response.getCdrInfoArray().add(new CDRInfo());
+
+        return response;
+    }
+
     public static SetRoamingAuthorisationListResponse getSetRoamingAuthorisationListResponse(){
         SetRoamingAuthorisationListResponse response = new SetRoamingAuthorisationListResponse();
         Result result = new Result();
@@ -66,8 +80,24 @@ public final class SOAPTestUtils {
         return response;
     }
 
+    public static GetRoamingAuthorisationListResponse getRoamingAuthorisationListResponse(){
+        GetRoamingAuthorisationListResponse response = new GetRoamingAuthorisationListResponse();
+        Result result = new Result();
+        result.setResultCode(0);
+        response.setResult(result);
+
+        response.getRoamingAuthorisationInfoArray().add(new RoamingAuthorisationInfo());
+
+        return response;
+    }
+
     public static GetChargepointListResponse getChargepointListResponse(){
         GetChargepointListResponse response = new GetChargepointListResponse();
+
+        Result result = new Result();
+        result.setResultCode(0);
+        response.setResult(result);
+
         List<ChargepointInfo> chargepoints = response.getChargepointInfoArray();
         chargepoints.add(new ChargepointInfo());
         chargepoints.add(new ChargepointInfo());
@@ -79,6 +109,29 @@ public final class SOAPTestUtils {
         Result result = new Result();
         result.setResultCode(0);
         response.setResult(result);
+        return response;
+    }
+    
+    public static GetRoamingAuthorisationListResponse getRoamingAuthenticationListResponse() {
+        GetRoamingAuthorisationListResponse response = new GetRoamingAuthorisationListResponse();
+        List<RoamingAuthorisationInfo> authorisations =  response.getRoamingAuthorisationInfoArray();
+        authorisations.add(new RoamingAuthorisationInfo());
+        authorisations.add(new RoamingAuthorisationInfo());
+
+        Result result = new Result();
+        result.setResultCode(SUCCESS);
+        response.setResult(result);
+
+        return response;
+    }
+
+    public static GetRoamingAuthorisationListResponse getFailedRoamingAuthenticationListResponse() {
+        GetRoamingAuthorisationListResponse response = new GetRoamingAuthorisationListResponse();
+
+        Result result = new Result();
+        result.setResultCode(FAILURE);
+        response.setResult(result);
+
         return response;
     }
 
