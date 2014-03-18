@@ -87,7 +87,53 @@ public class OchpEventHandler {
         }
     }
 
-    //TODO: Listen to ChargingStationLocationChangedEvent event in order to obtain the address information - Ingo Pak, 17 Mar 2014
+    @EventHandler
+    public void handle(ChargingStationPlacedEvent event) {
+        updateLocationForChargingStation(event.getChargingStationId(), event.getCoordinates(), event.getAddress(), event.getAccessibility());
+    }
+
+    @EventHandler
+    public void handle(ChargingStationLocationImprovedEvent event) {
+        updateLocationForChargingStation(event.getChargingStationId(), event.getCoordinates(), event.getAddress(), event.getAccessibility());
+    }
+
+    @EventHandler
+    public void handle(ChargingStationMovedEvent event) {
+        updateLocationForChargingStation(event.getChargingStationId(), event.getCoordinates(), event.getAddress(), event.getAccessibility());
+    }
+
+    /**
+     * Updates the location of the charging station to either new lat/long coordinates or a geographical address (or both).
+     * If the charging station cannot be found in the repository an error is logged.
+     *
+     * @param chargingStationId charging station identifier.
+     * @param coordinates the lat/long coordinates of the charging station.
+     * @param address the geographical address of the charging station.
+     * @param accessibility the accessibility of the charging station.
+     */
+    private void updateLocationForChargingStation(ChargingStationId chargingStationId, Coordinates coordinates, Address address, Accessibility accessibility) {
+        ChargingStation chargingStation = getChargingStation(chargingStationId);
+
+        if (chargingStation != null) {
+
+            if (coordinates != null) {
+                chargingStation.setLatitude(coordinates.getLatitude());
+                chargingStation.setLongitude(coordinates.getLongitude());
+            }
+
+            if (address != null) {
+                chargingStation.setAddress(address.getAddressline1());
+                chargingStation.setCity(address.getCity());
+                chargingStation.setCountry(address.getCountry());
+                chargingStation.setPostalCode(address.getPostalCode());
+                chargingStation.setRegion(address.getRegion());
+            }
+
+            chargingStation.setAccessibility(accessibility);
+
+            chargingStationRepository.save(chargingStation);
+        }
+    }
 
     @EventHandler
     public void handle(AuthorizationResultEvent event) {

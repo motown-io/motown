@@ -106,6 +106,22 @@ public class OchpEventHandlerTest {
     }
 
     @Test
+    public void testHandleChargingStationPlacedEvent() {
+
+        eventHandler.handle(new ChargingStationPlacedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY));
+    }
+
+    @Test
+    public void testHandleChargingStationLocationImprovedEvent() {
+        eventHandler.handle(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY));
+    }
+
+    @Test
+    public void testHandleChargingStationMovedEvent() {
+        eventHandler.handle(new ChargingStationMovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY));
+    }
+
+    @Test
     public void testHandleAuthorizationResultEventUpdateToInvalid() {
         Identification identification = new Identification(IDENTIFYING_TOKEN.getToken(), AuthorizationResultStatus.ACCEPTED);
         identificationRepository.save(identification);

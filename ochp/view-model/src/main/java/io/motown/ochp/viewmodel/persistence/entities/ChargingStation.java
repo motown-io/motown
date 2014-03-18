@@ -15,6 +15,8 @@
  */
 package io.motown.ochp.viewmodel.persistence.entities;
 
+import io.motown.domain.api.chargingstation.Accessibility;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -27,6 +29,23 @@ public class ChargingStation {
 
     @Column(unique = true)
     private String chargingStationId;
+
+    private double latitude;
+
+    private double longitude;
+
+    private String address;
+
+    private String city;
+
+    private String country;
+
+    private String postalCode;
+
+    private String region;
+
+    @Enumerated(EnumType.STRING)
+    private Accessibility accessibility;
 
     private ChargingStation() {
         // Private no-arg constructor for Hibernate.
@@ -50,6 +69,70 @@ public class ChargingStation {
 
     public void setChargingStationId(String chargingStationId) {
         this.chargingStationId = chargingStationId;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public Accessibility getAccessibility() {
+        return accessibility;
+    }
+
+    public void setAccessibility(Accessibility accessibility) {
+        this.accessibility = accessibility;
     }
 
     @Override

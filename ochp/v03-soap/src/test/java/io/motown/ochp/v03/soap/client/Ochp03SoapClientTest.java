@@ -122,8 +122,9 @@ public class Ochp03SoapClientTest {
         transaction.setTimeStop(now);
         transaction.setMeterStart(12);
         transaction.setMeterStop(34);
-        transaction.setChargingStation(new ChargingStation("chargingStationId"));
-        //TODO: add the rest of the parameters to see if they are correctly converted - Ingo Pak, 06 Mar 2014
+
+        ChargingStation chargingStation = mock(ChargingStation.class);
+        transaction.setChargingStation(chargingStation);
 
         transactions.add(transaction);
         client.addChargeDetailRecords(transactions);

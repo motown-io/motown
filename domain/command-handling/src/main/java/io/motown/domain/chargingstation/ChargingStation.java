@@ -276,8 +276,8 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @CommandHandler
     public void handle(StatusChangedCommand command, MetaData metaData) {
         apply(new StatusChangedEvent(command.getChargingStationId(), command.getStatus(), command.getStatusMessage()), metaData);
-    }
 
+    }
     @CommandHandler
     public void handle(GrantAuthorizationCommand command) {
         apply(new AuthorizationResultEvent(command.getChargingStationId(), command.getIdentifyingToken(), AuthorizationResultStatus.ACCEPTED));

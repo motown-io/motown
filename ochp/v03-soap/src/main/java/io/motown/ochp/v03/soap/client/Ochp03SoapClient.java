@@ -90,8 +90,6 @@ public class Ochp03SoapClient implements Ochp03Client {
         AddCDRsRequest request = new AddCDRsRequest();
         List<CDRInfo> cdrInfoList = request.getCdrInfoArray();
         for(Transaction transaction : transactionList){
-            ChargingStation chargingStation = transaction.getChargingStation();
-
             CDRInfo cdrInfo = new CDRInfo();
             cdrInfo.setAuthenticationId(transaction.getIdentificationId());
             cdrInfo.setCdrId(transaction.getTransactionId());
@@ -99,21 +97,29 @@ public class Ochp03SoapClient implements Ochp03Client {
             cdrInfo.setDuration(DateFormatter.formatDuration(transaction.getTimeStart(), transaction.getTimeStop()));
             cdrInfo.setStartDatetime(DateFormatter.toISO8601(transaction.getTimeStart()));
             cdrInfo.setEndDatetime(DateFormatter.toISO8601(transaction.getTimeStop()));
-            cdrInfo.setChargePointId(chargingStation.getChargingStationId());
             cdrInfo.setVolume(String.format("%.4f", transaction.calculateVolume()));
+
+            ChargingStation chargingStation = transaction.getChargingStation();
+            if(chargingStation != null) {
+                cdrInfo.setChargePointId(chargingStation.getChargingStationId());
+                cdrInfo.setChargePointAddress(chargingStation.getAddress());
+                cdrInfo.setChargePointCity(chargingStation.getCity());
+                cdrInfo.setChargePointZip(chargingStation.getPostalCode());
+                cdrInfo.setChargePointCountry(chargingStation.getCountry());
+            }
 // TODO: Decide if the fields below will be provided - Ingo Pak, 11 Mar 2014
-            cdrInfo.setChargePointAddress("");
-            cdrInfo.setChargePointCity("");
-            cdrInfo.setChargePointZip("");
-            cdrInfo.setChargePointCountry("");
             cdrInfo.setChargePointType("");
             cdrInfo.setInfraProviderId("");
-            cdrInfo.setMeterId(""); //identification of the physical energy meter
-            cdrInfo.setObisCode(""); //object identification of the register in the meter (IEC 62056-61 eg. 1-1:1.8.0)
-            cdrInfo.setProductType(""); //identifies the type of product that is delivered
+            //identification of the physical energy meter
+            cdrInfo.setMeterId("");
+            //object identification of the register in the meter (IEC 62056-61 eg. 1-1:1.8.0)
+            cdrInfo.setObisCode("");
+            //identifies the type of product that is delivered
+            cdrInfo.setProductType("");
             cdrInfo.setTariffType("");
             cdrInfo.setServiceProviderId("");
-            cdrInfo.setEvcoId(""); //identifies a customer in the electric mobility charging context (http://data.fir.de/projektseiten/emobility-ids/)
+            //identifies a customer in the electric mobility charging context (http://data.fir.de/projektseiten/emobility-ids/)
+            cdrInfo.setEvcoId("");
 
             cdrInfoList.add(cdrInfo);
         }
@@ -253,6 +259,12 @@ public class Ochp03SoapClient implements Ochp03Client {
         for (ChargingStation chargingStation : chargingStations) {
             ChargepointInfo chargepointInfo = new ChargepointInfo();
             chargepointInfo.setEvseId(chargingStation.getChargingStationId());
+            chargepointInfo.setStreetName(chargingStation.getAddress());
+            chargepointInfo.setCity(chargingStation.getCity());
+            chargepointInfo.setPostalCode(chargingStation.getPostalCode());
+            chargepointInfo.setTaLat(Double.toString(chargingStation.getLatitude()));
+            chargepointInfo.setTaLon(Double.toString(chargingStation.getLongitude()));
+
             //TODO: add more fields to chargepointInfo - Mark Manders 2014-03-14
 
             chargepointInfoList.add(chargepointInfo);
