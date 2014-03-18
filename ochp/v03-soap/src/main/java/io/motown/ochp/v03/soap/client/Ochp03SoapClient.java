@@ -27,7 +27,6 @@ import io.motown.ochp.viewmodel.persistence.repostories.ChargingStationRepositor
 import io.motown.ochp.viewmodel.persistence.repostories.TransactionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Date;
 import java.util.List;
@@ -47,17 +46,26 @@ public class Ochp03SoapClient implements Ochp03Client {
 
     private TransactionRepository transactionRepository;
 
-    @Value("${io.motown.ochp.server.address}")
     private String serverAddress;
 
-    @Value("${io.motown.ochp.server.address}")
     private String username;
 
-    @Value("${io.motown.ochp.server.address}")
     private String password;
 
     /** In memory cache to store the authentication token that is required in all webservice calls */
     private String cachedAuthenticationToken;
+
+    public void setServerAddress(String serverAddress) {
+        this.serverAddress = serverAddress;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     /**
      * Performs authentication in case we do not have an authentication token

@@ -42,6 +42,9 @@
         <property name="ochpProxyFactory" ref="ochpProxyFactory"/>
         <property name="chargingStationRepository" ref="chargingStationRepository"/>
         <property name="transactionRepository" ref="transactionRepository"/>
+        <property name="serverAddress" value="${io.motown.ochp.server.address}" />
+        <property name="username" value="${io.motown.ochp.username}" />
+        <property name="password" value="${io.motown.ochp.password}" />
     </bean>
 
     <!-- OCHP task scheduling -->
