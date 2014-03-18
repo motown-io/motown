@@ -143,8 +143,10 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
     @Override
     public MeterValuesResponse meterValues(MeterValuesRequest request, String chargeBoxIdentity) {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
+        //TODO transaction id is not mandatory. Constructing NumberedTransactionId without a transaction id will cause an exception. - Mark van den Bergh, March 18th 2014
         TransactionId transactionId = new NumberedTransactionId(chargingStationId, PROTOCOL_IDENTIFIER, request.getTransactionId());
 
+        //TODO meter values request values contains info we're discarding at the moment: ReadingContext, ValueFormat, Measurand, Location, UnitOfMeasure. - Mark van den Bergh, March 18th 2014
         List<MeterValue> meterValues = new ArrayList<>();
         for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue mv : request.getValues()) {
             meterValues.add(new MeterValue(mv.getTimestamp(), mv.getValue().toString()));
