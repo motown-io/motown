@@ -19,9 +19,7 @@ import org.junit.Test;
 
 import java.util.Date;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.FIVE_MINUTES_AGO;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.TWO_MINUTES_AGO;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -61,14 +59,15 @@ public class RequestDiagnosticsCommandTest {
         assertFalse(endTime.equals(command.getPeriodEndTime()));
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     public void exposedDatesShouldNotAffectInternalRepresentation() {
         RequestDiagnosticsCommand command = new RequestDiagnosticsCommand(CHARGING_STATION_ID, UPLOAD_LOCATION, NUM_RETRIES, RETRY_INTERVAL, START_TIME, END_TIME);
 
         Date startTime = command.getPeriodStartTime();
+        assert startTime != null;
         startTime.setTime(0);
         Date endTime = command.getPeriodEndTime();
+        assert endTime != null;
         endTime.setTime(0);
 
         assertFalse(startTime.equals(command.getPeriodStartTime()));

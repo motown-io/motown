@@ -49,7 +49,6 @@ public class ChargingStationRepository {
     }
 
     public ChargingStation findByChargingStationId(String chargingStationId) {
-        @SuppressWarnings("JpaQlInspection")
         Query query = entityManager.createQuery("SELECT cs FROM io.motown.vas.viewmodel.model.ChargingStation AS cs WHERE cs.chargingStationId = :chargingStationId").setParameter("chargingStationId", chargingStationId);
         List resultList = query.getResultList();
         if (resultList.size() > 0) {
@@ -60,7 +59,6 @@ public class ChargingStationRepository {
     }
 
     public List<ChargingStation> findAll() {
-        @SuppressWarnings("JpaQlInspection")
         Query query = entityManager.createQuery("SELECT cs FROM io.motown.vas.viewmodel.model.ChargingStation AS cs");
         return (List<ChargingStation>) query.getResultList();
     }

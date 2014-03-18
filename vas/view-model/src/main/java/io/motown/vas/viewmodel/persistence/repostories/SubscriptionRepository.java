@@ -24,7 +24,6 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import java.util.List;
 
-@SuppressWarnings("JpaQlInspection")
 public class SubscriptionRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(SubscriptionRepository.class);

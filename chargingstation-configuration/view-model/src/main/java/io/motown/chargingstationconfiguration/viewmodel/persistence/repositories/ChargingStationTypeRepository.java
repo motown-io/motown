@@ -26,7 +26,6 @@ public class ChargingStationTypeRepository {
     private EntityManager entityManager;
 
     public List<ChargingStationType> findByCodeAndManufacturerCode(String code, String manufacturerCode) {
-        @SuppressWarnings("JpaQlInspection")
         Query query = entityManager.createQuery("SELECT cst FROM ChargingStationType AS cst where UPPER(cst.code) = UPPER(:code) and UPPER(cst.manufacturer.code) = UPPER(:manufacturerCode)").setParameter("code", code).setParameter("manufacturerCode", manufacturerCode);
         return (List<ChargingStationType>) query.getResultList();
     }
