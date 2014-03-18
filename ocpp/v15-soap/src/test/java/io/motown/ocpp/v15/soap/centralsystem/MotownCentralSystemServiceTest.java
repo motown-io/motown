@@ -15,11 +15,12 @@
  */
 package io.motown.ocpp.v15.soap.centralsystem;
 
-import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.ComponentStatus;
 import io.motown.domain.api.chargingstation.MeterValue;
+import io.motown.domain.api.chargingstation.NumberedTransactionId;
 import io.motown.ocpp.soaputils.header.SoapHeaderReader;
 import io.motown.ocpp.v15.soap.centralsystem.schema.*;
-import io.motown.ocpp.v15.soap.centralsystem.schema.FirmwareStatus;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import org.junit.Before;
@@ -37,9 +38,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class MotownCentralSystemServiceTest {
 
@@ -234,7 +233,9 @@ public class MotownCentralSystemServiceTest {
         request.getValues().addAll(meterValuesSoap);
         List<MeterValue> expectedMeterValuesList = new ArrayList<>();
         for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue mv : meterValuesSoap) {
-            expectedMeterValuesList.add(new MeterValue(mv.getTimestamp(), mv.getValue().toString()));
+            for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value value : mv.getValue()) {
+                expectedMeterValuesList.add(new MeterValue(mv.getTimestamp(), value.getValue()));
+            }
         }
 
         motownCentralSystemService.meterValues(request, CHARGING_STATION_ID.getId());
