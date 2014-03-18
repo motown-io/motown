@@ -15,13 +15,14 @@
  */
 package io.motown.ocpp.v15.soap.centralsystem;
 
+import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.chargingstation.MeterValue;
 import io.motown.ocpp.soaputils.async.*;
 import io.motown.ocpp.soaputils.header.SoapHeaderReader;
+import io.motown.ocpp.v15.soap.Ocpp15RequestHandler;
 import io.motown.ocpp.v15.soap.centralsystem.schema.*;
 import io.motown.ocpp.v15.soap.centralsystem.schema.FirmwareStatus;
-import io.motown.ocpp.v15.soap.Ocpp15RequestHandler;
 import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
@@ -30,10 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 @javax.jws.WebService(
         serviceName = "CentralSystemService",
@@ -46,6 +44,12 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
     private static final Logger LOG = LoggerFactory.getLogger(MotownCentralSystemService.class);
 
     private static final String PROTOCOL_IDENTIFIER = Ocpp15RequestHandler.PROTOCOL_IDENTIFIER;
+
+    public static final String CONTEXT_KEY = "context";
+    public static final String FORMAT_KEY = "format";
+    public static final String MEASURAND_KEY = "measurand";
+    public static final String LOCATION_KEY = "location";
+    public static final String UNIT_KEY = "unit";
 
     private int heartbeatIntervalFallback;
 
@@ -94,10 +98,17 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
 
         List<MeterValue> meterValues = new ArrayList<>();
         List<TransactionData> transactionData = request.getTransactionData();
+        Map<String, String> attributes = Maps.newHashMap();
         for (TransactionData data : transactionData) {
             for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue mv : data.getValues()){
                 for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value value : mv.getValue()) {
-                    meterValues.add(new MeterValue(mv.getTimestamp(), value.getValue()));
+                    addAttributeIfNotNull(attributes, CONTEXT_KEY, value.getContext() != null ? value.getContext().value() : null);
+                    addAttributeIfNotNull(attributes, FORMAT_KEY, value.getFormat() != null ? value.getFormat().value() : null);
+                    addAttributeIfNotNull(attributes, MEASURAND_KEY, value.getMeasurand() != null ? value.getMeasurand().value() : null);
+                    addAttributeIfNotNull(attributes, LOCATION_KEY, value.getLocation() != null ? value.getLocation().value() : null);
+                    addAttributeIfNotNull(attributes, UNIT_KEY, value.getUnit() != null ? value.getUnit().value() : null);
+
+                    meterValues.add(new MeterValue(mv.getTimestamp(), value.getValue(), attributes));
                 }
             }
         }
@@ -143,13 +154,20 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
     @Override
     public MeterValuesResponse meterValues(MeterValuesRequest request, String chargeBoxIdentity) {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
-        //TODO transaction id is not mandatory. Constructing NumberedTransactionId without a transaction id will cause an exception. - Mark van den Bergh, March 18th 2014
-        TransactionId transactionId = new NumberedTransactionId(chargingStationId, PROTOCOL_IDENTIFIER, request.getTransactionId());
+        TransactionId transactionId = request.getTransactionId() != null ? new NumberedTransactionId(chargingStationId, PROTOCOL_IDENTIFIER, request.getTransactionId()) : null;
 
-        //TODO meter values request values contains info we're discarding at the moment: ReadingContext, ValueFormat, Measurand, Location, UnitOfMeasure. - Mark van den Bergh, March 18th 2014
         List<MeterValue> meterValues = new ArrayList<>();
+        Map<String, String> attributes = Maps.newHashMap();
         for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue mv : request.getValues()) {
-            meterValues.add(new MeterValue(mv.getTimestamp(), mv.getValue().toString()));
+            for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value value : mv.getValue()) {
+                addAttributeIfNotNull(attributes, CONTEXT_KEY, value.getContext() != null ? value.getContext().value() : null);
+                addAttributeIfNotNull(attributes, FORMAT_KEY, value.getFormat() != null ? value.getFormat().value() : null);
+                addAttributeIfNotNull(attributes, MEASURAND_KEY, value.getMeasurand() != null ? value.getMeasurand().value() : null);
+                addAttributeIfNotNull(attributes, LOCATION_KEY, value.getLocation() != null ? value.getLocation().value() : null);
+                addAttributeIfNotNull(attributes, UNIT_KEY, value.getUnit() != null ? value.getUnit().value() : null);
+
+                meterValues.add(new MeterValue(mv.getTimestamp(), value.getValue(), attributes));
+            }
         }
 
         domainService.meterValues(chargingStationId, transactionId, new EvseId(request.getConnectorId()), meterValues);
@@ -242,6 +260,19 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         response.setIdTagInfo(idTagInfo);
         response.setTransactionId(transactionId);
         return response;
+    }
+
+    /**
+     * Adds the attribute to the map using the key and value if the value is not null.
+     *
+     * @param attributes    map of keys and values.
+     * @param key           key of the attribute.
+     * @param value         value of the attribute.
+     */
+    private void addAttributeIfNotNull(Map<String, String> attributes, String key, String value) {
+        if (value != null) {
+            attributes.put(key, value);
+        }
     }
 
     public void setDomainService(DomainService domainService) {

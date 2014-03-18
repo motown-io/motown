@@ -292,11 +292,22 @@ public final class ChargingStationTestUtils {
             .build();
 
     /**
+     * The default list of meter value attributes.
+     */
+    public static final ImmutableMap<String, String> METER_VALUE_ATTRIBUTES = ImmutableMap.<String, String>builder()
+            .put("context", "Sample.Clock")
+            .put("format", "Raw")
+            .put("measurand", "Energy.Active.Export.Register")
+            .put("location", "Inlet")
+            .put("unit", "kWh")
+            .build();
+
+    /**
      * The default list of meter values.
      */
     public static final ImmutableList<MeterValue> METER_VALUES = ImmutableList.<MeterValue>builder()
-            .add(new MeterValue(FIVE_MINUTES_AGO, Integer.toString(METER_START)))
-            .add(new MeterValue(TWO_MINUTES_AGO, Integer.toString(METER_STOP)))
+            .add(new MeterValue(FIVE_MINUTES_AGO, Integer.toString(METER_START), METER_VALUE_ATTRIBUTES))
+            .add(new MeterValue(TWO_MINUTES_AGO, Integer.toString(METER_STOP), METER_VALUE_ATTRIBUTES))
             .build();
 
     /**

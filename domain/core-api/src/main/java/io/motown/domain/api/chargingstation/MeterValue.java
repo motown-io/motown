@@ -16,7 +16,11 @@
 
 package io.motown.domain.api.chargingstation;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+
 import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -30,16 +34,24 @@ public final class MeterValue {
 
     private final String value;
 
+    private final Map<String, String> attributes;
+
+    public MeterValue(Date timestamp, String value) {
+        this(timestamp, value, Maps.<String, String>newHashMap());
+    }
+
     /**
      * Creates a {@code MeterValue} holding a timestamp and a value.
      *
      * @param timestamp
      * @param value
-     * @throws NullPointerException if {@code timestamp}, or {@code value} is {@code null}.
+     * @param attributes
+     * @throws NullPointerException if {@code timestamp}, {@code value}, or {@code attributes} is {@code null}.
      */
-    public MeterValue(Date timestamp, String value) {
+    public MeterValue(Date timestamp, String value, Map<String, String> attributes) {
         this.timestamp = new Date(checkNotNull(timestamp).getTime());
         this.value = checkNotNull(value);
+        this.attributes = ImmutableMap.copyOf(checkNotNull(attributes));
     }
 
     /**
@@ -56,9 +68,16 @@ public final class MeterValue {
         return value;
     }
 
+    /**
+     * @return the attributes
+     */
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(timestamp, value);
+        return Objects.hash(timestamp, value, attributes);
     }
 
     @Override
@@ -70,6 +89,6 @@ public final class MeterValue {
             return false;
         }
         final MeterValue other = (MeterValue) obj;
-        return Objects.equals(this.timestamp, other.timestamp) && Objects.equals(this.value, other.value);
+        return Objects.equals(this.timestamp, other.timestamp) && Objects.equals(this.value, other.value) && Objects.equals(this.attributes, other.attributes);
     }
 }

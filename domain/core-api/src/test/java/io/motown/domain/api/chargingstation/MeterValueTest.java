@@ -35,6 +35,11 @@ public class MeterValueTest {
         new MeterValue(new Date(), null);
     }
 
+    @Test(expected = NullPointerException.class)
+    public void createMeterValueWithNullAttributesThrowsNullPointerException() {
+        new MeterValue(new Date(), "123", null);
+    }
+
     @Test
     public void getTimestampShouldReturnDefensiveCopy() {
         Date now = new Date();
@@ -49,5 +54,10 @@ public class MeterValueTest {
     @Test
     public void equalsAndHashcodeShouldBeImplementedAccordingToTheContract() {
         EqualsVerifier.forClass(MeterValue.class).verify();
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void addValueToAttributesShouldThrowUnsupportedOperationException() {
+        new MeterValue(new Date(), "123").getAttributes().put("key", "value");
     }
 }

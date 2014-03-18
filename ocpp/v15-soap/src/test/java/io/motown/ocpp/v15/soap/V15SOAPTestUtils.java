@@ -16,10 +16,14 @@
 package io.motown.ocpp.v15.soap;
 
 import com.google.common.collect.ImmutableMap;
-import io.motown.domain.api.chargingstation.*;
-import io.motown.ocpp.v15.soap.centralsystem.schema.TransactionData;
+import io.motown.domain.api.chargingstation.AuthorizationListUpdateType;
+import io.motown.domain.api.chargingstation.IdentifyingToken;
+import io.motown.domain.api.chargingstation.MeterValue;
+import io.motown.domain.api.chargingstation.TextualToken;
+import io.motown.ocpp.v15.soap.centralsystem.schema.*;
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
-import io.motown.ocpp.v15.soap.chargepoint.schema.ReservationStatus;
+import io.motown.ocpp.v15.soap.chargepoint.schema.DataTransferResponse;
+import io.motown.ocpp.v15.soap.chargepoint.schema.DataTransferStatus;
 
 import javax.persistence.EntityManager;
 import java.util.*;
@@ -218,6 +222,11 @@ public final class V15SOAPTestUtils {
         for (MeterValue meterValue : meterValues) {
             io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value value = new io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value();
             value.setValue(meterValue.getValue());
+            value.setContext(ReadingContext.fromValue(meterValue.getAttributes().get("context")));
+            value.setFormat(ValueFormat.fromValue(meterValue.getAttributes().get("format")));
+            value.setMeasurand(Measurand.fromValue(meterValue.getAttributes().get("measurand")));
+            value.setLocation(Location.fromValue(meterValue.getAttributes().get("location")));
+            value.setUnit(UnitOfMeasure.fromValue(meterValue.getAttributes().get("unit")));
 
             io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue meterValueSoap = new io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue();
             meterValueSoap.getValue().add(value);
