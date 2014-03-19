@@ -32,7 +32,7 @@ public class ChargingStationTypeRepository {
                 .getResultList();
     }
 
-    public void saveOrUpdate(ChargingStationType chargingStationType) {
+    public void create(ChargingStationType chargingStationType) {
         EntityTransaction transaction = entityManager.getTransaction();
 
         if (!transaction.isActive()) {
@@ -41,6 +41,22 @@ public class ChargingStationTypeRepository {
 
         try {
             entityManager.persist(chargingStationType);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            throw e;
+        }
+    }
+
+    public void update(ChargingStationType chargingStationType) {
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        if (!transaction.isActive()) {
+            transaction.begin();
+        }
+
+        try {
+            entityManager.merge(chargingStationType);
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();

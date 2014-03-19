@@ -25,7 +25,7 @@ public class ConnectorRepository {
 
     private EntityManager entityManager;
 
-    public void saveOrUpdate(Connector connector) {
+    public void create(Connector connector) {
         EntityTransaction transaction = entityManager.getTransaction();
 
         if (!transaction.isActive()) {
@@ -34,6 +34,22 @@ public class ConnectorRepository {
 
         try {
             entityManager.persist(connector);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            throw e;
+        }
+    }
+
+    public void update(Connector connector) {
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        if (!transaction.isActive()) {
+            transaction.begin();
+        }
+
+        try {
+            entityManager.merge(connector);
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
