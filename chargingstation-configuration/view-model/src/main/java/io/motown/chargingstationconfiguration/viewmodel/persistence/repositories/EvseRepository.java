@@ -15,24 +15,17 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.persistence.repositories;
 
-import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.util.List;
 
-public class ChargingStationTypeRepository {
+public class EvseRepository {
 
     private EntityManager entityManager;
 
-    public List<ChargingStationType> findByCodeAndManufacturerCode(String code, String manufacturerCode) {
-        return entityManager.createQuery("SELECT cst FROM ChargingStationType AS cst where UPPER(cst.code) = UPPER(:code) and UPPER(cst.manufacturer.code) = UPPER(:manufacturerCode)", ChargingStationType.class)
-                .setParameter("code", code)
-                .setParameter("manufacturerCode", manufacturerCode)
-                .getResultList();
-    }
-
-    public void saveOrUpdate(ChargingStationType chargingStationType) {
+    public void saveOrUpdate(Evse evse) {
         EntityTransaction transaction = entityManager.getTransaction();
 
         if (!transaction.isActive()) {
@@ -40,7 +33,7 @@ public class ChargingStationTypeRepository {
         }
 
         try {
-            entityManager.persist(chargingStationType);
+            entityManager.persist(evse);
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
@@ -48,16 +41,12 @@ public class ChargingStationTypeRepository {
         }
     }
 
-    public List<ChargingStationType> findAll() {
-        return entityManager.createQuery("SELECT cst FROM ChargingStationType cst", ChargingStationType.class).getResultList();
+    public List<Evse> findAll() {
+        return entityManager.createQuery("SELECT e FROM Evse e", Evse.class).getResultList();
     }
 
-    public ChargingStationType findOne(Long id) {
-        return entityManager.find(ChargingStationType.class, id);
-    }
-
-    public void delete(ChargingStationType chargingStationType) {
-        entityManager.remove(chargingStationType);
+    public Evse findOne(Long id) {
+        return entityManager.find(Evse.class, id);
     }
 
     public void setEntityManager(EntityManager entityManager) {

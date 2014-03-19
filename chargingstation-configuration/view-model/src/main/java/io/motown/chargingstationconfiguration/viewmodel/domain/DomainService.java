@@ -19,6 +19,9 @@ import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Cha
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ConnectorRepository;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.EvseRepository;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ManufacturerRepository;
 import io.motown.domain.api.chargingstation.EvseId;
 
 import java.util.ArrayList;
@@ -29,6 +32,9 @@ import java.util.Set;
 public class DomainService {
 
     private ChargingStationTypeRepository chargingStationTypeRepository;
+    private ConnectorRepository connectorRepository;
+    private EvseRepository evseRepository;
+    private ManufacturerRepository manufacturerRepository;
 
     /**
      * Retrieves a set of {@code io.motown.domain.api.chargingstation.Evse}s based on the vendor and model.
@@ -55,15 +61,6 @@ public class DomainService {
     }
 
     /**
-     * Sets the charging station type repository.
-     *
-     * @param chargingStationTypeRepository repository to use.
-     */
-    public void setChargingStationTypeRepository(ChargingStationTypeRepository chargingStationTypeRepository) {
-        this.chargingStationTypeRepository = chargingStationTypeRepository;
-    }
-
-    /**
      * Converts a set of {@code Connector}s to a list of {@code io.motown.domain.api.chargingstation.Connector}s for use
      * in commands.
      *
@@ -81,4 +78,39 @@ public class DomainService {
         return resultList;
     }
 
+    /**
+     * Sets the charging station type repository.
+     *
+     * @param chargingStationTypeRepository repository to use.
+     */
+    public void setChargingStationTypeRepository(ChargingStationTypeRepository chargingStationTypeRepository) {
+        this.chargingStationTypeRepository = chargingStationTypeRepository;
+    }
+
+    /**
+     * Sets the connector repository.
+     *
+     * @param connectorRepository repository to use.
+     */
+    public void setConnectorRepository(ConnectorRepository connectorRepository) {
+        this.connectorRepository = connectorRepository;
+    }
+
+    /**
+     * Sets the evse repository.
+     *
+     * @param evseRepository repository to use.
+     */
+    public void setEvseRepository(EvseRepository evseRepository) {
+        this.evseRepository = evseRepository;
+    }
+
+    /**
+     * Sets the manufacturer repository.
+     *
+     * @param manufacturerRepository repository to use.
+     */
+    public void setManufacturerRepository(ManufacturerRepository manufacturerRepository) {
+        this.manufacturerRepository = manufacturerRepository;
+    }
 }
