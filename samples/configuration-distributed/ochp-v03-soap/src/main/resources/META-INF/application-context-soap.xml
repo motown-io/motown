@@ -51,6 +51,7 @@
     <bean id="ochpSchedulingService" class="io.motown.ochp.v03.soap.client.OchpSchedulingService">
         <property name="ochp03SoapClient" ref="ochp03SoapClient"/>
         <property name="transactionRepository" ref="transactionRepository"/>
+        <property name="identificationRepository" ref="identificationRepository"/>
     </bean>
     <task:scheduled-tasks>
         <task:scheduled ref="ochpSchedulingService" method="executeAddCDRs" cron="${io.motown.ochp.addcdrs.cron}"></task:scheduled>

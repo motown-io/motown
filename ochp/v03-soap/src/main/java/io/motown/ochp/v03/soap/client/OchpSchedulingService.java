@@ -66,4 +66,8 @@ public class OchpSchedulingService {
     public void setTransactionRepository(TransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
     }
+
+    public void setIdentificationRepository(IdentificationRepository identificationRepository) {
+        this.identificationRepository = identificationRepository;
+    }
 }
