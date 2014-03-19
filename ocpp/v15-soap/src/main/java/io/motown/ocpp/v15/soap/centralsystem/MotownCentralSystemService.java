@@ -106,7 +106,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
                 }
             }
         }
-
+        //TODO: timestamp is optional in the webservice, this currently 'breaks' the code ahead - Ingo Pak, 19 Mar 2014
         domainService.stopTransaction(chargingStationId, transactionId, identifyingToken, request.getMeterStop(), request.getTimestamp(), meterValues);
         return new StopTransactionResponse();
     }
