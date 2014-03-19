@@ -38,7 +38,7 @@ public class StatusNotificationRequest {
         this.status = status;
         this.errorCode = errorCode;
         this.info = info;
-        this.timestamp = timestamp;
+        this.timestamp = timestamp != null ? new Date(timestamp.getTime()) : null;
         this.vendorId = vendorId;
         this.vendorErrorCode = vendorErrorCode;
     }
@@ -60,7 +60,7 @@ public class StatusNotificationRequest {
     }
 
     public Date getTimestamp() {
-        return timestamp;
+        return timestamp != null ? new Date(timestamp.getTime()) : null;
     }
 
     public String getVendorId() {
