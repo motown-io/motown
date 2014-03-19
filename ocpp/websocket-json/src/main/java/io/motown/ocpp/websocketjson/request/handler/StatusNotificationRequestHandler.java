@@ -19,14 +19,8 @@ import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.request.chargingstation.ChargePointStatus;
-import io.motown.ocpp.websocketjson.request.chargingstation.StartTransactionRequest;
 import io.motown.ocpp.websocketjson.request.chargingstation.StatusNotificationRequest;
-import io.motown.ocpp.websocketjson.response.centralsystem.AuthorizationStatus;
-import io.motown.ocpp.websocketjson.response.centralsystem.IdTagInfo;
-import io.motown.ocpp.websocketjson.response.centralsystem.StartTransactionResponse;
 import io.motown.ocpp.websocketjson.response.centralsystem.StatusNotificationResponse;
-
-import java.util.GregorianCalendar;
 
 public class StatusNotificationRequestHandler implements RequestHandler {
 
