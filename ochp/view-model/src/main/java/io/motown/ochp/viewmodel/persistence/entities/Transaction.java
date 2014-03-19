@@ -169,11 +169,11 @@ public class Transaction {
     }
 
     public Date getTimeSynced() {
-        return timeSynced;
+        return timeSynced != null ? new Date(timeSynced.getTime()) : null;
     }
 
     public void setTimeSynced(Date timeSynced) {
-        this.timeSynced = timeSynced;
+        this.timeSynced = timeSynced != null ? new Date(timeSynced.getTime()) : null;
     }
 
     /**
