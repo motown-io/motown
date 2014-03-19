@@ -298,8 +298,8 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
     private ComponentStatus getComponentStatusFromChargePointStatus(ChargePointStatus status) {
         String value = status.value();
 
-        if ("Unavailable".equalsIgnoreCase(value)) {
-            value = "Inoperative";
+        if (ChargePointStatus.UNAVAILABLE.value().equalsIgnoreCase(value)) {
+            value = ComponentStatus.INOPERATIVE.value();
         }
 
         return ComponentStatus.fromValue(value);

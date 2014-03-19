@@ -142,6 +142,9 @@ public class OcppJsonService {
             case "starttransaction":
                 requestHandler = new StartTransactionRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER);
                 break;
+            case "statusnotification":
+                requestHandler = new StatusNotificationRequestHandler(gson, domainService);
+                break;
             default:
                 LOG.error("Unknown ProcUri: " + wampMessage.getProcUri());
                 return null;

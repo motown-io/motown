@@ -45,6 +45,8 @@ public class OcppWebSocketJsonTestUtils {
                 .add(new DiagnosticsStatusTypeAdapterDeserializer())
                 .add(new UnlockStatusTypeAdapterDeserializer())
                 .add(new FirmwareStatusTypeAdapterDeserializer())
+                .add(new ChargePointErrorCodeTypeAdapterDeserializer())
+                .add(new ChargePointStatusTypeAdapterDeserializer())
                 .build();
         gsonFactoryBean.setTypeAdapterDeserializers(typeAdapterDeserializers);
 

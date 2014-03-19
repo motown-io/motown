@@ -32,7 +32,7 @@ public class StartTransactionRequest {
     public StartTransactionRequest(int connectorId, String idTag, Date timestamp, int meterStart, int reservationId) {
         this.connectorId = connectorId;
         this.idTag = idTag;
-        this.timestamp = timestamp;
+        this.timestamp = timestamp != null ? new Date(timestamp.getTime()) : null;
         this.meterStart = meterStart;
         this.reservationId = reservationId;
     }
@@ -46,7 +46,7 @@ public class StartTransactionRequest {
     }
 
     public Date getTimestamp() {
-        return timestamp;
+        return timestamp != null ? new Date(timestamp.getTime()) : null;
     }
 
     public int getMeterStart() {

@@ -26,12 +26,12 @@ public class MeterValue {
     private List<MeterValue.Value> values = new ArrayList<>();
 
     public MeterValue(Date timestamp, List<Value> values) {
-        this.timestamp = timestamp;
+        this.timestamp = timestamp != null ? new Date(timestamp.getTime()) : null;
         this.values = values;
     }
 
     public Date getTimestamp() {
-        return timestamp;
+        return timestamp != null ? new Date(timestamp.getTime()) : null;
     }
 
     public List<Value> getValues() {

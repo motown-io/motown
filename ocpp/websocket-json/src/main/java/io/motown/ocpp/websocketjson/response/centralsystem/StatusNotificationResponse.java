@@ -15,32 +15,5 @@
  */
 package io.motown.ocpp.websocketjson.response.centralsystem;
 
-import java.util.Date;
-
-public class IdTagInfo {
-
-    private AuthorizationStatus status;
-
-    private java.util.Date expiryDate;
-
-    private String parentIdTag;
-
-    public IdTagInfo(AuthorizationStatus status, Date expiryDate, String parentIdTag) {
-        this.status = status;
-        this.expiryDate = expiryDate != null ? new Date(expiryDate.getTime()) : null;
-        this.parentIdTag = parentIdTag;
-    }
-
-    public AuthorizationStatus getStatus() {
-        return status;
-    }
-
-    public Date getExpiryDate() {
-        return expiryDate != null ? new Date(expiryDate.getTime()) : null;
-    }
-
-    public String getParentIdTag() {
-        return parentIdTag;
-    }
-
+public class StatusNotificationResponse implements CentralSystemResponse {
 }

@@ -17,19 +17,19 @@ package io.motown.ocpp.websocketjson.gson;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
-import io.motown.ocpp.websocketjson.request.chargingstation.FirmwareStatus;
+import io.motown.ocpp.websocketjson.request.chargingstation.ChargePointStatus;
 
 import java.lang.reflect.Type;
 
-public class FirmwareStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<FirmwareStatus> {
+public class ChargePointStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<ChargePointStatus> {
 
     @Override
-    public FirmwareStatus deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
-        return FirmwareStatus.fromValue(jsonElement.getAsString());
+    public ChargePointStatus deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
+        return ChargePointStatus.fromValue(jsonElement.getAsString());
     }
 
     @Override
     public Class<?> getAdaptedType() {
-        return FirmwareStatus.class;
+        return ChargePointStatus.class;
     }
 }

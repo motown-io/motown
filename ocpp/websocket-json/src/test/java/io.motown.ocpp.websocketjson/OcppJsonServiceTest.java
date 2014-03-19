@@ -248,6 +248,27 @@ public class OcppJsonServiceTest {
     }
 
     @Test
+    public void handleStatusNotification() {
+        String callId = UUID.randomUUID().toString();
+        String request = String.format("[%d,\"%s\",\"StatusNotification\",%s]", WampMessage.CALL, callId, "{\"connectorId\": 2,\"status\": \"Available\",\"errorCode\": \"NoError\",\"info\": \"\",\"timestamp\": \"2013-02-01T15:09:18Z\",\"vendorId\": \"\",\"vendorErrorCode\": \"\"}");
+
+        String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
+
+        assertEquals(String.format("[%d,\"%s\",{}]", WampMessage.CALL_RESULT, callId), response);
+    }
+
+    @Test
+    public void handleInvalidStatusNotification() {
+        String callId = UUID.randomUUID().toString();
+        String request = String.format("[%d,\"%s\",\"StatusNotification\",%s]", WampMessage.CALL, callId, "{\"status\": \"Available\",\"errorCode\": \"NoError\",\"info\": \"\",\"timestamp\": \"2013-02-01T15:09:18Z\",\"vendorId\": \"\",\"vendorErrorCode\": \"\"}");
+        when(schemaValidator.isValidRequest(anyString(), anyString())).thenReturn(false);
+
+        String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
+
+        assertNull(response);
+    }
+
+    @Test
     public void unlockEvseRequestVerifySocketWrite() throws IOException {
         WebSocket webSocket = getMockWebSocket();
         service.addWebSocket(CHARGING_STATION_ID.getId(), webSocket);

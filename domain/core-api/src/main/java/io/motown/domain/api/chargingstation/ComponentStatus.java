@@ -77,6 +77,10 @@ public enum ComponentStatus {
         throw new IllegalArgumentException("Component status value must be one of the known statuses");
     }
 
+    public String value() {
+        return value;
+    }
+
     /**
      * {@inheritDoc}
      */
