@@ -18,12 +18,10 @@ package io.motown.ocpp.websocketjson.request.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.request.chargingstation.MeterValuesRequest;
 import io.motown.ocpp.websocketjson.request.chargingstation.StopTransactionRequest;
 import io.motown.ocpp.websocketjson.request.chargingstation.TransactionData;
 import io.motown.ocpp.websocketjson.response.centralsystem.AuthorizationStatus;
 import io.motown.ocpp.websocketjson.response.centralsystem.IdTagInfo;
-import io.motown.ocpp.websocketjson.response.centralsystem.MeterValuesResponse;
 import io.motown.ocpp.websocketjson.response.centralsystem.StopTransactionResponse;
 
 import java.util.*;
