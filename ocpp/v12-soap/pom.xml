@@ -30,11 +30,6 @@
     <groupId>io.motown.ocpp</groupId>
     <artifactId>ocpp-v12-soap</artifactId>
 
-    <properties>
-        <jetty.port>8082</jetty.port>
-        <jetty.scanIntervalSeconds>10</jetty.scanIntervalSeconds>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>io.motown.ocpp</groupId>
@@ -167,16 +162,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <configuration>
-                    <httpConnector>
-                        <port>${jetty.port}</port>
-                    </httpConnector>
-                    <scanIntervalSeconds>${jetty.scanIntervalSeconds}</scanIntervalSeconds>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.mycila</groupId>

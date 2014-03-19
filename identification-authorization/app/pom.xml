@@ -31,11 +31,6 @@
     <groupId>io.motown.identification-authorization</groupId>
     <artifactId>identification-authorization-app</artifactId>
 
-    <properties>
-        <jetty.port>8082</jetty.port>
-        <jetty.scanIntervalSeconds>10</jetty.scanIntervalSeconds>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>io.motown.domain</groupId>

@@ -30,6 +30,10 @@
     <artifactId>samples-configuration-distributed-operator-api</artifactId>
     <packaging>war</packaging>
 
+    <properties>
+        <jetty.port>8086</jetty.port>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>io.motown.operator-api</groupId>
@@ -40,6 +44,15 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <configuration>
+                    <httpConnector>
+                        <port>${jetty.port}</port>
+                    </httpConnector>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>

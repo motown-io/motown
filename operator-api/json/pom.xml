@@ -30,10 +30,6 @@
     <groupId>io.motown.operator-api</groupId>
     <artifactId>operator-api-json</artifactId>
 
-    <properties>
-        <jetty.port>8081</jetty.port>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -100,15 +96,6 @@
     </dependencies>
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <configuration>
-                    <httpConnector>
-                        <port>${jetty.port}</port>
-                    </httpConnector>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>

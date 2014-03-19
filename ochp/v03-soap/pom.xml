@@ -30,11 +30,6 @@
     <groupId>io.motown.ochp</groupId>
     <artifactId>ochp-v03-soap</artifactId>
 
-    <properties>
-        <jetty.port>8085</jetty.port>
-        <jetty.scanIntervalSeconds>10</jetty.scanIntervalSeconds>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>io.motown.ochp</groupId>
@@ -150,16 +145,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <configuration>
-                    <httpConnector>
-                        <port>${jetty.port}</port>
-                    </httpConnector>
-                    <scanIntervalSeconds>${jetty.scanIntervalSeconds}</scanIntervalSeconds>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.mycila</groupId>
