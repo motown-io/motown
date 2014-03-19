@@ -24,6 +24,7 @@ import io.motown.ocpp.v15.soap.centralsystem.schema.*;
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
 import io.motown.ocpp.v15.soap.chargepoint.schema.DataTransferResponse;
 import io.motown.ocpp.v15.soap.chargepoint.schema.DataTransferStatus;
+import io.motown.ocpp.viewmodel.domain.DomainService;
 
 import javax.persistence.EntityManager;
 import java.util.*;
@@ -222,11 +223,11 @@ public final class V15SOAPTestUtils {
         for (MeterValue meterValue : meterValues) {
             io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value value = new io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value();
             value.setValue(meterValue.getValue());
-            value.setContext(ReadingContext.fromValue(meterValue.getAttributes().get("context")));
-            value.setFormat(ValueFormat.fromValue(meterValue.getAttributes().get("format")));
-            value.setMeasurand(Measurand.fromValue(meterValue.getAttributes().get("measurand")));
-            value.setLocation(Location.fromValue(meterValue.getAttributes().get("location")));
-            value.setUnit(UnitOfMeasure.fromValue(meterValue.getAttributes().get("unit")));
+            value.setContext(ReadingContext.fromValue(meterValue.getAttributes().get(DomainService.CONTEXT_KEY)));
+            value.setFormat(ValueFormat.fromValue(meterValue.getAttributes().get(DomainService.FORMAT_KEY)));
+            value.setMeasurand(Measurand.fromValue(meterValue.getAttributes().get(DomainService.MEASURAND_KEY)));
+            value.setLocation(Location.fromValue(meterValue.getAttributes().get(DomainService.LOCATION_KEY)));
+            value.setUnit(UnitOfMeasure.fromValue(meterValue.getAttributes().get(DomainService.UNIT_KEY)));
 
             io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue meterValueSoap = new io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue();
             meterValueSoap.getValue().add(value);

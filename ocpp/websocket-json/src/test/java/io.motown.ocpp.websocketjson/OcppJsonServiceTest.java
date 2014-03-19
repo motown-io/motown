@@ -204,6 +204,50 @@ public class OcppJsonServiceTest {
     }
 
     @Test
+    public void handleMeterValues() {
+        String callId = UUID.randomUUID().toString();
+        String request = String.format("[%d,\"%s\",\"MeterValues\",%s]", WampMessage.CALL, callId, "{ \"connectorId\": 2, \"transactionId\": 0, \"values\": [ { \"timestamp\": \"2013-03-07T16:52:16Z\", \"values\": [ { \"value\": \"0\", \"unit\": \"Wh\", \"measurand\": \"Energy.Active.Import.Register\", \"context\": \"Transaction.End\", \"format\": \"SignedData\", \"location\": \"Outlet\"}, { \"value\": \"0\", \"unit\": \"varh\", \"measurand\": \"Energy.Reactive.Import.Register\" } ] }, { \"timestamp\": \"2013-03-07T19:52:16Z\", \"values\": [ { \"value\": \"20\", \"unit\": \"Wh\", \"measurand\": \"Energy.Active.Import.Register\" }, { \"value\": \"20\", \"unit\": \"varh\", \"measurand\": \"Energy.Reactive.Import.Register\" } ] } ] }");
+
+        String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
+
+        assertEquals(String.format("[%d,\"%s\",{}]", WampMessage.CALL_RESULT, callId), response);
+    }
+
+    @Test
+    public void handleInvalidMeterValues() {
+        String callId = UUID.randomUUID().toString();
+        String request = String.format("[%d,\"%s\",\"MeterValues\",%s]", WampMessage.CALL, callId, "{ \"transactionId\": 0, \"values\": [ { \"timestamp\": \"2013-03-07T16:52:16Z\", \"values\": [ { \"value\": \"0\", \"unit\": \"Wh\", \"measurand\": \"Energy.Active.Import.Register\", \"context\": \"Transaction.End\", \"format\": \"SignedData\", \"location\": \"Outlet\"}, { \"value\": \"0\", \"unit\": \"varh\", \"measurand\": \"Energy.Reactive.Import.Register\" } ] }, { \"timestamp\": \"2013-03-07T19:52:16Z\", \"values\": [ { \"value\": \"20\", \"unit\": \"Wh\", \"measurand\": \"Energy.Active.Import.Register\" }, { \"value\": \"20\", \"unit\": \"varh\", \"measurand\": \"Energy.Reactive.Import.Register\" } ] } ] }");
+        when(schemaValidator.isValidRequest(anyString(), anyString())).thenReturn(false);
+
+        String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
+
+        assertNull(response);
+    }
+
+    @Test
+    public void handleStartTransaction() {
+        //TODO implement
+//        String callId = UUID.randomUUID().toString();
+//        String request = String.format("[%d,\"%s\",\"StartTransaction\",%s]", WampMessage.CALL, callId, "{\"connectorId\": 2,\"idTag\": \"B4F62CEF\",\"timestamp\": \"2013-02-01T15:09:18Z\",\"meterStart\": 0,\"reservationId\": 0}");
+//
+//        String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
+//
+//        assertEquals(String.format("[%d,\"%s\",{}]", WampMessage.CALL_RESULT, callId), response);
+    }
+
+    @Test
+    public void handleInvalidStartTransaction() {
+        //TODO implement
+//        String callId = UUID.randomUUID().toString();
+//        String request = String.format("[%d,\"%s\",\"MeterValues\",%s]", WampMessage.CALL, callId, "{ \"transactionId\": 0, \"values\": [ { \"timestamp\": \"2013-03-07T16:52:16Z\", \"values\": [ { \"value\": \"0\", \"unit\": \"Wh\", \"measurand\": \"Energy.Active.Import.Register\", \"context\": \"Transaction.End\", \"format\": \"SignedData\", \"location\": \"Outlet\"}, { \"value\": \"0\", \"unit\": \"varh\", \"measurand\": \"Energy.Reactive.Import.Register\" } ] }, { \"timestamp\": \"2013-03-07T19:52:16Z\", \"values\": [ { \"value\": \"20\", \"unit\": \"Wh\", \"measurand\": \"Energy.Active.Import.Register\" }, { \"value\": \"20\", \"unit\": \"varh\", \"measurand\": \"Energy.Reactive.Import.Register\" } ] } ] }");
+//        when(schemaValidator.isValidRequest(anyString(), anyString())).thenReturn(false);
+//
+//        String response = service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
+//
+//        assertNull(response);
+    }
+
+    @Test
     public void unlockEvseRequestVerifySocketWrite() throws IOException {
         WebSocket webSocket = getMockWebSocket();
         service.addWebSocket(CHARGING_STATION_ID.getId(), webSocket);

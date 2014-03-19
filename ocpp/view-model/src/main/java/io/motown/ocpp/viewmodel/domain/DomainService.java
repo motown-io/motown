@@ -52,6 +52,31 @@ public class DomainService {
 
     public static final String RESERVATION_ID_KEY = "reservationId";
 
+    /**
+     * Meter value context attribute key.
+     */
+    public static final String CONTEXT_KEY = "context";
+
+    /**
+     * Meter value format attribute key.
+     */
+    public static final String FORMAT_KEY = "format";
+
+    /**
+     * Meter value measurand attribute key.
+     */
+    public static final String MEASURAND_KEY = "measurand";
+
+    /**
+     * Meter value location attribute key.
+     */
+    public static final String LOCATION_KEY = "location";
+
+    /**
+     * Meter value unit attribute key.
+     */
+    public static final String UNIT_KEY = "unit";
+
     private DomainCommandGateway commandGateway;
 
     private ChargingStationRepository chargingStationRepository;
@@ -278,7 +303,7 @@ public class DomainService {
      * @param key           key of the attribute.
      * @param value         value of the attribute.
      */
-    private void addAttributeIfNotNull(Map<String, String> attributes, String key, String value) {
+    public static void addAttributeIfNotNull(Map<String, String> attributes, String key, String value) {
         if (value != null) {
             attributes.put(key, value);
         }

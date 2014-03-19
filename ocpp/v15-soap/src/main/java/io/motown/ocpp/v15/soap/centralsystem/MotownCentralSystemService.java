@@ -45,12 +45,6 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
 
     private static final String PROTOCOL_IDENTIFIER = Ocpp15RequestHandler.PROTOCOL_IDENTIFIER;
 
-    public static final String CONTEXT_KEY = "context";
-    public static final String FORMAT_KEY = "format";
-    public static final String MEASURAND_KEY = "measurand";
-    public static final String LOCATION_KEY = "location";
-    public static final String UNIT_KEY = "unit";
-
     private int heartbeatIntervalFallback;
 
     /**
@@ -102,11 +96,11 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         for (TransactionData data : transactionData) {
             for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue mv : data.getValues()){
                 for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value value : mv.getValue()) {
-                    addAttributeIfNotNull(attributes, CONTEXT_KEY, value.getContext() != null ? value.getContext().value() : null);
-                    addAttributeIfNotNull(attributes, FORMAT_KEY, value.getFormat() != null ? value.getFormat().value() : null);
-                    addAttributeIfNotNull(attributes, MEASURAND_KEY, value.getMeasurand() != null ? value.getMeasurand().value() : null);
-                    addAttributeIfNotNull(attributes, LOCATION_KEY, value.getLocation() != null ? value.getLocation().value() : null);
-                    addAttributeIfNotNull(attributes, UNIT_KEY, value.getUnit() != null ? value.getUnit().value() : null);
+                    addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getContext() != null ? value.getContext().value() : null);
+                    addAttributeIfNotNull(attributes, DomainService.FORMAT_KEY, value.getFormat() != null ? value.getFormat().value() : null);
+                    addAttributeIfNotNull(attributes, DomainService.MEASURAND_KEY, value.getMeasurand() != null ? value.getMeasurand().value() : null);
+                    addAttributeIfNotNull(attributes, DomainService.LOCATION_KEY, value.getLocation() != null ? value.getLocation().value() : null);
+                    addAttributeIfNotNull(attributes, DomainService.UNIT_KEY, value.getUnit() != null ? value.getUnit().value() : null);
 
                     meterValues.add(new MeterValue(mv.getTimestamp(), value.getValue(), attributes));
                 }
@@ -160,11 +154,11 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         Map<String, String> attributes = Maps.newHashMap();
         for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue mv : request.getValues()) {
             for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value value : mv.getValue()) {
-                addAttributeIfNotNull(attributes, CONTEXT_KEY, value.getContext() != null ? value.getContext().value() : null);
-                addAttributeIfNotNull(attributes, FORMAT_KEY, value.getFormat() != null ? value.getFormat().value() : null);
-                addAttributeIfNotNull(attributes, MEASURAND_KEY, value.getMeasurand() != null ? value.getMeasurand().value() : null);
-                addAttributeIfNotNull(attributes, LOCATION_KEY, value.getLocation() != null ? value.getLocation().value() : null);
-                addAttributeIfNotNull(attributes, UNIT_KEY, value.getUnit() != null ? value.getUnit().value() : null);
+                addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getContext() != null ? value.getContext().value() : null);
+                addAttributeIfNotNull(attributes, DomainService.FORMAT_KEY, value.getFormat() != null ? value.getFormat().value() : null);
+                addAttributeIfNotNull(attributes, DomainService.MEASURAND_KEY, value.getMeasurand() != null ? value.getMeasurand().value() : null);
+                addAttributeIfNotNull(attributes, DomainService.LOCATION_KEY, value.getLocation() != null ? value.getLocation().value() : null);
+                addAttributeIfNotNull(attributes, DomainService.UNIT_KEY, value.getUnit() != null ? value.getUnit().value() : null);
 
                 meterValues.add(new MeterValue(mv.getTimestamp(), value.getValue(), attributes));
             }

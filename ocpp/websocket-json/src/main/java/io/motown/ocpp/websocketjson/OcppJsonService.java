@@ -136,6 +136,12 @@ public class OcppJsonService {
             case "heartbeat":
                 requestHandler = new HeartbeatRequestHandler(domainService);
                 break;
+            case "metervalues":
+                requestHandler = new MeterValuesRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER);
+                break;
+            case "starttransaction":
+                requestHandler = new StartTransactionRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER);
+                break;
             default:
                 LOG.error("Unknown ProcUri: " + wampMessage.getProcUri());
                 return null;
