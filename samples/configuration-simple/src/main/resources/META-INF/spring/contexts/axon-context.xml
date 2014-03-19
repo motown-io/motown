@@ -24,7 +24,12 @@
 
     <axon:annotation-config/>
 
-    <axon:command-bus id="commandBus" />
+    <axon:command-bus id="commandBus">
+        <axon:handlerInterceptors>
+            <bean class="io.motown.domain.app.axon.CorrelationCommandHandlerInterceptor"/>
+            <bean class="org.axonframework.commandhandling.interceptors.LoggingInterceptor"/>
+        </axon:handlerInterceptors>
+    </axon:command-bus>
 
     <axon:event-bus id="eventBus" />
 
