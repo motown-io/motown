@@ -47,5 +47,10 @@
             <param-value>true</param-value>
         </init-param>
     </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>JerseyServlet</servlet-name>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>
 
 </web-app>
