@@ -17,8 +17,10 @@
 package io.motown.ochp.v03.soap.client;
 
 import io.motown.ochp.viewmodel.persistence.TransactionStatus;
+import io.motown.ochp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ochp.viewmodel.persistence.entities.Identification;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
+import io.motown.ochp.viewmodel.persistence.repostories.ChargingStationRepository;
 import io.motown.ochp.viewmodel.persistence.repostories.IdentificationRepository;
 import io.motown.ochp.viewmodel.persistence.repostories.TransactionRepository;
 import org.slf4j.Logger;
@@ -32,6 +34,8 @@ public class OchpSchedulingService {
 
     private Ochp03SoapClient ochp03SoapClient;
 
+    private ChargingStationRepository chargingStationRepository;
+
     private TransactionRepository transactionRepository;
 
     private IdentificationRepository identificationRepository;
@@ -41,7 +45,7 @@ public class OchpSchedulingService {
     }
 
     public void executeAddCDRs() {
-        LOG.info("Executing scheduled task addCDRs");
+        LOG.info("Executing task addCDRs");
 
         List<Transaction> unsyncedTransactions = transactionRepository.findTransactionsByStatusAndTimeSynced(TransactionStatus.STOPPED, null);
         if(unsyncedTransactions != null && !unsyncedTransactions.isEmpty()) {
@@ -52,15 +56,27 @@ public class OchpSchedulingService {
     }
 
     public void executeSetRoamingAuthorizationList() {
-        LOG.info("Executing set roaming authorisation list");
+        LOG.info("Executing task set roaming authorisation list");
 
         List<Identification> identifications = identificationRepository.all();
 
         ochp03SoapClient.sendAuthorizationInformation(identifications);
     }
 
+    public void executeSetChargingStationList() {
+        LOG.info("Executing task set charging station list");
+
+        List<ChargingStation> chargingStations = chargingStationRepository.all();
+
+        ochp03SoapClient.sendChargePointList(chargingStations);
+    }
+
     public void setOchp03SoapClient(Ochp03SoapClient ochp03SoapClient) {
         this.ochp03SoapClient = ochp03SoapClient;
+    }
+
+    public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {
+        this.chargingStationRepository = chargingStationRepository;
     }
 
     public void setTransactionRepository(TransactionRepository transactionRepository) {

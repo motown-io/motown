@@ -20,9 +20,11 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:task="http://www.springframework.org/schema/task"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
                             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-                            http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+                            http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+                            http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd">
 
     <import resource="classpath:META-INF/cxf/cxf.xml"/>
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
@@ -47,15 +49,50 @@
         <property name="password" value="${io.motown.ochp.password}" />
     </bean>
 
+    <!-- Spring Data JPA -->
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="io.motown.ochp.viewmodel.persistence.entities"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="database" value="HSQL"/>
+                <property name="generateDdl" value="true"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="jpaEntityManager" factory-bean="entityManagerFactory" factory-method="createEntityManager" />
+
+    <bean class="io.motown.ochp.viewmodel.persistence.repostories.ChargingStationRepository">
+        <property name="entityManager" ref="jpaEntityManager" />
+    </bean>
+
+    <bean class="io.motown.ochp.viewmodel.persistence.repostories.IdentificationRepository">
+        <property name="entityManager" ref="jpaEntityManager" />
+    </bean>
+
+    <bean class="io.motown.ochp.viewmodel.persistence.repostories.TransactionRepository">
+        <property name="entityManager" ref="jpaEntityManager" />
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <jdbc:embedded-database id="dataSource" type="HSQL"/>
+
     <!-- OCHP task scheduling -->
     <bean id="ochpSchedulingService" class="io.motown.ochp.v03.soap.client.OchpSchedulingService">
         <property name="ochp03SoapClient" ref="ochp03SoapClient"/>
+        <property name="chargingStationRepository" ref="chargingStationRepository"/>
         <property name="transactionRepository" ref="transactionRepository"/>
         <property name="identificationRepository" ref="identificationRepository"/>
     </bean>
     <task:scheduled-tasks>
         <task:scheduled ref="ochpSchedulingService" method="executeAddCDRs" cron="${io.motown.ochp.addcdrs.cron}"></task:scheduled>
         <task:scheduled ref="ochpSchedulingService" method="executeSetRoamingAuthorizationList" cron="${io.motown.ochp.setauthorizationlist.cron}"></task:scheduled>
+        <task:scheduled ref="ochpSchedulingService" method="executeSetChargingStationList" cron="${io.motown.ochp.setchargingstationlist.cron}"></task:scheduled>
     </task:scheduled-tasks>
 
 </beans>

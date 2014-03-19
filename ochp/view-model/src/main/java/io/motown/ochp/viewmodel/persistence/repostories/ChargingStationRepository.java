@@ -46,6 +46,12 @@ public class ChargingStationRepository {
         }
     }
 
+    public List<ChargingStation> all() {
+        List<ChargingStation> result = entityManager.createQuery("SELECT c FROM ChargingStation c", ChargingStation.class)
+                .getResultList();
+        return result;
+    }
+
     public void deleteAll() {
         EntityTransaction transaction = entityManager.getTransaction();
 
