@@ -18,6 +18,7 @@ package io.motown.chargingstationconfiguration.viewmodel.domain;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Manufacturer;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ConnectorRepository;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.EvseRepository;
@@ -76,6 +77,227 @@ public class DomainService {
         }
 
         return resultList;
+    }
+
+    /**
+     * Create a charging station type.
+     *
+     * @param chargingStationType the entity to be persisted.
+     */
+    public void createChargingStationType(ChargingStationType chargingStationType) {
+        chargingStationTypeRepository.create(chargingStationType);
+    }
+
+    /**
+     * Update a charging station type.
+     *
+     * @param id the id of the entity to find.
+     * @param jsonModel the payload from the request.
+     */
+    public void updateChargingStationType(Long id, ChargingStationType jsonModel) {
+        ChargingStationType chargingStationType = chargingStationTypeRepository.findOne(id);
+        if (chargingStationType != null) {
+            chargingStationType.setCode(jsonModel.getCode() != null ? jsonModel.getCode() : chargingStationType.getCode());
+            chargingStationType.setEvses(jsonModel.getEvses() != null ? jsonModel.getEvses() : chargingStationType.getEvses());
+            chargingStationType.setManufacturer(jsonModel.getManufacturer() != null ? jsonModel.getManufacturer() : chargingStationType.getManufacturer());
+
+            chargingStationTypeRepository.update(chargingStationType);
+        }
+        throw new IllegalArgumentException(String.format("Unable to find charging station type with id '%s'", id));
+    }
+
+    /**
+     * Find all charging station types.
+     *
+     * @return a list of charging station types.
+     */
+    public List<ChargingStationType> getChargingStationTypes() {
+        return chargingStationTypeRepository.findAll();
+    }
+
+    /**
+     * Find a charging station type based on its id.
+     *
+     * @param id the id of the entity to find.
+     * @return the charging station type.
+     */
+    public ChargingStationType getChargingStationType(Long id) {
+        return chargingStationTypeRepository.findOne(id);
+    }
+
+    /**
+     * Delete a charging station type.
+     *
+     * @param id the id of the entity to delete.
+     */
+    public void deleteChargingStationType(Long id) {
+        chargingStationTypeRepository.delete(id);
+    }
+
+    /**
+     * Create a connector.
+     *
+     * @param connector the entity to be persisted.
+     */
+    public void createConnector(Connector connector) {
+        connectorRepository.create(connector);
+    }
+
+    /**
+     * Update a connector.
+     *
+     * @param id the id of the entity to find.
+     * @param jsonModel the payload from the request.
+     */
+    public void updateConnector(Long id, Connector jsonModel) {
+        Connector connector = connectorRepository.findOne(id);
+        if (connector != null) {
+            connector.setChargingProtocol(jsonModel.getChargingProtocol() != null ? jsonModel.getChargingProtocol() : connector.getChargingProtocol());
+            connector.setConnectorType(jsonModel.getConnectorType() != null ? jsonModel.getConnectorType() : connector.getConnectorType());
+            connector.setCurrent(jsonModel.getCurrent() != null ? jsonModel.getCurrent() : connector.getCurrent());
+            connector.setMaxAmp(jsonModel.getMaxAmp());
+            connector.setPhase(jsonModel.getPhase());
+            connector.setVoltage(jsonModel.getVoltage());
+
+            connectorRepository.update(connector);
+        }
+        throw new IllegalArgumentException(String.format("Unable to find connector with id '%s'", id));
+    }
+
+    /**
+     * Find all connectors.
+     *
+     * @return a list of connectors.
+     */
+    public List<Connector> getConnectors() {
+        return connectorRepository.findAll();
+    }
+
+    /**
+     * Find a connector based on its id.
+     *
+     * @param id the id of the entity to find.
+     * @return the connector.
+     */
+    public Connector getConnector(Long id) {
+        return connectorRepository.findOne(id);
+    }
+
+    /**
+     * Delete a connector.
+     *
+     * @param id the id of the entity to delete.
+     */
+    public void deleteConnector(Long id) {
+        connectorRepository.delete(id);
+    }
+
+    /**
+     * Create an Evse.
+     *
+     * @param evse the entity to be persisted.
+     */
+    public void createEvse(Evse evse) {
+        evseRepository.create(evse);
+    }
+
+    /**
+     * Update an evse.
+     *
+     * @param id the id of the entity to find.
+     * @param jsonModel the payload from the request.
+     */
+    public void updateEvse(Long id, Evse jsonModel) {
+        Evse evse = evseRepository.findOne(id);
+        if (evse != null) {
+            evse.setConnectors(jsonModel.getConnectors() != null ? jsonModel.getConnectors() : evse.getConnectors());
+            evse.setIdentifier(jsonModel.getIdentifier());
+
+            evseRepository.update(evse);
+        }
+        throw new IllegalArgumentException(String.format("Unable to find evse with id '%s'", id));
+    }
+
+    /**
+     * Find all evses.
+     *
+     * @return a list of evses.
+     */
+    public List<Evse> getEvses() {
+        return evseRepository.findAll();
+    }
+
+    /**
+     * Find an evse based on its id.
+     *
+     * @param id the id of the entity to find.
+     * @return the evse.
+     */
+    public Evse getEvse(Long id) {
+        return evseRepository.findOne(id);
+    }
+
+    /**
+     * Delete an evse.
+     *
+     * @param id the id of the entity to delete.
+     */
+    public void deleteEvse(Long id) {
+        evseRepository.delete(id);
+    }
+
+    /**
+     * Create a manufacturer.
+     *
+     * @param manufacturer the entity to be persisted.
+     */
+    public void createManufacturer(Manufacturer manufacturer) {
+        manufacturerRepository.create(manufacturer);
+    }
+
+    /**
+     * Update a manufacturer.
+     *
+     * @param id the id of the entity to find.
+     * @param jsonModel the payload from the request.
+     */
+    public void updateManufacturer(Long id, Manufacturer jsonModel) {
+        Manufacturer manufacturer = manufacturerRepository.findOne(id);
+        if (manufacturer != null) {
+            manufacturer.setChargingStationTypes(jsonModel.getChargingStationTypes() != null ? jsonModel.getChargingStationTypes() : manufacturer.getChargingStationTypes());
+            manufacturer.setCode(jsonModel.getCode() != null ? jsonModel.getCode() : manufacturer.getCode());
+
+            manufacturerRepository.update(manufacturer);
+        }
+        throw new IllegalArgumentException(String.format("Unable to find evse with id '%s'", id));
+    }
+
+    /**
+     * Find all manufacturers.
+     *
+     * @return a list of manufacturers.
+     */
+    public List<Manufacturer> getManufacturers() {
+        return manufacturerRepository.findAll();
+    }
+
+    /**
+     * Find a manufacturer based on its id.
+     *
+     * @param id the id of the entity to find.
+     * @return the manufacturer.
+     */
+    public Manufacturer getManufacturer(Long id) {
+        return manufacturerRepository.findOne(id);
+    }
+
+    /**
+     * Delete a manufacturer.
+     *
+     * @param id the id of the entity to delete.
+     */
+    public void deleteManufacturer(Long id) {
+        manufacturerRepository.delete(id);
     }
 
     /**
