@@ -19,18 +19,11 @@ import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import java.net.URI;
-
 
 @Path("/evses")
 public class EvseResource {
-
-    @Context
-    private UriInfo uriInfo;
 
     private DomainService domainService;
 
@@ -40,8 +33,7 @@ public class EvseResource {
     public Response createEvse(Evse evse) {
         try {
             domainService.createEvse(evse);
-            URI uri = uriInfo.getAbsolutePathBuilder().path(evse.getId().toString()).build();
-            return Response.created(uri).entity(evse).build();
+            return Response.status(Response.Status.CREATED).entity(evse).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
         }

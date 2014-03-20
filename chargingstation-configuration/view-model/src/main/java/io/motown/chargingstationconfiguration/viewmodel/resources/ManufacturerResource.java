@@ -19,18 +19,11 @@ import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Manufacturer;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import java.net.URI;
-
 
 @Path("/manufacturers")
 public class ManufacturerResource {
-
-    @Context
-    private UriInfo uriInfo;
 
     private DomainService domainService;
 
@@ -40,8 +33,7 @@ public class ManufacturerResource {
     public Response createManufacturer(Manufacturer manufacturer) {
         try {
             domainService.createManufacturer(manufacturer);
-            URI uri = uriInfo.getAbsolutePathBuilder().path(manufacturer.getId().toString()).build();
-            return Response.created(uri).entity(manufacturer).build();
+            return Response.status(Response.Status.CREATED).entity(manufacturer).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
         }

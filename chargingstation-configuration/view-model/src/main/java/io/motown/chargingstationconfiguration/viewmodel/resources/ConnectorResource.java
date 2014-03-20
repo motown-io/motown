@@ -19,18 +19,11 @@ import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import java.net.URI;
-
 
 @Path("/connectors")
 public class ConnectorResource {
-
-    @Context
-    private UriInfo uriInfo;
 
     private DomainService domainService;
 
@@ -40,8 +33,7 @@ public class ConnectorResource {
     public Response createConnector(Connector connector) {
         try {
             domainService.createConnector(connector);
-            URI uri = uriInfo.getAbsolutePathBuilder().path(connector.getId().toString()).build();
-            return Response.created(uri).entity(connector).build();
+            return Response.status(Response.Status.CREATED).entity(connector).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
         }
