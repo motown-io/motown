@@ -67,17 +67,15 @@ public class Ochp03SoapClientTest {
         client.setChargingStationRepository(chargingStationRepository);
     }
 
-    @DirtiesContext //Resets the spring context to simulate a fresh startup where there is no authenticationtoken
     @Test
-    public void verifyInitialAuthentication() {
+    public void verifyAuthenticationOnEachCall() {
         when(echsClient.getChargepointList(any(GetChargepointListRequest.class), anyString())).thenReturn(getChargepointListResponse());
 
         //Call twice in order to verify if authentication only takes place at first call
         client.getChargePointList();
         client.getChargePointList();
 
-        verify(echsClient, times(1)).authenticate(any(AuthenticateRequest.class));
-        verify(echsClient, times(2)).getChargepointList(any(GetChargepointListRequest.class), anyString());
+        verify(echsClient, times(2)).authenticate(any(AuthenticateRequest.class));
     }
 
     @Test

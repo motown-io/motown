@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Ochp03SoapClient implements Ochp03Client {
 
@@ -52,9 +53,6 @@ public class Ochp03SoapClient implements Ochp03Client {
 
     private String password;
 
-    /** In memory cache to store the authentication token that is required in all webservice calls */
-    private String cachedAuthenticationToken;
-
     public void setServerAddress(String serverAddress) {
         this.serverAddress = serverAddress;
     }
@@ -68,33 +66,31 @@ public class Ochp03SoapClient implements Ochp03Client {
     }
 
     /**
-     * Performs authentication in case we do not have an authentication token
+     * Performs authentication
+     * @return String holding the authenticationToken which is valid for a limited amount of time (<1hr)
      */
-    private void forceAuthentication() {
-        if(cachedAuthenticationToken == null){
-            LOG.info("Not authenticated yet, performing OCHP authenticate");
+    private String authenticate() {
+        LOG.info("Authenticating");
 
-            Echs ochpClientService = this.createOchpClientService();
+        Echs ochpClientService = this.createOchpClientService();
+        AuthenticateRequest request = new AuthenticateRequest();
+        request.setUserId(username);
+        request.setPassword(password);
+        AuthenticateResponse response = ochpClientService.authenticate(new AuthenticateRequest());
 
-            AuthenticateRequest request = new AuthenticateRequest();
-            request.setUserId(username);
-            request.setPassword(password);
-            AuthenticateResponse response = ochpClientService.authenticate(new AuthenticateRequest());
+        if (response.getResultCode() != ACCEPTED) {
+            LOG.error("Authentication of {} failed", username);
+            throw new RuntimeException("Authentication failed");
+        } else {
+            LOG.info("Authentication of {} successfull", username);
 
-            if(response.getResultCode() != ACCEPTED) {
-                LOG.error("Authentication of {} failed", username);
-            } else {
-                LOG.info("Authentication was successfull");
-                cachedAuthenticationToken = response.getAuthToken();
-            }
         }
+        return response.getAuthToken();
     }
 
     @Override
     public void addChargeDetailRecords(List<Transaction> transactionList) {
         LOG.info("Add CDRs");
-        forceAuthentication();
-
         AddCDRsRequest request = new AddCDRsRequest();
         List<CDRInfo> cdrInfoList = request.getCdrInfoArray();
         for(Transaction transaction : transactionList){
@@ -115,7 +111,7 @@ public class Ochp03SoapClient implements Ochp03Client {
                 cdrInfo.setChargePointZip(chargingStation.getPostalCode());
                 cdrInfo.setChargePointCountry(chargingStation.getCountry());
             }
-// TODO: Decide if the fields below will be provided - Ingo Pak, 11 Mar 2014
+            // TODO: Decide if the fields below will be provided - Ingo Pak, 11 Mar 2014
             cdrInfo.setChargePointType("");
             cdrInfo.setInfraProviderId("");
             //identification of the physical energy meter
@@ -132,7 +128,7 @@ public class Ochp03SoapClient implements Ochp03Client {
             cdrInfoList.add(cdrInfo);
         }
 
-        AddCDRsResponse response = this.createOchpClientService().addCDRs(request, cachedAuthenticationToken);
+        AddCDRsResponse response = this.createOchpClientService().addCDRs(request, authenticate());
 
         if(response.getResult() == null || response.getResult().getResultCode() != ACCEPTED) {
             LOG.error("Failed to add the CDR's: {}", response.getResult().getResultDescription());
@@ -153,26 +149,32 @@ public class Ochp03SoapClient implements Ochp03Client {
     @Override
     public void sendAuthorizationInformation(List<Identification> identifications) {
         LOG.info("Send authorisation list");
-        forceAuthentication();
-
         SetRoamingAuthorisationListRequest request = new SetRoamingAuthorisationListRequest();
         List<RoamingAuthorisationInfo> roamingAuthorisationList = request.getRoamingAuthorisationInfoArray();
 
         for (Identification identification : identifications){
             RoamingAuthorisationInfo authorisationInfo = new RoamingAuthorisationInfo();
-            //TODO: Spec is unclear if tokenId or evcoId(emtId) should be used, and which information is optional - Ingo Pak, 13 Mar 2014
-            authorisationInfo.setEvcoId(identification.getIdentificationId());
+            //TODO: We do not have the EvcoId/ContractId information available - Ingo Pak, 20 Mar 2014
+            authorisationInfo.setEvcoId("NL-G00-000252-10");
             authorisationInfo.setTokenId(identification.getIdentificationId());
             if(AuthorizationResultStatus.ACCEPTED.equals(identification.getAuthorizationStatus())) {
                 authorisationInfo.setTokenActivated(ACTIVATED);
             } else {
                 authorisationInfo.setTokenActivated(DEACTIVATED);
             }
+            //TODO: We do not have the available information for the fields below, these are hardcoded for now - Ingo Pak, 20 Mar 2014
+            authorisationInfo.setPinMandatory(0);
+            authorisationInfo.setPin(0);
+            authorisationInfo.setHash("");
+            authorisationInfo.setRoamingHubId(1);
+            authorisationInfo.setPrintedNumber("");
+            Date expiryDate = new Date(new Date().getTime() + TimeUnit.DAYS.toMillis(365));
+            authorisationInfo.setExpiryDate(DateFormatter.toSimple(expiryDate));
 
             roamingAuthorisationList.add(authorisationInfo);
         }
 
-        SetRoamingAuthorisationListResponse response = this.createOchpClientService().setRoamingAuthorisationList(request, cachedAuthenticationToken);
+        SetRoamingAuthorisationListResponse response = this.createOchpClientService().setRoamingAuthorisationList(request, authenticate());
 
         if(response.getResult() != null && response.getResult().getResultCode() != ACCEPTED) {
             LOG.error("Failed to send the roaming authorisation list: {}", response.getResult().getResultDescription());
@@ -182,10 +184,8 @@ public class Ochp03SoapClient implements Ochp03Client {
     @Override
     public List<Transaction> getTransactionList() {
         LOG.info("Retrieving the OCHP transaction information");
-        forceAuthentication();
-
         Echs ochpClientService = this.createOchpClientService();
-        GetCDRsResponse response = ochpClientService.getCDRs(new GetCDRsRequest(), cachedAuthenticationToken);
+        GetCDRsResponse response = ochpClientService.getCDRs(new GetCDRsRequest(), authenticate());
 
         List<Transaction> transactions = Lists.newArrayList();
         if (response.getResult() != null && response.getResult().getResultCode() == ACCEPTED) {
@@ -215,10 +215,8 @@ public class Ochp03SoapClient implements Ochp03Client {
     @Override
     public List<ChargingStation> getChargePointList() {
         LOG.info("Retrieving the OCHP chargePoint information");
-        forceAuthentication();
-
         Echs ochpClientService = this.createOchpClientService();
-        GetChargepointListResponse response = ochpClientService.getChargepointList(new GetChargepointListRequest(), cachedAuthenticationToken);
+        GetChargepointListResponse response = ochpClientService.getChargepointList(new GetChargepointListRequest(), authenticate());
 
         List<ChargingStation> chargingStations = Lists.newArrayList();
         if (response.getResult() != null && response.getResult().getResultCode() == ACCEPTED) {
@@ -236,10 +234,8 @@ public class Ochp03SoapClient implements Ochp03Client {
     @Override
     public List<Identification> getRoamingAuthorizationList() {
         LOG.info("Retrieving the OCHP roaming authorization list");
-        forceAuthentication();
-
         Echs ochpClientService = this.createOchpClientService();
-        GetRoamingAuthorisationListResponse response = ochpClientService.getRoamingAuthorisationList(new GetRoamingAuthorisationListRequest(), cachedAuthenticationToken);
+        GetRoamingAuthorisationListResponse response = ochpClientService.getRoamingAuthorisationList(new GetRoamingAuthorisationListRequest(), authenticate());
 
         List<Identification> identifications = Lists.newArrayList();
         if(response.getResult() != null && response.getResult().getResultCode() == ACCEPTED) {
@@ -259,8 +255,6 @@ public class Ochp03SoapClient implements Ochp03Client {
     @Override
     public void sendChargePointList(List<ChargingStation> chargingStations) {
         LOG.info("Send charge point list");
-        forceAuthentication();
-
         SetChargepointListRequest request = new SetChargepointListRequest();
         List<ChargepointInfo> chargepointInfoList = request.getChargepointInfoArray();
 
@@ -278,7 +272,7 @@ public class Ochp03SoapClient implements Ochp03Client {
             chargepointInfoList.add(chargepointInfo);
         }
 
-        SetChargepointListResponse response = createOchpClientService().setChargepointList(request, cachedAuthenticationToken);
+        SetChargepointListResponse response = createOchpClientService().setChargepointList(request, authenticate());
 
         if (response.getResult() != null && response.getResult().getResultCode() != ACCEPTED) {
             LOG.error("Failed to send the charge point list: {}", response.getResult().getResultDescription());
