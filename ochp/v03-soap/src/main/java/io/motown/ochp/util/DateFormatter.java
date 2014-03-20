@@ -20,14 +20,10 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public final class DateFormatter {
-
-    private static final SimpleDateFormat simpleFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     /**
      * Private no-arg constructor to prevent instantiation of this utility class.
@@ -37,14 +33,6 @@ public final class DateFormatter {
 
     private static DateTimeFormatter createISO8601Formatter() {
         return ISODateTimeFormat.dateTimeNoMillis();
-    }
-
-    public static String toSimple(Date date) {
-        return simpleFormat.format(date);
-    }
-
-    public static Date fromSimple(String dateString) throws ParseException {
-        return simpleFormat.parse(dateString);
     }
 
     /**

@@ -25,12 +25,12 @@ import io.motown.ochp.viewmodel.persistence.entities.Identification;
 import io.motown.ochp.viewmodel.persistence.entities.Transaction;
 import io.motown.ochp.viewmodel.persistence.repostories.ChargingStationRepository;
 import io.motown.ochp.viewmodel.persistence.repostories.TransactionRepository;
+import org.apache.cxf.interceptor.security.AuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class Ochp03SoapClient implements Ochp03Client {
 
@@ -80,10 +80,9 @@ public class Ochp03SoapClient implements Ochp03Client {
 
         if (response.getResultCode() != ACCEPTED) {
             LOG.error("Authentication of {} failed", username);
-            throw new RuntimeException("Authentication failed");
+            throw new AuthenticationException("Authentication failed");
         } else {
             LOG.info("Authentication of {} successfull", username);
-
         }
         return response.getAuthToken();
     }
@@ -168,8 +167,7 @@ public class Ochp03SoapClient implements Ochp03Client {
             authorisationInfo.setHash("");
             authorisationInfo.setRoamingHubId(1);
             authorisationInfo.setPrintedNumber("");
-            Date expiryDate = new Date(new Date().getTime() + TimeUnit.DAYS.toMillis(365));
-            authorisationInfo.setExpiryDate(DateFormatter.toSimple(expiryDate));
+            authorisationInfo.setExpiryDate(null);
 
             roamingAuthorisationList.add(authorisationInfo);
         }
