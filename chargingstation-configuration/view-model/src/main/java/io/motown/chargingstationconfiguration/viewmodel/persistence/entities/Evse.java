@@ -15,6 +15,8 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.persistence.entities;
 
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,6 +31,7 @@ public class Evse {
     // TODO it's probably nicer to create a 'real' object for this, just like EvseId (see API). - Mark van den Bergh, Januari 31st 2014
     private int identifier;
 
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, targetEntity = Connector.class, fetch = FetchType.EAGER)
     private Set<Connector> connectors = new HashSet<>();
 

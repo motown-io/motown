@@ -15,6 +15,8 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.persistence.entities;
 
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -35,6 +37,7 @@ public class Manufacturer {
     /**
      * Charging station types connected to this manufacturer.
      */
+    @JsonManagedReference
     @OneToMany(mappedBy="manufacturer",
                cascade = CascadeType.ALL,
                targetEntity = ChargingStationType.class,

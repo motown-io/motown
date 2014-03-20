@@ -15,6 +15,9 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.persistence.entities;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,12 +32,14 @@ public class ChargingStationType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name="manufacturerId")
     private Manufacturer manufacturer;
 
     private String code;
 
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, targetEntity = Evse.class, fetch = FetchType.EAGER)
     private Set<Evse> evses = new HashSet<>();
 

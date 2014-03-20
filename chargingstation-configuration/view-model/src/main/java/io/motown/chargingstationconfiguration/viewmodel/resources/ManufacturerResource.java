@@ -26,7 +26,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 
-@Path("/manufacturer")
+@Path("/manufacturers")
 public class ManufacturerResource {
 
     @Context

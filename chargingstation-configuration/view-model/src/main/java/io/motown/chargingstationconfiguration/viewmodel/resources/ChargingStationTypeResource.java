@@ -25,7 +25,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
-@Path("/chargingstationtype")
+@Path("/chargingstationtypes")
 public class ChargingStationTypeResource {
 
     @Context
