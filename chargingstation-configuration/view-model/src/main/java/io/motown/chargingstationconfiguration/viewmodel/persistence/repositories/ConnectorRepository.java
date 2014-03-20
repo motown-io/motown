@@ -65,6 +65,26 @@ public class ConnectorRepository {
         return entityManager.find(Connector.class, id);
     }
 
+    public void delete(Long id) {
+        Connector connector = findOne(id);
+        if (connector != null) {
+            EntityTransaction transaction = entityManager.getTransaction();
+
+            if (!transaction.isActive()) {
+                transaction.begin();
+            }
+
+            try {
+                entityManager.remove(connector);
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+                throw e;
+            }
+        }
+        throw new IllegalArgumentException(String.format("Unable to find connector with id '%s'", id));
+    }
+
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }

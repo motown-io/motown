@@ -65,6 +65,26 @@ public class EvseRepository {
         return entityManager.find(Evse.class, id);
     }
 
+    public void delete(Long id) {
+        Evse evse = findOne(id);
+        if (evse != null) {
+            EntityTransaction transaction = entityManager.getTransaction();
+
+            if (!transaction.isActive()) {
+                transaction.begin();
+            }
+
+            try {
+                entityManager.remove(evse);
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+                throw e;
+            }
+        }
+        throw new IllegalArgumentException(String.format("Unable to find evse with id '%s'", id));
+    }
+
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }

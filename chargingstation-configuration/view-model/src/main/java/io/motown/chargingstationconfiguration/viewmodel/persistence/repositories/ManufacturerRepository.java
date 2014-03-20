@@ -65,6 +65,26 @@ public class ManufacturerRepository {
         return entityManager.find(Manufacturer.class, id);
     }
 
+    public void delete(Long id) {
+        Manufacturer manufacturer = findOne(id);
+        if (manufacturer != null) {
+            EntityTransaction transaction = entityManager.getTransaction();
+
+            if (!transaction.isActive()) {
+                transaction.begin();
+            }
+
+            try {
+                entityManager.remove(manufacturer);
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+                throw e;
+            }
+        }
+        throw new IllegalArgumentException(String.format("Unable to find manufacturer with id '%s'", id));
+    }
+
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }

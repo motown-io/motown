@@ -72,8 +72,24 @@ public class ChargingStationTypeRepository {
         return entityManager.find(ChargingStationType.class, id);
     }
 
-    public void delete(ChargingStationType chargingStationType) {
-        entityManager.remove(chargingStationType);
+    public void delete(Long id) {
+        ChargingStationType chargingStationType = findOne(id);
+        if (chargingStationType != null) {
+            EntityTransaction transaction = entityManager.getTransaction();
+
+            if (!transaction.isActive()) {
+                transaction.begin();
+            }
+
+            try {
+                entityManager.remove(chargingStationType);
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+                throw e;
+            }
+        }
+        throw new IllegalArgumentException(String.format("Unable to find charging station type with id '%s'", id));
     }
 
     public void setEntityManager(EntityManager entityManager) {
