@@ -61,6 +61,8 @@
         <property name="entityManagerFactory" ref="entityManagerFactoryChargingStationConfiguration"/>
     </bean>
 
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils" />
+
     <jdbc:embedded-database id="dataSourceChargingStationConfiguration" type="HSQL">
         <!--<jdbc:script location="hsqldb/schema.sql" />-->
     </jdbc:embedded-database>
