@@ -20,9 +20,8 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.EvseId;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.request.chargingstation.*;
+import io.motown.ocpp.websocketjson.request.chargingstation.UnlockConnectorRequest;
 import io.motown.ocpp.websocketjson.request.handler.*;
-import io.motown.ocpp.websocketjson.response.centralsystem.*;
 import io.motown.ocpp.websocketjson.response.handler.ResponseHandler;
 import io.motown.ocpp.websocketjson.response.handler.UnlockConnectorResponseHandler;
 import io.motown.ocpp.websocketjson.schema.SchemaValidator;
@@ -52,6 +51,11 @@ public class OcppJsonService {
     public static final String PROTOCOL_IDENTIFIER = OcppWebSocketRequestHandler.PROTOCOL_IDENTIFIER;
 
     /**
+     * Map of requestHandlers, key is lowercase procUri.
+     */
+    private Map<String, RequestHandler> requestHandlers = new HashMap<>();
+
+    /**
      * Map of sockets, key is charging station identifier.
      */
     private Map<String, WebSocket> sockets = new HashMap<>();
@@ -61,21 +65,19 @@ public class OcppJsonService {
      */
     private Map<String, ResponseHandler> responseHandlers = new HashMap<>();
 
-    public String handleMessage(ChargingStationId chargingStationId, Reader reader) {
+    public void handleMessage(ChargingStationId chargingStationId, Reader reader) {
         WampMessage wampMessage = wampMessageParser.parseMessage(reader);
 
         LOG.info("Received call from [{}]: {}", chargingStationId.getId(), wampMessage.getPayloadAsString());
 
-        String result = null;
         if (WampMessage.CALL == wampMessage.getMessageType()) {
             if (!schemaValidator.isValidRequest(wampMessage.getPayloadAsString(), wampMessage.getProcUri())) {
                 LOG.error("Cannot continue processing invalid request for [{}].", chargingStationId.getId());
-                return null;
+                //TODO send back wamp error?
+                return;
             }
 
-            WampMessage processedMessage = processWampMessage(chargingStationId, wampMessage);
-
-            result = processedMessage != null ? processedMessage.toJson(gson) : null;
+            processWampMessage(chargingStationId, wampMessage);
         } else if (WampMessage.CALL_RESULT == wampMessage.getMessageType()) {
             ResponseHandler responseHandler = responseHandlers.get(wampMessage.getCallId());
             if (responseHandler != null) {
@@ -86,12 +88,7 @@ public class OcppJsonService {
             } else {
                 LOG.warn("No response handler found for callId [{}]", wampMessage.getCallId());
             }
-
-            // no response is needed when handling a call result
-            result = null;
         }
-
-        return result;
     }
 
     public void getConfiguration(ChargingStationId chargingStationId) {
@@ -117,47 +114,53 @@ public class OcppJsonService {
         }
     }
 
-    private WampMessage processWampMessage(ChargingStationId chargingStationId, WampMessage wampMessage) {
-        RequestHandler requestHandler;
+    private void processWampMessage(ChargingStationId chargingStationId, WampMessage wampMessage) {
+        String procUri = wampMessage.getProcUri().toLowerCase();
 
-        switch (wampMessage.getProcUri().toLowerCase()) {
-            case "bootnotification":
-                requestHandler = new BootNotificationRequestHandler(gson, domainService);
-                break;
-            case "datatransfer":
-                requestHandler = new DataTransferRequestHandler(gson, domainService);
-                break;
-            case "diagnosticsstatusnotification":
-                requestHandler = new DiagnosticsStatusNotificationRequestHandler(gson, domainService);
-                break;
-            case "firmwarestatusnotification":
-                requestHandler = new FirmwareStatusNotificationRequestHandler(gson, domainService);
-                break;
-            case "heartbeat":
-                requestHandler = new HeartbeatRequestHandler(domainService);
-                break;
-            case "metervalues":
-                requestHandler = new MeterValuesRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER);
-                break;
-            case "starttransaction":
-                requestHandler = new StartTransactionRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER);
-                break;
-            case "statusnotification":
-                requestHandler = new StatusNotificationRequestHandler(gson, domainService);
-                break;
-            case "stoptransaction":
-                requestHandler = new StopTransactionRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER);
-                break;
-            default:
-                LOG.error("Unknown ProcUri: " + wampMessage.getProcUri());
-                return null;
+        RequestHandler requestHandler = requestHandlers.get(procUri);
+
+        if(requestHandler == null) {
+            switch (procUri) {
+                case AuthorizeRequestHandler.PROC_URI:
+                    requestHandler = new AuthorizeRequestHandler(gson, domainService);
+                    break;
+                case BootNotificationRequestHandler.PROC_URI:
+                    requestHandler = new BootNotificationRequestHandler(gson, domainService);
+                    break;
+                case DataTransferRequestHandler.PROC_URI:
+                    requestHandler = new DataTransferRequestHandler(gson, domainService);
+                    break;
+                case DiagnosticsStatusNotificationRequestHandler.PROC_URI:
+                    requestHandler = new DiagnosticsStatusNotificationRequestHandler(gson, domainService);
+                    break;
+                case FirmwareStatusNotificationRequestHandler.PROC_URI:
+                    requestHandler = new FirmwareStatusNotificationRequestHandler(gson, domainService);
+                    break;
+                case HeartbeatRequestHandler.PROC_URI:
+                    requestHandler = new HeartbeatRequestHandler(gson, domainService);
+                    break;
+                case MeterValuesRequestHandler.PROC_URI:
+                    requestHandler = new MeterValuesRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER);
+                    break;
+                case StartTransactionRequestHandler.PROC_URI:
+                    requestHandler = new StartTransactionRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER);
+                    break;
+                case StatusNotificationRequestHandler.PROC_URI:
+                    requestHandler = new StatusNotificationRequestHandler(gson, domainService);
+                    break;
+                case StopTransactionRequestHandler.PROC_URI:
+                    requestHandler = new StopTransactionRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER);
+                    break;
+                default:
+                    LOG.error("Unknown ProcUri: " + wampMessage.getProcUri());
+                    return;
+            }
+
+            requestHandlers.put(procUri, requestHandler);
         }
 
-        CentralSystemResponse result = requestHandler.handleRequest(chargingStationId, wampMessage.getPayloadAsString());
-
-        return new WampMessage(WampMessage.CALL_RESULT, wampMessage.getCallId(), result);
+        requestHandler.handleRequest(chargingStationId, wampMessage.getCallId(), wampMessage.getPayloadAsString(), sockets.get(chargingStationId.getId()));
     }
-
 
     public void setWampMessageParser(WampMessageParser wampMessageParser) {
         this.wampMessageParser = wampMessageParser;
@@ -181,5 +184,9 @@ public class OcppJsonService {
 
     public void addResponseHandler(String callId, ResponseHandler responseHandler) {
         responseHandlers.put(callId, responseHandler);
+    }
+
+    public void addRequestHandler(String procUri, RequestHandler requestHandler) {
+        requestHandlers.put(procUri, requestHandler);
     }
 }

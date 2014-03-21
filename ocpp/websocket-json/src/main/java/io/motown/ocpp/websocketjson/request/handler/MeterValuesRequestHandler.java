@@ -20,13 +20,16 @@ import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.request.chargingstation.MeterValuesRequest;
 import io.motown.ocpp.websocketjson.response.centralsystem.MeterValuesResponse;
+import org.atmosphere.websocket.WebSocket;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MeterValuesRequestHandler implements RequestHandler {
+public class MeterValuesRequestHandler extends RequestHandler {
+
+    public static final String PROC_URI = "metervalues";
 
     private String protocolIdentifier;
 
@@ -41,7 +44,7 @@ public class MeterValuesRequestHandler implements RequestHandler {
     }
 
     @Override
-    public MeterValuesResponse handleRequest(ChargingStationId chargingStationId, String payload) {
+    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
         MeterValuesRequest request = gson.fromJson(payload, MeterValuesRequest.class);
 
         List<MeterValue> meterValues = new ArrayList<>();
@@ -65,7 +68,7 @@ public class MeterValuesRequestHandler implements RequestHandler {
 
         domainService.meterValues(chargingStationId, transactionId, new EvseId(request.getConnectorId()), meterValues);
 
-        return new MeterValuesResponse();
+        writeResponse(webSocket, new MeterValuesResponse(), callId, gson);
     }
 
 }

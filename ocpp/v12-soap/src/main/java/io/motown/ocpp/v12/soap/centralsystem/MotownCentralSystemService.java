@@ -16,11 +16,9 @@
 package io.motown.ocpp.v12.soap.centralsystem;
 
 import io.motown.domain.api.chargingstation.*;
-import io.motown.domain.api.chargingstation.MeterValue;
 import io.motown.ocpp.soaputils.async.*;
 import io.motown.ocpp.soaputils.header.SoapHeaderReader;
 import io.motown.ocpp.v12.soap.centralsystem.schema.*;
-import io.motown.ocpp.v12.soap.centralsystem.schema.FirmwareStatus;
 import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
@@ -207,7 +205,6 @@ public class MotownCentralSystemService implements CentralSystemService {
         String errorCode = request.getErrorCode() != null ? request.getErrorCode().value() : null;
 
         String info = null;
-        //TODO: OCPP 1.2 does not contain a timestamp. Is it valid to create one here? - Ingo Pak, 16 Jan 2014
         Date timestamp = new Date();
         String vendorId = null;
         String vendorErrorCode = null;

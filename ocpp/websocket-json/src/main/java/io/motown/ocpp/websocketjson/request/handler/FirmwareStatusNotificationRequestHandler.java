@@ -21,8 +21,11 @@ import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.request.chargingstation.FirmwareStatus;
 import io.motown.ocpp.websocketjson.request.chargingstation.FirmwareStatusNotificationRequest;
 import io.motown.ocpp.websocketjson.response.centralsystem.FirmwareStatusNotificationResponse;
+import org.atmosphere.websocket.WebSocket;
 
-public class FirmwareStatusNotificationRequestHandler implements RequestHandler {
+public class FirmwareStatusNotificationRequestHandler extends RequestHandler {
+
+    public static final String PROC_URI = "firmwarestatusnotification";
 
     private Gson gson;
 
@@ -34,7 +37,7 @@ public class FirmwareStatusNotificationRequestHandler implements RequestHandler 
     }
 
     @Override
-    public FirmwareStatusNotificationResponse handleRequest(ChargingStationId chargingStationId, String payload) {
+    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
         FirmwareStatusNotificationRequest request = gson.fromJson(payload, FirmwareStatusNotificationRequest.class);
 
         FirmwareStatus status = request.getStatus();
@@ -53,6 +56,6 @@ public class FirmwareStatusNotificationRequestHandler implements RequestHandler 
 
         domainService.firmwareStatusUpdate(chargingStationId, firmwareStatus);
 
-        return new FirmwareStatusNotificationResponse();
+        writeResponse(webSocket, new FirmwareStatusNotificationResponse(), callId, gson);
     }
 }

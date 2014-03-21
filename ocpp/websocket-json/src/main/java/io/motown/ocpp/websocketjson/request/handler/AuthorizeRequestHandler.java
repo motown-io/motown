@@ -18,29 +18,30 @@ package io.motown.ocpp.websocketjson.request.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.response.centralsystem.HeartbeatResponse;
+import io.motown.ocpp.viewmodel.domain.FutureEventCallback;
+import io.motown.ocpp.websocketjson.request.chargingstation.AuthorizeRequest;
 import org.atmosphere.websocket.WebSocket;
 
-import java.util.Date;
+public class AuthorizeRequestHandler extends RequestHandler {
 
-public class HeartbeatRequestHandler extends RequestHandler {
-
-    public static final String PROC_URI = "heartbeat";
+    public static final String PROC_URI = "authorize";
 
     private Gson gson;
 
     private DomainService domainService;
 
-    public HeartbeatRequestHandler(Gson gson, DomainService domainService) {
+    public AuthorizeRequestHandler(Gson gson, DomainService domainService) {
         this.gson = gson;
         this.domainService = domainService;
     }
 
     @Override
     public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
-        domainService.heartbeat(chargingStationId);
+        FutureEventCallback futureEventCallback = new AuthorizationFutureEventCallback(callId, webSocket, gson);
 
-        writeResponse(webSocket, new HeartbeatResponse(new Date()), callId, gson);
+        AuthorizeRequest request = gson.fromJson(payload, AuthorizeRequest.class);
 
+        // futureEventCallback will handle authorize result
+        domainService.authorize(chargingStationId, request.getIdTag(), futureEventCallback);
     }
 }

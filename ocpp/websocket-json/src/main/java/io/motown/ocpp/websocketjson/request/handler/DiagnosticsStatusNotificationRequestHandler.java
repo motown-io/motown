@@ -21,8 +21,11 @@ import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.request.chargingstation.DiagnosticsStatus;
 import io.motown.ocpp.websocketjson.request.chargingstation.DiagnosticsStatusNotificationRequest;
 import io.motown.ocpp.websocketjson.response.centralsystem.DiagnosticsStatusNotificationResponse;
+import org.atmosphere.websocket.WebSocket;
 
-public class DiagnosticsStatusNotificationRequestHandler implements RequestHandler {
+public class DiagnosticsStatusNotificationRequestHandler extends RequestHandler {
+
+    public static final String PROC_URI = "diagnosticsstatusnotification";
 
     private Gson gson;
 
@@ -34,11 +37,11 @@ public class DiagnosticsStatusNotificationRequestHandler implements RequestHandl
     }
 
     @Override
-    public DiagnosticsStatusNotificationResponse handleRequest(ChargingStationId chargingStationId, String payload) {
+    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
         DiagnosticsStatusNotificationRequest request = gson.fromJson(payload, DiagnosticsStatusNotificationRequest.class);
 
         domainService.diagnosticsUploadStatusUpdate(chargingStationId, request.getStatus().equals(DiagnosticsStatus.UPLOADED));
 
-        return new DiagnosticsStatusNotificationResponse();
+        writeResponse(webSocket, new DiagnosticsStatusNotificationResponse(), callId, gson);
     }
 }

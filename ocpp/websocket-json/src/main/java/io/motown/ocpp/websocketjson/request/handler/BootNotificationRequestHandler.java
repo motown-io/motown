@@ -23,8 +23,11 @@ import io.motown.ocpp.websocketjson.OcppJsonService;
 import io.motown.ocpp.websocketjson.request.chargingstation.BootNotificationRequest;
 import io.motown.ocpp.websocketjson.response.centralsystem.BootNotificationResponse;
 import io.motown.ocpp.websocketjson.response.centralsystem.RegistrationStatus;
+import org.atmosphere.websocket.WebSocket;
 
-public class BootNotificationRequestHandler implements RequestHandler {
+public class BootNotificationRequestHandler extends RequestHandler {
+
+    public static final String PROC_URI = "bootnotification";
 
     private Gson gson;
 
@@ -36,7 +39,7 @@ public class BootNotificationRequestHandler implements RequestHandler {
     }
 
     @Override
-    public BootNotificationResponse handleRequest(ChargingStationId chargingStationId, String payload) {
+    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
         BootNotificationRequest request = gson.fromJson(payload, BootNotificationRequest.class);
 
         BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(chargingStationId, null, request.getChargePointVendor(),
@@ -44,6 +47,8 @@ public class BootNotificationRequestHandler implements RequestHandler {
                 request.getFirmwareVersion(), request.getIccid(), request.getImsi(), request.getMeterType(),
                 request.getMeterSerialNumber());
 
-        return new BootNotificationResponse(bootChargingStationResult.isAccepted()? RegistrationStatus.ACCEPTED:RegistrationStatus.REJECTED, bootChargingStationResult.getTimeStamp(), bootChargingStationResult.getHeartbeatInterval());
+        BootNotificationResponse response = new BootNotificationResponse(bootChargingStationResult.isAccepted()? RegistrationStatus.ACCEPTED:RegistrationStatus.REJECTED, bootChargingStationResult.getTimeStamp(), bootChargingStationResult.getHeartbeatInterval());
+
+        writeResponse(webSocket, response, callId, gson);
     }
 }

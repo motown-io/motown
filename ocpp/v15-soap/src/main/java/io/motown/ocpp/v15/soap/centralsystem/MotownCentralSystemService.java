@@ -17,12 +17,10 @@ package io.motown.ocpp.v15.soap.centralsystem;
 
 import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
-import io.motown.domain.api.chargingstation.MeterValue;
 import io.motown.ocpp.soaputils.async.*;
 import io.motown.ocpp.soaputils.header.SoapHeaderReader;
 import io.motown.ocpp.v15.soap.Ocpp15RequestHandler;
 import io.motown.ocpp.v15.soap.centralsystem.schema.*;
-import io.motown.ocpp.v15.soap.centralsystem.schema.FirmwareStatus;
 import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
@@ -77,9 +75,12 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         ComponentStatus componentStatus = getComponentStatusFromChargePointStatus(request.getStatus());
         String errorCode = request.getErrorCode() != null ? request.getErrorCode().value() : null;
 
-        //TODO timestamp is not mandatory in the WSDL, however it's mandatory in the statusNotification command! - Mark van den Bergh, Februari 21st 2014
+        Date timestamp = request.getTimestamp();
+        if(timestamp == null) {
+            timestamp = new Date();
+        }
 
-        domainService.statusNotification(chargingStationId, evseId, errorCode, componentStatus, request.getInfo(), request.getTimestamp(), request.getVendorId(), request.getVendorErrorCode());
+        domainService.statusNotification(chargingStationId, evseId, errorCode, componentStatus, request.getInfo(), timestamp, request.getVendorId(), request.getVendorErrorCode());
         return new StatusNotificationResponse();
     }
 

@@ -16,17 +16,23 @@
 package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
-import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.MeterValue;
+import io.motown.domain.api.chargingstation.NumberedTransactionId;
+import io.motown.domain.api.chargingstation.TextualToken;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.request.chargingstation.StopTransactionRequest;
 import io.motown.ocpp.websocketjson.request.chargingstation.TransactionData;
 import io.motown.ocpp.websocketjson.response.centralsystem.AuthorizationStatus;
 import io.motown.ocpp.websocketjson.response.centralsystem.IdTagInfo;
 import io.motown.ocpp.websocketjson.response.centralsystem.StopTransactionResponse;
+import org.atmosphere.websocket.WebSocket;
 
 import java.util.*;
 
-public class StopTransactionRequestHandler implements RequestHandler {
+public class StopTransactionRequestHandler extends RequestHandler {
+
+    public static final String PROC_URI = "stoptransaction";
 
     private String protocolIdentifier;
 
@@ -41,7 +47,7 @@ public class StopTransactionRequestHandler implements RequestHandler {
     }
 
     @Override
-    public StopTransactionResponse handleRequest(ChargingStationId chargingStationId, String payload) {
+    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
         StopTransactionRequest request = gson.fromJson(payload, StopTransactionRequest.class);
 
         List<MeterValue> meterValues = new ArrayList<>();
@@ -70,7 +76,9 @@ public class StopTransactionRequestHandler implements RequestHandler {
         // TODO locally store identifications, so we can use these in the response. - Dennis Laumen, December 16th 2013
         GregorianCalendar expDate = new GregorianCalendar();
         expDate.add(GregorianCalendar.YEAR, 1);
-        return new StopTransactionResponse(new IdTagInfo(AuthorizationStatus.ACCEPTED, expDate.getTime(), request.getIdTag()));
+        StopTransactionResponse response = new StopTransactionResponse(new IdTagInfo(AuthorizationStatus.ACCEPTED, expDate.getTime(), request.getIdTag()));
+
+        writeResponse(webSocket, response, callId, gson);
     }
 
 }

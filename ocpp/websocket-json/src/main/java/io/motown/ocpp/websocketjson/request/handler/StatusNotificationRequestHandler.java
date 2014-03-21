@@ -16,13 +16,20 @@
 package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
-import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.ComponentStatus;
+import io.motown.domain.api.chargingstation.EvseId;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.request.chargingstation.ChargePointStatus;
 import io.motown.ocpp.websocketjson.request.chargingstation.StatusNotificationRequest;
 import io.motown.ocpp.websocketjson.response.centralsystem.StatusNotificationResponse;
+import org.atmosphere.websocket.WebSocket;
 
-public class StatusNotificationRequestHandler implements RequestHandler {
+import java.util.Date;
+
+public class StatusNotificationRequestHandler extends RequestHandler {
+
+    public static final String PROC_URI = "statusnotification";
 
     private Gson gson;
 
@@ -34,13 +41,18 @@ public class StatusNotificationRequestHandler implements RequestHandler {
     }
 
     @Override
-    public StatusNotificationResponse handleRequest(ChargingStationId chargingStationId, String payload) {
+    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
         StatusNotificationRequest request = gson.fromJson(payload, StatusNotificationRequest.class);
 
         String errorCode = request.getErrorCode() != null ? request.getErrorCode().value() : null;
-        domainService.statusNotification(chargingStationId, new EvseId(request.getConnectorId()), errorCode, getComponentStatusFromChargePointStatus(request.getStatus()), request.getInfo(), request.getTimestamp(), request.getVendorId(), request.getVendorErrorCode());
+        Date timestamp = request.getTimestamp();
+        if(timestamp == null) {
+            timestamp = new Date();
+        }
 
-        return new StatusNotificationResponse();
+        domainService.statusNotification(chargingStationId, new EvseId(request.getConnectorId()), errorCode, getComponentStatusFromChargePointStatus(request.getStatus()), request.getInfo(), timestamp, request.getVendorId(), request.getVendorErrorCode());
+
+        writeResponse(webSocket, new StatusNotificationResponse(), callId, gson);
     }
 
     /**

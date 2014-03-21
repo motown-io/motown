@@ -22,10 +22,13 @@ import io.motown.ocpp.websocketjson.request.chargingstation.StartTransactionRequ
 import io.motown.ocpp.websocketjson.response.centralsystem.AuthorizationStatus;
 import io.motown.ocpp.websocketjson.response.centralsystem.IdTagInfo;
 import io.motown.ocpp.websocketjson.response.centralsystem.StartTransactionResponse;
+import org.atmosphere.websocket.WebSocket;
 
 import java.util.GregorianCalendar;
 
-public class StartTransactionRequestHandler implements RequestHandler {
+public class StartTransactionRequestHandler extends RequestHandler {
+
+    public static final String PROC_URI = "starttransaction";
 
     private Gson gson;
 
@@ -40,7 +43,7 @@ public class StartTransactionRequestHandler implements RequestHandler {
     }
 
     @Override
-    public StartTransactionResponse handleRequest(ChargingStationId chargingStationId, String payload) {
+    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
         StartTransactionRequest request = gson.fromJson(payload, StartTransactionRequest.class);
 
         ReservationId reservationId = null;
@@ -53,6 +56,8 @@ public class StartTransactionRequestHandler implements RequestHandler {
         // TODO locally store identifications, so we can use these in the response. - Dennis Laumen, December 16th 2013
         GregorianCalendar expDate = new GregorianCalendar();
         expDate.add(GregorianCalendar.YEAR, 1);
-        return new StartTransactionResponse(transactionId, new IdTagInfo(AuthorizationStatus.ACCEPTED, expDate.getTime(), request.getIdTag()));
+        StartTransactionResponse response = new StartTransactionResponse(transactionId, new IdTagInfo(AuthorizationStatus.ACCEPTED, expDate.getTime(), request.getIdTag()));
+
+        writeResponse(webSocket, response, callId, gson);
     }
 }
