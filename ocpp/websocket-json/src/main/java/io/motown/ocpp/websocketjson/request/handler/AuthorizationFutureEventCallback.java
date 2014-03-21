@@ -22,10 +22,14 @@ import io.motown.ocpp.viewmodel.domain.FutureEventCallback;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import org.atmosphere.websocket.WebSocket;
 import org.axonframework.domain.EventMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 public class AuthorizationFutureEventCallback extends FutureEventCallback<AuthorizationResult> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AuthorizationFutureEventCallback.class);
 
     private WebSocket webSocket;
 
@@ -65,7 +69,7 @@ public class AuthorizationFutureEventCallback extends FutureEventCallback<Author
         try {
             webSocket.write(new WampMessage(WampMessage.CALL_RESULT, callId, result).toJson(gson));
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            LOG.error("IOException while writing to web socket.", e);
         }
     }
 }
