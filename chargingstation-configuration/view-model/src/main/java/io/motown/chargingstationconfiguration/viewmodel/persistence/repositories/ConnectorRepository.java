@@ -81,8 +81,9 @@ public class ConnectorRepository {
                 transaction.rollback();
                 throw e;
             }
+        } else {
+            throw new IllegalArgumentException(String.format("Unable to find connector with id '%s'", id));
         }
-        throw new IllegalArgumentException(String.format("Unable to find connector with id '%s'", id));
     }
 
     public void setEntityManager(EntityManager entityManager) {

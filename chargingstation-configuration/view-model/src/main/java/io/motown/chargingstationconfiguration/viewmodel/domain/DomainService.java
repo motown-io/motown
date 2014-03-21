@@ -92,18 +92,11 @@ public class DomainService {
      * Update a charging station type.
      *
      * @param id the id of the entity to find.
-     * @param jsonModel the payload from the request.
+     * @param chargingStationType the payload from the request.
      */
-    public void updateChargingStationType(Long id, ChargingStationType jsonModel) {
-        ChargingStationType chargingStationType = chargingStationTypeRepository.findOne(id);
-        if (chargingStationType != null) {
-            chargingStationType.setCode(jsonModel.getCode() != null ? jsonModel.getCode() : chargingStationType.getCode());
-            chargingStationType.setEvses(jsonModel.getEvses() != null ? jsonModel.getEvses() : chargingStationType.getEvses());
-            chargingStationType.setManufacturer(jsonModel.getManufacturer() != null ? jsonModel.getManufacturer() : chargingStationType.getManufacturer());
-
-            chargingStationTypeRepository.update(chargingStationType);
-        }
-        throw new IllegalArgumentException(String.format("Unable to find charging station type with id '%s'", id));
+    public void updateChargingStationType(Long id, ChargingStationType chargingStationType) {
+        chargingStationType.setId(id);
+        chargingStationTypeRepository.update(chargingStationType);
     }
 
     /**
@@ -147,21 +140,11 @@ public class DomainService {
      * Update a connector.
      *
      * @param id the id of the entity to find.
-     * @param jsonModel the payload from the request.
+     * @param connector the payload from the request.
      */
-    public void updateConnector(Long id, Connector jsonModel) {
-        Connector connector = connectorRepository.findOne(id);
-        if (connector != null) {
-            connector.setChargingProtocol(jsonModel.getChargingProtocol() != null ? jsonModel.getChargingProtocol() : connector.getChargingProtocol());
-            connector.setConnectorType(jsonModel.getConnectorType() != null ? jsonModel.getConnectorType() : connector.getConnectorType());
-            connector.setCurrent(jsonModel.getCurrent() != null ? jsonModel.getCurrent() : connector.getCurrent());
-            connector.setMaxAmp(jsonModel.getMaxAmp());
-            connector.setPhase(jsonModel.getPhase());
-            connector.setVoltage(jsonModel.getVoltage());
-
-            connectorRepository.update(connector);
-        }
-        throw new IllegalArgumentException(String.format("Unable to find connector with id '%s'", id));
+    public void updateConnector(Long id, Connector connector) {
+        connector.setId(id);
+        connectorRepository.update(connector);
     }
 
     /**
@@ -205,17 +188,11 @@ public class DomainService {
      * Update an evse.
      *
      * @param id the id of the entity to find.
-     * @param jsonModel the payload from the request.
+     * @param evse the payload from the request.
      */
-    public void updateEvse(Long id, Evse jsonModel) {
-        Evse evse = evseRepository.findOne(id);
-        if (evse != null) {
-            evse.setConnectors(jsonModel.getConnectors() != null ? jsonModel.getConnectors() : evse.getConnectors());
-            evse.setIdentifier(jsonModel.getIdentifier());
-
-            evseRepository.update(evse);
-        }
-        throw new IllegalArgumentException(String.format("Unable to find evse with id '%s'", id));
+    public void updateEvse(Long id, Evse evse) {
+        evse.setId(id);
+        evseRepository.update(evse);
     }
 
     /**
@@ -259,17 +236,11 @@ public class DomainService {
      * Update a manufacturer.
      *
      * @param id the id of the entity to find.
-     * @param jsonModel the payload from the request.
+     * @param manufacturer the payload from the request.
      */
-    public void updateManufacturer(Long id, Manufacturer jsonModel) {
-        Manufacturer manufacturer = manufacturerRepository.findOne(id);
-        if (manufacturer != null) {
-            manufacturer.setChargingStationTypes(jsonModel.getChargingStationTypes() != null ? jsonModel.getChargingStationTypes() : manufacturer.getChargingStationTypes());
-            manufacturer.setCode(jsonModel.getCode() != null ? jsonModel.getCode() : manufacturer.getCode());
-
-            manufacturerRepository.update(manufacturer);
-        }
-        throw new IllegalArgumentException(String.format("Unable to find evse with id '%s'", id));
+    public void updateManufacturer(Long id, Manufacturer manufacturer) {
+        manufacturer.setId(id);
+        manufacturerRepository.update(manufacturer);
     }
 
     /**

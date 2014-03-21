@@ -88,8 +88,9 @@ public class ChargingStationTypeRepository {
                 transaction.rollback();
                 throw e;
             }
+        } else {
+            throw new IllegalArgumentException(String.format("Unable to find charging station type with id '%s'", id));
         }
-        throw new IllegalArgumentException(String.format("Unable to find charging station type with id '%s'", id));
     }
 
     public void setEntityManager(EntityManager entityManager) {

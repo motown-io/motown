@@ -47,6 +47,10 @@ public class Connector {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public int getMaxAmp() {
         return maxAmp;
     }

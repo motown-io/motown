@@ -81,8 +81,9 @@ public class ManufacturerRepository {
                 transaction.rollback();
                 throw e;
             }
+        } else {
+            throw new IllegalArgumentException(String.format("Unable to find manufacturer with id '%s'", id));
         }
-        throw new IllegalArgumentException(String.format("Unable to find manufacturer with id '%s'", id));
     }
 
     public void setEntityManager(EntityManager entityManager) {
