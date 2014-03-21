@@ -16,9 +16,11 @@
 package io.motown.ocpp.v12.soap.centralsystem;
 
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.MeterValue;
 import io.motown.ocpp.soaputils.async.*;
 import io.motown.ocpp.soaputils.header.SoapHeaderReader;
 import io.motown.ocpp.v12.soap.centralsystem.schema.*;
+import io.motown.ocpp.v12.soap.centralsystem.schema.FirmwareStatus;
 import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
