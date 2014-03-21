@@ -16,12 +16,13 @@
 package io.motown.chargingstationconfiguration.viewmodel.persistence.entities;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonManagedReference;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @Entity
 @Table(uniqueConstraints=
     @UniqueConstraint(columnNames = {"code", "manufacturerId"})
@@ -39,7 +40,6 @@ public class ChargingStationType {
 
     private String code;
 
-    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, targetEntity = Evse.class, fetch = FetchType.EAGER)
     private Set<Evse> evses = new HashSet<>();
 

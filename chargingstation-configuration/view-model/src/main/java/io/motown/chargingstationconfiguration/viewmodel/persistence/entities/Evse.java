@@ -15,12 +15,13 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.persistence.entities;
 
-import org.codehaus.jackson.annotate.JsonManagedReference;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @Entity
 public class Evse {
 
@@ -31,7 +32,6 @@ public class Evse {
     // TODO it's probably nicer to create a 'real' object for this, just like EvseId (see API). - Mark van den Bergh, Januari 31st 2014
     private int identifier;
 
-    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, targetEntity = Connector.class, fetch = FetchType.EAGER)
     private Set<Connector> connectors = new HashSet<>();
 
