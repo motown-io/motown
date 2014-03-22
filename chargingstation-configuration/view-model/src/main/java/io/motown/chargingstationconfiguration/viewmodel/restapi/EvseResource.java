@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.chargingstationconfiguration.viewmodel.resources;
+package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
 import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
-import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Manufacturer;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/manufacturers")
-public class ManufacturerResource {
+@Path("/evses")
+public class EvseResource {
 
     private DomainService domainService;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createManufacturer(Manufacturer manufacturer) {
+    public Response createEvse(Evse evse) {
         try {
-            domainService.createManufacturer(manufacturer);
-            return Response.status(Response.Status.CREATED).entity(manufacturer).build();
+            domainService.createEvse(evse);
+            return Response.status(Response.Status.CREATED).entity(evse).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
         }
@@ -43,10 +43,10 @@ public class ManufacturerResource {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateManufacturer(@PathParam("id") Long id, Manufacturer manufacturer) {
+    public Response updateEvse(@PathParam("id") Long id, Evse evse) {
         try {
-            domainService.updateManufacturer(id, manufacturer);
-            return Response.ok(manufacturer).build();
+            domainService.updateEvse(id, evse);
+            return Response.ok(evse).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
         }
@@ -54,9 +54,9 @@ public class ManufacturerResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getManufacturers() {
+    public Response getEvses() {
         try {
-            return Response.ok(domainService.getManufacturers()).build();
+            return Response.ok(domainService.getEvses()).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
         }
@@ -65,11 +65,11 @@ public class ManufacturerResource {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getManufacturer(@PathParam("id") Long id) {
+    public Response getEvse(@PathParam("id") Long id) {
         try {
-            Manufacturer manufacturer = domainService.getManufacturer(id);
-            if (manufacturer != null) {
-                return Response.ok(manufacturer).build();
+            Evse evse = domainService.getEvse(id);
+            if (evse != null) {
+                return Response.ok(evse).build();
             }
             return Response.status(Response.Status.NOT_FOUND).entity(id).build();
         } catch (Exception e) {
@@ -80,9 +80,9 @@ public class ManufacturerResource {
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteManufacturer(@PathParam("id") Long id) {
+    public Response deleteEvse(@PathParam("id") Long id) {
         try {
-            domainService.deleteManufacturer(id);
+            domainService.deleteEvse(id);
             return Response.ok(id).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).build();

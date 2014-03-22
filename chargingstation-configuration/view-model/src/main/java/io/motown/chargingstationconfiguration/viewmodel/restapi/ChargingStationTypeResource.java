@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.chargingstationconfiguration.viewmodel.resources;
+package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
 import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
-import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/connectors")
-public class ConnectorResource {
+@Path("/chargingstationtypes")
+public class ChargingStationTypeResource {
 
     private DomainService domainService;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createConnector(Connector connector) {
+    public Response createChargingStationType(ChargingStationType chargingStationType) {
         try {
-            domainService.createConnector(connector);
-            return Response.status(Response.Status.CREATED).entity(connector).build();
+            domainService.createChargingStationType(chargingStationType);
+            return Response.status(Response.Status.CREATED).entity(chargingStationType).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
         }
@@ -43,10 +43,10 @@ public class ConnectorResource {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateConnector(@PathParam("id") Long id, Connector connector) {
+    public Response updateChargingStationType(@PathParam("id") Long id, ChargingStationType chargingStationType) {
         try {
-            domainService.updateConnector(id, connector);
-            return Response.ok(connector).build();
+            domainService.updateChargingStationType(id, chargingStationType);
+            return Response.ok(chargingStationType).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
         }
@@ -54,9 +54,9 @@ public class ConnectorResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getConnectors() {
+    public Response getChargingStationTypes() {
         try {
-            return Response.ok(domainService.getConnectors()).build();
+            return Response.ok(domainService.getChargingStationTypes()).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
         }
@@ -65,11 +65,11 @@ public class ConnectorResource {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getConnector(@PathParam("id") Long id) {
+    public Response getChargingStationType(@PathParam("id") Long id) {
         try {
-            Connector connector = domainService.getConnector(id);
-            if (connector != null) {
-                return Response.ok(connector).build();
+            ChargingStationType chargingStationType = domainService.getChargingStationType(id);
+            if (chargingStationType != null) {
+                return Response.ok(chargingStationType).build();
             }
             return Response.status(Response.Status.NOT_FOUND).entity(id).build();
         } catch (Exception e) {
@@ -80,9 +80,9 @@ public class ConnectorResource {
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteConnector(@PathParam("id") Long id) {
+    public Response deleteChargingStationType(@PathParam("id") Long id) {
         try {
-            domainService.deleteConnector(id);
+            domainService.deleteChargingStationType(id);
             return Response.ok(id).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).build();

@@ -148,19 +148,19 @@
         <jdbc:script location="classpath*:META-INF/hsqldb/initialData.sql" />
     </jdbc:embedded-database>
 
-    <bean class="io.motown.chargingstationconfiguration.viewmodel.resources.ChargingStationTypeResource">
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.ChargingStationTypeResource">
         <property name="domainService" ref="domainService" />
     </bean>
 
-    <bean class="io.motown.chargingstationconfiguration.viewmodel.resources.ConnectorResource">
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.ConnectorResource">
         <property name="domainService" ref="domainService" />
     </bean>
 
-    <bean class="io.motown.chargingstationconfiguration.viewmodel.resources.EvseResource">
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.EvseResource">
         <property name="domainService" ref="domainService" />
     </bean>
 
-    <bean class="io.motown.chargingstationconfiguration.viewmodel.resources.ManufacturerResource">
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.ManufacturerResource">
         <property name="domainService" ref="domainService" />
     </bean>
 

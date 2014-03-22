@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.chargingstationconfiguration.viewmodel.resources;
+package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
 import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
-import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/chargingstationtypes")
-public class ChargingStationTypeResource {
+@Path("/connectors")
+public class ConnectorResource {
 
     private DomainService domainService;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createChargingStationType(ChargingStationType chargingStationType) {
+    public Response createConnector(Connector connector) {
         try {
-            domainService.createChargingStationType(chargingStationType);
-            return Response.status(Response.Status.CREATED).entity(chargingStationType).build();
+            domainService.createConnector(connector);
+            return Response.status(Response.Status.CREATED).entity(connector).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
         }
@@ -43,10 +43,10 @@ public class ChargingStationTypeResource {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateChargingStationType(@PathParam("id") Long id, ChargingStationType chargingStationType) {
+    public Response updateConnector(@PathParam("id") Long id, Connector connector) {
         try {
-            domainService.updateChargingStationType(id, chargingStationType);
-            return Response.ok(chargingStationType).build();
+            domainService.updateConnector(id, connector);
+            return Response.ok(connector).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
         }
@@ -54,9 +54,9 @@ public class ChargingStationTypeResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getChargingStationTypes() {
+    public Response getConnectors() {
         try {
-            return Response.ok(domainService.getChargingStationTypes()).build();
+            return Response.ok(domainService.getConnectors()).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
         }
@@ -65,11 +65,11 @@ public class ChargingStationTypeResource {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getChargingStationType(@PathParam("id") Long id) {
+    public Response getConnector(@PathParam("id") Long id) {
         try {
-            ChargingStationType chargingStationType = domainService.getChargingStationType(id);
-            if (chargingStationType != null) {
-                return Response.ok(chargingStationType).build();
+            Connector connector = domainService.getConnector(id);
+            if (connector != null) {
+                return Response.ok(connector).build();
             }
             return Response.status(Response.Status.NOT_FOUND).entity(id).build();
         } catch (Exception e) {
@@ -80,9 +80,9 @@ public class ChargingStationTypeResource {
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteChargingStationType(@PathParam("id") Long id) {
+    public Response deleteConnector(@PathParam("id") Long id) {
         try {
-            domainService.deleteChargingStationType(id);
+            domainService.deleteConnector(id);
             return Response.ok(id).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
