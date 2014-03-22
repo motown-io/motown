@@ -22,9 +22,6 @@ import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Man
 import io.motown.domain.api.chargingstation.ChargingProtocol;
 import io.motown.domain.api.chargingstation.ConnectorType;
 import io.motown.domain.api.chargingstation.Current;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -32,9 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public final class TestUtils implements ApplicationContextAware {
-
-    private static ApplicationContext context;
+public final class TestUtils {
 
     public static final int MAX_AMP_32 = 32;
     public static final int NUMBER_OF_CONNECTORS = 3;
@@ -145,12 +140,4 @@ public final class TestUtils implements ApplicationContextAware {
         return connector;
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        context = applicationContext;
-    }
-
-    public static ApplicationContext getApplicationContext() {
-        return context;
-    }
 }
