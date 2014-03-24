@@ -22,7 +22,6 @@ import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-// TODO should the Date fields really be copies? - Mark Manders 2014-02-20
 @Entity
 public class Transaction {
 
