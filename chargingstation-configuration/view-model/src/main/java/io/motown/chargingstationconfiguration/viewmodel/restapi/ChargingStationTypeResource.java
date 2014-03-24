@@ -19,11 +19,17 @@ import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 
 @Path("/chargingstationtypes")
 public final class ChargingStationTypeResource {
+
+    @Context
+    private UriInfo uriInfo;
 
     private DomainService domainService;
 
@@ -32,7 +38,8 @@ public final class ChargingStationTypeResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createChargingStationType(ChargingStationType chargingStationType) {
         domainService.createChargingStationType(chargingStationType);
-        return Response.status(Response.Status.CREATED).entity(chargingStationType).build();
+        URI uri = uriInfo.getAbsolutePathBuilder().path(chargingStationType.getId().toString()).build();
+        return Response.created(uri).entity(chargingStationType).build();
     }
 
     @PUT
