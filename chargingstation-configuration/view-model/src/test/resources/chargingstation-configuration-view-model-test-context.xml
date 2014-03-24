@@ -62,7 +62,7 @@
     </bean>
 
     <jdbc:embedded-database id="dataSourceChargingStationConfiguration" type="HSQL">
-        <jdbc:script location="hsqldb/schema.sql" />
+        <!--<jdbc:script location="hsqldb/schema.sql" />-->
     </jdbc:embedded-database>
 
 </beans>
