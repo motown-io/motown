@@ -23,7 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/evses")
-public class EvseResource {
+public final class EvseResource {
 
     private DomainService domainService;
 
@@ -31,62 +31,38 @@ public class EvseResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createEvse(Evse evse) {
-        try {
-            domainService.createEvse(evse);
-            return Response.status(Response.Status.CREATED).entity(evse).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        domainService.createEvse(evse);
+        return Response.status(Response.Status.CREATED).entity(evse).build();
     }
 
     @PUT
-    @Path("{id}")
+    @Path("{id: [0-9]+}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateEvse(@PathParam("id") Long id, Evse evse) {
-        try {
-            domainService.updateEvse(id, evse);
-            return Response.ok(evse).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        domainService.updateEvse(id, evse);
+        return Response.ok(evse).build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getEvses() {
-        try {
-            return Response.ok(domainService.getEvses()).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        return Response.ok(domainService.getEvses()).build();
     }
 
     @GET
-    @Path("{id}")
+    @Path("{id: [0-9]+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getEvse(@PathParam("id") Long id) {
-        try {
-            Evse evse = domainService.getEvse(id);
-            if (evse != null) {
-                return Response.ok(evse).build();
-            }
-            return Response.status(Response.Status.NOT_FOUND).entity(id).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        return Response.ok(domainService.getEvse(id)).build();
     }
 
     @DELETE
-    @Path("{id}")
+    @Path("{id: [0-9]+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteEvse(@PathParam("id") Long id) {
-        try {
-            domainService.deleteEvse(id);
-            return Response.ok(id).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        domainService.deleteEvse(id);
+        return Response.ok(id).build();
     }
 
     public void setDomainService(DomainService domainService) {

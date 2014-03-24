@@ -18,6 +18,7 @@ package io.motown.chargingstationconfiguration.viewmodel.persistence.repositorie
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Manufacturer;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityTransaction;
 import java.util.List;
 
@@ -62,7 +63,11 @@ public class ManufacturerRepository {
     }
 
     public Manufacturer findOne(Long id) {
-        return entityManager.find(Manufacturer.class, id);
+        Manufacturer manufacturer = entityManager.find(Manufacturer.class, id);
+        if (manufacturer != null) {
+            return manufacturer;
+        }
+        throw new EntityNotFoundException(String.format("Unable to find manufacturer with id '%s'", id));
     }
 
     public void delete(Long id) {
@@ -82,7 +87,7 @@ public class ManufacturerRepository {
                 throw e;
             }
         } else {
-            throw new IllegalArgumentException(String.format("Unable to find manufacturer with id '%s'", id));
+            throw new EntityNotFoundException(String.format("Unable to find manufacturer with id '%s'", id));
         }
     }
 

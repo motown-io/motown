@@ -18,6 +18,7 @@ package io.motown.chargingstationconfiguration.viewmodel.persistence.repositorie
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityTransaction;
 import java.util.List;
 
@@ -69,7 +70,11 @@ public class ChargingStationTypeRepository {
     }
 
     public ChargingStationType findOne(Long id) {
-        return entityManager.find(ChargingStationType.class, id);
+        ChargingStationType chargingStationType = entityManager.find(ChargingStationType.class, id);
+        if (chargingStationType != null) {
+            return chargingStationType;
+        }
+        throw new EntityNotFoundException(String.format("Unable to find charging station type with id '%s'", id));
     }
 
     public void delete(Long id) {
@@ -89,7 +94,7 @@ public class ChargingStationTypeRepository {
                 throw e;
             }
         } else {
-            throw new IllegalArgumentException(String.format("Unable to find charging station type with id '%s'", id));
+            throw new EntityNotFoundException(String.format("Unable to find charging station type with id '%s'", id));
         }
     }
 

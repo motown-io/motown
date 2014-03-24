@@ -18,6 +18,7 @@ package io.motown.chargingstationconfiguration.viewmodel.persistence.repositorie
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityTransaction;
 import java.util.List;
 
@@ -62,7 +63,11 @@ public class ConnectorRepository {
     }
 
     public Connector findOne(Long id) {
-        return entityManager.find(Connector.class, id);
+        Connector connector = entityManager.find(Connector.class, id);
+        if (connector != null) {
+            return connector;
+        }
+        throw new EntityNotFoundException(String.format("Unable to find connector with id '%s'", id));
     }
 
     public void delete(Long id) {
@@ -82,7 +87,7 @@ public class ConnectorRepository {
                 throw e;
             }
         } else {
-            throw new IllegalArgumentException(String.format("Unable to find connector with id '%s'", id));
+            throw new EntityNotFoundException(String.format("Unable to find connector with id '%s'", id));
         }
     }
 

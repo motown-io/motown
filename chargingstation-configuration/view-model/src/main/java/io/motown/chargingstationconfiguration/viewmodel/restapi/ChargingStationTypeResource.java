@@ -23,7 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/chargingstationtypes")
-public class ChargingStationTypeResource {
+public final class ChargingStationTypeResource {
 
     private DomainService domainService;
 
@@ -31,62 +31,38 @@ public class ChargingStationTypeResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createChargingStationType(ChargingStationType chargingStationType) {
-        try {
-            domainService.createChargingStationType(chargingStationType);
-            return Response.status(Response.Status.CREATED).entity(chargingStationType).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        domainService.createChargingStationType(chargingStationType);
+        return Response.status(Response.Status.CREATED).entity(chargingStationType).build();
     }
 
     @PUT
-    @Path("{id}")
+    @Path("{id: [0-9]+}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateChargingStationType(@PathParam("id") Long id, ChargingStationType chargingStationType) {
-        try {
-            domainService.updateChargingStationType(id, chargingStationType);
-            return Response.ok(chargingStationType).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        domainService.updateChargingStationType(id, chargingStationType);
+        return Response.ok(chargingStationType).build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getChargingStationTypes() {
-        try {
-            return Response.ok(domainService.getChargingStationTypes()).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        return Response.ok(domainService.getChargingStationTypes()).build();
     }
 
     @GET
-    @Path("{id}")
+    @Path("{id: [0-9]+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getChargingStationType(@PathParam("id") Long id) {
-        try {
-            ChargingStationType chargingStationType = domainService.getChargingStationType(id);
-            if (chargingStationType != null) {
-                return Response.ok(chargingStationType).build();
-            }
-            return Response.status(Response.Status.NOT_FOUND).entity(id).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        return Response.ok(domainService.getChargingStationType(id)).build();
     }
 
     @DELETE
-    @Path("{id}")
+    @Path("{id: [0-9]+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteChargingStationType(@PathParam("id") Long id) {
-        try {
-            domainService.deleteChargingStationType(id);
-            return Response.ok(id).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        domainService.deleteChargingStationType(id);
+        return Response.ok(id).build();
     }
 
     public void setDomainService(DomainService domainService) {

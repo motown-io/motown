@@ -23,7 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/manufacturers")
-public class ManufacturerResource {
+public final class ManufacturerResource {
 
     private DomainService domainService;
 
@@ -31,62 +31,38 @@ public class ManufacturerResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createManufacturer(Manufacturer manufacturer) {
-        try {
-            domainService.createManufacturer(manufacturer);
-            return Response.status(Response.Status.CREATED).entity(manufacturer).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        domainService.createManufacturer(manufacturer);
+        return Response.status(Response.Status.CREATED).entity(manufacturer).build();
     }
 
     @PUT
-    @Path("{id}")
+    @Path("{id: [0-9]+}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateManufacturer(@PathParam("id") Long id, Manufacturer manufacturer) {
-        try {
-            domainService.updateManufacturer(id, manufacturer);
-            return Response.ok(manufacturer).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        domainService.updateManufacturer(id, manufacturer);
+        return Response.ok(manufacturer).build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getManufacturers() {
-        try {
-            return Response.ok(domainService.getManufacturers()).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        return Response.ok(domainService.getManufacturers()).build();
     }
 
     @GET
-    @Path("{id}")
+    @Path("{id: [0-9]+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getManufacturer(@PathParam("id") Long id) {
-        try {
-            Manufacturer manufacturer = domainService.getManufacturer(id);
-            if (manufacturer != null) {
-                return Response.ok(manufacturer).build();
-            }
-            return Response.status(Response.Status.NOT_FOUND).entity(id).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        return Response.ok(domainService.getManufacturer(id)).build();
     }
 
     @DELETE
-    @Path("{id}")
+    @Path("{id: [0-9]+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteManufacturer(@PathParam("id") Long id) {
-        try {
-            domainService.deleteManufacturer(id);
-            return Response.ok(id).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        domainService.deleteManufacturer(id);
+        return Response.ok(id).build();
     }
 
     public void setDomainService(DomainService domainService) {

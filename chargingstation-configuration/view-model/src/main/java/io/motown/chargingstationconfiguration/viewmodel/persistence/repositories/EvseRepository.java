@@ -18,6 +18,7 @@ package io.motown.chargingstationconfiguration.viewmodel.persistence.repositorie
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityTransaction;
 import java.util.List;
 
@@ -62,7 +63,11 @@ public class EvseRepository {
     }
 
     public Evse findOne(Long id) {
-        return entityManager.find(Evse.class, id);
+        Evse evse = entityManager.find(Evse.class, id);
+        if (evse != null) {
+            return evse;
+        }
+        throw new EntityNotFoundException(String.format("Unable to find evse with id '%s'", id));
     }
 
     public void delete(Long id) {
@@ -82,7 +87,7 @@ public class EvseRepository {
                 throw e;
             }
         } else {
-            throw new IllegalArgumentException(String.format("Unable to find evse with id '%s'", id));
+            throw new EntityNotFoundException(String.format("Unable to find evse with id '%s'", id));
         }
     }
 

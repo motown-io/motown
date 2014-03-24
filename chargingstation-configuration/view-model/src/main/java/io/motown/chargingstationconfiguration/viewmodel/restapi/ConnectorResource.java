@@ -23,7 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/connectors")
-public class ConnectorResource {
+public final class ConnectorResource {
 
     private DomainService domainService;
 
@@ -31,62 +31,38 @@ public class ConnectorResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createConnector(Connector connector) {
-        try {
-            domainService.createConnector(connector);
-            return Response.status(Response.Status.CREATED).entity(connector).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        domainService.createConnector(connector);
+        return Response.status(Response.Status.CREATED).entity(connector).build();
     }
 
     @PUT
-    @Path("{id}")
+    @Path("{id: [0-9]+}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateConnector(@PathParam("id") Long id, Connector connector) {
-        try {
-            domainService.updateConnector(id, connector);
-            return Response.ok(connector).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        domainService.updateConnector(id, connector);
+        return Response.ok(connector).build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getConnectors() {
-        try {
-            return Response.ok(domainService.getConnectors()).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        return Response.ok(domainService.getConnectors()).build();
     }
 
     @GET
-    @Path("{id}")
+    @Path("{id: [0-9]+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getConnector(@PathParam("id") Long id) {
-        try {
-            Connector connector = domainService.getConnector(id);
-            if (connector != null) {
-                return Response.ok(connector).build();
-            }
-            return Response.status(Response.Status.NOT_FOUND).entity(id).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        return Response.ok(domainService.getConnector(id)).build();
     }
 
     @DELETE
-    @Path("{id}")
+    @Path("{id: [0-9]+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteConnector(@PathParam("id") Long id) {
-        try {
-            domainService.deleteConnector(id);
-            return Response.ok(id).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
-        }
+        domainService.deleteConnector(id);
+        return Response.ok(id).build();
     }
 
     public void setDomainService(DomainService domainService) {
