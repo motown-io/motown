@@ -32,7 +32,7 @@
     <packaging>war</packaging>
 
     <properties>
-        <jetty.port>8088</jetty.port>
+        <jetty.port>8089</jetty.port>
         <jetty.scanIntervalSeconds>10</jetty.scanIntervalSeconds>
     </properties>
 
