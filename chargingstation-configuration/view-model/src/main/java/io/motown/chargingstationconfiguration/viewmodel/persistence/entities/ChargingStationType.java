@@ -15,15 +15,14 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.persistence.entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(uniqueConstraints=
@@ -35,7 +34,6 @@ public class ChargingStationType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne
     @JoinColumn(name="manufacturerId")
     private Manufacturer manufacturer;

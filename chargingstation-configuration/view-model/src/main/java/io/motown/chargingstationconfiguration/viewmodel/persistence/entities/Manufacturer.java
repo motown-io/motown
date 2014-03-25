@@ -15,17 +15,13 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.persistence.entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import javax.persistence.*;
-import java.util.Set;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 public class Manufacturer {
 
@@ -39,15 +35,6 @@ public class Manufacturer {
      */
     @Column(unique=true)
     private String code;
-
-    /**
-     * Charging station types connected to this manufacturer.
-     */
-    @OneToMany(mappedBy="manufacturer",
-               cascade = CascadeType.ALL,
-               targetEntity = ChargingStationType.class,
-                fetch = FetchType.EAGER)
-    private Set<ChargingStationType> chargingStationTypes;
 
     public Long getId() {
         return id;
@@ -63,14 +50,6 @@ public class Manufacturer {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public Set<ChargingStationType> getChargingStationTypes() {
-        return chargingStationTypes;
-    }
-
-    public void setChargingStationTypes(Set<ChargingStationType> chargingStationTypes) {
-        this.chargingStationTypes = chargingStationTypes;
     }
 
 }

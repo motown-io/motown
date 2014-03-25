@@ -40,7 +40,7 @@
         <load-on-startup>1</load-on-startup>
         <init-param>
             <param-name>com.sun.jersey.config.property.packages</param-name>
-            <param-value>com.fasterxml.jackson.jaxrs.json;io.motown.chargingstationconfiguration.viewmodel.restapi</param-value>
+            <param-value>org.codehaus.jackson.jaxrs;io.motown.chargingstationconfiguration.viewmodel.restapi</param-value>
         </init-param>
         <init-param>
             <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
