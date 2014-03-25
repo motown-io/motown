@@ -16,11 +16,9 @@
 package io.motown.ocpp.websocketjson;
 
 import com.google.gson.Gson;
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.CorrelationToken;
-import io.motown.domain.api.chargingstation.EvseId;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.request.chargingstation.UnlockConnectorRequest;
+import io.motown.ocpp.websocketjson.request.chargingstation.*;
 import io.motown.ocpp.websocketjson.request.handler.*;
 import io.motown.ocpp.websocketjson.response.handler.ResponseHandler;
 import io.motown.ocpp.websocketjson.response.handler.UnlockConnectorResponseHandler;
@@ -95,6 +93,21 @@ public class OcppJsonService {
         //TODO implement
     }
 
+    public void startTransaction(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken identifyingToken, CorrelationToken statusCorrelationToken) {
+        RemoteStartTransactionRequest remoteStartTransactionRequest = new RemoteStartTransactionRequest(evseId.getNumberedId(), identifyingToken.getToken());
+
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "RemoteStartTransaction", remoteStartTransactionRequest);
+        sendWampMessage(wampMessage, chargingStationId);
+    }
+
+    public void stopTransaction(ChargingStationId chargingStationId, TransactionId transactionId, CorrelationToken statusCorrelationToken) {
+        NumberedTransactionId transactionIdNumber = (NumberedTransactionId) transactionId;
+        RemoteStopTransactionRequest remoteStopTransactionRequest = new RemoteStopTransactionRequest(transactionIdNumber.getNumber());
+
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "RemoteStopTransaction", remoteStopTransactionRequest);
+        sendWampMessage(wampMessage, chargingStationId);
+    }
+
     public void unlockEvse(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken statusCorrelationToken) {
         UnlockConnectorRequest unlockConnectorRequest = new UnlockConnectorRequest(evseId.getNumberedId());
 
@@ -102,6 +115,10 @@ public class OcppJsonService {
 
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "UnlockConnector", unlockConnectorRequest);
 
+        sendWampMessage(wampMessage, chargingStationId);
+    }
+
+    private void sendWampMessage(WampMessage wampMessage, ChargingStationId chargingStationId) {
         WebSocket webSocket = sockets.get(chargingStationId.getId());
         if (webSocket != null) {
             try {
