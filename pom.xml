@@ -88,6 +88,7 @@
         <atmosphere.version>2.1.0</atmosphere.version>
         <json-schema-validator.version>2.1.7</json-schema-validator.version>
         <jersey.version>1.18.1</jersey.version>
+        <jackson.version>2.3.2</jackson.version>
     </properties>
 
     <dependencyManagement>
@@ -361,6 +362,11 @@
                 <groupId>com.sun.jersey.jersey-test-framework</groupId>
                 <artifactId>jersey-test-framework-grizzly2</artifactId>
                 <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                <artifactId>jackson-jaxrs-json-provider</artifactId>
+                <version>${jackson.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
