@@ -35,7 +35,7 @@ public final class ConnectorResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response createConnector(Connector connector) {
         domainService.createConnector(connector);
         URI uri = uriInfo.getAbsolutePathBuilder().path(connector.getId().toString()).build();
@@ -45,28 +45,28 @@ public final class ConnectorResource {
     @PUT
     @Path("{id: [0-9]+}")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response updateConnector(@PathParam("id") Long id, Connector connector) {
         domainService.updateConnector(id, connector);
         return Response.ok(connector).build();
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response getConnectors() {
         return Response.ok(domainService.getConnectors()).build();
     }
 
     @GET
     @Path("{id: [0-9]+}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response getConnector(@PathParam("id") Long id) {
         return Response.ok(domainService.getConnector(id)).build();
     }
 
     @DELETE
     @Path("{id: [0-9]+}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response deleteConnector(@PathParam("id") Long id) {
         domainService.deleteConnector(id);
         return Response.ok(id).build();

@@ -35,7 +35,7 @@ public final class ChargingStationTypeResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response createChargingStationType(ChargingStationType chargingStationType) {
         domainService.createChargingStationType(chargingStationType);
         URI uri = uriInfo.getAbsolutePathBuilder().path(chargingStationType.getId().toString()).build();
@@ -45,28 +45,28 @@ public final class ChargingStationTypeResource {
     @PUT
     @Path("{id: [0-9]+}")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response updateChargingStationType(@PathParam("id") Long id, ChargingStationType chargingStationType) {
         domainService.updateChargingStationType(id, chargingStationType);
         return Response.ok(chargingStationType).build();
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response getChargingStationTypes() {
         return Response.ok(domainService.getChargingStationTypes()).build();
     }
 
     @GET
     @Path("{id: [0-9]+}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response getChargingStationType(@PathParam("id") Long id) {
         return Response.ok(domainService.getChargingStationType(id)).build();
     }
 
     @DELETE
     @Path("{id: [0-9]+}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response deleteChargingStationType(@PathParam("id") Long id) {
         domainService.deleteChargingStationType(id);
         return Response.ok(id).build();
