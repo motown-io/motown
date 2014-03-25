@@ -93,6 +93,20 @@ public class OcppJsonService {
         //TODO implement
     }
 
+    public void softReset(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken) {
+        ResetRequest softResetRequest = new ResetRequest(ResetType.SOFT.value());
+
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "Reset", softResetRequest);
+        sendWampMessage(wampMessage, chargingStationId);
+    }
+
+    public void hardReset(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken) {
+        ResetRequest hardResetRequest = new ResetRequest(ResetType.HARD.value());
+
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "Reset", hardResetRequest);
+        sendWampMessage(wampMessage, chargingStationId);
+    }
+
     public void startTransaction(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken identifyingToken, CorrelationToken statusCorrelationToken) {
         RemoteStartTransactionRequest remoteStartTransactionRequest = new RemoteStartTransactionRequest(evseId.getNumberedId(), identifyingToken.getToken());
 

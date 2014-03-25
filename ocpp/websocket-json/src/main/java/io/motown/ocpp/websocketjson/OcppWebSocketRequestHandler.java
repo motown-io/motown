@@ -44,11 +44,13 @@ public class OcppWebSocketRequestHandler implements OcppRequestHandler {
     @Override
     public void handle(SoftResetChargingStationRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("SoftResetChargingStationRequestedEvent");
+        ocppJsonService.softReset(event.getChargingStationId(), statusCorrelationToken);
     }
 
     @Override
     public void handle(HardResetChargingStationRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("HardResetChargingStationRequestedEvent");
+        ocppJsonService.hardReset(event.getChargingStationId(), statusCorrelationToken);
     }
 
     @Override
