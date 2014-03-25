@@ -29,9 +29,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.persistence.EntityManager;
 import java.util.Set;
 
-import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.deleteFromDatabase;
-import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.getManufacturerWithConfiguration;
-import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.insertIntoDatabase;
+import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.*;
 import static org.junit.Assert.assertEquals;
 
 @ContextConfiguration("classpath:chargingstation-configuration-view-model-test-context.xml")
@@ -61,34 +59,11 @@ public class DomainServiceTest {
     }
 
     @Test
-    public void testGetEvsesForExistingManufacturerAndModel() {
-        Manufacturer manufacturer = getManufacturerWithConfiguration(VENDOR, MODEL);
-        insertIntoDatabase(entityManager, manufacturer);
-
-        Set<Evse> evses = domainService.getEvses(VENDOR, MODEL);
-        assertEquals(manufacturer.getChargingStationTypes().iterator().next().getEvses().size(), evses.size());
-
-        // validate consistent results
-        evses = domainService.getEvses(VENDOR, MODEL);
-        assertEquals(manufacturer.getChargingStationTypes().iterator().next().getEvses().size(), evses.size());
-    }
-
-    @Test
     public void testGetEvsesForNonExistingManufacturerAndModel() {
         Manufacturer manufacturer = getManufacturerWithConfiguration(VENDOR, MODEL);
         insertIntoDatabase(entityManager, manufacturer);
 
         Set<Evse> evses = domainService.getEvses(UNKNOWN_VENDOR, UNKNOWN_MODEL);
-
-        assertEquals(0, evses.size());
-    }
-
-    @Test
-    public void testGetEvsesForExistingManufacturerAndNonExistingModel() {
-        Manufacturer manufacturer = getManufacturerWithConfiguration(VENDOR, MODEL);
-        insertIntoDatabase(entityManager, manufacturer);
-
-        Set<Evse> evses = domainService.getEvses(VENDOR, UNKNOWN_MODEL);
 
         assertEquals(0, evses.size());
     }

@@ -77,7 +77,6 @@ public final class TestUtils {
 
     public static Manufacturer getManufacturerWithConfiguration(String vendor, String model) {
         Manufacturer manufacturer = getManufacturer(vendor);
-        manufacturer.setChargingStationTypes(getChargingStationTypes(manufacturer, model));
 
         return manufacturer;
     }
