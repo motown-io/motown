@@ -17,95 +17,115 @@ package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
 import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Manufacturer;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ManufacturerRepository;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceException;
 import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ManufacturerResourceTest {
-    private static final int OK = 200;
-    private static final int CREATED = 201;
-    private static final int BAD_REQUEST = 400;
-    private static final int NOT_FOUND = 404;
-
     private ManufacturerResource resource;
 
-    private DomainService service;
+    @Mock
+    private ManufacturerRepository repository;
 
     @Before
     public void setUp() {
         resource = new ManufacturerResource();
-        service = mock(DomainService.class);
+        DomainService service = new DomainService();
 
+        service.setManufacturerRepository(repository);
         resource.setDomainService(service);
     }
 
     @Test
     public void testCreateManufacturer() {
-        Response created = resource.createManufacturer(any(Manufacturer.class));
-        assertEquals(CREATED, created.getStatus());
+        Response response = resource.createManufacturer(any(Manufacturer.class));
+        verify(repository).create(any(Manufacturer.class));
 
-        doThrow(mock(RuntimeException.class)).when(service).createManufacturer(any(Manufacturer.class));
-        Response error = resource.createManufacturer(any(Manufacturer.class));
-        assertEquals(BAD_REQUEST, error.getStatus());
+        assertNotNull(response);
+        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+    }
 
-        verify(service, times(2)).createManufacturer(any(Manufacturer.class));
+    @Test(expected = RuntimeException.class)
+    public void testCreateManufacturerThrowsException() {
+        doThrow(mock(PersistenceException.class)).when(repository).create(any(Manufacturer.class));
+        resource.createManufacturer(any(Manufacturer.class));
     }
 
     @Test
     public void testUpdateManufacturer() {
-        Response ok = resource.updateManufacturer(anyLong(), any(Manufacturer.class));
-        assertEquals(OK, ok.getStatus());
+        Manufacturer manufacturer = mock(Manufacturer.class);
+        when(manufacturer.getId()).thenReturn(1L);
+        Response response = resource.updateManufacturer(1L, manufacturer);
+        verify(repository).update(manufacturer);
 
-        doThrow(mock(RuntimeException.class)).when(service).updateManufacturer(anyLong(), any(Manufacturer.class));
-        Response error = resource.updateManufacturer(anyLong(), any(Manufacturer.class));
-        assertEquals(BAD_REQUEST, error.getStatus());
+        assertNotNull(response);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
 
-        verify(service, times(2)).updateManufacturer(anyLong(), any(Manufacturer.class));
+    @Test(expected = RuntimeException.class)
+    public void testUpdateManufacturerThrowsException() {
+        Manufacturer manufacturer = mock(Manufacturer.class);
+        when(manufacturer.getId()).thenReturn(1L);
+        doThrow(mock(PersistenceException.class)).when(repository).update(manufacturer);
+        resource.updateManufacturer(1L, manufacturer);
     }
 
     @Test
     public void testGetManufacturers() {
-        Response ok = resource.getManufacturers();
-        assertEquals(OK, ok.getStatus());
+        Response response = resource.getManufacturers();
+        verify(repository).findAll();
 
-        when(service.getManufacturers()).thenThrow(mock(RuntimeException.class));
-        Response error = resource.getManufacturers();
-        assertEquals(BAD_REQUEST, error.getStatus());
+        assertNotNull(response);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
 
-        verify(service, times(2)).getManufacturers();
+    @Test(expected = RuntimeException.class)
+    public void testGetManufacturersThrowsException() {
+        when(repository.findAll()).thenThrow(mock(PersistenceException.class));
+        resource.getManufacturers();
     }
 
     @Test
     public void testGetManufacturer() {
-        when(service.getManufacturer(anyLong())).thenReturn(mock(Manufacturer.class));
-        Response ok = resource.getManufacturer(anyLong());
-        assertEquals(OK, ok.getStatus());
+        Response response = resource.getManufacturer(anyLong());
+        verify(repository).findOne(anyLong());
 
-        when(service.getManufacturer(anyLong())).thenReturn(null);
-        Response notFound = resource.getManufacturer(anyLong());
-        assertEquals(NOT_FOUND, notFound.getStatus());
+        assertNotNull(response);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
 
-        when(service.getManufacturer(anyLong())).thenThrow(mock(RuntimeException.class));
-        Response error = resource.getManufacturer(anyLong());
-        assertEquals(BAD_REQUEST, error.getStatus());
-
-        verify(service, times(3)).getManufacturer(anyLong());
+    @Test(expected = RuntimeException.class)
+    public void testGetManufacturerThrowsException() {
+        when(repository.findOne(anyLong())).thenThrow(mock(EntityNotFoundException.class));
+        resource.getManufacturer(anyLong());
     }
 
     @Test
     public void testDeleteManufacturer() {
-        Response ok = resource.deleteManufacturer(anyLong());
-        assertEquals(OK, ok.getStatus());
+        Response response = resource.deleteManufacturer(anyLong());
+        verify(repository).delete(anyLong());
 
-        doThrow(mock(RuntimeException.class)).when(service).deleteManufacturer(anyLong());
-        Response error = resource.deleteManufacturer(anyLong());
-        assertEquals(BAD_REQUEST, error.getStatus());
-
-        verify(service, times(2)).deleteManufacturer(anyLong());
+        assertNotNull(response);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
+
+    @Test(expected = RuntimeException.class)
+    public void testDeleteManufacturerThrowsException() {
+        doThrow(mock(PersistenceException.class)).when(repository).delete(anyLong());
+        resource.deleteManufacturer(anyLong());
+    }
+
 }

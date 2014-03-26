@@ -17,95 +17,115 @@ package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
 import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceException;
 import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ChargingStationTypeResourceTest {
-    private static final int OK = 200;
-    private static final int CREATED = 201;
-    private static final int BAD_REQUEST = 400;
-    private static final int NOT_FOUND = 404;
-
     private ChargingStationTypeResource resource;
 
-    private DomainService service;
+    @Mock
+    private ChargingStationTypeRepository repository;
 
     @Before
     public void setUp() {
         resource = new ChargingStationTypeResource();
-        service = mock(DomainService.class);
+        DomainService service = new DomainService();
 
+        service.setChargingStationTypeRepository(repository);
         resource.setDomainService(service);
     }
 
     @Test
     public void testCreateChargingStationType() {
-        Response created = resource.createChargingStationType(any(ChargingStationType.class));
-        assertEquals(CREATED, created.getStatus());
+        Response response = resource.createChargingStationType(any(ChargingStationType.class));
+        verify(repository).create(any(ChargingStationType.class));
 
-        doThrow(mock(RuntimeException.class)).when(service).createChargingStationType(any(ChargingStationType.class));
-        Response error = resource.createChargingStationType(any(ChargingStationType.class));
-        assertEquals(BAD_REQUEST, error.getStatus());
+        assertNotNull(response);
+        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+    }
 
-        verify(service, times(2)).createChargingStationType(any(ChargingStationType.class));
+    @Test(expected = RuntimeException.class)
+    public void testCreateChargingStationTypeThrowsException() {
+        doThrow(mock(PersistenceException.class)).when(repository).create(any(ChargingStationType.class));
+        resource.createChargingStationType(any(ChargingStationType.class));
     }
 
     @Test
     public void testUpdateChargingStationType() {
-        Response ok = resource.updateChargingStationType(anyLong(), any(ChargingStationType.class));
-        assertEquals(OK, ok.getStatus());
+        ChargingStationType chargingStationType = mock(ChargingStationType.class);
+        when(chargingStationType.getId()).thenReturn(1L);
+        Response response = resource.updateChargingStationType(1L, chargingStationType);
+        verify(repository).update(chargingStationType);
 
-        doThrow(mock(RuntimeException.class)).when(service).updateChargingStationType(anyLong(), any(ChargingStationType.class));
-        Response error = resource.updateChargingStationType(anyLong(), any(ChargingStationType.class));
-        assertEquals(BAD_REQUEST, error.getStatus());
+        assertNotNull(response);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
 
-        verify(service, times(2)).updateChargingStationType(anyLong(), any(ChargingStationType.class));
+    @Test(expected = RuntimeException.class)
+    public void testUpdateChargingStationTypeThrowsException() {
+        ChargingStationType chargingStationType = mock(ChargingStationType.class);
+        when(chargingStationType.getId()).thenReturn(1L);
+        doThrow(mock(PersistenceException.class)).when(repository).update(chargingStationType);
+        resource.updateChargingStationType(1L, chargingStationType);
     }
 
     @Test
     public void testGetChargingStationTypes() {
-        Response ok = resource.getChargingStationTypes();
-        assertEquals(OK, ok.getStatus());
+        Response response = resource.getChargingStationTypes();
+        verify(repository).findAll();
 
-        when(service.getChargingStationTypes()).thenThrow(mock(RuntimeException.class));
-        Response error = resource.getChargingStationTypes();
-        assertEquals(BAD_REQUEST, error.getStatus());
+        assertNotNull(response);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
 
-        verify(service, times(2)).getChargingStationTypes();
+    @Test(expected = RuntimeException.class)
+    public void testGetChargingStationTypesThrowsException() {
+        when(repository.findAll()).thenThrow(mock(PersistenceException.class));
+        resource.getChargingStationTypes();
     }
 
     @Test
     public void testGetChargingStationType() {
-        when(service.getChargingStationType(anyLong())).thenReturn(mock(ChargingStationType.class));
-        Response ok = resource.getChargingStationType(anyLong());
-        assertEquals(OK, ok.getStatus());
+        Response response = resource.getChargingStationType(anyLong());
+        verify(repository).findOne(anyLong());
 
-        when(service.getChargingStationType(anyLong())).thenReturn(null);
-        Response notFound = resource.getChargingStationType(anyLong());
-        assertEquals(NOT_FOUND, notFound.getStatus());
+        assertNotNull(response);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
 
-        when(service.getChargingStationType(anyLong())).thenThrow(mock(RuntimeException.class));
-        Response error = resource.getChargingStationType(anyLong());
-        assertEquals(BAD_REQUEST, error.getStatus());
-
-        verify(service, times(3)).getChargingStationType(anyLong());
+    @Test(expected = RuntimeException.class)
+    public void testGetChargingStationTypeThrowsException() {
+        when(repository.findOne(anyLong())).thenThrow(mock(EntityNotFoundException.class));
+        resource.getChargingStationType(anyLong());
     }
 
     @Test
     public void testDeleteChargingStationType() {
-        Response ok = resource.deleteChargingStationType(anyLong());
-        assertEquals(OK, ok.getStatus());
+        Response response = resource.deleteChargingStationType(anyLong());
+        verify(repository).delete(anyLong());
 
-        doThrow(mock(RuntimeException.class)).when(service).deleteChargingStationType(anyLong());
-        Response error = resource.deleteChargingStationType(anyLong());
-        assertEquals(BAD_REQUEST, error.getStatus());
-
-        verify(service, times(2)).deleteChargingStationType(anyLong());
+        assertNotNull(response);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
+
+    @Test(expected = RuntimeException.class)
+    public void testDeleteChargingStationTypeThrowsException() {
+        doThrow(mock(PersistenceException.class)).when(repository).delete(anyLong());
+        resource.deleteChargingStationType(anyLong());
+    }
+
 }

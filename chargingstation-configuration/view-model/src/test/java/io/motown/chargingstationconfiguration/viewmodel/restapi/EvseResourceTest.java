@@ -17,95 +17,115 @@ package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
 import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.EvseRepository;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceException;
 import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class EvseResourceTest {
-    private static final int OK = 200;
-    private static final int CREATED = 201;
-    private static final int BAD_REQUEST = 400;
-    private static final int NOT_FOUND = 404;
-
     private EvseResource resource;
 
-    private DomainService service;
+    @Mock
+    private EvseRepository repository;
 
     @Before
     public void setUp() {
         resource = new EvseResource();
-        service = mock(DomainService.class);
+        DomainService service = new DomainService();
 
+        service.setEvseRepository(repository);
         resource.setDomainService(service);
     }
 
     @Test
     public void testCreateEvse() {
-        Response created = resource.createEvse(any(Evse.class));
-        assertEquals(CREATED, created.getStatus());
+        Response response = resource.createEvse(any(Evse.class));
+        verify(repository).create(any(Evse.class));
 
-        doThrow(mock(RuntimeException.class)).when(service).createEvse(any(Evse.class));
-        Response error = resource.createEvse(any(Evse.class));
-        assertEquals(BAD_REQUEST, error.getStatus());
+        assertNotNull(response);
+        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+    }
 
-        verify(service, times(2)).createEvse(any(Evse.class));
+    @Test(expected = RuntimeException.class)
+    public void testCreateEvseThrowsException() {
+        doThrow(mock(PersistenceException.class)).when(repository).create(any(Evse.class));
+        resource.createEvse(any(Evse.class));
     }
 
     @Test
     public void testUpdateEvse() {
-        Response ok = resource.updateEvse(anyLong(), any(Evse.class));
-        assertEquals(OK, ok.getStatus());
+        Evse evse = mock(Evse.class);
+        when(evse.getId()).thenReturn(1L);
+        Response response = resource.updateEvse(1L, evse);
+        verify(repository).update(evse);
 
-        doThrow(mock(RuntimeException.class)).when(service).updateEvse(anyLong(), any(Evse.class));
-        Response error = resource.updateEvse(anyLong(), any(Evse.class));
-        assertEquals(BAD_REQUEST, error.getStatus());
+        assertNotNull(response);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
 
-        verify(service, times(2)).updateEvse(anyLong(), any(Evse.class));
+    @Test(expected = RuntimeException.class)
+    public void testUpdateEvseThrowsException() {
+        Evse evse = mock(Evse.class);
+        when(evse.getId()).thenReturn(1L);
+        doThrow(mock(PersistenceException.class)).when(repository).update(evse);
+        resource.updateEvse(1L, evse);
     }
 
     @Test
     public void testGetEvses() {
-        Response ok = resource.getEvses();
-        assertEquals(OK, ok.getStatus());
+        Response response = resource.getEvses();
+        verify(repository).findAll();
 
-        when(service.getEvses()).thenThrow(mock(RuntimeException.class));
-        Response error = resource.getEvses();
-        assertEquals(BAD_REQUEST, error.getStatus());
+        assertNotNull(response);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
 
-        verify(service, times(2)).getEvses();
+    @Test(expected = RuntimeException.class)
+    public void testGetEvsesThrowsException() {
+        when(repository.findAll()).thenThrow(mock(PersistenceException.class));
+        resource.getEvses();
     }
 
     @Test
     public void testGetEvse() {
-        when(service.getEvse(anyLong())).thenReturn(mock(Evse.class));
-        Response ok = resource.getEvse(anyLong());
-        assertEquals(OK, ok.getStatus());
+        Response response = resource.getEvse(anyLong());
+        verify(repository).findOne(anyLong());
 
-        when(service.getEvse(anyLong())).thenReturn(null);
-        Response notFound = resource.getEvse(anyLong());
-        assertEquals(NOT_FOUND, notFound.getStatus());
+        assertNotNull(response);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
 
-        when(service.getEvse(anyLong())).thenThrow(mock(RuntimeException.class));
-        Response error = resource.getEvse(anyLong());
-        assertEquals(BAD_REQUEST, error.getStatus());
-
-        verify(service, times(3)).getEvse(anyLong());
+    @Test(expected = RuntimeException.class)
+    public void testGetEvseThrowsException() {
+        when(repository.findOne(anyLong())).thenThrow(mock(EntityNotFoundException.class));
+        resource.getEvse(anyLong());
     }
 
     @Test
     public void testDeleteEvse() {
-        Response ok = resource.deleteEvse(anyLong());
-        assertEquals(OK, ok.getStatus());
+        Response response = resource.deleteEvse(anyLong());
+        verify(repository).delete(anyLong());
 
-        doThrow(mock(RuntimeException.class)).when(service).deleteEvse(anyLong());
-        Response error = resource.deleteEvse(anyLong());
-        assertEquals(BAD_REQUEST, error.getStatus());
-
-        verify(service, times(2)).deleteEvse(anyLong());
+        assertNotNull(response);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
+
+    @Test(expected = RuntimeException.class)
+    public void testDeleteEvseThrowsException() {
+        doThrow(mock(PersistenceException.class)).when(repository).delete(anyLong());
+        resource.deleteEvse(anyLong());
+    }
+
 }

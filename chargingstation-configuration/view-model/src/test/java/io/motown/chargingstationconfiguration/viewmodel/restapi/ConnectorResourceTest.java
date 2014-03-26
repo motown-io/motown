@@ -17,95 +17,115 @@ package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
 import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ConnectorRepository;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceException;
 import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ConnectorResourceTest {
-    private static final int OK = 200;
-    private static final int CREATED = 201;
-    private static final int BAD_REQUEST = 400;
-    private static final int NOT_FOUND = 404;
-
     private ConnectorResource resource;
 
-    private DomainService service;
+    @Mock
+    private ConnectorRepository repository;
 
     @Before
     public void setUp() {
         resource = new ConnectorResource();
-        service = mock(DomainService.class);
+        DomainService service = new DomainService();
 
+        service.setConnectorRepository(repository);
         resource.setDomainService(service);
     }
 
     @Test
     public void testCreateConnector() {
-        Response created = resource.createConnector(any(Connector.class));
-        assertEquals(CREATED, created.getStatus());
+        Response response = resource.createConnector(any(Connector.class));
+        verify(repository).create(any(Connector.class));
 
-        doThrow(mock(RuntimeException.class)).when(service).createConnector(any(Connector.class));
-        Response error = resource.createConnector(any(Connector.class));
-        assertEquals(BAD_REQUEST, error.getStatus());
+        assertNotNull(response);
+        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+    }
 
-        verify(service, times(2)).createConnector(any(Connector.class));
+    @Test(expected = RuntimeException.class)
+    public void testCreateConnectorThrowsException() {
+        doThrow(mock(PersistenceException.class)).when(repository).create(any(Connector.class));
+        resource.createConnector(any(Connector.class));
     }
 
     @Test
     public void testUpdateConnector() {
-        Response ok = resource.updateConnector(anyLong(), any(Connector.class));
-        assertEquals(OK, ok.getStatus());
+        Connector connector = mock(Connector.class);
+        when(connector.getId()).thenReturn(1L);
+        Response response = resource.updateConnector(1L, connector);
+        verify(repository).update(connector);
 
-        doThrow(mock(RuntimeException.class)).when(service).updateConnector(anyLong(), any(Connector.class));
-        Response error = resource.updateConnector(anyLong(), any(Connector.class));
-        assertEquals(BAD_REQUEST, error.getStatus());
+        assertNotNull(response);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
 
-        verify(service, times(2)).updateConnector(anyLong(), any(Connector.class));
+    @Test(expected = RuntimeException.class)
+    public void testUpdateConnectorThrowsException() {
+        Connector connector = mock(Connector.class);
+        when(connector.getId()).thenReturn(1L);
+        doThrow(mock(PersistenceException.class)).when(repository).update(connector);
+        resource.updateConnector(1L, connector);
     }
 
     @Test
     public void testGetConnectors() {
-        Response ok = resource.getConnectors();
-        assertEquals(OK, ok.getStatus());
+        Response response = resource.getConnectors();
+        verify(repository).findAll();
 
-        when(service.getConnectors()).thenThrow(mock(RuntimeException.class));
-        Response error = resource.getConnectors();
-        assertEquals(BAD_REQUEST, error.getStatus());
+        assertNotNull(response);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
 
-        verify(service, times(2)).getConnectors();
+    @Test(expected = RuntimeException.class)
+    public void testGetConnectorsThrowsException() {
+        when(repository.findAll()).thenThrow(mock(PersistenceException.class));
+        resource.getConnectors();
     }
 
     @Test
     public void testGetConnector() {
-        when(service.getConnector(anyLong())).thenReturn(mock(Connector.class));
-        Response ok = resource.getConnector(anyLong());
-        assertEquals(OK, ok.getStatus());
+        Response response = resource.getConnector(anyLong());
+        verify(repository).findOne(anyLong());
 
-        when(service.getConnector(anyLong())).thenReturn(null);
-        Response notFound = resource.getConnector(anyLong());
-        assertEquals(NOT_FOUND, notFound.getStatus());
+        assertNotNull(response);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
 
-        when(service.getConnector(anyLong())).thenThrow(mock(RuntimeException.class));
-        Response error = resource.getConnector(anyLong());
-        assertEquals(BAD_REQUEST, error.getStatus());
-
-        verify(service, times(3)).getConnector(anyLong());
+    @Test(expected = RuntimeException.class)
+    public void testGetConnectorThrowsException() {
+        when(repository.findOne(anyLong())).thenThrow(mock(EntityNotFoundException.class));
+        resource.getConnector(anyLong());
     }
 
     @Test
     public void testDeleteConnector() {
-        Response ok = resource.deleteConnector(anyLong());
-        assertEquals(OK, ok.getStatus());
+        Response response = resource.deleteConnector(anyLong());
+        verify(repository).delete(anyLong());
 
-        doThrow(mock(RuntimeException.class)).when(service).deleteConnector(anyLong());
-        Response error = resource.deleteConnector(anyLong());
-        assertEquals(BAD_REQUEST, error.getStatus());
-
-        verify(service, times(2)).deleteConnector(anyLong());
+        assertNotNull(response);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
+
+    @Test(expected = RuntimeException.class)
+    public void testDeleteConnectorThrowsException() {
+        doThrow(mock(PersistenceException.class)).when(repository).delete(anyLong());
+        resource.deleteConnector(anyLong());
+    }
+
 }
