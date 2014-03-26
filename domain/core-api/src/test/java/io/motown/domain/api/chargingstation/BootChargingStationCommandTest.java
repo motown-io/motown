@@ -25,22 +25,22 @@ public class BootChargingStationCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingChargingStationWithChargingStationIdNull() {
-        new BootChargingStationCommand(null, PROTOCOL);
+        new BootChargingStationCommand(null, PROTOCOL, IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingChargingStationWithChargingStationIdNullAndAttributes() {
-        new BootChargingStationCommand(null, PROTOCOL, new HashMap<String, String>());
+        new BootChargingStationCommand(null, PROTOCOL, new HashMap<String, String>(), IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingChargingStationWithChargingStationIdAndAttributesNull() {
-        new BootChargingStationCommand(CHARGING_STATION_ID, null);
+        new BootChargingStationCommand(CHARGING_STATION_ID, null, IDENTITY_CONTEXT);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedOperationExceptionThrownWhenModifyingAttributes() {
-        BootChargingStationCommand command = new BootChargingStationCommand(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES);
+        BootChargingStationCommand command = new BootChargingStationCommand(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT);
 
         command.getAttributes().put("foo", "bar");
     }

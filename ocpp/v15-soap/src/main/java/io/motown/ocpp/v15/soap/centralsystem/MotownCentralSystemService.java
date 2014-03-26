@@ -18,6 +18,8 @@ package io.motown.ocpp.v15.soap.centralsystem;
 import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.chargingstation.MeterValue;
+import io.motown.domain.api.chargingstation.identity.AddOnIdentity;
+import io.motown.domain.api.chargingstation.identity.TypeBasedAddOnIdentity;
 import io.motown.ocpp.soaputils.async.*;
 import io.motown.ocpp.soaputils.header.SoapHeaderReader;
 import io.motown.ocpp.v15.soap.Ocpp15RequestHandler;
@@ -45,6 +47,8 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
 
     private static final String PROTOCOL_IDENTIFIER = Ocpp15RequestHandler.PROTOCOL_IDENTIFIER;
 
+    private static final String ADD_ON_TYPE = "OCPPS15";
+
     private int heartbeatIntervalFallback;
 
     /**
@@ -58,6 +62,8 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
 
     @Resource
     private WebServiceContext context;
+
+    private AddOnIdentity addOnIdentity;
 
     @Override
     public DataTransferResponse dataTransfer(DataTransferRequest request, String chargeBoxIdentity) {
@@ -128,8 +134,9 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
             return response;
         }
 
-        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel(), PROTOCOL_IDENTIFIER,
-                request.getChargePointSerialNumber(), request.getChargeBoxSerialNumber(), request.getFirmwareVersion(), request.getIccid(), request.getImsi(), request.getMeterType(), request.getMeterSerialNumber());
+        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel(),PROTOCOL_IDENTIFIER,
+                request.getChargePointSerialNumber(), request.getChargeBoxSerialNumber(), request.getFirmwareVersion(), request.getIccid(), request.getImsi(), request.getMeterType(), request.getMeterSerialNumber(),
+                addOnIdentity);
 
         BootNotificationResponse response = new BootNotificationResponse();
         response.setStatus(result.isAccepted() ? RegistrationStatus.ACCEPTED : RegistrationStatus.REJECTED);
@@ -290,6 +297,10 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
 
     public void setSoapHeaderReader(SoapHeaderReader soapHeaderReader) {
         this.soapHeaderReader = soapHeaderReader;
+    }
+
+    public void setAddOnId(String id) {
+        addOnIdentity = new TypeBasedAddOnIdentity(ADD_ON_TYPE, id);
     }
 
     /**

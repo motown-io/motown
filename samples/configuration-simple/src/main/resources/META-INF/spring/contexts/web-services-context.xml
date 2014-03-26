@@ -71,6 +71,7 @@
         <property name="soapHeaderReader">
             <bean class="io.motown.ocpp.soaputils.header.SoapHeaderReader" />
         </property>
+        <property name="addOnId" value="1" />
     </bean>
 
     <jaxws:endpoint implementor="#centralSystemServiceOcpp15"
@@ -159,6 +160,7 @@
         <property name="soapHeaderReader">
             <bean class="io.motown.ocpp.soaputils.header.SoapHeaderReader" />
         </property>
+        <property name="addOnId" value="1" />
     </bean>
 
     <jaxws:endpoint implementor="#centralSystemServiceOcpp12"

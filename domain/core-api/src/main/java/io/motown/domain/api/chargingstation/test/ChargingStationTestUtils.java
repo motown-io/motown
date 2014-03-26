@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.identity.*;
 import org.joda.time.DateTimeUtils;
 
 import java.util.*;
@@ -284,6 +285,33 @@ public final class ChargingStationTestUtils {
     public static final String UPDATE_LOCATION = "https://somewhere.nl";
 
     /**
+     * Add-on id used to construct ADD_ON_IDENTITY.
+     */
+    public static final String ADD_ON_ID = "ID";
+
+    /**
+     * The default add-on identity.
+     */
+    public static final AddOnIdentity ADD_ON_IDENTITY = new TypeBasedAddOnIdentity("ADD-ON", ADD_ON_ID);
+
+    /**
+     * The default user identity.
+     */
+    public static final UserIdentity USER_IDENTITY = new SimpleUserIdentity("USER-ID");
+
+    /**
+     * The default identity context.
+     */
+    public static final IdentityContext IDENTITY_CONTEXT = new IdentityContext(ADD_ON_IDENTITY, USER_IDENTITY);
+
+    /**
+     * The default identity context with NullUserIdentity.
+     *
+     * Used to test add-ons which do not pass a user identity in the identity context.
+     */
+    public static final IdentityContext NULL_USER_IDENTITY_CONTEXT = new IdentityContext(ADD_ON_IDENTITY, new NullUserIdentity());
+
+    /**
      * The default list of identifying tokens.
      */
     public static final ImmutableList<IdentifyingToken> IDENTIFYING_TOKENS = ImmutableList.<IdentifyingToken>builder()
@@ -348,7 +376,7 @@ public final class ChargingStationTestUtils {
      */
     public static final List<Object> UNCONFIGURED_CHARGING_STATION = ImmutableList.builder()
             .addAll(CREATED_CHARGING_STATION)
-            .add(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES))
+            .add(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT))
             .build();
 
     /**
@@ -363,7 +391,7 @@ public final class ChargingStationTestUtils {
      * The list of events which leads to a created, accepted, and configured charging station which has booted.
      */
     public static final List<Object> CHARGING_STATION = ImmutableList.builder()
-            .add(new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES))
+            .add(new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT))
             .add(new ChargingStationCreatedEvent(CHARGING_STATION_ID))
             .add(new ChargingStationAcceptedEvent(CHARGING_STATION_ID))
             .add(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS))
@@ -373,7 +401,7 @@ public final class ChargingStationTestUtils {
      * The list of events which leads to a created, accepted, configured, and reservable charging station which has booted.
      */
     public static final List<Object> RESERVABLE_CHARGING_STATION = ImmutableList.builder()
-            .add(new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES))
+            .add(new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT))
             .add(new ChargingStationCreatedEvent(CHARGING_STATION_ID))
             .add(new ChargingStationAcceptedEvent(CHARGING_STATION_ID))
             .add(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS))

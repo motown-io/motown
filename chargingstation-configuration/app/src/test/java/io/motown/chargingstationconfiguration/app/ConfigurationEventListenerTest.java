@@ -53,7 +53,7 @@ public class ConfigurationEventListenerTest {
         String unknownModel = "MODEL";
         when(domainService.getEvses(unknownManufacturer, unknownModel)).thenReturn(new HashSet<Evse>());
 
-        eventListener.onEvent(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, getAttributes(unknownManufacturer, unknownModel)));
+        eventListener.onEvent(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, getAttributes(unknownManufacturer, unknownModel), IDENTITY_CONTEXT));
 
         verify(domainService).getEvses(unknownManufacturer, unknownModel);
         verify(gateway, never()).send(any(ConfigureChargingStationCommand.class));
@@ -65,7 +65,7 @@ public class ConfigurationEventListenerTest {
         String unknownModel = "MODEL";
         when(domainService.getEvses(unknownManufacturer, unknownModel)).thenReturn(null);
 
-        eventListener.onEvent(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, getAttributes(unknownManufacturer, unknownModel)));
+        eventListener.onEvent(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, getAttributes(unknownManufacturer, unknownModel), IDENTITY_CONTEXT));
 
         verify(domainService).getEvses(unknownManufacturer, unknownModel);
         verify(gateway, never()).send(any(ConfigureChargingStationCommand.class));
@@ -77,7 +77,7 @@ public class ConfigurationEventListenerTest {
         String model = "MODEL1";
         when(domainService.getEvses(manufacturer, model)).thenReturn(getEvses(NUMBER_OF_EVSES));
 
-        eventListener.onEvent(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, getAttributes(manufacturer, model)));
+        eventListener.onEvent(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, getAttributes(manufacturer, model), IDENTITY_CONTEXT));
 
         verify(domainService).getEvses(manufacturer, model);
         verify(gateway).send(new ConfigureChargingStationCommand(CHARGING_STATION_ID, getEvses(NUMBER_OF_EVSES)));

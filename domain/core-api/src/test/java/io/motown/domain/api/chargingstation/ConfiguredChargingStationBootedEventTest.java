@@ -26,24 +26,24 @@ public class ConfiguredChargingStationBootedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNullAndAttributes() {
-        new ConfiguredChargingStationBootedEvent(null, PROTOCOL, new HashMap<String, String>());
+        new ConfiguredChargingStationBootedEvent(null, PROTOCOL, new HashMap<String, String>(), IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdAndAttributesNull() {
-        new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, null);
+        new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, null, IDENTITY_CONTEXT);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedOperationExceptionThrownWhenModifyingAttributes() {
-        ConfiguredChargingStationBootedEvent event = new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES);
+        ConfiguredChargingStationBootedEvent event = new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT);
 
         event.getAttributes().put("foo", "bar");
     }
 
     @Test
     public void constructorSetsFields() {
-        ConfiguredChargingStationBootedEvent event = new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES);
+        ConfiguredChargingStationBootedEvent event = new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT);
 
         assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
         assertEquals(PROTOCOL, event.getProtocol());

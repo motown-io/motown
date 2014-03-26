@@ -39,22 +39,22 @@ public class ChargingStationTest {
     @Test
     public void testBootingCreatedChargingStation() {
         fixture.given(CREATED_CHARGING_STATION)
-                .when(new BootChargingStationCommand(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES))
-                .expectEvents(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES));
+                .when(new BootChargingStationCommand(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT))
+                .expectEvents(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT));
     }
 
     @Test
     public void testBootingRegisteredChargingStation() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
-                .when(new BootChargingStationCommand(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES))
-                .expectEvents(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES));
+                .when(new BootChargingStationCommand(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT))
+                .expectEvents(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT));
     }
 
     @Test
     public void testBootingConfiguredChargingStation() {
         fixture.given(CHARGING_STATION)
-                .when(new BootChargingStationCommand(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES))
-                .expectEvents(new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES));
+                .when(new BootChargingStationCommand(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT))
+                .expectEvents(new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT));
     }
 
     @Test
@@ -92,28 +92,28 @@ public class ChargingStationTest {
     @Test
     public void testRegisteringUnacceptedChargingStation() {
         fixture.given(CREATED_CHARGING_STATION)
-                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID))
+                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, IDENTITY_CONTEXT))
                 .expectEvents(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
     }
 
     @Test
     public void testRegisteringAcceptedChargingStation() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
-                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID))
+                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRegisteringNonExistentChargingStation() {
         fixture.given()
-                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID))
+                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, IDENTITY_CONTEXT))
                 .expectException(AggregateNotFoundException.class);
     }
 
     @Test
     public void testRegisteringAlreadyRegisteredChargingStation() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
-                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID))
+                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
 
@@ -135,7 +135,7 @@ public class ChargingStationTest {
     @Test
     public void testChargeAcceptance() {
         fixture.given(new ChargingStationCreatedEvent(CHARGING_STATION_ID))
-                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID))
+                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, IDENTITY_CONTEXT))
                 .expectEvents(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
     }
 

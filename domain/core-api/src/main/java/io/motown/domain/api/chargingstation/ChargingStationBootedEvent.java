@@ -16,6 +16,7 @@
 package io.motown.domain.api.chargingstation;
 
 import com.google.common.collect.ImmutableMap;
+import io.motown.domain.api.chargingstation.identity.IdentityContext;
 
 import java.util.Map;
 
@@ -32,6 +33,8 @@ public abstract class ChargingStationBootedEvent {
 
     private final Map<String, String> attributes;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code ChargingStationBootedEvent} with an identifier and a {@link java.util.Map} of attributes.
      *
@@ -40,12 +43,14 @@ public abstract class ChargingStationBootedEvent {
      * @param attributes        a {@link java.util.Map} of attributes. These attributes are additional information provided by
      *                          the charging station when it booted but which are not required by Motown. Because
      *                          {@link java.util.Map} implementations are potentially mutable a defensive copy is made.
+     * @param identityContext the identity context.
      * @throws NullPointerException if {@code chargingStationId} or {@protocol} or {@code attributes} is {@code null}.
      */
-    public ChargingStationBootedEvent(ChargingStationId chargingStationId, String protocol, Map<String, String> attributes) {
+    public ChargingStationBootedEvent(ChargingStationId chargingStationId, String protocol, Map<String, String> attributes, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.protocol = checkNotNull(protocol);
         this.attributes = ImmutableMap.copyOf(checkNotNull(attributes));
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**

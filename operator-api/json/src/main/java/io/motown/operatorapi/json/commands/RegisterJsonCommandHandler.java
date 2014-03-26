@@ -22,6 +22,9 @@ import io.motown.domain.api.chargingstation.AcceptChargingStationCommand;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ConfigureChargingStationCommand;
 import io.motown.domain.api.chargingstation.CreateAndAcceptChargingStationCommand;
+import io.motown.domain.api.chargingstation.identity.IdentityContext;
+import io.motown.domain.api.chargingstation.identity.SimpleUserIdentity;
+import io.motown.domain.api.chargingstation.identity.TypeBasedAddOnIdentity;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
@@ -42,11 +45,14 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
 
     @Override
     public void handle(String chargingStationId, JsonObject commandObject) {
+        //TODO this should probably be passed as a parameter
+        IdentityContext identityContext = new IdentityContext(new TypeBasedAddOnIdentity("OPERATOR-API", "1"), new SimpleUserIdentity("mark"));
+
         ChargingStation chargingStation = repository.findOne(chargingStationId);
         if (chargingStation == null) {
             commandGateway.send(new CreateAndAcceptChargingStationCommand(new ChargingStationId(chargingStationId)));
         } else if (!chargingStation.isAccepted()) {
-            commandGateway.send(new AcceptChargingStationCommand(new ChargingStationId(chargingStationId)));
+            commandGateway.send(new AcceptChargingStationCommand(new ChargingStationId(chargingStationId), identityContext));
         } else {
             throw new IllegalStateException("Charging station { %s } is already in accepted state, you can't register this station".format(chargingStationId));
         }

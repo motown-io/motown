@@ -17,6 +17,8 @@ package io.motown.ocpp.v12.soap.centralsystem;
 
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.chargingstation.MeterValue;
+import io.motown.domain.api.chargingstation.identity.AddOnIdentity;
+import io.motown.domain.api.chargingstation.identity.TypeBasedAddOnIdentity;
 import io.motown.ocpp.soaputils.header.SoapHeaderReader;
 import io.motown.ocpp.v12.soap.V12SOAPTestUtils;
 import io.motown.ocpp.v12.soap.centralsystem.schema.*;
@@ -48,6 +50,10 @@ public class MotownCentralSystemServiceTest {
 
     private SoapHeaderReader soapHeaderReader;
 
+    private static final String ADD_ON_TYPE = "OCPPS12";
+
+    private static final TypeBasedAddOnIdentity OCPPS12_ADD_ON_IDENTITY = new TypeBasedAddOnIdentity(ADD_ON_TYPE, ADD_ON_ID);
+
     @Before
     public void setup() {
         motownCentralSystemService = new MotownCentralSystemService();
@@ -59,6 +65,7 @@ public class MotownCentralSystemServiceTest {
         domainService = mock(DomainService.class);
         motownCentralSystemService.setDomainService(domainService);
         motownCentralSystemService.setContext(mock(WebServiceContext.class));
+        motownCentralSystemService.setAddOnId(ADD_ON_ID);
     }
 
     @Test
@@ -124,7 +131,7 @@ public class MotownCentralSystemServiceTest {
         BootNotificationRequest request = new BootNotificationRequest();
         Date now = new Date();
         BootChargingStationResult result = new BootChargingStationResult(true, V12SOAPTestUtils.HEARTBEAT_INTERVAL, now);
-        when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(result);
+        when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(AddOnIdentity.class))).thenReturn(result);
 
         BootNotificationResponse response = motownCentralSystemService.bootNotification(request, CHARGING_STATION_ID.getId());
 
@@ -138,7 +145,7 @@ public class MotownCentralSystemServiceTest {
         BootNotificationRequest request = new BootNotificationRequest();
         Date now = new Date();
         BootChargingStationResult result = new BootChargingStationResult(false, HEARTBEAT_INTERVAL, now);
-        when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(result);
+        when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(AddOnIdentity.class))).thenReturn(result);
 
         BootNotificationResponse response = motownCentralSystemService.bootNotification(request, CHARGING_STATION_ID.getId());
 
@@ -162,12 +169,12 @@ public class MotownCentralSystemServiceTest {
 
         Date now = new Date();
         BootChargingStationResult result = new BootChargingStationResult(true, HEARTBEAT_INTERVAL, now);
-        when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(result);
+        when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(AddOnIdentity.class))).thenReturn(result);
 
         motownCentralSystemService.bootNotification(request, CHARGING_STATION_ID.getId());
 
         verify(domainService).bootChargingStation(CHARGING_STATION_ID, LOCALHOST, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL_IDENTIFIER, CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER,
-                CHARGING_STATION_FIRMWARE_VERSION, CHARGING_STATION_ICCID, CHARGING_STATION_IMSI, CHARGING_STATION_METER_TYPE, CHARGING_STATION_METER_SERIAL_NUMBER);
+                CHARGING_STATION_FIRMWARE_VERSION, CHARGING_STATION_ICCID, CHARGING_STATION_IMSI, CHARGING_STATION_METER_TYPE, CHARGING_STATION_METER_SERIAL_NUMBER, OCPPS12_ADD_ON_IDENTITY);
     }
 
     @Test

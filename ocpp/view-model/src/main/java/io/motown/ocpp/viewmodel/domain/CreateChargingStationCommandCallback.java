@@ -16,6 +16,7 @@
 package io.motown.ocpp.viewmodel.domain;
 
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.identity.AddOnIdentity;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
 import org.axonframework.commandhandling.CommandCallback;
@@ -40,9 +41,10 @@ public class CreateChargingStationCommandCallback implements CommandCallback<Obj
     private String imsi;
     private String meterType;
     private String meterSerialNumber;
+    private AddOnIdentity addOnIdentity;
 
     public CreateChargingStationCommandCallback(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model, String protocol, String chargePointSerialNumber, String chargeBoxSerialNumber, String firmwareVersion, String iccid, String imsi, String meterType, String meterSerialNumber,
-                                                ChargingStationRepository chargingStationRepository, DomainService domainService) {
+                                                AddOnIdentity addOnIdentity, ChargingStationRepository chargingStationRepository, DomainService domainService) {
         this.chargingStationId = chargingStationId;
         this.chargingStationAddress = chargingStationAddress;
         this.vendor = vendor;
@@ -55,6 +57,7 @@ public class CreateChargingStationCommandCallback implements CommandCallback<Obj
         this.meterType = meterType;
         this.meterSerialNumber = meterSerialNumber;
         this.protocol = protocol;
+        this.addOnIdentity = addOnIdentity;
         this.chargingStationRepository = chargingStationRepository;
         this.domainService = domainService;
     }
@@ -63,7 +66,7 @@ public class CreateChargingStationCommandCallback implements CommandCallback<Obj
     public void onSuccess(Object o) {
         chargingStationRepository.insert(new ChargingStation(chargingStationId.getId()));
 
-        domainService.bootChargingStation(chargingStationId, chargingStationAddress, vendor, model, protocol, chargePointSerialNumber, chargeBoxSerialNumber, firmwareVersion, iccid, imsi, meterType, meterSerialNumber);
+        domainService.bootChargingStation(chargingStationId, chargingStationAddress, vendor, model, protocol, chargePointSerialNumber, chargeBoxSerialNumber, firmwareVersion, iccid, imsi, meterType, meterSerialNumber, addOnIdentity);
     }
 
     @Override

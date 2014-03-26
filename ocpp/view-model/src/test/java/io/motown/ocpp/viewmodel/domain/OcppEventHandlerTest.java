@@ -78,7 +78,7 @@ public class OcppEventHandlerTest {
         ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
         Assert.assertNull(cs.getProtocol());
 
-        eventHandler.handle(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES));
+        eventHandler.handle(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT));
 
         cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
         Assert.assertEquals(PROTOCOL, cs.getProtocol());

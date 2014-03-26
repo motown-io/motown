@@ -17,10 +17,12 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.IDENTITY_CONTEXT;
+
 public class AcceptChargingStationCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new AcceptChargingStationCommand(null);
+        new AcceptChargingStationCommand(null, IDENTITY_CONTEXT);
     }
 }

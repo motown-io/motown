@@ -56,9 +56,9 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         ChargingStationBootedEvent chargingStationBootedEvent;
 
         if (isConfigured) {
-            chargingStationBootedEvent = new ConfiguredChargingStationBootedEvent(command.getChargingStationId(), command.getProtocol(), command.getAttributes());
+            chargingStationBootedEvent = new ConfiguredChargingStationBootedEvent(command.getChargingStationId(), command.getProtocol(), command.getAttributes(), command.getIdentityContext());
         } else {
-            chargingStationBootedEvent = new UnconfiguredChargingStationBootedEvent(command.getChargingStationId(), command.getProtocol(), command.getAttributes());
+            chargingStationBootedEvent = new UnconfiguredChargingStationBootedEvent(command.getChargingStationId(), command.getProtocol(), command.getAttributes(), command.getIdentityContext());
         }
 
         apply(chargingStationBootedEvent);
@@ -71,6 +71,10 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(AcceptChargingStationCommand command) {
+//        if(!authorizer.isAuthorized(command.getIdentityContext(), this.authorizations, command.getClass())) {
+//            // throw exception or event...
+//        }
+
         if (isAccepted) {
             throw new IllegalStateException("Cannot accept an already accepted charging station");
         }

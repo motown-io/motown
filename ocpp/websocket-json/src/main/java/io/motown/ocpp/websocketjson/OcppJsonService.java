@@ -17,6 +17,7 @@ package io.motown.ocpp.websocketjson;
 
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.identity.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.request.chargingstation.*;
 import io.motown.ocpp.websocketjson.request.handler.*;
@@ -38,6 +39,8 @@ public class OcppJsonService {
 
     private static final Logger LOG = LoggerFactory.getLogger(OcppJsonService.class);
 
+    private static final String ADD_ON_TYPE = "OCPPJ15";
+
     private WampMessageParser wampMessageParser;
 
     private SchemaValidator schemaValidator;
@@ -45,6 +48,8 @@ public class OcppJsonService {
     private DomainService domainService;
 
     private Gson gson;
+
+    private AddOnIdentity addOnIdentity;
 
     public static final String PROTOCOL_IDENTIFIER = OcppWebSocketRequestHandler.PROTOCOL_IDENTIFIER;
 
@@ -156,7 +161,7 @@ public class OcppJsonService {
                     requestHandler = new AuthorizeRequestHandler(gson, domainService);
                     break;
                 case BootNotificationRequestHandler.PROC_URI:
-                    requestHandler = new BootNotificationRequestHandler(gson, domainService);
+                    requestHandler = new BootNotificationRequestHandler(gson, domainService, addOnIdentity);
                     break;
                 case DataTransferRequestHandler.PROC_URI:
                     requestHandler = new DataTransferRequestHandler(gson, domainService);

@@ -23,17 +23,17 @@ public class UnconfiguredChargingStationBootedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNullAndAttributes() {
-        new UnconfiguredChargingStationBootedEvent(null, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES);
+        new UnconfiguredChargingStationBootedEvent(null, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdAndAttributesNull() {
-        new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, null);
+        new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, null, IDENTITY_CONTEXT);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedOperationExceptionThrownWhenModifyingAttributes() {
-        UnconfiguredChargingStationBootedEvent command = new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES);
+        UnconfiguredChargingStationBootedEvent command = new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT);
 
         command.getAttributes().put("foo", "bar");
     }

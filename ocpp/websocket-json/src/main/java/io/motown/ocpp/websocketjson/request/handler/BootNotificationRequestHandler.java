@@ -17,6 +17,7 @@ package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.identity.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.OcppJsonService;
@@ -33,9 +34,12 @@ public class BootNotificationRequestHandler extends RequestHandler {
 
     private DomainService domainService;
 
-    public BootNotificationRequestHandler(Gson gson, DomainService domainService) {
+    private AddOnIdentity addOnIdentity;
+
+    public BootNotificationRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         this.gson = gson;
         this.domainService = domainService;
+        this.addOnIdentity = addOnIdentity;
     }
 
     @Override
@@ -45,7 +49,7 @@ public class BootNotificationRequestHandler extends RequestHandler {
         BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(chargingStationId, null, request.getChargePointVendor(),
                 request.getChargePointModel(), OcppJsonService.PROTOCOL_IDENTIFIER, request.getChargePointSerialNumber(), request.getChargeBoxSerialNumber(),
                 request.getFirmwareVersion(), request.getIccid(), request.getImsi(), request.getMeterType(),
-                request.getMeterSerialNumber());
+                request.getMeterSerialNumber(), addOnIdentity);
 
         BootNotificationResponse response = new BootNotificationResponse(bootChargingStationResult.isAccepted()? RegistrationStatus.ACCEPTED:RegistrationStatus.REJECTED, bootChargingStationResult.getTimeStamp(), bootChargingStationResult.getHeartbeatInterval());
 

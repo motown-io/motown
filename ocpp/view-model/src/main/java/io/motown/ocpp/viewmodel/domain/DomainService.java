@@ -17,6 +17,9 @@ package io.motown.ocpp.viewmodel.domain;
 
 import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.identity.AddOnIdentity;
+import io.motown.domain.api.chargingstation.identity.IdentityContext;
+import io.motown.domain.api.chargingstation.identity.NullUserIdentity;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.entities.ReservationIdentifier;
 import io.motown.ocpp.viewmodel.persistence.entities.Transaction;
@@ -93,7 +96,7 @@ public class DomainService {
 
     public BootChargingStationResult bootChargingStation(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model,
                                                          String protocol, String chargingStationSerialNumber, String chargeBoxSerialNumber, String firmwareVersion, String iccid,
-                                                         String imsi, String meterType, String meterSerialNumber) {
+                                                         String imsi, String meterType, String meterSerialNumber, AddOnIdentity addOnIdentity) {
         // Check if we already know the charging station, or have to create one
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
 
@@ -102,7 +105,7 @@ public class DomainService {
 
             commandGateway.send(new CreateChargingStationCommand(chargingStationId), new CreateChargingStationCommandCallback(
                     chargingStationId, chargingStationAddress, vendor, model, protocol, chargingStationSerialNumber, chargeBoxSerialNumber, firmwareVersion, iccid,
-                    imsi, meterType, meterSerialNumber, chargingStationRepository, this));
+                    imsi, meterType, meterSerialNumber, addOnIdentity, chargingStationRepository, this));
 
             // we didn't know the charging station when this bootNotification occurred so we reject it.
             return new BootChargingStationResult(false, heartbeatInterval, new Date());
@@ -124,7 +127,7 @@ public class DomainService {
         addAttributeIfNotNull(attributes, METER_TYPE_KEY, meterType);
         addAttributeIfNotNull(attributes, METER_SERIALNUMBER_KEY, meterSerialNumber);
 
-        commandGateway.send(new BootChargingStationCommand(chargingStationId, protocol, attributes));
+        commandGateway.send(new BootChargingStationCommand(chargingStationId, protocol, attributes, new IdentityContext(addOnIdentity, new NullUserIdentity())));
 
         return new BootChargingStationResult(chargingStation.isRegistered(), heartbeatInterval, new Date());
     }
