@@ -15,31 +15,16 @@
  */
 package io.motown.domain.api.chargingstation.identity;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
- * A user identification.
+ * Describes an user's identity used to determine the context of a call.
  */
-public class UserIdentity implements Identity {
-
-    private String identity;
+public interface UserIdentity {
 
     /**
-     * Creates a user identity.
+     * The string representation of the user identity.
      *
-     * @param identity string representation of user identity.
-     * @throws NullPointerException when identity is null.
-     * @throws IllegalArgumentException when identity is empty.
+     * @return string representation of the user identity.
      */
-    public UserIdentity(String identity) {
-        this.identity = checkNotNull(identity);
-        checkArgument(!identity.isEmpty());
-    }
+    String getId();
 
-    @Override
-    public String getId() {
-        return identity;
-    }
-    
 }

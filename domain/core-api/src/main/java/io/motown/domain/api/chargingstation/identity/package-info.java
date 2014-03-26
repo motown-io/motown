@@ -13,18 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@ParametersAreNonnullByDefault
 package io.motown.domain.api.chargingstation.identity;
 
-/**
- * Describes an identity used to determine the context of a call.
- */
-public interface Identity {
-
-    /**
-     * The string representation of the identity.
-     *
-     * @return string representation of the identity.
-     */
-    String getId();
-
-}
+import javax.annotation.ParametersAreNonnullByDefault;

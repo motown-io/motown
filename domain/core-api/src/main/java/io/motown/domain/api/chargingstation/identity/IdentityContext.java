@@ -15,10 +15,12 @@
  */
 package io.motown.domain.api.chargingstation.identity;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * The context in which a command is executed. Consists of add-on and user identity.
+ * The context in which an action is performed. Consists of add-on and user identity.
  */
 public class IdentityContext {
 
@@ -29,9 +31,9 @@ public class IdentityContext {
     /**
      * Creates a IdentityContext with add-on and user identity.
      *
-     * @param addOnIdentity
-     * @param userIdentity
-     * @throws NullPointerException if addOnIdentity or userIdentity is null;
+     * @param addOnIdentity add-on identity
+     * @param userIdentity user identity
+     * @throws NullPointerException if typeBasedAddOnIdentity or userIdentity is null;
      */
     public IdentityContext(AddOnIdentity addOnIdentity, UserIdentity userIdentity) {
         this.addOnIdentity = checkNotNull(addOnIdentity);
@@ -43,7 +45,7 @@ public class IdentityContext {
      *
      * @return add-on identity.
      */
-    public AddOnIdentity getAddOnIdentity() {
+    public AddOnIdentity getTypeBasedAddOnIdentity() {
         return addOnIdentity;
     }
 
@@ -56,4 +58,20 @@ public class IdentityContext {
         return userIdentity;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(addOnIdentity, userIdentity);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final IdentityContext other = (IdentityContext) obj;
+        return Objects.equals(this.addOnIdentity, other.addOnIdentity) && Objects.equals(this.userIdentity, other.userIdentity);
+    }
 }

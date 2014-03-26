@@ -15,20 +15,43 @@
  */
 package io.motown.domain.api.chargingstation.identity;
 
-public class AnonymousUserIdentity extends UserIdentity {
+import java.util.Objects;
+
+/**
+ * Used where a user identity is required but no user is involved in the identity context,
+ */
+public final class NullUserIdentity implements UserIdentity {
 
     private static final String ANONYMOUS_IDENTITY = "";
 
-    private static final String DUMMY_IDENTITY = "anonymous";
+    private final String id;
 
-    public AnonymousUserIdentity() {
-        // pass hardcoded string to prevent null/empty checks from failing
-        super(DUMMY_IDENTITY);
+    public NullUserIdentity() {
+        this.id = ANONYMOUS_IDENTITY;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getId() {
+        return id;
     }
 
     @Override
-    public String getId() {
-        return ANONYMOUS_IDENTITY;
+    public int hashCode() {
+        return Objects.hash(id);
     }
-    
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final NullUserIdentity other = (NullUserIdentity) obj;
+        return Objects.equals(this.id, other.id);
+    }
 }

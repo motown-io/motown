@@ -15,65 +15,16 @@
  */
 package io.motown.domain.api.chargingstation.identity;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
- * Identity used by add-ons.
+ * Describes an add-on identity used to determine the context of a call.
  */
-public class AddOnIdentity implements Identity {
+public interface AddOnIdentity {
 
     /**
-     * Identifier of the add-on type.
-     */
-    private String addOnType;
-
-    /**
-     * Identifier of the add-on. This can be used to differentiate instances of the same add-on.
-     */
-    private String addOnId;
-
-    /**
-     * The format of the id which is a combination of addOnType and addOnId.
-     */
-    private static final String STRING_ID_FORMAT = "%s-%s";
-
-    /**
-     * Creates a AddOnIdentity with a type and id.
+     * The string representation of the add-on identity.
      *
-     * @param addOnType the add-on type.
-     * @param addOnId the add-on id.
-     * @throws NullPointerException if addOnType or addOnId is null.
-     * @throws IllegalArgumentException if addOnType or addOnId is empty.
+     * @return string representation of the add-on identity.
      */
-    public AddOnIdentity(String addOnType, String addOnId) {
-        this.addOnType = checkNotNull(addOnType);
-        this.addOnId = checkNotNull(addOnId);
-        checkArgument(!addOnType.isEmpty());
-        checkArgument(!addOnId.isEmpty());
-    }
-
-    @Override
-    public String getId() {
-        return String.format(STRING_ID_FORMAT, addOnType, addOnId);
-    }
-
-    /**
-     * Gets the add-on type.
-     *
-     * @return add-on type.
-     */
-    public String getAddOnType() {
-        return addOnType;
-    }
-
-    /**
-     * Gets the add-on id. This can be used to differentiate instances of the same add-on.
-     *
-     * @return add-on id.
-     */
-    public String getAddOnId() {
-        return addOnId;
-    }
+    String getId();
 
 }
