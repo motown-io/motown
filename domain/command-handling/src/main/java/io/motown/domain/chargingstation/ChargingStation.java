@@ -15,7 +15,10 @@
  */
 package io.motown.domain.chargingstation;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.identity.*;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.domain.MetaData;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
@@ -32,10 +35,23 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     private int numberOfEvses;
 
     private boolean isAccepted = false;
+
     private boolean isConfigured = false;
+
     private boolean isReservable = false;
 
+    private CommandAuthorization commandAuthorization = new SimpleCommandAuthorization();
+
+    /**
+     * Map of identities with command classes the identity is authorized to execute.
+     */
+    private Multimap<UserIdentity, Class<?>> authorizations = HashMultimap.create();
+
     protected ChargingStation() {
+        //TODO fix bootstrapping of authorization. - Mark van den Bergh, March 26th 2014
+        SimpleUserIdentity rootUserIdentity = new SimpleUserIdentity("root");
+
+        authorizations.put(rootUserIdentity, AllPermissions.class);
     }
 
     @CommandHandler
@@ -49,6 +65,20 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         this();
         apply(new ChargingStationCreatedEvent(command.getChargingStationId()));
         apply(new ChargingStationAcceptedEvent(command.getChargingStationId()));
+    }
+
+    @CommandHandler
+    public void handle(GrantPermissionCommand command) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
+        apply(new PermissionGrantedEvent(command.getChargingStationId(), command.getUserIdentity(), command.getCommandClass(), command.getIdentityContext()));
+    }
+
+    @CommandHandler
+    public void handle(RevokePermissionCommand command) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
+        apply(new PermissionRevokedEvent(command.getChargingStationId(), command.getUserIdentity(), command.getCommandClass(), command.getIdentityContext()));
     }
 
     @CommandHandler
@@ -71,9 +101,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(AcceptChargingStationCommand command) {
-//        if(!authorizer.isAuthorized(command.getIdentityContext(), this.authorizations, command.getClass())) {
-//            // throw exception or event...
-//        }
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
 
         if (isAccepted) {
             throw new IllegalStateException("Cannot accept an already accepted charging station");
@@ -348,6 +376,16 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         this.isReservable = false;
     }
 
+    @EventSourcingHandler
+    public void handle(PermissionGrantedEvent event) {
+        this.authorizations.put(event.getUserIdentity(), event.getCommandClass());
+    }
+
+    @EventSourcingHandler
+    public void handle(PermissionRevokedEvent event) {
+        this.authorizations.remove(event.getUserIdentity(), event.getCommandClass());
+    }
+
     /**
      * Ensures that communication with this charging station is allowed.
      * <p/>
@@ -362,4 +400,18 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
             throw new IllegalStateException("Communication not allowed with an unaccepted or unconfigured charging station");
         }
     }
+
+    /**
+     * Ensures that the identityContext is allowed access to the command class.
+     *
+     * @param identityContext identity context.
+     * @param commandClass class of the command.
+     */
+    private void checkCommandAllowed(IdentityContext identityContext, Class commandClass) {
+        if(!commandAuthorization.isAuthorized(identityContext, this.authorizations.asMap(), commandClass)) {
+            // TODO decide on whether to throw an exception or an event... - Mark van den Bergh, March 26th 2014
+            throw new IllegalStateException("No authorization for this action.");
+        }
+    }
+
 }

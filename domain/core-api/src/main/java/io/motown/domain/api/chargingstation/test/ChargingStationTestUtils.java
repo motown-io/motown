@@ -305,6 +305,16 @@ public final class ChargingStationTestUtils {
     public static final IdentityContext IDENTITY_CONTEXT = new IdentityContext(ADD_ON_IDENTITY, USER_IDENTITY);
 
     /**
+     * The default root user identity.
+     */
+    public static final UserIdentity ROOT_USER_IDENTITY = new SimpleUserIdentity("root");
+
+    /**
+     * The default root identity context.
+     */
+    public static final IdentityContext ROOT_IDENTITY_CONTEXT = new IdentityContext(ADD_ON_IDENTITY, ROOT_USER_IDENTITY);
+
+    /**
      * The default identity context with NullUserIdentity.
      *
      * Used to test add-ons which do not pass a user identity in the identity context.

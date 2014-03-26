@@ -46,7 +46,7 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
     @Override
     public void handle(String chargingStationId, JsonObject commandObject) {
         //TODO this should probably be passed as a parameter
-        IdentityContext identityContext = new IdentityContext(new TypeBasedAddOnIdentity("OPERATOR-API", "1"), new SimpleUserIdentity("mark"));
+        IdentityContext identityContext = new IdentityContext(new TypeBasedAddOnIdentity("OPERATOR-API", "1"), new SimpleUserIdentity("root"));
 
         ChargingStation chargingStation = repository.findOne(chargingStationId);
         if (chargingStation == null) {

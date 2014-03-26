@@ -92,7 +92,7 @@ public class ChargingStationTest {
     @Test
     public void testRegisteringUnacceptedChargingStation() {
         fixture.given(CREATED_CHARGING_STATION)
-                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, IDENTITY_CONTEXT))
+                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
     }
 
@@ -135,7 +135,7 @@ public class ChargingStationTest {
     @Test
     public void testChargeAcceptance() {
         fixture.given(new ChargingStationCreatedEvent(CHARGING_STATION_ID))
-                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, IDENTITY_CONTEXT))
+                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
     }
 
