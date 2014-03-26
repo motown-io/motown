@@ -20,7 +20,7 @@ import io.motown.domain.api.chargingstation.ChargingStationBootedEvent;
 import io.motown.domain.api.chargingstation.ChargingStationConfiguredEvent;
 import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
-import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
+import io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -15,7 +15,7 @@
 
     <bean class="io.motown.ocpp.viewmodel.OcppEventHandler">
         <property name="chargingStationRepository">
-            <bean class="io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository">
+            <bean class="io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository">
                 <property name="entityManager" ref="jpaEntityManager" />
             </bean>
         </property>
@@ -92,15 +92,15 @@
 
     <bean id="jpaEntityManager" factory-bean="entityManagerFactory" factory-method="createEntityManager" />
 
-    <bean id="chargingStationRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository">
+    <bean id="chargingStationRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository">
         <property name="entityManager" ref="jpaEntityManager" />
     </bean>
 
-    <bean id="reservationIdentifierRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repostories.ReservationIdentifierRepository">
+    <bean id="reservationIdentifierRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repositories.ReservationIdentifierRepository">
         <property name="entityManager" ref="jpaEntityManager" />
     </bean>
 
-    <bean id="transactionRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repostories.TransactionRepository">
+    <bean id="transactionRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repositories.TransactionRepository">
         <property name="entityManager" ref="jpaEntityManager" />
     </bean>
 

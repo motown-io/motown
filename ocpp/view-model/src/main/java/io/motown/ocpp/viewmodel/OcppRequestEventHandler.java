@@ -17,7 +17,7 @@ package io.motown.ocpp.viewmodel;
 
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
-import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
+import io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.axonframework.common.annotation.MetaData;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;

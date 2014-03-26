@@ -13,27 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.viewmodel.persistence.repostories;
+package io.motown.ocpp.viewmodel.persistence.repositories;
 
-import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
+import io.motown.ocpp.viewmodel.persistence.entities.ReservationIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
-public class ChargingStationRepository {
+public class ReservationIdentifierRepository {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ChargingStationRepository.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ReservationIdentifierRepository.class);
 
     private EntityManager entityManager;
 
-    public ChargingStation findOne(String id) {
-        return entityManager.find(ChargingStation.class, id);
-    }
-
-    public void insert(ChargingStation chargingStation) {
+    public void insert(ReservationIdentifier reservationIdentifier) {
         EntityTransaction transaction = entityManager.getTransaction();
 
         if (!transaction.isActive()) {
@@ -41,12 +36,8 @@ public class ChargingStationRepository {
         }
 
         try {
-            entityManager.persist(chargingStation);
+            entityManager.persist(reservationIdentifier);
             transaction.commit();
-        } catch (EntityExistsException e) {
-            // because the identifier of the charging station entity is not generated it can occur that (for example)
-            // 2 event handlers try to create the same charging station, therefore we catch this exception.
-            LOG.warn("EntityExistsException while trying to persist chargingStation, other thread created charging station [{}] before we could.", chargingStation.getId());
         } finally {
             if (transaction.isActive()) {
                 LOG.warn("Transaction is still active while it should not be, rolling back.");

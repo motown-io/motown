@@ -16,7 +16,7 @@
 package io.motown.ocpp.viewmodel.domain;
 
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
-import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
+import io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

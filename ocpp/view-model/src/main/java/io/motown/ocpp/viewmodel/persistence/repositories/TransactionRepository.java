@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.viewmodel.persistence.repostories;
+package io.motown.ocpp.viewmodel.persistence.repositories;
 
 import io.motown.ocpp.viewmodel.persistence.entities.Transaction;
 import org.slf4j.Logger;

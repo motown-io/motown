@@ -21,7 +21,7 @@ import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
 import io.motown.domain.api.chargingstation.UnconfiguredChargingStationBootedEvent;
 import io.motown.ocpp.viewmodel.OcppEventHandler;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
-import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
+import io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
