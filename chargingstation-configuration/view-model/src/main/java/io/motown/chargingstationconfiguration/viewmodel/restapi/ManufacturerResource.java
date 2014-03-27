@@ -31,8 +31,7 @@ public final class ManufacturerResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response createManufacturer(Manufacturer manufacturer) {
-        manufacturer = domainService.createManufacturer(manufacturer);
-        return Response.status(Response.Status.CREATED).entity(manufacturer).build();
+        return Response.status(Response.Status.CREATED).entity(domainService.createManufacturer(manufacturer)).build();
     }
 
     @PUT
@@ -40,8 +39,7 @@ public final class ManufacturerResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response updateManufacturer(@PathParam("id") Long id, Manufacturer manufacturer) {
-        manufacturer = domainService.updateManufacturer(id, manufacturer);
-        return Response.ok(manufacturer).build();
+        return Response.ok(domainService.updateManufacturer(id, manufacturer)).build();
     }
 
     @GET

@@ -31,8 +31,7 @@ public final class EvseResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response createEvse(Evse evse) {
-        evse = domainService.createEvse(evse);
-        return Response.status(Response.Status.CREATED).entity(evse).build();
+        return Response.status(Response.Status.CREATED).entity(domainService.createEvse(evse)).build();
     }
 
     @PUT
@@ -40,8 +39,7 @@ public final class EvseResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response updateEvse(@PathParam("id") Long id, Evse evse) {
-        evse = domainService.updateEvse(id, evse);
-        return Response.ok(evse).build();
+        return Response.ok(domainService.updateEvse(id, evse)).build();
     }
 
     @GET

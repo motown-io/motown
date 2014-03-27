@@ -31,8 +31,7 @@ public final class ConnectorResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response createConnector(Connector connector) {
-        connector = domainService.createConnector(connector);
-        return Response.status(Response.Status.CREATED).entity(connector).build();
+        return Response.status(Response.Status.CREATED).entity(domainService.createConnector(connector)).build();
     }
 
     @PUT
@@ -40,8 +39,7 @@ public final class ConnectorResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response updateConnector(@PathParam("id") Long id, Connector connector) {
-        connector = domainService.updateConnector(id, connector);
-        return Response.ok(connector).build();
+        return Response.ok(domainService.updateConnector(id, connector)).build();
     }
 
     @GET
