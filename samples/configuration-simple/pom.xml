@@ -58,11 +58,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.motown.ochp</groupId>
-            <artifactId>ochp-v03-soap</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>io.motown.ocpp</groupId>
             <artifactId>ocpp-v15-soap</artifactId>
             <version>${project.version}</version>
