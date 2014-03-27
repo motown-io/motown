@@ -40,6 +40,7 @@ public final class GsonJsonProvider implements MessageBodyReader<Object>, Messag
     public GsonJsonProvider() {
         gson = new GsonBuilder()
                 .setPrettyPrinting()
+                .disableHtmlEscaping()
                 .create();
     }
 
