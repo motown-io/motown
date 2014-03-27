@@ -34,9 +34,9 @@ public class ConnectorRepository {
         }
 
         try {
-            connector = entityManager.merge(connector);
+            Connector persistentConnector = entityManager.merge(connector);
             transaction.commit();
-            return connector;
+            return persistentConnector;
         } catch (Exception e) {
             transaction.rollback();
             throw e;
@@ -57,22 +57,18 @@ public class ConnectorRepository {
 
     public void delete(Long id) {
         Connector connector = findOne(id);
-        if (connector != null) {
-            EntityTransaction transaction = entityManager.getTransaction();
+        EntityTransaction transaction = entityManager.getTransaction();
 
-            if (!transaction.isActive()) {
-                transaction.begin();
-            }
+        if (!transaction.isActive()) {
+            transaction.begin();
+        }
 
-            try {
-                entityManager.remove(connector);
-                transaction.commit();
-            } catch (Exception e) {
-                transaction.rollback();
-                throw e;
-            }
-        } else {
-            throw new EntityNotFoundException(String.format("Unable to find connector with id '%s'", id));
+        try {
+            entityManager.remove(connector);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            throw e;
         }
     }
 

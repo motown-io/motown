@@ -41,9 +41,9 @@ public class ChargingStationTypeRepository {
         }
 
         try {
-            chargingStationType = entityManager.merge(chargingStationType);
+            ChargingStationType persistentChargingStationType = entityManager.merge(chargingStationType);
             transaction.commit();
-            return chargingStationType;
+            return persistentChargingStationType;
         } catch (Exception e) {
             transaction.rollback();
             throw e;
@@ -64,22 +64,18 @@ public class ChargingStationTypeRepository {
 
     public void delete(Long id) {
         ChargingStationType chargingStationType = findOne(id);
-        if (chargingStationType != null) {
-            EntityTransaction transaction = entityManager.getTransaction();
+        EntityTransaction transaction = entityManager.getTransaction();
 
-            if (!transaction.isActive()) {
-                transaction.begin();
-            }
+        if (!transaction.isActive()) {
+            transaction.begin();
+        }
 
-            try {
-                entityManager.remove(chargingStationType);
-                transaction.commit();
-            } catch (Exception e) {
-                transaction.rollback();
-                throw e;
-            }
-        } else {
-            throw new EntityNotFoundException(String.format("Unable to find charging station type with id '%s'", id));
+        try {
+            entityManager.remove(chargingStationType);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            throw e;
         }
     }
 

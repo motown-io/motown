@@ -34,9 +34,9 @@ public class EvseRepository {
         }
 
         try {
-            evse = entityManager.merge(evse);
+            Evse persistentEvse = entityManager.merge(evse);
             transaction.commit();
-            return evse;
+            return persistentEvse;
         } catch (Exception e) {
             transaction.rollback();
             throw e;
@@ -57,22 +57,18 @@ public class EvseRepository {
 
     public void delete(Long id) {
         Evse evse = findOne(id);
-        if (evse != null) {
-            EntityTransaction transaction = entityManager.getTransaction();
+        EntityTransaction transaction = entityManager.getTransaction();
 
-            if (!transaction.isActive()) {
-                transaction.begin();
-            }
+        if (!transaction.isActive()) {
+            transaction.begin();
+        }
 
-            try {
-                entityManager.remove(evse);
-                transaction.commit();
-            } catch (Exception e) {
-                transaction.rollback();
-                throw e;
-            }
-        } else {
-            throw new EntityNotFoundException(String.format("Unable to find evse with id '%s'", id));
+        try {
+            entityManager.remove(evse);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            throw e;
         }
     }
 

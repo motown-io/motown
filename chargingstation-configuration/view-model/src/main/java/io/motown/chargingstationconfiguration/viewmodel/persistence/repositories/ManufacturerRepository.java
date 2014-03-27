@@ -34,9 +34,9 @@ public class ManufacturerRepository {
         }
 
         try {
-            manufacturer = entityManager.merge(manufacturer);
+            Manufacturer persistentManufacturer = entityManager.merge(manufacturer);
             transaction.commit();
-            return manufacturer;
+            return persistentManufacturer;
         } catch (Exception e) {
             transaction.rollback();
             throw e;
@@ -57,22 +57,18 @@ public class ManufacturerRepository {
 
     public void delete(Long id) {
         Manufacturer manufacturer = findOne(id);
-        if (manufacturer != null) {
-            EntityTransaction transaction = entityManager.getTransaction();
+        EntityTransaction transaction = entityManager.getTransaction();
 
-            if (!transaction.isActive()) {
-                transaction.begin();
-            }
+        if (!transaction.isActive()) {
+            transaction.begin();
+        }
 
-            try {
-                entityManager.remove(manufacturer);
-                transaction.commit();
-            } catch (Exception e) {
-                transaction.rollback();
-                throw e;
-            }
-        } else {
-            throw new EntityNotFoundException(String.format("Unable to find manufacturer with id '%s'", id));
+        try {
+            entityManager.remove(manufacturer);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            throw e;
         }
     }
 
