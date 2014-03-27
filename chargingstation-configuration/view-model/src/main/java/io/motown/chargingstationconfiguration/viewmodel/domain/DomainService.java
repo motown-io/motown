@@ -84,8 +84,8 @@ public class DomainService {
      *
      * @param chargingStationType the entity to be persisted.
      */
-    public void createChargingStationType(ChargingStationType chargingStationType) {
-        chargingStationTypeRepository.createOrUpdate(chargingStationType);
+    public ChargingStationType createChargingStationType(ChargingStationType chargingStationType) {
+        return chargingStationTypeRepository.createOrUpdate(chargingStationType);
     }
 
     /**
@@ -94,9 +94,9 @@ public class DomainService {
      * @param id the id of the entity to find.
      * @param chargingStationType the payload from the request.
      */
-    public void updateChargingStationType(Long id, ChargingStationType chargingStationType) {
+    public ChargingStationType updateChargingStationType(Long id, ChargingStationType chargingStationType) {
         chargingStationType.setId(id);
-        chargingStationTypeRepository.createOrUpdate(chargingStationType);
+        return chargingStationTypeRepository.createOrUpdate(chargingStationType);
     }
 
     /**
@@ -132,8 +132,8 @@ public class DomainService {
      *
      * @param connector the entity to be persisted.
      */
-    public void createConnector(Connector connector) {
-        connectorRepository.createOrUpdate(connector);
+    public Connector createConnector(Connector connector) {
+        return connectorRepository.createOrUpdate(connector);
     }
 
     /**
@@ -142,9 +142,9 @@ public class DomainService {
      * @param id the id of the entity to find.
      * @param connector the payload from the request.
      */
-    public void updateConnector(Long id, Connector connector) {
+    public Connector updateConnector(Long id, Connector connector) {
         connector.setId(id);
-        connectorRepository.createOrUpdate(connector);
+        return connectorRepository.createOrUpdate(connector);
     }
 
     /**
@@ -180,8 +180,8 @@ public class DomainService {
      *
      * @param evse the entity to be persisted.
      */
-    public void createEvse(Evse evse) {
-        evseRepository.createOrUpdate(evse);
+    public Evse createEvse(Evse evse) {
+        return evseRepository.createOrUpdate(evse);
     }
 
     /**
@@ -190,9 +190,9 @@ public class DomainService {
      * @param id the id of the entity to find.
      * @param evse the payload from the request.
      */
-    public void updateEvse(Long id, Evse evse) {
+    public Evse updateEvse(Long id, Evse evse) {
         evse.setId(id);
-        evseRepository.createOrUpdate(evse);
+        return evseRepository.createOrUpdate(evse);
     }
 
     /**
@@ -228,8 +228,8 @@ public class DomainService {
      *
      * @param manufacturer the entity to be persisted.
      */
-    public void createManufacturer(Manufacturer manufacturer) {
-        manufacturerRepository.createOrUpdate(manufacturer);
+    public Manufacturer createManufacturer(Manufacturer manufacturer) {
+        return manufacturerRepository.createOrUpdate(manufacturer);
     }
 
     /**
@@ -238,9 +238,9 @@ public class DomainService {
      * @param id the id of the entity to find.
      * @param manufacturer the payload from the request.
      */
-    public void updateManufacturer(Long id, Manufacturer manufacturer) {
+    public Manufacturer updateManufacturer(Long id, Manufacturer manufacturer) {
         manufacturer.setId(id);
-        manufacturerRepository.createOrUpdate(manufacturer);
+        return manufacturerRepository.createOrUpdate(manufacturer);
     }
 
     /**

@@ -26,7 +26,7 @@ public class EvseRepository {
 
     private EntityManager entityManager;
 
-    public void createOrUpdate(Evse evse) {
+    public Evse createOrUpdate(Evse evse) {
         EntityTransaction transaction = entityManager.getTransaction();
 
         if (!transaction.isActive()) {
@@ -34,8 +34,9 @@ public class EvseRepository {
         }
 
         try {
-            entityManager.merge(evse);
+            evse = entityManager.merge(evse);
             transaction.commit();
+            return evse;
         } catch (Exception e) {
             transaction.rollback();
             throw e;

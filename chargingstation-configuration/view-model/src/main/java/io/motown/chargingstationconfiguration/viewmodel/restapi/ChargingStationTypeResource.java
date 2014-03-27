@@ -31,7 +31,7 @@ public final class ChargingStationTypeResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response createChargingStationType(ChargingStationType chargingStationType) {
-        domainService.createChargingStationType(chargingStationType);
+        chargingStationType = domainService.createChargingStationType(chargingStationType);
         return Response.status(Response.Status.CREATED).entity(chargingStationType).build();
     }
 
@@ -40,7 +40,7 @@ public final class ChargingStationTypeResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response updateChargingStationType(@PathParam("id") Long id, ChargingStationType chargingStationType) {
-        domainService.updateChargingStationType(id, chargingStationType);
+        chargingStationType = domainService.updateChargingStationType(id, chargingStationType);
         return Response.ok(chargingStationType).build();
     }
 

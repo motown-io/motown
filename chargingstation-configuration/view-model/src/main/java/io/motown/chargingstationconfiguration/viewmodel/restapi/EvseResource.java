@@ -31,7 +31,7 @@ public final class EvseResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response createEvse(Evse evse) {
-        domainService.createEvse(evse);
+        evse = domainService.createEvse(evse);
         return Response.status(Response.Status.CREATED).entity(evse).build();
     }
 
@@ -40,7 +40,7 @@ public final class EvseResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response updateEvse(@PathParam("id") Long id, Evse evse) {
-        domainService.updateEvse(id, evse);
+        evse = domainService.updateEvse(id, evse);
         return Response.ok(evse).build();
     }
 

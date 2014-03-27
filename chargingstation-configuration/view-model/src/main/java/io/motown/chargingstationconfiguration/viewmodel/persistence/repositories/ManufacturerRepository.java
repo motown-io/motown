@@ -26,7 +26,7 @@ public class ManufacturerRepository {
 
     private EntityManager entityManager;
 
-    public void createOrUpdate(Manufacturer manufacturer) {
+    public Manufacturer createOrUpdate(Manufacturer manufacturer) {
         EntityTransaction transaction = entityManager.getTransaction();
 
         if (!transaction.isActive()) {
@@ -34,8 +34,9 @@ public class ManufacturerRepository {
         }
 
         try {
-            entityManager.merge(manufacturer);
+            manufacturer = entityManager.merge(manufacturer);
             transaction.commit();
+            return manufacturer;
         } catch (Exception e) {
             transaction.rollback();
             throw e;

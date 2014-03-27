@@ -103,7 +103,7 @@ public class EvseResourceTest extends JerseyTest {
     @Test
     public void testCreateEvseUniqueConstraintViolation() {
         Evse e1 = getEvse();
-        repository.createOrUpdate(e1);
+        e1 = repository.createOrUpdate(e1);
 
         Evse e2 = getEvse();
         e2.setId(e1.getId());
@@ -119,7 +119,7 @@ public class EvseResourceTest extends JerseyTest {
     @Test
     public void testUpdateEvse() {
         Evse evse = getEvse();
-        repository.createOrUpdate(evse);
+        evse = repository.createOrUpdate(evse);
 
         evse.setIdentifier(2);
 
@@ -157,7 +157,7 @@ public class EvseResourceTest extends JerseyTest {
     @Test
     public void testGetEvse() {
         Evse evse = getEvse();
-        repository.createOrUpdate(evse);
+        evse = repository.createOrUpdate(evse);
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/" + evse.getId())
@@ -180,7 +180,7 @@ public class EvseResourceTest extends JerseyTest {
     @Test
     public void testDeleteEvse() {
         Evse evse = getEvse();
-        repository.createOrUpdate(evse);
+        evse = repository.createOrUpdate(evse);
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/" + evse.getId())
