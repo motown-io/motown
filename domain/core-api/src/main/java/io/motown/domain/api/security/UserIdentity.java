@@ -13,13 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.domain.api.chargingstation.identity;
+package io.motown.domain.api.security;
 
-import java.util.Collection;
-import java.util.Map;
+/**
+ * Describes an user's identity used to determine the context of a call.
+ */
+public interface UserIdentity {
 
-public interface CommandAuthorization {
-
-    boolean isAuthorized(IdentityContext identityContext, Map<UserIdentity,Collection<Class<?>>> authorizations, Class commandClass);
+    /**
+     * The string representation of the user identity.
+     *
+     * @return string representation of the user identity.
+     */
+    String getId();
 
 }

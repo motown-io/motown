@@ -13,18 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.domain.api.chargingstation.identity;
+package io.motown.domain.api.security;
 
 import java.util.Collection;
 import java.util.Map;
 
-public class SimpleCommandAuthorization implements CommandAuthorization {
+public interface CommandAuthorization {
 
-    @Override
-    public boolean isAuthorized(IdentityContext identityContext, Map<UserIdentity, Collection<Class<?>>> authorizations, Class commandClass) {
-        Collection<Class<?>> authorizationsForUser = authorizations.get(identityContext.getUserIdentity());
-
-        return authorizationsForUser != null && (authorizationsForUser.contains(commandClass) || authorizationsForUser.contains(AllPermissions.class));
-    }
+    boolean isAuthorized(IdentityContext identityContext, Map<UserIdentity,Collection<Class<?>>> authorizations, Class commandClass);
 
 }

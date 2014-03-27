@@ -15,8 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import io.motown.domain.api.chargingstation.identity.IdentityContext;
-import io.motown.domain.api.chargingstation.identity.UserIdentity;
+import io.motown.domain.api.security.IdentityContext;
+import io.motown.domain.api.security.UserIdentity;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Objects;

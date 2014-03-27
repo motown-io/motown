@@ -13,21 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.domain.api.chargingstation.identity;
+package io.motown.domain.api.security;
 
 import java.util.Objects;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * Used where a user identity is required but no user is involved in the identity context,
+ * A user identification based on a string.
  */
-public final class NullUserIdentity implements UserIdentity {
+public class SimpleUserIdentity implements UserIdentity {
 
-    private static final String ANONYMOUS_IDENTITY = "";
+    private String identity;
 
-    private final String id;
-
-    public NullUserIdentity() {
-        this.id = ANONYMOUS_IDENTITY;
+    /**
+     * Creates a user identity based on a string.
+     *
+     * @param identity string representation of user identity.
+     * @throws NullPointerException when identity is null.
+     * @throws IllegalArgumentException when identity is empty.
+     */
+    public SimpleUserIdentity(String identity) {
+        this.identity = checkNotNull(identity);
+        checkArgument(!identity.isEmpty());
     }
 
     /**
@@ -35,12 +44,12 @@ public final class NullUserIdentity implements UserIdentity {
      */
     @Override
     public String getId() {
-        return id;
+        return identity;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(identity);
     }
 
     @Override
@@ -51,7 +60,7 @@ public final class NullUserIdentity implements UserIdentity {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final NullUserIdentity other = (NullUserIdentity) obj;
-        return Objects.equals(this.id, other.id);
+        final SimpleUserIdentity other = (SimpleUserIdentity) obj;
+        return Objects.equals(this.identity, other.identity);
     }
 }

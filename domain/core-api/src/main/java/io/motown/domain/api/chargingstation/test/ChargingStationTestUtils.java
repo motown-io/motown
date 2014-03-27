@@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.chargingstation.*;
-import io.motown.domain.api.chargingstation.identity.*;
+import io.motown.domain.api.security.*;
 import org.joda.time.DateTimeUtils;
 
 import java.util.*;

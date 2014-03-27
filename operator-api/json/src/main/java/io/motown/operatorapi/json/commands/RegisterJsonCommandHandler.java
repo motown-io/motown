@@ -22,9 +22,9 @@ import io.motown.domain.api.chargingstation.AcceptChargingStationCommand;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ConfigureChargingStationCommand;
 import io.motown.domain.api.chargingstation.CreateAndAcceptChargingStationCommand;
-import io.motown.domain.api.chargingstation.identity.IdentityContext;
-import io.motown.domain.api.chargingstation.identity.SimpleUserIdentity;
-import io.motown.domain.api.chargingstation.identity.TypeBasedAddOnIdentity;
+import io.motown.domain.api.security.IdentityContext;
+import io.motown.domain.api.security.SimpleUserIdentity;
+import io.motown.domain.api.security.TypeBasedAddOnIdentity;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 

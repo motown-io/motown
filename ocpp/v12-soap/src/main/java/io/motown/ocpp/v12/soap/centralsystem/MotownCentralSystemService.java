@@ -17,8 +17,8 @@ package io.motown.ocpp.v12.soap.centralsystem;
 
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.chargingstation.MeterValue;
-import io.motown.domain.api.chargingstation.identity.AddOnIdentity;
-import io.motown.domain.api.chargingstation.identity.TypeBasedAddOnIdentity;
+import io.motown.domain.api.security.AddOnIdentity;
+import io.motown.domain.api.security.TypeBasedAddOnIdentity;
 import io.motown.ocpp.soaputils.async.*;
 import io.motown.ocpp.soaputils.header.SoapHeaderReader;
 import io.motown.ocpp.v12.soap.centralsystem.schema.*;

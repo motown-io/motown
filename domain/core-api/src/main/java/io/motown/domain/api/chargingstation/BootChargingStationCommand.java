@@ -16,7 +16,7 @@
 package io.motown.domain.api.chargingstation;
 
 import com.google.common.collect.ImmutableMap;
-import io.motown.domain.api.chargingstation.identity.IdentityContext;
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Map;

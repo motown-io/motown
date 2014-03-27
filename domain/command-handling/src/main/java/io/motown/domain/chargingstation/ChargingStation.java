@@ -18,7 +18,7 @@ package io.motown.domain.chargingstation;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import io.motown.domain.api.chargingstation.*;
-import io.motown.domain.api.chargingstation.identity.*;
+import io.motown.domain.api.security.*;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.domain.MetaData;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;

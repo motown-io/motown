@@ -16,7 +16,7 @@
 package io.motown.ocpp.viewmodel.domain;
 
 import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.identity.AddOnIdentity;
+import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.axonframework.commandhandling.CommandCallback;

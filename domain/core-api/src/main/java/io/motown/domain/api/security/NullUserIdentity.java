@@ -13,30 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.domain.api.chargingstation.identity;
+package io.motown.domain.api.security;
 
 import java.util.Objects;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
- * A user identification based on a string.
+ * Used where a user identity is required but no user is involved in the identity context,
  */
-public class SimpleUserIdentity implements UserIdentity {
+public final class NullUserIdentity implements UserIdentity {
 
-    private String identity;
+    private static final String ANONYMOUS_IDENTITY = "";
 
-    /**
-     * Creates a user identity based on a string.
-     *
-     * @param identity string representation of user identity.
-     * @throws NullPointerException when identity is null.
-     * @throws IllegalArgumentException when identity is empty.
-     */
-    public SimpleUserIdentity(String identity) {
-        this.identity = checkNotNull(identity);
-        checkArgument(!identity.isEmpty());
+    private final String id;
+
+    public NullUserIdentity() {
+        this.id = ANONYMOUS_IDENTITY;
     }
 
     /**
@@ -44,12 +35,12 @@ public class SimpleUserIdentity implements UserIdentity {
      */
     @Override
     public String getId() {
-        return identity;
+        return id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(identity);
+        return Objects.hash(id);
     }
 
     @Override
@@ -60,7 +51,7 @@ public class SimpleUserIdentity implements UserIdentity {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final SimpleUserIdentity other = (SimpleUserIdentity) obj;
-        return Objects.equals(this.identity, other.identity);
+        final NullUserIdentity other = (NullUserIdentity) obj;
+        return Objects.equals(this.id, other.id);
     }
 }

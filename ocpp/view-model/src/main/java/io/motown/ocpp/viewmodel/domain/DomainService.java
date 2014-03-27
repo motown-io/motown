@@ -17,9 +17,9 @@ package io.motown.ocpp.viewmodel.domain;
 
 import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
-import io.motown.domain.api.chargingstation.identity.AddOnIdentity;
-import io.motown.domain.api.chargingstation.identity.IdentityContext;
-import io.motown.domain.api.chargingstation.identity.NullUserIdentity;
+import io.motown.domain.api.security.AddOnIdentity;
+import io.motown.domain.api.security.IdentityContext;
+import io.motown.domain.api.security.NullUserIdentity;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.entities.ReservationIdentifier;
 import io.motown.ocpp.viewmodel.persistence.entities.Transaction;
