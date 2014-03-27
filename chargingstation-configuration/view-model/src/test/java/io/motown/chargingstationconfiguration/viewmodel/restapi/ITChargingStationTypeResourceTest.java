@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.chargingstationconfiguration.viewmodel.restapi.integration;
+package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -31,7 +31,6 @@ import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Man
 import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ManufacturerRepository;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +47,7 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration("classpath:jersey-test-config.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@Ignore
-public class ChargingStationTypeResourceTest extends JerseyTest {
+public class ITChargingStationTypeResourceTest extends JerseyTest {
     private static final int OK = 200;
     private static final int CREATED = 201;
     private static final int BAD_REQUEST = 400;
@@ -65,7 +63,7 @@ public class ChargingStationTypeResourceTest extends JerseyTest {
     @Autowired
     private ManufacturerRepository manufacturerRepository;
 
-    public ChargingStationTypeResourceTest() throws TestContainerException {
+    public ITChargingStationTypeResourceTest() throws TestContainerException {
         super(new GrizzlyWebTestContainerFactory());
     }
 

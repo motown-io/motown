@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.chargingstationconfiguration.viewmodel.restapi.integration;
+package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -29,7 +29,6 @@ import com.sun.jersey.test.framework.spi.container.grizzly2.web.GrizzlyWebTestCo
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ConnectorRepository;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,13 +45,11 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration("classpath:jersey-test-config.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@Ignore
-public class ConnectorResourceTest extends JerseyTest {
+public class ITConnectorResourceTest extends JerseyTest {
     private static final int OK = 200;
     private static final int CREATED = 201;
     private static final int BAD_REQUEST = 400;
     private static final int NOT_FOUND = 404;
-    private static final int INTERNAL_SERVER_ERROR = 500;
     private static final String BASE_URI = "http://localhost:9998/config/api/connectors";
 
     private Client client;
@@ -60,7 +57,7 @@ public class ConnectorResourceTest extends JerseyTest {
     @Autowired
     private ConnectorRepository repository;
 
-    public ConnectorResourceTest() throws TestContainerException {
+    public ITConnectorResourceTest() throws TestContainerException {
         super(new GrizzlyWebTestContainerFactory());
     }
 
@@ -98,22 +95,6 @@ public class ConnectorResourceTest extends JerseyTest {
                 .post(ClientResponse.class, connector);
 
         assertEquals(CREATED, response.getStatus());
-    }
-
-    @Test
-    public void testCreateConnectorUniqueConstraintViolation() {
-        Connector c1 = getConnector();
-        c1 = repository.createOrUpdate(c1);
-
-        Connector c2 = getConnector();
-        c2.setId(c1.getId());
-
-        ClientResponse response = client.resource(BASE_URI)
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.TEXT_PLAIN)
-                .post(ClientResponse.class, c2);
-
-        assertEquals(INTERNAL_SERVER_ERROR, response.getStatus());
     }
 
     @Test

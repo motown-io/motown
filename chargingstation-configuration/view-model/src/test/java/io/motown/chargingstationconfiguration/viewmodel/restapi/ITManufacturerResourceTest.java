@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.chargingstationconfiguration.viewmodel.restapi.integration;
+package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -26,10 +26,9 @@ import com.sun.jersey.test.framework.JerseyTest;
 import com.sun.jersey.test.framework.WebAppDescriptor;
 import com.sun.jersey.test.framework.spi.container.TestContainerException;
 import com.sun.jersey.test.framework.spi.container.grizzly2.web.GrizzlyWebTestContainerFactory;
-import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
-import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.EvseRepository;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Manufacturer;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ManufacturerRepository;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,21 +45,20 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration("classpath:jersey-test-config.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@Ignore
-public class EvseResourceTest extends JerseyTest {
+public class ITManufacturerResourceTest extends JerseyTest {
     private static final int OK = 200;
     private static final int CREATED = 201;
     private static final int BAD_REQUEST = 400;
     private static final int NOT_FOUND = 404;
     private static final int INTERNAL_SERVER_ERROR = 500;
-    private static final String BASE_URI = "http://localhost:9998/config/api/evses";
+    private static final String BASE_URI = "http://localhost:9998/config/api/manufacturers";
 
     private Client client;
 
     @Autowired
-    private EvseRepository repository;
+    private ManufacturerRepository repository;
 
-    public EvseResourceTest() throws TestContainerException {
+    public ITManufacturerResourceTest() throws TestContainerException {
         super(new GrizzlyWebTestContainerFactory());
     }
 
@@ -90,63 +88,63 @@ public class EvseResourceTest extends JerseyTest {
     }
 
     @Test
-    public void testCreateEvse() {
-        Evse evse = getEvse();
+    public void testCreateManufacturer() {
+        Manufacturer manufacturer = getManufacturer();
         ClientResponse response = client.resource(BASE_URI)
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .post(ClientResponse.class, evse);
+                .post(ClientResponse.class, manufacturer);
 
         assertEquals(CREATED, response.getStatus());
     }
 
     @Test
-    public void testCreateEvseUniqueConstraintViolation() {
-        Evse e1 = getEvse();
-        e1 = repository.createOrUpdate(e1);
+    public void testCreateManufacturerUniqueConstraintViolation() {
+        Manufacturer m1 = getManufacturer();
+        m1 = repository.createOrUpdate(m1);
 
-        Evse e2 = getEvse();
-        e2.setId(e1.getId());
+        Manufacturer m2 = getManufacturer();
+        m2.setCode(m1.getCode());
 
         ClientResponse response = client.resource(BASE_URI)
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.TEXT_PLAIN)
-                .post(ClientResponse.class, e2);
+                .post(ClientResponse.class, m2);
 
         assertEquals(INTERNAL_SERVER_ERROR, response.getStatus());
     }
 
     @Test
-    public void testUpdateEvse() {
-        Evse evse = getEvse();
-        evse = repository.createOrUpdate(evse);
+    public void testUpdateManufacturer() {
+        Manufacturer manufacturer = getManufacturer();
+        manufacturer = repository.createOrUpdate(manufacturer);
 
-        evse.setIdentifier(2);
+        manufacturer.setCode("MAN02");
 
         ClientResponse response = client.resource(BASE_URI)
-                .path("/" + evse.getId())
+                .path("/" + manufacturer.getId())
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .put(ClientResponse.class, evse);
+                .put(ClientResponse.class, manufacturer);
 
         assertEquals(OK, response.getStatus());
-        assertEquals(evse.getIdentifier(), response.getEntity(Evse.class).getIdentifier());
+        assertEquals(manufacturer.getCode(), response.getEntity(Manufacturer.class).getCode());
     }
 
     @Test
-    public void testUpdateEvseNonExistentEntity() {
-        Evse evse = getEvse();
+    public void testUpdateManufacturerNonExistentEntity() {
+        Manufacturer manufacturer = getManufacturer();
         ClientResponse response = client.resource(BASE_URI)
                 .path("/2")
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.TEXT_PLAIN)
-                .put(ClientResponse.class, evse);
+                .put(ClientResponse.class, manufacturer);
 
         assertEquals(BAD_REQUEST, response.getStatus());
     }
 
     @Test
-    public void testGetEvses() {
+    public void testGetManufacturers() {
         ClientResponse response = client.resource(BASE_URI)
                 .accept(MediaType.APPLICATION_JSON)
                 .get(ClientResponse.class);
@@ -155,12 +153,12 @@ public class EvseResourceTest extends JerseyTest {
     }
 
     @Test
-    public void testGetEvse() {
-        Evse evse = getEvse();
-        evse = repository.createOrUpdate(evse);
+    public void testGetManufacturer() {
+        Manufacturer manufacturer = getManufacturer();
+        manufacturer = repository.createOrUpdate(manufacturer);
 
         ClientResponse response = client.resource(BASE_URI)
-                .path("/" + evse.getId())
+                .path("/" + manufacturer.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .get(ClientResponse.class);
 
@@ -168,7 +166,7 @@ public class EvseResourceTest extends JerseyTest {
     }
 
     @Test
-    public void testGetEvseNotFound() {
+    public void testGetManufacturerNotFound() {
         ClientResponse response = client.resource(BASE_URI)
                 .path("/1")
                 .accept(MediaType.TEXT_PLAIN)
@@ -178,12 +176,12 @@ public class EvseResourceTest extends JerseyTest {
     }
 
     @Test
-    public void testDeleteEvse() {
-        Evse evse = getEvse();
-        evse = repository.createOrUpdate(evse);
+    public void testDeleteManufacturer() {
+        Manufacturer manufacturer = getManufacturer();
+        manufacturer = repository.createOrUpdate(manufacturer);
 
         ClientResponse response = client.resource(BASE_URI)
-                .path("/" + evse.getId())
+                .path("/" + manufacturer.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .delete(ClientResponse.class);
 
@@ -191,7 +189,7 @@ public class EvseResourceTest extends JerseyTest {
     }
 
     @Test
-    public void testDeleteEvseNotFound() {
+    public void testDeleteManufacturerNotFound() {
         ClientResponse response = client.resource(BASE_URI)
                 .path("/1")
                 .accept(MediaType.TEXT_PLAIN)
@@ -200,9 +198,9 @@ public class EvseResourceTest extends JerseyTest {
         assertEquals(NOT_FOUND, response.getStatus());
     }
 
-    private Evse getEvse() {
-        Evse evse = new Evse();
-        evse.setIdentifier(1);
-        return evse;
+    private Manufacturer getManufacturer() {
+        Manufacturer manufacturer = new Manufacturer();
+        manufacturer.setCode("MAN01");
+        return manufacturer;
     }
 }
