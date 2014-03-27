@@ -65,7 +65,7 @@ public class GsonJsonProviderTest {
 
     @Test(expected = JsonParseException.class)
     public void testReadFromThrowsJsonParseException() throws IOException {
-        Object obj = provider.readFrom((Class<Object>) MOCK.getClass(), MOCK.getClass(), new Annotation[]{}, MediaType.APPLICATION_JSON_TYPE, MAP, new ByteArrayInputStream(INCORRECT_MOCK_OBJECT_JSON.getBytes()));
+        provider.readFrom((Class<Object>) MOCK.getClass(), MOCK.getClass(), new Annotation[]{}, MediaType.APPLICATION_JSON_TYPE, MAP, new ByteArrayInputStream(INCORRECT_MOCK_OBJECT_JSON.getBytes()));
     }
 
     @Test
