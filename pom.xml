@@ -49,8 +49,6 @@
         <module>vas/view-model</module>
         <module>samples/configuration-distributed</module>
         <module>samples/configuration-simple</module>
-        <module>ochp/v03-soap</module>
-        <module>ochp/view-model</module>
     </modules>
 
     <properties>

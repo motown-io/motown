@@ -27,7 +27,6 @@
         <module>domain</module>
         <module>chargingstation-configuration</module>
         <module>identification-authorization</module>
-        <module>ochp-v03-soap</module>
         <module>ocpp-v15-soap</module>
         <module>ocpp-v12-soap</module>
         <module>operator-api</module>
