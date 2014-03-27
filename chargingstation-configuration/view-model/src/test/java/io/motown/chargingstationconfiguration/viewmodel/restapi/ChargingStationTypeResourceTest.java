@@ -52,7 +52,7 @@ public class ChargingStationTypeResourceTest {
     @Test
     public void testCreateChargingStationType() {
         Response response = resource.createChargingStationType(any(ChargingStationType.class));
-        verify(repository).create(any(ChargingStationType.class));
+        verify(repository).createOrUpdate(any(ChargingStationType.class));
 
         assertNotNull(response);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
@@ -60,7 +60,7 @@ public class ChargingStationTypeResourceTest {
 
     @Test(expected = RuntimeException.class)
     public void testCreateChargingStationTypeThrowsException() {
-        doThrow(mock(PersistenceException.class)).when(repository).create(any(ChargingStationType.class));
+        doThrow(mock(PersistenceException.class)).when(repository).createOrUpdate(any(ChargingStationType.class));
         resource.createChargingStationType(any(ChargingStationType.class));
     }
 
@@ -69,7 +69,7 @@ public class ChargingStationTypeResourceTest {
         ChargingStationType chargingStationType = mock(ChargingStationType.class);
         when(chargingStationType.getId()).thenReturn(1L);
         Response response = resource.updateChargingStationType(1L, chargingStationType);
-        verify(repository).update(chargingStationType);
+        verify(repository).createOrUpdate(chargingStationType);
 
         assertNotNull(response);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
@@ -79,7 +79,7 @@ public class ChargingStationTypeResourceTest {
     public void testUpdateChargingStationTypeThrowsException() {
         ChargingStationType chargingStationType = mock(ChargingStationType.class);
         when(chargingStationType.getId()).thenReturn(1L);
-        doThrow(mock(PersistenceException.class)).when(repository).update(chargingStationType);
+        doThrow(mock(PersistenceException.class)).when(repository).createOrUpdate(chargingStationType);
         resource.updateChargingStationType(1L, chargingStationType);
     }
 

@@ -26,23 +26,7 @@ public class EvseRepository {
 
     private EntityManager entityManager;
 
-    public void create(Evse evse) {
-        EntityTransaction transaction = entityManager.getTransaction();
-
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
-        try {
-            entityManager.persist(evse);
-            transaction.commit();
-        } catch (Exception e) {
-            transaction.rollback();
-            throw e;
-        }
-    }
-
-    public void update(Evse evse) {
+    public void createOrUpdate(Evse evse) {
         EntityTransaction transaction = entityManager.getTransaction();
 
         if (!transaction.isActive()) {

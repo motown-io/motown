@@ -52,7 +52,7 @@ public class ConnectorResourceTest {
     @Test
     public void testCreateConnector() {
         Response response = resource.createConnector(any(Connector.class));
-        verify(repository).create(any(Connector.class));
+        verify(repository).createOrUpdate(any(Connector.class));
 
         assertNotNull(response);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
@@ -60,7 +60,7 @@ public class ConnectorResourceTest {
 
     @Test(expected = RuntimeException.class)
     public void testCreateConnectorThrowsException() {
-        doThrow(mock(PersistenceException.class)).when(repository).create(any(Connector.class));
+        doThrow(mock(PersistenceException.class)).when(repository).createOrUpdate(any(Connector.class));
         resource.createConnector(any(Connector.class));
     }
 
@@ -69,7 +69,7 @@ public class ConnectorResourceTest {
         Connector connector = mock(Connector.class);
         when(connector.getId()).thenReturn(1L);
         Response response = resource.updateConnector(1L, connector);
-        verify(repository).update(connector);
+        verify(repository).createOrUpdate(connector);
 
         assertNotNull(response);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
@@ -79,7 +79,7 @@ public class ConnectorResourceTest {
     public void testUpdateConnectorThrowsException() {
         Connector connector = mock(Connector.class);
         when(connector.getId()).thenReturn(1L);
-        doThrow(mock(PersistenceException.class)).when(repository).update(connector);
+        doThrow(mock(PersistenceException.class)).when(repository).createOrUpdate(connector);
         resource.updateConnector(1L, connector);
     }
 

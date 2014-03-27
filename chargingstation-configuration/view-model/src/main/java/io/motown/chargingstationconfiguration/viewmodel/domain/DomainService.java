@@ -85,7 +85,7 @@ public class DomainService {
      * @param chargingStationType the entity to be persisted.
      */
     public void createChargingStationType(ChargingStationType chargingStationType) {
-        chargingStationTypeRepository.create(chargingStationType);
+        chargingStationTypeRepository.createOrUpdate(chargingStationType);
     }
 
     /**
@@ -96,7 +96,7 @@ public class DomainService {
      */
     public void updateChargingStationType(Long id, ChargingStationType chargingStationType) {
         chargingStationType.setId(id);
-        chargingStationTypeRepository.update(chargingStationType);
+        chargingStationTypeRepository.createOrUpdate(chargingStationType);
     }
 
     /**
@@ -133,7 +133,7 @@ public class DomainService {
      * @param connector the entity to be persisted.
      */
     public void createConnector(Connector connector) {
-        connectorRepository.create(connector);
+        connectorRepository.createOrUpdate(connector);
     }
 
     /**
@@ -144,7 +144,7 @@ public class DomainService {
      */
     public void updateConnector(Long id, Connector connector) {
         connector.setId(id);
-        connectorRepository.update(connector);
+        connectorRepository.createOrUpdate(connector);
     }
 
     /**
@@ -181,7 +181,7 @@ public class DomainService {
      * @param evse the entity to be persisted.
      */
     public void createEvse(Evse evse) {
-        evseRepository.create(evse);
+        evseRepository.createOrUpdate(evse);
     }
 
     /**
@@ -192,7 +192,7 @@ public class DomainService {
      */
     public void updateEvse(Long id, Evse evse) {
         evse.setId(id);
-        evseRepository.update(evse);
+        evseRepository.createOrUpdate(evse);
     }
 
     /**
@@ -229,7 +229,7 @@ public class DomainService {
      * @param manufacturer the entity to be persisted.
      */
     public void createManufacturer(Manufacturer manufacturer) {
-        manufacturerRepository.create(manufacturer);
+        manufacturerRepository.createOrUpdate(manufacturer);
     }
 
     /**
@@ -240,7 +240,7 @@ public class DomainService {
      */
     public void updateManufacturer(Long id, Manufacturer manufacturer) {
         manufacturer.setId(id);
-        manufacturerRepository.update(manufacturer);
+        manufacturerRepository.createOrUpdate(manufacturer);
     }
 
     /**

@@ -103,7 +103,7 @@ public class ManufacturerResourceTest extends JerseyTest {
     @Test
     public void testCreateManufacturerUniqueConstraintViolation() {
         Manufacturer m1 = getManufacturer();
-        repository.create(m1);
+        repository.createOrUpdate(m1);
 
         Manufacturer m2 = getManufacturer();
         m2.setCode(m1.getCode());
@@ -119,7 +119,7 @@ public class ManufacturerResourceTest extends JerseyTest {
     @Test
     public void testUpdateManufacturer() {
         Manufacturer manufacturer = getManufacturer();
-        repository.create(manufacturer);
+        repository.createOrUpdate(manufacturer);
 
         manufacturer.setCode("MAN02");
 
@@ -157,7 +157,7 @@ public class ManufacturerResourceTest extends JerseyTest {
     @Test
     public void testGetManufacturer() {
         Manufacturer manufacturer = getManufacturer();
-        repository.create(manufacturer);
+        repository.createOrUpdate(manufacturer);
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/" + manufacturer.getId())
@@ -180,7 +180,7 @@ public class ManufacturerResourceTest extends JerseyTest {
     @Test
     public void testDeleteManufacturer() {
         Manufacturer manufacturer = getManufacturer();
-        repository.create(manufacturer);
+        repository.createOrUpdate(manufacturer);
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/" + manufacturer.getId())

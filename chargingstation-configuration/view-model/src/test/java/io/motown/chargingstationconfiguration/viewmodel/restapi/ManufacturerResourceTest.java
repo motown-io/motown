@@ -52,7 +52,7 @@ public class ManufacturerResourceTest {
     @Test
     public void testCreateManufacturer() {
         Response response = resource.createManufacturer(any(Manufacturer.class));
-        verify(repository).create(any(Manufacturer.class));
+        verify(repository).createOrUpdate(any(Manufacturer.class));
 
         assertNotNull(response);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
@@ -60,7 +60,7 @@ public class ManufacturerResourceTest {
 
     @Test(expected = RuntimeException.class)
     public void testCreateManufacturerThrowsException() {
-        doThrow(mock(PersistenceException.class)).when(repository).create(any(Manufacturer.class));
+        doThrow(mock(PersistenceException.class)).when(repository).createOrUpdate(any(Manufacturer.class));
         resource.createManufacturer(any(Manufacturer.class));
     }
 
@@ -69,7 +69,7 @@ public class ManufacturerResourceTest {
         Manufacturer manufacturer = mock(Manufacturer.class);
         when(manufacturer.getId()).thenReturn(1L);
         Response response = resource.updateManufacturer(1L, manufacturer);
-        verify(repository).update(manufacturer);
+        verify(repository).createOrUpdate(manufacturer);
 
         assertNotNull(response);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
@@ -79,7 +79,7 @@ public class ManufacturerResourceTest {
     public void testUpdateManufacturerThrowsException() {
         Manufacturer manufacturer = mock(Manufacturer.class);
         when(manufacturer.getId()).thenReturn(1L);
-        doThrow(mock(PersistenceException.class)).when(repository).update(manufacturer);
+        doThrow(mock(PersistenceException.class)).when(repository).createOrUpdate(manufacturer);
         resource.updateManufacturer(1L, manufacturer);
     }
 

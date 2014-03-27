@@ -52,7 +52,7 @@ public class EvseResourceTest {
     @Test
     public void testCreateEvse() {
         Response response = resource.createEvse(any(Evse.class));
-        verify(repository).create(any(Evse.class));
+        verify(repository).createOrUpdate(any(Evse.class));
 
         assertNotNull(response);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
@@ -60,7 +60,7 @@ public class EvseResourceTest {
 
     @Test(expected = RuntimeException.class)
     public void testCreateEvseThrowsException() {
-        doThrow(mock(PersistenceException.class)).when(repository).create(any(Evse.class));
+        doThrow(mock(PersistenceException.class)).when(repository).createOrUpdate(any(Evse.class));
         resource.createEvse(any(Evse.class));
     }
 
@@ -69,7 +69,7 @@ public class EvseResourceTest {
         Evse evse = mock(Evse.class);
         when(evse.getId()).thenReturn(1L);
         Response response = resource.updateEvse(1L, evse);
-        verify(repository).update(evse);
+        verify(repository).createOrUpdate(evse);
 
         assertNotNull(response);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
@@ -79,7 +79,7 @@ public class EvseResourceTest {
     public void testUpdateEvseThrowsException() {
         Evse evse = mock(Evse.class);
         when(evse.getId()).thenReturn(1L);
-        doThrow(mock(PersistenceException.class)).when(repository).update(evse);
+        doThrow(mock(PersistenceException.class)).when(repository).createOrUpdate(evse);
         resource.updateEvse(1L, evse);
     }
 

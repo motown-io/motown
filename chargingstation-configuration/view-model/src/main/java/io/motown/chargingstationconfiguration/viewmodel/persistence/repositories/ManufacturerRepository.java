@@ -26,23 +26,7 @@ public class ManufacturerRepository {
 
     private EntityManager entityManager;
 
-    public void create(Manufacturer manufacturer) {
-        EntityTransaction transaction = entityManager.getTransaction();
-
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
-        try {
-            entityManager.persist(manufacturer);
-            transaction.commit();
-        } catch (Exception e) {
-            transaction.rollback();
-            throw e;
-        }
-    }
-
-    public void update(Manufacturer manufacturer) {
+    public void createOrUpdate(Manufacturer manufacturer) {
         EntityTransaction transaction = entityManager.getTransaction();
 
         if (!transaction.isActive()) {

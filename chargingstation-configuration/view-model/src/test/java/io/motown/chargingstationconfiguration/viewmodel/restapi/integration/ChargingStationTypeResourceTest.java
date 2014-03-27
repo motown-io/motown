@@ -109,11 +109,11 @@ public class ChargingStationTypeResourceTest extends JerseyTest {
     public void testCreateChargingStationTypeUniqueConstraintViolation() {
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setCode("MAN01");
-        manufacturerRepository.create(manufacturer);
+        manufacturerRepository.createOrUpdate(manufacturer);
 
         ChargingStationType c1 = getChargingStationType();
         c1.setManufacturer(manufacturer);
-        chargingStationTypeRepository.create(c1);
+        chargingStationTypeRepository.createOrUpdate(c1);
 
         ChargingStationType c2 = getChargingStationType();
         c2.setManufacturer(manufacturer);
@@ -128,7 +128,7 @@ public class ChargingStationTypeResourceTest extends JerseyTest {
     @Test
     public void testUpdateChargingStationType() {
         ChargingStationType cst = getChargingStationType();
-        chargingStationTypeRepository.create(cst);
+        chargingStationTypeRepository.createOrUpdate(cst);
 
         cst.setCode("TEST02");
         ClientResponse response = client.resource(BASE_URI)
@@ -165,7 +165,7 @@ public class ChargingStationTypeResourceTest extends JerseyTest {
     @Test
     public void testGetChargingStationType() {
         ChargingStationType cst = getChargingStationType();
-        chargingStationTypeRepository.create(cst);
+        chargingStationTypeRepository.createOrUpdate(cst);
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/" + cst.getId())
@@ -188,7 +188,7 @@ public class ChargingStationTypeResourceTest extends JerseyTest {
     @Test
     public void testDeleteChargingStationType() {
         ChargingStationType cst = getChargingStationType();
-        chargingStationTypeRepository.create(cst);
+        chargingStationTypeRepository.createOrUpdate(cst);
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/" + cst.getId())

@@ -26,23 +26,7 @@ public class ConnectorRepository {
 
     private EntityManager entityManager;
 
-    public void create(Connector connector) {
-        EntityTransaction transaction = entityManager.getTransaction();
-
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
-        try {
-            entityManager.persist(connector);
-            transaction.commit();
-        } catch (Exception e) {
-            transaction.rollback();
-            throw e;
-        }
-    }
-
-    public void update(Connector connector) {
+    public void createOrUpdate(Connector connector) {
         EntityTransaction transaction = entityManager.getTransaction();
 
         if (!transaction.isActive()) {

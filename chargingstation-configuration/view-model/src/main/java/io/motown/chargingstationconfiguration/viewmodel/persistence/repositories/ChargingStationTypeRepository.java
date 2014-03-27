@@ -33,23 +33,7 @@ public class ChargingStationTypeRepository {
                 .getResultList();
     }
 
-    public void create(ChargingStationType chargingStationType) {
-        EntityTransaction transaction = entityManager.getTransaction();
-
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
-        try {
-            entityManager.persist(chargingStationType);
-            transaction.commit();
-        } catch (Exception e) {
-            transaction.rollback();
-            throw e;
-        }
-    }
-
-    public void update(ChargingStationType chargingStationType) {
+    public void createOrUpdate(ChargingStationType chargingStationType) {
         EntityTransaction transaction = entityManager.getTransaction();
 
         if (!transaction.isActive()) {

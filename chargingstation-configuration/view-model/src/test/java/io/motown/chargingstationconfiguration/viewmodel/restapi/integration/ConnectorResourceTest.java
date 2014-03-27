@@ -103,7 +103,7 @@ public class ConnectorResourceTest extends JerseyTest {
     @Test
     public void testCreateConnectorUniqueConstraintViolation() {
         Connector c1 = getConnector();
-        repository.create(c1);
+        repository.createOrUpdate(c1);
 
         Connector c2 = getConnector();
         c2.setId(c1.getId());
@@ -119,7 +119,7 @@ public class ConnectorResourceTest extends JerseyTest {
     @Test
     public void testUpdateConnector() {
         Connector connector = getConnector();
-        repository.create(connector);
+        repository.createOrUpdate(connector);
 
         connector.setVoltage(110);
 
@@ -157,7 +157,7 @@ public class ConnectorResourceTest extends JerseyTest {
     @Test
     public void testGetConnector() {
         Connector connector = getConnector();
-        repository.create(connector);
+        repository.createOrUpdate(connector);
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/" + connector.getId())
@@ -180,7 +180,7 @@ public class ConnectorResourceTest extends JerseyTest {
     @Test
     public void testDeleteConnector() {
         Connector connector = getConnector();
-        repository.create(connector);
+        repository.createOrUpdate(connector);
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/" + connector.getId())
