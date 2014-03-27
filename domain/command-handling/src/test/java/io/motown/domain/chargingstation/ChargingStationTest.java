@@ -409,11 +409,11 @@ public class ChargingStationTest {
     }
 
     @Test
-    public void testStatusChanged() {
+    public void testInformRequestResult() {
         String statusMessage = "Test message";
         fixture.given(CHARGING_STATION)
-                .when(new StatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS, statusMessage))
-                .expectEvents(new StatusChangedEvent(CHARGING_STATION_ID, RequestStatus.SUCCESS, statusMessage));
+                .when(new InformRequestResultCommand(CHARGING_STATION_ID, RequestResult.SUCCESS, statusMessage))
+                .expectEvents(new RequestResultEvent(CHARGING_STATION_ID, RequestResult.SUCCESS, statusMessage));
     }
 
     @Test

@@ -21,18 +21,18 @@ import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.RequestResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.response.chargingstation.RequestStatus;
-import io.motown.ocpp.websocketjson.response.chargingstation.UnlockConnectorResponse;
+import io.motown.ocpp.websocketjson.response.chargingstation.RemoteStopTransactionResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 
-public class UnlockConnectorResponseHandler extends ResponseHandler {
+public class RemoteStopTransactionResponseHandler extends ResponseHandler {
 
-    public UnlockConnectorResponseHandler(CorrelationToken correlationToken) {
+    public RemoteStopTransactionResponseHandler(CorrelationToken correlationToken) {
         this.setCorrelationToken(correlationToken);
     }
 
     @Override
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService) {
-        UnlockConnectorResponse response = gson.fromJson(wampMessage.getPayloadAsString(), UnlockConnectorResponse.class);
+        RemoteStopTransactionResponse response = gson.fromJson(wampMessage.getPayloadAsString(), RemoteStopTransactionResponse.class);
         RequestResult requestResult = response.getStatus().equals(RequestStatus.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
         domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "");

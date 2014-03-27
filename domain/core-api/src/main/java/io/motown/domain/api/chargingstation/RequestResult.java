@@ -13,17 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.response.chargingstation;
+package io.motown.domain.api.chargingstation;
 
-public class UnlockConnectorResponse {
-
-    private RequestStatus status;
-
-    public void setStatus(RequestStatus status) {
-        this.status = status;
-    }
-
-    public RequestStatus getStatus() {
-        return status;
-    }
+/**
+ * {@code RequestStatus} describes the different soap response status translations.
+ */
+public enum RequestResult {
+    SUCCESS,
+    FAILURE;
 }

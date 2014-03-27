@@ -13,23 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.gson;
+package io.motown.ocpp.websocketjson.response.chargingstation;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
-import io.motown.ocpp.websocketjson.response.chargingstation.UnlockStatus;
+public enum RequestStatus {
 
-import java.lang.reflect.Type;
+    ACCEPTED("Accepted"),
+    REJECTED("Rejected");
 
-public class UnlockStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<UnlockStatus> {
+    private final String value;
 
-    @Override
-    public UnlockStatus deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
-        return UnlockStatus.fromValue(jsonElement.getAsString());
+    RequestStatus(String v) {
+        value = v;
     }
 
-    @Override
-    public Class<?> getAdaptedType() {
-        return UnlockStatus.class;
+    public String value() {
+        return value;
     }
+
+    public static RequestStatus fromValue(String v) {
+        for (RequestStatus c: RequestStatus.values()) {
+            if (c.value.equals(v)) {
+                return c;
+            }
+        }
+        throw new IllegalArgumentException(v);
+    }
+
 }

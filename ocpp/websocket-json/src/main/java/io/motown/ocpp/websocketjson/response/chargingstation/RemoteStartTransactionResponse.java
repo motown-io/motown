@@ -15,28 +15,15 @@
  */
 package io.motown.ocpp.websocketjson.response.chargingstation;
 
-public enum UnlockStatus {
+public class RemoteStartTransactionResponse {
 
-    ACCEPTED("Accepted"),
-    REJECTED("Rejected");
+    private RequestStatus status;
 
-    private final String value;
-
-    UnlockStatus(String v) {
-        value = v;
+    public void setStatus(RequestStatus status) {
+        this.status = status;
     }
 
-    public String value() {
-        return value;
+    public RequestStatus getStatus() {
+        return status;
     }
-
-    public static UnlockStatus fromValue(String v) {
-        for (UnlockStatus c: UnlockStatus.values()) {
-            if (c.value.equals(v)) {
-                return c;
-            }
-        }
-        throw new IllegalArgumentException(v);
-    }
-
 }

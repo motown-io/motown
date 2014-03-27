@@ -53,7 +53,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     }
 
     @Override
-    public RequestStatus startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, EvseId evseId) {
+    public RequestResult startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, EvseId evseId) {
         LOG.info("Requesting remote start transaction on {}", id);
 
         ChargePointService chargePointService = this.createChargingStationService(id);
@@ -66,15 +66,15 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
         if (RemoteStartStopStatus.ACCEPTED.equals(response.getStatus())) {
             LOG.info("Remote start transaction request on {} has been accepted", id);
-            return RequestStatus.SUCCESS;
+            return RequestResult.SUCCESS;
         } else {
             LOG.warn("Remote start transaction request on {} has been rejected", id);
-            return RequestStatus.FAILURE;
+            return RequestResult.FAILURE;
         }
     }
 
     @Override
-    public RequestStatus stopTransaction(ChargingStationId id, int transactionId) {
+    public RequestResult stopTransaction(ChargingStationId id, int transactionId) {
         LOG.debug("Stopping transaction {} on {}", transactionId, id);
 
         ChargePointService chargePointService = this.createChargingStationService(id);
@@ -87,29 +87,29 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
         if (RemoteStartStopStatus.ACCEPTED.equals(response.getStatus())) {
             LOG.info("Stop transaction {} on {} has been accepted", transactionId, id);
-            return RequestStatus.SUCCESS;
+            return RequestResult.SUCCESS;
         } else {
             LOG.warn("Stop transaction {} on {} has been rejected", transactionId, id);
-            return RequestStatus.FAILURE;
+            return RequestResult.FAILURE;
         }
     }
 
     @Override
-    public RequestStatus softReset(ChargingStationId id) {
+    public RequestResult softReset(ChargingStationId id) {
         LOG.info("Requesting soft reset on {}", id);
 
         return reset(id, ResetType.SOFT);
     }
 
     @Override
-    public RequestStatus hardReset(ChargingStationId id) {
+    public RequestResult hardReset(ChargingStationId id) {
         LOG.info("Requesting hard reset on {}", id);
 
         return reset(id, ResetType.HARD);
     }
 
     @Override
-    public RequestStatus unlockConnector(ChargingStationId id, EvseId evseId) {
+    public RequestResult unlockConnector(ChargingStationId id, EvseId evseId) {
         LOG.debug("Unlocking of connector {} on {}", evseId, id);
         ChargePointService chargePointService = this.createChargingStationService(id);
 
@@ -120,29 +120,29 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
         if (UnlockStatus.ACCEPTED.equals(response.getStatus())) {
             LOG.info("Unlocking of connector {} on {} has been accepted", evseId, id);
-            return RequestStatus.SUCCESS;
+            return RequestResult.SUCCESS;
         } else {
             LOG.warn("Unlocking of connector {} on {} has been rejected", evseId, id);
-            return RequestStatus.FAILURE;
+            return RequestResult.FAILURE;
         }
     }
 
     @Override
-    public RequestStatus changeAvailabilityToInoperative(ChargingStationId id, EvseId evseId) {
+    public RequestResult changeAvailabilityToInoperative(ChargingStationId id, EvseId evseId) {
         LOG.debug("Changing availability of connector {} on {} to inoperative", evseId, id);
 
         return changeAvailability(id, evseId, AvailabilityType.INOPERATIVE);
     }
 
     @Override
-    public RequestStatus changeAvailabilityToOperative(ChargingStationId id, EvseId evseId) {
+    public RequestResult changeAvailabilityToOperative(ChargingStationId id, EvseId evseId) {
         LOG.debug("Changing availability of connector {} on {} to operative", evseId, id);
 
         return changeAvailability(id, evseId, AvailabilityType.OPERATIVE);
     }
 
     @Override
-    public RequestStatus dataTransfer(ChargingStationId id, String vendorId, String messageId, String data) {
+    public RequestResult dataTransfer(ChargingStationId id, String vendorId, String messageId, String data) {
         LOG.debug("Data transfer to {}", id);
         ChargePointService chargePointService = this.createChargingStationService(id);
 
@@ -155,16 +155,16 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
         if (DataTransferStatus.ACCEPTED.equals(response.getStatus())) {
             LOG.info("Data transfer to {} has been accepted", id);
-            return RequestStatus.SUCCESS;
+            return RequestResult.SUCCESS;
         } else {
             String responseStatus = (response.getStatus() != null) ? response.getStatus().value() : "-unknown status-";
             LOG.warn("Data transfer to {} has failed due to {}", id, responseStatus);
-            return RequestStatus.FAILURE;
+            return RequestResult.FAILURE;
         }
     }
 
     @Override
-    public RequestStatus changeConfiguration(ChargingStationId id, String key, String value) {
+    public RequestResult changeConfiguration(ChargingStationId id, String key, String value) {
         LOG.debug("Change configuration of {}", id);
         ChargePointService chargePointService = this.createChargingStationService(id);
 
@@ -176,11 +176,11 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
         if (ConfigurationStatus.ACCEPTED.equals(response.getStatus())) {
             LOG.info("Configuration change of {} on {} has been accepted", key, id);
-            return RequestStatus.SUCCESS;
+            return RequestResult.SUCCESS;
         } else {
             String responseStatus = (response.getStatus() != null) ? response.getStatus().value() : "-unknown status-";
             LOG.warn("Configuration change of {} on {} has failed due to {}", key, id, responseStatus);
-            return RequestStatus.FAILURE;
+            return RequestResult.FAILURE;
         }
     }
 
@@ -200,23 +200,23 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     }
 
     @Override
-    public RequestStatus clearCache(ChargingStationId id) {
+    public RequestResult clearCache(ChargingStationId id) {
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         ClearCacheRequest request = new ClearCacheRequest();
 
-        RequestStatus requestStatus;
+        RequestResult requestResult;
         ClearCacheResponse response = chargePointService.clearCache(request, id.getId());
 
         if (ClearCacheStatus.ACCEPTED.equals(response.getStatus())) {
             LOG.info("Clear cache on {} has been accepted", id.getId());
-            requestStatus = RequestStatus.SUCCESS;
+            requestResult = RequestResult.SUCCESS;
         } else {
             LOG.warn("Clear cache on {} has been rejected", id.getId());
-            requestStatus = RequestStatus.FAILURE;
+            requestResult = RequestResult.FAILURE;
         }
 
-        return requestStatus;
+        return requestResult;
     }
 
     @Override
@@ -247,7 +247,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     }
 
     @Override
-    public RequestStatus sendAuthorizationList(ChargingStationId id, String hash, int listVersion, List<IdentifyingToken> identifyingTokens, AuthorizationListUpdateType updateType) {
+    public RequestResult sendAuthorizationList(ChargingStationId id, String hash, int listVersion, List<IdentifyingToken> identifyingTokens, AuthorizationListUpdateType updateType) {
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         SendLocalListRequest request = new SendLocalListRequest();
@@ -272,11 +272,11 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
         if (UpdateStatus.ACCEPTED.equals(response.getStatus())) {
             LOG.info("Update of local authorization list on {} has been accepted", id);
-            return RequestStatus.SUCCESS;
+            return RequestResult.SUCCESS;
         } else {
             String responseStatus = (response.getStatus() != null ? response.getStatus().value() : "-unknown status-");
             LOG.warn("Update of local authorization list on {} has failed due to {}", id, responseStatus);
-            return RequestStatus.FAILURE;
+            return RequestResult.FAILURE;
         }
     }
 
@@ -329,7 +329,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         this.identifyingTokenConverterService = identifyingTokenConverterService;
     }
 
-    private RequestStatus reset(ChargingStationId id, ResetType type) {
+    private RequestResult reset(ChargingStationId id, ResetType type) {
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         ResetRequest request = new ResetRequest();
@@ -338,13 +338,13 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         ResetResponse response = chargePointService.reset(request, id.getId());
 
         if (ResetStatus.ACCEPTED.equals(response.getStatus())) {
-            return RequestStatus.SUCCESS;
+            return RequestResult.SUCCESS;
         } else {
-            return RequestStatus.FAILURE;
+            return RequestResult.FAILURE;
         }
     }
 
-    private RequestStatus changeAvailability(ChargingStationId id, EvseId evseId, AvailabilityType type) {
+    private RequestResult changeAvailability(ChargingStationId id, EvseId evseId, AvailabilityType type) {
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         ChangeAvailabilityRequest request = new ChangeAvailabilityRequest();
@@ -354,9 +354,9 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
         if (AvailabilityStatus.ACCEPTED.equals(response.getStatus()) ||
             AvailabilityStatus.SCHEDULED.equals(response.getStatus())) {
-            return RequestStatus.SUCCESS;
+            return RequestResult.SUCCESS;
         } else {
-            return RequestStatus.FAILURE;
+            return RequestResult.FAILURE;
         }
     }
 

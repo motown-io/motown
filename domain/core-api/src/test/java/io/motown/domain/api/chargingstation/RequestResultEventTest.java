@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.response.chargingstation;
+package io.motown.domain.api.chargingstation;
 
-public class UnlockConnectorResponse {
+import org.junit.Test;
 
-    private RequestStatus status;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 
-    public void setStatus(RequestStatus status) {
-        this.status = status;
+public class RequestResultEventTest {
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
+        new RequestResultEvent(null, RequestResult.SUCCESS, "Test message");
     }
 
-    public RequestStatus getStatus() {
-        return status;
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithoutStatus() {
+        new RequestResultEvent(CHARGING_STATION_ID, null, "Test message");
     }
 }

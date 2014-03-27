@@ -242,8 +242,8 @@ public class DomainService {
         }
     }
 
-    public void statusChanged(ChargingStationId chargingStationId, RequestStatus requestStatus, CorrelationToken statusCorrelationToken, String statusMessage) {
-        commandGateway.send(new StatusChangedCommand(chargingStationId, requestStatus, statusMessage), statusCorrelationToken);
+    public void informRequestResult(ChargingStationId chargingStationId, RequestResult requestResult, CorrelationToken statusCorrelationToken, String statusMessage) {
+        commandGateway.send(new InformRequestResultCommand(chargingStationId, requestResult, statusMessage), statusCorrelationToken);
     }
 
     public void setCommandGateway(DomainCommandGateway commandGateway) {

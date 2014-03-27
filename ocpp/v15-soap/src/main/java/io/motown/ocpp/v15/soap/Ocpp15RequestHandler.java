@@ -48,9 +48,9 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
 
         if (event.getTransactionId() instanceof NumberedTransactionId) {
             NumberedTransactionId transactionId = (NumberedTransactionId) event.getTransactionId();
-            RequestStatus requestStatus = chargingStationOcpp15Client.stopTransaction(event.getChargingStationId(), transactionId.getNumber());
+            RequestResult requestResult = chargingStationOcpp15Client.stopTransaction(event.getChargingStationId(), transactionId.getNumber());
 
-            domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
+            domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "");
         } else {
             LOG.warn("StopTransactionRequestedEvent does not contain a NumberedTransactionId. Event: {}", event);
         }
@@ -59,65 +59,65 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
     @Override
     public void handle(SoftResetChargingStationRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("SoftResetChargingStationRequestedEvent");
-        RequestStatus requestStatus = chargingStationOcpp15Client.softReset(event.getChargingStationId());
+        RequestResult requestResult = chargingStationOcpp15Client.softReset(event.getChargingStationId());
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
+        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "");
     }
 
     @Override
     public void handle(HardResetChargingStationRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("HardResetChargingStationRequestedEvent");
-        RequestStatus requestStatus = chargingStationOcpp15Client.hardReset(event.getChargingStationId());
+        RequestResult requestResult = chargingStationOcpp15Client.hardReset(event.getChargingStationId());
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
+        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "");
     }
 
     @Override
     public void handle(StartTransactionRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("StartTransactionRequestedEvent");
-        RequestStatus requestStatus =  chargingStationOcpp15Client.startTransaction(event.getChargingStationId(), event.getIdentifyingToken(), event.getEvseId());
+        RequestResult requestResult =  chargingStationOcpp15Client.startTransaction(event.getChargingStationId(), event.getIdentifyingToken(), event.getEvseId());
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
+        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "");
     }
 
     @Override
     public void handle(UnlockEvseRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("UnlockEvseRequestedEvent");
-        RequestStatus requestStatus = chargingStationOcpp15Client.unlockConnector(event.getChargingStationId(), event.getEvseId());
+        RequestResult requestResult = chargingStationOcpp15Client.unlockConnector(event.getChargingStationId(), event.getEvseId());
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
+        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "");
     }
 
     @Override
     public void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("ChangeChargingStationAvailabilityToInoperativeRequestedEvent");
-        RequestStatus requestStatus = chargingStationOcpp15Client.changeAvailabilityToInoperative(event.getChargingStationId(), event.getEvseId());
+        RequestResult requestResult = chargingStationOcpp15Client.changeAvailabilityToInoperative(event.getChargingStationId(), event.getEvseId());
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
+        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "");
     }
 
     @Override
     public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("ChangeChargingStationAvailabilityToOperativeRequestedEvent");
-        RequestStatus requestStatus = chargingStationOcpp15Client.changeAvailabilityToOperative(event.getChargingStationId(), event.getEvseId());
+        RequestResult requestResult = chargingStationOcpp15Client.changeAvailabilityToOperative(event.getChargingStationId(), event.getEvseId());
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
+        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "");
     }
 
     @Override
     public void handle(DataTransferEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("DataTransferEvent");
-        RequestStatus requestStatus = chargingStationOcpp15Client.dataTransfer(event.getChargingStationId(), event.getVendorId(), event.getMessageId(), event.getData());
+        RequestResult requestResult = chargingStationOcpp15Client.dataTransfer(event.getChargingStationId(), event.getVendorId(), event.getMessageId(), event.getData());
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
+        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "");
     }
 
     @Override
     public void handle(ChangeConfigurationEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("ChangeConfigurationEvent");
-        RequestStatus requestStatus = chargingStationOcpp15Client.changeConfiguration(event.getChargingStationId(), event.getKey(), event.getValue());
+        RequestResult requestResult = chargingStationOcpp15Client.changeConfiguration(event.getChargingStationId(), event.getKey(), event.getValue());
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
+        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "");
     }
 
     @Override
@@ -131,9 +131,9 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
     @Override
     public void handle(ClearCacheRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("ClearCacheRequestedEvent");
-        RequestStatus requestStatus = chargingStationOcpp15Client.clearCache(event.getChargingStationId());
+        RequestResult requestResult = chargingStationOcpp15Client.clearCache(event.getChargingStationId());
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
+        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "");
     }
 
     @Override
@@ -166,9 +166,9 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
     public void handle(SendAuthorizationListRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("SendAuthorizationListRequestedEvent");
 
-        RequestStatus requestStatus = chargingStationOcpp15Client.sendAuthorizationList(event.getChargingStationId(), event.getAuthorizationListHash(), event.getAuthorizationListVersion(), event.getAuthorizationList(), event.getUpdateType());
+        RequestResult requestResult = chargingStationOcpp15Client.sendAuthorizationList(event.getChargingStationId(), event.getAuthorizationListHash(), event.getAuthorizationListVersion(), event.getAuthorizationList(), event.getUpdateType());
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, "");
+        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "");
     }
 
     @Override
@@ -180,9 +180,9 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         ReservationStatus reservationStatus = chargingStationOcpp15Client.reserveNow(event.getChargingStationId(), event.getEvseId(), event.getIdentifyingToken(), event.getExpiryDate(), event.getParentIdentifyingToken(), reservationIdentifier.getNumber());
         String reservationStatusMessage = (reservationStatus != null) ? reservationStatus.name() : "";
 
-        RequestStatus requestStatus = ReservationStatus.ACCEPTED.equals(reservationStatus) ? RequestStatus.SUCCESS : RequestStatus.FAILURE;
+        RequestResult requestResult = ReservationStatus.ACCEPTED.equals(reservationStatus) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        domainService.statusChanged(event.getChargingStationId(), requestStatus, statusCorrelationToken, reservationStatusMessage);
+        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, reservationStatusMessage);
     }
 
     public void setChargingStationOcpp15Client(ChargingStationOcpp15Client chargingStationOcpp15Client) {

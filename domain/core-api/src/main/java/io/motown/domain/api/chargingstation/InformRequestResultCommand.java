@@ -15,29 +15,34 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
+
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code StatusChangedEvent} serves as a base class for events that inform about the resulting status of a request
+ * {@code InformRequestResultCommand} serves as a base class for commands which will inform about the resulting status of a request
  * that has been sent to the charging station.
  */
-public class StatusChangedEvent {
+public final class InformRequestResultCommand {
 
+    @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final RequestStatus status;
+    private final RequestResult status;
 
     private final String statusMessage;
 
     /**
-     * Creates a {@code StatusChangedEvent} with an identifier and new status.
+     * Creates a {@code InformRequestResultCommand} with an identifier and new status.
      *
      * @param chargingStationId   the identifier of the charging station.
      * @param status              the resulting status of the request
      * @param statusMessage       status message, to primarily inform about the cause of a failure
      * @throws NullPointerException if {@code chargingStationId}, {@code status} or {@code statusMessage} is {@code null}.
      */
-    public StatusChangedEvent(ChargingStationId chargingStationId, RequestStatus status, String statusMessage) {
+    public InformRequestResultCommand(ChargingStationId chargingStationId, RequestResult status, String statusMessage) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.status = checkNotNull(status);
         this.statusMessage = checkNotNull(statusMessage);
@@ -54,9 +59,10 @@ public class StatusChangedEvent {
 
     /**
      * Gets the resulting status of the request.
+     *
      * @return the request status
      */
-    public RequestStatus getStatus() {
+    public RequestResult getStatus() {
         return status;
     }
 
@@ -67,5 +73,22 @@ public class StatusChangedEvent {
      */
     public String getStatusMessage() {
         return statusMessage;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, status, statusMessage);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final InformRequestResultCommand other = (InformRequestResultCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.status, other.status) && Objects.equals(this.statusMessage, other.statusMessage);
     }
 }

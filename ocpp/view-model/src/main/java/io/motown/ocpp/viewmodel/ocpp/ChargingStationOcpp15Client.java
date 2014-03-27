@@ -26,33 +26,33 @@ public interface ChargingStationOcpp15Client {
 
     Map<String, String> getConfiguration(ChargingStationId id);
 
-    RequestStatus startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, EvseId evseId);
+    RequestResult startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, EvseId evseId);
 
-    RequestStatus stopTransaction(ChargingStationId id, int transactionId);
+    RequestResult stopTransaction(ChargingStationId id, int transactionId);
 
-    RequestStatus softReset(ChargingStationId id);
+    RequestResult softReset(ChargingStationId id);
 
-    RequestStatus hardReset(ChargingStationId id);
+    RequestResult hardReset(ChargingStationId id);
 
-    RequestStatus unlockConnector(ChargingStationId id, EvseId evseId);
+    RequestResult unlockConnector(ChargingStationId id, EvseId evseId);
 
-    RequestStatus changeAvailabilityToInoperative(ChargingStationId id, EvseId evseId);
+    RequestResult changeAvailabilityToInoperative(ChargingStationId id, EvseId evseId);
 
-    RequestStatus changeAvailabilityToOperative(ChargingStationId id, EvseId evseId);
+    RequestResult changeAvailabilityToOperative(ChargingStationId id, EvseId evseId);
 
-    RequestStatus dataTransfer(ChargingStationId id, String vendorId, String messageId, String data);
+    RequestResult dataTransfer(ChargingStationId id, String vendorId, String messageId, String data);
 
-    RequestStatus changeConfiguration(ChargingStationId id, String key, String value);
+    RequestResult changeConfiguration(ChargingStationId id, String key, String value);
 
     String getDiagnostics(ChargingStationId id, String uploadLocation, Integer numRetries, Integer retryInterval, Date periodStartTime, Date periodStopTime);
 
-    RequestStatus clearCache(ChargingStationId id);
+    RequestResult clearCache(ChargingStationId id);
 
     void updateFirmware(ChargingStationId id, String downloadLocation, Date retrieveDate, Integer numRetries, Integer retryInterval);
 
     int getAuthorizationListVersion(ChargingStationId id);
 
-    RequestStatus sendAuthorizationList(ChargingStationId id, String hash, int listVersion, List<IdentifyingToken> identifyingTokens, AuthorizationListUpdateType updateType);
+    RequestResult sendAuthorizationList(ChargingStationId id, String hash, int listVersion, List<IdentifyingToken> identifyingTokens, AuthorizationListUpdateType updateType);
 
     ReservationStatus reserveNow(ChargingStationId id, EvseId evseId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken, int reservationId);
 }

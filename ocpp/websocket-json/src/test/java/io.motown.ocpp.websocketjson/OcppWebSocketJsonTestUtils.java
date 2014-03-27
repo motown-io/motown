@@ -25,6 +25,8 @@ import io.motown.ocpp.websocketjson.request.chargingstation.ChargePointErrorCode
 import io.motown.ocpp.websocketjson.request.chargingstation.ChargePointStatus;
 import io.motown.ocpp.websocketjson.request.chargingstation.DiagnosticsStatus;
 import io.motown.ocpp.websocketjson.request.chargingstation.FirmwareStatus;
+import io.motown.ocpp.websocketjson.response.chargingstation.RequestStatus;
+import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.websocket.WebSocket;
@@ -55,7 +57,7 @@ public class OcppWebSocketJsonTestUtils {
 
         Set<TypeAdapterDeserializer<?>> typeAdapterDeserializers = ImmutableSet.<TypeAdapterDeserializer<?>>builder()
                 .add(new DiagnosticsStatusTypeAdapterDeserializer())
-                .add(new UnlockStatusTypeAdapterDeserializer())
+                .add(new RequestStatusTypeAdapterDeserializer())
                 .add(new FirmwareStatusTypeAdapterDeserializer())
                 .add(new ChargePointErrorCodeTypeAdapterDeserializer())
                 .add(new ChargePointStatusTypeAdapterDeserializer())
@@ -77,6 +79,10 @@ public class OcppWebSocketJsonTestUtils {
 
         when(webSocket.resource()).thenReturn(resource);
         return webSocket;
+    }
+
+    public static String createAcceptedCallResult(String callId) {
+        return String.format("[%d,\"%s\",{\"status\":\"%s\"}]", WampMessage.CALL_RESULT, callId, RequestStatus.ACCEPTED.value());
     }
 
     /**

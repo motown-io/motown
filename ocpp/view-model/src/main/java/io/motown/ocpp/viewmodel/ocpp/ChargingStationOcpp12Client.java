@@ -19,31 +19,31 @@ package io.motown.ocpp.viewmodel.ocpp;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.EvseId;
 import io.motown.domain.api.chargingstation.IdentifyingToken;
-import io.motown.domain.api.chargingstation.RequestStatus;
+import io.motown.domain.api.chargingstation.RequestResult;
 
 import java.util.Date;
 
 public interface ChargingStationOcpp12Client {
 
-    RequestStatus changeAvailabilityToInoperative(ChargingStationId id, EvseId evseId);
+    RequestResult changeAvailabilityToInoperative(ChargingStationId id, EvseId evseId);
 
-    RequestStatus changeAvailabilityToOperative(ChargingStationId id, EvseId evseId);
+    RequestResult changeAvailabilityToOperative(ChargingStationId id, EvseId evseId);
 
-    RequestStatus changeConfiguration(ChargingStationId id, String key, String value);
+    RequestResult changeConfiguration(ChargingStationId id, String key, String value);
 
-    RequestStatus clearCache(ChargingStationId id);
+    RequestResult clearCache(ChargingStationId id);
 
     String getDiagnostics(ChargingStationId id, String uploadLocation, Integer numRetries, Integer retryInterval, Date periodStartTime, Date periodStopTime);
 
-    RequestStatus startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, EvseId evseId);
+    RequestResult startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, EvseId evseId);
 
-    RequestStatus stopTransaction(ChargingStationId id, int transactionId);
+    RequestResult stopTransaction(ChargingStationId id, int transactionId);
 
-    RequestStatus softReset(ChargingStationId id);
+    RequestResult softReset(ChargingStationId id);
 
-    RequestStatus hardReset(ChargingStationId id);
+    RequestResult hardReset(ChargingStationId id);
 
-    RequestStatus unlockConnector(ChargingStationId id, EvseId evseId);
+    RequestResult unlockConnector(ChargingStationId id, EvseId evseId);
 
     void updateFirmware(ChargingStationId id, String downloadLocation, Date retrieveDate, Integer numRetries, Integer retryInterval);
 

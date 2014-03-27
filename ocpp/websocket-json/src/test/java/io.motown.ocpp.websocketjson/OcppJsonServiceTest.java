@@ -21,9 +21,7 @@ import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.request.chargingstation.*;
 import io.motown.ocpp.websocketjson.request.handler.*;
-import io.motown.ocpp.websocketjson.response.chargingstation.UnlockStatus;
-import io.motown.ocpp.websocketjson.response.handler.ResponseHandler;
-import io.motown.ocpp.websocketjson.response.handler.UnlockConnectorResponseHandler;
+import io.motown.ocpp.websocketjson.response.handler.*;
 import io.motown.ocpp.websocketjson.schema.SchemaValidator;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import io.motown.ocpp.websocketjson.wamp.WampMessageParser;
@@ -39,8 +37,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
-import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
-import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
+import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -317,7 +314,7 @@ public class OcppJsonServiceTest {
     @Test
     public void handleUnlockEvseResponse() {
         String callId = UUID.randomUUID().toString();
-        String request = String.format("[%d,\"%s\",{\"status\":\"%s\"}]", WampMessage.CALL_RESULT, callId, UnlockStatus.ACCEPTED.value());
+        String request = createAcceptedCallResult(callId);
         ResponseHandler responseHandler = mock(UnlockConnectorResponseHandler.class);
         service.addResponseHandler(callId, responseHandler);
 
@@ -329,10 +326,70 @@ public class OcppJsonServiceTest {
     @Test
     public void handleUnlockEvseResponseNoHandler() {
         String callId = UUID.randomUUID().toString();
-        String request = String.format("[%d,\"%s\",{\"status\":\"%s\"}]", WampMessage.CALL_RESULT, callId, UnlockStatus.ACCEPTED.value());
+        String request = createAcceptedCallResult(callId);
 
         // no exceptions
         service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
+    }
+
+    @Test
+    public void performStartTransaction() throws IOException{
+        service.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, CORRELATION_TOKEN);
+        verify(mockWebSocket).write(anyString());
+    }
+
+    @Test
+    public void handleStartTransactionResponse() {
+        String callId = UUID.randomUUID().toString();
+        String request = createAcceptedCallResult(callId);
+        ResponseHandler responseHandler = mock(RemoteStartTransactionResponseHandler.class);
+        service.addResponseHandler(callId, responseHandler);
+
+        service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
+
+        verify(responseHandler).handle(CHARGING_STATION_ID, new WampMessageParser(gson).parseMessage(new StringReader(request)), gson, domainService);
+    }
+
+    @Test
+    public void performStopTransaction() throws IOException{
+        service.stopTransaction(CHARGING_STATION_ID, TRANSACTION_ID, CORRELATION_TOKEN);
+        verify(mockWebSocket).write(anyString());
+    }
+
+    @Test
+    public void handleStopTransactionResponse() {
+        String callId = UUID.randomUUID().toString();
+        String request = createAcceptedCallResult(callId);
+        ResponseHandler responseHandler = mock(RemoteStopTransactionResponseHandler.class);
+        service.addResponseHandler(callId, responseHandler);
+
+        service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
+
+        verify(responseHandler).handle(CHARGING_STATION_ID, new WampMessageParser(gson).parseMessage(new StringReader(request)), gson, domainService);
+    }
+
+    @Test
+    public void performSoftReset() throws IOException{
+        service.softReset(CHARGING_STATION_ID, CORRELATION_TOKEN);
+        verify(mockWebSocket).write(anyString());
+    }
+
+    @Test
+    public void performHardReset() throws IOException{
+        service.hardReset(CHARGING_STATION_ID, CORRELATION_TOKEN);
+        verify(mockWebSocket).write(anyString());
+    }
+
+    @Test
+    public void handleResetResponse() {
+        String callId = UUID.randomUUID().toString();
+        String request = createAcceptedCallResult(callId);
+        ResponseHandler responseHandler = mock(ResetResponseHandler.class);
+        service.addResponseHandler(callId, responseHandler);
+
+        service.handleMessage(CHARGING_STATION_ID, new StringReader(request));
+
+        verify(responseHandler).handle(CHARGING_STATION_ID, new WampMessageParser(gson).parseMessage(new StringReader(request)), gson, domainService);
     }
 
 }

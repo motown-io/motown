@@ -16,7 +16,7 @@
 package io.motown.ocpp.v12.soap.chargepoint;
 
 import io.motown.domain.api.chargingstation.NumberedTransactionId;
-import io.motown.domain.api.chargingstation.RequestStatus;
+import io.motown.domain.api.chargingstation.RequestResult;
 import io.motown.ocpp.v12.soap.chargepoint.schema.*;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import org.junit.Before;
@@ -56,18 +56,18 @@ public class ChargingStationOcpp12SoapClientTest {
     public void startTransactionAcceptedVerifyReturnValue() {
         when(chargePointService.remoteStartTransaction(any(RemoteStartTransactionRequest.class), anyString())).thenReturn(getRemoteStartTransactionResponse(RemoteStartStopStatus.ACCEPTED));
 
-        RequestStatus requestStatus = client.startTransaction(CHARGING_STATION_ID, IDENTIFYING_TOKEN, EVSE_ID);
+        RequestResult requestResult = client.startTransaction(CHARGING_STATION_ID, IDENTIFYING_TOKEN, EVSE_ID);
 
-        assertEquals(RequestStatus.SUCCESS, requestStatus);
+        assertEquals(RequestResult.SUCCESS, requestResult);
     }
 
     @Test
     public void startTransactionRejectedVerifyReturnValue() {
         when(chargePointService.remoteStartTransaction(any(RemoteStartTransactionRequest.class), anyString())).thenReturn(getRemoteStartTransactionResponse(RemoteStartStopStatus.REJECTED));
 
-        RequestStatus requestStatus = client.startTransaction(CHARGING_STATION_ID, IDENTIFYING_TOKEN, EVSE_ID);
+        RequestResult requestResult = client.startTransaction(CHARGING_STATION_ID, IDENTIFYING_TOKEN, EVSE_ID);
 
-        assertEquals(RequestStatus.FAILURE, requestStatus);
+        assertEquals(RequestResult.FAILURE, requestResult);
     }
 
     @Test
@@ -86,18 +86,18 @@ public class ChargingStationOcpp12SoapClientTest {
     public void stopTransactionAcceptedVerifyReturnValue() {
         when(chargePointService.remoteStopTransaction(any(RemoteStopTransactionRequest.class), anyString())).thenReturn(getRemoteStopTransactionResponse(RemoteStartStopStatus.ACCEPTED));
 
-        RequestStatus requestStatus = client.stopTransaction(CHARGING_STATION_ID, ((NumberedTransactionId) TRANSACTION_ID).getNumber());
+        RequestResult requestResult = client.stopTransaction(CHARGING_STATION_ID, ((NumberedTransactionId) TRANSACTION_ID).getNumber());
 
-        assertEquals(RequestStatus.SUCCESS, requestStatus);
+        assertEquals(RequestResult.SUCCESS, requestResult);
     }
 
     @Test
     public void stopTransactionRejectedVerifyReturnValue() {
         when(chargePointService.remoteStopTransaction(any(RemoteStopTransactionRequest.class), anyString())).thenReturn(getRemoteStopTransactionResponse(RemoteStartStopStatus.REJECTED));
 
-        RequestStatus requestStatus = client.stopTransaction(CHARGING_STATION_ID, ((NumberedTransactionId) TRANSACTION_ID).getNumber());
+        RequestResult requestResult = client.stopTransaction(CHARGING_STATION_ID, ((NumberedTransactionId) TRANSACTION_ID).getNumber());
 
-        assertEquals(RequestStatus.FAILURE, requestStatus);
+        assertEquals(RequestResult.FAILURE, requestResult);
     }
 
     @Test
@@ -115,18 +115,18 @@ public class ChargingStationOcpp12SoapClientTest {
     public void softResetAcceptedVerifyReturnValue() {
         when(chargePointService.reset(any(ResetRequest.class), anyString())).thenReturn(getResetResponse(ResetStatus.ACCEPTED));
 
-        RequestStatus requestStatus = client.softReset(CHARGING_STATION_ID);
+        RequestResult requestResult = client.softReset(CHARGING_STATION_ID);
 
-        assertEquals(RequestStatus.SUCCESS, requestStatus);
+        assertEquals(RequestResult.SUCCESS, requestResult);
     }
 
     @Test
     public void softResetRejectedVerifyReturnValue() {
         when(chargePointService.reset(any(ResetRequest.class), anyString())).thenReturn(getResetResponse(ResetStatus.REJECTED));
 
-        RequestStatus requestStatus = client.softReset(CHARGING_STATION_ID);
+        RequestResult requestResult = client.softReset(CHARGING_STATION_ID);
 
-        assertEquals(RequestStatus.FAILURE, requestStatus);
+        assertEquals(RequestResult.FAILURE, requestResult);
     }
 
     @Test
@@ -144,18 +144,18 @@ public class ChargingStationOcpp12SoapClientTest {
     public void hardResetAcceptedVerifyReturnValue() {
         when(chargePointService.reset(any(ResetRequest.class), anyString())).thenReturn(getResetResponse(ResetStatus.ACCEPTED));
 
-        RequestStatus requestStatus = client.hardReset(CHARGING_STATION_ID);
+        RequestResult requestResult = client.hardReset(CHARGING_STATION_ID);
 
-        assertEquals(RequestStatus.SUCCESS, requestStatus);
+        assertEquals(RequestResult.SUCCESS, requestResult);
     }
 
     @Test
     public void hardResetRejectedVerifyReturnValue() {
         when(chargePointService.reset(any(ResetRequest.class), anyString())).thenReturn(getResetResponse(ResetStatus.REJECTED));
 
-        RequestStatus requestStatus = client.hardReset(CHARGING_STATION_ID);
+        RequestResult requestResult = client.hardReset(CHARGING_STATION_ID);
 
-        assertEquals(RequestStatus.FAILURE, requestStatus);
+        assertEquals(RequestResult.FAILURE, requestResult);
     }
 
     @Test
@@ -173,18 +173,18 @@ public class ChargingStationOcpp12SoapClientTest {
     public void unlockConnectorAcceptedVerifyReturnValue() {
         when(chargePointService.unlockConnector(any(UnlockConnectorRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getUnlockConnectorResponse(UnlockStatus.ACCEPTED));
 
-        RequestStatus requestStatus = client.unlockConnector(CHARGING_STATION_ID, EVSE_ID);
+        RequestResult requestResult = client.unlockConnector(CHARGING_STATION_ID, EVSE_ID);
 
-        assertEquals(RequestStatus.SUCCESS, requestStatus);
+        assertEquals(RequestResult.SUCCESS, requestResult);
     }
 
     @Test
     public void unlockConnectorRejectedVerifyReturnValue() {
         when(chargePointService.unlockConnector(any(UnlockConnectorRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getUnlockConnectorResponse(UnlockStatus.REJECTED));
 
-        RequestStatus requestStatus = client.unlockConnector(CHARGING_STATION_ID, EVSE_ID);
+        RequestResult requestResult = client.unlockConnector(CHARGING_STATION_ID, EVSE_ID);
 
-        assertEquals(RequestStatus.FAILURE, requestStatus);
+        assertEquals(RequestResult.FAILURE, requestResult);
     }
 
     @Test
@@ -202,18 +202,18 @@ public class ChargingStationOcpp12SoapClientTest {
     public void changeAvailabilityToInoperativeAcceptedVerifyReturnValue() {
         when(chargePointService.changeAvailability(any(ChangeAvailabilityRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getChangeAvailabilityResponse(AvailabilityStatus.ACCEPTED));
 
-        RequestStatus requestStatus = client.changeAvailabilityToInoperative(CHARGING_STATION_ID, EVSE_ID);
+        RequestResult requestResult = client.changeAvailabilityToInoperative(CHARGING_STATION_ID, EVSE_ID);
 
-        assertEquals(RequestStatus.SUCCESS, requestStatus);
+        assertEquals(RequestResult.SUCCESS, requestResult);
     }
 
     @Test
     public void changeAvailabilityToInoperativeRejectedVerifyReturnValue() {
         when(chargePointService.changeAvailability(any(ChangeAvailabilityRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getChangeAvailabilityResponse(AvailabilityStatus.REJECTED));
 
-        RequestStatus requestStatus = client.changeAvailabilityToInoperative(CHARGING_STATION_ID, EVSE_ID);
+        RequestResult requestResult = client.changeAvailabilityToInoperative(CHARGING_STATION_ID, EVSE_ID);
 
-        assertEquals(RequestStatus.FAILURE, requestStatus);
+        assertEquals(RequestResult.FAILURE, requestResult);
     }
 
     @Test
@@ -232,18 +232,18 @@ public class ChargingStationOcpp12SoapClientTest {
     public void changeAvailabilityToOperativeAcceptedVerifyReturnValue() {
         when(chargePointService.changeAvailability(any(ChangeAvailabilityRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getChangeAvailabilityResponse(AvailabilityStatus.ACCEPTED));
 
-        RequestStatus requestStatus = client.changeAvailabilityToOperative(CHARGING_STATION_ID, EVSE_ID);
+        RequestResult requestResult = client.changeAvailabilityToOperative(CHARGING_STATION_ID, EVSE_ID);
 
-        assertEquals(RequestStatus.SUCCESS, requestStatus);
+        assertEquals(RequestResult.SUCCESS, requestResult);
     }
 
     @Test
     public void changeAvailabilityToOperativeRejectedVerifyReturnValue() {
         when(chargePointService.changeAvailability(any(ChangeAvailabilityRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getChangeAvailabilityResponse(AvailabilityStatus.REJECTED));
 
-        RequestStatus requestStatus = client.changeAvailabilityToOperative(CHARGING_STATION_ID, EVSE_ID);
+        RequestResult requestResult = client.changeAvailabilityToOperative(CHARGING_STATION_ID, EVSE_ID);
 
-        assertEquals(RequestStatus.FAILURE, requestStatus);
+        assertEquals(RequestResult.FAILURE, requestResult);
     }
 
     @Test
@@ -262,18 +262,18 @@ public class ChargingStationOcpp12SoapClientTest {
     public void changeConfigurationAcceptedVerifyReturnValue() {
         when(chargePointService.changeConfiguration(any(ChangeConfigurationRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getChangeConfigurationResponse(ConfigurationStatus.ACCEPTED));
 
-        RequestStatus requestStatus = client.changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_KEY, CONFIGURATION_VALUE);
+        RequestResult requestResult = client.changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_KEY, CONFIGURATION_VALUE);
 
-        assertEquals(RequestStatus.SUCCESS, requestStatus);
+        assertEquals(RequestResult.SUCCESS, requestResult);
     }
 
     @Test
     public void changeConfigurationRejectedVerifyReturnValue() {
         when(chargePointService.changeConfiguration(any(ChangeConfigurationRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getChangeConfigurationResponse(ConfigurationStatus.REJECTED));
 
-        RequestStatus requestStatus = client.changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_KEY, CONFIGURATION_VALUE);
+        RequestResult requestResult = client.changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_KEY, CONFIGURATION_VALUE);
 
-        assertEquals(RequestStatus.FAILURE, requestStatus);
+        assertEquals(RequestResult.FAILURE, requestResult);
     }
 
     @Test
@@ -316,18 +316,18 @@ public class ChargingStationOcpp12SoapClientTest {
     public void clearCacheAcceptedVerifyReturnValue() {
         when(chargePointService.clearCache(any(ClearCacheRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getClearCacheResponse(ClearCacheStatus.ACCEPTED));
 
-        RequestStatus requestStatus = client.clearCache(CHARGING_STATION_ID);
+        RequestResult requestResult = client.clearCache(CHARGING_STATION_ID);
 
-        assertEquals(RequestStatus.SUCCESS, requestStatus);
+        assertEquals(RequestResult.SUCCESS, requestResult);
     }
 
     @Test
     public void clearCacheRejectedVerifyReturnValue() {
         when(chargePointService.clearCache(any(ClearCacheRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getClearCacheResponse(ClearCacheStatus.REJECTED));
 
-        RequestStatus requestStatus = client.clearCache(CHARGING_STATION_ID);
+        RequestResult requestResult = client.clearCache(CHARGING_STATION_ID);
 
-        assertEquals(RequestStatus.FAILURE, requestStatus);
+        assertEquals(RequestResult.FAILURE, requestResult);
     }
 
     @Test

@@ -33,7 +33,7 @@
         <property name="typeAdapterDeserializers">
             <set>
                 <bean class="io.motown.ocpp.websocketjson.gson.DiagnosticsStatusTypeAdapterDeserializer"/>
-                <bean class="io.motown.ocpp.websocketjson.gson.UnlockStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.RequestStatusTypeAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.FirmwareStatusTypeAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.ChargePointErrorCodeTypeAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.ChargePointStatusTypeAdapterDeserializer"/>

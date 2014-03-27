@@ -15,10 +15,19 @@
  */
 package io.motown.domain.api.chargingstation;
 
-/**
- * {@code RequestStatus} describes the different soap response status translations.
- */
-public enum RequestStatus {
-    SUCCESS,
-    FAILURE;
+import org.junit.Test;
+
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+
+public class InformRequestResultCommandTest {
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
+        new InformRequestResultCommand(null, RequestResult.SUCCESS, "Test message");
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithoutStatus() {
+        new InformRequestResultCommand(CHARGING_STATION_ID, null, "Test message");
+    }
 }

@@ -21,8 +21,7 @@ import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.request.chargingstation.*;
 import io.motown.ocpp.websocketjson.request.handler.*;
-import io.motown.ocpp.websocketjson.response.handler.ResponseHandler;
-import io.motown.ocpp.websocketjson.response.handler.UnlockConnectorResponseHandler;
+import io.motown.ocpp.websocketjson.response.handler.*;
 import io.motown.ocpp.websocketjson.schema.SchemaValidator;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import io.motown.ocpp.websocketjson.wamp.WampMessageParser;
@@ -101,12 +100,16 @@ public class OcppJsonService {
     public void softReset(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken) {
         ResetRequest softResetRequest = new ResetRequest(ResetType.SOFT.value());
 
+        responseHandlers.put(statusCorrelationToken.getToken(), new ResetResponseHandler(statusCorrelationToken));
+
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "Reset", softResetRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 
     public void hardReset(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken) {
         ResetRequest hardResetRequest = new ResetRequest(ResetType.HARD.value());
+
+        responseHandlers.put(statusCorrelationToken.getToken(), new ResetResponseHandler(statusCorrelationToken));
 
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "Reset", hardResetRequest);
         sendWampMessage(wampMessage, chargingStationId);
@@ -115,6 +118,8 @@ public class OcppJsonService {
     public void startTransaction(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken identifyingToken, CorrelationToken statusCorrelationToken) {
         RemoteStartTransactionRequest remoteStartTransactionRequest = new RemoteStartTransactionRequest(evseId.getNumberedId(), identifyingToken.getToken());
 
+        responseHandlers.put(statusCorrelationToken.getToken(), new RemoteStartTransactionResponseHandler(statusCorrelationToken));
+
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "RemoteStartTransaction", remoteStartTransactionRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
@@ -122,6 +127,8 @@ public class OcppJsonService {
     public void stopTransaction(ChargingStationId chargingStationId, TransactionId transactionId, CorrelationToken statusCorrelationToken) {
         NumberedTransactionId transactionIdNumber = (NumberedTransactionId) transactionId;
         RemoteStopTransactionRequest remoteStopTransactionRequest = new RemoteStopTransactionRequest(transactionIdNumber.getNumber());
+
+        responseHandlers.put(statusCorrelationToken.getToken(), new RemoteStopTransactionResponseHandler(statusCorrelationToken));
 
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "RemoteStopTransaction", remoteStopTransactionRequest);
         sendWampMessage(wampMessage, chargingStationId);

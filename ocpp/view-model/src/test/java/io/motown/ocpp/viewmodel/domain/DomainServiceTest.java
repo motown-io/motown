@@ -243,14 +243,14 @@ public class DomainServiceTest {
     }
 
     @Test
-    public void testStatusChanged() {
+    public void testInformRequestResult() {
         String statusMessage = "Test message";
 
-        domainService.statusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS, CORRELATION_TOKEN, statusMessage);
-        verify(gateway).send(new StatusChangedCommand(CHARGING_STATION_ID, RequestStatus.SUCCESS, statusMessage), CORRELATION_TOKEN);
+        domainService.informRequestResult(CHARGING_STATION_ID, RequestResult.SUCCESS, CORRELATION_TOKEN, statusMessage);
+        verify(gateway).send(new InformRequestResultCommand(CHARGING_STATION_ID, RequestResult.SUCCESS, statusMessage), CORRELATION_TOKEN);
 
-        domainService.statusChanged(CHARGING_STATION_ID, RequestStatus.FAILURE, CORRELATION_TOKEN, statusMessage);
-        verify(gateway).send(new StatusChangedCommand(CHARGING_STATION_ID, RequestStatus.FAILURE, statusMessage), CORRELATION_TOKEN);
+        domainService.informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, CORRELATION_TOKEN, statusMessage);
+        verify(gateway).send(new InformRequestResultCommand(CHARGING_STATION_ID, RequestResult.FAILURE, statusMessage), CORRELATION_TOKEN);
     }
 
     @Test

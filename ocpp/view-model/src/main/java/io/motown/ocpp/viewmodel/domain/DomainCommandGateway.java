@@ -51,6 +51,6 @@ interface DomainCommandGateway {
 
     void send(StatusNotificationCommand command);
 
-    void send(StatusChangedCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(InformRequestResultCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 }
 

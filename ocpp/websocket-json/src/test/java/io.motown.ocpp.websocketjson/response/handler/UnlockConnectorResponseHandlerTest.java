@@ -17,7 +17,7 @@ package io.motown.ocpp.websocketjson.response.handler;
 
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.CorrelationToken;
-import io.motown.domain.api.chargingstation.RequestStatus;
+import io.motown.domain.api.chargingstation.RequestResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import io.motown.ocpp.websocketjson.wamp.WampMessageParser;
@@ -53,7 +53,7 @@ public class UnlockConnectorResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService);
 
-        verify(domainService).statusChanged(CHARGING_STATION_ID, RequestStatus.SUCCESS, correlationToken, "");
+        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.SUCCESS, correlationToken, "");
     }
 
 }
