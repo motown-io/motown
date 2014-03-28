@@ -29,9 +29,24 @@
 
     <bean id="chargingStationConfigurationDomainService" class="io.motown.chargingstationconfiguration.viewmodel.domain.DomainService">
         <property name="chargingStationTypeRepository" ref="chargingStationRepositoryChargingStationConfiguration" />
+        <property name="connectorRepository" ref="connectorRepositoryChargingStationConfiguration" />
+        <property name="evseRepository" ref="evseRepositoryChargingStationConfiguration" />
+        <property name="manufacturerRepository" ref="manufacturerRepositoryChargingStationConfiguration" />
     </bean>
 
     <bean id="chargingStationRepositoryChargingStationConfiguration" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository">
+        <property name="entityManager" ref="jpaEntityManagerChargingStationConfiguration" />
+    </bean>
+
+    <bean id="connectorRepositoryChargingStationConfiguration" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ConnectorRepository">
+        <property name="entityManager" ref="jpaEntityManagerChargingStationConfiguration" />
+    </bean>
+
+    <bean id="evseRepositoryChargingStationConfiguration" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.EvseRepository">
+        <property name="entityManager" ref="jpaEntityManagerChargingStationConfiguration" />
+    </bean>
+
+    <bean id="manufacturerRepositoryChargingStationConfiguration" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ManufacturerRepository">
         <property name="entityManager" ref="jpaEntityManagerChargingStationConfiguration" />
     </bean>
 
@@ -70,5 +85,21 @@
         <!-- initialData.sql contains some dummy values to be able to use the charging station configuration add-on -->
         <jdbc:script location="classpath*:META-INF/hsqldb/initialData.sql" />
     </jdbc:embedded-database>
+
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.ChargingStationTypeResource">
+        <property name="domainService" ref="chargingStationConfigurationDomainService" />
+    </bean>
+
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.ConnectorResource">
+        <property name="domainService" ref="chargingStationConfigurationDomainService" />
+    </bean>
+
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.EvseResource">
+        <property name="domainService" ref="chargingStationConfigurationDomainService" />
+    </bean>
+
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.ManufacturerResource">
+        <property name="domainService" ref="chargingStationConfigurationDomainService" />
+    </bean>
 
 </beans>

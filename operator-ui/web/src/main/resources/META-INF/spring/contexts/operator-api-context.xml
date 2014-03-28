@@ -171,8 +171,6 @@
         <property name="gatewayInterface" value="io.motown.operatorapi.json.commands.DomainCommandGateway"/>
     </bean>
 
-    <bean id="applicationContextProvider" class="io.motown.operatorapi.viewmodel.spring.ApplicationContextProvider" />
-
     <bean id="asyncExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean">
         <property name="corePoolSize" value="1"/>
         <property name="waitForTasksToCompleteOnShutdown" value="true"/>
@@ -210,9 +208,5 @@
     </bean>
 
     <jdbc:embedded-database id="operatorApiDataSource" type="HSQL"/>
-
-    <bean id="operatorApiBaseUrl" class="java.lang.String">
-        <constructor-arg value="/api" />
-    </bean>
 
 </beans>

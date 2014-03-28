@@ -182,8 +182,6 @@
     <context:property-placeholder location="classpath:config.properties, file:${io.motown.operatorapi.config}"
                                   ignore-resource-not-found="true"/>
 
-    <bean id="applicationContextProvider" class="io.motown.operatorapi.viewmodel.spring.ApplicationContextProvider" />
-
     <bean id="asyncExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean">
         <property name="corePoolSize" value="1"/>
         <property name="waitForTasksToCompleteOnShutdown" value="true"/>
