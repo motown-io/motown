@@ -35,7 +35,7 @@ public final class ManufacturerResource {
     }
 
     @PUT
-    @Path("{id: [0-9]+}")
+    @Path("/{id: [0-9]+}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateManufacturer(@PathParam("id") Long id, Manufacturer manufacturer) {
         return Response.ok(domainService.updateManufacturer(id, manufacturer)).build();
@@ -47,13 +47,13 @@ public final class ManufacturerResource {
     }
 
     @GET
-    @Path("{id: [0-9]+}")
+    @Path("/{id: [0-9]+}")
     public Response getManufacturer(@PathParam("id") Long id) {
         return Response.ok(domainService.getManufacturer(id)).build();
     }
 
     @DELETE
-    @Path("{id: [0-9]+}")
+    @Path("/{id: [0-9]+}")
     public Response deleteManufacturer(@PathParam("id") Long id) {
         domainService.deleteManufacturer(id);
         return Response.ok(id).build();

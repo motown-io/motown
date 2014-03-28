@@ -35,7 +35,7 @@ public final class EvseResource {
     }
 
     @PUT
-    @Path("{id: [0-9]+}")
+    @Path("/{id: [0-9]+}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateEvse(@PathParam("id") Long id, Evse evse) {
         return Response.ok(domainService.updateEvse(id, evse)).build();
@@ -47,13 +47,13 @@ public final class EvseResource {
     }
 
     @GET
-    @Path("{id: [0-9]+}")
+    @Path("/{id: [0-9]+}")
     public Response getEvse(@PathParam("id") Long id) {
         return Response.ok(domainService.getEvse(id)).build();
     }
 
     @DELETE
-    @Path("{id: [0-9]+}")
+    @Path("/{id: [0-9]+}")
     public Response deleteEvse(@PathParam("id") Long id) {
         domainService.deleteEvse(id);
         return Response.ok(id).build();

@@ -35,7 +35,7 @@ public final class ConnectorResource {
     }
 
     @PUT
-    @Path("{id: [0-9]+}")
+    @Path("/{id: [0-9]+}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateConnector(@PathParam("id") Long id, Connector connector) {
         return Response.ok(domainService.updateConnector(id, connector)).build();
@@ -47,13 +47,13 @@ public final class ConnectorResource {
     }
 
     @GET
-    @Path("{id: [0-9]+}")
+    @Path("/{id: [0-9]+}")
     public Response getConnector(@PathParam("id") Long id) {
         return Response.ok(domainService.getConnector(id)).build();
     }
 
     @DELETE
-    @Path("{id: [0-9]+}")
+    @Path("/{id: [0-9]+}")
     public Response deleteConnector(@PathParam("id") Long id) {
         domainService.deleteConnector(id);
         return Response.ok(id).build();
