@@ -70,7 +70,7 @@ public class ITConnectorResourceTest extends JerseyTest {
                 .requestListenerClass(RequestContextListener.class)
                 .servletClass(SpringServlet.class)
                 .servletPath("/api")
-                .initParam("com.sun.jersey.config.property.packages", "org.codehaus.jackson.jaxrs;io.motown.chargingstationconfiguration.viewmodel.restapi")
+                .initParam("com.sun.jersey.config.property.packages", "io.motown.chargingstationconfiguration.viewmodel.restapi")
                 .build();
     }
 
