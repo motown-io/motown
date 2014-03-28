@@ -23,19 +23,24 @@
          version="3.0">
     <display-name>Motown.IO - Operator JSON API</display-name>
 
-    <filter>
-        <filter-name>SparkFilter</filter-name>
-        <filter-class>spark.servlet.SparkFilter</filter-class>
+    <servlet>
+        <servlet-name>JerseyServlet</servlet-name>
+        <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
         <init-param>
-            <param-name>applicationClass</param-name>
-            <param-value>io.motown.operatorapi.json.JsonOperatorApiApplication</param-value>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>io.motown.operatorapi.json.restapi</param-value>
         </init-param>
-    </filter>
+        <init-param>
+            <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </servlet>
 
-    <filter-mapping>
-        <filter-name>SparkFilter</filter-name>
+    <servlet-mapping>
+        <servlet-name>JerseyServlet</servlet-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>
+    </servlet-mapping>
 
     <context-param>
         <param-name>contextConfigLocation</param-name>

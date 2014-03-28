@@ -258,4 +258,13 @@
 
     <jdbc:embedded-database id="dataSource" type="HSQL"/>
 
+    <bean id="chargingStationResource" class="io.motown.operatorapi.json.restapi.ChargingStationResource">
+        <property name="commandService" ref="jsonCommandService"/>
+        <property name="service" ref="operatorApiService"/>
+    </bean>
+
+    <bean id="transactionResource" class="io.motown.operatorapi.json.restapi.TransactionResource">
+        <property name="service" ref="operatorApiService"/>
+    </bean>
+
 </beans>
