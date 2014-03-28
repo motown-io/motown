@@ -23,7 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/connectors")
-@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+@Produces(MediaType.APPLICATION_JSON)
 public final class ConnectorResource {
 
     private DomainService domainService;

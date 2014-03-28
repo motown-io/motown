@@ -23,7 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/manufacturers")
-@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+@Produces(MediaType.APPLICATION_JSON)
 public final class ManufacturerResource {
 
     private DomainService domainService;
