@@ -23,13 +23,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/evses")
+@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
 public final class EvseResource {
 
     private DomainService domainService;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response createEvse(Evse evse) {
         return Response.status(Response.Status.CREATED).entity(domainService.createEvse(evse)).build();
     }
@@ -37,27 +37,23 @@ public final class EvseResource {
     @PUT
     @Path("{id: [0-9]+}")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response updateEvse(@PathParam("id") Long id, Evse evse) {
         return Response.ok(domainService.updateEvse(id, evse)).build();
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response getEvses() {
         return Response.ok(domainService.getEvses()).build();
     }
 
     @GET
     @Path("{id: [0-9]+}")
-    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response getEvse(@PathParam("id") Long id) {
         return Response.ok(domainService.getEvse(id)).build();
     }
 
     @DELETE
     @Path("{id: [0-9]+}")
-    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response deleteEvse(@PathParam("id") Long id) {
         domainService.deleteEvse(id);
         return Response.ok(id).build();

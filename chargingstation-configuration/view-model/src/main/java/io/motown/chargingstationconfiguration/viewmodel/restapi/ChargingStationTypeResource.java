@@ -23,13 +23,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/chargingstationtypes")
+@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
 public final class ChargingStationTypeResource {
 
     private DomainService domainService;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response createChargingStationType(ChargingStationType chargingStationType) {
         return Response.status(Response.Status.CREATED).entity(domainService.createChargingStationType(chargingStationType)).build();
     }
@@ -37,27 +37,23 @@ public final class ChargingStationTypeResource {
     @PUT
     @Path("{id: [0-9]+}")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response updateChargingStationType(@PathParam("id") Long id, ChargingStationType chargingStationType) {
         return Response.ok(domainService.updateChargingStationType(id, chargingStationType)).build();
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response getChargingStationTypes() {
         return Response.ok(domainService.getChargingStationTypes()).build();
     }
 
     @GET
     @Path("{id: [0-9]+}")
-    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response getChargingStationType(@PathParam("id") Long id) {
         return Response.ok(domainService.getChargingStationType(id)).build();
     }
 
     @DELETE
     @Path("{id: [0-9]+}")
-    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response deleteChargingStationType(@PathParam("id") Long id) {
         domainService.deleteChargingStationType(id);
         return Response.ok(id).build();
