@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
 import java.util.List;
 
 public class ChargingStationRepository {
@@ -52,8 +51,7 @@ public class ChargingStationRepository {
     }
 
     public List<ChargingStation> findAll() {
-        Query query = entityManager.createQuery("SELECT cs FROM io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation AS cs");
-        return (List<ChargingStation>) query.getResultList();
+        return entityManager.createQuery("SELECT cs FROM io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation AS cs", ChargingStation.class).getResultList();
     }
 
     public void setEntityManager(EntityManager entityManager) {

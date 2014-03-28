@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
 import java.util.List;
 
 public class TransactionRepository {
@@ -34,13 +33,13 @@ public class TransactionRepository {
      * Find transactions by transaction id (not the auto-increment transaction.id)
      */
     public List<Transaction> findByTransactionId(String transactionId) {
-        Query query = entityManager.createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t WHERE t.transactionId = :transactionId").setParameter("transactionId", transactionId);
-        return (List<Transaction>) query.getResultList();
+        return entityManager.createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t WHERE t.transactionId = :transactionId", Transaction.class)
+                .setParameter("transactionId", transactionId)
+                .getResultList();
     }
 
     public List<Transaction> findAll() {
-        Query query = entityManager.createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t");
-        return (List<Transaction>) query.getResultList();
+        return entityManager.createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t", Transaction.class).getResultList();
     }
 
     public void save(Transaction transaction) {
