@@ -26,7 +26,6 @@ import com.sun.jersey.test.framework.JerseyTest;
 import com.sun.jersey.test.framework.WebAppDescriptor;
 import com.sun.jersey.test.framework.spi.container.TestContainerException;
 import com.sun.jersey.test.framework.spi.container.grizzly2.web.GrizzlyWebTestContainerFactory;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -45,8 +44,6 @@ import static org.junit.Assert.assertEquals;
 public class ITTransactionTest extends JerseyTest {
     private static final int OK = 200;
     private static final String BASE_URI = "http://localhost:9998/operator/api/transactions";
-
-    private Client client;
 
     public ITTransactionTest() throws TestContainerException {
         super(new GrizzlyWebTestContainerFactory());
@@ -72,14 +69,9 @@ public class ITTransactionTest extends JerseyTest {
         return Client.create(config);
     }
 
-    @Before
-    public void setUp() {
-        this.client = client();
-    }
-
     @Test
     public void testGetTransactions() {
-        ClientResponse response = client.resource(BASE_URI)
+        ClientResponse response = client().resource(BASE_URI)
                 .accept(MediaType.APPLICATION_JSON)
                 .get(ClientResponse.class);
 
