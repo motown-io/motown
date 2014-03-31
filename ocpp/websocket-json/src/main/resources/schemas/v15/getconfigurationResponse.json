@@ -1,0 +1,34 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "GetConfigurationResponse",
+    "type": "object",
+    "properties": {
+        "configurationKey": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "key": {
+                        "type": "string"
+                    },
+                    "readonly": {
+                        "type": "boolean"
+                    },
+                    "value": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "key",
+                    "readonly"
+                ]
+            }
+        },
+        "unknownKey": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    }
+}

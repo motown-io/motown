@@ -20,8 +20,7 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.RequestResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.response.chargingstation.RequestStatus;
-import io.motown.ocpp.websocketjson.response.chargingstation.RemoteStartTransactionResponse;
+import io.motown.ocpp.websocketjson.schema.generated.v15.RemotestarttransactionResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 
 public class RemoteStartTransactionResponseHandler extends ResponseHandler {
@@ -32,8 +31,8 @@ public class RemoteStartTransactionResponseHandler extends ResponseHandler {
 
     @Override
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService) {
-        RemoteStartTransactionResponse response = gson.fromJson(wampMessage.getPayloadAsString(), RemoteStartTransactionResponse.class);
-        RequestResult requestResult = response.getStatus().equals(RequestStatus.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
+        RemotestarttransactionResponse response = gson.fromJson(wampMessage.getPayloadAsString(), RemotestarttransactionResponse.class);
+        RequestResult requestResult = response.getStatus().equals(RemotestarttransactionResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
         domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "");
     }

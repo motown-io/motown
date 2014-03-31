@@ -71,6 +71,29 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.jsonschema2pojo</groupId>
+                <artifactId>jsonschema2pojo-maven-plugin</artifactId>
+                <version>0.4.1</version>
+                <executions>
+                    <execution>
+                        <id>All</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <sourceDirectory>${basedir}/src/main/resources/schemas/v15</sourceDirectory>
+                            <outputDirectory>${basedir}/src/main/java</outputDirectory>
+                            <targetPackage>io.motown.ocpp.websocketjson.schema.generated.v15</targetPackage>
+                            <generateBuilders>false</generateBuilders>
+                            <annotationStyle>gson</annotationStyle>
+                            <includeToString>false</includeToString>
+                            <includeHashcodeAndEquals>false</includeHashcodeAndEquals>
+                        </configuration>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
@@ -83,6 +106,7 @@
                         <exclude>**/README</exclude>
                         <exclude>src/test/resources/**</exclude>
                         <exclude>src/main/resources/**</exclude>
+                        <exclude>src/main/java/**/generated/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>

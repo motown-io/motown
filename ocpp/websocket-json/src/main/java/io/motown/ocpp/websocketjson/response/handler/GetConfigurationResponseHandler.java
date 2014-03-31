@@ -15,26 +15,32 @@
  */
 package io.motown.ocpp.websocketjson.response.handler;
 
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
-import io.motown.domain.api.chargingstation.RequestResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.schema.generated.v15.RemotestoptransactionResponse;
+import io.motown.ocpp.websocketjson.schema.generated.v15.ConfigurationKey;
+import io.motown.ocpp.websocketjson.schema.generated.v15.GetconfigurationResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 
-public class RemoteStopTransactionResponseHandler extends ResponseHandler {
+import java.util.Map;
 
-    public RemoteStopTransactionResponseHandler(CorrelationToken correlationToken) {
+public class GetConfigurationResponseHandler extends ResponseHandler {
+
+    public GetConfigurationResponseHandler(CorrelationToken correlationToken) {
         this.setCorrelationToken(correlationToken);
     }
 
     @Override
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService) {
-        RemotestoptransactionResponse response = gson.fromJson(wampMessage.getPayloadAsString(), RemotestoptransactionResponse.class);
-        RequestResult requestResult = response.getStatus().equals(RemotestoptransactionResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
+        GetconfigurationResponse response = gson.fromJson(wampMessage.getPayloadAsString(), GetconfigurationResponse.class);
 
-        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "");
+        Map<String, String> configurationItems = Maps.newHashMap();
+        for (ConfigurationKey configurationKey : response.getConfigurationKey()) {
+            configurationItems.put(configurationKey.getKey(), configurationKey.getValue());
+        }
+
+        domainService.configureChargingStation(chargingStationId, configurationItems);
     }
-
 }

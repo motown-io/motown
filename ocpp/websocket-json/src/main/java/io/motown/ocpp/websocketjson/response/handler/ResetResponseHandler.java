@@ -20,8 +20,7 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.RequestResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.response.chargingstation.RequestStatus;
-import io.motown.ocpp.websocketjson.response.chargingstation.ResetResponse;
+import io.motown.ocpp.websocketjson.schema.generated.v15.ResetResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 
 public class ResetResponseHandler extends ResponseHandler {
@@ -33,9 +32,8 @@ public class ResetResponseHandler extends ResponseHandler {
     @Override
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService) {
         ResetResponse response = gson.fromJson(wampMessage.getPayloadAsString(), ResetResponse.class);
-        RequestResult requestResult = response.getStatus().equals(RequestStatus.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
+        RequestResult requestResult = response.getStatus().equals(ResetResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
         domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "");
     }
-
 }

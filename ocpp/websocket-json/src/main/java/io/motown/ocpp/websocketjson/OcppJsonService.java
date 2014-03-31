@@ -23,6 +23,7 @@ import io.motown.ocpp.websocketjson.request.chargingstation.*;
 import io.motown.ocpp.websocketjson.request.handler.*;
 import io.motown.ocpp.websocketjson.response.handler.*;
 import io.motown.ocpp.websocketjson.schema.SchemaValidator;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Getconfiguration;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import io.motown.ocpp.websocketjson.wamp.WampMessageParser;
 import org.atmosphere.websocket.WebSocket;
@@ -93,8 +94,23 @@ public class OcppJsonService {
         }
     }
 
+    /**
+     * Performs the synchronous call to retrieve the charging station configuration
+     * @param chargingStationId
+     */
     public void getConfiguration(ChargingStationId chargingStationId) {
-        //TODO implement
+
+        CorrelationToken statusCorrelationToken = new CorrelationToken();
+        Getconfiguration getConfigurationRequest = new Getconfiguration();
+
+        responseHandlers.put(statusCorrelationToken.getToken(), new GetConfigurationResponseHandler(statusCorrelationToken));
+
+        //Map<String, String> configurationItems = chargingStationOcpp15Client.getConfiguration(event.getChargingStationId());
+
+        //domainService.configureChargingStation(event.getChargingStationId(), configurationItems);
+
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "GetConfiguration", getConfigurationRequest);
+        sendWampMessage(wampMessage, chargingStationId);
     }
 
     public void softReset(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken) {

@@ -20,8 +20,7 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.RequestResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.response.chargingstation.RequestStatus;
-import io.motown.ocpp.websocketjson.response.chargingstation.UnlockConnectorResponse;
+import io.motown.ocpp.websocketjson.schema.generated.v15.UnlockconnectorResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 
 public class UnlockConnectorResponseHandler extends ResponseHandler {
@@ -32,10 +31,9 @@ public class UnlockConnectorResponseHandler extends ResponseHandler {
 
     @Override
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService) {
-        UnlockConnectorResponse response = gson.fromJson(wampMessage.getPayloadAsString(), UnlockConnectorResponse.class);
-        RequestResult requestResult = response.getStatus().equals(RequestStatus.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
+        UnlockconnectorResponse response = gson.fromJson(wampMessage.getPayloadAsString(), UnlockconnectorResponse.class);
+        RequestResult requestResult = response.getStatus().equals(UnlockconnectorResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
         domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "");
     }
-
 }

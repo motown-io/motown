@@ -17,19 +17,19 @@ package io.motown.ocpp.websocketjson.gson;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
-import io.motown.ocpp.websocketjson.response.chargingstation.RequestStatus;
+import io.motown.ocpp.websocketjson.schema.generated.v15.RemotestarttransactionResponse;
 
 import java.lang.reflect.Type;
 
-public class RequestStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<RequestStatus> {
+public class RemoteStartTransactionResponseTypeAdapterDeserializer implements TypeAdapterDeserializer<RemotestarttransactionResponse.Status> {
 
     @Override
-    public RequestStatus deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
-        return RequestStatus.fromValue(jsonElement.getAsString());
+    public RemotestarttransactionResponse.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
+        return RemotestarttransactionResponse.Status.fromValue(jsonElement.getAsString());
     }
 
     @Override
     public Class<?> getAdaptedType() {
-        return RequestStatus.class;
+        return RemotestarttransactionResponse.Status.class;
     }
 }
