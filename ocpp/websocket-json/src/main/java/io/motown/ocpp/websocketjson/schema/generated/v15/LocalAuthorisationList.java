@@ -13,7 +13,7 @@ public class LocalAuthorisationList {
      * 
      */
     @Expose
-    private IdTagInfo idTagInfo;
+    private IdTagInfo_ idTagInfo;
 
     public String getIdTag() {
         return idTag;
@@ -26,14 +26,14 @@ public class LocalAuthorisationList {
     /**
      * 
      */
-    public IdTagInfo getIdTagInfo() {
+    public IdTagInfo_ getIdTagInfo() {
         return idTagInfo;
     }
 
     /**
      * 
      */
-    public void setIdTagInfo(IdTagInfo idTagInfo) {
+    public void setIdTagInfo(IdTagInfo_ idTagInfo) {
         this.idTagInfo = idTagInfo;
     }
 

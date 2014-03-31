@@ -20,7 +20,7 @@ public class StarttransactionResponse {
      * 
      */
     @Expose
-    private IdTagInfo_ idTagInfo;
+    private IdTagInfo__ idTagInfo;
 
     public Double getTransactionId() {
         return transactionId;
@@ -33,14 +33,14 @@ public class StarttransactionResponse {
     /**
      * 
      */
-    public IdTagInfo_ getIdTagInfo() {
+    public IdTagInfo__ getIdTagInfo() {
         return idTagInfo;
     }
 
     /**
      * 
      */
-    public void setIdTagInfo(IdTagInfo_ idTagInfo) {
+    public void setIdTagInfo(IdTagInfo__ idTagInfo) {
         this.idTagInfo = idTagInfo;
     }
 

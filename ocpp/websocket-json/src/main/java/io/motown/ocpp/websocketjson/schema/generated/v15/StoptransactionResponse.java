@@ -18,19 +18,19 @@ public class StoptransactionResponse {
      * 
      */
     @Expose
-    private IdTagInfo__ idTagInfo;
+    private IdTagInfo___ idTagInfo;
 
     /**
      * 
      */
-    public IdTagInfo__ getIdTagInfo() {
+    public IdTagInfo___ getIdTagInfo() {
         return idTagInfo;
     }
 
     /**
      * 
      */
-    public void setIdTagInfo(IdTagInfo__ idTagInfo) {
+    public void setIdTagInfo(IdTagInfo___ idTagInfo) {
         this.idTagInfo = idTagInfo;
     }
 
