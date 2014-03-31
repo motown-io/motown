@@ -51,6 +51,7 @@ public class OcppWebSocketJsonTestUtils {
                 .add(new FirmwareStatusTypeAdapterSerializer())
                 .add(new ChargePointErrorCodeTypeAdapterSerializer())
                 .add(new ChargePointStatusTypeAdapterSerializer())
+                .add(new BootnotificationResponseStatusTypeAdapterSerializer())
                 .build();
         gsonFactoryBean.setTypeAdapterSerializers(typeAdapterSerializers);
 

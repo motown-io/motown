@@ -28,6 +28,11 @@
             <set>
                 <bean class="io.motown.ocpp.websocketjson.gson.RegistrationStatusTypeAdapterSerializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.DataTransferStatusTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.DiagnosticsStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.FirmwareStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.ChargePointErrorCodeTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.ChargePointStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.BootnotificationResponseStatusTypeAdapterSerializer"/>
             </set>
         </property>
         <property name="typeAdapterDeserializers">

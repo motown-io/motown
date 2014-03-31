@@ -21,9 +21,8 @@ import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.OcppJsonService;
-import io.motown.ocpp.websocketjson.request.chargingstation.BootNotificationRequest;
-import io.motown.ocpp.websocketjson.response.centralsystem.BootNotificationResponse;
-import io.motown.ocpp.websocketjson.response.centralsystem.RegistrationStatus;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Bootnotification;
+import io.motown.ocpp.websocketjson.schema.generated.v15.BootnotificationResponse;
 import org.atmosphere.websocket.WebSocket;
 
 public class BootNotificationRequestHandler extends RequestHandler {
@@ -44,14 +43,17 @@ public class BootNotificationRequestHandler extends RequestHandler {
 
     @Override
     public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
-        BootNotificationRequest request = gson.fromJson(payload, BootNotificationRequest.class);
+        Bootnotification request = gson.fromJson(payload, Bootnotification.class);
 
         BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(chargingStationId, null, request.getChargePointVendor(),
                 request.getChargePointModel(), OcppJsonService.PROTOCOL_IDENTIFIER, request.getChargePointSerialNumber(), request.getChargeBoxSerialNumber(),
                 request.getFirmwareVersion(), request.getIccid(), request.getImsi(), request.getMeterType(),
                 request.getMeterSerialNumber(), addOnIdentity);
 
-        BootNotificationResponse response = new BootNotificationResponse(bootChargingStationResult.isAccepted()? RegistrationStatus.ACCEPTED:RegistrationStatus.REJECTED, bootChargingStationResult.getTimeStamp(), bootChargingStationResult.getHeartbeatInterval());
+        BootnotificationResponse response = new BootnotificationResponse();
+        response.setStatus(bootChargingStationResult.isAccepted()? BootnotificationResponse.Status.ACCEPTED:BootnotificationResponse.Status.REJECTED);
+        response.setCurrentTime(bootChargingStationResult.getTimeStamp());
+        response.setHeartbeatInterval((double) bootChargingStationResult.getHeartbeatInterval());
 
         writeResponse(webSocket, response, callId, gson);
     }
