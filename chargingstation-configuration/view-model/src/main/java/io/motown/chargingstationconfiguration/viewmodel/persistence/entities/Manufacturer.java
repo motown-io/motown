@@ -15,13 +15,8 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.persistence.entities;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
 import javax.persistence.*;
 
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 public class Manufacturer {
 

@@ -23,7 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/evses")
-@Produces(MediaType.APPLICATION_JSON)
+@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
 public final class EvseResource {
 
     private DomainService domainService;

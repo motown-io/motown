@@ -15,15 +15,10 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.persistence.entities;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(uniqueConstraints=
     @UniqueConstraint(columnNames = {"code", "manufacturerId"})

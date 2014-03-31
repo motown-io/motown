@@ -24,7 +24,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/transactions")
-@Produces(MediaType.APPLICATION_JSON)
+@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
 public final class TransactionResource {
 
     private OperatorApiService service;
