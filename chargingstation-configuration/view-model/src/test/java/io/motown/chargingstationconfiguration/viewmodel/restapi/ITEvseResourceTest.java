@@ -48,7 +48,6 @@ import static org.junit.Assert.assertEquals;
 public class ITEvseResourceTest extends JerseyTest {
     private static final int OK = 200;
     private static final int CREATED = 201;
-    private static final int BAD_REQUEST = 400;
     private static final int NOT_FOUND = 404;
     private static final String BASE_URI = "http://localhost:9998/config/api/evses";
 
@@ -112,18 +111,6 @@ public class ITEvseResourceTest extends JerseyTest {
 
         assertEquals(OK, response.getStatus());
         assertEquals(evse.getIdentifier(), response.getEntity(Evse.class).getIdentifier());
-    }
-
-    @Test
-    public void testUpdateEvseNonExistentEntity() {
-        Evse evse = getEvse();
-        ClientResponse response = client.resource(BASE_URI)
-                .path("/2")
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.TEXT_PLAIN)
-                .put(ClientResponse.class, evse);
-
-        assertEquals(BAD_REQUEST, response.getStatus());
     }
 
     @Test

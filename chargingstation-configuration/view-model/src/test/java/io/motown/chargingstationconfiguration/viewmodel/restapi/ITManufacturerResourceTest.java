@@ -48,7 +48,6 @@ import static org.junit.Assert.assertEquals;
 public class ITManufacturerResourceTest extends JerseyTest {
     private static final int OK = 200;
     private static final int CREATED = 201;
-    private static final int BAD_REQUEST = 400;
     private static final int NOT_FOUND = 404;
     private static final int INTERNAL_SERVER_ERROR = 500;
     private static final String BASE_URI = "http://localhost:9998/config/api/manufacturers";
@@ -129,18 +128,6 @@ public class ITManufacturerResourceTest extends JerseyTest {
 
         assertEquals(OK, response.getStatus());
         assertEquals(manufacturer.getCode(), response.getEntity(Manufacturer.class).getCode());
-    }
-
-    @Test
-    public void testUpdateManufacturerNonExistentEntity() {
-        Manufacturer manufacturer = getManufacturer();
-        ClientResponse response = client.resource(BASE_URI)
-                .path("/2")
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.TEXT_PLAIN)
-                .put(ClientResponse.class, manufacturer);
-
-        assertEquals(BAD_REQUEST, response.getStatus());
     }
 
     @Test
