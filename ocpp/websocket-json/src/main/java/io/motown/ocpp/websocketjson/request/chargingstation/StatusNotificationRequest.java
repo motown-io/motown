@@ -17,6 +17,7 @@ package io.motown.ocpp.websocketjson.request.chargingstation;
 
 import java.util.Date;
 
+@Deprecated
 public class StatusNotificationRequest {
 
     private int connectorId;

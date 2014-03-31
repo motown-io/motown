@@ -15,6 +15,7 @@
  */
 package io.motown.ocpp.websocketjson.request.chargingstation;
 
+@Deprecated
 public enum FirmwareStatus {
 
     DOWNLOADED("Downloaded"),

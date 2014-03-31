@@ -18,6 +18,7 @@ package io.motown.ocpp.websocketjson.request.chargingstation;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class TransactionData {
 
     private List<MeterValue> values = new ArrayList<>();

@@ -15,5 +15,6 @@
  */
 package io.motown.ocpp.websocketjson.request.chargingstation;
 
+@Deprecated
 public class HeartbeatRequest {
 }

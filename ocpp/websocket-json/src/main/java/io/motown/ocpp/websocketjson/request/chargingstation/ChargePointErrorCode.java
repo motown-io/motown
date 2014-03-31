@@ -15,6 +15,7 @@
  */
 package io.motown.ocpp.websocketjson.request.chargingstation;
 
+@Deprecated
 public enum ChargePointErrorCode {
 
     CONNECTOR_LOCK_FAILURE("ConnectorLockFailure"),
