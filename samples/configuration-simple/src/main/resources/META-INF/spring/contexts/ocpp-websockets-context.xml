@@ -28,10 +28,6 @@
             <set>
                 <bean class="io.motown.ocpp.websocketjson.gson.RegistrationStatusTypeAdapterSerializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.DataTransferStatusTypeAdapterSerializer"/>
-                <bean class="io.motown.ocpp.websocketjson.gson.DiagnosticsStatusTypeAdapterDeserializer"/>
-                <bean class="io.motown.ocpp.websocketjson.gson.FirmwareStatusTypeAdapterDeserializer"/>
-                <bean class="io.motown.ocpp.websocketjson.gson.ChargePointErrorCodeTypeAdapterDeserializer"/>
-                <bean class="io.motown.ocpp.websocketjson.gson.ChargePointStatusTypeAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.BootnotificationResponseStatusTypeAdapterSerializer"/>
             </set>
         </property>
@@ -45,6 +41,10 @@
                 <bean class="io.motown.ocpp.websocketjson.gson.ResetStatusResponseTypeAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.RemoteStartTransactionResponseTypeAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.RemoteStopTransactionResponseTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.DiagnosticsStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.FirmwareStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.ChargePointErrorCodeTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.ChargePointStatusTypeAdapterDeserializer"/>
             </set>
         </property>
     </bean>
