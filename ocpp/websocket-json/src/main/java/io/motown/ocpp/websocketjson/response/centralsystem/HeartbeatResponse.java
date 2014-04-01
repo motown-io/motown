@@ -17,6 +17,7 @@ package io.motown.ocpp.websocketjson.response.centralsystem;
 
 import java.util.Date;
 
+@Deprecated
 public class HeartbeatResponse implements CentralSystemResponse {
 
     private Date currentTime;

@@ -15,6 +15,7 @@
  */
 package io.motown.ocpp.websocketjson.response.centralsystem;
 
+@Deprecated
 public class DataTransferResponse implements CentralSystemResponse {
 
     private DataTransferStatus status;

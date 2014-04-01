@@ -15,5 +15,6 @@
  */
 package io.motown.ocpp.websocketjson.response.centralsystem;
 
+@Deprecated
 public class FirmwareStatusNotificationResponse implements CentralSystemResponse {
 }
