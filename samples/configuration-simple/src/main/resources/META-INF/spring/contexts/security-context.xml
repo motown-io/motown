@@ -45,10 +45,7 @@
         <security:custom-filter ref="authenticationTokenProcessingFilter" position="FORM_LOGIN_FILTER" />
         <security:intercept-url pattern="/rest/user/authenticate" access="permitAll" />
         <security:intercept-url pattern="/rest/config/**" access="isAuthenticated()" />
-        <!--<security:intercept-url method="GET" pattern="/config/**" access="isAuthenticated()" />-->
-        <!--<security:intercept-url method="PUT" pattern="/config/**" access="isAuthenticated()" />-->
-        <!--<security:intercept-url method="POST" pattern="/config/**" access="isAuthenticated()" />-->
-        <!--<security:intercept-url method="DELETE" pattern="/config/**" access="isAuthenticated()" />-->
+        <security:intercept-url pattern="/rest/operator-api/**" access="isAuthenticated()" />
     </security:http>
 
     <bean id="unauthorizedEntryPoint" class="io.motown.configuration.simple.authorization.rest.UnauthorizedEntryPoint" />

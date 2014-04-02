@@ -47,7 +47,7 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>JerseyServlet</servlet-name>
+        <servlet-name>JerseyOperatorApiServlet</servlet-name>
         <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -59,11 +59,6 @@
             <param-value>true</param-value>
         </init-param>
     </servlet>
-
-    <servlet-mapping>
-        <servlet-name>JerseyServlet</servlet-name>
-        <url-pattern>/api/*</url-pattern>
-    </servlet-mapping>
 
     <filter>
         <filter-name>SecWebSocketVersionInterceptor</filter-name>
@@ -102,6 +97,20 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>JerseyConfigurationApiServlet</servlet-name>
+        <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>io.motown.chargingstationconfiguration.viewmodel.restapi</param-value>
+        </init-param>
+        <init-param>
+            <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet>
         <servlet-name>JerseyUserServlet</servlet-name>
         <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
@@ -116,7 +125,12 @@
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>JerseyServlet</servlet-name>
+        <servlet-name>JerseyOperatorApiServlet</servlet-name>
+        <url-pattern>/rest/operator-api/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>JerseyConfigurationApiServlet</servlet-name>
         <url-pattern>/rest/config/*</url-pattern>
     </servlet-mapping>
 

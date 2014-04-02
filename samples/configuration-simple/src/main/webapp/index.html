@@ -31,7 +31,25 @@
         <link rel="stylesheet" href="css/libs/bootstrap.min.css">
     </head>
     <body>
-        <h2>Index</h2>
-        <div ng-view></div>
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-controller="HeaderController">
+            <div class="container">
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li ng-class="{ active: isActive('/chargingstations')}">
+                            <a href="#chargingstations">Charging Stations</a>
+                        </li>
+                        <li ng-class="{ active: isActive('/transactions')}"><a href="#transactions">Transactions</a></li>
+                        <li ng-class="{ active: isActive('/configuration')}"><a href="#configuration">Configuration</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#logout">Log out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" style="padding-top: 50px;">
+            <div ng-view></div>
+        </div>
     </body>
 </html>

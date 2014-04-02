@@ -23,7 +23,7 @@ angular.module('demoApp', ['ngRoute', 'ngCookies', 'demoApp.controllers', 'demoA
             controller: 'LoginController'
         });
 
-        $routeProvider.when('/chargingStations', {
+        $routeProvider.when('/chargingstations', {
             templateUrl: 'pages/chargingstations.html'
         });
 
@@ -31,8 +31,12 @@ angular.module('demoApp', ['ngRoute', 'ngCookies', 'demoApp.controllers', 'demoA
             templateUrl: 'pages/configuration.html'
         });
 
+        $routeProvider.when('/transactions', {
+            templateUrl: 'pages/transactions.html'
+        });
+
         $routeProvider.otherwise({
-            redirectTo: '/configuration'
+            redirectTo: '/chargingstations'
         });
 
         // redirect browser to login page on HTTP status 401, otherwise show message

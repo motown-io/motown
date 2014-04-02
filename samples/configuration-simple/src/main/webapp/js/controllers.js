@@ -29,7 +29,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.getChargingStations = function () {
                 $http({
-                    url: 'api/charging-stations',
+                    url: 'rest/operator-api/charging-stations',
                     method: 'GET',
                     data: ''
                 }).success(function (response) {
@@ -94,7 +94,7 @@ angular.module('demoApp.controllers', []).
                 }
 
                 $http({
-                    url: 'api/charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['ResetChargingStation', {
                         'type': resetType
@@ -106,7 +106,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.startTransaction = function (chargingStation) {
                 $http({
-                    url: 'api/charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['RequestStartTransaction', {
                         'evseId': 1,
@@ -119,7 +119,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.unlockEvse = function (chargingStation, evseId) {
                 $http({
-                    url: 'api/charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['UnlockEvse', {
                         'evseId': evseId,
@@ -132,7 +132,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.dataTransfer = function (chargingStation, vendorId, messageId, data) {
                 $http({
-                    url: 'api/charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['DataTransfer', {
                         'vendorId': vendorId,
@@ -146,7 +146,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.changeConfiguration = function (chargingStation, key, value) {
                 $http({
-                    url: 'api/charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['ChangeConfiguration', {
                         'key': key,
@@ -159,7 +159,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.getDiagnostics = function (chargingStation, targetLocation) {
                 $http({
-                    url: 'api/charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['RequestDiagnostics', {
                         'targetLocation': targetLocation
@@ -171,7 +171,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.clearCache = function (chargingStation) {
                 $http({
-                    url: 'api/charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['ClearCache', {
                     }]
@@ -182,7 +182,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.updateFirmware = function (chargingStation, location, retrieveDate) {
                 $http({
-                    url: 'api/charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['UpdateFirmware', {
                         'location': location,
@@ -195,7 +195,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.getAuthorizationListVersion = function (chargingStation) {
                 $http({
-                    url: 'api/charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['RequestAuthorizationListVersion', {
                     }]
@@ -206,7 +206,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.sendAuthorizationList = function (chargingStation, listVersion, updateType, items) {
                 $http({
-                    url: 'api/charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['SendAuthorizationList', {
                         'listVersion': listVersion,
@@ -226,7 +226,7 @@ angular.module('demoApp.controllers', []).
                 }
 
                 $http({
-                    url: 'api/charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['ChangeAvailability', {
                         'evseId': 1,
@@ -239,7 +239,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.reserveNow = function (chargingStation, evseId, identifyingToken) {
                 $http({
-                    url: 'api/charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['RequestReserveNow', {
                         'evseId': evseId,
@@ -253,7 +253,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.updateReservable = function (chargingStation, reservable) {
                 $http({
-                    url: 'api/charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['UpdateChargingStationReservable', {
                         'reservable': reservable
@@ -265,7 +265,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.placeChargingStation = function (chargingStation, coordinates, address, accessibility) {
                 $http({
-                    url: 'api/charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['PlaceChargingStation', {
                         'coordinates': coordinates,
@@ -279,7 +279,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.improveChargingStationLocation = function (chargingStation, coordinates, address, accessibility) {
                 $http({
-                    url: 'api/charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['ImproveChargingStationLocation', {
                         'coordinates': coordinates,
@@ -293,7 +293,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.moveChargingStation = function (chargingStation, coordinates, address, accessibility) {
                 $http({
-                    url: 'api/charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['MoveChargingStation', {
                         'coordinates': coordinates,
@@ -307,7 +307,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.setOpeningTimes = function (chargingStation, openingTimes) {
                 $http({
-                    url: 'api/charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['SetChargingStationOpeningTimes', {
                         'openingTimes': openingTimes
@@ -319,7 +319,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.addOpeningTimes = function (chargingStation, openingTimes) {
                 $http({
-                    url: 'api/charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['AddChargingStationOpeningTimes', {
                         'openingTimes': openingTimes
@@ -344,7 +344,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.getTransactions = function () {
                 $http({
-                    url: 'api/transactions',
+                    url: 'rest/operator-api/transactions',
                     method: 'GET',
                     data: ''
                 }).success(function (response) {
@@ -354,7 +354,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.stopTransaction = function (chargingStationId, id) {
                 $http({
-                    url: 'api/charging-stations/' + chargingStationId + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStationId + '/commands',
                     method: 'POST',
                     data: ['RequestStopTransaction', {
                         'id': id
@@ -395,5 +395,11 @@ angular.module('demoApp.controllers', []).
                 });
             };
         }
-    ]
-);
+    ]).
+    controller('HeaderController',
+        ['$scope', '$location', function($scope, $location) {
+            $scope.isActive = function (viewLocation) {
+                return viewLocation === $location.path();
+            };
+        }]
+    );
