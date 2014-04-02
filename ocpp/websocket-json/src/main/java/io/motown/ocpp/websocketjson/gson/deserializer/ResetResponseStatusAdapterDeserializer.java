@@ -13,22 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.gson;
+package io.motown.ocpp.websocketjson.gson.deserializer;
 
-import com.google.gson.*;
-import io.motown.ocpp.websocketjson.request.chargingstation.DiagnosticsStatus;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonElement;
+import io.motown.ocpp.websocketjson.schema.generated.v15.ResetResponse;
 
 import java.lang.reflect.Type;
 
-public class DiagnosticsStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<DiagnosticsStatus> {
+public class ResetResponseStatusAdapterDeserializer implements TypeAdapterDeserializer<ResetResponse.Status> {
 
     @Override
-    public DiagnosticsStatus deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
-        return DiagnosticsStatus.fromValue(jsonElement.getAsString());
+    public ResetResponse.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
+        return ResetResponse.Status.fromValue(jsonElement.getAsString());
     }
 
     @Override
     public Class<?> getAdaptedType() {
-        return DiagnosticsStatus.class;
+        return ResetResponse.Status.class;
     }
 }

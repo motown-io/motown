@@ -20,9 +20,8 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ComponentStatus;
 import io.motown.domain.api.chargingstation.EvseId;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.request.chargingstation.ChargePointStatus;
-import io.motown.ocpp.websocketjson.request.chargingstation.StatusNotificationRequest;
-import io.motown.ocpp.websocketjson.response.centralsystem.StatusNotificationResponse;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Statusnotification;
+import io.motown.ocpp.websocketjson.schema.generated.v15.StatusnotificationResponse;
 import org.atmosphere.websocket.WebSocket;
 
 import java.util.Date;
@@ -42,17 +41,17 @@ public class StatusNotificationRequestHandler extends RequestHandler {
 
     @Override
     public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
-        StatusNotificationRequest request = gson.fromJson(payload, StatusNotificationRequest.class);
+        Statusnotification request = gson.fromJson(payload, Statusnotification.class);
 
-        String errorCode = request.getErrorCode() != null ? request.getErrorCode().value() : null;
+        String errorCode = request.getErrorCode() != null ? request.getErrorCode().toString() : null;
         Date timestamp = request.getTimestamp();
         if(timestamp == null) {
             timestamp = new Date();
         }
 
-        domainService.statusNotification(chargingStationId, new EvseId(request.getConnectorId()), errorCode, getComponentStatusFromChargePointStatus(request.getStatus()), request.getInfo(), timestamp, request.getVendorId(), request.getVendorErrorCode());
+        domainService.statusNotification(chargingStationId, new EvseId(request.getConnectorId().intValue()), errorCode, getComponentStatusFromChargePointStatus(request.getStatus()), request.getInfo(), timestamp, request.getVendorId(), request.getVendorErrorCode());
 
-        writeResponse(webSocket, new StatusNotificationResponse(), callId, gson);
+        writeResponse(webSocket, new StatusnotificationResponse(), callId, gson);
     }
 
     /**
@@ -61,10 +60,10 @@ public class StatusNotificationRequestHandler extends RequestHandler {
      * @param status the {@code ChargePointStatus}.
      * @return the {@code ComponentStatus}.
      */
-    private ComponentStatus getComponentStatusFromChargePointStatus(ChargePointStatus status) {
-        String value = status.value();
+    private ComponentStatus getComponentStatusFromChargePointStatus(Statusnotification.Status status) {
+        String value = status.toString();
 
-        if (ChargePointStatus.UNAVAILABLE.value().equalsIgnoreCase(value)) {
+        if (Statusnotification.Status.UNAVAILABLE.toString().equalsIgnoreCase(value)) {
             value = ComponentStatus.INOPERATIVE.value();
         }
 

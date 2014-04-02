@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.gson;
+package io.motown.ocpp.websocketjson.gson.serializer;
 
 import com.google.gson.JsonSerializer;
 

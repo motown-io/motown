@@ -13,23 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.gson;
+package io.motown.ocpp.websocketjson.gson.serializer;
 
-import com.google.gson.*;
-import io.motown.ocpp.websocketjson.response.centralsystem.RegistrationStatus;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import io.motown.ocpp.websocketjson.schema.generated.v15.DatatransferResponse;
 
 import java.lang.reflect.Type;
 
-public class RegistrationStatusTypeAdapterSerializer implements TypeAdapterSerializer<RegistrationStatus> {
+public class DataTransferResponseStatusTypeAdapterSerializer implements TypeAdapterSerializer<DatatransferResponse.Status> {
 
     @Override
-    public JsonElement serialize(RegistrationStatus registrationStatus, Type type, JsonSerializationContext jsonSerializationContext) {
-        return new JsonPrimitive(registrationStatus.value());
+    public JsonElement serialize(DatatransferResponse.Status dataTransferStatus, Type type, JsonSerializationContext jsonSerializationContext) {
+        return new JsonPrimitive(dataTransferStatus.toString());
     }
 
     @Override
     public Class<?> getAdaptedType() {
-        return RegistrationStatus.class;
+        return DatatransferResponse.Status.class;
     }
 
 }

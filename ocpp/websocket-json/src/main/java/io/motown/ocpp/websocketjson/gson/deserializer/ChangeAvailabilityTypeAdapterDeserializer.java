@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.gson;
+package io.motown.ocpp.websocketjson.gson.deserializer;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
-import io.motown.ocpp.websocketjson.request.chargingstation.ChargePointErrorCode;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Statusnotification;
 
 import java.lang.reflect.Type;
 
-public class ChargePointErrorCodeTypeAdapterDeserializer implements TypeAdapterDeserializer<ChargePointErrorCode> {
+public class ChangeAvailabilityTypeAdapterDeserializer implements TypeAdapterDeserializer<Statusnotification.Status> {
 
     @Override
-    public ChargePointErrorCode deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
-        return ChargePointErrorCode.fromValue(jsonElement.getAsString());
+    public Statusnotification.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
+        return Statusnotification.Status.fromValue(jsonElement.getAsString());
     }
 
     @Override
     public Class<?> getAdaptedType() {
-        return ChargePointErrorCode.class;
+        return Statusnotification.Status.class;
     }
 }

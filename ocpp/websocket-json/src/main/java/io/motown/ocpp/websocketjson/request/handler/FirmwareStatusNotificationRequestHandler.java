@@ -18,9 +18,8 @@ package io.motown.ocpp.websocketjson.request.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.request.chargingstation.FirmwareStatus;
-import io.motown.ocpp.websocketjson.request.chargingstation.FirmwareStatusNotificationRequest;
-import io.motown.ocpp.websocketjson.response.centralsystem.FirmwareStatusNotificationResponse;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Firmwarestatusnotification;
+import io.motown.ocpp.websocketjson.schema.generated.v15.FirmwarestatusnotificationResponse;
 import org.atmosphere.websocket.WebSocket;
 
 public class FirmwareStatusNotificationRequestHandler extends RequestHandler {
@@ -38,17 +37,17 @@ public class FirmwareStatusNotificationRequestHandler extends RequestHandler {
 
     @Override
     public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
-        FirmwareStatusNotificationRequest request = gson.fromJson(payload, FirmwareStatusNotificationRequest.class);
+        Firmwarestatusnotification request = gson.fromJson(payload, Firmwarestatusnotification.class);
 
-        FirmwareStatus status = request.getStatus();
+        Firmwarestatusnotification.Status status = request.getStatus();
 
         io.motown.domain.api.chargingstation.FirmwareStatus firmwareStatus;
 
-        if (FirmwareStatus.INSTALLED.equals(status)) {
+        if (Firmwarestatusnotification.Status.INSTALLED.equals(status)) {
             firmwareStatus = io.motown.domain.api.chargingstation.FirmwareStatus.INSTALLED;
-        } else if (FirmwareStatus.DOWNLOADED.equals(status)) {
+        } else if (Firmwarestatusnotification.Status.DOWNLOADED.equals(status)) {
             firmwareStatus = io.motown.domain.api.chargingstation.FirmwareStatus.DOWNLOADED;
-        } else if (FirmwareStatus.INSTALLATION_FAILED.equals(status)) {
+        } else if (Firmwarestatusnotification.Status.INSTALLATION_FAILED.equals(status)) {
             firmwareStatus = io.motown.domain.api.chargingstation.FirmwareStatus.INSTALLATION_FAILED;
         } else {
             firmwareStatus = io.motown.domain.api.chargingstation.FirmwareStatus.DOWNLOAD_FAILED;
@@ -56,6 +55,6 @@ public class FirmwareStatusNotificationRequestHandler extends RequestHandler {
 
         domainService.firmwareStatusUpdate(chargingStationId, firmwareStatus);
 
-        writeResponse(webSocket, new FirmwareStatusNotificationResponse(), callId, gson);
+        writeResponse(webSocket, new FirmwarestatusnotificationResponse(), callId, gson);
     }
 }

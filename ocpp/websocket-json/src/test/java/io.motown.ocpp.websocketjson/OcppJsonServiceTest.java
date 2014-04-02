@@ -19,10 +19,10 @@ import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.request.chargingstation.*;
 import io.motown.ocpp.websocketjson.request.handler.*;
 import io.motown.ocpp.websocketjson.response.handler.*;
 import io.motown.ocpp.websocketjson.schema.SchemaValidator;
+import io.motown.ocpp.websocketjson.schema.generated.v15.*;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import io.motown.ocpp.websocketjson.wamp.WampMessageParser;
 import org.atmosphere.websocket.WebSocket;
@@ -78,7 +78,17 @@ public class OcppJsonServiceTest {
 
     @Test
     public void handleBootNotification() throws IOException {
-        BootNotificationRequest request = new BootNotificationRequest(CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER, FIRMWARE_VERSION, ICCID, IMSI, METER_TYPE, METER_SERIAL_NUMBER);
+        Bootnotification request = new Bootnotification();
+        request.setChargePointVendor(CHARGING_STATION_VENDOR);
+        request.setChargePointModel(CHARGING_STATION_MODEL);
+        request.setChargePointSerialNumber(CHARGING_STATION_SERIAL_NUMBER);
+        request.setChargeBoxSerialNumber(CHARGE_BOX_SERIAL_NUMBER);
+        request.setFirmwareVersion(FIRMWARE_VERSION);
+        request.setIccid(ICCID);
+        request.setImsi(IMSI);
+        request.setMeterType(METER_TYPE);
+        request.setMeterSerialNumber(METER_SERIAL_NUMBER);
+
         String callId = UUID.randomUUID().toString();
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, callId, BootNotificationRequestHandler.PROC_URI, request);
         BootNotificationRequestHandler handler = mock(BootNotificationRequestHandler.class);
@@ -91,7 +101,17 @@ public class OcppJsonServiceTest {
 
     @Test
     public void handleInvalidBootNotification() {
-        BootNotificationRequest request = new BootNotificationRequest(null, CHARGING_STATION_MODEL, CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER, FIRMWARE_VERSION, ICCID, IMSI, METER_TYPE, METER_SERIAL_NUMBER);
+        Bootnotification request = new Bootnotification();
+        request.setChargePointVendor(null);
+        request.setChargePointModel(CHARGING_STATION_MODEL);
+        request.setChargePointSerialNumber(CHARGING_STATION_SERIAL_NUMBER);
+        request.setChargeBoxSerialNumber(CHARGE_BOX_SERIAL_NUMBER);
+        request.setFirmwareVersion(FIRMWARE_VERSION);
+        request.setIccid(ICCID);
+        request.setImsi(IMSI);
+        request.setMeterType(METER_TYPE);
+        request.setMeterSerialNumber(METER_SERIAL_NUMBER);
+
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, UUID.randomUUID().toString(), BootNotificationRequestHandler.PROC_URI, request);
         BootNotificationRequestHandler handler = mock(BootNotificationRequestHandler.class);
         service.addRequestHandler(BootNotificationRequestHandler.PROC_URI, handler);
@@ -103,7 +123,11 @@ public class OcppJsonServiceTest {
 
     @Test
     public void handleDataTransfer() {
-        DataTransferRequest request = new DataTransferRequest(CHARGING_STATION_VENDOR, "GetChargeInstruction", "");
+        Datatransfer request = new Datatransfer();
+        request.setVendorId(CHARGING_STATION_VENDOR);
+        request.setMessageId("GetChargeInstruction");
+        request.setData("");
+
         String callId = UUID.randomUUID().toString();
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, callId, DataTransferRequestHandler.PROC_URI, request);
         DataTransferRequestHandler handler = mock(DataTransferRequestHandler.class);
@@ -116,7 +140,12 @@ public class OcppJsonServiceTest {
 
     @Test
     public void handleInvalidDataTransfer() {
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, UUID.randomUUID().toString(), DataTransferRequestHandler.PROC_URI, new DataTransferRequest(null, "GetChargeInstruction", ""));
+        Datatransfer request = new Datatransfer();
+        request.setVendorId(null);
+        request.setMessageId("GetChargeInstruction");
+        request.setData("");
+
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, UUID.randomUUID().toString(), DataTransferRequestHandler.PROC_URI, request);
         DataTransferRequestHandler handler = mock(DataTransferRequestHandler.class);
         service.addRequestHandler(DataTransferRequestHandler.PROC_URI, handler);
 
@@ -128,7 +157,10 @@ public class OcppJsonServiceTest {
     @Test
     public void handleDiagnosticsStatusNotification() {
         String callId = UUID.randomUUID().toString();
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, callId, DiagnosticsStatusNotificationRequestHandler.PROC_URI, new DiagnosticsStatusNotificationRequest(DiagnosticsStatus.UPLOADED));
+        Diagnosticsstatusnotification request = new Diagnosticsstatusnotification();
+        request.setStatus(Diagnosticsstatusnotification.Status.UPLOADED);
+
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, callId, DiagnosticsStatusNotificationRequestHandler.PROC_URI, request);
         DiagnosticsStatusNotificationRequestHandler handler = mock(DiagnosticsStatusNotificationRequestHandler.class);
         service.addRequestHandler(DiagnosticsStatusNotificationRequestHandler.PROC_URI, handler);
 
@@ -139,7 +171,10 @@ public class OcppJsonServiceTest {
 
     @Test
     public void handleInvalidDiagnosticsStatusNotification() {
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, UUID.randomUUID().toString(), DiagnosticsStatusNotificationRequestHandler.PROC_URI, new DiagnosticsStatusNotificationRequest(null));
+        Diagnosticsstatusnotification request = new Diagnosticsstatusnotification();
+        request.setStatus(null);
+
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, UUID.randomUUID().toString(), DiagnosticsStatusNotificationRequestHandler.PROC_URI, request);
         DiagnosticsStatusNotificationRequestHandler handler = mock(DiagnosticsStatusNotificationRequestHandler.class);
         service.addRequestHandler(DiagnosticsStatusNotificationRequestHandler.PROC_URI, handler);
 
@@ -151,7 +186,10 @@ public class OcppJsonServiceTest {
     @Test
     public void handleFirmwareStatusNotification() {
         String callId = UUID.randomUUID().toString();
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, callId, FirmwareStatusNotificationRequestHandler.PROC_URI, new FirmwareStatusNotificationRequest(FirmwareStatus.DOWNLOADED));
+        Firmwarestatusnotification request =  new Firmwarestatusnotification();
+        request.setStatus(Firmwarestatusnotification.Status.DOWNLOADED);
+
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, callId, FirmwareStatusNotificationRequestHandler.PROC_URI, request);
         FirmwareStatusNotificationRequestHandler handler = mock(FirmwareStatusNotificationRequestHandler.class);
         service.addRequestHandler(FirmwareStatusNotificationRequestHandler.PROC_URI, handler);
 
@@ -162,7 +200,10 @@ public class OcppJsonServiceTest {
 
     @Test
     public void handleInvalidFirmwareStatusNotification() {
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, UUID.randomUUID().toString(), FirmwareStatusNotificationRequestHandler.PROC_URI, new FirmwareStatusNotificationRequest(null));
+        Firmwarestatusnotification request =  new Firmwarestatusnotification();
+        request.setStatus(null);
+
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, UUID.randomUUID().toString(), FirmwareStatusNotificationRequestHandler.PROC_URI, request);
         FirmwareStatusNotificationRequestHandler handler = mock(FirmwareStatusNotificationRequestHandler.class);
         service.addRequestHandler(FirmwareStatusNotificationRequestHandler.PROC_URI, handler);
 
@@ -174,7 +215,7 @@ public class OcppJsonServiceTest {
     @Test
     public void handleHeartbeat() {
         String callId = UUID.randomUUID().toString();
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, callId, HeartbeatRequestHandler.PROC_URI, new HeartbeatRequest());
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, callId, HeartbeatRequestHandler.PROC_URI, new Heartbeat());
         HeartbeatRequestHandler handler = mock(HeartbeatRequestHandler.class);
         service.addRequestHandler(HeartbeatRequestHandler.PROC_URI, handler);
 
@@ -186,11 +227,29 @@ public class OcppJsonServiceTest {
     @Test
     public void handleMeterValues() {
         String callId = UUID.randomUUID().toString();
-        List<MeterValue.Value> values = new ArrayList<>();
-        values.add(new MeterValue.Value("100", "Transaction.Begin", "SignedData", "Power.Active.Export", "Outlet", "kWh"));
-        List<MeterValue> meterValues = new ArrayList<>();
-        meterValues.add(new MeterValue(new Date(), values));
-        MeterValuesRequest request = new MeterValuesRequest(EVSE_ID.getNumberedId(), TRANSACTION_NUMBER, meterValues);
+
+        Value_ value = new Value_();
+        value.setValue("100");
+        value.setContext("Transaction.Begin");
+        value.setFormat("SignedData");
+        value.setMeasurand("Power.Active.Export");
+        value.setLocation("Outlet");
+        value.setUnit("kWh");
+
+        List<Value_> values = new ArrayList<>();
+        values.add(value);
+
+        Value meterValue = new Value();
+        meterValue.setTimestamp(new Date());
+        meterValue.setValues(values);
+        List<Value> meterValues = new ArrayList<>();
+        meterValues.add(meterValue);
+
+        Metervalues request = new Metervalues();
+        request.setConnectorId((double) EVSE_ID.getNumberedId());
+        request.setTransactionId((double) TRANSACTION_NUMBER);
+        request.setValues(meterValues);
+
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, callId, MeterValuesRequestHandler.PROC_URI, request);
         MeterValuesRequestHandler handler = mock(MeterValuesRequestHandler.class);
         service.addRequestHandler(MeterValuesRequestHandler.PROC_URI, handler);
@@ -202,7 +261,11 @@ public class OcppJsonServiceTest {
 
     @Test
     public void handleInvalidMeterValues() {
-        MeterValuesRequest request = new MeterValuesRequest(EVSE_ID.getNumberedId(), TRANSACTION_NUMBER, new ArrayList<MeterValue>());
+        Metervalues request = new Metervalues();
+        request.setConnectorId((double) EVSE_ID.getNumberedId());
+        request.setTransactionId((double) TRANSACTION_NUMBER);
+        request.setValues(new ArrayList<Value>());
+
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, UUID.randomUUID().toString(), MeterValuesRequestHandler.PROC_URI, request);
         MeterValuesRequestHandler handler = mock(MeterValuesRequestHandler.class);
 
@@ -214,7 +277,13 @@ public class OcppJsonServiceTest {
     @Test
     public void handleStartTransaction() {
         String callId = UUID.randomUUID().toString();
-        StartTransactionRequest request = new StartTransactionRequest(EVSE_ID.getNumberedId(), IDENTIFYING_TOKEN.getToken(), FIVE_MINUTES_AGO, METER_START, RESERVATION_ID.getNumber());
+        Starttransaction request = new Starttransaction();
+        request.setConnectorId((double) EVSE_ID.getNumberedId());
+        request.setIdTag(IDENTIFYING_TOKEN.getToken());
+        request.setTimestamp(FIVE_MINUTES_AGO);
+        request.setMeterStart((double) METER_START);
+        request.setReservationId((double) RESERVATION_ID.getNumber());
+
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, callId, StartTransactionRequestHandler.PROC_URI, request);
         StartTransactionRequestHandler handler = mock(StartTransactionRequestHandler.class);
         service.addRequestHandler(StartTransactionRequestHandler.PROC_URI, handler);
@@ -226,7 +295,13 @@ public class OcppJsonServiceTest {
 
     @Test
     public void handleInvalidStartTransaction() {
-        StartTransactionRequest request = new StartTransactionRequest(EVSE_ID.getNumberedId(), IDENTIFYING_TOKEN.getToken(), null, METER_START, RESERVATION_ID.getNumber());
+        Starttransaction request = new Starttransaction();
+        request.setConnectorId((double) EVSE_ID.getNumberedId());
+        request.setIdTag(IDENTIFYING_TOKEN.getToken());
+        request.setTimestamp(null);
+        request.setMeterStart((double) METER_START);
+        request.setReservationId((double) RESERVATION_ID.getNumber());
+
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, UUID.randomUUID().toString(), StartTransactionRequestHandler.PROC_URI, request);
         StartTransactionRequestHandler handler = mock(StartTransactionRequestHandler.class);
         service.addRequestHandler(StartTransactionRequestHandler.PROC_URI, handler);
@@ -239,7 +314,15 @@ public class OcppJsonServiceTest {
     @Test
     public void handleStatusNotification() {
         String callId = UUID.randomUUID().toString();
-        StatusNotificationRequest request = new StatusNotificationRequest(EVSE_ID.getNumberedId(), ChargePointStatus.AVAILABLE, ChargePointErrorCode.NO_ERROR, null, FIVE_MINUTES_AGO, CHARGING_STATION_VENDOR, null);
+        Statusnotification request = new Statusnotification();
+        request.setConnectorId((double) EVSE_ID.getNumberedId());
+        request.setStatus(Statusnotification.Status.AVAILABLE);
+        request.setErrorCode(Statusnotification.ErrorCode.NO_ERROR);
+        request.setInfo(null);
+        request.setTimestamp(FIVE_MINUTES_AGO);
+        request.setVendorId(CHARGING_STATION_VENDOR);
+        request.setVendorErrorCode(null);
+
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, callId, StatusNotificationRequestHandler.PROC_URI, request);
         StatusNotificationRequestHandler handler = mock(StatusNotificationRequestHandler.class);
         service.addRequestHandler(StatusNotificationRequestHandler.PROC_URI, handler);
@@ -251,7 +334,15 @@ public class OcppJsonServiceTest {
 
     @Test
     public void handleInvalidStatusNotification() {
-        StatusNotificationRequest request = new StatusNotificationRequest(EVSE_ID.getNumberedId(), null, ChargePointErrorCode.NO_ERROR, null, FIVE_MINUTES_AGO, CHARGING_STATION_VENDOR, null);
+        Statusnotification request = new Statusnotification();
+        request.setConnectorId((double) EVSE_ID.getNumberedId());
+        request.setStatus(null);
+        request.setErrorCode(Statusnotification.ErrorCode.NO_ERROR);
+        request.setInfo(null);
+        request.setTimestamp(FIVE_MINUTES_AGO);
+        request.setVendorId(CHARGING_STATION_VENDOR);
+        request.setVendorErrorCode(null);
+
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, UUID.randomUUID().toString(), StatusNotificationRequestHandler.PROC_URI, request);
         StatusNotificationRequestHandler handler = mock(StatusNotificationRequestHandler.class);
         service.addRequestHandler(StatusNotificationRequestHandler.PROC_URI, handler);
@@ -264,7 +355,13 @@ public class OcppJsonServiceTest {
     @Test
     public void handleStopTransaction() {
         String callId = UUID.randomUUID().toString();
-        StopTransactionRequest request = new StopTransactionRequest(TRANSACTION_NUMBER, IDENTIFYING_TOKEN.getToken(), FIVE_MINUTES_AGO, METER_STOP, null);
+        Stoptransaction request = new Stoptransaction();
+        request.setTransactionId((double) TRANSACTION_NUMBER);
+        request.setIdTag(IDENTIFYING_TOKEN.getToken());
+        request.setTimestamp(FIVE_MINUTES_AGO);
+        request.setMeterStop((double) METER_STOP);
+        request.setTransactionData(null);
+
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, callId, StopTransactionRequestHandler.PROC_URI, request);
         StopTransactionRequestHandler handler = mock(StopTransactionRequestHandler.class);
         service.addRequestHandler(StopTransactionRequestHandler.PROC_URI, handler);
@@ -276,7 +373,13 @@ public class OcppJsonServiceTest {
 
     @Test
     public void handleInvalidStopTransaction() {
-        StopTransactionRequest request = new StopTransactionRequest(TRANSACTION_NUMBER, IDENTIFYING_TOKEN.getToken(), null, METER_STOP, null);
+        Stoptransaction request = new Stoptransaction();
+        request.setTransactionId((double) TRANSACTION_NUMBER);
+        request.setIdTag(IDENTIFYING_TOKEN.getToken());
+        request.setTimestamp(null);
+        request.setMeterStop((double) METER_STOP);
+        request.setTransactionData(null);
+
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, UUID.randomUUID().toString(), StopTransactionRequestHandler.PROC_URI, request);
         StopTransactionRequestHandler handler = mock(StopTransactionRequestHandler.class);
         service.addRequestHandler(StopTransactionRequestHandler.PROC_URI, handler);

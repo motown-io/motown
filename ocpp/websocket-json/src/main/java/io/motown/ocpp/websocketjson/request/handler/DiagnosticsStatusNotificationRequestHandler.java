@@ -18,9 +18,8 @@ package io.motown.ocpp.websocketjson.request.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.request.chargingstation.DiagnosticsStatus;
-import io.motown.ocpp.websocketjson.request.chargingstation.DiagnosticsStatusNotificationRequest;
-import io.motown.ocpp.websocketjson.response.centralsystem.DiagnosticsStatusNotificationResponse;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Diagnosticsstatusnotification;
+import io.motown.ocpp.websocketjson.schema.generated.v15.DiagnosticsstatusnotificationResponse;
 import org.atmosphere.websocket.WebSocket;
 
 public class DiagnosticsStatusNotificationRequestHandler extends RequestHandler {
@@ -38,10 +37,10 @@ public class DiagnosticsStatusNotificationRequestHandler extends RequestHandler 
 
     @Override
     public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
-        DiagnosticsStatusNotificationRequest request = gson.fromJson(payload, DiagnosticsStatusNotificationRequest.class);
+        Diagnosticsstatusnotification request = gson.fromJson(payload, Diagnosticsstatusnotification.class);
 
-        domainService.diagnosticsUploadStatusUpdate(chargingStationId, request.getStatus().equals(DiagnosticsStatus.UPLOADED));
+        domainService.diagnosticsUploadStatusUpdate(chargingStationId, request.getStatus().equals(Diagnosticsstatusnotification.Status.UPLOADED));
 
-        writeResponse(webSocket, new DiagnosticsStatusNotificationResponse(), callId, gson);
+        writeResponse(webSocket, new DiagnosticsstatusnotificationResponse(), callId, gson);
     }
 }

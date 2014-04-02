@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.gson;
+package io.motown.ocpp.websocketjson.gson.deserializer;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
-import io.motown.ocpp.websocketjson.schema.generated.v15.UnlockconnectorResponse;
+import io.motown.ocpp.websocketjson.schema.generated.v15.ReservenowResponse;
 
 import java.lang.reflect.Type;
 
-public class UnlockConnectorStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<UnlockconnectorResponse.Status> {
+public class CancelReservationResponseStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<ReservenowResponse.Status> {
 
     @Override
-    public UnlockconnectorResponse.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
-        return UnlockconnectorResponse.Status.fromValue(jsonElement.getAsString());
+    public ReservenowResponse.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
+        return ReservenowResponse.Status.fromValue(jsonElement.getAsString());
     }
 
     @Override
     public Class<?> getAdaptedType() {
-        return UnlockconnectorResponse.Status.class;
+        return ReservenowResponse.Status.class;
     }
 }

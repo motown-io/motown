@@ -20,11 +20,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
-import io.motown.ocpp.websocketjson.gson.*;
-import io.motown.ocpp.websocketjson.request.chargingstation.ChargePointErrorCode;
-import io.motown.ocpp.websocketjson.request.chargingstation.ChargePointStatus;
-import io.motown.ocpp.websocketjson.request.chargingstation.DiagnosticsStatus;
-import io.motown.ocpp.websocketjson.request.chargingstation.FirmwareStatus;
+import io.motown.ocpp.websocketjson.gson.GsonFactoryBean;
+import io.motown.ocpp.websocketjson.gson.deserializer.*;
+import io.motown.ocpp.websocketjson.gson.serializer.*;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Diagnosticsstatusnotification;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Firmwarestatusnotification;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Statusnotification;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResource;
@@ -45,8 +46,19 @@ public class OcppWebSocketJsonTestUtils {
         GsonFactoryBean gsonFactoryBean = new GsonFactoryBean();
         gsonFactoryBean.setDateFormat(DATE_FORMAT);
         Set<TypeAdapterSerializer<?>> typeAdapterSerializers = ImmutableSet.<TypeAdapterSerializer<?>>builder()
-                .add(new RegistrationStatusTypeAdapterSerializer())
+                .add(new BootnotificationResponseStatusTypeAdapterSerializer())
+                .add(new CancelReservationStatusTypeAdapterSerializer())
+                .add(new ChangeAvailabilityStatusTypeAdapterSerializer())
+                .add(new ChangeConfigurationStatusTypeAdapterSerializer())
+                .add(new ClearCacheStatusTypeAdapterSerializer())
                 .add(new DataTransferStatusTypeAdapterSerializer())
+                .add(new RemoteStartStatusTypeAdapterSerializer())
+                .add(new RemoteStopStatusTypeAdapterSerializer())
+                .add(new ReserveNowStatusTypeAdapterSerializer())
+                .add(new ResetStatusTypeAdapterSerializer())
+                .add(new SendLocalListStatusTypeAdapterSerializer())
+                .add(new UnlockConnectorStatusTypeAdapterSerializer())
+                //The serializers below are only needed during testing, as they are used to verify the result
                 .add(new DiagnosticsStatusTypeAdapterSerializer())
                 .add(new FirmwareStatusTypeAdapterSerializer())
                 .add(new ChargePointErrorCodeTypeAdapterSerializer())
@@ -56,14 +68,14 @@ public class OcppWebSocketJsonTestUtils {
         gsonFactoryBean.setTypeAdapterSerializers(typeAdapterSerializers);
 
         Set<TypeAdapterDeserializer<?>> typeAdapterDeserializers = ImmutableSet.<TypeAdapterDeserializer<?>>builder()
-                .add(new DiagnosticsStatusTypeAdapterDeserializer())
-                .add(new FirmwareStatusTypeAdapterDeserializer())
                 .add(new ChargePointErrorCodeTypeAdapterDeserializer())
                 .add(new ChargePointStatusTypeAdapterDeserializer())
-                .add(new UnlockConnectorStatusTypeAdapterDeserializer())
-                .add(new ResetStatusResponseTypeAdapterDeserializer())
+                .add(new DiagnosticsStatusTypeAdapterDeserializer())
+                .add(new FirmwareStatusTypeAdapterDeserializer())
                 .add(new RemoteStartTransactionResponseTypeAdapterDeserializer())
                 .add(new RemoteStopTransactionResponseTypeAdapterDeserializer())
+                .add(new ResetStatusResponseTypeAdapterDeserializer())
+                .add(new UnlockConnectorStatusTypeAdapterDeserializer())
                 .build();
         gsonFactoryBean.setTypeAdapterDeserializers(typeAdapterDeserializers);
 
@@ -89,58 +101,58 @@ public class OcppWebSocketJsonTestUtils {
     }
 
     /**
-     * Only needed for testing
+     * Only needed for testing to translate back
      */
-    private static class DiagnosticsStatusTypeAdapterSerializer implements TypeAdapterSerializer<DiagnosticsStatus> {
+    private static class DiagnosticsStatusTypeAdapterSerializer implements TypeAdapterSerializer<Diagnosticsstatusnotification.Status> {
         @Override
-        public JsonElement serialize(DiagnosticsStatus diagnosticsStatus, Type type, JsonSerializationContext jsonSerializationContext) {
-            return new JsonPrimitive(diagnosticsStatus.value());
+        public JsonElement serialize(Diagnosticsstatusnotification.Status diagnosticsStatus, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(diagnosticsStatus.toString());
         }
         @Override
         public Class<?> getAdaptedType() {
-            return DiagnosticsStatus.class;
+            return Diagnosticsstatusnotification.Status.class;
         }
     }
 
     /**
      * Only needed for testing
      */
-    private static class FirmwareStatusTypeAdapterSerializer implements TypeAdapterSerializer<FirmwareStatus> {
+    private static class FirmwareStatusTypeAdapterSerializer implements TypeAdapterSerializer<Firmwarestatusnotification.Status> {
         @Override
-        public JsonElement serialize(FirmwareStatus firmwareStatus, Type type, JsonSerializationContext jsonSerializationContext) {
-            return new JsonPrimitive(firmwareStatus.value());
+        public JsonElement serialize(Firmwarestatusnotification.Status firmwareStatus, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(firmwareStatus.toString());
         }
         @Override
         public Class<?> getAdaptedType() {
-            return FirmwareStatus.class;
+            return Firmwarestatusnotification.Status.class;
         }
     }
 
     /**
      * Only needed for testing
      */
-    private static class ChargePointErrorCodeTypeAdapterSerializer implements TypeAdapterSerializer<ChargePointErrorCode> {
+    private static class ChargePointErrorCodeTypeAdapterSerializer implements TypeAdapterSerializer<Statusnotification.ErrorCode> {
         @Override
-        public JsonElement serialize(ChargePointErrorCode chargePointErrorCode, Type type, JsonSerializationContext jsonSerializationContext) {
-            return new JsonPrimitive(chargePointErrorCode.value());
+        public JsonElement serialize(Statusnotification.ErrorCode chargePointErrorCode, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(chargePointErrorCode.toString());
         }
         @Override
         public Class<?> getAdaptedType() {
-            return ChargePointErrorCode.class;
+            return Statusnotification.ErrorCode.class;
         }
     }
 
     /**
      * Only needed for testing
      */
-    private static class ChargePointStatusTypeAdapterSerializer implements TypeAdapterSerializer<ChargePointStatus> {
+    private static class ChargePointStatusTypeAdapterSerializer implements TypeAdapterSerializer<Statusnotification.Status> {
         @Override
-        public JsonElement serialize(ChargePointStatus chargePointStatus, Type type, JsonSerializationContext jsonSerializationContext) {
-            return new JsonPrimitive(chargePointStatus.value());
+        public JsonElement serialize(Statusnotification.Status chargePointStatus, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(chargePointStatus.toString());
         }
         @Override
         public Class<?> getAdaptedType() {
-            return ChargePointStatus.class;
+            return Statusnotification.Status.class;
         }
     }
 

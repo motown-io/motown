@@ -18,8 +18,10 @@ package io.motown.ocpp.websocketjson.request.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.request.chargingstation.MeterValuesRequest;
 import io.motown.ocpp.websocketjson.response.centralsystem.MeterValuesResponse;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Metervalues;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Value;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Value_;
 import org.atmosphere.websocket.WebSocket;
 
 import java.util.ArrayList;
@@ -45,11 +47,11 @@ public class MeterValuesRequestHandler extends RequestHandler {
 
     @Override
     public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
-        MeterValuesRequest request = gson.fromJson(payload, MeterValuesRequest.class);
+        Metervalues request = gson.fromJson(payload, Metervalues.class);
 
         List<MeterValue> meterValues = new ArrayList<>();
-        for(io.motown.ocpp.websocketjson.request.chargingstation.MeterValue meterValue : request.getValues()) {
-            for(io.motown.ocpp.websocketjson.request.chargingstation.MeterValue.Value value : meterValue.getValues()) {
+        for(Value meterValue : request.getValues()) {
+            for(Value_ value : meterValue.getValues()) {
                 Map<String, String> attributes = new HashMap<>();
                 DomainService.addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getContext());
                 DomainService.addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getFormat());
@@ -61,12 +63,12 @@ public class MeterValuesRequestHandler extends RequestHandler {
         }
 
         TransactionId transactionId = null;
-        Integer requestTransactionId = request.getTransactionId();
+        Integer requestTransactionId = request.getTransactionId().intValue();
         if(requestTransactionId != null && requestTransactionId > 0) {
             transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, requestTransactionId);
         }
 
-        domainService.meterValues(chargingStationId, transactionId, new EvseId(request.getConnectorId()), meterValues);
+        domainService.meterValues(chargingStationId, transactionId, new EvseId(request.getConnectorId().intValue()), meterValues);
 
         writeResponse(webSocket, new MeterValuesResponse(), callId, gson);
     }

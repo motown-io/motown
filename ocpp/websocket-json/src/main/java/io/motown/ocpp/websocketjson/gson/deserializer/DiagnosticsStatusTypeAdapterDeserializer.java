@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.gson;
+package io.motown.ocpp.websocketjson.gson.deserializer;
 
+import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import io.motown.ocpp.websocketjson.schema.generated.v15.BootnotificationResponse;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Diagnosticsstatusnotification;
 
 import java.lang.reflect.Type;
 
-public class BootnotificationResponseStatusTypeAdapterSerializer implements TypeAdapterSerializer<BootnotificationResponse.Status> {
+public class DiagnosticsStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<Diagnosticsstatusnotification.Status> {
 
     @Override
-    public JsonElement serialize(BootnotificationResponse.Status registrationStatus, Type type, JsonSerializationContext jsonSerializationContext) {
-        return new JsonPrimitive(registrationStatus.toString());
+    public Diagnosticsstatusnotification.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
+        return Diagnosticsstatusnotification.Status.fromValue(jsonElement.getAsString());
     }
 
     @Override
     public Class<?> getAdaptedType() {
-        return BootnotificationResponse.Status.class;
+        return Diagnosticsstatusnotification.Status.class;
     }
-
 }

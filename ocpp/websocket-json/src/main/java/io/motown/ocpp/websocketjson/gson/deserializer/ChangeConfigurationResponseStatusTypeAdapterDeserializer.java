@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.gson;
+package io.motown.ocpp.websocketjson.gson.deserializer;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
-import io.motown.ocpp.websocketjson.request.chargingstation.ChargePointStatus;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Changeavailability;
 
 import java.lang.reflect.Type;
 
-public class ChargePointStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<ChargePointStatus> {
+public class ChangeConfigurationResponseStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<Changeavailability.Type> {
 
     @Override
-    public ChargePointStatus deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
-        return ChargePointStatus.fromValue(jsonElement.getAsString());
+    public Changeavailability.Type deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
+        return Changeavailability.Type.fromValue(jsonElement.getAsString());
     }
 
     @Override
     public Class<?> getAdaptedType() {
-        return ChargePointStatus.class;
+        return Changeavailability.Type.class;
     }
 }

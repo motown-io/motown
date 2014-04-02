@@ -13,23 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.gson;
+package io.motown.ocpp.websocketjson.gson.serializer;
 
-import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
-import io.motown.ocpp.websocketjson.schema.generated.v15.RemotestarttransactionResponse;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Sendlocallist;
 
 import java.lang.reflect.Type;
 
-public class RemoteStartTransactionResponseTypeAdapterDeserializer implements TypeAdapterDeserializer<RemotestarttransactionResponse.Status> {
+public class SendLocalListRequestUpdateTypeAdapterSerializer implements TypeAdapterSerializer<Sendlocallist.UpdateType> {
 
     @Override
-    public RemotestarttransactionResponse.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
-        return RemotestarttransactionResponse.Status.fromValue(jsonElement.getAsString());
+    public JsonElement serialize(Sendlocallist.UpdateType dataTransferStatus, Type type, JsonSerializationContext jsonSerializationContext) {
+        return new JsonPrimitive(dataTransferStatus.toString());
     }
 
     @Override
     public Class<?> getAdaptedType() {
-        return RemotestarttransactionResponse.Status.class;
+        return Sendlocallist.UpdateType.class;
     }
+
 }

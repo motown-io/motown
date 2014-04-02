@@ -19,11 +19,10 @@ import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.request.chargingstation.*;
 import io.motown.ocpp.websocketjson.request.handler.*;
 import io.motown.ocpp.websocketjson.response.handler.*;
 import io.motown.ocpp.websocketjson.schema.SchemaValidator;
-import io.motown.ocpp.websocketjson.schema.generated.v15.Getconfiguration;
+import io.motown.ocpp.websocketjson.schema.generated.v15.*;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import io.motown.ocpp.websocketjson.wamp.WampMessageParser;
 import org.atmosphere.websocket.WebSocket;
@@ -114,7 +113,8 @@ public class OcppJsonService {
     }
 
     public void softReset(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken) {
-        ResetRequest softResetRequest = new ResetRequest(ResetType.SOFT.value());
+        Reset softResetRequest = new Reset();
+        softResetRequest.setType(Reset.Type.SOFT);
 
         responseHandlers.put(statusCorrelationToken.getToken(), new ResetResponseHandler(statusCorrelationToken));
 
@@ -123,7 +123,8 @@ public class OcppJsonService {
     }
 
     public void hardReset(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken) {
-        ResetRequest hardResetRequest = new ResetRequest(ResetType.HARD.value());
+        Reset hardResetRequest = new Reset();
+        hardResetRequest.setType(Reset.Type.HARD);
 
         responseHandlers.put(statusCorrelationToken.getToken(), new ResetResponseHandler(statusCorrelationToken));
 
@@ -132,7 +133,9 @@ public class OcppJsonService {
     }
 
     public void startTransaction(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken identifyingToken, CorrelationToken statusCorrelationToken) {
-        RemoteStartTransactionRequest remoteStartTransactionRequest = new RemoteStartTransactionRequest(evseId.getNumberedId(), identifyingToken.getToken());
+        Remotestarttransaction remoteStartTransactionRequest = new Remotestarttransaction();
+        remoteStartTransactionRequest.setConnectorId((double) evseId.getNumberedId());
+        remoteStartTransactionRequest.setIdTag(identifyingToken.getToken());
 
         responseHandlers.put(statusCorrelationToken.getToken(), new RemoteStartTransactionResponseHandler(statusCorrelationToken));
 
@@ -142,7 +145,8 @@ public class OcppJsonService {
 
     public void stopTransaction(ChargingStationId chargingStationId, TransactionId transactionId, CorrelationToken statusCorrelationToken) {
         NumberedTransactionId transactionIdNumber = (NumberedTransactionId) transactionId;
-        RemoteStopTransactionRequest remoteStopTransactionRequest = new RemoteStopTransactionRequest(transactionIdNumber.getNumber());
+        Remotestoptransaction remoteStopTransactionRequest = new Remotestoptransaction();
+        remoteStopTransactionRequest.setTransactionId((double) transactionIdNumber.getNumber());
 
         responseHandlers.put(statusCorrelationToken.getToken(), new RemoteStopTransactionResponseHandler(statusCorrelationToken));
 
@@ -151,7 +155,8 @@ public class OcppJsonService {
     }
 
     public void unlockEvse(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken statusCorrelationToken) {
-        UnlockConnectorRequest unlockConnectorRequest = new UnlockConnectorRequest(evseId.getNumberedId());
+        Unlockconnector unlockConnectorRequest = new Unlockconnector();
+        unlockConnectorRequest.setConnectorId((double) evseId.getNumberedId());
 
         responseHandlers.put(statusCorrelationToken.getToken(), new UnlockConnectorResponseHandler(statusCorrelationToken));
 
@@ -159,6 +164,8 @@ public class OcppJsonService {
 
         sendWampMessage(wampMessage, chargingStationId);
     }
+
+    //TODO: Add the rest of the outgoing calls towards the charging station - Ingo Pak, 02 Apr 2014
 
     private void sendWampMessage(WampMessage wampMessage, ChargingStationId chargingStationId) {
         WebSocket webSocket = sockets.get(chargingStationId.getId());

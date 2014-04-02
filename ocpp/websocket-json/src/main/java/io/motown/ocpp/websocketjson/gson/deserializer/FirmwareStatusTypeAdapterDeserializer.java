@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.gson;
+package io.motown.ocpp.websocketjson.gson.deserializer;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
-import io.motown.ocpp.websocketjson.schema.generated.v15.ResetResponse;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Firmwarestatusnotification;
 
 import java.lang.reflect.Type;
 
-public class ResetStatusResponseTypeAdapterDeserializer implements TypeAdapterDeserializer<ResetResponse.Status> {
+public class FirmwareStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<Firmwarestatusnotification.Status> {
 
     @Override
-    public ResetResponse.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
-        return ResetResponse.Status.fromValue(jsonElement.getAsString());
+    public Firmwarestatusnotification.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
+        return Firmwarestatusnotification.Status.fromValue(jsonElement.getAsString());
     }
 
     @Override
     public Class<?> getAdaptedType() {
-        return ResetResponse.Status.class;
+        return Firmwarestatusnotification.Status.class;
     }
 }

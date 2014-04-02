@@ -17,6 +17,8 @@ package io.motown.ocpp.websocketjson.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.motown.ocpp.websocketjson.gson.deserializer.TypeAdapterDeserializer;
+import io.motown.ocpp.websocketjson.gson.serializer.TypeAdapterSerializer;
 import org.springframework.beans.factory.FactoryBean;
 
 import java.util.Set;

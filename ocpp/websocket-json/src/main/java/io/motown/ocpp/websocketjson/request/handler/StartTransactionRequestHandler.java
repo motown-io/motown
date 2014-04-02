@@ -18,10 +18,9 @@ package io.motown.ocpp.websocketjson.request.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.request.chargingstation.StartTransactionRequest;
-import io.motown.ocpp.websocketjson.response.centralsystem.AuthorizationStatus;
-import io.motown.ocpp.websocketjson.response.centralsystem.IdTagInfo;
-import io.motown.ocpp.websocketjson.response.centralsystem.StartTransactionResponse;
+import io.motown.ocpp.websocketjson.schema.generated.v15.IdTagInfo__;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Starttransaction;
+import io.motown.ocpp.websocketjson.schema.generated.v15.StarttransactionResponse;
 import org.atmosphere.websocket.WebSocket;
 
 import java.util.GregorianCalendar;
@@ -44,19 +43,28 @@ public class StartTransactionRequestHandler extends RequestHandler {
 
     @Override
     public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
-        StartTransactionRequest request = gson.fromJson(payload, StartTransactionRequest.class);
+        Starttransaction request = gson.fromJson(payload, Starttransaction.class);
 
         ReservationId reservationId = null;
         if (request.getReservationId() != 0) {
-            reservationId = new NumberedReservationId(chargingStationId, protocolIdentifier, request.getReservationId());
+            reservationId = new NumberedReservationId(chargingStationId, protocolIdentifier, request.getReservationId().intValue());
         }
 
-        int transactionId = domainService.startTransaction(chargingStationId, new EvseId(request.getConnectorId()), new TextualToken(request.getIdTag()), request.getMeterStart(), request.getTimestamp(), reservationId, protocolIdentifier);
+        int transactionId = domainService.startTransaction(chargingStationId, new EvseId(request.getConnectorId().intValue()), new TextualToken(request.getIdTag()), request.getMeterStart().intValue(), request.getTimestamp(), reservationId, protocolIdentifier);
 
-        // TODO locally store identifications, so we can use these in the response. - Dennis Laumen, December 16th 2013
         GregorianCalendar expDate = new GregorianCalendar();
         expDate.add(GregorianCalendar.YEAR, 1);
-        StartTransactionResponse response = new StartTransactionResponse(transactionId, new IdTagInfo(AuthorizationStatus.ACCEPTED, expDate.getTime(), request.getIdTag()));
+
+        // TODO locally store identifications, so we can use these in the response. - Dennis Laumen, December 16th 2013
+
+        IdTagInfo__ idTagInfo = new IdTagInfo__();
+        idTagInfo.setExpiryDate(expDate.getTime());
+        idTagInfo.setStatus(IdTagInfo__.Status.ACCEPTED);
+        idTagInfo.setParentIdTag(request.getIdTag());
+
+        StarttransactionResponse response = new StarttransactionResponse();
+        response.setTransactionId((double) transactionId);
+        response.setIdTagInfo(idTagInfo);
 
         writeResponse(webSocket, response, callId, gson);
     }

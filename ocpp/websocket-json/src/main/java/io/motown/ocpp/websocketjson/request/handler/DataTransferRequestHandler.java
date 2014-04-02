@@ -18,9 +18,8 @@ package io.motown.ocpp.websocketjson.request.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.request.chargingstation.DataTransferRequest;
-import io.motown.ocpp.websocketjson.response.centralsystem.DataTransferResponse;
-import io.motown.ocpp.websocketjson.response.centralsystem.DataTransferStatus;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Datatransfer;
+import io.motown.ocpp.websocketjson.schema.generated.v15.DatatransferResponse;
 import org.atmosphere.websocket.WebSocket;
 
 public class DataTransferRequestHandler extends RequestHandler {
@@ -38,11 +37,13 @@ public class DataTransferRequestHandler extends RequestHandler {
 
     @Override
     public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
-        DataTransferRequest request = gson.fromJson(payload, DataTransferRequest.class);
+        Datatransfer request = gson.fromJson(payload, Datatransfer.class);
 
         domainService.dataTransfer(chargingStationId, request.getData(), request.getVendorId(), request.getMessageId());
 
-        DataTransferResponse response = new DataTransferResponse(DataTransferStatus.ACCEPTED, null);
+        DatatransferResponse response = new DatatransferResponse();
+        response.setStatus(DatatransferResponse.Status.ACCEPTED);
+        response.setData(null);
 
         writeResponse(webSocket, response, callId, gson);
     }

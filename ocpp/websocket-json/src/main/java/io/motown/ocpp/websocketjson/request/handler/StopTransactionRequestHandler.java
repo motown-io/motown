@@ -21,11 +21,7 @@ import io.motown.domain.api.chargingstation.MeterValue;
 import io.motown.domain.api.chargingstation.NumberedTransactionId;
 import io.motown.domain.api.chargingstation.TextualToken;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.request.chargingstation.StopTransactionRequest;
-import io.motown.ocpp.websocketjson.request.chargingstation.TransactionData;
-import io.motown.ocpp.websocketjson.response.centralsystem.AuthorizationStatus;
-import io.motown.ocpp.websocketjson.response.centralsystem.IdTagInfo;
-import io.motown.ocpp.websocketjson.response.centralsystem.StopTransactionResponse;
+import io.motown.ocpp.websocketjson.schema.generated.v15.*;
 import org.atmosphere.websocket.WebSocket;
 
 import java.util.*;
@@ -48,12 +44,12 @@ public class StopTransactionRequestHandler extends RequestHandler {
 
     @Override
     public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
-        StopTransactionRequest request = gson.fromJson(payload, StopTransactionRequest.class);
+        Stoptransaction request = gson.fromJson(payload, Stoptransaction.class);
 
         List<MeterValue> meterValues = new ArrayList<>();
-        for(TransactionData data : request.getTransactionData()) {
-            for(io.motown.ocpp.websocketjson.request.chargingstation.MeterValue meterValue : data.getValues()) {
-                for(io.motown.ocpp.websocketjson.request.chargingstation.MeterValue.Value value : meterValue.getValues()) {
+        for(TransactionDatum data : request.getTransactionData()) {
+            for(Value__ meterValue : data.getValues()) {
+                for(Value___ value : meterValue.getValues()) {
                     Map<String, String> attributes = new HashMap<>();
                     DomainService.addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getContext());
                     DomainService.addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getFormat());
@@ -66,17 +62,24 @@ public class StopTransactionRequestHandler extends RequestHandler {
         }
 
         NumberedTransactionId transactionId = null;
-        Integer requestTransactionId = request.getTransactionId();
+        Integer requestTransactionId = request.getTransactionId().intValue();
         if(requestTransactionId != null && requestTransactionId > 0) {
             transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, requestTransactionId);
         }
 
-        domainService.stopTransaction(chargingStationId, transactionId, new TextualToken(request.getIdTag()), request.getMeterStop(), request.getTimestamp(), meterValues);
+        domainService.stopTransaction(chargingStationId, transactionId, new TextualToken(request.getIdTag()), request.getMeterStop().intValue(), request.getTimestamp(), meterValues);
 
         // TODO locally store identifications, so we can use these in the response. - Dennis Laumen, December 16th 2013
         GregorianCalendar expDate = new GregorianCalendar();
         expDate.add(GregorianCalendar.YEAR, 1);
-        StopTransactionResponse response = new StopTransactionResponse(new IdTagInfo(AuthorizationStatus.ACCEPTED, expDate.getTime(), request.getIdTag()));
+
+        IdTagInfo___ idTagInfo = new IdTagInfo___();
+        idTagInfo.setStatus(IdTagInfo___.Status.ACCEPTED);
+        idTagInfo.setExpiryDate(expDate.getTime());
+        idTagInfo.setParentIdTag(request.getIdTag());
+
+        StoptransactionResponse response = new StoptransactionResponse();
+        response.setIdTagInfo(idTagInfo);
 
         writeResponse(webSocket, response, callId, gson);
     }
