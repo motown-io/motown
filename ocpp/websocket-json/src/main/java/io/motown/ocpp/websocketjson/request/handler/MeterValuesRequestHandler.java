@@ -18,8 +18,8 @@ package io.motown.ocpp.websocketjson.request.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.response.centralsystem.MeterValuesResponse;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Metervalues;
+import io.motown.ocpp.websocketjson.schema.generated.v15.MetervaluesResponse;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Value;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Value_;
 import org.atmosphere.websocket.WebSocket;
@@ -70,7 +70,7 @@ public class MeterValuesRequestHandler extends RequestHandler {
 
         domainService.meterValues(chargingStationId, transactionId, new EvseId(request.getConnectorId().intValue()), meterValues);
 
-        writeResponse(webSocket, new MeterValuesResponse(), callId, gson);
+        writeResponse(webSocket, new MetervaluesResponse(), callId, gson);
     }
 
 }
