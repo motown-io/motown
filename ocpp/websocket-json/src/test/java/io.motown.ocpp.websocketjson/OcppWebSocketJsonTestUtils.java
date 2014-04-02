@@ -47,17 +47,9 @@ public class OcppWebSocketJsonTestUtils {
         gsonFactoryBean.setDateFormat(DATE_FORMAT);
         Set<TypeAdapterSerializer<?>> typeAdapterSerializers = ImmutableSet.<TypeAdapterSerializer<?>>builder()
                 .add(new BootnotificationResponseStatusTypeAdapterSerializer())
-                .add(new CancelReservationStatusTypeAdapterSerializer())
-                .add(new ChangeAvailabilityStatusTypeAdapterSerializer())
-                .add(new ChangeConfigurationStatusTypeAdapterSerializer())
-                .add(new ClearCacheStatusTypeAdapterSerializer())
-                .add(new DataTransferStatusTypeAdapterSerializer())
-                .add(new RemoteStartStatusTypeAdapterSerializer())
-                .add(new RemoteStopStatusTypeAdapterSerializer())
-                .add(new ReserveNowStatusTypeAdapterSerializer())
-                .add(new ResetStatusTypeAdapterSerializer())
-                .add(new SendLocalListStatusTypeAdapterSerializer())
-                .add(new UnlockConnectorStatusTypeAdapterSerializer())
+                .add(new DataTransferResponseStatusTypeAdapterSerializer())
+                .add(new ResetTypeAdapterSerializer())
+                .add(new SendLocalListRequestUpdateTypeAdapterSerializer())
                 //The serializers below are only needed during testing, as they are used to verify the result
                 .add(new DiagnosticsStatusTypeAdapterSerializer())
                 .add(new FirmwareStatusTypeAdapterSerializer())
@@ -68,14 +60,21 @@ public class OcppWebSocketJsonTestUtils {
         gsonFactoryBean.setTypeAdapterSerializers(typeAdapterSerializers);
 
         Set<TypeAdapterDeserializer<?>> typeAdapterDeserializers = ImmutableSet.<TypeAdapterDeserializer<?>>builder()
+                .add(new CancelReservationResponseStatusTypeAdapterDeserializer())
+                .add(new ChangeAvailabilityTypeAdapterDeserializer())
+                .add(new ChangeConfigurationResponseStatusTypeAdapterDeserializer())
                 .add(new ChargePointErrorCodeTypeAdapterDeserializer())
                 .add(new ChargePointStatusTypeAdapterDeserializer())
+                .add(new ClearCacheResponseStatusTypeAdapterDeserializer())
+                .add(new DataTransferResponseStatusTypeAdapterDeserializer())
                 .add(new DiagnosticsStatusTypeAdapterDeserializer())
                 .add(new FirmwareStatusTypeAdapterDeserializer())
                 .add(new RemoteStartTransactionResponseTypeAdapterDeserializer())
                 .add(new RemoteStopTransactionResponseTypeAdapterDeserializer())
-                .add(new ResetStatusResponseTypeAdapterDeserializer())
-                .add(new UnlockConnectorStatusTypeAdapterDeserializer())
+                .add(new ReserveNowResponseStatusTypeAdapterDeserializer())
+                .add(new ResetResponseStatusAdapterDeserializer())
+                .add(new SendLocalListResponseStatusTypeAdapterDeserializer())
+                .add(new UnlockConnectorResponseStatusTypeAdapterDeserializer())
                 .build();
         gsonFactoryBean.setTypeAdapterDeserializers(typeAdapterDeserializers);
 

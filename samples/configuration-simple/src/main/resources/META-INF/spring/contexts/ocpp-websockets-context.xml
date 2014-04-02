@@ -26,25 +26,29 @@
         <property name="dateFormat" value="yyyy-MM-dd'T'HH:mm:ss'Z'"/>
         <property name="typeAdapterSerializers">
             <set>
-                <bean class="io.motown.ocpp.websocketjson.gson.serializer.RegistrationStatusTypeAdapterSerializer"/>
-                <bean class="io.motown.ocpp.websocketjson.gson.serializer.DataTransferStatusTypeAdapterSerializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.serializer.BootnotificationResponseStatusTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.DataTransferResponseStatusTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.ResetTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.SendLocalListRequestUpdateTypeAdapterSerializer"/>
             </set>
         </property>
         <property name="typeAdapterDeserializers">
             <set>
-                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.DiagnosticsStatusTypeAdapterDeserializer"/>
-                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.FirmwareStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.CancelReservationResponseStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ChangeAvailabilityTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ChangeConfigurationResponseStatusTypeAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ChargePointErrorCodeTypeAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ChargePointStatusTypeAdapterDeserializer"/>
-                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.UnlockConnectorStatusTypeAdapterDeserializer"/>
-                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ResetStatusResponseTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ClearCacheResponseStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.DataTransferResponseStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.DiagnosticsStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.FirmwareStatusTypeAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.deserializer.RemoteStartTransactionResponseTypeAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.deserializer.RemoteStopTransactionResponseTypeAdapterDeserializer"/>
-                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.DiagnosticsStatusTypeAdapterDeserializer"/>
-                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.FirmwareStatusTypeAdapterDeserializer"/>
-                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ChargePointErrorCodeTypeAdapterDeserializer"/>
-                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ChargePointStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ReserveNowResponseStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ResetResponseStatusAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.SendLocalListResponseStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.UnlockConnectorResponseStatusTypeAdapterDeserializer"/>
             </set>
         </property>
     </bean>

@@ -17,19 +17,19 @@ package io.motown.ocpp.websocketjson.gson.deserializer;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
-import io.motown.ocpp.websocketjson.schema.generated.v15.ChangeconfigurationResponse;
+import io.motown.ocpp.websocketjson.schema.generated.v15.SendlocallistResponse;
 
 import java.lang.reflect.Type;
 
-public class SendLocalListResponseStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<ChangeconfigurationResponse.Status> {
+public class SendLocalListResponseStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<SendlocallistResponse.Status> {
 
     @Override
-    public ChangeconfigurationResponse.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
-        return ChangeconfigurationResponse.Status.fromValue(jsonElement.getAsString());
+    public SendlocallistResponse.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
+        return SendlocallistResponse.Status.fromValue(jsonElement.getAsString());
     }
 
     @Override
     public Class<?> getAdaptedType() {
-        return ChangeconfigurationResponse.Status.class;
+        return SendlocallistResponse.Status.class;
     }
 }

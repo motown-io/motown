@@ -17,19 +17,19 @@ package io.motown.ocpp.websocketjson.gson.deserializer;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
-import io.motown.ocpp.websocketjson.schema.generated.v15.ReservenowResponse;
+import io.motown.ocpp.websocketjson.schema.generated.v15.CancelreservationResponse;
 
 import java.lang.reflect.Type;
 
-public class CancelReservationResponseStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<ReservenowResponse.Status> {
+public class CancelReservationResponseStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<CancelreservationResponse.Status> {
 
     @Override
-    public ReservenowResponse.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
-        return ReservenowResponse.Status.fromValue(jsonElement.getAsString());
+    public CancelreservationResponse.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
+        return CancelreservationResponse.Status.fromValue(jsonElement.getAsString());
     }
 
     @Override
     public Class<?> getAdaptedType() {
-        return ReservenowResponse.Status.class;
+        return CancelreservationResponse.Status.class;
     }
 }

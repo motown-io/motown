@@ -17,19 +17,19 @@ package io.motown.ocpp.websocketjson.gson.deserializer;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
-import io.motown.ocpp.websocketjson.schema.generated.v15.SendlocallistResponse;
+import io.motown.ocpp.websocketjson.schema.generated.v15.ClearcacheResponse;
 
 import java.lang.reflect.Type;
 
-public class ClearCacheResponseStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<SendlocallistResponse.Status> {
+public class ClearCacheResponseStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<ClearcacheResponse.Status> {
 
     @Override
-    public SendlocallistResponse.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
-        return SendlocallistResponse.Status.fromValue(jsonElement.getAsString());
+    public ClearcacheResponse.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
+        return ClearcacheResponse.Status.fromValue(jsonElement.getAsString());
     }
 
     @Override
     public Class<?> getAdaptedType() {
-        return SendlocallistResponse.Status.class;
+        return ClearcacheResponse.Status.class;
     }
 }

@@ -17,19 +17,19 @@ package io.motown.ocpp.websocketjson.gson.deserializer;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
-import io.motown.ocpp.websocketjson.schema.generated.v15.Statusnotification;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Changeavailability;
 
 import java.lang.reflect.Type;
 
-public class ChangeAvailabilityTypeAdapterDeserializer implements TypeAdapterDeserializer<Statusnotification.Status> {
+public class ChangeAvailabilityTypeAdapterDeserializer implements TypeAdapterDeserializer<Changeavailability.Type> {
 
     @Override
-    public Statusnotification.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
-        return Statusnotification.Status.fromValue(jsonElement.getAsString());
+    public Changeavailability.Type deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
+        return Changeavailability.Type.fromValue(jsonElement.getAsString());
     }
 
     @Override
     public Class<?> getAdaptedType() {
-        return Statusnotification.Status.class;
+        return Changeavailability.Type.class;
     }
 }

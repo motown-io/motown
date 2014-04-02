@@ -17,19 +17,19 @@ package io.motown.ocpp.websocketjson.gson.deserializer;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
-import io.motown.ocpp.websocketjson.schema.generated.v15.ClearcacheResponse;
+import io.motown.ocpp.websocketjson.schema.generated.v15.DatatransferResponse;
 
 import java.lang.reflect.Type;
 
-public class DataTransferResponseStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<ClearcacheResponse.Status> {
+public class DataTransferResponseStatusTypeAdapterDeserializer implements TypeAdapterDeserializer<DatatransferResponse.Status> {
 
     @Override
-    public ClearcacheResponse.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
-        return ClearcacheResponse.Status.fromValue(jsonElement.getAsString());
+    public DatatransferResponse.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
+        return DatatransferResponse.Status.fromValue(jsonElement.getAsString());
     }
 
     @Override
     public Class<?> getAdaptedType() {
-        return ClearcacheResponse.Status.class;
+        return DatatransferResponse.Status.class;
     }
 }
