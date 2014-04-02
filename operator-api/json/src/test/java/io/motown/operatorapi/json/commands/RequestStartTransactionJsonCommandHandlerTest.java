@@ -41,42 +41,42 @@ public class RequestStartTransactionJsonCommandHandlerTest {
     @Test
     public void testStartTransaction() {
         JsonObject command = gson.fromJson("{evseId:'1',identifyingToken:{token:'1',status:'ACCEPTED'}}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, command);
+        handler.handle(CHARGING_STATION_ID_STRING, command, null);
     }
 
     @Test
     public void testStartTransactionNoStatus() {
         JsonObject command = gson.fromJson("{evseId:'1',identifyingToken:{token:'1'}}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, command);
+        handler.handle(CHARGING_STATION_ID_STRING, command, null);
     }
 
     @Test(expected = NullPointerException.class)
     public void testStartTransactionNoToken() {
         JsonObject command = gson.fromJson("{evseId:'1'}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, command);
+        handler.handle(CHARGING_STATION_ID_STRING, command, null);
     }
 
     @Test(expected = JsonParseException.class)
     public void testStartTransactionIdentifyingTokenIsString() {
         JsonObject command = gson.fromJson("{evseId:'1',identifyingToken:'ACCEPTED'}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, command);
+        handler.handle(CHARGING_STATION_ID_STRING, command, null);
     }
 
     @Test(expected = JsonParseException.class)
     public void testStartTransactionTokenIsObject() {
         JsonObject command = gson.fromJson("{evseId:'1',identifyingToken:{token:{status:'ACCEPTED'}}}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, command);
+        handler.handle(CHARGING_STATION_ID_STRING, command, null);
     }
 
     @Test(expected = JsonParseException.class)
     public void testStartTransactionStatusIsObject() {
         JsonObject command = gson.fromJson("{evseId:'1',identifyingToken:{token:'1',status:{status:'ACCEPTED'}}}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, command);
+        handler.handle(CHARGING_STATION_ID_STRING, command, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testStartTransactionStatusInvalid() {
         JsonObject command = gson.fromJson("{evseId:'1',identifyingToken:{token:'1',status:'NEW'}}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, command);
+        handler.handle(CHARGING_STATION_ID_STRING, command, null);
     }
 }

@@ -37,13 +37,13 @@ public class RequestResetChargingStationJsonCommandHandlerTest {
     @Test
     public void testResetCommand() {
         JsonObject commandObject = gson.fromJson("{type:'soft'}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
     }
 
     @Test
     public void testHardResetCommand() {
         JsonObject commandObject = gson.fromJson("{type:'hard'}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
     }
 
 }

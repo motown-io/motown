@@ -36,48 +36,48 @@ public class SetChargingStationOpeningTimesJsonCommandHandlerTest {
     @Test
     public void testSetOpeningTimes() {
         JsonObject commandObject = gson.fromJson("{openingTimes:[{day:1,timeStart:'12:00',timeStop:'12:30'}]}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
     }
 
     @Test
     public void testSetOpeningTimesOtherHour() {
         JsonObject commandObject = gson.fromJson("{openingTimes:[{day:1,timeStart:'12:00',timeStop:'13:00'}]}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testSetOpeningTimesInvalidDay() {
         JsonObject commandObject = gson.fromJson("{openingTimes:[{day:8,timeStart:'12:00',timeStop:'15:00'}]}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
     }
 
     @Test(expected = NumberFormatException.class)
     public void testSetOpeningTimesInvalidArgument() {
         JsonObject commandObject = gson.fromJson("{openingTimes:[{day:'MONDAY',timeStart:'12:00',timeStop:'15:00'}]}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
     }
 
     @Test(expected = JsonParseException.class)
     public void testSetOpeningTimesInvalidTime() {
         JsonObject commandObject = gson.fromJson("{openingTimes:[{day:'2',timeStart:'12:60',timeStop:'15:00'}]}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
     }
 
     @Test(expected = JsonParseException.class)
     public void testSetOpeningTimesInvalidTime2() {
         JsonObject commandObject = gson.fromJson("{openingTimes:[{day:'2',timeStart:'24:00',timeStop:'15:00'}]}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testOpeningTimesTimeStartEqualToTimeStop() {
         JsonObject commandObject = gson.fromJson("{openingTimes:[{day:'2',timeStart:'12:00',timeStop:'12:00'}]}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testOpeningTimesTimeStartNotBeforeTimeStop() {
         JsonObject commandObject = gson.fromJson("{openingTimes:[{day:'2',timeStart:'12:00',timeStop:'11:00'}]}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
     }
 }

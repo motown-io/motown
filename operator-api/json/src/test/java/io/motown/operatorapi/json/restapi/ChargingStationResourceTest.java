@@ -15,6 +15,8 @@
  */
 package io.motown.operatorapi.json.restapi;
 
+import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
+import io.motown.domain.api.security.UserIdentity;
 import io.motown.operatorapi.json.commands.JsonCommandService;
 import io.motown.operatorapi.json.queries.OperatorApiService;
 import org.junit.Before;
@@ -25,6 +27,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.persistence.PersistenceException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+
+import java.security.Principal;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
@@ -40,26 +45,33 @@ public class ChargingStationResourceTest {
     @Mock
     private JsonCommandService commandService;
 
+    private SecurityContext mockedSecurityContext;
+
     @Before
     public void setUp() {
         resource = new ChargingStationResource();
 
         resource.setCommandService(commandService);
         resource.setService(service);
+
+        mockedSecurityContext = mock(SecurityContext.class);
+        Principal mockedPrincipal = mock(Principal.class);
+        when(mockedPrincipal.getName()).thenReturn("root");
+        when(mockedSecurityContext.getUserPrincipal()).thenReturn(mockedPrincipal);
     }
 
     @Test
     public void testExecuteCommand() {
-        Response response = resource.executeCommand(anyString(), anyString());
-        verify(commandService).handleCommand(anyString(), anyString());
+        Response response = resource.executeCommand(ChargingStationTestUtils.CHARGING_STATION_ID.getId(), "jsonCommand", mockedSecurityContext);
+        verify(commandService).handleCommand(anyString(), anyString(), any(UserIdentity.class));
 
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testExecuteCommandThrowsIllegalArgumentException() {
-        doThrow(mock(IllegalArgumentException.class)).when(commandService).handleCommand(anyString(), anyString());
-        resource.executeCommand(anyString(), anyString());
+        doThrow(mock(IllegalArgumentException.class)).when(commandService).handleCommand(anyString(), anyString(), any(UserIdentity.class));
+        resource.executeCommand(ChargingStationTestUtils.CHARGING_STATION_ID.getId(), "jsonCommand", mockedSecurityContext);
     }
 
     @Test

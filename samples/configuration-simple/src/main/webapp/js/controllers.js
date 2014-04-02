@@ -43,11 +43,10 @@ angular.module('demoApp.controllers', []).
             };
 
             $scope.registerChargingStation = function (chargingStation) {
-
                 var cs = chargingStation;
 
                 $http({
-                    url: 'api/charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['Register', {
                         'configuration': {

@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ImproveChargingStationLocationCommand;
+import io.motown.domain.api.security.IdentityContext;
 import io.motown.operatorapi.viewmodel.model.ImproveChargingStationLocationApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -40,7 +41,7 @@ class ImproveChargingStationLocationJsonCommandHandler implements JsonCommandHan
     }
 
     @Override
-    public void handle(String chargingStationId, JsonObject commandObject) {
+    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) {
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {

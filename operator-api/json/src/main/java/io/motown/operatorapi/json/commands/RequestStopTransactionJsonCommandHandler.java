@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.security.IdentityContext;
 import io.motown.operatorapi.viewmodel.model.RequestStopTransactionApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -39,7 +40,7 @@ class RequestStopTransactionJsonCommandHandler implements JsonCommandHandler {
     }
 
     @Override
-    public void handle(String chargingStationId, JsonObject commandObject) {
+    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) {
         try {
             RequestStopTransactionApiCommand command = gson.fromJson(commandObject, RequestStopTransactionApiCommand.class);
 

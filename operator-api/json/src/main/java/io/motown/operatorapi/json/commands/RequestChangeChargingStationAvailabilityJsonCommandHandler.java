@@ -22,6 +22,7 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestChangeChargingStationAvailabilityToInoperativeCommand;
 import io.motown.domain.api.chargingstation.RequestChangeChargingStationAvailabilityToOperativeCommand;
 import io.motown.domain.api.chargingstation.CorrelationToken;
+import io.motown.domain.api.security.IdentityContext;
 import io.motown.operatorapi.viewmodel.model.RequestChangeChargingStationAvailabilityApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -42,7 +43,7 @@ class RequestChangeChargingStationAvailabilityJsonCommandHandler implements Json
     }
 
     @Override
-    public void handle(String chargingStationId, JsonObject commandObject) {
+    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) {
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {

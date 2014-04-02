@@ -54,18 +54,18 @@ public class RegisterJsonCommandHandlerTest {
     public void testHandleComplete() {
 
         JsonObject commandObject = gson.fromJson("{'configuration' : {'evses' : [{'evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}]}], 'settings' : {'key':'value', 'key2':'value2'}}}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.UNREGISTERED_CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(OperatorApiJsonTestUtils.UNREGISTERED_CHARGING_STATION_ID_STRING, commandObject, null);
     }
 
     @Test(expected=IllegalStateException.class)
     public void testHandleCompleteUnRegistered() {
         JsonObject commandObject = gson.fromJson("{'configuration' : {'evses' : [{'evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}]}], 'settings' : {'key':'value', 'key2':'value2'}}}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
     }
 
     @Test
     public void testHandleConfigNull() {
         JsonObject commandObject = gson.fromJson("{'configuration' : null }", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.UNREGISTERED_CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(OperatorApiJsonTestUtils.UNREGISTERED_CHARGING_STATION_ID_STRING, commandObject, null);
     }
 }

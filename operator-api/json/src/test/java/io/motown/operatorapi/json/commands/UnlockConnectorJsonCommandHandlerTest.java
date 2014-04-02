@@ -39,12 +39,12 @@ public class UnlockConnectorJsonCommandHandlerTest {
     @Test
     public void testUnlockCommand() {
         JsonObject commandObject = gson.fromJson("{evseId:'1'}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
     }
 
     @Test(expected = NullPointerException.class)
     public void testInvalidUnlockCommand() {
         JsonObject commandObject = gson.fromJson("{evseID:'1'}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
     }
 }

@@ -29,6 +29,6 @@ public class RequestAuthorizationListVersionJsonCommandHandlerTest {
 
     @Test
     public void testHandler() {
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, null);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, null, null);
     }
 }

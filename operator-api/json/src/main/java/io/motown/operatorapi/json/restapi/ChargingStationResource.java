@@ -15,12 +15,15 @@
  */
 package io.motown.operatorapi.json.restapi;
 
+import io.motown.domain.api.security.SimpleUserIdentity;
 import io.motown.operatorapi.json.commands.JsonCommandService;
 import io.motown.operatorapi.json.queries.OperatorApiService;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 @Path("/charging-stations")
 @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
@@ -33,8 +36,8 @@ public final class ChargingStationResource {
     @POST
     @Path("/{chargingStationId}/commands")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response executeCommand(@PathParam("chargingStationId") String chargingStationId, String jsonCommand) {
-        commandService.handleCommand(chargingStationId, jsonCommand);
+    public Response executeCommand(@PathParam("chargingStationId") String chargingStationId, String jsonCommand, @Context SecurityContext securityContext) {
+        commandService.handleCommand(chargingStationId, jsonCommand, new SimpleUserIdentity(securityContext.getUserPrincipal().getName()));
         return Response.status(Response.Status.ACCEPTED).build();
     }
 

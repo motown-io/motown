@@ -38,25 +38,25 @@ public class SendAuthorizationListJsonCommandHandlerTest {
     @Test
     public void testSendAuthorizationListCommand() {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'FULL',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID, commandObject);
+        handler.handle(CHARGING_STATION_ID, commandObject, null);
     }
 
     @Test
     public void testDifferentialUpdateType() {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'DIFFERENTIAL',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID, commandObject);
+        handler.handle(CHARGING_STATION_ID, commandObject, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidUpdateType() {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'NEW',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID, commandObject);
+        handler.handle(CHARGING_STATION_ID, commandObject, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidAuthenticationStatus() {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'FULL',items:[{token:'1',status:'NEW'}]}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID, commandObject);
+        handler.handle(CHARGING_STATION_ID, commandObject, null);
     }
 
 }

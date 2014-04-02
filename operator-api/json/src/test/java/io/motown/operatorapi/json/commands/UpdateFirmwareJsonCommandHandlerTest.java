@@ -39,18 +39,18 @@ public class UpdateFirmwareJsonCommandHandlerTest {
     @Test
     public void testUpdateFirmwareCommand() {
         JsonObject commandObject = gson.fromJson("{location:'DEURNE',retrieveDate:'2014-02-03T12:00:00Z'}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidUpdateCommandInvalidDate() {
         JsonObject commandObject = gson.fromJson("{location:'DEURNE',retrieveDate:'2014-02-03'}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
     }
 
     @Test(expected = NullPointerException.class)
     public void testInvalidUpdateCommandInvalidLocation() {
         JsonObject commandObject = gson.fromJson("{loc:'DEURNE',retrieveDate:'2014-02-03T12:00:00Z'}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
     }
 }

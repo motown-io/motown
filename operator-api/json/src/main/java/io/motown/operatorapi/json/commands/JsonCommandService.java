@@ -18,6 +18,9 @@ package io.motown.operatorapi.json.commands;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import io.motown.domain.api.security.IdentityContext;
+import io.motown.domain.api.security.TypeBasedAddOnIdentity;
+import io.motown.domain.api.security.UserIdentity;
 
 import java.util.List;
 
@@ -35,7 +38,7 @@ public class JsonCommandService {
 
     private List<JsonCommandHandler> jsonCommandHandlers;
 
-    public void handleCommand(String chargingStationId, String jsonCommand) {
+    public void handleCommand(String chargingStationId, String jsonCommand, UserIdentity userIdentity) {
         JsonArray commandAsArray = gson.fromJson(jsonCommand, JsonArray.class);
 
         checkArgument(commandAsArray.size() == COMMAND_ARRAY_SIZE, "API command must be a JSON array with two elements");
@@ -45,7 +48,9 @@ public class JsonCommandService {
 
         JsonCommandHandler commandHandler = getCommandHandler(commandName);
 
-        commandHandler.handle(chargingStationId, commandPayloadAsObject);
+        IdentityContext identityContext = new IdentityContext(new TypeBasedAddOnIdentity("OPERATOR-API", "1"), userIdentity);
+
+        commandHandler.handle(chargingStationId, commandPayloadAsObject, identityContext);
     }
 
     private JsonCommandHandler getCommandHandler(String commandName) {

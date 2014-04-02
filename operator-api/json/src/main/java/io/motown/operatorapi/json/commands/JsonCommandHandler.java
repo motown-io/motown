@@ -16,10 +16,12 @@
 package io.motown.operatorapi.json.commands;
 
 import com.google.gson.JsonObject;
+import io.motown.domain.api.security.IdentityContext;
 
 public interface JsonCommandHandler {
 
     String getCommandName();
 
-    void handle(String chargingStationId, JsonObject commandObject);
+    void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext);
+
 }

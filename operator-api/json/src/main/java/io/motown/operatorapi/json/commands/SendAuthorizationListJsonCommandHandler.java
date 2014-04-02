@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.security.IdentityContext;
 import io.motown.operatorapi.viewmodel.model.SendAuthorizationListApiCommand;
 
 import java.util.List;
@@ -38,7 +39,7 @@ class SendAuthorizationListJsonCommandHandler implements JsonCommandHandler {
     }
 
     @Override
-    public void handle(String chargingStationId, JsonObject commandObject) {
+    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) {
         try {
             List<IdentifyingToken> authorizationList = Lists.newArrayList();
 

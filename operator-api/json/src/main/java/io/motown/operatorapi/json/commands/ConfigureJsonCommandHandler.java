@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ConfigureChargingStationCommand;
+import io.motown.domain.api.security.IdentityContext;
 
 /**
  * Json command handler for the 'Configure' command.
@@ -59,9 +60,10 @@ class ConfigureJsonCommandHandler implements JsonCommandHandler {
                 'key2':'value2'
             }
         }"
+     * @param identityContext
      */
     @Override
-    public void handle(String chargingStationId, JsonObject commandObject) {
+    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) {
         try {
             ConfigureChargingStationCommand newCommand = JsonCommandParser.parseConfigureChargingStation(new ChargingStationId(chargingStationId), commandObject, gson);
             commandGateway.send(newCommand);

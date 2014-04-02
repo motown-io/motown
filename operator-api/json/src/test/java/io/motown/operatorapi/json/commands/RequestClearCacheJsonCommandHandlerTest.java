@@ -29,6 +29,6 @@ public class RequestClearCacheJsonCommandHandlerTest {
 
     @Test
     public void testClearCacheCommand() {
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, null);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, null, null);
     }
 }

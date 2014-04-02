@@ -38,6 +38,6 @@ public class ChangeConfigurationJsonCommandHandlerTest {
     @Test
     public void testHandleChangeConfigurationOnRegisteredStation() {
         JsonObject commandObject = gson.fromJson("{'key' : 'foo', 'value': 'bar'}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
     }
 }

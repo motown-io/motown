@@ -49,21 +49,21 @@ public class UpdateChangeChargingStationReservableJsonCommandHandlerTest {
     public void updateReservableToTrueNoExceptions() {
         JsonObject commandObject = gson.fromJson("{'reservable': true}", JsonObject.class);
 
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
     }
 
     @Test
     public void updateReservableToFalseNoExceptions() {
         JsonObject commandObject = gson.fromJson("{'reservable': false}", JsonObject.class);
 
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
     }
 
     @Test
     public void updateReservableToTrueValidateGatewayCall() {
         JsonObject commandObject = gson.fromJson("{'reservable': true}", JsonObject.class);
 
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
 
         verify(gateway).send(new MakeChargingStationReservableCommand(CHARGING_STATION_ID));
     }
@@ -72,7 +72,7 @@ public class UpdateChangeChargingStationReservableJsonCommandHandlerTest {
     public void updateReservableToFalseValidateGatewayCall() {
         JsonObject commandObject = gson.fromJson("{'reservable': false}", JsonObject.class);
 
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
 
         verify(gateway).send(new MakeChargingStationNotReservableCommand(CHARGING_STATION_ID));
     }

@@ -36,18 +36,18 @@ public class RequestDiagnosticsJsonCommandHandlerTest {
     @Test
     public void testHandler() {
         JsonObject commandObject = gson.fromJson("{targetLocation:'LOC001'}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
     }
 
     @Test(expected = NullPointerException.class)
     public void testInvalidJsonProperty() {
         JsonObject commandObject = gson.fromJson("{target:'LOC001'}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidJsonPropertyType() {
         JsonObject commandObject = gson.fromJson("{targetLocation:{location:'LOC001'}}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
     }
 }

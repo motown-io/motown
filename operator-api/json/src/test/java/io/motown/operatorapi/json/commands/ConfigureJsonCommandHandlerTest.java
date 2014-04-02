@@ -39,31 +39,31 @@ public class ConfigureJsonCommandHandlerTest {
     @Test
     public void testHandleComplete() {
         JsonObject commandObject = gson.fromJson("{'evses' : [{'evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}]}], 'settings' : {'key':'value', 'key2':'value2'}}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID, commandObject);
+        handler.handle(CHARGING_STATION_ID, commandObject, null);
     }
 
     @Test
     public void testHandleSettingsOnly() {
         JsonObject commandObject = gson.fromJson("{'settings' : {'key':'value', 'key2':'value2'}}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID, commandObject);
+        handler.handle(CHARGING_STATION_ID, commandObject, null);
     }
 
     @Test
     public void testHandleConnectorsOnly() {
         JsonObject commandObject = gson.fromJson("{'evses' : [{'evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}]}]}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID, commandObject);
+        handler.handle(CHARGING_STATION_ID, commandObject, null);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void throwIllegalArgumentExceptionIfEvsesAreNotInList() {
         JsonObject commandObject = gson.fromJson("{'evses' : {'evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}] }}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID, commandObject);
+        handler.handle(CHARGING_STATION_ID, commandObject, null);
     }
 
     @Test(expected=JsonSyntaxException.class)
     public void throwJsonSyntaxExceptionIfEvsesAreInListInsteadOfArray() {
         JsonObject commandObject = gson.fromJson("{'evses' : [{['evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}]}]}]}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID, commandObject);
+        handler.handle(CHARGING_STATION_ID, commandObject, null);
     }
 
 }
