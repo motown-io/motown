@@ -17,13 +17,15 @@ angular.module('demoApp.controllers', []).
     controller('ChargingStationController',
         ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
             $scope.init = function () {
-                $scope.startGetChargingStationsTimer();
+                if(!$scope.chargingStationTimer) {
+                    $scope.chargingStationTimer = $scope.startGetChargingStationsTimer();
+                }
             };
 
             $scope.startGetChargingStationsTimer = function () {
-                $timeout(function () {
+                return $timeout(function () {
                     $scope.getChargingStations();
-                    $scope.startGetChargingStationsTimer();
+                    $scope.chargingStationTimer = $scope.startGetChargingStationsTimer();
                 }, 1000);
             };
 
@@ -34,6 +36,9 @@ angular.module('demoApp.controllers', []).
                     data: ''
                 }).success(function (response) {
                     $scope.chargingStations = response;
+                }).error(function () {
+                    console.log('Error getting charging stations, cancel polling.');
+                    $timeout.cancel($scope.chargingStationTimer);
                 });
             };
 
@@ -332,13 +337,15 @@ angular.module('demoApp.controllers', []).
     controller('TransactionController',
         ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
             $scope.init = function () {
-                $scope.startGetTransactionsTimer();
+                if(!$scope.transactionTimer) {
+                    $scope.transactionTimer = $scope.startGetTransactionsTimer();
+                }
             };
 
             $scope.startGetTransactionsTimer = function () {
-                $timeout(function () {
+                return $timeout(function () {
                     $scope.getTransactions();
-                    $scope.startGetTransactionsTimer();
+                    $scope.transactionTimer = $scope.startGetTransactionsTimer();
                 }, 1000);
             };
 
@@ -349,6 +356,9 @@ angular.module('demoApp.controllers', []).
                     data: ''
                 }).success(function (response) {
                     $scope.transactions = response;
+                }).error(function() {
+                    console.log('Error getting transactions, cancel polling.');
+                    $timeout.cancel($scope.transactionTimer);
                 });
             };
 
