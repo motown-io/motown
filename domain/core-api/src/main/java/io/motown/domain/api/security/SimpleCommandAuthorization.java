@@ -22,6 +22,10 @@ public class SimpleCommandAuthorization implements CommandAuthorization {
 
     @Override
     public boolean isAuthorized(IdentityContext identityContext, Map<UserIdentity, Collection<Class<?>>> authorizations, Class commandClass) {
+        if (identityContext == null || authorizations == null) {
+            return false;
+        }
+
         Collection<Class<?>> authorizationsForUser = authorizations.get(identityContext.getUserIdentity());
 
         return authorizationsForUser != null && (authorizationsForUser.contains(commandClass) || authorizationsForUser.contains(AllPermissions.class));
