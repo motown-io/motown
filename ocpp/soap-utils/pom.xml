@@ -34,6 +34,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.motown.domain</groupId>
+            <artifactId>domain-core-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>io.motown.ocpp</groupId>
             <artifactId>ocpp-view-model</artifactId>
             <version>${project.version}</version>
@@ -41,26 +46,6 @@
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jul-to-slf4j</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -71,17 +56,23 @@
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-transports-http</artifactId>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-transports-http-hc</artifactId>
+            <artifactId>cxf-rt-ws-addr</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-tools-common</artifactId>
+            <artifactId>cxf-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-bindings-soap</artifactId>
+        </dependency>
+
+        <!-- Test dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
