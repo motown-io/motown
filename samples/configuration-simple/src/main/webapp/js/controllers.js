@@ -363,4 +363,37 @@ angular.module('demoApp.controllers', []).
                     console.log('remote stop!');
                 });
             };
-        }]);
+        }]).
+    controller('ConfigurationController',
+        ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
+            $scope.init = function () {
+            };
+
+            $scope.testConfigApi = function () {
+                $http({
+                    url: 'rest/config/connectors',
+                    method: 'GET',
+                    data: ''
+                }).success(function (response) {
+                    console.log('configuration api called');
+                });
+            };
+        }]
+    ).
+    controller('LoginController',
+        ['$scope', '$rootScope', '$location', '$cookieStore', 'UserService', function ($scope, $rootScope, $location, $cookieStore, UserService) {
+            $scope.rememberMe = false;
+
+            $scope.login = function() {
+                UserService.authenticate($.param({username: $scope.username, password: $scope.password}), function(authenticationResult) {
+                    var authToken = authenticationResult.token;
+                    $rootScope.authToken = authToken;
+                    if ($scope.rememberMe) {
+                        $cookieStore.put('authToken', authToken);
+                    }
+                    $location.path("/");
+                });
+            };
+        }
+    ]
+);

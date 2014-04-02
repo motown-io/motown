@@ -74,7 +74,7 @@
         </init-param>
         <init-param>
             <param-name>supportedProtocols</param-name>
-            <param-value>ocpp1.5,ocpp1.2</param-value>
+            <param-value>ocpp1.5</param-value>
         </init-param>
     </filter>
     <filter-mapping>
@@ -100,5 +100,38 @@
         <servlet-name>AtmosphereServlet</servlet-name>
         <url-pattern>/websockets/*</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>JerseyUserServlet</servlet-name>
+        <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>io.motown.chargingstationconfiguration.viewmodel.restapi,sample</param-value>
+        </init-param>
+        <init-param>
+            <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>JerseyServlet</servlet-name>
+        <url-pattern>/rest/config/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>JerseyUserServlet</servlet-name>
+        <url-pattern>/rest/user/*</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
 </web-app>

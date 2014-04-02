@@ -13,8 +13,103 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-angular.module('demoApp', ['demoApp.controllers']).
-    config(['$httpProvider', function ($httpProvider) {
+angular.module('demoApp', ['ngRoute', 'ngCookies', 'demoApp.controllers', 'demoApp.services']).
+    config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
         $httpProvider.defaults.headers.common['Content-Type'] = 'application/json';
         $httpProvider.defaults.headers.common['Accept'] = '*/*';
-    }]);
+
+        $routeProvider.when('/login', {
+            templateUrl: 'pages/login.html',
+            controller: 'LoginController'
+        });
+
+        $routeProvider.when('/chargingStations', {
+            templateUrl: 'pages/chargingstations.html'
+        });
+
+        $routeProvider.when('/configuration', {
+            templateUrl: 'pages/configuration.html'
+        });
+
+        $routeProvider.otherwise({
+            redirectTo: '/configuration'
+        });
+
+        // redirect browser to login page on HTTP status 401, otherwise show message
+        $httpProvider.interceptors.push(function ($q, $rootScope, $location) {
+                return {
+                    'responseError': function(rejection) {
+                        var status = rejection.status;
+                        var config = rejection.config;
+                        var method = config.method;
+                        var url = config.url;
+
+                        if (status == 401) {
+                            $location.path( "/login" );
+                        } else {
+                            $rootScope.error = method + " on " + url + " failed with status " + status;
+                        }
+
+                        return $q.reject(rejection);
+                    }
+                };
+            }
+        );
+
+        // every request should contain the authToken if it exists.
+        $httpProvider.interceptors.push(function ($q, $rootScope, $location) {
+            return {
+                'request': function(config) {
+//                    var isRestCall = config.url.indexOf('user') == 0;
+                    var isRestCall = true;
+                    //demoApp.useAuthTokenHeader = true;
+                    var useAuthTokenHeader = true;
+
+                    if (isRestCall && angular.isDefined($rootScope.authToken)) {
+                        var authToken = $rootScope.authToken;
+                        if (useAuthTokenHeader) {
+                            config.headers['X-Auth-Token'] = authToken;
+                        } else {
+                            config.url = config.url + "?token=" + authToken;
+                        }
+                    }
+                    return config || $q.when(config);
+                }
+            };
+        });
+    }]
+    ).run(function($rootScope, $location, $cookieStore) {
+        $rootScope.$on('$viewContentLoaded', function() {
+            delete $rootScope.error;
+        });
+
+        $rootScope.logout = function() {
+            delete $rootScope.authToken;
+            $cookieStore.remove('authToken');
+            $location.path("/login");
+        };
+
+        // if there is no auth cookie we redirect to login
+        var originalPath = $location.path();
+        $location.path("/login");
+        var authToken = $cookieStore.get('authToken');
+        if (authToken !== undefined) {
+            $rootScope.authToken = authToken;
+            $location.path(originalPath);
+        }
+    }
+);
+
+var services = angular.module('demoApp.services', ['ngResource']);
+
+services.factory('UserService', function($resource) {
+    return $resource('rest/user/:action', {},
+        {
+            authenticate: {
+                method: 'POST',
+                params: {'action' : 'authenticate'},
+                headers : {'Content-Type': 'application/x-www-form-urlencoded'}
+            }
+        }
+    );
+});

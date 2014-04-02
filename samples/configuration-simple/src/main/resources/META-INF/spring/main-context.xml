@@ -39,4 +39,6 @@
 
     <import resource="contexts/ocpp-websockets-context.xml" />
 
+    <import resource="contexts/security-context.xml" />
+
 </beans>
