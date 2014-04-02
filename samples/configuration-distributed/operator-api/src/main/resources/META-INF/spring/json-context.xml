@@ -48,6 +48,7 @@
     <bean id="jsonCommandService" class="io.motown.operatorapi.json.commands.JsonCommandService">
         <property name="gson" ref="gson" />
         <property name="jsonCommandHandlers" ref="jsonCommandHandlers" />
+        <property name="addOnId" value="1" />
     </bean>
 
     <bean id="operatorApiService" class="io.motown.operatorapi.json.queries.OperatorApiService">

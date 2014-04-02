@@ -38,6 +38,10 @@ public class JsonCommandService {
 
     private List<JsonCommandHandler> jsonCommandHandlers;
 
+    private static final String ADD_ON_TYPE = "OPERATOR-API";
+
+    private String addOnId;
+
     public void handleCommand(String chargingStationId, String jsonCommand, UserIdentity userIdentity) {
         JsonArray commandAsArray = gson.fromJson(jsonCommand, JsonArray.class);
 
@@ -48,7 +52,7 @@ public class JsonCommandService {
 
         JsonCommandHandler commandHandler = getCommandHandler(commandName);
 
-        IdentityContext identityContext = new IdentityContext(new TypeBasedAddOnIdentity("OPERATOR-API", "1"), userIdentity);
+        IdentityContext identityContext = new IdentityContext(new TypeBasedAddOnIdentity(ADD_ON_TYPE, addOnId), userIdentity);
 
         commandHandler.handle(chargingStationId, commandPayloadAsObject, identityContext);
     }
@@ -69,5 +73,9 @@ public class JsonCommandService {
 
     public void setJsonCommandHandlers(List<JsonCommandHandler> jsonCommandHandlers) {
         this.jsonCommandHandlers = jsonCommandHandlers;
+    }
+
+    public void setAddOnId(String addOnId) {
+        this.addOnId = addOnId;
     }
 }
