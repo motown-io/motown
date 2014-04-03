@@ -54,7 +54,7 @@ public class AuthorizationEventListenerTest {
 
     @Test
     public void testValidIdentification() {
-        eventListener.onEvent(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN), CORRELATION_ID);
+        eventListener.onEvent(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT), CORRELATION_ID);
 
         verify(service).isValid(IDENTIFYING_TOKEN);
 
@@ -76,7 +76,7 @@ public class AuthorizationEventListenerTest {
 
     @Test
     public void testInvalidIdentification() {
-        eventListener.onEvent(new AuthorizationRequestedEvent(CHARGING_STATION_ID, INVALID_IDENTIFYING_TOKEN), CORRELATION_ID);
+        eventListener.onEvent(new AuthorizationRequestedEvent(CHARGING_STATION_ID, INVALID_IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT), CORRELATION_ID);
 
         verify(service).isValid(INVALID_IDENTIFYING_TOKEN);
 
@@ -99,7 +99,7 @@ public class AuthorizationEventListenerTest {
 
     @Test
     public void testNullCorrelationId() {
-        eventListener.onEvent(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN), null);
+        eventListener.onEvent(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT), null);
 
         verify(service).isValid(IDENTIFYING_TOKEN);
 

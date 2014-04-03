@@ -50,7 +50,7 @@ public class CorrelationUnitOfWorkListenerTest {
         CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT)).withMetaData(Collections.singletonMap("correlationId", "12345"));
         UnitOfWorkListener listener = new CorrelationUnitOfWorkListener(command);
 
-        EventMessage event = listener.onEventRegistered(new DefaultUnitOfWork(), asEventMessage(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN)));
+        EventMessage event = listener.onEventRegistered(new DefaultUnitOfWork(), asEventMessage(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT)));
 
         assertTrue(event.getMetaData().get("correlationId").equals("12345"));
     }

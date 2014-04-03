@@ -27,6 +27,7 @@ import java.util.concurrent.ExecutionException;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.IDENTIFYING_TOKEN;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.NULL_USER_IDENTITY_CONTEXT;
 import static org.axonframework.domain.GenericEventMessage.asEventMessage;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -94,7 +95,7 @@ public class AuthorizationFutureEventCallbackTest {
     @Test
     public void onEventInvalidEventNoExceptions() {
         AuthorizationFutureEventCallback callback = new AuthorizationFutureEventCallback();
-        EventMessage eventMessage = asEventMessage(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN));
+        EventMessage eventMessage = asEventMessage(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT));
 
         callback.onEvent(eventMessage);
     }
@@ -104,7 +105,7 @@ public class AuthorizationFutureEventCallbackTest {
         AuthorizationFutureEventCallback callback = new AuthorizationFutureEventCallback();
         Continuation continuation = mock(Continuation.class);
         callback.setContinuation(continuation);
-        EventMessage eventMessage = asEventMessage(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN));
+        EventMessage eventMessage = asEventMessage(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT));
 
         callback.onEvent(eventMessage);
 

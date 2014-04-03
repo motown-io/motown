@@ -464,7 +464,7 @@ public class ChargingStationTest {
     public void testAuthorize() {
         fixture.given(CHARGING_STATION)
                 .when(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN));
+                .expectEvents(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test

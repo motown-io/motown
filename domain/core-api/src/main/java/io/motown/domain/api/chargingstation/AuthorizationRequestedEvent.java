@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -27,16 +29,20 @@ public final class AuthorizationRequestedEvent {
 
     private final IdentifyingToken identifyingToken;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code AuthorizationRequestedEvent} with an identifier and a identifyingToken.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param identifyingToken  identification which should be authorized.
-     * @throws NullPointerException if {@code chargingStationId} or {@code identifyingToken} is {@code null}.
+     * @param identityContext the identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code identifyingToken} or {@code identityContext} is {@code null}.
      */
-    public AuthorizationRequestedEvent(ChargingStationId chargingStationId, IdentifyingToken identifyingToken) {
+    public AuthorizationRequestedEvent(ChargingStationId chargingStationId, IdentifyingToken identifyingToken, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.identifyingToken = checkNotNull(identifyingToken);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -55,5 +61,14 @@ public final class AuthorizationRequestedEvent {
      */
     public IdentifyingToken getIdentifyingToken() {
         return identifyingToken;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 }

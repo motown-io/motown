@@ -123,7 +123,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(AuthorizeCommand command) {
-        apply(new AuthorizationRequestedEvent(command.getChargingStationId(), command.getIdentifyingToken()));
+        apply(new AuthorizationRequestedEvent(command.getChargingStationId(), command.getIdentifyingToken(), command.getIdentityContext()));
     }
 
     /**
