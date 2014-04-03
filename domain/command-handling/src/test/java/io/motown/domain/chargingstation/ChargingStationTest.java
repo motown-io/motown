@@ -60,8 +60,8 @@ public class ChargingStationTest {
     @Test
     public void testHeartbeat() {
         fixture.given(CHARGING_STATION)
-                .when(new HeartbeatCommand(CHARGING_STATION_ID))
-                .expectEvents(new ChargingStationSentHeartbeatEvent(CHARGING_STATION_ID));
+                .when(new HeartbeatCommand(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT))
+                .expectEvents(new ChargingStationSentHeartbeatEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test

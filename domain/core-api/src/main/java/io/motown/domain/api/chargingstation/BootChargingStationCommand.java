@@ -43,6 +43,7 @@ public final class BootChargingStationCommand {
      *
      * @param chargingStationId the identifier of the charging station.
      * @param protocol          protocol identifier.
+     * @param identityContext   the identity context.
      * @throws NullPointerException if {@code chargingStationId} or {@code protocol} is {@code null}.
      */
     public BootChargingStationCommand(ChargingStationId chargingStationId, String protocol, IdentityContext identityContext) {

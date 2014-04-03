@@ -138,8 +138,10 @@ public class DomainService {
         commandGateway.send(new IncomingDataTransferCommand(chargingStationId, vendorId, messageId, data));
     }
 
-    public void heartbeat(ChargingStationId chargingStationId) {
-        commandGateway.send(new HeartbeatCommand(chargingStationId));
+    public void heartbeat(ChargingStationId chargingStationId, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        commandGateway.send(new HeartbeatCommand(chargingStationId, identityContext));
     }
 
     public void meterValues(ChargingStationId chargingStationId, TransactionId transactionId, EvseId evseId, List<MeterValue> meterValues) {

@@ -52,7 +52,7 @@ public class MotownCentralSystemServiceTest {
 
     private static final String ADD_ON_TYPE = "OCPPS15";
 
-    private static final TypeBasedAddOnIdentity OCPPS15_ADD_ON_IDENTITY = new TypeBasedAddOnIdentity(ADD_ON_TYPE, ADD_ON_ID);
+    private static final AddOnIdentity OCPPS15_ADD_ON_IDENTITY = new TypeBasedAddOnIdentity(ADD_ON_TYPE, ADD_ON_ID);
 
     @Before
     public void setup() {
@@ -218,7 +218,7 @@ public class MotownCentralSystemServiceTest {
 
         motownCentralSystemService.heartbeat(request, CHARGING_STATION_ID.getId());
 
-        verify(domainService).heartbeat(CHARGING_STATION_ID);
+        verify(domainService).heartbeat(CHARGING_STATION_ID, OCPPS15_ADD_ON_IDENTITY);
     }
 
     @Test

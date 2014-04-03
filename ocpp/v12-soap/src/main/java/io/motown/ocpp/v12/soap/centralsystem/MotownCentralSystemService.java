@@ -159,7 +159,7 @@ public class MotownCentralSystemService implements CentralSystemService {
 
     @Override
     public HeartbeatResponse heartbeat(HeartbeatRequest parameters, String chargeBoxIdentity) {
-        domainService.heartbeat(new ChargingStationId(chargeBoxIdentity));
+        domainService.heartbeat(new ChargingStationId(chargeBoxIdentity), addOnIdentity);
 
         HeartbeatResponse response = new HeartbeatResponse();
         response.setCurrentTime(new Date());

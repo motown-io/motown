@@ -148,7 +148,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
 
     @Override
     public HeartbeatResponse heartbeat(HeartbeatRequest parameters, String chargeBoxIdentity) {
-        domainService.heartbeat(new ChargingStationId(chargeBoxIdentity));
+        domainService.heartbeat(new ChargingStationId(chargeBoxIdentity), addOnIdentity);
 
         HeartbeatResponse response = new HeartbeatResponse();
         response.setCurrentTime(new Date());

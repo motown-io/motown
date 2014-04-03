@@ -154,9 +154,9 @@ public class DomainServiceTest {
 
     @Test
     public void testHeartbeat() {
-        domainService.heartbeat(CHARGING_STATION_ID);
+        domainService.heartbeat(CHARGING_STATION_ID, ADD_ON_IDENTITY);
 
-        verify(gateway).send(new HeartbeatCommand(CHARGING_STATION_ID));
+        verify(gateway).send(new HeartbeatCommand(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test

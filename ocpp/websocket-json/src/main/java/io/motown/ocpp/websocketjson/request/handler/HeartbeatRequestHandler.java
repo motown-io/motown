@@ -17,6 +17,7 @@ package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.HeartbeatResponse;
 import org.atmosphere.websocket.WebSocket;
@@ -31,14 +32,17 @@ public class HeartbeatRequestHandler extends RequestHandler {
 
     private DomainService domainService;
 
-    public HeartbeatRequestHandler(Gson gson, DomainService domainService) {
+    private final AddOnIdentity addOnIdentity;
+
+    public HeartbeatRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         this.gson = gson;
         this.domainService = domainService;
+        this.addOnIdentity = addOnIdentity;
     }
 
     @Override
     public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
-        domainService.heartbeat(chargingStationId);
+        domainService.heartbeat(chargingStationId, addOnIdentity);
 
         HeartbeatResponse response = new HeartbeatResponse();
         response.setCurrentTime(new Date());

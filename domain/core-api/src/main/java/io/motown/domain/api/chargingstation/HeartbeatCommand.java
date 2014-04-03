@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Objects;
@@ -30,14 +31,18 @@ public final class HeartbeatCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code HeartbeatCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
+     * @param identityContext the identity context.
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public HeartbeatCommand(ChargingStationId chargingStationId) {
+    public HeartbeatCommand(ChargingStationId chargingStationId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -49,9 +54,18 @@ public final class HeartbeatCommand {
         return chargingStationId;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId);
+        return Objects.hash(chargingStationId, identityContext);
     }
 
     @Override
@@ -63,6 +77,6 @@ public final class HeartbeatCommand {
             return false;
         }
         final HeartbeatCommand other = (HeartbeatCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -28,14 +29,18 @@ public final class ChargingStationSentHeartbeatEvent {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code ChargingStationSentHeartbeatEvent} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
+     * @param identityContext   the identity context.
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public ChargingStationSentHeartbeatEvent(ChargingStationId chargingStationId) {
+    public ChargingStationSentHeartbeatEvent(ChargingStationId chargingStationId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -45,5 +50,14 @@ public final class ChargingStationSentHeartbeatEvent {
      */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 }

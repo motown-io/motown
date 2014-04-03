@@ -97,7 +97,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(HeartbeatCommand command) {
-        apply(new ChargingStationSentHeartbeatEvent(command.getChargingStationId()));
+        apply(new ChargingStationSentHeartbeatEvent(command.getChargingStationId(), command.getIdentityContext()));
     }
 
     @CommandHandler
