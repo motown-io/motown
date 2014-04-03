@@ -15,6 +15,7 @@
  */
 package io.motown.ocpp.websocketjson;
 
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
@@ -165,7 +166,7 @@ public class OcppJsonServiceTest {
         int retryInterval = 1000;
         Date startTime = new Date();
         Date stopTime = new Date(DateTimeUtils.currentTimeMillis() - FIVE_MINUTES);
-        service.getDiagnostics(CHARGING_STATION_ID, numRetries, retryInterval, startTime, stopTime, "ftp://somewhere.com", CORRELATION_TOKEN);
+        service.getDiagnostics(CHARGING_STATION_ID, numRetries, retryInterval, startTime, stopTime, FTP_LOCATION, CORRELATION_TOKEN);
         verify(mockWebSocket).write(anyString());
     }
 
@@ -184,6 +185,12 @@ public class OcppJsonServiceTest {
     @Test
     public void hardResetRequest() throws IOException{
         service.hardReset(CHARGING_STATION_ID, CORRELATION_TOKEN);
+        verify(mockWebSocket).write(anyString());
+    }
+
+    @Test
+    public void updateFirmwareRequest() throws IOException{
+        service.updateFirmware(CHARGING_STATION_ID, new Date(), Maps.<String, String>newHashMap(), FTP_LOCATION);
         verify(mockWebSocket).write(anyString());
     }
 

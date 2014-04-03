@@ -138,6 +138,32 @@ public class OcppJsonService {
         }
     }
 
+    public void updateFirmware(ChargingStationId chargingStationId, Date retrieveDate, Map<String, String> attributes, String updateLocation) {
+        CorrelationToken statusCorrelationToken = new CorrelationToken();
+
+        try {
+            Updatefirmware updateFirmwareRequest = new Updatefirmware();
+            updateFirmwareRequest.setRetrieveDate(retrieveDate);
+            updateFirmwareRequest.setLocation(new URI(updateLocation));
+
+            String numRetries = attributes.get(FirmwareUpdateAttributeKey.NUM_RETRIES);
+            if(numRetries != null) {
+                updateFirmwareRequest.setRetries(Double.parseDouble(numRetries));
+            }
+            String retryInterval = attributes.get(FirmwareUpdateAttributeKey.RETRY_INTERVAL);
+            if(retryInterval != null) {
+                updateFirmwareRequest.setRetryInterval(Double.parseDouble(retryInterval));
+            }
+
+            //No response handler is necessary. No data comes back from the firmwareupdaterequest, so there is nothing to communicate to the caller. Besides that the correlationtoken is not known to the caller.
+            WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "UpdateFirmware", updateFirmwareRequest);
+
+            sendWampMessage(wampMessage, chargingStationId);
+        } catch (URISyntaxException e) {
+            LOG.error("Unable to perform update firmware request due to an invalid upload URI.", e);
+        }
+    }
+
     public void softReset(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken) {
         Reset softResetRequest = new Reset();
         softResetRequest.setType(Reset.Type.SOFT);

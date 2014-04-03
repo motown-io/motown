@@ -77,6 +77,11 @@ public final class ChargingStationTestUtils {
     public static final CorrelationToken CORRELATION_TOKEN = new CorrelationToken();
 
     /**
+     * An String containing a FTP URI
+     */
+    public static final String FTP_LOCATION = "ftp://somewhere.com";
+
+    /**
      * The timestamp in milliseconds two minutes ago.
      * <p/>
      * Note: this is a constant. This means this timestamp isn't two minutes ago from the time you use but two minutes

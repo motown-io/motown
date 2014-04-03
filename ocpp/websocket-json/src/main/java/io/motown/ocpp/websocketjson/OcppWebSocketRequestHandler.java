@@ -100,6 +100,7 @@ public class OcppWebSocketRequestHandler implements OcppRequestHandler {
     @Override
     public void handle(FirmwareUpdateRequestedEvent event) {
         LOG.info("FirmwareUpdateRequestedEvent");
+        ocppJsonService.updateFirmware(event.getChargingStationId(), event.getRetrieveDate(), event.getAttributes(), event.getUpdateLocation());
     }
 
     @Override
