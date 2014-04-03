@@ -415,7 +415,7 @@ public final class ChargingStationTestUtils {
             .add(new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT))
             .add(new ChargingStationAcceptedEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
             .add(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS))
-            .add(new ChargingStationMadeReservableEvent(CHARGING_STATION_ID))
+            .add(new ChargingStationMadeReservableEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
             .build();
 
     private static final int OPENING_TIME_START_HOUR = 12;

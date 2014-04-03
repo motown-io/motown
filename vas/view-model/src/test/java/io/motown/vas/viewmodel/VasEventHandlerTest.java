@@ -269,7 +269,7 @@ public class VasEventHandlerTest {
     public void chargingStationMadeReservableEventChargingStationReservable() {
         chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
 
-        eventHandler.handle(new ChargingStationMadeReservableEvent(CHARGING_STATION_ID));
+        eventHandler.handle(new ChargingStationMadeReservableEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT));
 
         assertTrue(getTestChargingStationFromRepository().isReservable());
     }
@@ -287,7 +287,7 @@ public class VasEventHandlerTest {
     public void chargingStationMadeReservableEventUnknownChargingStationNoExceptionThrown() {
         assertNull(getTestChargingStationFromRepository());
 
-        eventHandler.handle(new ChargingStationMadeReservableEvent(CHARGING_STATION_ID));
+        eventHandler.handle(new ChargingStationMadeReservableEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
