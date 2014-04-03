@@ -209,7 +209,7 @@ public class OcppJsonService {
                     requestHandler = new MeterValuesRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER);
                     break;
                 case StartTransactionRequestHandler.PROC_URI:
-                    requestHandler = new StartTransactionRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER);
+                    requestHandler = new StartTransactionRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER, addOnIdentity);
                     break;
                 case StatusNotificationRequestHandler.PROC_URI:
                     requestHandler = new StatusNotificationRequestHandler(gson, domainService);

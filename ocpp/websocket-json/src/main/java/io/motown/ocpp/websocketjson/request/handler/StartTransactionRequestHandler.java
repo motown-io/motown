@@ -17,6 +17,7 @@ package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.IdTagInfo__;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Starttransaction;
@@ -35,10 +36,13 @@ public class StartTransactionRequestHandler extends RequestHandler {
 
     private String protocolIdentifier;
 
-    public StartTransactionRequestHandler(Gson gson, DomainService domainService, String protocolIdentifier) {
+    private AddOnIdentity addOnIdentity;
+
+    public StartTransactionRequestHandler(Gson gson, DomainService domainService, String protocolIdentifier, AddOnIdentity addOnIdentity) {
         this.gson = gson;
         this.domainService = domainService;
         this.protocolIdentifier = protocolIdentifier;
+        this.addOnIdentity = addOnIdentity;
     }
 
     @Override
@@ -50,7 +54,7 @@ public class StartTransactionRequestHandler extends RequestHandler {
             reservationId = new NumberedReservationId(chargingStationId, protocolIdentifier, request.getReservationId().intValue());
         }
 
-        int transactionId = domainService.startTransaction(chargingStationId, new EvseId(request.getConnectorId().intValue()), new TextualToken(request.getIdTag()), request.getMeterStart().intValue(), request.getTimestamp(), reservationId, protocolIdentifier);
+        int transactionId = domainService.startTransaction(chargingStationId, new EvseId(request.getConnectorId().intValue()), new TextualToken(request.getIdTag()), request.getMeterStart().intValue(), request.getTimestamp(), reservationId, protocolIdentifier, addOnIdentity);
 
         GregorianCalendar expDate = new GregorianCalendar();
         expDate.add(GregorianCalendar.YEAR, 1);

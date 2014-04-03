@@ -181,7 +181,7 @@ public class ChargingStationTest {
         int meterStart = 0;
 
         fixture.given(CHARGING_STATION)
-                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, evseId, IDENTIFYING_TOKEN, meterStart, now))
+                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, evseId, IDENTIFYING_TOKEN, meterStart, now, NULL_USER_IDENTITY_CONTEXT))
                 .expectEvents(new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, evseId, IDENTIFYING_TOKEN, meterStart, now, ImmutableMap.<String, String>of()));
     }
 
@@ -192,7 +192,7 @@ public class ChargingStationTest {
         int meterStart = 0;
 
         fixture.given(CHARGING_STATION)
-                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, evseId, IDENTIFYING_TOKEN, meterStart, now, BOOT_NOTIFICATION_ATTRIBUTES))
+                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, evseId, IDENTIFYING_TOKEN, meterStart, now, BOOT_NOTIFICATION_ATTRIBUTES, NULL_USER_IDENTITY_CONTEXT))
                 .expectEvents(new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, evseId, IDENTIFYING_TOKEN, meterStart, now, BOOT_NOTIFICATION_ATTRIBUTES));
     }
 
@@ -234,7 +234,7 @@ public class ChargingStationTest {
     @Test
     public void testRequestingToStartTransactionForUnconfiguredChargingStation() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
-                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, new Date()))
+                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), NULL_USER_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
 
@@ -255,7 +255,7 @@ public class ChargingStationTest {
     @Test
     public void testStartTransactionOnUnknownEvse() {
         fixture.given(CHARGING_STATION)
-                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, UNKNOWN_EVSE_ID, IDENTIFYING_TOKEN, 0, new Date()))
+                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, UNKNOWN_EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), NULL_USER_IDENTITY_CONTEXT))
                 .expectEvents(new EvseNotFoundEvent(CHARGING_STATION_ID, UNKNOWN_EVSE_ID));
     }
 

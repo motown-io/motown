@@ -249,7 +249,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         }
 
         int transactionId = domainService.startTransaction(chargingStationId, new EvseId(parameters.getConnectorId()), new TextualToken(parameters.getIdTag()),
-                parameters.getMeterStart(), parameters.getTimestamp(), reservationId, PROTOCOL_IDENTIFIER);
+                parameters.getMeterStart(), parameters.getTimestamp(), reservationId, PROTOCOL_IDENTIFIER, addOnIdentity);
 
         // TODO locally store identifications, so we can use these in the response. - Dennis Laumen, December 16th 2013
         IdTagInfo idTagInfo = new IdTagInfo();

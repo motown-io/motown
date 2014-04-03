@@ -352,7 +352,7 @@ public class MotownCentralSystemServiceTest {
 
         motownCentralSystemService.startTransaction(request, CHARGING_STATION_ID.getId());
 
-        verify(domainService).startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, METER_START, TWO_MINUTES_AGO, null, PROTOCOL_IDENTIFIER);
+        verify(domainService).startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, METER_START, TWO_MINUTES_AGO, null, PROTOCOL_IDENTIFIER, OCPPS15_ADD_ON_IDENTITY);
     }
 
     @Test
@@ -366,6 +366,6 @@ public class MotownCentralSystemServiceTest {
 
         motownCentralSystemService.startTransaction(request, CHARGING_STATION_ID.getId());
 
-        verify(domainService).startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, METER_START, TWO_MINUTES_AGO, RESERVATION_ID, PROTOCOL_IDENTIFIER);
+        verify(domainService).startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, METER_START, TWO_MINUTES_AGO, RESERVATION_ID, PROTOCOL_IDENTIFIER, OCPPS15_ADD_ON_IDENTITY);
     }
 }

@@ -16,6 +16,7 @@
 package io.motown.domain.api.chargingstation;
 
 import com.google.common.collect.ImmutableMap;
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Date;
@@ -44,6 +45,8 @@ public final class StartTransactionCommand {
 
     private final Map<String, String> attributes;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code StartTransactionCommand}.
      * <p/>
@@ -57,12 +60,13 @@ public final class StartTransactionCommand {
      * @param identifyingToken  the token which started the transaction.
      * @param meterStart        meter value in Wh for the evse when the transaction started.
      * @param timestamp         the time at which the transaction started.
-     * @throws NullPointerException     if {@code chargingStationId}, {@code transactionId}, {@code evseId}, {@code identifyingToken} or
-     *                                  {@code timestamp} is {@code null}.
+     * @param identityContext   the identity context.
+     * @throws NullPointerException     if {@code chargingStationId}, {@code transactionId}, {@code evseId}, {@code identifyingToken},
+     *                                  {@code timestamp} or {@code identityContext} is {@code null}.
      * @throws IllegalArgumentException if {@code evseId} is negative.
      */
-    public StartTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId, EvseId evseId, IdentifyingToken identifyingToken, int meterStart, Date timestamp) {
-        this(chargingStationId, transactionId, evseId, identifyingToken, meterStart, timestamp, ImmutableMap.<String, String>of());
+    public StartTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId, EvseId evseId, IdentifyingToken identifyingToken, int meterStart, Date timestamp, IdentityContext identityContext) {
+        this(chargingStationId, transactionId, evseId, identifyingToken, meterStart, timestamp, ImmutableMap.<String, String>of(), identityContext);
     }
 
 
@@ -82,11 +86,12 @@ public final class StartTransactionCommand {
      * @param attributes        a {@link java.util.Map} of attributes. These attributes are additional information provided by
      *                          the charging station when it booted but which are not required by Motown. Because
      *                          {@link java.util.Map} implementations are potentially mutable a defensive copy is made.
+     * @param identityContext   the identity context.
      * @throws NullPointerException     if {@code chargingStationId}, {@code transactionId}, {@code evseId}, {@code identifyingToken},
-     *                                  {@code timestamp} or {@code attributes} is {@code null}.
+     *                                  {@code timestamp}, {@code attributes} or {@code identityContext} is {@code null}.
      * @throws IllegalArgumentException if {@code evseId} is negative.
      */
-    public StartTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId, EvseId evseId, IdentifyingToken identifyingToken, int meterStart, Date timestamp, Map<String, String> attributes) {
+    public StartTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId, EvseId evseId, IdentifyingToken identifyingToken, int meterStart, Date timestamp, Map<String, String> attributes, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = checkNotNull(transactionId);
         this.evseId = checkNotNull(evseId);
@@ -94,6 +99,7 @@ public final class StartTransactionCommand {
         this.meterStart = meterStart;
         this.timestamp = new Date(checkNotNull(timestamp).getTime());
         this.attributes = ImmutableMap.copyOf(checkNotNull(attributes));
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -162,9 +168,18 @@ public final class StartTransactionCommand {
         return attributes;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, transactionId, evseId, identifyingToken, meterStart, timestamp, attributes);
+        return Objects.hash(chargingStationId, transactionId, evseId, identifyingToken, meterStart, timestamp, attributes, identityContext);
     }
 
     @Override
@@ -176,6 +191,6 @@ public final class StartTransactionCommand {
             return false;
         }
         final StartTransactionCommand other = (StartTransactionCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.transactionId, other.transactionId) && Objects.equals(this.evseId, other.evseId) && Objects.equals(this.identifyingToken, other.identifyingToken) && Objects.equals(this.meterStart, other.meterStart) && Objects.equals(this.timestamp, other.timestamp) && Objects.equals(this.attributes, other.attributes);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.transactionId, other.transactionId) && Objects.equals(this.evseId, other.evseId) && Objects.equals(this.identifyingToken, other.identifyingToken) && Objects.equals(this.meterStart, other.meterStart) && Objects.equals(this.timestamp, other.timestamp) && Objects.equals(this.attributes, other.attributes) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

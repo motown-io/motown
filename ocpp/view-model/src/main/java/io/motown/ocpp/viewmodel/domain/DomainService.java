@@ -210,7 +210,8 @@ public class DomainService {
      * @param protocolIdentifier identifier of the protocol that starts the transaction  @throws IllegalStateException when the charging station cannot be found, is not registered and configured, or the evseId is unknown for this charging station
      * @return transaction identifier
      */
-    public int startTransaction(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken idTag, int meterStart, Date timestamp, ReservationId reservationId, String protocolIdentifier) {
+    public int startTransaction(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken idTag, int meterStart,
+                                Date timestamp, ReservationId reservationId, String protocolIdentifier, AddOnIdentity addOnIdentity) {
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
         if (chargingStation == null) {
             throw new IllegalStateException("Cannot start transaction for an unknown charging station.");
@@ -232,7 +233,9 @@ public class DomainService {
             attributes.put(RESERVATION_ID_KEY, reservationId.getId());
         }
 
-        StartTransactionCommand command = new StartTransactionCommand(chargingStationId, transactionId, evseId, idTag, meterStart, timestamp, attributes);
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        StartTransactionCommand command = new StartTransactionCommand(chargingStationId, transactionId, evseId, idTag, meterStart, timestamp, attributes, identityContext);
         commandGateway.send(command);
 
         return transactionId.getNumber();

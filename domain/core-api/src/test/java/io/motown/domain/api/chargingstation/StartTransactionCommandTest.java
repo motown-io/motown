@@ -26,28 +26,28 @@ public class StartTransactionCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new StartTransactionCommand(null, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 1, new Date());
+        new StartTransactionCommand(null, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 1, new Date(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTransactionId() {
-        new StartTransactionCommand(CHARGING_STATION_ID, null, EVSE_ID, IDENTIFYING_TOKEN, 1, new Date());
+        new StartTransactionCommand(CHARGING_STATION_ID, null, EVSE_ID, IDENTIFYING_TOKEN, 1, new Date(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullIdentifyingToken() {
-        new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, null, 1, new Date());
+        new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, null, 1, new Date(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTimestamp() {
-        new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 1, null);
+        new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 1, null, NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test
     public void testImmutableDate() {
         Date now = new Date();
-        StartTransactionCommand command = new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, TRANSACTION_NUMBER, now);
+        StartTransactionCommand command = new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, TRANSACTION_NUMBER, now, NULL_USER_IDENTITY_CONTEXT);
         command.getTimestamp().setTime(TWO_MINUTES_AGO.getTime());
         assertEquals(now, command.getTimestamp());
     }
