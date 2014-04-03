@@ -31,6 +31,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -93,10 +96,6 @@ public class OcppJsonService {
         }
     }
 
-    /**
-     * Performs the synchronous call to retrieve the charging station configuration
-     * @param chargingStationId
-     */
     public void getConfiguration(ChargingStationId chargingStationId) {
 
         CorrelationToken statusCorrelationToken = new CorrelationToken();
@@ -104,12 +103,27 @@ public class OcppJsonService {
 
         responseHandlers.put(statusCorrelationToken.getToken(), new GetConfigurationResponseHandler(statusCorrelationToken));
 
-        //Map<String, String> configurationItems = chargingStationOcpp15Client.getConfiguration(event.getChargingStationId());
-
-        //domainService.configureChargingStation(event.getChargingStationId(), configurationItems);
-
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "GetConfiguration", getConfigurationRequest);
         sendWampMessage(wampMessage, chargingStationId);
+    }
+
+    public void getDiagnostics(ChargingStationId chargingStationId, int numRetries, int retryInterval, Date start, Date stop, String uploadLocation, CorrelationToken statusCorrelationToken) {
+        Getdiagnostics getDiagnosticsRequest = new Getdiagnostics();
+        try {
+            getDiagnosticsRequest.setLocation(new URI(uploadLocation));
+            getDiagnosticsRequest.setRetries((double) numRetries);
+            getDiagnosticsRequest.setRetryInterval((double) retryInterval);
+            getDiagnosticsRequest.setStartTime(start);
+            getDiagnosticsRequest.setStopTime(stop);
+
+            responseHandlers.put(statusCorrelationToken.getToken(), new GetDiagnosticsResponseHandler(statusCorrelationToken));
+
+            WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "GetDiagnostics", getDiagnosticsRequest);
+
+            sendWampMessage(wampMessage, chargingStationId);
+        } catch (URISyntaxException e) {
+            LOG.error("Unable to perform get diagnostics request due to an invalid upload URI.", e);
+        }
     }
 
     public void softReset(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken) {
@@ -132,7 +146,7 @@ public class OcppJsonService {
         sendWampMessage(wampMessage, chargingStationId);
     }
 
-    public void startTransaction(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken identifyingToken, CorrelationToken statusCorrelationToken) {
+    public void remoteStartTransaction(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken identifyingToken, CorrelationToken statusCorrelationToken) {
         Remotestarttransaction remoteStartTransactionRequest = new Remotestarttransaction();
         remoteStartTransactionRequest.setConnectorId((double) evseId.getNumberedId());
         remoteStartTransactionRequest.setIdTag(identifyingToken.getToken());
@@ -143,7 +157,7 @@ public class OcppJsonService {
         sendWampMessage(wampMessage, chargingStationId);
     }
 
-    public void stopTransaction(ChargingStationId chargingStationId, TransactionId transactionId, CorrelationToken statusCorrelationToken) {
+    public void remoteStopTransaction(ChargingStationId chargingStationId, TransactionId transactionId, CorrelationToken statusCorrelationToken) {
         NumberedTransactionId transactionIdNumber = (NumberedTransactionId) transactionId;
         Remotestoptransaction remoteStopTransactionRequest = new Remotestoptransaction();
         remoteStopTransactionRequest.setTransactionId((double) transactionIdNumber.getNumber());

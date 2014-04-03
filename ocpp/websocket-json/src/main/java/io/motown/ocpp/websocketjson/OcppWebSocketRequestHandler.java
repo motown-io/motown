@@ -38,7 +38,7 @@ public class OcppWebSocketRequestHandler implements OcppRequestHandler {
     @Override
     public void handle(StopTransactionRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("StopTransactionRequestedEvent");
-        ocppJsonService.stopTransaction(event.getChargingStationId(), event.getTransactionId(), statusCorrelationToken);
+        ocppJsonService.remoteStopTransaction(event.getChargingStationId(), event.getTransactionId(), statusCorrelationToken);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class OcppWebSocketRequestHandler implements OcppRequestHandler {
     @Override
     public void handle(StartTransactionRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("StartTransactionRequestedEvent");
-        ocppJsonService.startTransaction(event.getChargingStationId(), event.getEvseId(), event.getIdentifyingToken(), statusCorrelationToken);
+        ocppJsonService.remoteStartTransaction(event.getChargingStationId(), event.getEvseId(), event.getIdentifyingToken(), statusCorrelationToken);
     }
 
     @Override
@@ -88,6 +88,7 @@ public class OcppWebSocketRequestHandler implements OcppRequestHandler {
     @Override
     public void handle(DiagnosticsRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("DiagnosticsRequestedEvent");
+        ocppJsonService.getDiagnostics(event.getChargingStationId(), event.getNumRetries(), event.getRetryInterval(), event.getPeriodStartTime(), event.getPeriodStopTime(), event.getUploadLocation(), statusCorrelationToken);
     }
 
     @Override
