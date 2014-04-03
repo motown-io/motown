@@ -118,7 +118,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(MakeChargingStationNotReservableCommand command) {
-        apply(new ChargingStationMadeNotReservableEvent(command.getChargingStationId()));
+        apply(new ChargingStationMadeNotReservableEvent(command.getChargingStationId(), command.getIdentityContext()));
     }
 
     @CommandHandler

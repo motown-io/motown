@@ -278,7 +278,7 @@ public class VasEventHandlerTest {
     public void chargingStationMadeNotReservableEventChargingStationNotReservable() {
         chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
 
-        eventHandler.handle(new ChargingStationMadeNotReservableEvent(CHARGING_STATION_ID));
+        eventHandler.handle(new ChargingStationMadeNotReservableEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT));
 
         assertFalse(getTestChargingStationFromRepository().isReservable());
     }
