@@ -192,8 +192,8 @@ public class DomainServiceTest {
     @Test
     public void testAuthorize() {
         FutureEventCallback futureEventCallback = getFutureEventCallback();
-        domainService.authorize(CHARGING_STATION_ID, IDENTIFYING_TOKEN.getToken(), futureEventCallback);
-        verify(eventWaitingGateway).sendAndWaitForEvent(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN), futureEventCallback);
+        domainService.authorize(CHARGING_STATION_ID, IDENTIFYING_TOKEN.getToken(), futureEventCallback, ADD_ON_IDENTITY);
+        verify(eventWaitingGateway).sendAndWaitForEvent(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT), futureEventCallback);
     }
 
     @Test

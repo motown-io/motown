@@ -156,8 +156,10 @@ public class DomainService {
         commandGateway.send(new AuthorizationListVersionReceivedCommand(chargingStationId, currentVersion), correlationToken);
     }
 
-    public void authorize(ChargingStationId chargingStationId, String idTag, FutureEventCallback future) {
-        eventWaitingGateway.sendAndWaitForEvent(new AuthorizeCommand(chargingStationId, new TextualToken(idTag)), future);
+    public void authorize(ChargingStationId chargingStationId, String idTag, FutureEventCallback future, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        eventWaitingGateway.sendAndWaitForEvent(new AuthorizeCommand(chargingStationId, new TextualToken(idTag), identityContext), future);
     }
 
     public void configureChargingStation(ChargingStationId chargingStationId, Map<String, String> configurationItems) {

@@ -17,6 +17,7 @@ package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.domain.FutureEventCallback;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Authorize;
@@ -30,9 +31,12 @@ public class AuthorizeRequestHandler extends RequestHandler {
 
     private DomainService domainService;
 
-    public AuthorizeRequestHandler(Gson gson, DomainService domainService) {
+    private AddOnIdentity addOnIdentity;
+
+    public AuthorizeRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         this.gson = gson;
         this.domainService = domainService;
+        this.addOnIdentity = addOnIdentity;
     }
 
     @Override
@@ -42,6 +46,6 @@ public class AuthorizeRequestHandler extends RequestHandler {
         Authorize request = gson.fromJson(payload, Authorize.class);
 
         // futureEventCallback will handle authorize result
-        domainService.authorize(chargingStationId, request.getIdTag(), futureEventCallback);
+        domainService.authorize(chargingStationId, request.getIdTag(), futureEventCallback, addOnIdentity);
     }
 }

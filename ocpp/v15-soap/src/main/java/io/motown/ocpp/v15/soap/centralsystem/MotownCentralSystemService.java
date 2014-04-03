@@ -200,7 +200,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         return handler.handle(future, new CallInitiator() {
             @Override
             public void initiateCall() {
-                domainService.authorize(chargingStationId, request.getIdTag(), future);
+                domainService.authorize(chargingStationId, request.getIdTag(), future, addOnIdentity);
             }
         }, new AuthorizeResponseFactory(), new ResponseFactory<AuthorizeResponse>() {
             @Override

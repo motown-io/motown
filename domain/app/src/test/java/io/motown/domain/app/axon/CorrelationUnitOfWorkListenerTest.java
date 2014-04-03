@@ -28,6 +28,7 @@ import java.util.Collections;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.IDENTIFYING_TOKEN;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.NULL_USER_IDENTITY_CONTEXT;
 import static org.axonframework.domain.GenericEventMessage.asEventMessage;
 import static org.junit.Assert.assertTrue;
 
@@ -40,13 +41,13 @@ public class CorrelationUnitOfWorkListenerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithCommandWithoutCorrectMetaData() {
-        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN));
+        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT));
         new CorrelationUnitOfWorkListener(command);
     }
 
     @Test
     public void onEventRegisteredReturnsEventWithMetaData() {
-        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN)).withMetaData(Collections.singletonMap("correlationId", "12345"));
+        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT)).withMetaData(Collections.singletonMap("correlationId", "12345"));
         UnitOfWorkListener listener = new CorrelationUnitOfWorkListener(command);
 
         EventMessage event = listener.onEventRegistered(new DefaultUnitOfWork(), asEventMessage(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN)));

@@ -188,7 +188,7 @@ public class OcppJsonService {
         if(requestHandler == null) {
             switch (procUri) {
                 case AuthorizeRequestHandler.PROC_URI:
-                    requestHandler = new AuthorizeRequestHandler(gson, domainService);
+                    requestHandler = new AuthorizeRequestHandler(gson, domainService, addOnIdentity);
                     break;
                 case BootNotificationRequestHandler.PROC_URI:
                     requestHandler = new BootNotificationRequestHandler(gson, domainService, addOnIdentity);
