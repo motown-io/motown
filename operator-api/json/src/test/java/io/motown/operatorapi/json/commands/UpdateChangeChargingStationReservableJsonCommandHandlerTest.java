@@ -75,6 +75,6 @@ public class UpdateChangeChargingStationReservableJsonCommandHandlerTest {
 
         handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
 
-        verify(gateway).send(new MakeChargingStationNotReservableCommand(CHARGING_STATION_ID));
+        verify(gateway).send(new MakeChargingStationNotReservableCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT));
     }
 }

@@ -20,6 +20,7 @@ import org.junit.Test;
 import java.util.Objects;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -27,32 +28,37 @@ public class MakeChargingStationNotReservableCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new MakeChargingStationNotReservableCommand(null);
+        new MakeChargingStationNotReservableCommand(null, ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
+        new MakeChargingStationNotReservableCommand(CHARGING_STATION_ID, null);
     }
 
     @Test
     public void constructorSetsFields() {
-        MakeChargingStationNotReservableCommand command = new MakeChargingStationNotReservableCommand(CHARGING_STATION_ID);
+        MakeChargingStationNotReservableCommand command = new MakeChargingStationNotReservableCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT);
 
         assertEquals(CHARGING_STATION_ID, command.getChargingStationId());
     }
 
     @Test
     public void hashCodeShouldEqualsChargingStationIdHashCode() {
-        assertEquals(Objects.hash(CHARGING_STATION_ID), new MakeChargingStationNotReservableCommand(CHARGING_STATION_ID).hashCode());
+        assertEquals(Objects.hash(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT), new MakeChargingStationNotReservableCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT).hashCode());
     }
 
     @Test
     public void equalsReturnsTrueOnSameInstance() {
-        MakeChargingStationNotReservableCommand command = new MakeChargingStationNotReservableCommand(CHARGING_STATION_ID);
+        MakeChargingStationNotReservableCommand command = new MakeChargingStationNotReservableCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT);
 
         assertTrue(command.equals(command));
     }
 
     @Test
     public void equalsReturnsTrueOnSameFieldValues() {
-        MakeChargingStationNotReservableCommand command = new MakeChargingStationNotReservableCommand(CHARGING_STATION_ID);
+        MakeChargingStationNotReservableCommand command = new MakeChargingStationNotReservableCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT);
 
-        assertTrue(command.equals(new MakeChargingStationNotReservableCommand(CHARGING_STATION_ID)));
+        assertTrue(command.equals(new MakeChargingStationNotReservableCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT)));
     }
 }

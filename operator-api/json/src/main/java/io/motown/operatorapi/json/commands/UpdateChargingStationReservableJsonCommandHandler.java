@@ -54,7 +54,7 @@ class UpdateChargingStationReservableJsonCommandHandler implements JsonCommandHa
                 if (command.isReservable()) {
                     commandGateway.send(new MakeChargingStationReservableCommand(csId, identityContext));
                 } else {
-                    commandGateway.send(new MakeChargingStationNotReservableCommand(csId));
+                    commandGateway.send(new MakeChargingStationNotReservableCommand(csId, identityContext));
                 }
             }
         } catch (JsonSyntaxException e) {
