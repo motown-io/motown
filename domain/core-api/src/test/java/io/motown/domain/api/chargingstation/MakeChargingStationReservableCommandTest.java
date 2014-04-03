@@ -15,12 +15,18 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
 import org.junit.Test;
 
 public class MakeChargingStationReservableCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new MakeChargingStationReservableCommand(null);
+        new MakeChargingStationReservableCommand(null, ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
+        new MakeChargingStationReservableCommand(ChargingStationTestUtils.CHARGING_STATION_ID, null);
     }
 }

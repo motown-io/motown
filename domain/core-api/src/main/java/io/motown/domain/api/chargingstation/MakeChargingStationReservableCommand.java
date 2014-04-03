@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Objects;
@@ -30,14 +31,18 @@ public final class MakeChargingStationReservableCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code MakeChargingStationReservableCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @param identityContext the identity context.
+     * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
      */
-    public MakeChargingStationReservableCommand(ChargingStationId chargingStationId) {
+    public MakeChargingStationReservableCommand(ChargingStationId chargingStationId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -47,6 +52,15 @@ public final class MakeChargingStationReservableCommand {
      */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 
     @Override

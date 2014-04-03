@@ -22,6 +22,7 @@ import io.motown.domain.api.chargingstation.MakeChargingStationReservableCommand
 import org.junit.Before;
 import org.junit.Test;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
 import static io.motown.operatorapi.json.commands.OperatorApiJsonTestUtils.CHARGING_STATION_ID;
 import static io.motown.operatorapi.json.commands.OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING;
 import static org.mockito.Mockito.mock;
@@ -49,30 +50,30 @@ public class UpdateChangeChargingStationReservableJsonCommandHandlerTest {
     public void updateReservableToTrueNoExceptions() {
         JsonObject commandObject = gson.fromJson("{'reservable': true}", JsonObject.class);
 
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test
     public void updateReservableToFalseNoExceptions() {
         JsonObject commandObject = gson.fromJson("{'reservable': false}", JsonObject.class);
 
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test
     public void updateReservableToTrueValidateGatewayCall() {
         JsonObject commandObject = gson.fromJson("{'reservable': true}", JsonObject.class);
 
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
 
-        verify(gateway).send(new MakeChargingStationReservableCommand(CHARGING_STATION_ID));
+        verify(gateway).send(new MakeChargingStationReservableCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
     public void updateReservableToFalseValidateGatewayCall() {
         JsonObject commandObject = gson.fromJson("{'reservable': false}", JsonObject.class);
 
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
 
         verify(gateway).send(new MakeChargingStationNotReservableCommand(CHARGING_STATION_ID));
     }

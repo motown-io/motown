@@ -484,7 +484,7 @@ public class ChargingStationTest {
     @Test
     public void testMakeChargingStationReservable() {
         fixture.given(CHARGING_STATION)
-                .when(new MakeChargingStationReservableCommand(CHARGING_STATION_ID))
+                .when(new MakeChargingStationReservableCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new ChargingStationMadeReservableEvent(CHARGING_STATION_ID));
     }
 

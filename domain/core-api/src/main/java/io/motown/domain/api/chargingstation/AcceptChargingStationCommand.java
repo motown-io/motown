@@ -42,7 +42,7 @@ public final class AcceptChargingStationCommand {
      */
     public AcceptChargingStationCommand(ChargingStationId chargingStationId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.identityContext = identityContext;
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**

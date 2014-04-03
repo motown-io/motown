@@ -52,7 +52,7 @@ class UpdateChargingStationReservableJsonCommandHandler implements JsonCommandHa
                 ChargingStationId csId = new ChargingStationId(chargingStationId);
 
                 if (command.isReservable()) {
-                    commandGateway.send(new MakeChargingStationReservableCommand(csId));
+                    commandGateway.send(new MakeChargingStationReservableCommand(csId, identityContext));
                 } else {
                     commandGateway.send(new MakeChargingStationNotReservableCommand(csId));
                 }
