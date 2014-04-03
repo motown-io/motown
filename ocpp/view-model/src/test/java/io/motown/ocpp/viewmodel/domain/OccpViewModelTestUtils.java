@@ -75,8 +75,8 @@ public final class OccpViewModelTestUtils {
 
     public static Map<String, String> getUpdateFirmwareAttributes(String numberOfRetries, String retryInterval) {
         return ImmutableMap.<String, String>builder()
-                .put("NUM_RETRIES", numberOfRetries)
-                .put("RETRY_INTERVAL", retryInterval)
+                .put(FirmwareUpdateAttributeKey.NUM_RETRIES, numberOfRetries)
+                .put(FirmwareUpdateAttributeKey.RETRY_INTERVAL, retryInterval)
                 .build();
     }
 

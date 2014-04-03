@@ -136,8 +136,8 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
         String attrNumRetries = null;
         String attrRetryInterval = null;
         if(attributes != null) {
-            attrNumRetries = attributes.get("NUM_RETRIES");
-            attrRetryInterval = attributes.get("RETRY_INTERVAL");
+            attrNumRetries = attributes.get(FirmwareUpdateAttributeKey.NUM_RETRIES);
+            attrRetryInterval = attributes.get(FirmwareUpdateAttributeKey.RETRY_INTERVAL);
         }
         Integer numRetries = (attrNumRetries != null && !"".equals(attrNumRetries))? Integer.parseInt(attrNumRetries): null;
         Integer retryInterval = (attrRetryInterval != null && !"".equals(attrRetryInterval))? Integer.parseInt(attrRetryInterval): null;

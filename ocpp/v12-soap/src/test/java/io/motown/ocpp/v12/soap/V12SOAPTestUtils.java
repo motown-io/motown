@@ -16,6 +16,7 @@
 package io.motown.ocpp.v12.soap;
 
 import com.google.common.collect.ImmutableMap;
+import io.motown.domain.api.chargingstation.FirmwareUpdateAttributeKey;
 import io.motown.ocpp.v12.soap.chargepoint.schema.*;
 
 import javax.persistence.EntityManager;
@@ -149,8 +150,8 @@ public final class V12SOAPTestUtils {
 
     public static Map<String, String> getUpdateFirmwareAttributes(String numberOfRetries, String retryInterval) {
         return ImmutableMap.<String, String>builder()
-                .put("NUM_RETRIES", numberOfRetries)
-                .put("RETRY_INTERVAL", retryInterval)
+                .put(FirmwareUpdateAttributeKey.NUM_RETRIES, numberOfRetries)
+                .put(FirmwareUpdateAttributeKey.RETRY_INTERVAL, retryInterval)
                 .build();
     }
 
