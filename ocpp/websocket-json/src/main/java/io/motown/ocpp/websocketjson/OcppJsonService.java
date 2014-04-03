@@ -96,6 +96,18 @@ public class OcppJsonService {
         }
     }
 
+    public void changeConfiguration(ChargingStationId chargingStationId, String key, String value, CorrelationToken statusCorrelationToken) {
+
+        Changeconfiguration changeConfigurationRequest = new Changeconfiguration();
+        changeConfigurationRequest.setKey(key);
+        changeConfigurationRequest.setValue(value);
+
+        responseHandlers.put(statusCorrelationToken.getToken(), new ChangeConfigurationResponseHandler(statusCorrelationToken));
+
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "ChangeConfiguration", changeConfigurationRequest);
+        sendWampMessage(wampMessage, chargingStationId);
+    }
+
     public void getConfiguration(ChargingStationId chargingStationId) {
 
         CorrelationToken statusCorrelationToken = new CorrelationToken();

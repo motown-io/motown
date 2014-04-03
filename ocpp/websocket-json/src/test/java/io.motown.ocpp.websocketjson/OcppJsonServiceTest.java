@@ -148,6 +148,12 @@ public class OcppJsonServiceTest {
     }
 
     @Test
+    public void changeConfigurationRequest() throws IOException{
+        service.changeConfiguration(CHARGING_STATION_ID, "KVCBX_LANG", "NL", CORRELATION_TOKEN);
+        verify(mockWebSocket).write(anyString());
+    }
+
+    @Test
     public void getConfigurationRequest() throws IOException{
         service.getConfiguration(CHARGING_STATION_ID);
         verify(mockWebSocket).write(anyString());
