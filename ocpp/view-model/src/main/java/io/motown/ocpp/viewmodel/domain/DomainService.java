@@ -100,10 +100,12 @@ public class DomainService {
         // Check if we already know the charging station, or have to create one
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
 
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
         if (chargingStation == null) {
             LOG.debug("Not a known charging station on boot notification, we send a CreateChargingStationCommand.");
 
-            commandGateway.send(new CreateChargingStationCommand(chargingStationId), new CreateChargingStationCommandCallback(
+            commandGateway.send(new CreateChargingStationCommand(chargingStationId, identityContext), new CreateChargingStationCommandCallback(
                     chargingStationId, chargingStationAddress, vendor, model, protocol, chargingStationSerialNumber, chargeBoxSerialNumber, firmwareVersion, iccid,
                     imsi, meterType, meterSerialNumber, addOnIdentity, chargingStationRepository, this));
 
@@ -127,7 +129,7 @@ public class DomainService {
         addAttributeIfNotNull(attributes, METER_TYPE_KEY, meterType);
         addAttributeIfNotNull(attributes, METER_SERIALNUMBER_KEY, meterSerialNumber);
 
-        commandGateway.send(new BootChargingStationCommand(chargingStationId, protocol, attributes, new IdentityContext(addOnIdentity, new NullUserIdentity())));
+        commandGateway.send(new BootChargingStationCommand(chargingStationId, protocol, attributes, identityContext));
 
         return new BootChargingStationResult(chargingStation.isRegistered(), heartbeatInterval, new Date());
     }

@@ -26,6 +26,8 @@ import io.motown.domain.api.security.IdentityContext;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
+
 class RegisterJsonCommandHandler implements JsonCommandHandler {
 
     private static final String COMMAND_NAME = "Register";
@@ -45,7 +47,7 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
     public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) {
         ChargingStation chargingStation = repository.findOne(chargingStationId);
         if (chargingStation == null) {
-            commandGateway.send(new CreateAndAcceptChargingStationCommand(new ChargingStationId(chargingStationId)));
+            commandGateway.send(new CreateAndAcceptChargingStationCommand(new ChargingStationId(chargingStationId), ROOT_IDENTITY_CONTEXT));
         } else if (!chargingStation.isAccepted()) {
             commandGateway.send(new AcceptChargingStationCommand(new ChargingStationId(chargingStationId), identityContext));
         } else {

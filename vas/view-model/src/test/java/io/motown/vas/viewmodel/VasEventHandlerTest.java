@@ -78,7 +78,7 @@ public class VasEventHandlerTest {
     public void chargingStationBootedEventChargingStationCreated() {
         assertNull(getTestChargingStationFromRepository());
 
-        eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID));
+        eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT));
 
         ChargingStation cs = getTestChargingStationFromRepository();
 
@@ -91,7 +91,7 @@ public class VasEventHandlerTest {
         chargingStationRepository.insert(new ChargingStation(CHARGING_STATION_ID.getId()));
         assertFalse(getTestChargingStationFromRepository().isRegistered());
 
-        eventHandler.handle(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
+        eventHandler.handle(new ChargingStationAcceptedEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT));
 
         assertTrue(getTestChargingStationFromRepository().isRegistered());
     }
@@ -100,7 +100,7 @@ public class VasEventHandlerTest {
     public void chargingStationAcceptedEventUnknownChargingStationNoExceptionThrown() {
         assertNull(getTestChargingStationFromRepository());
 
-        eventHandler.handle(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
+        eventHandler.handle(new ChargingStationAcceptedEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test

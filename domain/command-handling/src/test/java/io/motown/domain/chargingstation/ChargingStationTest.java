@@ -93,7 +93,7 @@ public class ChargingStationTest {
     public void testRegisteringUnacceptedChargingStation() {
         fixture.given(CREATED_CHARGING_STATION)
                 .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
+                .expectEvents(new ChargingStationAcceptedEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
@@ -120,23 +120,23 @@ public class ChargingStationTest {
     @Test
     public void testChargePointCreation() {
         fixture.given()
-                .when(new CreateChargingStationCommand(CHARGING_STATION_ID))
-                .expectEvents(new ChargingStationCreatedEvent(CHARGING_STATION_ID));
+                .when(new CreateChargingStationCommand(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT))
+                .expectEvents(new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testCreatingAndAcceptingChargingStation() {
         fixture.given()
-                .when(new CreateAndAcceptChargingStationCommand(CHARGING_STATION_ID))
-                .expectEvents(new ChargingStationCreatedEvent(CHARGING_STATION_ID),
-                        new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
+                .when(new CreateAndAcceptChargingStationCommand(CHARGING_STATION_ID, IDENTITY_CONTEXT))
+                .expectEvents(new ChargingStationCreatedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT),
+                        new ChargingStationAcceptedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
     }
 
     @Test
     public void testChargeAcceptance() {
-        fixture.given(new ChargingStationCreatedEvent(CHARGING_STATION_ID))
+        fixture.given(new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT))
                 .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new ChargingStationAcceptedEvent(CHARGING_STATION_ID));
+                .expectEvents(new ChargingStationAcceptedEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test

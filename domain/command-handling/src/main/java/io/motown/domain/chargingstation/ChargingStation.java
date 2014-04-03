@@ -57,14 +57,15 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @CommandHandler
     public ChargingStation(CreateChargingStationCommand command) {
         this();
-        apply(new ChargingStationCreatedEvent(command.getChargingStationId()));
+
+        apply(new ChargingStationCreatedEvent(command.getChargingStationId(), command.getIdentityContext()));
     }
 
     @CommandHandler
     public ChargingStation(CreateAndAcceptChargingStationCommand command) {
         this();
-        apply(new ChargingStationCreatedEvent(command.getChargingStationId()));
-        apply(new ChargingStationAcceptedEvent(command.getChargingStationId()));
+        apply(new ChargingStationCreatedEvent(command.getChargingStationId(), command.getIdentityContext()));
+        apply(new ChargingStationAcceptedEvent(command.getChargingStationId(), command.getIdentityContext()));
     }
 
     @CommandHandler
@@ -107,7 +108,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
             throw new IllegalStateException("Cannot accept an already accepted charging station");
         }
 
-        apply(new ChargingStationAcceptedEvent(command.getChargingStationId()));
+        apply(new ChargingStationAcceptedEvent(command.getChargingStationId(), command.getIdentityContext()));
     }
 
     @CommandHandler

@@ -39,12 +39,12 @@ public abstract class ChargingStationBootedEvent {
      * Creates a {@code ChargingStationBootedEvent} with an identifier and a {@link java.util.Map} of attributes.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param protocol protocol identifier.
+     * @param protocol          protocol identifier.
      * @param attributes        a {@link java.util.Map} of attributes. These attributes are additional information provided by
      *                          the charging station when it booted but which are not required by Motown. Because
      *                          {@link java.util.Map} implementations are potentially mutable a defensive copy is made.
-     * @param identityContext the identity context.
-     * @throws NullPointerException if {@code chargingStationId} or {@protocol} or {@code attributes} is {@code null}.
+     * @param identityContext   the identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code attributes} or {@code identityContext} is {@code null}.
      */
     public ChargingStationBootedEvent(ChargingStationId chargingStationId, String protocol, Map<String, String> attributes, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
@@ -81,5 +81,14 @@ public abstract class ChargingStationBootedEvent {
      */
     public Map<String, String> getAttributes() {
         return attributes;
+    }
+
+    /**
+     * Gets the identity context associated with this event.
+     *
+     * @return {@link IdentityContext}.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 }

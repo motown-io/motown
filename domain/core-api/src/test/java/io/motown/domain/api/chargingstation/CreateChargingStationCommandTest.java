@@ -17,10 +17,19 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.NULL_USER_IDENTITY_CONTEXT;
+
 public class CreateChargingStationCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new CreateChargingStationCommand(null);
+        new CreateChargingStationCommand(null, NULL_USER_IDENTITY_CONTEXT);
     }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
+        new CreateChargingStationCommand(CHARGING_STATION_ID, null);
+    }
+
 }

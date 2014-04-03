@@ -101,7 +101,7 @@ public class DomainServiceTest {
                 CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER, getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber(), ADD_ON_IDENTITY);
         assertFalse(bootChargingStationResult.isAccepted());
 
-        verify(gateway).send(eq(new CreateChargingStationCommand(CHARGING_STATION_ID)), any(CommandCallback.class));
+        verify(gateway).send(eq(new CreateChargingStationCommand(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT)), any(CommandCallback.class));
     }
 
     @Test

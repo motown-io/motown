@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -24,16 +26,18 @@ public final class ChargingStationCreatedEvent {
 
     private final ChargingStationId chargingStationId;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code ChargingStationCreatedEvent} with an identifier.
      *
-     *
-     *
      * @param chargingStationId the identifier of the charging station.
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @param identityContext the identity context.
+     * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
      */
-    public ChargingStationCreatedEvent(ChargingStationId chargingStationId) {
+    public ChargingStationCreatedEvent(ChargingStationId chargingStationId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -43,6 +47,15 @@ public final class ChargingStationCreatedEvent {
      */
     public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 
 }
