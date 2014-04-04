@@ -13,23 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.gson.deserializer;
+package io.motown.ocpp.websocketjson.gson.serializer;
 
-import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
-import io.motown.ocpp.websocketjson.schema.generated.v15.ChangeavailabilityResponse;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Changeavailability;
 
 import java.lang.reflect.Type;
 
-public class ChangeAvailabilityTypeAdapterDeserializer implements TypeAdapterDeserializer<ChangeavailabilityResponse.Status> {
+public class ChangeAvailabilityTypeAdapterSerializer implements TypeAdapterSerializer<Changeavailability.Type> {
 
     @Override
-    public ChangeavailabilityResponse.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
-        return ChangeavailabilityResponse.Status.fromValue(jsonElement.getAsString());
+    public JsonElement serialize(Changeavailability.Type resetType, Type type, JsonSerializationContext jsonSerializationContext) {
+        return new JsonPrimitive(resetType.toString());
     }
 
     @Override
     public Class<?> getAdaptedType() {
-        return ChangeavailabilityResponse.Status.class;
+        return Changeavailability.Type.class;
     }
+
 }

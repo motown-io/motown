@@ -281,6 +281,16 @@ public class OcppJsonService {
         sendWampMessage(wampMessage, chargingStationId);
     }
 
+    public void changeAvailability(ChargingStationId chargingStationId, int connectorId, Changeavailability.Type availabilityType, CorrelationToken statusCorrelationToken) {
+        Changeavailability changeAvailabilityRequest = new Changeavailability();
+        changeAvailabilityRequest.setConnectorId((double) connectorId);
+        changeAvailabilityRequest.setType(availabilityType);
+        responseHandlers.put(statusCorrelationToken.getToken(), new ChangeAvailabilityResponseHandler(statusCorrelationToken));
+
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "ChangeAvailability", changeAvailabilityRequest);
+        sendWampMessage(wampMessage, chargingStationId);
+    }
+
     //TODO: Add the rest of the outgoing calls towards the charging station - Ingo Pak, 02 Apr 2014
 
     private void sendWampMessage(WampMessage wampMessage, ChargingStationId chargingStationId) {

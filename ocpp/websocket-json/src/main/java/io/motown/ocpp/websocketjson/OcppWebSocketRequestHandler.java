@@ -17,6 +17,7 @@ package io.motown.ocpp.websocketjson;
 
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.OcppRequestHandler;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Changeavailability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,11 +69,13 @@ public class OcppWebSocketRequestHandler implements OcppRequestHandler {
     @Override
     public void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("ChangeChargingStationAvailabilityToInoperativeRequestedEvent");
+        ocppJsonService.changeAvailability(event.getChargingStationId(), event.getEvseId().getNumberedId(), Changeavailability.Type.INOPERATIVE, statusCorrelationToken);
     }
 
     @Override
     public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("ChangeChargingStationAvailabilityToOperativeRequestedEvent");
+        ocppJsonService.changeAvailability(event.getChargingStationId(), event.getEvseId().getNumberedId(), Changeavailability.Type.OPERATIVE, statusCorrelationToken);
     }
 
     @Override

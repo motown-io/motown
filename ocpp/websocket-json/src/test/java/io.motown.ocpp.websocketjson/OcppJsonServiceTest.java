@@ -22,6 +22,7 @@ import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.request.handler.DataTransferRequestHandler;
 import io.motown.ocpp.websocketjson.schema.SchemaValidator;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Changeavailability;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Datatransfer;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import io.motown.ocpp.websocketjson.wamp.WampMessageParser;
@@ -238,6 +239,19 @@ public class OcppJsonServiceTest {
         service.clearCache(CHARGING_STATION_ID, CORRELATION_TOKEN);
 
         String expectedMessage = String.format("[%d,\"%s\",\"%s\",{}]", WampMessage.CALL, CORRELATION_TOKEN.getToken(), "ClearCache").replaceAll("\\s+", "");
+
+        verify(mockWebSocket).write(expectedMessage);
+    }
+
+    @Test
+    public void changeAvailabilityRequest() throws IOException{
+        int connectorId = 2;
+        service.changeAvailability(CHARGING_STATION_ID, connectorId, Changeavailability.Type.INOPERATIVE, CORRELATION_TOKEN);
+
+        String expectedMessage = String.format("[%d,\"%s\",\"%s\",{\n" +
+                "  \"connectorId\": %d.0,\n" +
+                "  \"type\": \"%s\"\n" +
+                "}]", WampMessage.CALL, CORRELATION_TOKEN.getToken(), "ChangeAvailability", connectorId, Changeavailability.Type.INOPERATIVE.toString()).replaceAll("\\s+", "");
 
         verify(mockWebSocket).write(expectedMessage);
     }

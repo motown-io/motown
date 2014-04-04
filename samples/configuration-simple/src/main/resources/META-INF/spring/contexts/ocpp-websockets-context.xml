@@ -28,6 +28,7 @@
             <set>
                 <bean class="io.motown.ocpp.websocketjson.gson.serializer.AuthorizationListIdTagStatusTypeAdapterSerializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.serializer.BootnotificationResponseStatusTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.ChangeAvailabilityTypeAdapterSerializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.serializer.DataTransferResponseStatusTypeAdapterSerializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.serializer.ResetTypeAdapterSerializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.serializer.SendLocalListRequestUpdateTypeAdapterSerializer"/>

@@ -52,12 +52,12 @@ public class OcppWebSocketJsonTestUtils {
                 .add(new ResetTypeAdapterSerializer())
                 .add(new SendLocalListRequestUpdateTypeAdapterSerializer())
                 .add(new StartTransactionIdTagStatusTypeAdapterSerializer())
+                .add(new ChangeAvailabilityTypeAdapterSerializer())
                 //The serializers below are only needed during testing, as they are used to verify the result
                 .add(new DiagnosticsStatusTypeAdapterSerializer())
                 .add(new FirmwareStatusTypeAdapterSerializer())
                 .add(new ChargePointErrorCodeTypeAdapterSerializer())
                 .add(new ChargePointStatusTypeAdapterSerializer())
-                .add(new BootnotificationResponseStatusTypeAdapterSerializer())
                 .build();
         gsonFactoryBean.setTypeAdapterSerializers(typeAdapterSerializers);
 
