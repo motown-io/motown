@@ -111,6 +111,58 @@ public class ChargingStationEventListener {
         updateLastContactChargingStation(event.getChargingStationId());
     }
 
+    @EventHandler
+    public void handle(ChargingStationPlacedEvent event) {
+        LOG.debug("ChargingStationPlacedEvent for [{}] received!", event.getChargingStationId());
+        updateChargingStationLocation(event);
+    }
+
+    @EventHandler
+    public void handle(ChargingStationMovedEvent event) {
+        LOG.debug("ChargingStationMovedEvent for [{}] received!", event.getChargingStationId());
+        updateChargingStationLocation(event);
+    }
+
+    @EventHandler
+    public void handle(ChargingStationLocationImprovedEvent event) {
+        LOG.debug("ChargingStationLocationImprovedEvent for [{}] received!", event.getChargingStationId());
+        updateChargingStationLocation(event);
+    }
+
+    /**
+     * Updates the location of the charging station.
+     *
+     * @param event The event which contains the data of the location.
+     * @return {@code true} if the update has been performed, {@code false} if the charging station can't be found.
+     */
+    private boolean updateChargingStationLocation(ChargingStationLocationChangedEvent event) {
+        ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
+
+        if (chargingStation != null) {
+            if (event.getCoordinates() != null) {
+                chargingStation.setLatitude(event.getCoordinates().getLatitude());
+                chargingStation.setLongitude(event.getCoordinates().getLongitude());
+            }
+
+            if (event.getAddress() != null) {
+                chargingStation.setAddressline1(event.getAddress().getAddressline1());
+                chargingStation.setAddressline2(event.getAddress().getAddressline2());
+                chargingStation.setPostalCode(event.getAddress().getPostalCode());
+                chargingStation.setCity(event.getAddress().getCity());
+                chargingStation.setRegion(event.getAddress().getRegion());
+                chargingStation.setCountry(event.getAddress().getCountry());
+            }
+
+            chargingStation.setAccessibility(event.getAccessibility());
+
+            repository.save(chargingStation);
+        } else {
+            LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and update its location", event.getChargingStationId());
+        }
+
+        return chargingStation != null;
+    }
+
     /**
      * Updates the last contact field of the charging station if it can be found in the repository. Returns true if
      * the update has been performed, false if the charging station cannot be found.

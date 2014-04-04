@@ -15,6 +15,8 @@
  */
 package io.motown.operatorapi.viewmodel.persistence.entities;
 
+import io.motown.domain.api.chargingstation.Accessibility;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
@@ -31,6 +33,15 @@ public class ChargingStation {
     private Date lastTimeBooted;
     private Date lastContact;
     private Boolean accepted;
+    private Double latitude;
+    private Double longitude;
+    private String addressline1;
+    private String addressline2;
+    private String postalCode;
+    private String city;
+    private String region;
+    private String country;
+    private Accessibility accessibility;
 
     public String getProtocol() {
         return protocol;
@@ -83,6 +94,78 @@ public class ChargingStation {
 
     public Date getCreated() {
         return created != null ? new Date(created.getTime()) : null;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getAddressline1() {
+        return addressline1;
+    }
+
+    public void setAddressline1(String addressline1) {
+        this.addressline1 = addressline1;
+    }
+
+    public String getAddressline2() {
+        return addressline2;
+    }
+
+    public void setAddressline2(String addressline2) {
+        this.addressline2 = addressline2;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public Accessibility getAccessibility() {
+        return accessibility;
+    }
+
+    public void setAccessibility(Accessibility accessibility) {
+        this.accessibility = accessibility;
     }
 
     @PrePersist
