@@ -16,8 +16,6 @@
 package io.motown.ocpp.v15.soap;
 
 import io.motown.domain.api.chargingstation.*;
-import io.motown.ocpp.v15.soap.Ocpp15RequestHandler;
-import io.motown.ocpp.v15.soap.V15SOAPTestUtils;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
@@ -115,7 +113,7 @@ public class Ocpp15RequestHandlerTest {
 
     @Test
     public void testChangeChargingStationAvailabilityToInoperativeRequested() {
-        requestHandler.handle(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID), CORRELATION_TOKEN);
+        requestHandler.handle(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).changeAvailabilityToInoperative(CHARGING_STATION_ID, EVSE_ID);
     }
