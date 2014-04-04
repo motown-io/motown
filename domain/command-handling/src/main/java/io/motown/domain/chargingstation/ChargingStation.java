@@ -208,7 +208,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestChangeChargingStationAvailabilityToOperativeCommand command, MetaData metaData) {
-        apply(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(this.id, this.protocol, command.getEvseId()), metaData);
+        apply(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(this.id, this.protocol, command.getEvseId(), command.getIdentityContext()), metaData);
     }
 
     @CommandHandler

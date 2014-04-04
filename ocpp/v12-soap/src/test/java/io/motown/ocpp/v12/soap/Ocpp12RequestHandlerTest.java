@@ -111,7 +111,7 @@ public class Ocpp12RequestHandlerTest {
 
     @Test
     public void testChangeChargingStationAvailabilityToOperativeRequested() {
-        requestHandler.handle(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID), CORRELATION_TOKEN);
+        requestHandler.handle(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).changeAvailabilityToOperative(CHARGING_STATION_ID, EVSE_ID);
     }

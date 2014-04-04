@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -29,24 +31,26 @@ public final class ChangeChargingStationAvailabilityToOperativeRequestedEvent im
 
     private final EvseId evseId;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code ChangeChargingStationAvailabilityToOperativeRequestedEvent} with an identifier, a protocol and evse identifier.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param protocol          protocol identifier.
      * @param evseId            the identifier of the evse.
+     * @param identityContext   identity context.
      * @throws NullPointerException if {@code chargingStationId}, {@code protocol} or {@code evseId} is {@code null}.
      */
-    public ChangeChargingStationAvailabilityToOperativeRequestedEvent(ChargingStationId chargingStationId, String protocol, EvseId evseId) {
+    public ChangeChargingStationAvailabilityToOperativeRequestedEvent(ChargingStationId chargingStationId, String protocol, EvseId evseId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.protocol = checkNotNull(protocol);
         this.evseId = checkNotNull(evseId);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
-     * Gets the charging station identifier.
-     *
-     * @return the charging station identifier.
+     * {@inheritDoc}
      */
     @Override
     public ChargingStationId getChargingStationId() {
@@ -54,9 +58,7 @@ public final class ChangeChargingStationAvailabilityToOperativeRequestedEvent im
     }
 
     /**
-     * Gets the protocol identifier.
-     *
-     * @return the protocol identifier.
+     * {@inheritDoc}
      */
     @Override
     public String getProtocol() {
@@ -64,12 +66,19 @@ public final class ChangeChargingStationAvailabilityToOperativeRequestedEvent im
     }
 
     /**
-     * Gets the evse id.
-     *
-     * @return the evse id.
+     * {@inheritDoc}
      */
     @Override
     public EvseId getEvseId() {
         return evseId;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 }
