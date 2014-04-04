@@ -142,21 +142,21 @@ public class ChargingStationTest {
     @Test
     public void testRequestConfigurationForUnconfiguredChargingStation() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
-                .when(new RequestConfigurationCommand(CHARGING_STATION_ID))
+                .when(new RequestConfigurationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRequestConfigurationForUnregisteredChargingStation() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
-                .when(new RequestConfigurationCommand(CHARGING_STATION_ID))
+                .when(new RequestConfigurationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRequestConfiguration() {
         fixture.given(CHARGING_STATION)
-                .when(new RequestConfigurationCommand(CHARGING_STATION_ID))
+                .when(new RequestConfigurationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new ConfigurationRequestedEvent(CHARGING_STATION_ID, PROTOCOL));
     }
 
