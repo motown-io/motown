@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.PROTOCOL;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
 
 public class ChangeConfigurationEventTest {
 
@@ -27,22 +28,22 @@ public class ChangeConfigurationEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ChangeConfigurationEvent(null, PROTOCOL, KEY, VALUE);
+        new ChangeConfigurationEvent(null, PROTOCOL, KEY, VALUE, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithProtocolNull() {
-        new ChangeConfigurationEvent(CHARGING_STATION_ID, null, KEY, VALUE);
+        new ChangeConfigurationEvent(CHARGING_STATION_ID, null, KEY, VALUE, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithKeyNull() {
-        new ChangeConfigurationEvent(CHARGING_STATION_ID, PROTOCOL, null, VALUE);
+        new ChangeConfigurationEvent(CHARGING_STATION_ID, PROTOCOL, null, VALUE, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithValueNull() {
-        new ChangeConfigurationEvent(CHARGING_STATION_ID, PROTOCOL, KEY, null);
+        new ChangeConfigurationEvent(CHARGING_STATION_ID, PROTOCOL, KEY, null, ROOT_IDENTITY_CONTEXT);
     }
 
 }

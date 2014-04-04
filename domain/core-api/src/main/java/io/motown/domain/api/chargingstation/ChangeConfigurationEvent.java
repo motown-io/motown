@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -27,25 +29,31 @@ public final class ChangeConfigurationEvent implements CommunicationWithCharging
 
     private final String protocol;
 
-    private String key;
+    private final String key;
 
-    private String value;
+    private final String value;
+
+    private final IdentityContext identityContext;
 
     /**
-     * Creates a {@code DataTransferEvent} with an identifier, vendor identifier, message identifier, and free format data.
+     * Creates a {@code DataTransferEvent} with an identifier, vendor identifier, message identifier, free format data and identity context.
+     *
      * @param chargingStationId the identifier of the charging station.
      * @param protocol          the protocol identifier.
      * @param key               the key to be changed.
      * @param value             the new value.
-     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code key} or {@code value} is {@code null}.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code key}, {@code value}
+     *                          {@code identityContext} is {@code null}.
      */
-    public ChangeConfigurationEvent(ChargingStationId chargingStationId, String protocol, String key, String value) {
+    public ChangeConfigurationEvent(ChargingStationId chargingStationId, String protocol, String key, String value, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());
         this.protocol = protocol;
         this.key = checkNotNull(key);
         this.value = checkNotNull(value);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -76,5 +84,14 @@ public final class ChangeConfigurationEvent implements CommunicationWithCharging
      */
     public String getValue() {
         return value;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 }

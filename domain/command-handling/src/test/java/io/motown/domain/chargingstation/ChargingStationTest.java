@@ -449,7 +449,7 @@ public class ChargingStationTest {
         String configValue = "800";
         fixture.given(CHARGING_STATION)
                 .when(new ChangeConfigurationCommand(CHARGING_STATION_ID, configKey, configValue, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new ChangeConfigurationEvent(CHARGING_STATION_ID, PROTOCOL, configKey, configValue));
+                .expectEvents(new ChangeConfigurationEvent(CHARGING_STATION_ID, PROTOCOL, configKey, configValue, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
