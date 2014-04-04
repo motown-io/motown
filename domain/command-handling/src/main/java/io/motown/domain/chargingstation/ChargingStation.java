@@ -223,7 +223,6 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(ChangeConfigurationCommand command, MetaData metaData) {
-
         apply(new ChangeConfigurationEvent(this.id, this.protocol, command.getKey(), command.getValue()), metaData);
     }
 

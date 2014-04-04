@@ -18,6 +18,7 @@ package io.motown.domain.api.chargingstation;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
 
 public class ChangeConfigurationCommandTest {
 
@@ -26,17 +27,22 @@ public class ChangeConfigurationCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ChangeConfigurationCommand(null, KEY, VALUE);
+        new ChangeConfigurationCommand(null, KEY, VALUE, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithKeyNull() {
-        new ChangeConfigurationCommand(CHARGING_STATION_ID, null, VALUE);
+        new ChangeConfigurationCommand(CHARGING_STATION_ID, null, VALUE, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithValueNull() {
-        new ChangeConfigurationCommand(CHARGING_STATION_ID, KEY, null);
+        new ChangeConfigurationCommand(CHARGING_STATION_ID, KEY, null, ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingEventWithIdentityContextNull() {
+        new ChangeConfigurationCommand(CHARGING_STATION_ID, KEY, VALUE, null);
     }
 
 }

@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Objects;
@@ -34,18 +35,22 @@ public final class ChangeConfigurationCommand {
 
     private String value;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code ChangeConfigurationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param key               the key to change.
      * @param value             the new value.
-     * @throws NullPointerException if {@code key} or {@code value} is {@code null}.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code key}, {@code value} or {@code identityContext} is {@code null}.
      */
-    public ChangeConfigurationCommand(ChargingStationId chargingStationId, String key, String value) {
+    public ChangeConfigurationCommand(ChargingStationId chargingStationId, String key, String value, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.key = checkNotNull(key);
         this.value = checkNotNull(value);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -69,9 +74,18 @@ public final class ChangeConfigurationCommand {
         return value;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, key, value);
+        return Objects.hash(chargingStationId, key, value, identityContext);
     }
 
     @Override
@@ -83,6 +97,6 @@ public final class ChangeConfigurationCommand {
             return false;
         }
         final ChangeConfigurationCommand other = (ChangeConfigurationCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.key, other.key) && Objects.equals(this.value, other.value);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.key, other.key) && Objects.equals(this.value, other.value) && Objects.equals(this.identityContext, other.identityContext);
     }
 }
