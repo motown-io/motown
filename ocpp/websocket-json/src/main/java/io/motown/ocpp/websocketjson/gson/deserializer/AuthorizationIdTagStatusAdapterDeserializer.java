@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.gson.serializer;
+package io.motown.ocpp.websocketjson.gson.deserializer;
 
+import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import io.motown.ocpp.websocketjson.schema.generated.v15.Reset;
+import io.motown.ocpp.websocketjson.schema.generated.v15.IdTagInfo;
 
 import java.lang.reflect.Type;
 
-public class ResetTypeAdapterSerializer implements TypeAdapterSerializer<Reset.Type> {
+public class AuthorizationIdTagStatusAdapterDeserializer implements TypeAdapterDeserializer<IdTagInfo.Status> {
 
     @Override
-    public JsonElement serialize(Reset.Type resetType, Type type, JsonSerializationContext jsonSerializationContext) {
-        return new JsonPrimitive(resetType.toString());
+    public IdTagInfo.Status deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
+        return IdTagInfo.Status.fromValue(jsonElement.getAsString());
     }
 
     @Override
     public Class<?> getAdaptedType() {
-        return Reset.Type.class;
+        return IdTagInfo.Status.class;
     }
-
 }

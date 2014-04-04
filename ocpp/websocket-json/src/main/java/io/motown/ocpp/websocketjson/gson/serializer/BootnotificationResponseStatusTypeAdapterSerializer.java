@@ -25,8 +25,8 @@ import java.lang.reflect.Type;
 public class BootnotificationResponseStatusTypeAdapterSerializer implements TypeAdapterSerializer<BootnotificationResponse.Status> {
 
     @Override
-    public JsonElement serialize(BootnotificationResponse.Status registrationStatus, Type type, JsonSerializationContext jsonSerializationContext) {
-        return new JsonPrimitive(registrationStatus.toString());
+    public JsonElement serialize(BootnotificationResponse.Status status, Type type, JsonSerializationContext jsonSerializationContext) {
+        return new JsonPrimitive(status.toString());
     }
 
     @Override

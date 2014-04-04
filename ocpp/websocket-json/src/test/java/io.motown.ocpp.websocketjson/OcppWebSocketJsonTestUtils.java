@@ -46,10 +46,12 @@ public class OcppWebSocketJsonTestUtils {
         GsonFactoryBean gsonFactoryBean = new GsonFactoryBean();
         gsonFactoryBean.setDateFormat(DATE_FORMAT);
         Set<TypeAdapterSerializer<?>> typeAdapterSerializers = ImmutableSet.<TypeAdapterSerializer<?>>builder()
+                .add(new AuthorizationListIdTagStatusTypeAdapterSerializer())
                 .add(new BootnotificationResponseStatusTypeAdapterSerializer())
                 .add(new DataTransferResponseStatusTypeAdapterSerializer())
                 .add(new ResetTypeAdapterSerializer())
                 .add(new SendLocalListRequestUpdateTypeAdapterSerializer())
+                .add(new StartTransactionIdTagStatusTypeAdapterSerializer())
                 //The serializers below are only needed during testing, as they are used to verify the result
                 .add(new DiagnosticsStatusTypeAdapterSerializer())
                 .add(new FirmwareStatusTypeAdapterSerializer())
@@ -60,6 +62,7 @@ public class OcppWebSocketJsonTestUtils {
         gsonFactoryBean.setTypeAdapterSerializers(typeAdapterSerializers);
 
         Set<TypeAdapterDeserializer<?>> typeAdapterDeserializers = ImmutableSet.<TypeAdapterDeserializer<?>>builder()
+                .add(new AuthorizationIdTagStatusAdapterDeserializer())
                 .add(new CancelReservationResponseStatusTypeAdapterDeserializer())
                 .add(new ChangeAvailabilityTypeAdapterDeserializer())
                 .add(new ChangeConfigurationResponseStatusTypeAdapterDeserializer())
@@ -74,6 +77,7 @@ public class OcppWebSocketJsonTestUtils {
                 .add(new ReserveNowResponseStatusTypeAdapterDeserializer())
                 .add(new ResetResponseStatusAdapterDeserializer())
                 .add(new SendLocalListResponseStatusTypeAdapterDeserializer())
+                .add(new StopTransactionIdTagStatusAdapterDeserializer())
                 .add(new UnlockConnectorResponseStatusTypeAdapterDeserializer())
                 .build();
         gsonFactoryBean.setTypeAdapterDeserializers(typeAdapterDeserializers);

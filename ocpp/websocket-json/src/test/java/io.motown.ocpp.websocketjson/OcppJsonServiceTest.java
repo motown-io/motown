@@ -15,10 +15,10 @@
  */
 package io.motown.ocpp.websocketjson;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.CorrelationToken;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.request.handler.DataTransferRequestHandler;
 import io.motown.ocpp.websocketjson.schema.SchemaValidator;
@@ -33,6 +33,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
@@ -194,4 +195,32 @@ public class OcppJsonServiceTest {
         verify(mockWebSocket).write(anyString());
     }
 
+    @Test
+    public void sendLocalListRequest() throws IOException{
+        List<IdentifyingToken> list = Lists.newArrayList();
+        String idTag = "044943121F1D80";
+        TextualToken id = new TextualToken(idTag, IdentifyingToken.AuthenticationStatus.ACCEPTED);
+        list.add(id);
+
+        int listVersion = 1;
+        String listHash = "";
+        service.sendLocalList(CHARGING_STATION_ID, AuthorizationListUpdateType.FULL, list, listVersion, listHash, CORRELATION_TOKEN);
+
+        String expectedMessage = String.format("[%d,\"%s\",\"%s\",{" +
+                "  \"updateType\": \"Full\"," +
+                "  \"listVersion\": 1.0," +
+                "  \"localAuthorisationList\": [" +
+                "    {" +
+                "      \"idTag\": \"%s\"," +
+                "      \"idTagInfo\": {" +
+                "        \"status\": \"Accepted\"" +
+                "      }" +
+                "    }" +
+                "  ]," +
+                "  \"hash\": \"\"" +
+                "}]", WampMessage.CALL, CORRELATION_TOKEN.getToken(), "SendLocalList", idTag)
+                .replaceAll("\\s+", "");
+
+        verify(mockWebSocket).write(expectedMessage);
+    }
 }

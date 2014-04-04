@@ -25,8 +25,8 @@ import java.lang.reflect.Type;
 public class SendLocalListRequestUpdateTypeAdapterSerializer implements TypeAdapterSerializer<Sendlocallist.UpdateType> {
 
     @Override
-    public JsonElement serialize(Sendlocallist.UpdateType dataTransferStatus, Type type, JsonSerializationContext jsonSerializationContext) {
-        return new JsonPrimitive(dataTransferStatus.toString());
+    public JsonElement serialize(Sendlocallist.UpdateType updateType, Type type, JsonSerializationContext jsonSerializationContext) {
+        return new JsonPrimitive(updateType.toString());
     }
 
     @Override

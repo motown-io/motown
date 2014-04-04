@@ -18,20 +18,20 @@ package io.motown.ocpp.websocketjson.gson.serializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
-import io.motown.ocpp.websocketjson.schema.generated.v15.Reset;
+import io.motown.ocpp.websocketjson.schema.generated.v15.IdTagInfo__;
 
 import java.lang.reflect.Type;
 
-public class ResetTypeAdapterSerializer implements TypeAdapterSerializer<Reset.Type> {
+public class StartTransactionIdTagStatusTypeAdapterSerializer implements TypeAdapterSerializer<IdTagInfo__.Status> {
 
     @Override
-    public JsonElement serialize(Reset.Type resetType, Type type, JsonSerializationContext jsonSerializationContext) {
-        return new JsonPrimitive(resetType.toString());
+    public JsonElement serialize(IdTagInfo__.Status status, Type type, JsonSerializationContext jsonSerializationContext) {
+        return new JsonPrimitive(status.toString());
     }
 
     @Override
     public Class<?> getAdaptedType() {
-        return Reset.Type.class;
+        return IdTagInfo__.Status.class;
     }
 
 }

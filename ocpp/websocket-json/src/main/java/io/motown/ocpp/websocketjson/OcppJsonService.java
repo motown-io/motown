@@ -15,6 +15,7 @@
  */
 package io.motown.ocpp.websocketjson;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.AddOnIdentity;
@@ -36,6 +37,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class OcppJsonService {
@@ -162,6 +164,49 @@ public class OcppJsonService {
             sendWampMessage(wampMessage, chargingStationId);
         } catch (URISyntaxException e) {
             LOG.error("Unable to perform update firmware request due to an invalid upload URI.", e);
+        }
+    }
+
+    public void sendLocalList(ChargingStationId chargingStationId, AuthorizationListUpdateType updateType, List<IdentifyingToken> authorizationList, int authorizationListVersion, String authorizationListHash, CorrelationToken statusCorrelationToken) {
+
+        List<LocalAuthorisationList> localList = Lists.newArrayList();
+        for (IdentifyingToken token : authorizationList) {
+            LocalAuthorisationList localListEntry = new LocalAuthorisationList();
+            localListEntry.setIdTag(token.getToken());
+
+            IdTagInfo_ idTagInfo = new IdTagInfo_();
+            idTagInfo.setStatus(convertAuthenticationStatus(token.getAuthenticationStatus()));
+            localListEntry.setIdTagInfo(idTagInfo);
+
+            localList.add(localListEntry);
+        }
+
+        Sendlocallist sendLocalListRequest = new Sendlocallist();
+        sendLocalListRequest.setLocalAuthorisationList(localList);
+        sendLocalListRequest.setUpdateType(AuthorizationListUpdateType.FULL.equals(updateType) ? Sendlocallist.UpdateType.FULL : Sendlocallist.UpdateType.DIFFERENTIAL);
+        sendLocalListRequest.setListVersion((double) authorizationListVersion);
+        sendLocalListRequest.setHash(authorizationListHash);
+
+        responseHandlers.put(statusCorrelationToken.getToken(), new SendLocalListResponseHandler(statusCorrelationToken));
+
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "SendLocalList", sendLocalListRequest);
+
+        sendWampMessage(wampMessage, chargingStationId);
+    }
+
+    /**
+     * Converts the AuthenticationStatus into an OCPPJ specific status
+     * @param status
+     * @return
+     */
+    private IdTagInfo_.Status convertAuthenticationStatus(IdentifyingToken.AuthenticationStatus status) {
+        switch(status){
+            case ACCEPTED: return IdTagInfo_.Status.ACCEPTED;
+            case EXPIRED: return IdTagInfo_.Status.EXPIRED;
+            case DELETED: return IdTagInfo_.Status.EXPIRED;
+            case CONCURRENT_TX: return IdTagInfo_.Status.CONCURRENT_TX;
+            case BLOCKED: return IdTagInfo_.Status.BLOCKED;
+            default: return IdTagInfo_.Status.INVALID;
         }
     }
 
