@@ -21,6 +21,7 @@ import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.api.security.TypeBasedAddOnIdentity;
 import io.motown.ocpp.soaputils.async.*;
 import io.motown.ocpp.soaputils.header.SoapHeaderReader;
+import io.motown.ocpp.v12.soap.Ocpp12RequestHandler;
 import io.motown.ocpp.v12.soap.centralsystem.schema.*;
 import io.motown.ocpp.v12.soap.centralsystem.schema.FirmwareStatus;
 import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
@@ -48,7 +49,7 @@ public class MotownCentralSystemService implements CentralSystemService {
 
     private static final String PROTOCOL_IDENTIFIER = "OCPPS12";
 
-    private static final String ADD_ON_TYPE = "OCPPS12";
+    private static final String ADD_ON_TYPE = Ocpp12RequestHandler.ADD_ON_TYPE;
 
     private int heartbeatIntervalFallback;
 

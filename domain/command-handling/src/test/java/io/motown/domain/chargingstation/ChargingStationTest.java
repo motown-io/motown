@@ -316,7 +316,7 @@ public class ChargingStationTest {
     public void testGetDiagnosticsFileNameReceived() {
         String diagnosticsFileName = "diagnostics.zip";
         fixture.given(CHARGING_STATION)
-                .when(new DiagnosticsFileNameReceivedCommand(CHARGING_STATION_ID, diagnosticsFileName))
+                .when(new DiagnosticsFileNameReceivedCommand(CHARGING_STATION_ID, diagnosticsFileName, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new DiagnosticsFileNameReceivedEvent(CHARGING_STATION_ID, diagnosticsFileName));
     }
 
@@ -324,7 +324,7 @@ public class ChargingStationTest {
     public void testGetDiagnosticsEmptyFileNameReceived() {
         String diagnosticsFileName = "";
         fixture.given(CHARGING_STATION)
-                .when(new DiagnosticsFileNameReceivedCommand(CHARGING_STATION_ID, diagnosticsFileName))
+                .when(new DiagnosticsFileNameReceivedCommand(CHARGING_STATION_ID, diagnosticsFileName, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new NoDiagnosticsInformationAvailableEvent(CHARGING_STATION_ID));
     }
 

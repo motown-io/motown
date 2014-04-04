@@ -38,12 +38,14 @@
                     <bean class="io.motown.ocpp.v15.soap.Ocpp15RequestHandler">
                         <property name="domainService" ref="ocppDomainService" />
                         <property name="chargingStationOcpp15Client" ref="ocpp15SoapClient" />
+                        <property name="addOnId" value="1" />
                     </bean>
                 </entry>
                 <entry key="OCPPS12">
                     <bean class="io.motown.ocpp.v12.soap.Ocpp12RequestHandler">
                         <property name="domainService" ref="ocppDomainService" />
                         <property name="chargingStationOcpp12Client" ref="ocpp12SoapClient" />
+                        <property name="addOnId" value="1" />
                     </bean>
                 </entry>
                 <entry key="OCPPJ15">

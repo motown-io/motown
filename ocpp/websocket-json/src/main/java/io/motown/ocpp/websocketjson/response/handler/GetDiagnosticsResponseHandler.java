@@ -32,6 +32,6 @@ public class GetDiagnosticsResponseHandler extends ResponseHandler {
     @Override
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         GetdiagnosticsResponse response = gson.fromJson(wampMessage.getPayloadAsString(), GetdiagnosticsResponse.class);
-        domainService.diagnosticsFileNameReceived(chargingStationId, response.getFileName(), getCorrelationToken());
+        domainService.diagnosticsFileNameReceived(chargingStationId, response.getFileName(), getCorrelationToken(), addOnIdentity);
     }
 }

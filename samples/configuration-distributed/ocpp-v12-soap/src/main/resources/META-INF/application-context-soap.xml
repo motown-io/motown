@@ -71,6 +71,7 @@
                     <bean class="io.motown.ocpp.v12.soap.Ocpp12RequestHandler">
                         <property name="domainService" ref="domainService" />
                         <property name="chargingStationOcpp12Client" ref="ocpp12SoapClient" />
+                        <property name="addOnId" value="1" />
                     </bean>
                 </entry>
             </map>

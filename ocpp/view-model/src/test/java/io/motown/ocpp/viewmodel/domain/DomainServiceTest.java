@@ -176,9 +176,9 @@ public class DomainServiceTest {
     @Test
     public void testDiagnosticsFileNameReceived() {
         CorrelationToken correlationToken = new CorrelationToken();
-        domainService.diagnosticsFileNameReceived(CHARGING_STATION_ID, getDiagnosticsFileName(), correlationToken);
+        domainService.diagnosticsFileNameReceived(CHARGING_STATION_ID, getDiagnosticsFileName(), correlationToken, ADD_ON_IDENTITY);
 
-        verify(gateway).send(new DiagnosticsFileNameReceivedCommand(CHARGING_STATION_ID, getDiagnosticsFileName()), correlationToken);
+        verify(gateway).send(new DiagnosticsFileNameReceivedCommand(CHARGING_STATION_ID, getDiagnosticsFileName(), NULL_USER_IDENTITY_CONTEXT), correlationToken);
     }
 
     @Test

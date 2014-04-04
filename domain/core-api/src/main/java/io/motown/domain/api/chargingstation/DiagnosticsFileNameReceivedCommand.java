@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Objects;
@@ -32,17 +33,21 @@ public final class DiagnosticsFileNameReceivedCommand {
 
     private final String diagnosticsFileName;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code DiagnosticsFileNameReceivedCommand} with an identifier and a diagnostics file name.
      *
-     * @param chargingStationId the identifier of the charging station.
+     * @param chargingStationId   the identifier of the charging station.
      * @param diagnosticsFileName the filename the charging station will be using to send over the diagnostics (empty if
      *                            no file is being sent).
-     * @throws NullPointerException if {@code chargingStationId} or {@code diagnosticsFileName} is {@code null}.
+     * @param identityContext     identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code diagnosticsFileName} or {@code identityContext} is {@code null}.
      */
-    public DiagnosticsFileNameReceivedCommand(ChargingStationId chargingStationId, String diagnosticsFileName) {
+    public DiagnosticsFileNameReceivedCommand(ChargingStationId chargingStationId, String diagnosticsFileName, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.diagnosticsFileName = checkNotNull(diagnosticsFileName);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -61,9 +66,18 @@ public final class DiagnosticsFileNameReceivedCommand {
         return diagnosticsFileName;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, diagnosticsFileName);
+        return Objects.hash(chargingStationId, diagnosticsFileName, identityContext);
     }
 
     @Override
@@ -75,6 +89,6 @@ public final class DiagnosticsFileNameReceivedCommand {
             return false;
         }
         final DiagnosticsFileNameReceivedCommand other = (DiagnosticsFileNameReceivedCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.diagnosticsFileName, other.diagnosticsFileName);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.diagnosticsFileName, other.diagnosticsFileName) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

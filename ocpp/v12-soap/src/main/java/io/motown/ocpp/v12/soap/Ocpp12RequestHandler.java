@@ -16,6 +16,8 @@
 package io.motown.ocpp.v12.soap;
 
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.security.AddOnIdentity;
+import io.motown.domain.api.security.TypeBasedAddOnIdentity;
 import io.motown.ocpp.viewmodel.OcppRequestHandler;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp12Client;
@@ -31,6 +33,10 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
     private DomainService domainService;
 
     private ChargingStationOcpp12Client chargingStationOcpp12Client;
+
+    public static final String ADD_ON_TYPE = "OCPPS12";
+
+    private AddOnIdentity addOnIdentity;
 
     @Override
     public void handle(ConfigurationRequestedEvent event) {
@@ -117,7 +123,7 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
         LOG.info("OCPP 1.2 DiagnosticsRequestedEvent");
         String diagnosticsFilename = chargingStationOcpp12Client.getDiagnostics(event.getChargingStationId(), event.getUploadLocation(), event.getNumRetries(), event.getRetryInterval(), event.getPeriodStartTime(), event.getPeriodStopTime());
 
-        domainService.diagnosticsFileNameReceived(event.getChargingStationId(), diagnosticsFilename, statusCorrelationToken);
+        domainService.diagnosticsFileNameReceived(event.getChargingStationId(), diagnosticsFilename, statusCorrelationToken, addOnIdentity);
     }
 
     @Override
@@ -172,4 +178,15 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
     public void setDomainService(DomainService domainService) {
         this.domainService = domainService;
     }
+
+    /**
+     * Sets the add-on id. The add-on is hardcoded, the add-on id should be different for every instance (in a distributed configuration)
+     * to be able to differentiate between add-on instances.
+     *
+     * @param id add-on id.
+     */
+    public void setAddOnId(String id) {
+        addOnIdentity = new TypeBasedAddOnIdentity(ADD_ON_TYPE, id);
+    }
+
 }
