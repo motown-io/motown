@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,7 +41,7 @@ public class RequestStopTransactionJsonCommandHandlerTest {
     @Test
     public void testHandleStopTransactionOnRegisteredStation() {
         JsonObject commandObject = gson.fromJson("{'id' : 123}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT);
     }
 
     //TODO: Add more tests scenarios when the RequestStopTransactionJsonCommandHandler is more final - Ingo Pak, 04 dec 2013

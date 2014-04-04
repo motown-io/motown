@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -29,16 +30,20 @@ public final class RequestStopTransactionCommand {
 
     private final TransactionId transactionId;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code RequestStopTransactionCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param transactionId     the unique transaction identifier.
-     * @throws NullPointerException if {@code chargingStationId} or {@code transactionId} is {@code null}.
+     * @param identityContext   the identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code transactionId} or {@code identityContext} is {@code null}.
      */
-    public RequestStopTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId) {
+    public RequestStopTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = checkNotNull(transactionId);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -57,5 +62,14 @@ public final class RequestStopTransactionCommand {
      */
     public TransactionId getTransactionId() {
         return transactionId;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 }

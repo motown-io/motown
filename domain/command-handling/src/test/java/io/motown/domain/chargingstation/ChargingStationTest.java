@@ -170,7 +170,7 @@ public class ChargingStationTest {
     @Test
     public void testRequestStopTransaction() {
         fixture.given(CHARGING_STATION)
-                .when(new RequestStopTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID))
+                .when(new RequestStopTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new StopTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, TRANSACTION_ID));
     }
 
