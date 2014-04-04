@@ -237,7 +237,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         if (diagnosticsFileName.isEmpty()) {
             apply(new NoDiagnosticsInformationAvailableEvent(this.id, command.getIdentityContext()));
         } else {
-            apply(new DiagnosticsFileNameReceivedEvent(this.id, diagnosticsFileName));
+            apply(new DiagnosticsFileNameReceivedEvent(this.id, diagnosticsFileName, command.getIdentityContext()));
         }
     }
 

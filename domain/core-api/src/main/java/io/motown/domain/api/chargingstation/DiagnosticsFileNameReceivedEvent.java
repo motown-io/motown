@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -31,21 +32,24 @@ public final class DiagnosticsFileNameReceivedEvent {
 
     private final String diagnosticsFileName;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code DiagnosticsFileNameReceivedEvent} with an identifier and a diagnostics file name.
      *
      * @param chargingStationId     the identifier of the charging station.
      * @param diagnosticsFileName   the filename of the diagnostics file used by the charging station to upload the diagnostics information
-     *
-     * @throws NullPointerException if {@code chargingStationId} or {@code diagnosticsFileName} is {@code null}.
+     * @param identityContext       identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code diagnosticsFileName} or {@code identityContext} is {@code null}.
      * @throws IllegalArgumentException if {@code diagnosticsFileName} is empty.
      */
-    public DiagnosticsFileNameReceivedEvent(ChargingStationId chargingStationId, String diagnosticsFileName) {
+    public DiagnosticsFileNameReceivedEvent(ChargingStationId chargingStationId, String diagnosticsFileName, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
 
         checkNotNull(diagnosticsFileName);
         checkArgument(!diagnosticsFileName.isEmpty());
         this.diagnosticsFileName = diagnosticsFileName;
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -62,5 +66,14 @@ public final class DiagnosticsFileNameReceivedEvent {
      */
     public String getDiagnosticsFileName() {
         return diagnosticsFileName;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 }

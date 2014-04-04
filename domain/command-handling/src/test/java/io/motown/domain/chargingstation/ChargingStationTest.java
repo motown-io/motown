@@ -317,7 +317,7 @@ public class ChargingStationTest {
         String diagnosticsFileName = "diagnostics.zip";
         fixture.given(CHARGING_STATION)
                 .when(new DiagnosticsFileNameReceivedCommand(CHARGING_STATION_ID, diagnosticsFileName, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new DiagnosticsFileNameReceivedEvent(CHARGING_STATION_ID, diagnosticsFileName));
+                .expectEvents(new DiagnosticsFileNameReceivedEvent(CHARGING_STATION_ID, diagnosticsFileName, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test

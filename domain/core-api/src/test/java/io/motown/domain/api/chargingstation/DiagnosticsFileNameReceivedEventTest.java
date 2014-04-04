@@ -18,22 +18,28 @@ package io.motown.domain.api.chargingstation;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
 
 public class DiagnosticsFileNameReceivedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithChargingStationIdNull() {
-        new DiagnosticsFileNameReceivedEvent(null, "diagnostics.zip");
+        new DiagnosticsFileNameReceivedEvent(null, "diagnostics.zip", ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithFileNameNull() {
-        new DiagnosticsFileNameReceivedEvent(CHARGING_STATION_ID, null);
+        new DiagnosticsFileNameReceivedEvent(CHARGING_STATION_ID, null, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullPointerExceptionThrownWhenCreatingWithFileNameEmpty() {
-        new DiagnosticsFileNameReceivedEvent(CHARGING_STATION_ID, "");
+        new DiagnosticsFileNameReceivedEvent(CHARGING_STATION_ID, "", ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingWithIdentityContextNull() {
+        new DiagnosticsFileNameReceivedEvent(CHARGING_STATION_ID, "diagnostics.zip", null);
     }
 
 }

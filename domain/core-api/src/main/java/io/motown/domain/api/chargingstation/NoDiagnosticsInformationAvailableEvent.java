@@ -35,7 +35,7 @@ public final class NoDiagnosticsInformationAvailableEvent {
      * Creates a {@code NoDiagnosticsInformationAvailableEvent}.
      *
      * @param chargingStationId     the identifier of the charging station.
-     * @param identityContext   identity context.
+     * @param identityContext       identity context.
      * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
      */
     public NoDiagnosticsInformationAvailableEvent(ChargingStationId chargingStationId, IdentityContext identityContext) {
