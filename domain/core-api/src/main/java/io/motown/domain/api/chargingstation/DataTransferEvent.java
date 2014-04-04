@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -33,6 +35,8 @@ public final class DataTransferEvent implements CommunicationWithChargingStation
 
     private String data;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code DataTransferEvent} with an identifier, vendor identifier, message identifier, and free format data.
      * @param chargingStationId the identifier of the charging station.
@@ -40,9 +44,11 @@ public final class DataTransferEvent implements CommunicationWithChargingStation
      * @param vendorId          the vendor identifier.
      * @param messageId         the optional additional message identifier.
      * @param data              the free format data to send to the charging station.
-     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} or {@code vendorId} is {@code null}.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId} or {@code protocol}, {@code vendorId} or
+     *                              {@code identityContext} is {@code null}.
      */
-    public DataTransferEvent(ChargingStationId chargingStationId, String protocol, String vendorId, String messageId, String data) {
+    public DataTransferEvent(ChargingStationId chargingStationId, String protocol, String vendorId, String messageId, String data, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());
@@ -52,6 +58,7 @@ public final class DataTransferEvent implements CommunicationWithChargingStation
         this.vendorId = vendorId;
         this.messageId = checkNotNull(messageId);
         this.data = checkNotNull(data);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -89,5 +96,14 @@ public final class DataTransferEvent implements CommunicationWithChargingStation
      */
     public String getData() {
         return data;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 }

@@ -144,7 +144,7 @@ public class Ocpp15RequestHandlerTest {
 
     @Test
     public void testDataTransferEvent() {
-        requestHandler.handle(new DataTransferEvent(CHARGING_STATION_ID, PROTOCOL, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA), CORRELATION_TOKEN);
+        requestHandler.handle(new DataTransferEvent(CHARGING_STATION_ID, PROTOCOL, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
     }
