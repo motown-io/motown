@@ -20,6 +20,8 @@ import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
+
 public class RequestChangeChargingStationAvailabilityJsonCommandHandlerTest {
     private Gson gson;
     private RequestChangeChargingStationAvailabilityJsonCommandHandler handler = new RequestChangeChargingStationAvailabilityJsonCommandHandler();
@@ -35,13 +37,13 @@ public class RequestChangeChargingStationAvailabilityJsonCommandHandlerTest {
     @Test
     public void testInoperativeCommand() {
         JsonObject commandObject = gson.fromJson("{evseId:'1',availability:'inoperative'}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test
     public void testOperativeCommand() {
         JsonObject commandObject = gson.fromJson("{evseId:'1',availability:'operative'}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
 }

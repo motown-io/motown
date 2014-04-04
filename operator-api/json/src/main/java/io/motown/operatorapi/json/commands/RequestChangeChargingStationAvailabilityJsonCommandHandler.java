@@ -52,7 +52,7 @@ class RequestChangeChargingStationAvailabilityJsonCommandHandler implements Json
                 if ("inoperative".equalsIgnoreCase(command.getAvailability())) {
                     commandGateway.send(new RequestChangeChargingStationAvailabilityToInoperativeCommand(new ChargingStationId(chargingStationId), command.getEvseId()), new CorrelationToken());
                 } else {
-                    commandGateway.send(new RequestChangeChargingStationAvailabilityToOperativeCommand(new ChargingStationId(chargingStationId), command.getEvseId()), new CorrelationToken());
+                    commandGateway.send(new RequestChangeChargingStationAvailabilityToOperativeCommand(new ChargingStationId(chargingStationId), command.getEvseId(), identityContext), new CorrelationToken());
                 }
             }
         } catch (JsonSyntaxException ex) {

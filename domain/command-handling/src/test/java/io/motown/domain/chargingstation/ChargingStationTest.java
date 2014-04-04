@@ -291,7 +291,7 @@ public class ChargingStationTest {
     @Test
     public void testRequestChangeChargingStationAvailabilityToOperative() {
         fixture.given(CHARGING_STATION)
-                .when(new RequestChangeChargingStationAvailabilityToOperativeCommand(CHARGING_STATION_ID, EVSE_ID))
+                .when(new RequestChangeChargingStationAvailabilityToOperativeCommand(CHARGING_STATION_ID, EVSE_ID, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID));
     }
 
