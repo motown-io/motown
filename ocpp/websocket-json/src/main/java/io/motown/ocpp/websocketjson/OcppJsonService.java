@@ -194,6 +194,23 @@ public class OcppJsonService {
         sendWampMessage(wampMessage, chargingStationId);
     }
 
+    public void reserveNow(ChargingStationId chargingStationId, NumberedReservationId reservationId, EvseId evseId, IdentifyingToken identifyingToken, IdentifyingToken parentIdentifyingToken, Date expiryDate, CorrelationToken statusCorrelationToken) {
+        Reservenow reserveNowRequest = new Reservenow();
+        reserveNowRequest.setConnectorId((double) evseId.getNumberedId());
+        reserveNowRequest.setIdTag(identifyingToken.getToken());
+        if(parentIdentifyingToken != null){
+            reserveNowRequest.setParentIdTag(parentIdentifyingToken.getToken());
+        }
+        reserveNowRequest.setExpiryDate(expiryDate);
+        reserveNowRequest.setReservationId((double) reservationId.getNumber());
+
+        responseHandlers.put(statusCorrelationToken.getToken(), new ReserveNowResponseHandler(statusCorrelationToken));
+
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "ReserveNow", reserveNowRequest);
+
+        sendWampMessage(wampMessage, chargingStationId);
+    }
+
     /**
      * Converts the AuthenticationStatus into an OCPPJ specific status
      * @param status

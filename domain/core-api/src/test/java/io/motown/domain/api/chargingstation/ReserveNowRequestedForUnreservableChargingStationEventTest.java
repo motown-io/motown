@@ -28,32 +28,32 @@ public class ReserveNowRequestedForUnreservableChargingStationEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ReserveNowRequestedForUnreservableChargingStationEvent(null, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, IDENTIFYING_TOKEN);
+        new ReserveNowRequestedForUnreservableChargingStationEvent(null, RESERVATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, IDENTIFYING_TOKEN);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithEvseIdNull() {
-        new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, null, IDENTIFYING_TOKEN, EXPIRY_DATE, IDENTIFYING_TOKEN);
+        new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, RESERVATION_ID, null, IDENTIFYING_TOKEN, EXPIRY_DATE, IDENTIFYING_TOKEN);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithTokenNull() {
-        new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, EVSE_ID, null, EXPIRY_DATE, IDENTIFYING_TOKEN);
+        new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, null, EXPIRY_DATE, IDENTIFYING_TOKEN);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithExpiryDateNull() {
-        new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, null, IDENTIFYING_TOKEN);
+        new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, IDENTIFYING_TOKEN, null, IDENTIFYING_TOKEN);
     }
 
     @Test
     public void noNullPointerExceptionThrownWhenCreatingEventWithParentTokenNull() {
-        new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, null);
+        new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, null);
     }
 
     @Test
     public void testAllGetters() {
-        ReserveNowRequestedForUnreservableChargingStationEvent event = new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, IDENTIFYING_TOKEN);
+        ReserveNowRequestedForUnreservableChargingStationEvent event = new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, IDENTIFYING_TOKEN);
 
         assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
         assertEquals(EXPIRY_DATE, event.getExpiryDate());
@@ -65,7 +65,7 @@ public class ReserveNowRequestedForUnreservableChargingStationEventTest {
     @Test
     public void testImmutableDate() {
         Date now = new Date();
-        ReserveNowRequestedForUnreservableChargingStationEvent event = new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, now, PARENT_IDENTIFYING_TOKEN);
+        ReserveNowRequestedForUnreservableChargingStationEvent event = new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, IDENTIFYING_TOKEN, now, PARENT_IDENTIFYING_TOKEN);
         event.getExpiryDate().setTime(TWO_MINUTES_AGO.getTime());
         assertEquals(now, event.getExpiryDate());
     }

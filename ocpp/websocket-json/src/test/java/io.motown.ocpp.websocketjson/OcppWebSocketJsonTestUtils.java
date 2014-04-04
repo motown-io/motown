@@ -32,6 +32,8 @@ import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.websocket.WebSocket;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
@@ -41,6 +43,11 @@ import static org.mockito.Mockito.when;
 public class OcppWebSocketJsonTestUtils {
 
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+    public static String formatDate(Date date) {
+        SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
+        return df.format(date);
+    }
 
     public static Gson getGson() {
         GsonFactoryBean gsonFactoryBean = new GsonFactoryBean();

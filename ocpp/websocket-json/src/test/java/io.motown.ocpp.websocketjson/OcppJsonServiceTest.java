@@ -273,4 +273,23 @@ public class OcppJsonServiceTest {
 
         verify(mockWebSocket).write(expectedMessage);
     }
+
+    @Test
+    public void reserveNowRequest() throws IOException{
+        Date expiryDate = new Date(DateTimeUtils.currentTimeMillis() + FIVE_MINUTES);
+
+        service.reserveNow(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, IDENTIFYING_TOKEN, null, expiryDate, CORRELATION_TOKEN);
+
+        String expectedMessage = String.format("[%d,\"%s\",\"%s\",{\n" +
+                "  \"connectorId\": %d.0,\n" +
+                "  \"expiryDate\": \"%s\",\n" +
+                "  \"idTag\": \"%s\",\n" +
+                "  \"reservationId\": %d.0\n" +
+                "}]", WampMessage.CALL, CORRELATION_TOKEN.getToken(), "ReserveNow", EVSE_ID.getNumberedId(), formatDate(expiryDate), IDENTIFYING_TOKEN.getToken(), RESERVATION_ID.getNumber())
+                .replaceAll("\\s+", "");
+
+        verify(mockWebSocket).write(expectedMessage);
+    }
+
+
 }

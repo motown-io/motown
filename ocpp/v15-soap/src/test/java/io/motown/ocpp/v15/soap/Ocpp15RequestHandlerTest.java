@@ -137,7 +137,7 @@ public class Ocpp15RequestHandlerTest {
     @Test
     public void testReserveNowRequestedEvent() {
         Date expiryDate = new Date();
-        requestHandler.handle(new ReserveNowRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, null), CORRELATION_TOKEN);
+        requestHandler.handle(new ReserveNowRequestedEvent(CHARGING_STATION_ID, PROTOCOL, RESERVATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, null), CORRELATION_TOKEN);
 
         verify(client).reserveNow(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, null, RESERVATION_ID.getNumber());
     }

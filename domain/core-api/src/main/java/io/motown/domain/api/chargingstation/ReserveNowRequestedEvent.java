@@ -23,6 +23,8 @@ public final class ReserveNowRequestedEvent implements CommunicationWithCharging
 
     private final ChargingStationId chargingStationId;
 
+    private final ReservationId reservationId;
+
     private final String protocol;
 
     private final EvseId evseId;
@@ -33,8 +35,9 @@ public final class ReserveNowRequestedEvent implements CommunicationWithCharging
 
     private final IdentifyingToken parentIdentifyingToken;
 
-    public ReserveNowRequestedEvent(ChargingStationId chargingStationId, String protocol, EvseId evseId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken) {
+    public ReserveNowRequestedEvent(ChargingStationId chargingStationId, String protocol, ReservationId reservationId, EvseId evseId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.reservationId = checkNotNull(reservationId);
         this.protocol = checkNotNull(protocol);
         this.evseId = checkNotNull(evseId);
         this.identifyingToken = checkNotNull(identifyingToken);
@@ -50,6 +53,10 @@ public final class ReserveNowRequestedEvent implements CommunicationWithCharging
     @Override
     public String getProtocol() {
         return protocol;
+    }
+
+    public ReservationId getReservationId() {
+        return reservationId;
     }
 
     public EvseId getEvseId() {
