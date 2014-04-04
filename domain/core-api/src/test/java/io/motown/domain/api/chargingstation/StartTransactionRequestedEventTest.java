@@ -23,26 +23,31 @@ public class StartTransactionRequestedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new StartTransactionRequestedEvent(null, PROTOCOL, IDENTIFYING_TOKEN, EVSE_ID);
+        new StartTransactionRequestedEvent(null, PROTOCOL, IDENTIFYING_TOKEN, EVSE_ID, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullProtocol() {
-        new StartTransactionRequestedEvent(CHARGING_STATION_ID, null, IDENTIFYING_TOKEN, EVSE_ID);
+        new StartTransactionRequestedEvent(CHARGING_STATION_ID, null, IDENTIFYING_TOKEN, EVSE_ID, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithEmptyProtocol() {
-        new StartTransactionRequestedEvent(CHARGING_STATION_ID, "", IDENTIFYING_TOKEN, EVSE_ID);
+        new StartTransactionRequestedEvent(CHARGING_STATION_ID, "", IDENTIFYING_TOKEN, EVSE_ID, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullIdentifyingToken() {
-        new StartTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, null, EVSE_ID);
+        new StartTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, null, EVSE_ID, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithEvseIdNull() {
-        new StartTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, IDENTIFYING_TOKEN, null);
+        new StartTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, IDENTIFYING_TOKEN, null, ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingWithIdentityContextNull() {
+        new StartTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, IDENTIFYING_TOKEN, EVSE_ID, null);
     }
 }

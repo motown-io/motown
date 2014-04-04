@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -31,6 +33,8 @@ public final class StartTransactionRequestedEvent implements CommunicationWithCh
 
     private final EvseId evseId;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code StartTransactionRequestedEvent} with an identifier, a protocol and a evse identifier.
      *
@@ -38,15 +42,18 @@ public final class StartTransactionRequestedEvent implements CommunicationWithCh
      * @param protocol          the protocol identifier.
      * @param identifyingToken  the token that should start the transaction.
      * @param evseId            the identifier of the evse.
-     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code identifyingToken} or {@code evseId} is {@code null}.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code identifyingToken}, {@code evseId}
+     *                          or {@code identityContext} is {@code null}.
      */
-    public StartTransactionRequestedEvent(ChargingStationId chargingStationId, String protocol, IdentifyingToken identifyingToken, EvseId evseId) {
+    public StartTransactionRequestedEvent(ChargingStationId chargingStationId, String protocol, IdentifyingToken identifyingToken, EvseId evseId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());
         this.protocol = protocol;
         this.identifyingToken = checkNotNull(identifyingToken);
         this.evseId = checkNotNull(evseId);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -81,5 +88,14 @@ public final class StartTransactionRequestedEvent implements CommunicationWithCh
      */
     public EvseId getEvseId() {
         return evseId;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 }

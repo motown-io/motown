@@ -64,7 +64,7 @@ public class Ocpp12RequestHandlerTest {
 
     @Test
     public void testStartTransactionRequestedEvent() {
-        requestHandler.handle(new StartTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, IDENTIFYING_TOKEN, EVSE_ID), CORRELATION_TOKEN);
+        requestHandler.handle(new StartTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, IDENTIFYING_TOKEN, EVSE_ID, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).startTransaction(CHARGING_STATION_ID, IDENTIFYING_TOKEN, EVSE_ID);
     }

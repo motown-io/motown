@@ -182,7 +182,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestStartTransactionCommand command, MetaData metaData) {
-        apply(new StartTransactionRequestedEvent(this.id, this.protocol, command.getIdentifyingToken(), command.getEvseId()), metaData);
+        apply(new StartTransactionRequestedEvent(this.id, this.protocol, command.getIdentifyingToken(), command.getEvseId(), command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
