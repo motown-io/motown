@@ -16,6 +16,7 @@
 package io.motown.domain.api.chargingstation;
 
 import com.google.common.collect.ImmutableMap;
+import io.motown.domain.api.security.IdentityContext;
 
 import java.util.Date;
 import java.util.Map;
@@ -41,6 +42,8 @@ public final class TransactionStartedEvent {
 
     private final Map<String, String> attributes;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code TransactionStartedEvent}.
      *
@@ -57,12 +60,13 @@ public final class TransactionStartedEvent {
      * @param attributes        a {@link java.util.Map} of attributes. These attributes are additional information provided by
      *                          the charging station when it started the transaction but which are not required by Motown. Because
      *                          {@link java.util.Map} implementations are potentially mutable a defensive copy is made.
+     * @param identityContext   the identity context.
      * @throws NullPointerException if {@code chargingStationId}, {@code transactionId}, {@code evseId}, {@code identifyingToken},
-     * {@code timestamp} or {@code attributes} is {@code null}.
+     * {@code timestamp}, {@code attributes} or {@code identityContext} is {@code null}.
      * @throws IllegalArgumentException if {@code evseId} is negative.
      */
     public TransactionStartedEvent(ChargingStationId chargingStationId, TransactionId transactionId, EvseId evseId, IdentifyingToken identifyingToken,
-                                   int meterStart, Date timestamp, Map<String, String> attributes) {
+                                   int meterStart, Date timestamp, Map<String, String> attributes, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = checkNotNull(transactionId);
         this.evseId = checkNotNull(evseId);
@@ -70,6 +74,7 @@ public final class TransactionStartedEvent {
         this.meterStart = meterStart;
         this.timestamp = new Date(checkNotNull(timestamp).getTime());
         this.attributes = ImmutableMap.copyOf(checkNotNull(attributes));
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -136,5 +141,14 @@ public final class TransactionStartedEvent {
      */
     public Map<String, String> getAttributes() {
         return attributes;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 }

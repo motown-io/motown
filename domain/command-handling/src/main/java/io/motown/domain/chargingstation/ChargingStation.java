@@ -143,7 +143,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
             return;
         }
 
-        apply(new TransactionStartedEvent(command.getChargingStationId(), command.getTransactionId(), command.getEvseId(), command.getIdentifyingToken(), command.getMeterStart(), command.getTimestamp(), command.getAttributes()), metaData);
+        apply(new TransactionStartedEvent(command.getChargingStationId(), command.getTransactionId(), command.getEvseId(), command.getIdentifyingToken(), command.getMeterStart(), command.getTimestamp(), command.getAttributes(), command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
