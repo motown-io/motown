@@ -26,6 +26,7 @@ import org.mockito.ArgumentCaptor;
 import java.io.IOException;
 import java.util.UUID;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
@@ -48,7 +49,7 @@ public class MeterValuesRequestHandlerTest {
     @Test
     public void handleValidRequest() throws IOException {
         String token = UUID.randomUUID().toString();
-        MeterValuesRequestHandler handler = new MeterValuesRequestHandler(gson, domainService, OcppWebSocketRequestHandler.PROTOCOL_IDENTIFIER);
+        MeterValuesRequestHandler handler = new MeterValuesRequestHandler(gson, domainService, OcppWebSocketRequestHandler.PROTOCOL_IDENTIFIER, ADD_ON_IDENTITY);
 
         String requestPayload = "{\n" +
                 "  \"connectorId\": 2,\n" +

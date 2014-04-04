@@ -177,7 +177,7 @@ public class MotownCentralSystemService implements CentralSystemService {
             meterValues.add(new MeterValue(mv.getTimestamp(), Integer.toString(mv.getValue())));
         }
 
-        domainService.meterValues(chargingStationId, transactionId, new EvseId(request.getConnectorId()), meterValues);
+        domainService.meterValues(chargingStationId, transactionId, new EvseId(request.getConnectorId()), meterValues, addOnIdentity);
 
         return new MeterValuesResponse();
     }

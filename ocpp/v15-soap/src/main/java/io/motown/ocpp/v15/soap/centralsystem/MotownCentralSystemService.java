@@ -174,7 +174,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
             }
         }
 
-        domainService.meterValues(chargingStationId, transactionId, new EvseId(request.getConnectorId()), meterValues);
+        domainService.meterValues(chargingStationId, transactionId, new EvseId(request.getConnectorId()), meterValues, addOnIdentity);
 
         return new MeterValuesResponse();
     }

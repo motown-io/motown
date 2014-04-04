@@ -67,7 +67,7 @@ public class ChargingStationTest {
     @Test
     public void testMultipleMeterValues() {
         fixture.given(CHARGING_STATION)
-                .when(new ProcessMeterValueCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, METER_VALUES))
+                .when(new ProcessMeterValueCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, METER_VALUES, NULL_USER_IDENTITY_CONTEXT))
                 .expectEvents(new ChargingStationSentMeterValuesEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, METER_VALUES));
     }
 
@@ -76,7 +76,7 @@ public class ChargingStationTest {
         List<MeterValue> meterValues = new ArrayList<>();
 
         fixture.given(CHARGING_STATION)
-                .when(new ProcessMeterValueCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, meterValues))
+                .when(new ProcessMeterValueCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, meterValues, NULL_USER_IDENTITY_CONTEXT))
                 .expectEvents(new ChargingStationSentMeterValuesEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, meterValues));
     }
 
@@ -85,7 +85,7 @@ public class ChargingStationTest {
         TransactionId transactionId = null;
 
         fixture.given(CHARGING_STATION)
-                .when(new ProcessMeterValueCommand(CHARGING_STATION_ID, transactionId, EVSE_ID, METER_VALUES))
+                .when(new ProcessMeterValueCommand(CHARGING_STATION_ID, transactionId, EVSE_ID, METER_VALUES, NULL_USER_IDENTITY_CONTEXT))
                 .expectEvents(new ChargingStationSentMeterValuesEvent(CHARGING_STATION_ID, transactionId, EVSE_ID, METER_VALUES));
     }
 

@@ -247,7 +247,7 @@ public class MotownCentralSystemServiceTest {
 
         motownCentralSystemService.meterValues(request, CHARGING_STATION_ID.getId());
 
-        verify(domainService).meterValues(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, expectedMeterValuesList);
+        verify(domainService).meterValues(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, expectedMeterValuesList, OCPPS15_ADD_ON_IDENTITY);
     }
 
     @Test

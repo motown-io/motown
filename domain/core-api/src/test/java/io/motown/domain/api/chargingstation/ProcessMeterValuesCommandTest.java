@@ -25,16 +25,22 @@ public class ProcessMeterValuesCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new ProcessMeterValueCommand(null, TRANSACTION_ID, EVSE_ID, Collections.<MeterValue>emptyList());
+        new ProcessMeterValueCommand(null, TRANSACTION_ID, EVSE_ID, Collections.<MeterValue>emptyList(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithEvseIdNull() {
-        new ProcessMeterValueCommand(CHARGING_STATION_ID, TRANSACTION_ID, null, Collections.<MeterValue>emptyList());
+        new ProcessMeterValueCommand(CHARGING_STATION_ID, TRANSACTION_ID, null, Collections.<MeterValue>emptyList(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithMeterValuesNull() {
-        new ProcessMeterValueCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, null);
+        new ProcessMeterValueCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, null, NULL_USER_IDENTITY_CONTEXT);
     }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
+        new ProcessMeterValueCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, Collections.<MeterValue>emptyList(), null);
+    }
+
 }

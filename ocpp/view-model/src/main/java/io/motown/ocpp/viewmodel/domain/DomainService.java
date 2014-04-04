@@ -144,8 +144,10 @@ public class DomainService {
         commandGateway.send(new HeartbeatCommand(chargingStationId, identityContext));
     }
 
-    public void meterValues(ChargingStationId chargingStationId, TransactionId transactionId, EvseId evseId, List<MeterValue> meterValues) {
-        commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, evseId, meterValues));
+    public void meterValues(ChargingStationId chargingStationId, TransactionId transactionId, EvseId evseId, List<MeterValue> meterValues, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, evseId, meterValues, identityContext));
     }
 
     public void diagnosticsFileNameReceived(ChargingStationId chargingStationId, String diagnosticsFileName, CorrelationToken correlationToken) {
@@ -252,7 +254,7 @@ public class DomainService {
 
         if (meterValues != null && meterValues.size() > 0) {
             Transaction transaction = transactionRepository.findTransactionById((long) transactionId.getNumber());
-            commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, transaction.getEvseId(), meterValues));
+            commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, transaction.getEvseId(), meterValues, identityContext));
         }
     }
 

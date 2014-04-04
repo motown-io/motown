@@ -17,6 +17,7 @@ package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Metervalues;
 import io.motown.ocpp.websocketjson.schema.generated.v15.MetervaluesResponse;
@@ -39,10 +40,13 @@ public class MeterValuesRequestHandler extends RequestHandler {
 
     private DomainService domainService;
 
-    public MeterValuesRequestHandler(Gson gson, DomainService domainService, String protocolIdentifier) {
+    private AddOnIdentity addOnIdentity;
+
+    public MeterValuesRequestHandler(Gson gson, DomainService domainService, String protocolIdentifier, AddOnIdentity addOnIdentity) {
         this.gson = gson;
         this.domainService = domainService;
         this.protocolIdentifier = protocolIdentifier;
+        this.addOnIdentity = addOnIdentity;
     }
 
     @Override
@@ -68,7 +72,7 @@ public class MeterValuesRequestHandler extends RequestHandler {
             transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, requestTransactionId);
         }
 
-        domainService.meterValues(chargingStationId, transactionId, new EvseId(request.getConnectorId().intValue()), meterValues);
+        domainService.meterValues(chargingStationId, transactionId, new EvseId(request.getConnectorId().intValue()), meterValues, addOnIdentity);
 
         writeResponse(webSocket, new MetervaluesResponse(), callId, gson);
     }

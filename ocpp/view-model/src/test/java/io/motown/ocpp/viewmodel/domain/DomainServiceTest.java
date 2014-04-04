@@ -168,9 +168,9 @@ public class DomainServiceTest {
 
     @Test
     public void testMeterValues() {
-        domainService.meterValues(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, METER_VALUES);
+        domainService.meterValues(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, METER_VALUES, ADD_ON_IDENTITY);
 
-        verify(gateway).send(new ProcessMeterValueCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, METER_VALUES));
+        verify(gateway).send(new ProcessMeterValueCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, METER_VALUES, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
@@ -352,7 +352,7 @@ public class DomainServiceTest {
 
         verify(gateway).send(new StopTransactionCommand(CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, stopTransactionDate, NULL_USER_IDENTITY_CONTEXT));
         // stored transaction should provide the evse id that's needed to process the meter values
-        verify(gateway).send(new ProcessMeterValueCommand(CHARGING_STATION_ID, transactionId, EVSE_ID, METER_VALUES));
+        verify(gateway).send(new ProcessMeterValueCommand(CHARGING_STATION_ID, transactionId, EVSE_ID, METER_VALUES, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test

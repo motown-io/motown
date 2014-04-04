@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import javax.annotation.Nullable;
@@ -32,22 +33,29 @@ public final class ProcessMeterValueCommand {
     private final ChargingStationId chargingStationId;
 
     private TransactionId transactionId;
+
     private EvseId evseId;
 
     private List<MeterValue> meterValueList;
 
+    private final IdentityContext identityContext;
+
     /**
-     * Creates a {@code ProcessMeterValueCommand} with an identifier.
+     * Creates a {@code ProcessMeterValueCommand} with an identifier, transaction id, evse id, meter value list and identity context.
      *
-     * @param chargingStationId the identifier of the charging station.
-     * @throws NullPointerException     if {@code chargingStationId} is {@code null}.
-     * @throws IllegalArgumentException if {@code evseId} is negative.
+     * @param chargingStationId     identifier of the charging station.
+     * @param transactionId         identifier of the transaction.
+     * @param evseId                identifier of the evse.
+     * @param meterValueList        list of meter values.
+     * @param identityContext       identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code evseId}, {@code meterValueList} or {@code identityContext} is {@code null}.
      */
-    public ProcessMeterValueCommand(ChargingStationId chargingStationId, @Nullable TransactionId transactionId, EvseId evseId, List<MeterValue> meterValueList) {
+    public ProcessMeterValueCommand(ChargingStationId chargingStationId, @Nullable TransactionId transactionId, EvseId evseId, List<MeterValue> meterValueList, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = transactionId;
         this.evseId = checkNotNull(evseId);
         this.meterValueList = checkNotNull(meterValueList);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -87,9 +95,18 @@ public final class ProcessMeterValueCommand {
         return evseId;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, transactionId, evseId, meterValueList);
+        return Objects.hash(chargingStationId, transactionId, evseId, meterValueList, identityContext);
     }
 
     @Override
@@ -101,6 +118,6 @@ public final class ProcessMeterValueCommand {
             return false;
         }
         final ProcessMeterValueCommand other = (ProcessMeterValueCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.transactionId, other.transactionId) && Objects.equals(this.evseId, other.evseId) && Objects.equals(this.meterValueList, other.meterValueList);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.transactionId, other.transactionId) && Objects.equals(this.evseId, other.evseId) && Objects.equals(this.meterValueList, other.meterValueList) && Objects.equals(this.identityContext, other.identityContext);
     }
 }
