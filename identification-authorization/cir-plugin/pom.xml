@@ -16,21 +16,16 @@
     limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
-        <groupId>io.motown</groupId>
         <artifactId>motown-io</artifactId>
+        <groupId>io.motown</groupId>
         <version>0.1.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-
     <groupId>io.motown.identification-authorization</groupId>
     <artifactId>identification-authorization-cir-plugin</artifactId>
-
     <dependencies>
         <dependency>
             <groupId>io.motown.identification-authorization</groupId>
@@ -46,12 +41,18 @@
             <artifactId>mockito-all</artifactId>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <header>com/mycila/maven/plugin/license/templates/APACHE-2.txt</header>
                     <properties>
@@ -64,13 +65,6 @@
                         <exclude>src/main/resources/**</exclude>
                     </excludes>
                 </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.cxf</groupId>
@@ -80,14 +74,16 @@
                     <execution>
                         <id>generate-sources-cir-client</id>
                         <phase>generate-sources</phase>
+                        <goals>
+                            <goal>wsdl2java</goal>
+                        </goals>
                         <configuration>
                             <wsdlOptions>
                                 <wsdlOption>
                                     <wsdl>${basedir}/src/main/resources/wsdl/cir10.wsdl</wsdl>
                                     <wsdlLocation>classpath:wsdl/cir10.wsdl</wsdlLocation>
                                     <packagenames>
-                                        <packagename>io.motown.identificationauthorization.cirplugin.cir.schema
-                                        </packagename>
+                                        <packagename>io.motown.identificationauthorization.cirplugin.cir.schema</packagename>
                                     </packagenames>
                                     <extraargs>
                                         <extraarg>-compile</extraarg>
@@ -98,9 +94,6 @@
                                 </wsdlOption>
                             </wsdlOptions>
                         </configuration>
-                        <goals>
-                            <goal>wsdl2java</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>

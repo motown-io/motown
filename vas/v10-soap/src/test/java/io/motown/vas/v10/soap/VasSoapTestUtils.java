@@ -26,7 +26,7 @@ import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.COORDINATES;
 import static junit.framework.Assert.assertEquals;
-import static org.jgroups.util.Util.assertTrue;
+import static org.junit.Assert.assertTrue;
 
 public class VasSoapTestUtils {
 
