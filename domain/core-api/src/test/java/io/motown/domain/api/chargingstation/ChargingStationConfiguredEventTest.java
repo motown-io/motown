@@ -27,37 +27,37 @@ public class ChargingStationConfiguredEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNullAndEvses() {
-        new ChargingStationConfiguredEvent(null, Collections.<Evse>emptySet(), Collections.<String, String>emptyMap());
+        new ChargingStationConfiguredEvent(null, Collections.<Evse>emptySet(), Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithEvsesNull() {
-        new ChargingStationConfiguredEvent(CHARGING_STATION_ID, null, Collections.<String, String>emptyMap());
+        new ChargingStationConfiguredEvent(CHARGING_STATION_ID, null, Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithConfigurationItemsNull() {
-        new ChargingStationConfiguredEvent(CHARGING_STATION_ID, Collections.<Evse>emptySet(), null);
+        new ChargingStationConfiguredEvent(CHARGING_STATION_ID, Collections.<Evse>emptySet(), null, NULL_USER_IDENTITY_CONTEXT);
     }
 
     //TODO refactor
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedOperationExceptionThrownWhenModifyingEvses() {
-        ChargingStationConfiguredEvent command = new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, Collections.<String, String>emptyMap());
+        ChargingStationConfiguredEvent command = new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT);
 
         command.getEvses().add(new Evse(EVSE_ID, CONNECTORS));
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedOperationExceptionThrownWhenModifyingConfigurationItems() {
-        ChargingStationConfiguredEvent command = new ChargingStationConfiguredEvent(CHARGING_STATION_ID, Collections.<Evse>emptySet(), CONFIGURATION_ITEMS);
+        ChargingStationConfiguredEvent command = new ChargingStationConfiguredEvent(CHARGING_STATION_ID, Collections.<Evse>emptySet(), CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT);
 
         command.getConfigurationItems().put("configItem", "configValue");
     }
 
     @Test
     public void constructorSetsFields() {
-        ChargingStationConfiguredEvent event = new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS);
+        ChargingStationConfiguredEvent event = new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT);
 
         assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
         assertEquals(EVSES, event.getEvses());

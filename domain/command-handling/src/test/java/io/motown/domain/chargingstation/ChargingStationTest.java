@@ -200,21 +200,21 @@ public class ChargingStationTest {
     public void testConfigureChargingStation() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
                 .when(new ConfigureChargingStationCommand(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS));
+                .expectEvents(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testConfigureChargingStationWithoutEvses() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
                 .when(new ConfigureChargingStationCommand(CHARGING_STATION_ID, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, Collections.<Evse>emptySet(), CONFIGURATION_ITEMS));
+                .expectEvents(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, Collections.<Evse>emptySet(), CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testConfigureChargingStationWithoutConfigurationItems() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
                 .when(new ConfigureChargingStationCommand(CHARGING_STATION_ID, EVSES, NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, Collections.<String, String>emptyMap()));
+                .expectEvents(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test

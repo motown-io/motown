@@ -409,7 +409,7 @@ public final class ChargingStationTestUtils {
             .add(new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT))
             .add(new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT))
             .add(new ChargingStationAcceptedEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
-            .add(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS))
+            .add(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT))
             .build();
 
     /**
@@ -419,7 +419,7 @@ public final class ChargingStationTestUtils {
             .add(new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT))
             .add(new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT))
             .add(new ChargingStationAcceptedEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
-            .add(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS))
+            .add(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT))
             .add(new ChargingStationMadeReservableEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
             .build();
 

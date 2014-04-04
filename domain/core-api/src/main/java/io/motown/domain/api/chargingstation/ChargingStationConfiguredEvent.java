@@ -18,6 +18,7 @@ package io.motown.domain.api.chargingstation;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Map;
@@ -37,19 +38,23 @@ public final class ChargingStationConfiguredEvent {
 
     private final Map<String, String> configurationItems;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code ChargingStationConfiguredEvent} with an identifier.
      *
-     * @param chargingStationId the identifier of the charging station.
-     * @param evses the Evses with which the charging station has been configured.
+     * @param chargingStationId  the identifier of the charging station.
+     * @param evses              the Evses with which the charging station has been configured.
      * @param configurationItems the configuration items with which the charging station has been configured.
-     * @throws NullPointerException if {@code chargingStationId}, {@code evses}, or {@code configurationItems} is
-     * {@code null}.
+     * @param identityContext    identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code evses}, {@code configurationItems} or
+     *                          {@code identityContext} is {@code null}.
      */
-    public ChargingStationConfiguredEvent(ChargingStationId chargingStationId, Set<Evse> evses, Map<String, String> configurationItems) {
+    public ChargingStationConfiguredEvent(ChargingStationId chargingStationId, Set<Evse> evses, Map<String, String> configurationItems, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.evses = ImmutableSet.copyOf(checkNotNull(evses));
         this.configurationItems = ImmutableMap.copyOf(checkNotNull(configurationItems));
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -82,12 +87,22 @@ public final class ChargingStationConfiguredEvent {
         return configurationItems;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
     @Override
     public String toString() {
         return Objects.toStringHelper(this.getClass())
                 .add("chargingStationId", chargingStationId)
                 .add("evses", evses)
                 .add("configurationItems", configurationItems)
+                .add("identityContext", identityContext)
                 .toString();
     }
 }
