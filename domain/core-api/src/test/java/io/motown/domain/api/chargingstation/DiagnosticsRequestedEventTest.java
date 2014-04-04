@@ -19,22 +19,28 @@ import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.PROTOCOL;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
 
 public class DiagnosticsRequestedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithChargingStationIdNull() {
-        new DiagnosticsRequestedEvent(null, PROTOCOL, "ftp://abc.com");
+        new DiagnosticsRequestedEvent(null, PROTOCOL, "ftp://abc.com", ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithProtocolNull() {
-        new DiagnosticsRequestedEvent(CHARGING_STATION_ID, null, "ftp://abc.com");
+        new DiagnosticsRequestedEvent(CHARGING_STATION_ID, null, "ftp://abc.com", ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithEmptyProtocol() {
-        new DiagnosticsRequestedEvent(CHARGING_STATION_ID, "", "ftp://abc.com");
+        new DiagnosticsRequestedEvent(CHARGING_STATION_ID, "", "ftp://abc.com", ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingWithIdentityContextNull() {
+        new DiagnosticsRequestedEvent(CHARGING_STATION_ID, PROTOCOL, "ftp://abc.com", null);
     }
 
 }

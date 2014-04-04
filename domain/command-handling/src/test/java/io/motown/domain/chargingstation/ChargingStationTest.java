@@ -309,7 +309,7 @@ public class ChargingStationTest {
         String targetLocation = "ftp://abc.com/";
         fixture.given(CHARGING_STATION)
                 .when(new RequestDiagnosticsCommand(CHARGING_STATION_ID, targetLocation, null, null, null, null, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new DiagnosticsRequestedEvent(CHARGING_STATION_ID, PROTOCOL, targetLocation));
+                .expectEvents(new DiagnosticsRequestedEvent(CHARGING_STATION_ID, PROTOCOL, targetLocation, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test

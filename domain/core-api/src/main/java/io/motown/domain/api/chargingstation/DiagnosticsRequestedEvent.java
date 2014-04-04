@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import javax.annotation.Nullable;
@@ -43,21 +44,25 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
 
     private Date periodStopTime;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code DiagnosticsRequestedEvent}.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param protocol          the protocol the charging station supports
      * @param uploadLocation    the location where the diagnostics file should be uploaded to
-     *
-     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, or {@code uploadLocation} is {@code null}.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code uploadLocation} or
+     *                          {@code identityContext} is {@code null}.
      */
-    public DiagnosticsRequestedEvent(ChargingStationId chargingStationId, String protocol, String uploadLocation) {
+    public DiagnosticsRequestedEvent(ChargingStationId chargingStationId, String protocol, String uploadLocation, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());
         this.protocol = protocol;
         this.uploadLocation = checkNotNull(uploadLocation);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -69,12 +74,15 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
      * @param numRetries        the optional number of retries the charging station should perform in case of failure
      * @param retryInterval     the optional interval in seconds between retry attempts
      * @param periodStartTime   the optional date and time of the oldest logging information to include in the diagnostics report
-     * @param periodStopTime     the optional date and time of the latest logging information to include in the diagnostics report
+     * @param periodStopTime    the optional date and time of the latest logging information to include in the diagnostics report
+     * @param identityContext   identity context.
      *
-     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, or {@code uploadLocation} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code uploadLocation} or
+     *                          {@code identityContext} is {@code null}.
      */
-    public DiagnosticsRequestedEvent(ChargingStationId chargingStationId, String protocol, String uploadLocation, @Nullable Integer numRetries, @Nullable Integer retryInterval, @Nullable Date periodStartTime, @Nullable Date periodStopTime) {
-        this(chargingStationId, protocol, uploadLocation);
+    public DiagnosticsRequestedEvent(ChargingStationId chargingStationId, String protocol, String uploadLocation, @Nullable Integer numRetries,
+                                     @Nullable Integer retryInterval, @Nullable Date periodStartTime, @Nullable Date periodStopTime, IdentityContext identityContext) {
+        this(chargingStationId, protocol, uploadLocation, identityContext);
 
         this.numRetries = numRetries;
         this.retryInterval = retryInterval;
@@ -136,5 +144,14 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
     @Nullable
     public Date getPeriodStopTime() {
         return periodStopTime != null ? new Date(periodStopTime.getTime()) : null;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 }

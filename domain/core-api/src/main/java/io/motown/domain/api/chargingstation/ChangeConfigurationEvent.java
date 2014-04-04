@@ -43,7 +43,7 @@ public final class ChangeConfigurationEvent implements CommunicationWithCharging
      * @param key               the key to be changed.
      * @param value             the new value.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code key}, {@code value}
+     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code key}, {@code value} or
      *                          {@code identityContext} is {@code null}.
      */
     public ChangeConfigurationEvent(ChargingStationId chargingStationId, String protocol, String key, String value, IdentityContext identityContext) {
