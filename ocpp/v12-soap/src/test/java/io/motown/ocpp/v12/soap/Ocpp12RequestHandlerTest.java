@@ -92,7 +92,7 @@ public class Ocpp12RequestHandlerTest {
 
     @Test
     public void testRequestHardResetChargingStationEvent() {
-        requestHandler.handle(new HardResetChargingStationRequestedEvent(CHARGING_STATION_ID, PROTOCOL), CORRELATION_TOKEN);
+        requestHandler.handle(new HardResetChargingStationRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).hardReset(CHARGING_STATION_ID);
     }

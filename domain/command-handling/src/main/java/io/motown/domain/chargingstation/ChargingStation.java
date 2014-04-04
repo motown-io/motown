@@ -198,7 +198,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestHardResetChargingStationCommand command, MetaData metaData) {
-        apply(new HardResetChargingStationRequestedEvent(this.id, this.protocol), metaData);
+        apply(new HardResetChargingStationRequestedEvent(this.id, this.protocol, command.getIdentityContext()), metaData);
     }
 
     @CommandHandler

@@ -24,9 +24,7 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.IDENTITY_CONTEXT;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.PROTOCOL;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static org.junit.Assert.assertEquals;
 
 public class MotownRoutingKeyResolverTest {
@@ -47,7 +45,7 @@ public class MotownRoutingKeyResolverTest {
 
     @Test
     public void testResolveRoutingKeyCommunicationWithChargingStationEvent() {
-        EventMessage message = new GenericEventMessage<>(new HardResetChargingStationRequestedEvent(CHARGING_STATION_ID, PROTOCOL));
+        EventMessage message = new GenericEventMessage<>(new HardResetChargingStationRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT));
 
         String routingKey = resolver.resolveRoutingKey(message);
         String expected = routingKeyPrefix + PROTOCOL;
