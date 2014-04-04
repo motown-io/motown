@@ -20,6 +20,8 @@ import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
+
 public class DataTransferJsonCommandTest {
 
     private Gson gson;
@@ -38,12 +40,12 @@ public class DataTransferJsonCommandTest {
     @Test
     public void testDataTransferCommand() {
         JsonObject command = gson.fromJson("{vendorId:'ALFEN',messageId:'1',data:'NEW DATA'}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, command, null);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, command, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void testInvalidDataTransferCommand() {
         JsonObject command = gson.fromJson("{vendorID:'ALFEN',messageID:'1',data:'NEW DATA'}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, command, null);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, command, ROOT_IDENTITY_CONTEXT);
     }
 }

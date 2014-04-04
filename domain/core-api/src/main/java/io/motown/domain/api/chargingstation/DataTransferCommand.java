@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Objects;
@@ -37,6 +38,8 @@ public final class DataTransferCommand {
 
     private String data;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code DataTransferCommand} with an identifier.
      *
@@ -44,17 +47,19 @@ public final class DataTransferCommand {
      * @param vendorId          the charging station vendor.
      * @param messageId         optional additional identification field (use an empty string to signify no value).
      * @param data              the data to transfer (use an empty string to signify no value).
-     * @throws NullPointerException     if {@code chargingStationId}, {@code vendorId}, {@code messageId} or {@code data} is
-     *                                  {@code null}.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code vendorId}, {@code messageId}, {@code data}
+     *                              or {@code identityContext} is {@code null}.
      * @throws IllegalArgumentException if {@code vendorId} is empty.
      */
-    public DataTransferCommand(ChargingStationId chargingStationId, String vendorId, String messageId, String data) {
+    public DataTransferCommand(ChargingStationId chargingStationId, String vendorId, String messageId, String data, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(vendorId);
         checkArgument(!vendorId.isEmpty());
         this.vendorId = vendorId;
         this.messageId = checkNotNull(messageId);
         this.data = checkNotNull(data);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -85,9 +90,18 @@ public final class DataTransferCommand {
         return data;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, vendorId, messageId, data);
+        return Objects.hash(chargingStationId, vendorId, messageId, data, identityContext);
     }
 
     @Override
@@ -99,6 +113,6 @@ public final class DataTransferCommand {
             return false;
         }
         final DataTransferCommand other = (DataTransferCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.vendorId, other.vendorId) && Objects.equals(this.messageId, other.messageId) && Objects.equals(this.data, other.data);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.vendorId, other.vendorId) && Objects.equals(this.messageId, other.messageId) && Objects.equals(this.data, other.data) && Objects.equals(this.identityContext, other.identityContext);
     }
 }
