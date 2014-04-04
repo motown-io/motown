@@ -193,7 +193,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestSoftResetChargingStationCommand command, MetaData metaData) {
-        apply(new SoftResetChargingStationRequestedEvent(this.id, this.protocol), metaData);
+        apply(new SoftResetChargingStationRequestedEvent(this.id, this.protocol, command.getIdentityContext()), metaData);
     }
 
     @CommandHandler

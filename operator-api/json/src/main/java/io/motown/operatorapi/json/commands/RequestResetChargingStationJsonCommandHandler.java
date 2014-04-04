@@ -52,7 +52,7 @@ class RequestResetChargingStationJsonCommandHandler implements JsonCommandHandle
                 if("hard".equalsIgnoreCase(command.getType())) {
                     commandGateway.send(new RequestHardResetChargingStationCommand(new ChargingStationId(chargingStationId)), new CorrelationToken());
                 } else {
-                    commandGateway.send(new RequestSoftResetChargingStationCommand(new ChargingStationId(chargingStationId)), new CorrelationToken());
+                    commandGateway.send(new RequestSoftResetChargingStationCommand(new ChargingStationId(chargingStationId), identityContext), new CorrelationToken());
                 }
             }
         } catch (JsonSyntaxException ex) {

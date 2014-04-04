@@ -20,6 +20,8 @@ import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
+
 public class RequestResetChargingStationJsonCommandHandlerTest {
 
     private Gson gson;
@@ -37,13 +39,13 @@ public class RequestResetChargingStationJsonCommandHandlerTest {
     @Test
     public void testResetCommand() {
         JsonObject commandObject = gson.fromJson("{type:'soft'}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test
     public void testHardResetCommand() {
         JsonObject commandObject = gson.fromJson("{type:'hard'}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
 }

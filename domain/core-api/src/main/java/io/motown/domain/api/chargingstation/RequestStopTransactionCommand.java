@@ -33,7 +33,7 @@ public final class RequestStopTransactionCommand {
     private final IdentityContext identityContext;
 
     /**
-     * Creates a {@code RequestStopTransactionCommand} with an identifier.
+     * Creates a {@code RequestStopTransactionCommand} with an identifier, transaction identifier and identity context.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param transactionId     the unique transaction identifier.

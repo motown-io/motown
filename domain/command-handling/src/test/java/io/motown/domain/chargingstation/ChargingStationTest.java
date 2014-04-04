@@ -270,8 +270,8 @@ public class ChargingStationTest {
     @Test
     public void testRequestSoftResetChargingStation() {
         fixture.given(CHARGING_STATION)
-                .when(new RequestSoftResetChargingStationCommand(CHARGING_STATION_ID))
-                .expectEvents(new SoftResetChargingStationRequestedEvent(CHARGING_STATION_ID, PROTOCOL));
+                .when(new RequestSoftResetChargingStationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new SoftResetChargingStationRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test

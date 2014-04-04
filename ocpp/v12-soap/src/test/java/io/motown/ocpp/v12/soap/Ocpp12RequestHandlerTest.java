@@ -85,7 +85,7 @@ public class Ocpp12RequestHandlerTest {
 
     @Test
     public void testRequestSoftResetChargingStationEvent() {
-        requestHandler.handle(new SoftResetChargingStationRequestedEvent(CHARGING_STATION_ID, PROTOCOL), CORRELATION_TOKEN);
+        requestHandler.handle(new SoftResetChargingStationRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).softReset(CHARGING_STATION_ID);
     }
