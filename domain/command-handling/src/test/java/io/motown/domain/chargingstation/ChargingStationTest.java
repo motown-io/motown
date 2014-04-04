@@ -456,7 +456,7 @@ public class ChargingStationTest {
     public void testStopTransaction() {
         Date now = new Date();
         fixture.given(CHARGING_STATION)
-                .when(new StopTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, now))
+                .when(new StopTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, now, NULL_USER_IDENTITY_CONTEXT))
                 .expectEvents(new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, now));
     }
 

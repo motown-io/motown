@@ -230,7 +230,7 @@ public class MotownCentralSystemService implements CentralSystemService {
         //OCPP 1.2 does not include the meter values in a stop transaction message
         List<MeterValue> meterValues = new ArrayList<>();
 
-        domainService.stopTransaction(chargingStationId, transactionId, identifyingToken, request.getMeterStop(), request.getTimestamp(), meterValues);
+        domainService.stopTransaction(chargingStationId, transactionId, identifyingToken, request.getMeterStop(), request.getTimestamp(), meterValues, addOnIdentity);
         return new StopTransactionResponse();
     }
 

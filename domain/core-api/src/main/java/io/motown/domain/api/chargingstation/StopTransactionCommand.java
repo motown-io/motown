@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Date;
@@ -38,6 +39,8 @@ public final class StopTransactionCommand {
 
     private final Date timestamp;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code StopTransactionCommand}.
      * <p/>
@@ -50,15 +53,17 @@ public final class StopTransactionCommand {
      * @param identifyingToken  the token which stopped the transaction.
      * @param meterStop         meter value in Wh for the evse when the transaction stopped.
      * @param timestamp         the time at which the transaction stopped.
-     * @throws NullPointerException if {@code chargingStationId}, {@code transactionId}, {@code identifyingToken} or
-     *                              {@code timestamp} is {@code null}.
+     * @param identityContext   the identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code transactionId}, {@code identifyingToken},
+     *                              {@code timestamp} or {@code identityContext} is {@code null}.
      */
-    public StopTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId, IdentifyingToken identifyingToken, int meterStop, Date timestamp) {
+    public StopTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId, IdentifyingToken identifyingToken, int meterStop, Date timestamp, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = checkNotNull(transactionId);
         this.identifyingToken = checkNotNull(identifyingToken);
         this.meterStop = meterStop;
         this.timestamp = new Date(checkNotNull(timestamp).getTime());
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -106,9 +111,18 @@ public final class StopTransactionCommand {
         return new Date(timestamp.getTime());
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, transactionId, identifyingToken, meterStop, timestamp);
+        return Objects.hash(chargingStationId, transactionId, identifyingToken, meterStop, timestamp, identityContext);
     }
 
     @Override
@@ -120,6 +134,6 @@ public final class StopTransactionCommand {
             return false;
         }
         final StopTransactionCommand other = (StopTransactionCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.transactionId, other.transactionId) && Objects.equals(this.identifyingToken, other.identifyingToken) && Objects.equals(this.meterStop, other.meterStop) && Objects.equals(this.timestamp, other.timestamp);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.transactionId, other.transactionId) && Objects.equals(this.identifyingToken, other.identifyingToken) && Objects.equals(this.meterStop, other.meterStop) && Objects.equals(this.timestamp, other.timestamp) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

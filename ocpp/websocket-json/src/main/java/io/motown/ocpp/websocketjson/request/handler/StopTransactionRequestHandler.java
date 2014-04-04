@@ -20,6 +20,7 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.MeterValue;
 import io.motown.domain.api.chargingstation.NumberedTransactionId;
 import io.motown.domain.api.chargingstation.TextualToken;
+import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.*;
 import org.atmosphere.websocket.WebSocket;
@@ -36,10 +37,13 @@ public class StopTransactionRequestHandler extends RequestHandler {
 
     private DomainService domainService;
 
-    public StopTransactionRequestHandler(Gson gson, DomainService domainService, String protocolIdentifier) {
+    private AddOnIdentity addOnIdentity;
+
+    public StopTransactionRequestHandler(Gson gson, DomainService domainService, String protocolIdentifier, AddOnIdentity addOnIdentity) {
         this.gson = gson;
         this.domainService = domainService;
         this.protocolIdentifier = protocolIdentifier;
+        this.addOnIdentity = addOnIdentity;
     }
 
     @Override
@@ -63,11 +67,11 @@ public class StopTransactionRequestHandler extends RequestHandler {
 
         NumberedTransactionId transactionId = null;
         Integer requestTransactionId = request.getTransactionId().intValue();
-        if(requestTransactionId != null && requestTransactionId > 0) {
+        if(requestTransactionId > 0) {
             transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, requestTransactionId);
         }
 
-        domainService.stopTransaction(chargingStationId, transactionId, new TextualToken(request.getIdTag()), request.getMeterStop().intValue(), request.getTimestamp(), meterValues);
+        domainService.stopTransaction(chargingStationId, transactionId, new TextualToken(request.getIdTag()), request.getMeterStop().intValue(), request.getTimestamp(), meterValues, addOnIdentity);
 
         // TODO locally store identifications, so we can use these in the response. - Dennis Laumen, December 16th 2013
         GregorianCalendar expDate = new GregorianCalendar();

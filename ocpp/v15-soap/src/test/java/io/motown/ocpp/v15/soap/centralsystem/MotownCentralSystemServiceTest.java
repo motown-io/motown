@@ -136,7 +136,7 @@ public class MotownCentralSystemServiceTest {
 
         motownCentralSystemService.stopTransaction(request, CHARGING_STATION_ID.getId());
 
-        verify(domainService).stopTransaction(CHARGING_STATION_ID, new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL_IDENTIFIER, TRANSACTION_NUMBER), IDENTIFYING_TOKEN, METER_STOP, FIVE_MINUTES_AGO, METER_VALUES);
+        verify(domainService).stopTransaction(CHARGING_STATION_ID, new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL_IDENTIFIER, TRANSACTION_NUMBER), IDENTIFYING_TOKEN, METER_STOP, FIVE_MINUTES_AGO, METER_VALUES, OCPPS15_ADD_ON_IDENTITY);
     }
 
     @Test

@@ -26,28 +26,33 @@ public class StopTransactionCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new StopTransactionCommand(null, TRANSACTION_ID, IDENTIFYING_TOKEN, 1, new Date());
+        new StopTransactionCommand(null, TRANSACTION_ID, IDENTIFYING_TOKEN, 1, new Date(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTransactionId() {
-        new StopTransactionCommand(CHARGING_STATION_ID, null, IDENTIFYING_TOKEN, 1, new Date());
+        new StopTransactionCommand(CHARGING_STATION_ID, null, IDENTIFYING_TOKEN, 1, new Date(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullIdentifyingToken() {
-        new StopTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, null, 1, new Date());
+        new StopTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, null, 1, new Date(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTimestamp() {
-        new StopTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, 1, null);
+        new StopTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, 1, null, NULL_USER_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingWithNullIdentityContext() {
+        new StopTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, 1, new Date(), null);
     }
 
     @Test
     public void testImmutableDate() {
         Date now = new Date();
-        StopTransactionCommand command = new StopTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, TRANSACTION_NUMBER, now);
+        StopTransactionCommand command = new StopTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, TRANSACTION_NUMBER, now, NULL_USER_IDENTITY_CONTEXT);
         command.getTimestamp().setTime(TWO_MINUTES_AGO.getTime());
         assertEquals(now, command.getTimestamp());
     }

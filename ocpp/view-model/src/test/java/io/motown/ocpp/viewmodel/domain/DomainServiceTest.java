@@ -328,9 +328,9 @@ public class DomainServiceTest {
         int meterStopValue = 1;
         Date now = new Date();
 
-        domainService.stopTransaction(CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, now, getEmptyMeterValuesList());
+        domainService.stopTransaction(CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, now, getEmptyMeterValuesList(), ADD_ON_IDENTITY);
 
-        verify(gateway).send(new StopTransactionCommand(CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, now));
+        verify(gateway).send(new StopTransactionCommand(CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, now, NULL_USER_IDENTITY_CONTEXT));
     }
 
     /**
@@ -348,9 +348,9 @@ public class DomainServiceTest {
         int meterStopValue = 1;
         Date stopTransactionDate = new Date();
 
-        domainService.stopTransaction(CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, stopTransactionDate, METER_VALUES);
+        domainService.stopTransaction(CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, stopTransactionDate, METER_VALUES, ADD_ON_IDENTITY);
 
-        verify(gateway).send(new StopTransactionCommand(CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, stopTransactionDate));
+        verify(gateway).send(new StopTransactionCommand(CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, stopTransactionDate, NULL_USER_IDENTITY_CONTEXT));
         // stored transaction should provide the evse id that's needed to process the meter values
         verify(gateway).send(new ProcessMeterValueCommand(CHARGING_STATION_ID, transactionId, EVSE_ID, METER_VALUES));
     }
