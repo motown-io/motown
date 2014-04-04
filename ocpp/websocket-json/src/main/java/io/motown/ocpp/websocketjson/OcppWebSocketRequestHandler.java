@@ -81,6 +81,7 @@ public class OcppWebSocketRequestHandler implements OcppRequestHandler {
     @Override
     public void handle(DataTransferEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("DataTransferEvent");
+        ocppJsonService.dataTransfer(event.getChargingStationId(), event.getVendorId(), event.getMessageId(), event.getData(), statusCorrelationToken);
     }
 
     @Override

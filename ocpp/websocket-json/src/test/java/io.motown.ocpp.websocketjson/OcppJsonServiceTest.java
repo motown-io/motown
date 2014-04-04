@@ -207,6 +207,8 @@ public class OcppJsonServiceTest {
         String listHash = "";
         service.sendLocalList(CHARGING_STATION_ID, AuthorizationListUpdateType.FULL, list, listVersion, listHash, CORRELATION_TOKEN);
 
+        //TODO: the json schemas specify number which is translated to double but actually should be integer (modify the schemas) - Ingo Pak, 04 Apr 2014
+        
         String expectedMessage = String.format("[%d,\"%s\",\"%s\",{" +
                 "  \"updateType\": \"Full\"," +
                 "  \"listVersion\": 1.0," +
@@ -252,6 +254,22 @@ public class OcppJsonServiceTest {
                 "  \"connectorId\": %d.0,\n" +
                 "  \"type\": \"%s\"\n" +
                 "}]", WampMessage.CALL, CORRELATION_TOKEN.getToken(), "ChangeAvailability", connectorId, Changeavailability.Type.INOPERATIVE.toString()).replaceAll("\\s+", "");
+
+        verify(mockWebSocket).write(expectedMessage);
+    }
+
+    @Test
+    public void dataTransferRequest() throws IOException{
+        String vendorId = "fr.tm.cnr";
+        String messageId = "GetChargeInstruction";
+        String data = "";
+        service.dataTransfer(CHARGING_STATION_ID, vendorId, messageId, data, CORRELATION_TOKEN);
+
+        String expectedMessage = String.format("[%d,\"%s\",\"%s\",{\n" +
+                "  \"vendorId\": \"%s\",\n" +
+                "  \"messageId\": \"%s\",\n" +
+                "  \"data\": \"%s\"\n" +
+                "}]", WampMessage.CALL, CORRELATION_TOKEN.getToken(), "DataTransfer", vendorId, messageId, data).replaceAll("\\s+", "");
 
         verify(mockWebSocket).write(expectedMessage);
     }
