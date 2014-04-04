@@ -16,14 +16,12 @@
 package io.motown.operatorapi.viewmodel.model;
 
 import io.motown.domain.api.chargingstation.EvseId;
-import io.motown.domain.api.chargingstation.ReservationId;
 import io.motown.domain.api.chargingstation.TextualToken;
 
 import java.util.Date;
 
 public class RequestReserveNowApiCommand implements ApiCommand {
     private EvseId evseId;
-    private ReservationId reservationId;
     private TextualToken identifyingToken;
     private Date expiryDate;
 
@@ -36,14 +34,6 @@ public class RequestReserveNowApiCommand implements ApiCommand {
 
     public void setEvseId(EvseId evseId) {
         this.evseId = evseId;
-    }
-
-    public ReservationId getReservationId() {
-        return reservationId;
-    }
-
-    public void setReservationId(ReservationId reservationId) {
-        this.reservationId = reservationId;
     }
 
     public TextualToken getIdentifyingToken() {
