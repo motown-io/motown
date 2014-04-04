@@ -15,12 +15,18 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
 import org.junit.Test;
 
 public class NoDiagnosticsAvailableEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new NoDiagnosticsInformationAvailableEvent(null);
+        new NoDiagnosticsInformationAvailableEvent(null, ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingEventWithIdentityContextNull() {
+        new NoDiagnosticsInformationAvailableEvent(ChargingStationTestUtils.CHARGING_STATION_ID, null);
     }
 }

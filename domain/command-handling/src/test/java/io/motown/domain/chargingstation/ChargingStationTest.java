@@ -325,7 +325,7 @@ public class ChargingStationTest {
         String diagnosticsFileName = "";
         fixture.given(CHARGING_STATION)
                 .when(new DiagnosticsFileNameReceivedCommand(CHARGING_STATION_ID, diagnosticsFileName, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new NoDiagnosticsInformationAvailableEvent(CHARGING_STATION_ID));
+                .expectEvents(new NoDiagnosticsInformationAvailableEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
