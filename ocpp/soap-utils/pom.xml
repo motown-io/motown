@@ -38,7 +38,6 @@
             <artifactId>ocpp-view-model</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- Test dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
