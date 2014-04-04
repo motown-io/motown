@@ -171,7 +171,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     public void handle(RequestConfigurationCommand command) {
         checkCommunicationAllowed();
 
-        apply(new ConfigurationRequestedEvent(this.id, this.protocol));
+        apply(new ConfigurationRequestedEvent(this.id, this.protocol, command.getIdentityContext()));
     }
 
     @CommandHandler

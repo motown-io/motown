@@ -157,7 +157,7 @@ public class ChargingStationTest {
     public void testRequestConfiguration() {
         fixture.given(CHARGING_STATION)
                 .when(new RequestConfigurationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new ConfigurationRequestedEvent(CHARGING_STATION_ID, PROTOCOL));
+                .expectEvents(new ConfigurationRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test

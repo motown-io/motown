@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -27,16 +29,20 @@ public final class ConfigurationRequestedEvent implements CommunicationWithCharg
 
     private final String protocol;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code ConfigurationRequestedEvent} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param protocol protocol identifier.
-     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} is {@code null}.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} or {@code identityContext} is {@code null}.
      */
-    public ConfigurationRequestedEvent(ChargingStationId chargingStationId, String protocol) {
+    public ConfigurationRequestedEvent(ChargingStationId chargingStationId, String protocol, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.protocol = checkNotNull(protocol);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -57,5 +63,14 @@ public final class ConfigurationRequestedEvent implements CommunicationWithCharg
     @Override
     public String getProtocol() {
         return protocol;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 }
