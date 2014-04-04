@@ -48,7 +48,7 @@ class RequestStartTransactionJsonCommandHandler implements JsonCommandHandler {
             if (chargingStation != null && chargingStation.isAccepted()) {
                 RequestStartTransactionApiCommand command = gson.fromJson(commandObject, RequestStartTransactionApiCommand.class);
 
-                commandGateway.send(new RequestStartTransactionCommand(new ChargingStationId(chargingStationId), command.getIdentifyingToken(), command.getEvseId()), new CorrelationToken());
+                commandGateway.send(new RequestStartTransactionCommand(new ChargingStationId(chargingStationId), command.getIdentifyingToken(), command.getEvseId(), identityContext), new CorrelationToken());
             } else {
                 throw new IllegalStateException("It is not possible to request a start transaction on a charging station that is not registered");
             }

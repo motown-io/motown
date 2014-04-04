@@ -23,11 +23,16 @@ public class RequestStartTransactionCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new RequestStartTransactionCommand(null, IDENTIFYING_TOKEN, EVSE_ID);
+        new RequestStartTransactionCommand(null, IDENTIFYING_TOKEN, EVSE_ID, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTransactionId() {
-        new RequestStartTransactionCommand(CHARGING_STATION_ID, null, EVSE_ID);
+        new RequestStartTransactionCommand(CHARGING_STATION_ID, null, EVSE_ID, ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingWithNullIdentityContext() {
+        new RequestStartTransactionCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, EVSE_ID, null);
     }
 }

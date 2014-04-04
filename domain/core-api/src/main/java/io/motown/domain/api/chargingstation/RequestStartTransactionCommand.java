@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -31,18 +32,22 @@ public final class RequestStartTransactionCommand {
 
     private final EvseId evseId;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code RequestStopTransactionCommand} with an identifier and a identifying token.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param identifyingToken  the token that should start the transaction.
      * @param evseId            the identifier of the evse.
-     * @throws NullPointerException if {@code chargingStationId}, {@code identifyingToken} or {@code evseId} is {@code null}.
+     * @param identityContext   the identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code identifyingToken}, {@code evseId} or {@code identityContext} is {@code null}.
      */
-    public RequestStartTransactionCommand(ChargingStationId chargingStationId, IdentifyingToken identifyingToken, EvseId evseId) {
+    public RequestStartTransactionCommand(ChargingStationId chargingStationId, IdentifyingToken identifyingToken, EvseId evseId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.identifyingToken = checkNotNull(identifyingToken);
         this.evseId = checkNotNull(evseId);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -70,5 +75,14 @@ public final class RequestStartTransactionCommand {
      */
     public EvseId getEvseId() {
         return evseId;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 }
