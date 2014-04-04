@@ -249,14 +249,14 @@ public class ChargingStationTest {
     public void testRequestingToUnlockUnknownEvse() {
         fixture.given(CHARGING_STATION)
                 .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, UNKNOWN_EVSE_ID, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new EvseNotFoundEvent(CHARGING_STATION_ID, UNKNOWN_EVSE_ID));
+                .expectEvents(new EvseNotFoundEvent(CHARGING_STATION_ID, UNKNOWN_EVSE_ID, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testStartTransactionOnUnknownEvse() {
         fixture.given(CHARGING_STATION)
                 .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, UNKNOWN_EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new EvseNotFoundEvent(CHARGING_STATION_ID, UNKNOWN_EVSE_ID));
+                .expectEvents(new EvseNotFoundEvent(CHARGING_STATION_ID, UNKNOWN_EVSE_ID, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test

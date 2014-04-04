@@ -62,7 +62,7 @@ public final class TransactionStartedEvent {
      *                          {@link java.util.Map} implementations are potentially mutable a defensive copy is made.
      * @param identityContext   the identity context.
      * @throws NullPointerException if {@code chargingStationId}, {@code transactionId}, {@code evseId}, {@code identifyingToken},
-     * {@code timestamp}, {@code attributes} or {@code identityContext} is {@code null}.
+     *                          {@code timestamp}, {@code attributes} or {@code identityContext} is {@code null}.
      * @throws IllegalArgumentException if {@code evseId} is negative.
      */
     public TransactionStartedEvent(ChargingStationId chargingStationId, TransactionId transactionId, EvseId evseId, IdentifyingToken identifyingToken,

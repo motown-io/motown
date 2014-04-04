@@ -19,26 +19,33 @@ import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.EVSE_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
 import static org.junit.Assert.assertEquals;
 
 public class EvseNotFoundEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithChargingStationIdNull() {
-        new EvseNotFoundEvent(null, EVSE_ID);
+        new EvseNotFoundEvent(null, EVSE_ID, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithEvseIdNull() {
-        new EvseNotFoundEvent(CHARGING_STATION_ID, null);
+        new EvseNotFoundEvent(CHARGING_STATION_ID, null, ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingWithIdentityContextNull() {
+        new EvseNotFoundEvent(CHARGING_STATION_ID, EVSE_ID, null);
     }
 
     @Test
     public void constructorSetsFields() {
-        EvseNotFoundEvent event = new EvseNotFoundEvent(CHARGING_STATION_ID, EVSE_ID);
+        EvseNotFoundEvent event = new EvseNotFoundEvent(CHARGING_STATION_ID, EVSE_ID, ROOT_IDENTITY_CONTEXT);
 
         assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
         assertEquals(EVSE_ID, event.getEvseId());
+        assertEquals(ROOT_IDENTITY_CONTEXT, event.getIdentityContext());
     }
 
 }

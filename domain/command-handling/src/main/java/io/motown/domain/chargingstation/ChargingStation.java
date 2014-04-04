@@ -139,7 +139,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         // TODO store transaction identifier so we can validate 'stop transaction' commands? - Mark van den Bergh, December 2nd 2013
 
         if (command.getEvseId().getNumberedId() > numberOfEvses) {
-            apply(new EvseNotFoundEvent(id, command.getEvseId()), metaData);
+            apply(new EvseNotFoundEvent(id, command.getEvseId(), command.getIdentityContext()), metaData);
             return;
         }
 
@@ -155,7 +155,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     public void handle(RequestUnlockEvseCommand command, MetaData metaData) {
         checkCommunicationAllowed();
         if (command.getEvseId().getNumberedId() > numberOfEvses) {
-            apply(new EvseNotFoundEvent(id, command.getEvseId()), metaData);
+            apply(new EvseNotFoundEvent(id, command.getEvseId(), command.getIdentityContext()), metaData);
         } else {
             if (command.getEvseId() == Evse.ALL) {
                 for (int i = 1; i <= numberOfEvses; i++) {
