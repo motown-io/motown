@@ -232,4 +232,13 @@ public class OcppJsonServiceTest {
 
         verify(mockWebSocket).write(expectedMessage);
     }
+
+    @Test
+    public void clearCacheRequest() throws IOException{
+        service.clearCache(CHARGING_STATION_ID, CORRELATION_TOKEN);
+
+        String expectedMessage = String.format("[%d,\"%s\",\"%s\",{}]", WampMessage.CALL, CORRELATION_TOKEN.getToken(), "ClearCache").replaceAll("\\s+", "");
+
+        verify(mockWebSocket).write(expectedMessage);
+    }
 }

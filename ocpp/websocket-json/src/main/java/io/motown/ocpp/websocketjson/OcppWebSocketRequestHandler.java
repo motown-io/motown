@@ -95,6 +95,7 @@ public class OcppWebSocketRequestHandler implements OcppRequestHandler {
     @Override
     public void handle(ClearCacheRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("ClearCacheRequestedEvent");
+        ocppJsonService.clearCache(event.getChargingStationId(), statusCorrelationToken);
     }
 
     @Override

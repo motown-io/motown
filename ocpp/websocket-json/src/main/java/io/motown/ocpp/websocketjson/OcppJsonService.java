@@ -272,6 +272,15 @@ public class OcppJsonService {
         sendWampMessage(wampMessage, chargingStationId);
     }
 
+    public void clearCache(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken) {
+        Clearcache clearCacheRequest = new Clearcache();
+
+        responseHandlers.put(statusCorrelationToken.getToken(), new ClearCacheResponseHandler(statusCorrelationToken));
+
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "ClearCache", clearCacheRequest);
+        sendWampMessage(wampMessage, chargingStationId);
+    }
+
     //TODO: Add the rest of the outgoing calls towards the charging station - Ingo Pak, 02 Apr 2014
 
     private void sendWampMessage(WampMessage wampMessage, ChargingStationId chargingStationId) {
