@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Date;
@@ -37,6 +38,8 @@ public final class TransactionStoppedEvent {
 
     private final Date timestamp;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code TransactionStoppedEvent}.
      * <p/>
@@ -49,15 +52,17 @@ public final class TransactionStoppedEvent {
      * @param identifyingToken  the token which stopped the transaction.
      * @param meterStop         meter value in Wh for the evse when the transaction stopped.
      * @param timestamp         the time at which the transaction stopped.
-     * @throws NullPointerException if {@code chargingStationId}, {@code transactionId}, {@code identifyingToken} or
-     *                              {@code timestamp} is {@code null}.
+     * @param identityContext   the identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code transactionId}, {@code identifyingToken},
+     *                              {@code timestamp} or {@code identityContext} is {@code null}.
      */
-    public TransactionStoppedEvent(ChargingStationId chargingStationId, TransactionId transactionId, IdentifyingToken identifyingToken, int meterStop, Date timestamp) {
+    public TransactionStoppedEvent(ChargingStationId chargingStationId, TransactionId transactionId, IdentifyingToken identifyingToken, int meterStop, Date timestamp, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = checkNotNull(transactionId);
         this.identifyingToken = checkNotNull(identifyingToken);
         this.meterStop = meterStop;
         this.timestamp = new Date(checkNotNull(timestamp).getTime());
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -103,5 +108,14 @@ public final class TransactionStoppedEvent {
      */
     public Date getTimestamp() {
         return new Date(timestamp.getTime());
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 }

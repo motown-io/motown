@@ -26,39 +26,45 @@ public class TransactionStoppedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new TransactionStoppedEvent(null, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, new Date());
+        new TransactionStoppedEvent(null, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, new Date(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTransactionId() {
-        new TransactionStoppedEvent(CHARGING_STATION_ID, null, IDENTIFYING_TOKEN, METER_STOP, new Date());
+        new TransactionStoppedEvent(CHARGING_STATION_ID, null, IDENTIFYING_TOKEN, METER_STOP, new Date(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullIdentifyingToken() {
-        new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, null, METER_STOP, new Date());
+        new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, null, METER_STOP, new Date(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTimestamp() {
-        new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, null);
+        new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, null, NULL_USER_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingWithNullIdentityContext() {
+        new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, new Date(), null);
     }
 
     @Test
     public void constructorSetsFields() {
-        TransactionStoppedEvent event = new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, FIVE_MINUTES_AGO);
+        TransactionStoppedEvent event = new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, FIVE_MINUTES_AGO, NULL_USER_IDENTITY_CONTEXT);
 
         assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
         assertEquals(TRANSACTION_ID, event.getTransactionId());
         assertEquals(IDENTIFYING_TOKEN, event.getIdTag());
         assertEquals(METER_STOP, event.getMeterStop());
         assertEquals(FIVE_MINUTES_AGO, event.getTimestamp());
+        assertEquals(NULL_USER_IDENTITY_CONTEXT, event.getIdentityContext());
     }
 
     @Test
     public void testImmutableDate() {
         Date now = new Date();
-        TransactionStoppedEvent event = new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, now);
+        TransactionStoppedEvent event = new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN, METER_STOP, now, NULL_USER_IDENTITY_CONTEXT);
         event.getTimestamp().setTime(TWO_MINUTES_AGO.getTime());
         assertEquals(now, event.getTimestamp());
     }
