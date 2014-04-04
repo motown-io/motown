@@ -277,7 +277,7 @@ public class ChargingStationTest {
     @Test
     public void testRequestHardResetChargingStation() {
         fixture.given(CHARGING_STATION)
-                .when(new RequestHardResetChargingStationCommand(CHARGING_STATION_ID))
+                .when(new RequestHardResetChargingStationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new HardResetChargingStationRequestedEvent(CHARGING_STATION_ID, PROTOCOL));
     }
 

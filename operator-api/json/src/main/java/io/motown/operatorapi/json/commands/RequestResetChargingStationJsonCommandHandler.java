@@ -50,7 +50,7 @@ class RequestResetChargingStationJsonCommandHandler implements JsonCommandHandle
                 RequestResetChargingStationApiCommand command = gson.fromJson(commandObject, RequestResetChargingStationApiCommand.class);
 
                 if("hard".equalsIgnoreCase(command.getType())) {
-                    commandGateway.send(new RequestHardResetChargingStationCommand(new ChargingStationId(chargingStationId)), new CorrelationToken());
+                    commandGateway.send(new RequestHardResetChargingStationCommand(new ChargingStationId(chargingStationId), identityContext), new CorrelationToken());
                 } else {
                     commandGateway.send(new RequestSoftResetChargingStationCommand(new ChargingStationId(chargingStationId), identityContext), new CorrelationToken());
                 }
