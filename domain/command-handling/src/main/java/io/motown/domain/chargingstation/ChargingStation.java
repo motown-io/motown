@@ -213,7 +213,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(ProcessMeterValueCommand command) {
-        apply(new ChargingStationSentMeterValuesEvent(this.id, command.getTransactionId(), command.getEvseId(), command.getMeterValueList()));
+        apply(new ChargingStationSentMeterValuesEvent(this.id, command.getTransactionId(), command.getEvseId(), command.getMeterValueList(), command.getIdentityContext()));
     }
 
     @CommandHandler

@@ -26,26 +26,32 @@ public class ChargingStationSentMeterValuesEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ChargingStationSentMeterValuesEvent(null, TRANSACTION_ID, EVSE_ID, new ArrayList<MeterValue>());
+        new ChargingStationSentMeterValuesEvent(null, TRANSACTION_ID, EVSE_ID, new ArrayList<MeterValue>(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithNullEvseId() {
-        new ChargingStationSentMeterValuesEvent(CHARGING_STATION_ID, TRANSACTION_ID, null, new ArrayList<MeterValue>());
+        new ChargingStationSentMeterValuesEvent(CHARGING_STATION_ID, TRANSACTION_ID, null, new ArrayList<MeterValue>(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithMeterValuesNull() {
-        new ChargingStationSentMeterValuesEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, null);
+        new ChargingStationSentMeterValuesEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, null, NULL_USER_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingEventWithIdentityContextNull() {
+        new ChargingStationSentMeterValuesEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, new ArrayList<MeterValue>(), null);
     }
 
     @Test
     public void constructorSetsFields() {
-        ChargingStationSentMeterValuesEvent event = new ChargingStationSentMeterValuesEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, new ArrayList<MeterValue>());
+        ChargingStationSentMeterValuesEvent event = new ChargingStationSentMeterValuesEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, new ArrayList<MeterValue>(), NULL_USER_IDENTITY_CONTEXT);
 
         assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
         assertEquals(TRANSACTION_ID, event.getTransactionId());
         assertEquals(EVSE_ID, event.getEvseId());
         assertEquals(new ArrayList<MeterValue>(), event.getMeterValueList());
+        assertEquals(NULL_USER_IDENTITY_CONTEXT, event.getIdentityContext());
     }
 }

@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import javax.annotation.Nullable;
@@ -32,21 +33,31 @@ public final class ChargingStationSentMeterValuesEvent {
     private final ChargingStationId chargingStationId;
 
     private TransactionId transactionId;
+
     private EvseId evseId;
 
     private List<MeterValue> meterValueList;
 
+    private final IdentityContext identityContext;
+
     /**
-     * Creates a {@code ChargingStationSentMeterValuesEvent} with an identifier.
+     * Creates a {@code ChargingStationSentMeterValuesEvent} with an charging station identifier, transaction id, evse id,
+     * meter values and identity context.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @param transactionId     the identifier of the transaction.
+     * @param evseId            the identifier of the evse.
+     * @param meterValueList    list of meter values.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code evseId}, {@code meterValuesList} or
+     *                              {@code identityContext} is {@code null}.
      */
-    public ChargingStationSentMeterValuesEvent(ChargingStationId chargingStationId, @Nullable TransactionId transactionId, EvseId evseId, List<MeterValue> meterValueList) {
+    public ChargingStationSentMeterValuesEvent(ChargingStationId chargingStationId, @Nullable TransactionId transactionId, EvseId evseId, List<MeterValue> meterValueList, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = transactionId;
         this.evseId = checkNotNull(evseId);
         this.meterValueList = checkNotNull(meterValueList);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -76,5 +87,14 @@ public final class ChargingStationSentMeterValuesEvent {
      */
     public List<MeterValue> getMeterValueList() {
         return meterValueList;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 }
