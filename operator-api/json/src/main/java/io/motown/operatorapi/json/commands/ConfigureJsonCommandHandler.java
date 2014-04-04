@@ -65,7 +65,7 @@ class ConfigureJsonCommandHandler implements JsonCommandHandler {
     @Override
     public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) {
         try {
-            ConfigureChargingStationCommand newCommand = JsonCommandParser.parseConfigureChargingStation(new ChargingStationId(chargingStationId), commandObject, gson);
+            ConfigureChargingStationCommand newCommand = JsonCommandParser.parseConfigureChargingStation(new ChargingStationId(chargingStationId), commandObject, gson, identityContext);
             commandGateway.send(newCommand);
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted ?", ex);

@@ -17,6 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Collections;
@@ -39,15 +40,18 @@ public final class ConfigureChargingStationCommand {
 
     private final Map<String, String> settings;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code ConfigureChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param evses             the evses with which the charging station should be configured.
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @param identityContext   the identity context.
+     * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
      */
-    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Evse> evses) {
-        this(chargingStationId, evses, Collections.<String, String>emptyMap());
+    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Evse> evses, IdentityContext identityContext) {
+        this(chargingStationId, evses, Collections.<String, String>emptyMap(), identityContext);
     }
 
     /**
@@ -55,10 +59,11 @@ public final class ConfigureChargingStationCommand {
      *
      * @param chargingStationId the identifier of the charging station.
      * @param settings          the settings with which the charging station should be configured.
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @param identityContext   the identity context.
+     * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
      */
-    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Map<String, String> settings) {
-        this(chargingStationId, Collections.<Evse>emptySet(), settings);
+    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Map<String, String> settings, IdentityContext identityContext) {
+        this(chargingStationId, Collections.<Evse>emptySet(), settings, identityContext);
     }
 
     /**
@@ -67,13 +72,14 @@ public final class ConfigureChargingStationCommand {
      * @param chargingStationId the identifier of the charging station.
      * @param evses             the evses with which the charging station should be configured.
      * @param settings          the settings with which the charging station should be configured.
-     * @throws NullPointerException if {@code chargingStationId}, {@code evses}, or {@code settings} is
-     *                              {@code null}.
+     * @param identityContext   the identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code evses}, {@code settings} or {@code identityContext} is {@code null}.
      */
-    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Evse> evses, Map<String, String> settings) {
+    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Evse> evses, Map<String, String> settings, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.evses = ImmutableSet.copyOf(checkNotNull(evses));
         this.settings = ImmutableMap.copyOf(checkNotNull(settings));
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -106,9 +112,18 @@ public final class ConfigureChargingStationCommand {
         return settings;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, evses, settings);
+        return Objects.hash(chargingStationId, evses, settings, identityContext);
     }
 
     @Override
@@ -120,7 +135,7 @@ public final class ConfigureChargingStationCommand {
             return false;
         }
         final ConfigureChargingStationCommand other = (ConfigureChargingStationCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.evses, other.evses) && Objects.equals(this.settings, other.settings);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.evses, other.evses) && Objects.equals(this.settings, other.settings) && Objects.equals(this.identityContext, other.identityContext);
     }
 
     @Override
@@ -129,6 +144,7 @@ public final class ConfigureChargingStationCommand {
                 .add("chargingStationId", chargingStationId)
                 .add("evses", evses)
                 .add("settings", settings)
+                .add("identityContext", identityContext)
                 .toString();
     }
 }

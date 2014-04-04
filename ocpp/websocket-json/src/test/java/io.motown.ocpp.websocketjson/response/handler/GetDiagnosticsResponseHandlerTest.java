@@ -57,7 +57,7 @@ public class GetDiagnosticsResponseHandlerTest {
                 "}]";
 
         WampMessage message = new WampMessageParser(gson).parseMessage(new StringReader(String.format(responseMessage, WampMessage.CALL_RESULT, token)));
-        handler.handle(CHARGING_STATION_ID, message, gson, domainService);
+        handler.handle(CHARGING_STATION_ID, message, gson, domainService, null);
 
         verify(domainService).diagnosticsFileNameReceived(any(ChargingStationId.class), anyString(), any(CorrelationToken.class));
     }

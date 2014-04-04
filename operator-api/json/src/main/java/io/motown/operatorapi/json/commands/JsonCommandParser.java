@@ -21,6 +21,7 @@ import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ConfigureChargingStationCommand;
 import io.motown.domain.api.chargingstation.Evse;
+import io.motown.domain.api.security.IdentityContext;
 import io.motown.operatorapi.viewmodel.model.ConfigureChargingStationApiCommand;
 
 import java.util.Map;
@@ -44,7 +45,7 @@ public final class JsonCommandParser {
      * @return The command to be sent for configuration of a charging station.
      * @throws IllegalArgumentException when there is no valid configuration of at least evses or settings found
      */
-    public static ConfigureChargingStationCommand parseConfigureChargingStation(ChargingStationId chargingStationId, JsonObject payload, Gson gson) {
+    public static ConfigureChargingStationCommand parseConfigureChargingStation(ChargingStationId chargingStationId, JsonObject payload, Gson gson, IdentityContext identityContext) {
         ConfigureChargingStationApiCommand command;
 
         try {
@@ -58,11 +59,11 @@ public final class JsonCommandParser {
 
         ConfigureChargingStationCommand result;
         if (settings == null && evses != null) {
-            result = new ConfigureChargingStationCommand(chargingStationId, evses);
+            result = new ConfigureChargingStationCommand(chargingStationId, evses, identityContext);
         } else if (settings != null && evses == null) {
-            result = new ConfigureChargingStationCommand(chargingStationId, settings);
+            result = new ConfigureChargingStationCommand(chargingStationId, settings, identityContext);
         } else if (settings != null) {
-            result = new ConfigureChargingStationCommand(chargingStationId, evses, settings);
+            result = new ConfigureChargingStationCommand(chargingStationId, evses, settings, identityContext);
         } else {
             throw new IllegalArgumentException("Configure should at least have settings or evses");
         }

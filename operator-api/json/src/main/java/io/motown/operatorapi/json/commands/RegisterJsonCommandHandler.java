@@ -57,7 +57,7 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
         if (commandObject != null) {
             JsonElement jsConfiguration = commandObject.get("configuration");
             if (jsConfiguration != null && jsConfiguration.isJsonObject()) {
-                ConfigureChargingStationCommand newCommand = JsonCommandParser.parseConfigureChargingStation(new ChargingStationId(chargingStationId), jsConfiguration.getAsJsonObject(), gson);
+                ConfigureChargingStationCommand newCommand = JsonCommandParser.parseConfigureChargingStation(new ChargingStationId(chargingStationId), jsConfiguration.getAsJsonObject(), gson, identityContext);
                 commandGateway.send(newCommand);
             }
         }

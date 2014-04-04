@@ -56,7 +56,7 @@ public class ChangeConfigurationResponseHandlerTest {
 
         WampMessage message = new WampMessageParser(gson).parseMessage(new StringReader(String.format(responseMessage, WampMessage.CALL_RESULT, token)));
 
-        handler.handle(CHARGING_STATION_ID, message, gson, domainService);
+        handler.handle(CHARGING_STATION_ID, message, gson, domainService, null);
 
         verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.SUCCESS, correlationToken, "");
     }

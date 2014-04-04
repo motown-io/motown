@@ -64,6 +64,7 @@
             </bean>
         </property>
         <property name="gson" ref="gson" />
+        <property name="addOnId" value="1" />
     </bean>
 
 </beans>

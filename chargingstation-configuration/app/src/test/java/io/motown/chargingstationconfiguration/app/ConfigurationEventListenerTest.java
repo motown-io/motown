@@ -19,6 +19,10 @@ import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
 import io.motown.domain.api.chargingstation.ConfigureChargingStationCommand;
 import io.motown.domain.api.chargingstation.Evse;
 import io.motown.domain.api.chargingstation.UnconfiguredChargingStationBootedEvent;
+import io.motown.domain.api.security.AddOnIdentity;
+import io.motown.domain.api.security.IdentityContext;
+import io.motown.domain.api.security.NullUserIdentity;
+import io.motown.domain.api.security.TypeBasedAddOnIdentity;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,6 +40,10 @@ public class ConfigurationEventListenerTest {
 
     private ConfigurationCommandGateway gateway;
 
+    private static final String addOnId = "1";
+
+    private AddOnIdentity addOnIdentity = new TypeBasedAddOnIdentity(ConfigurationEventListener.ADD_ON_TYPE, addOnId);
+
     @Before
     public void setUp() {
         eventListener = new ConfigurationEventListener();
@@ -45,6 +53,7 @@ public class ConfigurationEventListenerTest {
 
         gateway = mock(ConfigurationCommandGateway.class);
         eventListener.setCommandGateway(gateway);
+        eventListener.setAddOnId(addOnId);
     }
 
     @Test
@@ -75,12 +84,13 @@ public class ConfigurationEventListenerTest {
     public void testConfigurationFound() {
         String manufacturer = "MOTOWN";
         String model = "MODEL1";
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
         when(domainService.getEvses(manufacturer, model)).thenReturn(getEvses(NUMBER_OF_EVSES));
 
-        eventListener.onEvent(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, getAttributes(manufacturer, model), IDENTITY_CONTEXT));
+        eventListener.onEvent(new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, getAttributes(manufacturer, model), identityContext));
 
         verify(domainService).getEvses(manufacturer, model);
-        verify(gateway).send(new ConfigureChargingStationCommand(CHARGING_STATION_ID, getEvses(NUMBER_OF_EVSES)));
+        verify(gateway).send(new ConfigureChargingStationCommand(CHARGING_STATION_ID, getEvses(NUMBER_OF_EVSES), identityContext));
     }
 
 }

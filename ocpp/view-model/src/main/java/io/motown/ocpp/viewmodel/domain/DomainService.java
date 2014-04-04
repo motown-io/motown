@@ -162,8 +162,10 @@ public class DomainService {
         eventWaitingGateway.sendAndWaitForEvent(new AuthorizeCommand(chargingStationId, new TextualToken(idTag), identityContext), future);
     }
 
-    public void configureChargingStation(ChargingStationId chargingStationId, Map<String, String> configurationItems) {
-        ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(chargingStationId, configurationItems);
+    public void configureChargingStation(ChargingStationId chargingStationId, Map<String, String> configurationItems, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(chargingStationId, configurationItems, identityContext);
         commandGateway.send(command);
     }
 

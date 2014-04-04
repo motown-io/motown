@@ -255,8 +255,8 @@ public class DomainServiceTest {
 
     @Test
     public void testConfigureChargingStation() {
-        domainService.configureChargingStation(CHARGING_STATION_ID, CONFIGURATION_ITEMS);
-        verify(gateway).send(new ConfigureChargingStationCommand(CHARGING_STATION_ID, CONFIGURATION_ITEMS));
+        domainService.configureChargingStation(CHARGING_STATION_ID, CONFIGURATION_ITEMS, ADD_ON_IDENTITY);
+        verify(gateway).send(new ConfigureChargingStationCommand(CHARGING_STATION_ID, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test(expected = IllegalStateException.class)

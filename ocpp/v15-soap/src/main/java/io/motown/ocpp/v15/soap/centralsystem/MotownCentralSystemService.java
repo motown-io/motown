@@ -47,7 +47,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
 
     private static final String PROTOCOL_IDENTIFIER = Ocpp15RequestHandler.PROTOCOL_IDENTIFIER;
 
-    private static final String ADD_ON_TYPE = "OCPPS15";
+    public static final String ADD_ON_TYPE = Ocpp15RequestHandler.ADD_ON_TYPE;
 
     private int heartbeatIntervalFallback;
 
@@ -299,6 +299,12 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         this.soapHeaderReader = soapHeaderReader;
     }
 
+    /**
+     * Sets the add-on id. The add-on is hardcoded, the add-on id should be different for every instance (in a distributed configuration)
+     * to be able to differentiate between add-on instances.
+     *
+     * @param id add-on id.
+     */
     public void setAddOnId(String id) {
         addOnIdentity = new TypeBasedAddOnIdentity(ADD_ON_TYPE, id);
     }

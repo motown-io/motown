@@ -29,10 +29,12 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.UUID;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -67,10 +69,10 @@ public class GetConfigurationResponseHandlerTest {
 
         WampMessage message = new WampMessageParser(gson).parseMessage(new StringReader(String.format(responseMessage, WampMessage.CALL_RESULT, token)));
 
-        handler.handle(CHARGING_STATION_ID, message, gson, domainService);
+        handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
         ArgumentCaptor<HashMap> configurationKeysCaptor = ArgumentCaptor.forClass(HashMap.class);
-        verify(domainService).configureChargingStation(any(ChargingStationId.class), configurationKeysCaptor.capture());
+        verify(domainService).configureChargingStation(any(ChargingStationId.class), configurationKeysCaptor.capture(), eq(ADD_ON_IDENTITY));
         assertEquals(configurationKeysCaptor.getValue().size(), 1);
     }
 

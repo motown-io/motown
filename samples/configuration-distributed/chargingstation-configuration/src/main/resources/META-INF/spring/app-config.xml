@@ -19,6 +19,7 @@
     <bean class="io.motown.chargingstationconfiguration.app.ConfigurationEventListener">
         <property name="commandGateway" ref="configurationCommandGateway" />
         <property name="domainService" ref="domainService" />
+        <property name="addOnId" value="1" />
     </bean>
 
     <bean id="domainService" class="io.motown.chargingstationconfiguration.viewmodel.domain.DomainService">

@@ -19,6 +19,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
+import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.ConfigurationKey;
 import io.motown.ocpp.websocketjson.schema.generated.v15.GetconfigurationResponse;
@@ -33,7 +34,7 @@ public class GetConfigurationResponseHandler extends ResponseHandler {
     }
 
     @Override
-    public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService) {
+    public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         GetconfigurationResponse response = gson.fromJson(wampMessage.getPayloadAsString(), GetconfigurationResponse.class);
 
         Map<String, String> configurationItems = Maps.newHashMap();
@@ -41,6 +42,6 @@ public class GetConfigurationResponseHandler extends ResponseHandler {
             configurationItems.put(configurationKey.getKey(), configurationKey.getValue());
         }
 
-        domainService.configureChargingStation(chargingStationId, configurationItems);
+        domainService.configureChargingStation(chargingStationId, configurationItems, addOnIdentity);
     }
 }

@@ -51,7 +51,7 @@ public class UnlockConnectorResponseHandlerTest {
         UnlockConnectorResponseHandler handler = new UnlockConnectorResponseHandler(correlationToken);
         WampMessage message = new WampMessageParser(gson).parseMessage(new StringReader(String.format("[%d,\"%s\",{\"status\":\"Accepted\"}]", WampMessage.CALL_RESULT, token)));
 
-        handler.handle(CHARGING_STATION_ID, message, gson, domainService);
+        handler.handle(CHARGING_STATION_ID, message, gson, domainService, null);
 
         verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.SUCCESS, correlationToken, "");
     }

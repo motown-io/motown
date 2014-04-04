@@ -18,6 +18,7 @@ package io.motown.ocpp.websocketjson.response.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
+import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.GetdiagnosticsResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
@@ -29,7 +30,7 @@ public class GetDiagnosticsResponseHandler extends ResponseHandler {
     }
 
     @Override
-    public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService) {
+    public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         GetdiagnosticsResponse response = gson.fromJson(wampMessage.getPayloadAsString(), GetdiagnosticsResponse.class);
         domainService.diagnosticsFileNameReceived(chargingStationId, response.getFileName(), getCorrelationToken());
     }

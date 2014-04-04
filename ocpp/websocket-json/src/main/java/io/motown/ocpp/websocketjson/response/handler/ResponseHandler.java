@@ -18,6 +18,7 @@ package io.motown.ocpp.websocketjson.response.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
+import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 
@@ -25,7 +26,7 @@ public abstract class ResponseHandler {
 
     private CorrelationToken correlationToken;
 
-    public abstract void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService);
+    public abstract void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity);
 
     CorrelationToken getCorrelationToken() {
         return correlationToken;

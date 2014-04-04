@@ -25,12 +25,12 @@ public class ConfigureChargingStationCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNullAndEvses() {
-        new ConfigureChargingStationCommand(null, Collections.<Evse>emptySet());
+        new ConfigureChargingStationCommand(null, Collections.<Evse>emptySet(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithEvsesNull() {
-        new ConfigureChargingStationCommand(CHARGING_STATION_ID, null, Collections.<String, String>emptyMap());
+        new ConfigureChargingStationCommand(CHARGING_STATION_ID, null, Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
@@ -41,14 +41,14 @@ public class ConfigureChargingStationCommandTest {
     //TODO refactor
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedOperationExceptionThrownWhenModifyingEvses() {
-        ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(CHARGING_STATION_ID, EVSES);
+        ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(CHARGING_STATION_ID, EVSES, NULL_USER_IDENTITY_CONTEXT);
 
         command.getEvses().add(new Evse(EVSE_ID, CONNECTORS));
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedOperationExceptionThrownWhenModifyingConfigurationItems() {
-        ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(CHARGING_STATION_ID, CONFIGURATION_ITEMS);
+        ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(CHARGING_STATION_ID, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT);
 
         command.getSettings().put("configItem", "configValue");
     }

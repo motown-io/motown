@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.RequestResult;
+import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.ChangeconfigurationResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
@@ -30,7 +31,7 @@ public class ChangeConfigurationResponseHandler extends ResponseHandler {
     }
 
     @Override
-    public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService) {
+    public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         ChangeconfigurationResponse response = gson.fromJson(wampMessage.getPayloadAsString(), ChangeconfigurationResponse.class);
         RequestResult requestResult = response.getStatus().equals(ChangeconfigurationResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
