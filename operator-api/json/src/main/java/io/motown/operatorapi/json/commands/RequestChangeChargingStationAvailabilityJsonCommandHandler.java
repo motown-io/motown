@@ -50,7 +50,7 @@ class RequestChangeChargingStationAvailabilityJsonCommandHandler implements Json
                 RequestChangeChargingStationAvailabilityApiCommand command = gson.fromJson(commandObject, RequestChangeChargingStationAvailabilityApiCommand.class);
 
                 if ("inoperative".equalsIgnoreCase(command.getAvailability())) {
-                    commandGateway.send(new RequestChangeChargingStationAvailabilityToInoperativeCommand(new ChargingStationId(chargingStationId), command.getEvseId()), new CorrelationToken());
+                    commandGateway.send(new RequestChangeChargingStationAvailabilityToInoperativeCommand(new ChargingStationId(chargingStationId), command.getEvseId(), identityContext), new CorrelationToken());
                 } else {
                     commandGateway.send(new RequestChangeChargingStationAvailabilityToOperativeCommand(new ChargingStationId(chargingStationId), command.getEvseId(), identityContext), new CorrelationToken());
                 }

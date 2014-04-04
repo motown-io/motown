@@ -284,7 +284,7 @@ public class ChargingStationTest {
     @Test
     public void testRequestChangeChargingStationAvailabilityToInoperative() {
         fixture.given(CHARGING_STATION)
-                .when(new RequestChangeChargingStationAvailabilityToInoperativeCommand(CHARGING_STATION_ID, EVSE_ID))
+                .when(new RequestChangeChargingStationAvailabilityToInoperativeCommand(CHARGING_STATION_ID, EVSE_ID, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID));
     }
 
