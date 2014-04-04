@@ -28,8 +28,6 @@ public final class ReserveNowRequestedForUnreservableChargingStationEvent {
 
     private final ChargingStationId chargingStationId;
 
-    private final ReservationId reservationId;
-
     private final EvseId evseId;
 
     private final IdentifyingToken identifyingToken;
@@ -49,9 +47,8 @@ public final class ReserveNowRequestedForUnreservableChargingStationEvent {
      * @param parentIdentifyingToken    parent identifier that would have reserved the charging station.
      * @throws NullPointerException     if chargingStationId, evseId, identifyingToken or expiryDate is null.
      */
-    public ReserveNowRequestedForUnreservableChargingStationEvent(ChargingStationId chargingStationId, ReservationId reservationId, EvseId evseId, IdentifyingToken identifyingToken, Date expiryDate, @Nullable IdentifyingToken parentIdentifyingToken) {
+    public ReserveNowRequestedForUnreservableChargingStationEvent(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken identifyingToken, Date expiryDate, @Nullable IdentifyingToken parentIdentifyingToken) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.reservationId = reservationId;
         this.evseId = checkNotNull(evseId);
         this.identifyingToken = checkNotNull(identifyingToken);
         this.expiryDate = new Date(checkNotNull(expiryDate).getTime());
@@ -60,10 +57,6 @@ public final class ReserveNowRequestedForUnreservableChargingStationEvent {
 
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
-    }
-
-    public ReservationId getReservationId() {
-        return reservationId;
     }
 
     public EvseId getEvseId() {

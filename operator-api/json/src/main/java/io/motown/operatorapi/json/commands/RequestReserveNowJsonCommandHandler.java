@@ -48,7 +48,7 @@ class RequestReserveNowJsonCommandHandler implements JsonCommandHandler {
             if (chargingStation != null && chargingStation.isAccepted()) {
                 RequestReserveNowApiCommand command = gson.fromJson(commandObject, RequestReserveNowApiCommand.class);
 
-                commandGateway.send(new RequestReserveNowCommand(new ChargingStationId(chargingStationId), command.getReservationId(), command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), null), new CorrelationToken());
+                commandGateway.send(new RequestReserveNowCommand(new ChargingStationId(chargingStationId), command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), null), new CorrelationToken());
             } else {
                 throw new IllegalStateException("It is not possible to request a reservation on a charging station that is not registered");
             }

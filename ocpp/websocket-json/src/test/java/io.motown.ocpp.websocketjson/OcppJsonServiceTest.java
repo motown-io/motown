@@ -30,6 +30,7 @@ import org.atmosphere.websocket.WebSocket;
 import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -39,6 +40,7 @@ import java.util.UUID;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.*;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -58,6 +60,7 @@ public class OcppJsonServiceTest {
         gson = getGson();
 
         domainService = mock(DomainService.class);
+        when(domainService.generateReservationIdentifier(any(ChargingStationId.class), anyString())).thenReturn(RESERVATION_ID);
 
         mockWebSocket = getMockWebSocket();
 
@@ -278,13 +281,13 @@ public class OcppJsonServiceTest {
     public void reserveNowRequest() throws IOException{
         Date expiryDate = new Date(DateTimeUtils.currentTimeMillis() + FIVE_MINUTES);
 
-        service.reserveNow(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, IDENTIFYING_TOKEN, null, expiryDate, CORRELATION_TOKEN);
+        service.reserveNow(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, null, expiryDate, CORRELATION_TOKEN);
 
         String expectedMessage = String.format("[%d,\"%s\",\"%s\",{\n" +
                 "  \"connectorId\": %d.0,\n" +
                 "  \"expiryDate\": \"%s\",\n" +
                 "  \"idTag\": \"%s\",\n" +
-                "  \"reservationId\": %d.0\n" +
+                "  \"reservationId\": %d.0" +
                 "}]", WampMessage.CALL, CORRELATION_TOKEN.getToken(), "ReserveNow", EVSE_ID.getNumberedId(), formatDate(expiryDate), IDENTIFYING_TOKEN.getToken(), RESERVATION_ID.getNumber())
                 .replaceAll("\\s+", "");
 

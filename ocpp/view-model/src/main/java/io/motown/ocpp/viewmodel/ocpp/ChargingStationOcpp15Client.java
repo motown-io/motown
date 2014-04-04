@@ -55,4 +55,6 @@ public interface ChargingStationOcpp15Client {
     RequestResult sendAuthorizationList(ChargingStationId id, String hash, int listVersion, List<IdentifyingToken> identifyingTokens, AuthorizationListUpdateType updateType);
 
     ReservationStatus reserveNow(ChargingStationId id, EvseId evseId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken, int reservationId);
+
+    RequestResult cancelReservation(ChargingStationId id, int reservationId);
 }

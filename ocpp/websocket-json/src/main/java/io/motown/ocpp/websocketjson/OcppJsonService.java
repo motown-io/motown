@@ -194,7 +194,9 @@ public class OcppJsonService {
         sendWampMessage(wampMessage, chargingStationId);
     }
 
-    public void reserveNow(ChargingStationId chargingStationId, NumberedReservationId reservationId, EvseId evseId, IdentifyingToken identifyingToken, IdentifyingToken parentIdentifyingToken, Date expiryDate, CorrelationToken statusCorrelationToken) {
+    public void reserveNow(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken identifyingToken, IdentifyingToken parentIdentifyingToken, Date expiryDate, CorrelationToken statusCorrelationToken) {
+        NumberedReservationId reservationId = domainService.generateReservationIdentifier(chargingStationId, PROTOCOL_IDENTIFIER);
+
         Reservenow reserveNowRequest = new Reservenow();
         reserveNowRequest.setConnectorId((double) evseId.getNumberedId());
         reserveNowRequest.setIdTag(identifyingToken.getToken());
@@ -207,6 +209,17 @@ public class OcppJsonService {
         responseHandlers.put(statusCorrelationToken.getToken(), new ReserveNowResponseHandler(statusCorrelationToken));
 
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "ReserveNow", reserveNowRequest);
+
+        sendWampMessage(wampMessage, chargingStationId);
+    }
+
+    public void cancelReservation(ChargingStationId chargingStationId, NumberedReservationId reservationId, CorrelationToken statusCorrelationToken) {
+        Cancelreservation cancelReservationRequest = new Cancelreservation();
+        cancelReservationRequest.setReservationId((double) reservationId.getNumber());
+
+        responseHandlers.put(statusCorrelationToken.getToken(), new CancelReservationResponseHandler(statusCorrelationToken));
+
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "ReserveNow", cancelReservationRequest);
 
         sendWampMessage(wampMessage, chargingStationId);
     }

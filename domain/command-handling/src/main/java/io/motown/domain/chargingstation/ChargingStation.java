@@ -279,9 +279,9 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @CommandHandler
     public void handle(RequestReserveNowCommand command, MetaData metaData) {
         if (isReservable) {
-            apply(new ReserveNowRequestedEvent(command.getChargingStationId(), this.protocol, command.getReservationId(), command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), command.getParentIdentifyingToken()), metaData);
+            apply(new ReserveNowRequestedEvent(command.getChargingStationId(), this.protocol, command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), command.getParentIdentifyingToken()), metaData);
         } else {
-            apply(new ReserveNowRequestedForUnreservableChargingStationEvent(command.getChargingStationId(), command.getReservationId(), command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), command.getParentIdentifyingToken()));
+            apply(new ReserveNowRequestedForUnreservableChargingStationEvent(command.getChargingStationId(), command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), command.getParentIdentifyingToken()));
         }
     }
 

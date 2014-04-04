@@ -52,4 +52,5 @@ public interface OcppRequestHandler {
 
     void handle(ReserveNowRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
+    void handle(CancelReservationRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 }

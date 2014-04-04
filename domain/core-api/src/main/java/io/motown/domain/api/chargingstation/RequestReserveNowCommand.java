@@ -30,7 +30,6 @@ public final class RequestReserveNowCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
-    private final ReservationId reservationId;
     private final EvseId evseId;
     private final IdentifyingToken identifyingToken;
     private final Date expiryDate;
@@ -40,16 +39,14 @@ public final class RequestReserveNowCommand {
      * Creates a {@code RequestReserveNowCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param reservationId the unique id for this reservation
      * @param evseId the identifier of the EVSE.
      * @param identifyingToken the identifying token that will fulfill the reservation.
      * @param expiryDate date at which the reservation should expire.
      * @param parentIdentifyingToken group of the identifying token.
      * @throws NullPointerException if {@code chargingStationId}, {@code evseId}, {@code identifyingToken} or {@code expiryDate} is {@code null}.
      */
-    public RequestReserveNowCommand(ChargingStationId chargingStationId, ReservationId reservationId, EvseId evseId, IdentifyingToken identifyingToken, Date expiryDate, @Nullable IdentifyingToken parentIdentifyingToken) {
+    public RequestReserveNowCommand(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken identifyingToken, Date expiryDate, @Nullable IdentifyingToken parentIdentifyingToken) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.reservationId = reservationId;
         this.evseId = checkNotNull(evseId);
         this.identifyingToken = checkNotNull(identifyingToken);
         this.expiryDate = new Date(checkNotNull(expiryDate).getTime());
@@ -67,10 +64,6 @@ public final class RequestReserveNowCommand {
 
     public EvseId getEvseId() {
         return evseId;
-    }
-
-    public ReservationId getReservationId() {
-        return reservationId;
     }
 
     public IdentifyingToken getIdentifyingToken() {

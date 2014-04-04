@@ -191,6 +191,18 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, reservationStatusMessage);
     }
 
+    @Override
+    public void handle(CancelReservationRequestedEvent event, CorrelationToken statusCorrelationToken) {
+        LOG.info("CancelReservationRequestedEvent");
+
+        RequestResult result = chargingStationOcpp15Client.cancelReservation(event.getChargingStationId(), ((NumberedReservationId) event.getReservationId()).getNumber());
+        String cancelReservationStatusMessage = (result != null) ? result.name() : "";
+
+        RequestResult requestResult = ReservationStatus.ACCEPTED.equals(cancelReservationStatusMessage) ? RequestResult.SUCCESS : RequestResult.FAILURE;
+
+        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "");
+    }
+
     public void setChargingStationOcpp15Client(ChargingStationOcpp15Client chargingStationOcpp15Client) {
         this.chargingStationOcpp15Client = chargingStationOcpp15Client;
     }

@@ -389,16 +389,16 @@ public class ChargingStationTest {
     public void testRequestReserveNowReservableChargingStation() {
         Date expiryDate = new Date();
         fixture.given(RESERVABLE_CHARGING_STATION)
-                .when(new RequestReserveNowCommand(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN))
-                .expectEvents(new ReserveNowRequestedEvent(CHARGING_STATION_ID, PROTOCOL, RESERVATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN));
+                .when(new RequestReserveNowCommand(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN))
+                .expectEvents(new ReserveNowRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN));
     }
 
     @Test
     public void testRequestReserveNowNotReservableChargingStation() {
         Date expiryDate = new Date();
         fixture.given(CHARGING_STATION)
-                .when(new RequestReserveNowCommand(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN))
-                .expectEvents(new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN));
+                .when(new RequestReserveNowCommand(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN))
+                .expectEvents(new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN));
     }
 
     @Test

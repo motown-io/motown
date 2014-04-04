@@ -317,6 +317,18 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         return result;
     }
 
+    @Override
+    public RequestResult cancelReservation(ChargingStationId id, int reservationId) {
+        ChargePointService chargePointService = this.createChargingStationService(id);
+
+        CancelReservationRequest cancelReservationRequest = new CancelReservationRequest();
+        cancelReservationRequest.setReservationId(reservationId);
+
+        CancelReservationResponse response = chargePointService.cancelReservation(cancelReservationRequest, id.getId());
+
+        return CancelReservationStatus.ACCEPTED.equals(response.getStatus()) ? RequestResult.SUCCESS : RequestResult.FAILURE;
+    }
+
     public void setDomainService(DomainService domainService) {
         this.domainService = domainService;
     }

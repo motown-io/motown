@@ -160,6 +160,11 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
         // no implementation in OCPP 1.2
     }
 
+    @Override
+    public void handle(CancelReservationRequestedEvent event, CorrelationToken statusCorrelationToken) {
+        // no implementation in OCPP 1.2
+    }
+
     public void setChargingStationOcpp12Client(ChargingStationOcpp12Client chargingStationOcpp12Client) {
         this.chargingStationOcpp12Client = chargingStationOcpp12Client;
     }

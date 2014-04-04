@@ -123,7 +123,13 @@ public class OcppWebSocketRequestHandler implements OcppRequestHandler {
     @Override
     public void handle(ReserveNowRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("ReserveNowRequestedEvent");
-        ocppJsonService.reserveNow(event.getChargingStationId(), (NumberedReservationId) event.getReservationId(), event.getEvseId(), event.getIdentifyingToken(), event.getParentIdentifyingToken(), event.getExpiryDate(), statusCorrelationToken);
+        ocppJsonService.reserveNow(event.getChargingStationId(), event.getEvseId(), event.getIdentifyingToken(), event.getParentIdentifyingToken(), event.getExpiryDate(), statusCorrelationToken);
+    }
+
+    @Override
+    public void handle(CancelReservationRequestedEvent event, CorrelationToken statusCorrelationToken) {
+        LOG.info("CancelReservationRequestedEvent");
+        ocppJsonService.cancelReservation(event.getChargingStationId(), (NumberedReservationId) event.getReservationId(), statusCorrelationToken);
     }
 
     public void setOcppJsonService(OcppJsonService ocppJsonService) {
