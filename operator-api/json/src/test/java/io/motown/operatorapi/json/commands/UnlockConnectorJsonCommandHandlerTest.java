@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
 import static io.motown.operatorapi.json.commands.OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING;
 
 public class UnlockConnectorJsonCommandHandlerTest {
@@ -39,12 +40,12 @@ public class UnlockConnectorJsonCommandHandlerTest {
     @Test
     public void testUnlockCommand() {
         JsonObject commandObject = gson.fromJson("{evseId:'1'}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void testInvalidUnlockCommand() {
         JsonObject commandObject = gson.fromJson("{evseID:'1'}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 }

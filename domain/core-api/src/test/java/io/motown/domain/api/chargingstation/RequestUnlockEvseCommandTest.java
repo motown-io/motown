@@ -19,25 +19,23 @@ import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.EVSE_ID;
-import static org.junit.Assert.assertEquals;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
 
 public class RequestUnlockEvseCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new RequestUnlockEvseCommand(null, EVSE_ID);
+        new RequestUnlockEvseCommand(null, EVSE_ID, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithEvseIdNull() {
-        new RequestUnlockEvseCommand(CHARGING_STATION_ID, null);
+        new RequestUnlockEvseCommand(CHARGING_STATION_ID, null, ROOT_IDENTITY_CONTEXT);
     }
 
-    @Test
-    public void constructorSetsFields() {
-        RequestUnlockEvseCommand command = new RequestUnlockEvseCommand(CHARGING_STATION_ID, EVSE_ID);
-
-        assertEquals(CHARGING_STATION_ID, command.getChargingStationId());
-        assertEquals(EVSE_ID, command.getEvseId());
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWitIdentityContextNull() {
+        new RequestUnlockEvseCommand(CHARGING_STATION_ID, EVSE_ID, null);
     }
+
 }

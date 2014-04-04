@@ -220,14 +220,14 @@ public class ChargingStationTest {
     @Test
     public void testRequestingToUnlockEvseForUnregisteredChargingStation() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
-                .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, EVSE_ID))
+                .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, EVSE_ID, ROOT_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRequestingToUnlockEvseForUnconfiguredChargingStation() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
-                .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, EVSE_ID))
+                .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, EVSE_ID, ROOT_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
 
@@ -241,14 +241,14 @@ public class ChargingStationTest {
     @Test
     public void testRequestingToUnlockEvse() {
         fixture.given(CHARGING_STATION)
-                .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, EVSE_ID))
+                .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, EVSE_ID, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new UnlockEvseRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID));
     }
 
     @Test
     public void testRequestingToUnlockUnknownEvse() {
         fixture.given(CHARGING_STATION)
-                .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, UNKNOWN_EVSE_ID))
+                .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, UNKNOWN_EVSE_ID, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new EvseNotFoundEvent(CHARGING_STATION_ID, UNKNOWN_EVSE_ID));
     }
 
@@ -262,7 +262,7 @@ public class ChargingStationTest {
     @Test
     public void testRequestingToUnlockAllEvses() {
         fixture.given(CHARGING_STATION)
-                .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, Evse.ALL))
+                .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, Evse.ALL, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new UnlockEvseRequestedEvent(CHARGING_STATION_ID, PROTOCOL, new EvseId(1)),
                         new UnlockEvseRequestedEvent(CHARGING_STATION_ID, PROTOCOL, new EvseId(2)));
     }
