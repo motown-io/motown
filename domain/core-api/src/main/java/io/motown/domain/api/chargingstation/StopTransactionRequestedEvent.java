@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -30,21 +32,26 @@ public final class StopTransactionRequestedEvent implements CommunicationWithCha
 
     private final TransactionId transactionId;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code StopTransactionRequestedEvent} with an identifier and a transaction identifier.
      *
      * @param chargingStationId the charging station's identifier.
      * @param protocol          the protocol identifier.
      * @param transactionId     the transaction's identifier.
-     * @throws NullPointerException     if {@code chargingStationId} or {@code protocol} or {@code transactionId} is {@code null}.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId} or {@code protocol}, {@code transactionId}
+     *                          or {@code identityContext} is {@code null}.
      * @throws IllegalArgumentException if {@code protocol} is empty.
      */
-    public StopTransactionRequestedEvent(ChargingStationId chargingStationId, String protocol, TransactionId transactionId) {
+    public StopTransactionRequestedEvent(ChargingStationId chargingStationId, String protocol, TransactionId transactionId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());
         this.protocol = protocol;
         this.transactionId = checkNotNull(transactionId);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -70,5 +77,14 @@ public final class StopTransactionRequestedEvent implements CommunicationWithCha
      */
     public TransactionId getTransactionId() {
         return transactionId;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 }

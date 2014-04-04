@@ -23,21 +23,26 @@ public class StopTransactionRequestedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new StopTransactionRequestedEvent(null, PROTOCOL, TRANSACTION_ID);
+        new StopTransactionRequestedEvent(null, PROTOCOL, TRANSACTION_ID, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullProtocol() {
-        new StopTransactionRequestedEvent(CHARGING_STATION_ID, null, TRANSACTION_ID);
+        new StopTransactionRequestedEvent(CHARGING_STATION_ID, null, TRANSACTION_ID, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithEmptyProtocol() {
-        new StopTransactionRequestedEvent(CHARGING_STATION_ID, "", TRANSACTION_ID);
+        new StopTransactionRequestedEvent(CHARGING_STATION_ID, "", TRANSACTION_ID, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTransactionId() {
-        new StopTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, null);
+        new StopTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, null, ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingWithNullIdentityContext() {
+        new StopTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, TRANSACTION_ID, null);
     }
 }

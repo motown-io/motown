@@ -71,14 +71,14 @@ public class Ocpp12RequestHandlerTest {
 
     @Test
     public void testStopTransactionRequestedEvent() {
-        requestHandler.handle(new StopTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, TRANSACTION_ID), CORRELATION_TOKEN);
+        requestHandler.handle(new StopTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, TRANSACTION_ID, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).stopTransaction(CHARGING_STATION_ID, ((NumberedTransactionId) TRANSACTION_ID).getNumber());
     }
 
     @Test
     public void noTransactionStoppedIfTransactionIdIsIncorrectType() {
-        requestHandler.handle(new StopTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, new UuidTransactionId()), CORRELATION_TOKEN);
+        requestHandler.handle(new StopTransactionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, new UuidTransactionId(), ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verifyZeroInteractions(client);
     }
