@@ -20,6 +20,8 @@ import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
+
 public class RequestDiagnosticsJsonCommandHandlerTest {
 
     private RequestDiagnosticsJsonCommandHandler handler = new RequestDiagnosticsJsonCommandHandler();
@@ -36,18 +38,18 @@ public class RequestDiagnosticsJsonCommandHandlerTest {
     @Test
     public void testHandler() {
         JsonObject commandObject = gson.fromJson("{targetLocation:'LOC001'}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void testInvalidJsonProperty() {
         JsonObject commandObject = gson.fromJson("{target:'LOC001'}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidJsonPropertyType() {
         JsonObject commandObject = gson.fromJson("{targetLocation:{location:'LOC001'}}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 }

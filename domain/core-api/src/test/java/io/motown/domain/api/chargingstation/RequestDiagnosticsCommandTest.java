@@ -38,19 +38,24 @@ public class RequestDiagnosticsCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new RequestDiagnosticsCommand(null, UPLOAD_LOCATION, null, null, null, null);
+        new RequestDiagnosticsCommand(null, UPLOAD_LOCATION, null, null, null, null, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void illegalArgumentExceptionThrownWhenCreatingCommandWithoutUploadLocation() {
-        new RequestDiagnosticsCommand(CHARGING_STATION_ID, null, null, null, null, null);
+        new RequestDiagnosticsCommand(CHARGING_STATION_ID, null, null, null, null, null, ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
+        new RequestDiagnosticsCommand(CHARGING_STATION_ID, UPLOAD_LOCATION, NUM_RETRIES, RETRY_INTERVAL, null, null, null);
     }
 
     @Test
     public void datesShouldNotBeModifiable() {
         Date startTime = new Date();
         Date endTime = new Date();
-        RequestDiagnosticsCommand command = new RequestDiagnosticsCommand(CHARGING_STATION_ID, UPLOAD_LOCATION, NUM_RETRIES, RETRY_INTERVAL, startTime, endTime);
+        RequestDiagnosticsCommand command = new RequestDiagnosticsCommand(CHARGING_STATION_ID, UPLOAD_LOCATION, NUM_RETRIES, RETRY_INTERVAL, startTime, endTime, ROOT_IDENTITY_CONTEXT);
 
         startTime.setTime(0);
         endTime.setTime(0);
@@ -61,7 +66,7 @@ public class RequestDiagnosticsCommandTest {
 
     @Test
     public void exposedDatesShouldNotAffectInternalRepresentation() {
-        RequestDiagnosticsCommand command = new RequestDiagnosticsCommand(CHARGING_STATION_ID, UPLOAD_LOCATION, NUM_RETRIES, RETRY_INTERVAL, START_TIME, END_TIME);
+        RequestDiagnosticsCommand command = new RequestDiagnosticsCommand(CHARGING_STATION_ID, UPLOAD_LOCATION, NUM_RETRIES, RETRY_INTERVAL, START_TIME, END_TIME, ROOT_IDENTITY_CONTEXT);
 
         Date startTime = command.getPeriodStartTime();
         assert startTime != null;
@@ -76,7 +81,7 @@ public class RequestDiagnosticsCommandTest {
 
     @Test
     public void constructorSetsFields() {
-        RequestDiagnosticsCommand command = new RequestDiagnosticsCommand(CHARGING_STATION_ID, UPLOAD_LOCATION, NUM_RETRIES, RETRY_INTERVAL, START_TIME, END_TIME);
+        RequestDiagnosticsCommand command = new RequestDiagnosticsCommand(CHARGING_STATION_ID, UPLOAD_LOCATION, NUM_RETRIES, RETRY_INTERVAL, START_TIME, END_TIME, ROOT_IDENTITY_CONTEXT);
 
         assertEquals(CHARGING_STATION_ID, command.getChargingStationId());
         assertEquals(UPLOAD_LOCATION, command.getUploadLocation());
@@ -88,7 +93,7 @@ public class RequestDiagnosticsCommandTest {
 
     @Test
     public void testNullStartAndEndPeriods() {
-        RequestDiagnosticsCommand command = new RequestDiagnosticsCommand(CHARGING_STATION_ID, UPLOAD_LOCATION, NUM_RETRIES, RETRY_INTERVAL, null, null);
+        RequestDiagnosticsCommand command = new RequestDiagnosticsCommand(CHARGING_STATION_ID, UPLOAD_LOCATION, NUM_RETRIES, RETRY_INTERVAL, null, null, ROOT_IDENTITY_CONTEXT);
 
         assertNull(command.getPeriodStartTime());
         assertNull(command.getPeriodEndTime());

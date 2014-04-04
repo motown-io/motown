@@ -48,12 +48,11 @@ class RequestDiagnosticsJsonCommandHandler implements JsonCommandHandler {
             if (chargingStation != null && chargingStation.isAccepted()) {
                 RequestDiagnosticsApiCommand command = gson.fromJson(commandObject, RequestDiagnosticsApiCommand.class);
 
-                commandGateway.send(new RequestDiagnosticsCommand(new ChargingStationId(chargingStationId), command.getTargetLocation(), null, null, null, null), new CorrelationToken());
+                commandGateway.send(new RequestDiagnosticsCommand(new ChargingStationId(chargingStationId), command.getTargetLocation(), null, null, null, null, identityContext), new CorrelationToken());
             }
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Data transfer command not able to parse the payload, is your json correctly formatted?", ex);
         }
-
     }
 
     public void setCommandGateway(DomainCommandGateway commandGateway) {

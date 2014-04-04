@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import javax.annotation.Nullable;
@@ -41,6 +42,8 @@ public final class RequestDiagnosticsCommand {
 
     private final Date periodEndTime;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code RequestDiagnosticsCommand}.
      *
@@ -50,16 +53,19 @@ public final class RequestDiagnosticsCommand {
      * @param retryInterval     the time in seconds between the retry attempts
      * @param periodStartTime   the date/time of the oldest diagnostics information that should be contained in the diagnostics report
      * @param periodEndTime     the date/time of the latest diagnostics information that should be contained in the diagnostics report
-     *
-     * * @throws NullPointerException if {@code chargingStationId}, or {@code uploadLocation} is {@code null}.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code uploadLocation} or {@code identityContext} is {@code null}.
      */
-    public RequestDiagnosticsCommand(ChargingStationId chargingStationId, String uploadLocation, @Nullable Integer numRetries, @Nullable Integer retryInterval, @Nullable Date periodStartTime, @Nullable Date periodEndTime) {
+    public RequestDiagnosticsCommand(ChargingStationId chargingStationId, String uploadLocation, @Nullable Integer numRetries,
+                                     @Nullable Integer retryInterval, @Nullable Date periodStartTime, @Nullable Date periodEndTime,
+                                     IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.uploadLocation = checkNotNull(uploadLocation);
         this.numRetries = numRetries;
         this.retryInterval = retryInterval;
         this.periodStartTime = periodStartTime != null ? new Date(periodStartTime.getTime()) : null;
         this.periodEndTime = periodEndTime != null ? new Date(periodEndTime.getTime()) : null;
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -109,6 +115,15 @@ public final class RequestDiagnosticsCommand {
     @Nullable
     public Date getPeriodEndTime() {
         return periodEndTime != null ? new Date(periodEndTime.getTime()) : null;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 
 }
