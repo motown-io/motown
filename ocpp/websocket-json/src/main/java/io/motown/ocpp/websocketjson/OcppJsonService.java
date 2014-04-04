@@ -263,6 +263,15 @@ public class OcppJsonService {
         sendWampMessage(wampMessage, chargingStationId);
     }
 
+    public void getLocalListVersion(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken) {
+        Getlocallistversion getlocallistversionRequest = new Getlocallistversion();
+
+        responseHandlers.put(statusCorrelationToken.getToken(), new GetLocalListVersionResponseHandler(statusCorrelationToken));
+
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "GetLocalListVersion", getlocallistversionRequest);
+        sendWampMessage(wampMessage, chargingStationId);
+    }
+
     //TODO: Add the rest of the outgoing calls towards the charging station - Ingo Pak, 02 Apr 2014
 
     private void sendWampMessage(WampMessage wampMessage, ChargingStationId chargingStationId) {

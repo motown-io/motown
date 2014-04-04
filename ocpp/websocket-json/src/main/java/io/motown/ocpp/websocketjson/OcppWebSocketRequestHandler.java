@@ -106,6 +106,7 @@ public class OcppWebSocketRequestHandler implements OcppRequestHandler {
     @Override
     public void handle(AuthorizationListVersionRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("AuthorizationListVersionRequestedEvent");
+        ocppJsonService.getLocalListVersion(event.getChargingStationId(), statusCorrelationToken);
     }
 
     @Override

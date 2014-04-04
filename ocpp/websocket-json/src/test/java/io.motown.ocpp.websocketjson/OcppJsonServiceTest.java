@@ -223,4 +223,13 @@ public class OcppJsonServiceTest {
 
         verify(mockWebSocket).write(expectedMessage);
     }
+
+    @Test
+    public void getLocalListVersionRequest() throws IOException{
+        service.getLocalListVersion(CHARGING_STATION_ID, CORRELATION_TOKEN);
+
+        String expectedMessage = String.format("[%d,\"%s\",\"%s\",{}]", WampMessage.CALL, CORRELATION_TOKEN.getToken(), "GetLocalListVersion").replaceAll("\\s+", "");
+
+        verify(mockWebSocket).write(expectedMessage);
+    }
 }
