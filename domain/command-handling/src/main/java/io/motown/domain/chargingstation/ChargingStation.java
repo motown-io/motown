@@ -159,10 +159,10 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         } else {
             if (command.getEvseId() == Evse.ALL) {
                 for (int i = 1; i <= numberOfEvses; i++) {
-                    apply(new UnlockEvseRequestedEvent(id, protocol, new EvseId(i)), metaData);
+                    apply(new UnlockEvseRequestedEvent(id, protocol, new EvseId(i), command.getIdentityContext()), metaData);
                 }
             } else {
-                apply(new UnlockEvseRequestedEvent(id, protocol, command.getEvseId()), metaData);
+                apply(new UnlockEvseRequestedEvent(id, protocol, command.getEvseId(), command.getIdentityContext()), metaData);
             }
         }
     }

@@ -242,7 +242,7 @@ public class ChargingStationTest {
     public void testRequestingToUnlockEvse() {
         fixture.given(CHARGING_STATION)
                 .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, EVSE_ID, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new UnlockEvseRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID));
+                .expectEvents(new UnlockEvseRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
@@ -263,8 +263,8 @@ public class ChargingStationTest {
     public void testRequestingToUnlockAllEvses() {
         fixture.given(CHARGING_STATION)
                 .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, Evse.ALL, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new UnlockEvseRequestedEvent(CHARGING_STATION_ID, PROTOCOL, new EvseId(1)),
-                        new UnlockEvseRequestedEvent(CHARGING_STATION_ID, PROTOCOL, new EvseId(2)));
+                .expectEvents(new UnlockEvseRequestedEvent(CHARGING_STATION_ID, PROTOCOL, new EvseId(1), ROOT_IDENTITY_CONTEXT),
+                        new UnlockEvseRequestedEvent(CHARGING_STATION_ID, PROTOCOL, new EvseId(2), ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
