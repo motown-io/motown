@@ -22,7 +22,6 @@ import io.motown.domain.api.chargingstation.RequestResult;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.CancelreservationResponse;
-import io.motown.ocpp.websocketjson.schema.generated.v15.ResetResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 
 public class CancelReservationResponseHandler extends ResponseHandler {
@@ -34,7 +33,7 @@ public class CancelReservationResponseHandler extends ResponseHandler {
     @Override
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         CancelreservationResponse response = gson.fromJson(wampMessage.getPayloadAsString(), CancelreservationResponse.class);
-        RequestResult requestResult = response.getStatus().equals(ResetResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
+        RequestResult requestResult = CancelreservationResponse.Status.ACCEPTED.equals(response.getStatus()) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
         domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "");
     }
