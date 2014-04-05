@@ -73,7 +73,7 @@ public class SubscriptionRepository {
     public Subscription findBySubscriptionId(String subscriptionId) {
         Query query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriptionId = :subscriptionId").setParameter("subscriptionId", subscriptionId);
         List resultList = query.getResultList();
-        if (resultList.size() > 0) {
+        if (!resultList.isEmpty()) {
             return (Subscription) resultList.get(0);
         } else {
             return null;
@@ -83,7 +83,7 @@ public class SubscriptionRepository {
     public Subscription findBySubscriberIdentityAndDeliveryAddress(String subscriberIdentity, String deliveryAddress) {
         Query query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriberIdentity = :subscriberIdentity AND s.deliveryAddress = :deliveryAddress").setParameter("subscriberIdentity", subscriberIdentity).setParameter("deliveryAddress", deliveryAddress);
         List resultList = query.getResultList();
-        if (resultList.size() > 0) {
+        if (!resultList.isEmpty()) {
             return (Subscription) resultList.get(0);
         } else {
             return null;

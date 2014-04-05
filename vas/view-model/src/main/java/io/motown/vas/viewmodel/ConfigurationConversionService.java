@@ -50,7 +50,7 @@ public class ConfigurationConversionService {
     public ChargeMode getChargeModeFromEvses(Set<Evse> evses) {
         ChargeMode chargeMode = ChargeMode.UNSPECIFIED;
         for (Evse evse : evses) {
-            if (evse.getConnectors().size() > 0) {
+            if (!evse.getConnectors().isEmpty()) {
                 chargeMode = ChargeMode.fromChargingProtocol(evse.getConnectors().get(0).getChargingProtocol());
                 break;
             }

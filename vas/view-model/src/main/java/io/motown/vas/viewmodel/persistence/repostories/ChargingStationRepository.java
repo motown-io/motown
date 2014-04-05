@@ -51,7 +51,7 @@ public class ChargingStationRepository {
     public ChargingStation findByChargingStationId(String chargingStationId) {
         Query query = entityManager.createQuery("SELECT cs FROM io.motown.vas.viewmodel.model.ChargingStation AS cs WHERE cs.chargingStationId = :chargingStationId").setParameter("chargingStationId", chargingStationId);
         List resultList = query.getResultList();
-        if (resultList.size() > 0) {
+        if (!resultList.isEmpty()) {
             return (ChargingStation) resultList.get(0);
         } else {
             return null;

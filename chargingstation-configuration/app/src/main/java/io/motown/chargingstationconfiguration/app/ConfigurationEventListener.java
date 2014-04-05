@@ -55,7 +55,7 @@ public class ConfigurationEventListener {
         Map<String,String> attributes = event.getAttributes();
         Set<Evse> evses = domainService.getEvses(attributes.get("vendor"), attributes.get("model"));
 
-        if (evses != null && evses.size() > 0) {
+        if (evses != null && !evses.isEmpty()) {
             IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
             ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(event.getChargingStationId(), evses, identityContext);

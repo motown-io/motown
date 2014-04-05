@@ -252,7 +252,7 @@ public class DomainService {
         StopTransactionCommand command = new StopTransactionCommand(chargingStationId, transactionId, idTag, meterValueStop, timeStamp, identityContext);
         commandGateway.send(command);
 
-        if (meterValues != null && meterValues.size() > 0) {
+        if (meterValues != null && !meterValues.isEmpty()) {
             Transaction transaction = transactionRepository.findTransactionById((long) transactionId.getNumber());
             commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, transaction.getEvseId(), meterValues, identityContext));
         }
