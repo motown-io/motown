@@ -274,7 +274,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
             LOG.info("Update of local authorization list on {} has been accepted", id);
             return RequestResult.SUCCESS;
         } else {
-            String responseStatus = (response.getStatus() != null ? response.getStatus().value() : "-unknown status-");
+            String responseStatus = response.getStatus() != null ? response.getStatus().value() : "-unknown status-";
             LOG.warn("Update of local authorization list on {} has failed due to {}", id, responseStatus);
             return RequestResult.FAILURE;
         }

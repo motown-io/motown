@@ -63,7 +63,7 @@ public class ChargingStation {
     }
 
     public boolean isRegisteredAndConfigured() {
-        return (this.isRegistered() && this.isConfigured());
+        return this.isRegistered() && this.isConfigured();
     }
 
     public void setRegistered(boolean registered) {
