@@ -284,7 +284,8 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
             apply(new ReserveNowRequestedEvent(command.getChargingStationId(), this.protocol, command.getEvseId(), command.getIdentifyingToken(),
                     command.getExpiryDate(), command.getParentIdentifyingToken(), command.getIdentityContext()), metaData);
         } else {
-            apply(new ReserveNowRequestedForUnreservableChargingStationEvent(command.getChargingStationId(), command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), command.getParentIdentifyingToken()));
+            apply(new ReserveNowRequestedForUnreservableChargingStationEvent(command.getChargingStationId(), command.getEvseId(),
+                    command.getIdentifyingToken(), command.getExpiryDate(), command.getParentIdentifyingToken(), command.getIdentityContext()));
         }
     }
 

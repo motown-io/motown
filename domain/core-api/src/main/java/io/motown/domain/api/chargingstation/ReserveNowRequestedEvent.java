@@ -63,7 +63,9 @@ public final class ReserveNowRequestedEvent implements CommunicationWithCharging
     }
 
     /**
-     * {@inheritDoc}
+     * Gets the charging station's identifier.
+     *
+     * @return the charging station's identifier.
      */
     @Override
     public ChargingStationId getChargingStationId() {
@@ -113,6 +115,15 @@ public final class ReserveNowRequestedEvent implements CommunicationWithCharging
      */
     public IdentifyingToken getParentIdentifyingToken() {
         return parentIdentifyingToken;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 
     @Override
