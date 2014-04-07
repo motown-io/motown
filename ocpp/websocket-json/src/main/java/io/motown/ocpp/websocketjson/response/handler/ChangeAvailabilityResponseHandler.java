@@ -37,6 +37,6 @@ public class ChangeAvailabilityResponseHandler extends ResponseHandler {
         ChangeavailabilityResponse response = gson.fromJson(wampMessage.getPayloadAsString(), ChangeavailabilityResponse.class);
         RequestResult requestResult = Status.ACCEPTED.equals(response.getStatus()) || Status.SCHEDULED.equals(response.getStatus())? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "");
+        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), response.getStatus().toString());
     }
 }

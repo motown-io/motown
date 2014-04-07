@@ -60,7 +60,7 @@ public class ChangeAvailabilityResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, null);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.SUCCESS, correlationToken, "");
+        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.SUCCESS, correlationToken, Status.ACCEPTED.toString());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class ChangeAvailabilityResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, null);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.SUCCESS, correlationToken, "");
+        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.SUCCESS, correlationToken, Status.SCHEDULED.toString());
     }
 
     @Test
@@ -82,7 +82,7 @@ public class ChangeAvailabilityResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, null);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, "");
+        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, Status.REJECTED.toString());
     }
 
 }
