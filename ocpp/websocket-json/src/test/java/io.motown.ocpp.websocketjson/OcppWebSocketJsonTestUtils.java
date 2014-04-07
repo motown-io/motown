@@ -60,6 +60,7 @@ public class OcppWebSocketJsonTestUtils {
                 .add(new ChangeAvailabilityTypeAdapterSerializer())
                 //The serializers below are only needed during testing, as they are used to verify the result
                 .add(new ChangeAvailabilityStatusTypeAdapterSerializer())
+                .add(new CancelReservationStatusTypeAdapterSerializer())
                 //.add(new DiagnosticsStatusTypeAdapterSerializer())
                 //.add(new FirmwareStatusTypeAdapterSerializer())
                 //.add(new ChargePointErrorCodeTypeAdapterSerializer())
@@ -120,6 +121,20 @@ public class OcppWebSocketJsonTestUtils {
         @Override
         public Class<?> getAdaptedType() {
             return ChangeavailabilityResponse.Status.class;
+        }
+    }
+
+    /**
+     * Only needed during tests to translate object to json
+     */
+    private static class CancelReservationStatusTypeAdapterSerializer implements TypeAdapterSerializer<CancelreservationResponse.Status> {
+        @Override
+        public JsonElement serialize(CancelreservationResponse.Status status, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(status.toString());
+        }
+        @Override
+        public Class<?> getAdaptedType() {
+            return CancelreservationResponse.Status.class;
         }
     }
 
