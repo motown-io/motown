@@ -15,6 +15,10 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -27,16 +31,20 @@ public final class AuthorizationListVersionRequestedEvent implements Communicati
 
     private final String protocol;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code AuthorizationListVersionRequestedEvent} with an identifier and a protocol.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param protocol          protocol identifier.
+     * @param identityContext   identity context.
      * @throws NullPointerException if {@code chargingStationId} or {@code protocol} is {@code null}.
      */
-    public AuthorizationListVersionRequestedEvent(ChargingStationId chargingStationId, String protocol) {
+    public AuthorizationListVersionRequestedEvent(ChargingStationId chargingStationId, String protocol, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.protocol = checkNotNull(protocol);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -59,4 +67,29 @@ public final class AuthorizationListVersionRequestedEvent implements Communicati
         return this.protocol;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, protocol, identityContext);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final AuthorizationListVersionRequestedEvent other = (AuthorizationListVersionRequestedEvent) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.protocol, other.protocol) && Objects.equals(this.identityContext, other.identityContext);
+    }
 }

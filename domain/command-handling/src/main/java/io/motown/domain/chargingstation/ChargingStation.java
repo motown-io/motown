@@ -264,7 +264,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestAuthorizationListVersionCommand command) {
-        apply(new AuthorizationListVersionRequestedEvent(command.getChargingStationId(), this.protocol));
+        apply(new AuthorizationListVersionRequestedEvent(command.getChargingStationId(), this.protocol, command.getIdentityContext()));
     }
 
     @CommandHandler

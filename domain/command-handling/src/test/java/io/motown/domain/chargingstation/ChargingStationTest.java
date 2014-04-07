@@ -374,7 +374,7 @@ public class ChargingStationTest {
     public void testGetAuthorizationListVersionRequest() {
         fixture.given(CHARGING_STATION)
                 .when(new RequestAuthorizationListVersionCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new AuthorizationListVersionRequestedEvent(CHARGING_STATION_ID, PROTOCOL));
+                .expectEvents(new AuthorizationListVersionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
