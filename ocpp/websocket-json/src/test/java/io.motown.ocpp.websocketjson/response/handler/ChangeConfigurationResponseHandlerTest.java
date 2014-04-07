@@ -19,12 +19,11 @@ import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.RequestResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.schema.generated.v15.ChangeconfigurationResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
-import io.motown.ocpp.websocketjson.wamp.WampMessageParser;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.StringReader;
 import java.util.UUID;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
@@ -38,27 +37,51 @@ public class ChangeConfigurationResponseHandlerTest {
 
     private DomainService domainService;
 
+    private String token;
+    private CorrelationToken correlationToken;
+    private ChangeConfigurationResponseHandler handler;
+
     @Before
     public void setup() {
         gson = getGson();
         domainService = mock(DomainService.class);
+
+        token = UUID.randomUUID().toString();
+        correlationToken = new CorrelationToken(token);
+        handler = new ChangeConfigurationResponseHandler(correlationToken);
     }
 
     @Test
-    public void handleValidResponse() {
-        String token = UUID.randomUUID().toString();
-        CorrelationToken correlationToken = new CorrelationToken(token);
-        ChangeConfigurationResponseHandler handler = new ChangeConfigurationResponseHandler(correlationToken);
-
-        String responseMessage = "[%d,\"%s\",{\n" +
-                "  \"status\": \"Accepted\"\n" +
-                "}]";
-
-        WampMessage message = new WampMessageParser(gson).parseMessage(new StringReader(String.format(responseMessage, WampMessage.CALL_RESULT, token)));
+    public void handleAcceptedResponse() {
+        ChangeconfigurationResponse payload = new ChangeconfigurationResponse();
+        payload.setStatus(ChangeconfigurationResponse.Status.ACCEPTED);
+        WampMessage message = new WampMessage(WampMessage.CALL_RESULT, token, gson.toJson(payload));
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, null);
 
         verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.SUCCESS, correlationToken, "");
+    }
+
+    @Test
+    public void handleRejectedResponse() {
+        ChangeconfigurationResponse payload = new ChangeconfigurationResponse();
+        payload.setStatus(ChangeconfigurationResponse.Status.REJECTED);
+        WampMessage message = new WampMessage(WampMessage.CALL_RESULT, token, gson.toJson(payload));
+
+        handler.handle(CHARGING_STATION_ID, message, gson, domainService, null);
+
+        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, "");
+    }
+
+    @Test
+    public void handleNotSupportedResponse() {
+        ChangeconfigurationResponse payload = new ChangeconfigurationResponse();
+        payload.setStatus(ChangeconfigurationResponse.Status.NOT_SUPPORTED);
+        WampMessage message = new WampMessage(WampMessage.CALL_RESULT, token, gson.toJson(payload));
+
+        handler.handle(CHARGING_STATION_ID, message, gson, domainService, null);
+
+        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, "");
     }
 
 }
