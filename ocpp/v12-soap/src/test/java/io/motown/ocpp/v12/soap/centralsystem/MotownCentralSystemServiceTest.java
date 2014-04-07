@@ -237,7 +237,7 @@ public class MotownCentralSystemServiceTest {
 
         motownCentralSystemService.diagnosticsStatusNotification(request, CHARGING_STATION_ID.getId());
 
-        verify(domainService).diagnosticsUploadStatusUpdate(CHARGING_STATION_ID, true);
+        verify(domainService).diagnosticsUploadStatusUpdate(CHARGING_STATION_ID, true, OCPPS12_ADD_ON_IDENTITY);
     }
 
     @Test
@@ -247,7 +247,7 @@ public class MotownCentralSystemServiceTest {
 
         motownCentralSystemService.diagnosticsStatusNotification(request, CHARGING_STATION_ID.getId());
 
-        verify(domainService).diagnosticsUploadStatusUpdate(CHARGING_STATION_ID, false);
+        verify(domainService).diagnosticsUploadStatusUpdate(CHARGING_STATION_ID, false, OCPPS12_ADD_ON_IDENTITY);
     }
 
     //TODO test authorize

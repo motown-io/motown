@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Objects;
@@ -32,17 +33,21 @@ public final class UpdateDiagnosticsUploadStatusCommand {
 
     private final boolean isUploaded;
 
+    private final IdentityContext identityContext;
+
     /**
-     * Creates a {@code UpdateDiagnosticsUploadStatusCommand} with an identifier and an indicator if the file has
-     * been successfully uploaded or not.
+     * Creates a {@code UpdateDiagnosticsUploadStatusCommand} with an identifier, an indicator if the file has
+     * been successfully uploaded or not and identity context.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param isUploaded        the status of the upload, in case false the upload failed
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
      */
-    public UpdateDiagnosticsUploadStatusCommand(ChargingStationId chargingStationId, boolean isUploaded) {
+    public UpdateDiagnosticsUploadStatusCommand(ChargingStationId chargingStationId, boolean isUploaded, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.isUploaded = isUploaded;
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -61,9 +66,18 @@ public final class UpdateDiagnosticsUploadStatusCommand {
         return isUploaded;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, isUploaded);
+        return Objects.hash(chargingStationId, isUploaded, identityContext);
     }
 
     @Override
@@ -75,6 +89,6 @@ public final class UpdateDiagnosticsUploadStatusCommand {
             return false;
         }
         final UpdateDiagnosticsUploadStatusCommand other = (UpdateDiagnosticsUploadStatusCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.isUploaded, other.isUploaded);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.isUploaded, other.isUploaded) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

@@ -198,11 +198,11 @@ public class DomainServiceTest {
 
     @Test
     public void testDiagnosticsUploadStatusUpdate() {
-        domainService.diagnosticsUploadStatusUpdate(CHARGING_STATION_ID, true);
-        verify(gateway).send(new UpdateDiagnosticsUploadStatusCommand(CHARGING_STATION_ID, true));
+        domainService.diagnosticsUploadStatusUpdate(CHARGING_STATION_ID, true, ADD_ON_IDENTITY);
+        verify(gateway).send(new UpdateDiagnosticsUploadStatusCommand(CHARGING_STATION_ID, true, NULL_USER_IDENTITY_CONTEXT));
 
-        domainService.diagnosticsUploadStatusUpdate(CHARGING_STATION_ID, false);
-        verify(gateway).send(new UpdateDiagnosticsUploadStatusCommand(CHARGING_STATION_ID, false));
+        domainService.diagnosticsUploadStatusUpdate(CHARGING_STATION_ID, false, ADD_ON_IDENTITY);
+        verify(gateway).send(new UpdateDiagnosticsUploadStatusCommand(CHARGING_STATION_ID, false, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test

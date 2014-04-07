@@ -127,7 +127,7 @@ public class MotownCentralSystemService implements CentralSystemService {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
         DiagnosticsStatus diagnosticsStatus = request.getStatus();
 
-        domainService.diagnosticsUploadStatusUpdate(chargingStationId, DiagnosticsStatus.UPLOADED.equals(diagnosticsStatus));
+        domainService.diagnosticsUploadStatusUpdate(chargingStationId, DiagnosticsStatus.UPLOADED.equals(diagnosticsStatus), addOnIdentity);
 
         return new DiagnosticsStatusNotificationResponse();
     }

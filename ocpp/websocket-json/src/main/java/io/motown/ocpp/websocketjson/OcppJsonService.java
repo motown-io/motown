@@ -365,7 +365,7 @@ public class OcppJsonService {
                     requestHandler = new DataTransferRequestHandler(gson, domainService);
                     break;
                 case DiagnosticsStatusNotificationRequestHandler.PROC_URI:
-                    requestHandler = new DiagnosticsStatusNotificationRequestHandler(gson, domainService);
+                    requestHandler = new DiagnosticsStatusNotificationRequestHandler(gson, domainService, addOnIdentity);
                     break;
                 case FirmwareStatusNotificationRequestHandler.PROC_URI:
                     requestHandler = new FirmwareStatusNotificationRequestHandler(gson, domainService);
