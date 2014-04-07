@@ -16,6 +16,7 @@
 package io.motown.domain.api.chargingstation;
 
 import com.google.common.collect.ImmutableList;
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.List;
@@ -40,22 +41,31 @@ public final class SendAuthorizationListCommand {
 
     private final AuthorizationListUpdateType updateType;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code SendAuthorizationListCommand}
      *
      * @param chargingStationId        the identifier of the charging station.
-     * @param authorizationList
-     * @param authorizationListVersion
-     * @param authorizationListHash
-     * @param updateType
-     * @throws NullPointerException if {@code chargingStationId}, {@code authorizationList}, {@code authorizationListHash} or {@code updateType} is {@code null}.
+     * @param authorizationList        in case of a full update this contains the list of values that form the new local
+     *                                 authorization list. In case of a differential update it contains the changes to be
+     *                                 applied to the local authorization list in the charging station.
+     * @param updateType               the type of update.
+     * @param authorizationListVersion in case of a full update this is the version number of the full list. In case of
+     *                                 a differential update it is the version number of the list after the update has been applied.
+     * @param authorizationListHash    hash value calculated over the contents of the list.
+     * @param identityContext          identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code authorizationList}, {@code authorizationListHash},
+     *                                 {@code updateType} or {@code identityContext} is {@code null}.
      */
-    public SendAuthorizationListCommand(ChargingStationId chargingStationId, List<IdentifyingToken> authorizationList, int authorizationListVersion, String authorizationListHash, AuthorizationListUpdateType updateType) {
+    public SendAuthorizationListCommand(ChargingStationId chargingStationId, List<IdentifyingToken> authorizationList, int authorizationListVersion,
+                                        String authorizationListHash, AuthorizationListUpdateType updateType, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.authorizationList = ImmutableList.copyOf(checkNotNull(authorizationList));
         this.authorizationListVersion = authorizationListVersion;
         this.authorizationListHash = checkNotNull(authorizationListHash);
         this.updateType = checkNotNull(updateType);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -67,25 +77,56 @@ public final class SendAuthorizationListCommand {
         return chargingStationId;
     }
 
+    /**
+     * In case of a full update this contains the list of values that form the new local authorization list. In case of
+     * a differential update it contains the changes to be applied to the local authorization list in the charging station.
+     *
+     * @return list of identifying tokens.
+     */
     public List<IdentifyingToken> getAuthorizationList() {
         return authorizationList;
     }
 
+    /**
+     * In case of a full update this is the version number of the full list. In case of a differential update it is the
+     * version number of the list after the update has been applied.
+     *
+     * @return list version.
+     */
     public int getAuthorizationListVersion() {
         return authorizationListVersion;
     }
 
+    /**
+     * Hash value calculated over the contents of the list.
+     *
+     * @return hash value.
+     */
     public String getAuthorizationListHash() {
         return authorizationListHash;
     }
 
+    /**
+     * Type of the update.
+     *
+     * @return update type.
+     */
     public AuthorizationListUpdateType getUpdateType() {
         return updateType;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, authorizationList, authorizationListVersion, authorizationListHash, updateType);
+        return Objects.hash(chargingStationId, authorizationList, authorizationListVersion, authorizationListHash, updateType, identityContext);
     }
 
     @Override
@@ -97,6 +138,6 @@ public final class SendAuthorizationListCommand {
             return false;
         }
         final SendAuthorizationListCommand other = (SendAuthorizationListCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.authorizationList, other.authorizationList) && Objects.equals(this.authorizationListVersion, other.authorizationListVersion) && Objects.equals(this.authorizationListHash, other.authorizationListHash) && Objects.equals(this.updateType, other.updateType);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.authorizationList, other.authorizationList) && Objects.equals(this.authorizationListVersion, other.authorizationListVersion) && Objects.equals(this.authorizationListHash, other.authorizationListHash) && Objects.equals(this.updateType, other.updateType) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

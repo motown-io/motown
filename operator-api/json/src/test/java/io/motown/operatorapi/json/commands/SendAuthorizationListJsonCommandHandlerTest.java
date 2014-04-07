@@ -20,6 +20,8 @@ import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
+
 public class SendAuthorizationListJsonCommandHandlerTest {
 
     public static final String CHARGING_STATION_ID = "TEST_CP";
@@ -38,25 +40,25 @@ public class SendAuthorizationListJsonCommandHandlerTest {
     @Test
     public void testSendAuthorizationListCommand() {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'FULL',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID, commandObject, null);
+        handler.handle(CHARGING_STATION_ID, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test
     public void testDifferentialUpdateType() {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'DIFFERENTIAL',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID, commandObject, null);
+        handler.handle(CHARGING_STATION_ID, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidUpdateType() {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'NEW',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID, commandObject, null);
+        handler.handle(CHARGING_STATION_ID, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidAuthenticationStatus() {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'FULL',items:[{token:'1',status:'NEW'}]}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID, commandObject, null);
+        handler.handle(CHARGING_STATION_ID, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
 }
