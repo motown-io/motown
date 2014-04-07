@@ -75,7 +75,6 @@ public final class CancelReservationRequestedEvent implements CommunicationWithC
         return reservationId;
     }
 
-
     /**
      * Gets the identity context.
      *

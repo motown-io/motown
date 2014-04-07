@@ -422,7 +422,7 @@ public class ChargingStationTest {
         String dataToTransfer = "Data to transfer";
         fixture.given(CHARGING_STATION)
                 .when(new IncomingDataTransferCommand(CHARGING_STATION_ID, CHARGING_STATION_VENDOR, messageId, dataToTransfer, NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new IncomingDataTransferReceivedEvent(CHARGING_STATION_ID, CHARGING_STATION_VENDOR, messageId, dataToTransfer));
+                .expectEvents(new IncomingDataTransferReceivedEvent(CHARGING_STATION_ID, CHARGING_STATION_VENDOR, messageId, dataToTransfer, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test

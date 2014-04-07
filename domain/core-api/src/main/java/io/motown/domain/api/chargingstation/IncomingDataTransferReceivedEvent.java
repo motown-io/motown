@@ -15,6 +15,10 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -32,24 +36,28 @@ public final class IncomingDataTransferReceivedEvent {
 
     private String data;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code IncomingDataTransferReceivedEvent} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param vendorId the charging station vendor.
-     * @param messageId optional additional identification field (empty if no value).
-     * @param data the data to transfer (empty if no value).
-     * @throws NullPointerException if {@code chargingStationId}, {@code vendorId}, {@code messageId}, {@code data} is
-     *                              {@code null}.
+     * @param vendorId          the charging station vendor.
+     * @param messageId         optional additional identification field (empty if no value).
+     * @param data              the data to transfer (empty if no value).
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code vendorId}, {@code messageId}, {@code data} or
+     *                          {@code identityContext} is {@code null}.
      * @throws IllegalArgumentException if {@code vendorId} is empty.
      */
-    public IncomingDataTransferReceivedEvent(ChargingStationId chargingStationId, String vendorId, String messageId, String data) {
+    public IncomingDataTransferReceivedEvent(ChargingStationId chargingStationId, String vendorId, String messageId, String data, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(vendorId);
         checkArgument(!vendorId.isEmpty());
         this.vendorId = checkNotNull(vendorId);
         this.messageId = checkNotNull(messageId);
         this.data = checkNotNull(data);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -78,5 +86,31 @@ public final class IncomingDataTransferReceivedEvent {
      */
     public String getData() {
         return data;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, vendorId, messageId, data, identityContext);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final IncomingDataTransferReceivedEvent other = (IncomingDataTransferReceivedEvent) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.vendorId, other.vendorId) && Objects.equals(this.messageId, other.messageId) && Objects.equals(this.data, other.data) && Objects.equals(this.identityContext, other.identityContext);
     }
 }
