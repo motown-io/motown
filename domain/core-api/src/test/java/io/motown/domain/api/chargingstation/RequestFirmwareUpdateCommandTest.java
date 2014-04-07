@@ -27,33 +27,38 @@ public class RequestFirmwareUpdateCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new RequestFirmwareUpdateCommand(null, UPDATE_LOCATION, new Date(), Collections.<String, String>emptyMap());
+        new RequestFirmwareUpdateCommand(null, UPDATE_LOCATION, new Date(), Collections.<String, String>emptyMap(), ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullDownloadLocation() {
-        new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, null, new Date(), Collections.<String, String>emptyMap());
+        new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, null, new Date(), Collections.<String, String>emptyMap(), ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithEmptyDownloadLocation() {
-        new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, "", new Date(), Collections.<String, String>emptyMap());
+        new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, "", new Date(), Collections.<String, String>emptyMap(), ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullRetrieveDate() {
-        new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, UPDATE_LOCATION, null, Collections.<String, String>emptyMap());
+        new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, UPDATE_LOCATION, null, Collections.<String, String>emptyMap(), ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullAttributes() {
-        new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, UPDATE_LOCATION, new Date(), null);
+        new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, UPDATE_LOCATION, new Date(), null, ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingWithNullIdentityContext() {
+        new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, UPDATE_LOCATION, new Date(), Collections.<String, String>emptyMap(), null);
     }
 
     @Test
     public void testImmutableDate() {
         Date now = new Date();
-        RequestFirmwareUpdateCommand command = new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, UPDATE_LOCATION, now, BOOT_NOTIFICATION_ATTRIBUTES);
+        RequestFirmwareUpdateCommand command = new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, UPDATE_LOCATION, now, BOOT_NOTIFICATION_ATTRIBUTES, ROOT_IDENTITY_CONTEXT);
         command.getRetrieveDate().setTime(TWO_MINUTES_AGO.getTime());
         assertEquals(now, command.getRetrieveDate());
     }

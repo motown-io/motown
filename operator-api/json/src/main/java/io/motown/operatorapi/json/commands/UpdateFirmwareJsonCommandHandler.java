@@ -50,7 +50,8 @@ class UpdateFirmwareJsonCommandHandler implements JsonCommandHandler {
             if (chargingStation != null && chargingStation.isAccepted()) {
                 UpdateFirmwareApiCommand command = gson.fromJson(commandObject, UpdateFirmwareApiCommand.class);
 
-                commandGateway.send(new RequestFirmwareUpdateCommand(new ChargingStationId(chargingStationId), command.getLocation(), command.getRetrieveDate(), new HashMap<String, String>()), new CorrelationToken());
+                commandGateway.send(new RequestFirmwareUpdateCommand(new ChargingStationId(chargingStationId),
+                        command.getLocation(), command.getRetrieveDate(), new HashMap<String, String>(), identityContext), new CorrelationToken());
             }
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Change configuration command not able to parse the payload, is your json correctly formatted?", ex);

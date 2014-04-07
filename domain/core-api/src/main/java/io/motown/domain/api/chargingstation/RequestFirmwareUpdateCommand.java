@@ -16,10 +16,12 @@
 package io.motown.domain.api.chargingstation;
 
 import com.google.common.collect.ImmutableMap;
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -39,18 +41,21 @@ public final class RequestFirmwareUpdateCommand {
 
     private Map<String, String> attributes;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code RequestFirmwareUpdateCommand}.
      *
-     * @param chargingStationId the charging station identifier
-     * @param updateLocation    the location to download the firmware update from
-     * @param retrieveDate      the moment the charging station should start retrieving the firmware update from the updatelocation
-     * @param attributes        optional attributes like retry settings
-     * @throws NullPointerException if {@code chargingStationId}, {@code updateLocation}, {@code retrieveDate} or
-     *                              {@code attributes} is {@code null}.
+     * @param chargingStationId the charging station identifier.
+     * @param updateLocation    the location to download the firmware update from.
+     * @param retrieveDate      the moment the charging station should start retrieving the firmware update from the update location.
+     * @param attributes        optional attributes like retry settings.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code updateLocation}, {@code retrieveDate},
+     *                              {@code attributes} or {@code identityContext} is {@code null}.
      * @throws IllegalArgumentException if {@code updateLocation} is empty.
      */
-    public RequestFirmwareUpdateCommand(ChargingStationId chargingStationId, String updateLocation, Date retrieveDate, Map<String, String> attributes) {
+    public RequestFirmwareUpdateCommand(ChargingStationId chargingStationId, String updateLocation, Date retrieveDate, Map<String, String> attributes, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
 
         checkNotNull(updateLocation);
@@ -58,6 +63,7 @@ public final class RequestFirmwareUpdateCommand {
         this.updateLocation = updateLocation;
         this.retrieveDate = new Date(checkNotNull(retrieveDate).getTime());
         this.attributes = ImmutableMap.copyOf(checkNotNull(attributes));
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -88,5 +94,31 @@ public final class RequestFirmwareUpdateCommand {
      */
     public Map<String, String> getAttributes() {
         return attributes;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, updateLocation, retrieveDate, attributes, identityContext);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final RequestFirmwareUpdateCommand other = (RequestFirmwareUpdateCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.updateLocation, other.updateLocation) && Objects.equals(this.retrieveDate, other.retrieveDate) && Objects.equals(this.attributes, other.attributes) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

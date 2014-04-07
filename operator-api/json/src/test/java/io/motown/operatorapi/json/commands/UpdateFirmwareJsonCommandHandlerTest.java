@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
 import static io.motown.operatorapi.json.commands.OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING;
 
 public class UpdateFirmwareJsonCommandHandlerTest {
@@ -39,18 +40,18 @@ public class UpdateFirmwareJsonCommandHandlerTest {
     @Test
     public void testUpdateFirmwareCommand() {
         JsonObject commandObject = gson.fromJson("{location:'DEURNE',retrieveDate:'2014-02-03T12:00:00Z'}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidUpdateCommandInvalidDate() {
         JsonObject commandObject = gson.fromJson("{location:'DEURNE',retrieveDate:'2014-02-03'}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void testInvalidUpdateCommandInvalidLocation() {
         JsonObject commandObject = gson.fromJson("{loc:'DEURNE',retrieveDate:'2014-02-03T12:00:00Z'}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 }
