@@ -52,7 +52,7 @@ public final class ReserveNowRequestedForUnreservableChargingStationEvent {
      * @param parentIdentifyingToken    parent identifier that would have reserved the charging station.
      * @param identityContext           the identity context.
      * @throws NullPointerException     if {@code chargingStationId}, {@code evseId}, {@code identifyingToken}, {@code expiryDate}
-     *                                  or {@code identityContext} is null.
+     *                                  or {@code identityContext} is {@code null}.
      */
     public ReserveNowRequestedForUnreservableChargingStationEvent(ChargingStationId chargingStationId, EvseId evseId,
                              IdentifyingToken identifyingToken, Date expiryDate, @Nullable IdentifyingToken parentIdentifyingToken, IdentityContext identityContext) {

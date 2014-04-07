@@ -405,7 +405,7 @@ public class ChargingStationTest {
     public void testRequestCancelReservation() {
         fixture.given(CHARGING_STATION)
                 .when(new RequestCancelReservationCommand(CHARGING_STATION_ID, RESERVATION_ID, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new CancelReservationRequestedEvent(CHARGING_STATION_ID, PROTOCOL, RESERVATION_ID));
+                .expectEvents(new CancelReservationRequestedEvent(CHARGING_STATION_ID, PROTOCOL, RESERVATION_ID, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test

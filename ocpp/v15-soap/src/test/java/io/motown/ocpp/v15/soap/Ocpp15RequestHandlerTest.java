@@ -149,7 +149,7 @@ public class Ocpp15RequestHandlerTest {
 
     @Test
     public void testCancelReservationRequestedEvent() {
-        requestHandler.handle(new CancelReservationRequestedEvent(CHARGING_STATION_ID, PROTOCOL, RESERVATION_ID), CORRELATION_TOKEN);
+        requestHandler.handle(new CancelReservationRequestedEvent(CHARGING_STATION_ID, PROTOCOL, RESERVATION_ID, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).cancelReservation(CHARGING_STATION_ID, RESERVATION_ID.getNumber());
     }
