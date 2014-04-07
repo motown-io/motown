@@ -35,6 +35,6 @@ public class SendLocalListResponseHandler extends ResponseHandler {
         SendlocallistResponse response = gson.fromJson(wampMessage.getPayloadAsString(), SendlocallistResponse.class);
         RequestResult requestResult = response.getStatus().equals(SendlocallistResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "");
+        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), response.getStatus().toString());
     }
 }
