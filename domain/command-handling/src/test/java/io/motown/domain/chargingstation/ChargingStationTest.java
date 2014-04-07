@@ -357,7 +357,7 @@ public class ChargingStationTest {
 
         fixture.given(CHARGING_STATION)
                 .when(new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, updateLocation, retrieveDate, attributes, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, updateLocation, retrieveDate, attributes));
+                .expectEvents(new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, updateLocation, retrieveDate, attributes, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test

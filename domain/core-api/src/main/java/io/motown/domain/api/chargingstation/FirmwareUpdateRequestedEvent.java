@@ -15,8 +15,11 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -37,18 +40,23 @@ public final class FirmwareUpdateRequestedEvent implements CommunicationWithChar
 
     private Map<String, String> attributes;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code RequestFirmwareUpdateCommand}.
      *
-     * @param chargingStationId the charging station identifier
-     * @param protocol          the protocol identifier
-     * @param updateLocation    the location to download the firmware update from
-     * @param retrieveDate      the moment the charging station should start retrieving the firmware update from the updatelocation
-     * @param attributes        optional attributes like retry settings
-     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code updateLocation} or {@code retrieveDate} is {@code null}.
+     * @param chargingStationId the charging station identifier.
+     * @param protocol          the protocol identifier.
+     * @param updateLocation    the location to download the firmware update from.
+     * @param retrieveDate      the moment the charging station should start retrieving the firmware update from the update location.
+     * @param attributes        optional attributes like retry settings.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code updateLocation}, {@code retrieveDate}
+     *                          or {@code identityContext} is {@code null}.
      * @throws IllegalArgumentException if {@code updateLocation} is empty.
      */
-    public FirmwareUpdateRequestedEvent(ChargingStationId chargingStationId, String protocol, String updateLocation, Date retrieveDate, Map<String, String> attributes) {
+    public FirmwareUpdateRequestedEvent(ChargingStationId chargingStationId, String protocol, String updateLocation,
+                                        Date retrieveDate, Map<String, String> attributes, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.protocol = checkNotNull(protocol);
 
@@ -57,6 +65,7 @@ public final class FirmwareUpdateRequestedEvent implements CommunicationWithChar
         this.updateLocation = updateLocation;
         this.retrieveDate = new Date(checkNotNull(retrieveDate).getTime());
         this.attributes = checkNotNull(attributes);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -94,5 +103,31 @@ public final class FirmwareUpdateRequestedEvent implements CommunicationWithChar
      */
     public Map<String, String> getAttributes() {
         return attributes;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, protocol, updateLocation, retrieveDate, attributes, identityContext);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final FirmwareUpdateRequestedEvent other = (FirmwareUpdateRequestedEvent) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.protocol, other.protocol) && Objects.equals(this.updateLocation, other.updateLocation) && Objects.equals(this.retrieveDate, other.retrieveDate) && Objects.equals(this.attributes, other.attributes) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

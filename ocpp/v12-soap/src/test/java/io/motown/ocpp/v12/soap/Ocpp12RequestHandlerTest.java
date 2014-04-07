@@ -143,11 +143,11 @@ public class Ocpp12RequestHandlerTest {
     public void testFirmwareUpdateRequestedEvent() {
         Date retrievedDate = new Date();
         Map<String, String> attributes = new HashMap<>();
-        requestHandler.handle(new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, V12SOAPTestUtils.getFirmwareUpdateLocation(), retrievedDate, attributes));
+        requestHandler.handle(new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, V12SOAPTestUtils.getFirmwareUpdateLocation(), retrievedDate, attributes, ROOT_IDENTITY_CONTEXT));
 
         verify(client).updateFirmware(CHARGING_STATION_ID, V12SOAPTestUtils.getFirmwareUpdateLocation(), retrievedDate, null, null);
 
-        requestHandler.handle(new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, V12SOAPTestUtils.getFirmwareUpdateLocation(), retrievedDate, V12SOAPTestUtils.getUpdateFirmwareAttributes(Integer.toString(V12SOAPTestUtils.NUMBER_OF_RETRIES), Integer.toString(V12SOAPTestUtils.RETRY_INTERVAL))));
+        requestHandler.handle(new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, V12SOAPTestUtils.getFirmwareUpdateLocation(), retrievedDate, V12SOAPTestUtils.getUpdateFirmwareAttributes(Integer.toString(V12SOAPTestUtils.NUMBER_OF_RETRIES), Integer.toString(V12SOAPTestUtils.RETRY_INTERVAL)), ROOT_IDENTITY_CONTEXT));
 
         verify(client).updateFirmware(CHARGING_STATION_ID, V12SOAPTestUtils.getFirmwareUpdateLocation(), retrievedDate, V12SOAPTestUtils.NUMBER_OF_RETRIES, V12SOAPTestUtils.RETRY_INTERVAL);
     }
