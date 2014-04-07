@@ -34,14 +34,14 @@ public class SchemaValidator {
 
     private JsonSchemaFactory factory;
 
-    public SchemaValidator() {
-        factory = JsonSchemaFactory.byDefault();
-    }
-
     /**
      * Key value is procUri (eg: BootNotification), value is JsonSchema for validation.
      */
     private Map<String, JsonSchema> schemas = new HashMap<>();
+
+    public SchemaValidator() {
+        factory = JsonSchemaFactory.byDefault();
+    }
 
     public boolean isValidRequest(String request, String procUri) {
         JsonSchema schema = schemas.get(procUri);
