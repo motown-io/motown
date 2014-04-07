@@ -253,7 +253,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestClearCacheCommand command, MetaData metaData) {
-        apply(new ClearCacheRequestedEvent(command.getChargingStationId(), this.protocol), metaData);
+        apply(new ClearCacheRequestedEvent(command.getChargingStationId(), this.protocol, command.getIdentityContext()), metaData);
     }
 
     @CommandHandler

@@ -165,7 +165,7 @@ public class Ocpp15RequestHandlerTest {
 
     @Test
     public void testClearCacheRequestedEvent() {
-        requestHandler.handle(new ClearCacheRequestedEvent(CHARGING_STATION_ID, PROTOCOL), CORRELATION_TOKEN);
+        requestHandler.handle(new ClearCacheRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).clearCache(CHARGING_STATION_ID);
     }

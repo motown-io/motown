@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -27,22 +29,24 @@ public final class ClearCacheRequestedEvent implements CommunicationWithCharging
 
     private final String protocol;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code ClearCacheRequestedEvent} with an identifier and a protocol.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param protocol          protocol identifier.
-     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} is {@code null}.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code protocol} or {@code identityContext} is {@code null}.
      */
-    public ClearCacheRequestedEvent(ChargingStationId chargingStationId, String protocol) {
+    public ClearCacheRequestedEvent(ChargingStationId chargingStationId, String protocol, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.protocol = checkNotNull(protocol);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
-     * Gets the charging station identifier.
-     *
-     * @return the charging station identifier.
+     * {@inheritDoc}
      */
     @Override
     public ChargingStationId getChargingStationId() {
@@ -50,13 +54,19 @@ public final class ClearCacheRequestedEvent implements CommunicationWithCharging
     }
 
     /**
-     * Gets the protocol identifier.
-     *
-     * @return the protocol identifier.
+     * {@inheritDoc}
      */
     @Override
     public String getProtocol() {
         return this.protocol;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
 }
