@@ -69,6 +69,7 @@ public class OcppWebSocketJsonTestUtils {
                 .add(new ReserveNowStatusTypeAdapterSerializer())
                 .add(new ResetStatusTypeAdapterSerializer())
                 .add(new SendLocalListStatusTypeAdapterSerializer())
+                .add(new UnlockConnectorResponseStatusTypeAdapterSerializer())
                 .build();
         gsonFactoryBean.setTypeAdapterSerializers(typeAdapterSerializers);
 
@@ -237,6 +238,20 @@ public class OcppWebSocketJsonTestUtils {
         @Override
         public Class<?> getAdaptedType() {
             return SendlocallistResponse.Status.class;
+        }
+    }
+
+    /**
+     * Only needed during tests to translate object to json
+     */
+    private static class UnlockConnectorResponseStatusTypeAdapterSerializer implements TypeAdapterSerializer<UnlockconnectorResponse.Status> {
+        @Override
+        public JsonElement serialize(UnlockconnectorResponse.Status status, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(status.toString());
+        }
+        @Override
+        public Class<?> getAdaptedType() {
+            return UnlockconnectorResponse.Status.class;
         }
     }
 
