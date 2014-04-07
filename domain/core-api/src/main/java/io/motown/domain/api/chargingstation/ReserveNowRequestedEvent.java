@@ -15,7 +15,10 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 import java.util.Date;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -33,38 +36,99 @@ public final class ReserveNowRequestedEvent implements CommunicationWithCharging
 
     private final IdentifyingToken parentIdentifyingToken;
 
-    public ReserveNowRequestedEvent(ChargingStationId chargingStationId, String protocol, EvseId evseId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken) {
+    private final IdentityContext identityContext;
+
+    /**
+     * Creates a {@code ReserveNowRequestedEvent}.
+     *
+     * @param chargingStationId      the charging station identifier.
+     * @param protocol               the protocol identifier.
+     * @param evseId                 identifier of the EVSE.
+     * @param identifyingToken       identifier of the token that has reserved the charging station.
+     * @param expiryDate             date at which the reservation expires.
+     * @param parentIdentifyingToken parent identifier that has reserved the charging station.
+     * @param identityContext        the identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code evseId}, {@code identifyingToken},
+     *                               {@code expiryDate}, {@code parentIdentifyingToken} or {@code identityContext} is {@code null}.
+     */
+    public ReserveNowRequestedEvent(ChargingStationId chargingStationId, String protocol, EvseId evseId, IdentifyingToken identifyingToken,
+                                    Date expiryDate, IdentifyingToken parentIdentifyingToken, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.protocol = checkNotNull(protocol);
         this.evseId = checkNotNull(evseId);
         this.identifyingToken = checkNotNull(identifyingToken);
         this.expiryDate = new Date(checkNotNull(expiryDate).getTime());
         this.parentIdentifyingToken = parentIdentifyingToken;
+        this.identityContext = checkNotNull(identityContext);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
     }
+
+    /**
+     * {@inheritDoc}
+     */
 
     @Override
     public String getProtocol() {
         return protocol;
     }
 
+    /**
+     * Identifier of the EVSE.
+     *
+     * @return EVSE identifier.
+     */
     public EvseId getEvseId() {
         return evseId;
     }
 
+    /**
+     * Identifier of the token that has reserved the charging station.
+     *
+     * @return identifying token.
+     */
     public IdentifyingToken getIdentifyingToken() {
         return identifyingToken;
     }
 
+    /**
+     * Date at which the reservation expires.
+     *
+     * @return expiry date.
+     */
     public Date getExpiryDate() {
         return new Date(expiryDate.getTime());
     }
 
+    /**
+     * Parent identifier that has reserved the charging station.
+     *
+     * @return parent identifying token.
+     */
     public IdentifyingToken getParentIdentifyingToken() {
         return parentIdentifyingToken;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, protocol, evseId, identifyingToken, expiryDate, parentIdentifyingToken, identityContext);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final ReserveNowRequestedEvent other = (ReserveNowRequestedEvent) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.protocol, other.protocol) && Objects.equals(this.evseId, other.evseId) && Objects.equals(this.identifyingToken, other.identifyingToken) && Objects.equals(this.expiryDate, other.expiryDate) && Objects.equals(this.parentIdentifyingToken, other.parentIdentifyingToken) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

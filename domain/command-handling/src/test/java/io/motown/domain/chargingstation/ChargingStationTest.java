@@ -390,7 +390,7 @@ public class ChargingStationTest {
         Date expiryDate = new Date();
         fixture.given(RESERVABLE_CHARGING_STATION)
                 .when(new RequestReserveNowCommand(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new ReserveNowRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN));
+                .expectEvents(new ReserveNowRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test

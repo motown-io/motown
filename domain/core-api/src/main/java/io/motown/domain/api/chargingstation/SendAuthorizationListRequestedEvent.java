@@ -46,6 +46,7 @@ public final class SendAuthorizationListRequestedEvent implements CommunicationW
 
     /**
      * Creates a {@code SendAuthorizationListRequestedEvent}.
+     *
      * @param chargingStationId         the charging station identifier.
      * @param protocol                  the protocol identifier.
      * @param authorizationList         the list of IdentifyingTokens to be updated/added.
