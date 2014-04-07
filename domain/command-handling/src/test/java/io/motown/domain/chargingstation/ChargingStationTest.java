@@ -339,7 +339,7 @@ public class ChargingStationTest {
     public void testFirmwareStatusUpdate() {
         fixture.given(CHARGING_STATION)
                 .when(new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED, NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new FirmwareStatusUpdatedEvent(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED));
+                .expectEvents(new FirmwareStatusUpdatedEvent(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test

@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -27,16 +29,20 @@ public final class FirmwareStatusUpdatedEvent {
 
     private final FirmwareStatus firmwareStatus;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code FirmwareStatusUpdatedEvent}.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param firmwareStatus    the status of the firmware update.
-     * @throws NullPointerException if {@code chargingStationId} or {@code firmwareStatus} is {@code null}.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code firmwareStatus} or {@code identityContext} is {@code null}.
      */
-    public FirmwareStatusUpdatedEvent(ChargingStationId chargingStationId, FirmwareStatus firmwareStatus) {
+    public FirmwareStatusUpdatedEvent(ChargingStationId chargingStationId, FirmwareStatus firmwareStatus, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.firmwareStatus = checkNotNull(firmwareStatus);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -55,5 +61,14 @@ public final class FirmwareStatusUpdatedEvent {
      */
     public FirmwareStatus getFirmwareStatus() {
         return firmwareStatus;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 }

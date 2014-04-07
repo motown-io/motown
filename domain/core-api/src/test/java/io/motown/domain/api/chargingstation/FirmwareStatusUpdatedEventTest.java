@@ -18,16 +18,22 @@ package io.motown.domain.api.chargingstation;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.NULL_USER_IDENTITY_CONTEXT;
 
 public class FirmwareStatusUpdatedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new FirmwareStatusUpdatedEvent(null, FirmwareStatus.DOWNLOAD_FAILED);
+        new FirmwareStatusUpdatedEvent(null, FirmwareStatus.DOWNLOAD_FAILED, NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithoutStatus() {
-        new FirmwareStatusUpdatedEvent(CHARGING_STATION_ID, null);
+        new FirmwareStatusUpdatedEvent(CHARGING_STATION_ID, null, NULL_USER_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithoutIdentityContext() {
+        new FirmwareStatusUpdatedEvent(CHARGING_STATION_ID, FirmwareStatus.INSTALLATION_FAILED, null);
     }
 }
