@@ -15,12 +15,17 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 /**
  * Command to indicate that a new charging station is placed on a specific location.
  */
 public final class PlaceChargingStationCommand extends ChangeChargingStationLocationCommand {
 
-    public PlaceChargingStationCommand(ChargingStationId chargingStationId, Coordinates coordinates, Address address, Accessibility accessibility) {
-        super(chargingStationId, coordinates, address, accessibility);
+    /**
+     * {@inheritDoc}
+     */
+    public PlaceChargingStationCommand(ChargingStationId chargingStationId, Coordinates coordinates, Address address, Accessibility accessibility, IdentityContext identityContext) {
+        super(chargingStationId, coordinates, address, accessibility, identityContext);
     }
 }

@@ -15,11 +15,17 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 /**
  * Event which is generated when the location of the charging station is improved.
  */
 public final class ChargingStationLocationImprovedEvent extends ChargingStationLocationChangedEvent {
-    public ChargingStationLocationImprovedEvent(ChargingStationId chargingStationId, Coordinates coordinates, Address address, Accessibility accessibility) {
-        super(chargingStationId, coordinates, address, accessibility);
+
+    /**
+     * {@inheritDoc}
+     */
+    public ChargingStationLocationImprovedEvent(ChargingStationId chargingStationId, Coordinates coordinates, Address address, Accessibility accessibility, IdentityContext identityContext) {
+        super(chargingStationId, coordinates, address, accessibility, identityContext);
     }
 }

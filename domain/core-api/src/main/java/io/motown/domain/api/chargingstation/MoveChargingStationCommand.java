@@ -15,12 +15,17 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 /**
  * Command that is used to indicate that the location of the charging station has moved to another location.
  */
 public final class MoveChargingStationCommand extends ChangeChargingStationLocationCommand {
 
-    public MoveChargingStationCommand(ChargingStationId chargingStationId, Coordinates coordinates, Address address, Accessibility accessibility) {
-        super(chargingStationId, coordinates, address, accessibility);
+    /**
+     * {@inheritDoc}
+     */
+    public MoveChargingStationCommand(ChargingStationId chargingStationId, Coordinates coordinates, Address address, Accessibility accessibility, IdentityContext identityContext) {
+        super(chargingStationId, coordinates, address, accessibility, identityContext);
     }
 }

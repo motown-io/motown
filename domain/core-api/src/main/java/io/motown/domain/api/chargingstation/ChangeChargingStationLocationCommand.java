@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Objects;
@@ -31,17 +32,19 @@ public abstract class ChangeChargingStationLocationCommand {
     private final Coordinates coordinates;
     private final Address address;
     private final Accessibility accessibility;
+    private final IdentityContext identityContext;
 
     /**
      * Creates a command object that changes the location of a charging station.
      *
      * @param chargingStationId The identifier of the charging station.
-     * @param coordinates The coordinates (latitude/longitude) of the charging station.
-     * @param address The address of the charging station.
-     * @param accessibility The accessibility of the charging station.
-     * @throws java.lang.NullPointerException if either {@code coordinates} or {@code address} is {@code null}.
+     * @param coordinates       The coordinates (latitude/longitude) of the charging station.
+     * @param address           The address of the charging station.
+     * @param accessibility     The accessibility of the charging station.
+     * @param identityContext   the identity context.
+     * @throws java.lang.NullPointerException if {@code coordinates} and {@code address} is {@code null} or any of the other parameters is {@code null}.
      */
-    protected ChangeChargingStationLocationCommand(ChargingStationId chargingStationId, Coordinates coordinates, Address address, Accessibility accessibility) {
+    protected ChangeChargingStationLocationCommand(ChargingStationId chargingStationId, Coordinates coordinates, Address address, Accessibility accessibility, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         if (coordinates == null && address == null) {
             throw new NullPointerException("Either coordinates or address parameter must be non-null");
@@ -49,10 +52,12 @@ public abstract class ChangeChargingStationLocationCommand {
         this.coordinates = coordinates;
         this.address = address;
         this.accessibility = checkNotNull(accessibility);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
      * Gets the charging station identifier.
+     *
      * @return the charging station identifier.
      */
     public ChargingStationId getChargingStationId() {
@@ -61,6 +66,7 @@ public abstract class ChangeChargingStationLocationCommand {
 
     /**
      * Gets the coordinates of the charging station.
+     *
      * @return the coordinates.
      */
     public Coordinates getCoordinates() {
@@ -69,6 +75,7 @@ public abstract class ChangeChargingStationLocationCommand {
 
     /**
      * Gets the address of the charging station.
+     *
      * @return the address.
      */
     public Address getAddress() {
@@ -77,17 +84,33 @@ public abstract class ChangeChargingStationLocationCommand {
 
     /**
      * Gets the accessibility of the charging station.
+     *
      * @return the accessibility.
      */
     public Accessibility getAccessibility() {
         return accessibility;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(chargingStationId, coordinates, address, accessibility);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

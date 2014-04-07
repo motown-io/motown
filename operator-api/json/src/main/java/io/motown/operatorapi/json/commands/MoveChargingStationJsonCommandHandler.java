@@ -46,7 +46,7 @@ class MoveChargingStationJsonCommandHandler implements JsonCommandHandler {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
                 MoveChargingStationApiCommand command = gson.fromJson(commandObject, MoveChargingStationApiCommand.class);
-                commandGateway.send(new MoveChargingStationCommand(new ChargingStationId(chargingStationId), command.getCoordinates(), command.getAddress(), command.getAccessibility()));
+                commandGateway.send(new MoveChargingStationCommand(new ChargingStationId(chargingStationId), command.getCoordinates(), command.getAddress(), command.getAccessibility(), identityContext));
             }
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Move charging station command not able to parse the payload, is your JSON correctly formatted?", ex);
