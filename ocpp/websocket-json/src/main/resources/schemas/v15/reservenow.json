@@ -4,7 +4,7 @@
     "type": "object",
     "properties": {
         "connectorId": {
-            "type": "number"
+            "type": "integer"
         },
         "expiryDate": {
             "type": "string",
@@ -19,7 +19,7 @@
             "maxLength": 20
         },
         "reservationId": {
-            "type": "number"
+            "type": "integer"
         }
     },
     "required": [

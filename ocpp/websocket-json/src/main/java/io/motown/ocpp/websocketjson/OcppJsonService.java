@@ -126,8 +126,8 @@ public class OcppJsonService {
         Getdiagnostics getDiagnosticsRequest = new Getdiagnostics();
         try {
             getDiagnosticsRequest.setLocation(new URI(uploadLocation));
-            getDiagnosticsRequest.setRetries((double) numRetries);
-            getDiagnosticsRequest.setRetryInterval((double) retryInterval);
+            getDiagnosticsRequest.setRetries(numRetries);
+            getDiagnosticsRequest.setRetryInterval(retryInterval);
             getDiagnosticsRequest.setStartTime(start);
             getDiagnosticsRequest.setStopTime(stop);
 
@@ -184,7 +184,7 @@ public class OcppJsonService {
         Sendlocallist sendLocalListRequest = new Sendlocallist();
         sendLocalListRequest.setLocalAuthorisationList(localList);
         sendLocalListRequest.setUpdateType(AuthorizationListUpdateType.FULL.equals(updateType) ? Sendlocallist.UpdateType.FULL : Sendlocallist.UpdateType.DIFFERENTIAL);
-        sendLocalListRequest.setListVersion((double) authorizationListVersion);
+        sendLocalListRequest.setListVersion(authorizationListVersion);
         sendLocalListRequest.setHash(authorizationListHash);
 
         responseHandlers.put(statusCorrelationToken.getToken(), new SendLocalListResponseHandler(statusCorrelationToken));
@@ -198,13 +198,13 @@ public class OcppJsonService {
         NumberedReservationId reservationId = domainService.generateReservationIdentifier(chargingStationId, PROTOCOL_IDENTIFIER);
 
         Reservenow reserveNowRequest = new Reservenow();
-        reserveNowRequest.setConnectorId((double) evseId.getNumberedId());
+        reserveNowRequest.setConnectorId(evseId.getNumberedId());
         reserveNowRequest.setIdTag(identifyingToken.getToken());
         if(parentIdentifyingToken != null){
             reserveNowRequest.setParentIdTag(parentIdentifyingToken.getToken());
         }
         reserveNowRequest.setExpiryDate(expiryDate);
-        reserveNowRequest.setReservationId((double) reservationId.getNumber());
+        reserveNowRequest.setReservationId(reservationId.getNumber());
 
         responseHandlers.put(statusCorrelationToken.getToken(), new ReserveNowResponseHandler(statusCorrelationToken));
 
@@ -215,7 +215,7 @@ public class OcppJsonService {
 
     public void cancelReservation(ChargingStationId chargingStationId, NumberedReservationId reservationId, CorrelationToken statusCorrelationToken) {
         Cancelreservation cancelReservationRequest = new Cancelreservation();
-        cancelReservationRequest.setReservationId((double) reservationId.getNumber());
+        cancelReservationRequest.setReservationId(reservationId.getNumber());
 
         responseHandlers.put(statusCorrelationToken.getToken(), new CancelReservationResponseHandler(statusCorrelationToken));
 
@@ -262,7 +262,7 @@ public class OcppJsonService {
 
     public void remoteStartTransaction(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken identifyingToken, CorrelationToken statusCorrelationToken) {
         Remotestarttransaction remoteStartTransactionRequest = new Remotestarttransaction();
-        remoteStartTransactionRequest.setConnectorId((double) evseId.getNumberedId());
+        remoteStartTransactionRequest.setConnectorId(evseId.getNumberedId());
         remoteStartTransactionRequest.setIdTag(identifyingToken.getToken());
 
         responseHandlers.put(statusCorrelationToken.getToken(), new RemoteStartTransactionResponseHandler(statusCorrelationToken));
@@ -274,7 +274,7 @@ public class OcppJsonService {
     public void remoteStopTransaction(ChargingStationId chargingStationId, TransactionId transactionId, CorrelationToken statusCorrelationToken) {
         NumberedTransactionId transactionIdNumber = (NumberedTransactionId) transactionId;
         Remotestoptransaction remoteStopTransactionRequest = new Remotestoptransaction();
-        remoteStopTransactionRequest.setTransactionId((double) transactionIdNumber.getNumber());
+        remoteStopTransactionRequest.setTransactionId(transactionIdNumber.getNumber());
 
         responseHandlers.put(statusCorrelationToken.getToken(), new RemoteStopTransactionResponseHandler(statusCorrelationToken));
 
@@ -284,7 +284,7 @@ public class OcppJsonService {
 
     public void unlockEvse(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken statusCorrelationToken) {
         Unlockconnector unlockConnectorRequest = new Unlockconnector();
-        unlockConnectorRequest.setConnectorId((double) evseId.getNumberedId());
+        unlockConnectorRequest.setConnectorId(evseId.getNumberedId());
 
         responseHandlers.put(statusCorrelationToken.getToken(), new UnlockConnectorResponseHandler(statusCorrelationToken));
 
@@ -313,7 +313,7 @@ public class OcppJsonService {
 
     public void changeAvailability(ChargingStationId chargingStationId, int connectorId, Changeavailability.Type availabilityType, CorrelationToken statusCorrelationToken) {
         Changeavailability changeAvailabilityRequest = new Changeavailability();
-        changeAvailabilityRequest.setConnectorId((double) connectorId);
+        changeAvailabilityRequest.setConnectorId(connectorId);
         changeAvailabilityRequest.setType(availabilityType);
         responseHandlers.put(statusCorrelationToken.getToken(), new ChangeAvailabilityResponseHandler(statusCorrelationToken));
 

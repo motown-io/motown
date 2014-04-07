@@ -49,7 +49,7 @@ public class StatusNotificationRequestHandler extends RequestHandler {
             timestamp = new Date();
         }
 
-        domainService.statusNotification(chargingStationId, new EvseId(request.getConnectorId().intValue()), errorCode, getComponentStatusFromChargePointStatus(request.getStatus()), request.getInfo(), timestamp, request.getVendorId(), request.getVendorErrorCode());
+        domainService.statusNotification(chargingStationId, new EvseId(request.getConnectorId()), errorCode, getComponentStatusFromChargePointStatus(request.getStatus()), request.getInfo(), timestamp, request.getVendorId(), request.getVendorErrorCode());
 
         writeResponse(webSocket, new StatusnotificationResponse(), callId, gson);
     }

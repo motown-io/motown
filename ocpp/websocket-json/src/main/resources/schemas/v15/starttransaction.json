@@ -4,7 +4,7 @@
     "type": "object",
     "properties": {
         "connectorId": {
-            "type": "number"
+            "type": "integer"
         },
         "idTag": {
             "type": "string",
@@ -15,10 +15,10 @@
             "format": "date-time"
         },
         "meterStart": {
-            "type": "number"
+            "type": "integer"
         },
         "reservationId": {
-            "type": "number"
+            "type": "integer"
         }
     },
     "required": [

@@ -30,7 +30,6 @@ import org.atmosphere.websocket.WebSocket;
 import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -40,7 +39,6 @@ import java.util.UUID;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.*;
-import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -210,11 +208,9 @@ public class OcppJsonServiceTest {
         String listHash = "";
         service.sendLocalList(CHARGING_STATION_ID, AuthorizationListUpdateType.FULL, list, listVersion, listHash, CORRELATION_TOKEN);
 
-        //TODO: the json schemas specify number which is translated to double but actually should be integer (modify the schemas) - Ingo Pak, 04 Apr 2014
-        
         String expectedMessage = String.format("[%d,\"%s\",\"%s\",{" +
                 "  \"updateType\": \"Full\"," +
-                "  \"listVersion\": 1.0," +
+                "  \"listVersion\": 1," +
                 "  \"localAuthorisationList\": [" +
                 "    {" +
                 "      \"idTag\": \"%s\"," +
@@ -254,7 +250,7 @@ public class OcppJsonServiceTest {
         service.changeAvailability(CHARGING_STATION_ID, connectorId, Changeavailability.Type.INOPERATIVE, CORRELATION_TOKEN);
 
         String expectedMessage = String.format("[%d,\"%s\",\"%s\",{\n" +
-                "  \"connectorId\": %d.0,\n" +
+                "  \"connectorId\": %d,\n" +
                 "  \"type\": \"%s\"\n" +
                 "}]", WampMessage.CALL, CORRELATION_TOKEN.getToken(), "ChangeAvailability", connectorId, Changeavailability.Type.INOPERATIVE.toString()).replaceAll("\\s+", "");
 
@@ -284,10 +280,10 @@ public class OcppJsonServiceTest {
         service.reserveNow(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, null, expiryDate, CORRELATION_TOKEN);
 
         String expectedMessage = String.format("[%d,\"%s\",\"%s\",{\n" +
-                "  \"connectorId\": %d.0,\n" +
+                "  \"connectorId\": %d,\n" +
                 "  \"expiryDate\": \"%s\",\n" +
                 "  \"idTag\": \"%s\",\n" +
-                "  \"reservationId\": %d.0" +
+                "  \"reservationId\": %d" +
                 "}]", WampMessage.CALL, CORRELATION_TOKEN.getToken(), "ReserveNow", EVSE_ID.getNumberedId(), formatDate(expiryDate), IDENTIFYING_TOKEN.getToken(), RESERVATION_ID.getNumber())
                 .replaceAll("\\s+", "");
 

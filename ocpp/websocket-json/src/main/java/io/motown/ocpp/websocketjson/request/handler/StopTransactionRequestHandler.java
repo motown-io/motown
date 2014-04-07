@@ -66,12 +66,12 @@ public class StopTransactionRequestHandler extends RequestHandler {
         }
 
         NumberedTransactionId transactionId = null;
-        Integer requestTransactionId = request.getTransactionId().intValue();
+        Integer requestTransactionId = request.getTransactionId();
         if(requestTransactionId > 0) {
             transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, requestTransactionId);
         }
 
-        domainService.stopTransaction(chargingStationId, transactionId, new TextualToken(request.getIdTag()), request.getMeterStop().intValue(), request.getTimestamp(), meterValues, addOnIdentity);
+        domainService.stopTransaction(chargingStationId, transactionId, new TextualToken(request.getIdTag()), request.getMeterStop(), request.getTimestamp(), meterValues, addOnIdentity);
 
         // TODO locally store identifications, so we can use these in the response. - Dennis Laumen, December 16th 2013
         GregorianCalendar expDate = new GregorianCalendar();

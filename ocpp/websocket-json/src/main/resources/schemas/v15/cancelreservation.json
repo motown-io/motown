@@ -4,7 +4,7 @@
     "type": "object",
     "properties": {
         "reservationId": {
-            "type": "number"
+            "type": "integer"
         }
     },
     "required": [

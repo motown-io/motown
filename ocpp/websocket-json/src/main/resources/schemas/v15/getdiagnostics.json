@@ -16,10 +16,10 @@
             "format": "date-time"
         },
         "retries": {
-            "type": "number"
+            "type": "integer"
         },
         "retryInterval": {
-            "type": "number"
+            "type": "integer"
         }
     },
     "required": [

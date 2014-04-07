@@ -4,7 +4,7 @@
     "type": "object",
     "properties": {
         "listVersion": {
-            "type": "number"
+            "type": "integer"
         }
     },
     "required": [

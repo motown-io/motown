@@ -51,10 +51,10 @@ public class StartTransactionRequestHandler extends RequestHandler {
 
         ReservationId reservationId = null;
         if (request.getReservationId() != 0) {
-            reservationId = new NumberedReservationId(chargingStationId, protocolIdentifier, request.getReservationId().intValue());
+            reservationId = new NumberedReservationId(chargingStationId, protocolIdentifier, request.getReservationId());
         }
 
-        int transactionId = domainService.startTransaction(chargingStationId, new EvseId(request.getConnectorId().intValue()), new TextualToken(request.getIdTag()), request.getMeterStart().intValue(), request.getTimestamp(), reservationId, protocolIdentifier, addOnIdentity);
+        int transactionId = domainService.startTransaction(chargingStationId, new EvseId(request.getConnectorId()), new TextualToken(request.getIdTag()), request.getMeterStart(), request.getTimestamp(), reservationId, protocolIdentifier, addOnIdentity);
 
         GregorianCalendar expDate = new GregorianCalendar();
         expDate.add(GregorianCalendar.YEAR, 1);

@@ -4,10 +4,10 @@
     "type": "object",
     "properties": {
         "connectorId": {
-            "type": "number"
+            "type": "integer"
         },
         "transactionId": {
-            "type": "number"
+            "type": "integer"
         },
         "values": {
             "type": "array",

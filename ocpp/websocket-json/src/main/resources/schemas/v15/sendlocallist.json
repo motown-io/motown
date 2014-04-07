@@ -11,7 +11,7 @@
             ]
         },
         "listVersion": {
-            "type": "number"
+            "type": "integer"
         },
         "localAuthorisationList": {
             "type": "array",

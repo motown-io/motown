@@ -67,12 +67,12 @@ public class MeterValuesRequestHandler extends RequestHandler {
         }
 
         TransactionId transactionId = null;
-        Integer requestTransactionId = request.getTransactionId().intValue();
+        Integer requestTransactionId = request.getTransactionId();
         if(requestTransactionId != null && requestTransactionId > 0) {
             transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, requestTransactionId);
         }
 
-        domainService.meterValues(chargingStationId, transactionId, new EvseId(request.getConnectorId().intValue()), meterValues, addOnIdentity);
+        domainService.meterValues(chargingStationId, transactionId, new EvseId(request.getConnectorId()), meterValues, addOnIdentity);
 
         writeResponse(webSocket, new MetervaluesResponse(), callId, gson);
     }

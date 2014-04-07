@@ -4,7 +4,7 @@
     "type": "object",
     "properties": {
         "transactionId": {
-            "type": "number"
+            "type": "integer"
         },
         "idTag": {
             "type": "string",
@@ -15,7 +15,7 @@
             "format": "date-time"
         },
         "meterStop": {
-            "type": "number"
+            "type": "integer"
         },
         "transactionData": {
             "type": "array",
