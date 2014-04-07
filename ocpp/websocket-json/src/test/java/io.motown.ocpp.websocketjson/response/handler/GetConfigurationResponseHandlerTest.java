@@ -15,18 +15,20 @@
  */
 package io.motown.ocpp.websocketjson.response.handler;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.schema.generated.v15.ConfigurationKey;
+import io.motown.ocpp.websocketjson.schema.generated.v15.GetconfigurationResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
-import io.motown.ocpp.websocketjson.wamp.WampMessageParser;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-import java.io.StringReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
@@ -44,30 +46,32 @@ public class GetConfigurationResponseHandlerTest {
 
     private DomainService domainService;
 
+    private String token;
+    private CorrelationToken correlationToken;
+    private GetConfigurationResponseHandler handler;
+
     @Before
     public void setup() {
         gson = getGson();
         domainService = mock(DomainService.class);
+
+        token = UUID.randomUUID().toString();
+        correlationToken = new CorrelationToken(token);
+        handler = new GetConfigurationResponseHandler(correlationToken);
     }
 
     @Test
     public void handleValidResponse() {
-        String token = UUID.randomUUID().toString();
-        CorrelationToken correlationToken = new CorrelationToken(token);
-        GetConfigurationResponseHandler handler = new GetConfigurationResponseHandler(correlationToken);
-
-        String responseMessage = "[%d,\"%s\",{\n" +
-                "  \"configurationKey\": [\n" +
-                "    {\n" +
-                "      \"key\": \"KVCBX_PROFILE\",\n" +
-                "      \"readonly\": true,\n" +
-                "      \"value\": \"NQC-ACDC\"\n" +
-                "    }\n" +
-                "  ],\n" +
-                "  \"unknownKey\": []\n" +
-                "}]";
-
-        WampMessage message = new WampMessageParser(gson).parseMessage(new StringReader(String.format(responseMessage, WampMessage.CALL_RESULT, token)));
+        GetconfigurationResponse payload = new GetconfigurationResponse();
+        List configurationKeys = Lists.<ConfigurationKey>newArrayList();
+        ConfigurationKey key = new ConfigurationKey();
+        key.setKey("KVCBX_PROFILE");
+        key.setReadonly(true);
+        key.setValue("NQC-ACDC");
+        configurationKeys.add(key);
+        payload.setConfigurationKey(configurationKeys);
+        payload.setUnknownKey(Lists.<String>newArrayList());
+        WampMessage message = new WampMessage(WampMessage.CALL_RESULT, token, gson.toJson(payload));
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
