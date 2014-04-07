@@ -345,7 +345,7 @@ public class ChargingStationTest {
     @Test
     public void testClearCache() {
         fixture.given(CHARGING_STATION)
-                .when(new RequestClearCacheCommand(CHARGING_STATION_ID))
+                .when(new RequestClearCacheCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new ClearCacheRequestedEvent(CHARGING_STATION_ID, PROTOCOL));
     }
 

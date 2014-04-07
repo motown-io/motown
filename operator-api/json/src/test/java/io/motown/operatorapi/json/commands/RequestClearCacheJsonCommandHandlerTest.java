@@ -15,6 +15,7 @@
  */
 package io.motown.operatorapi.json.commands;
 
+import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,6 +30,6 @@ public class RequestClearCacheJsonCommandHandlerTest {
 
     @Test
     public void testClearCacheCommand() {
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, null, null);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, null, ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT);
     }
 }
