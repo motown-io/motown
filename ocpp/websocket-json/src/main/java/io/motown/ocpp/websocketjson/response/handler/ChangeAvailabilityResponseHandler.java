@@ -24,6 +24,8 @@ import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.ChangeavailabilityResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 
+import static io.motown.ocpp.websocketjson.schema.generated.v15.ChangeavailabilityResponse.Status;
+
 public class ChangeAvailabilityResponseHandler extends ResponseHandler {
 
     public ChangeAvailabilityResponseHandler(CorrelationToken correlationToken) {
@@ -33,7 +35,7 @@ public class ChangeAvailabilityResponseHandler extends ResponseHandler {
     @Override
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         ChangeavailabilityResponse response = gson.fromJson(wampMessage.getPayloadAsString(), ChangeavailabilityResponse.class);
-        RequestResult requestResult = response.getStatus().equals(ChangeavailabilityResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
+        RequestResult requestResult = Status.ACCEPTED.equals(response.getStatus()) || Status.SCHEDULED.equals(response.getStatus())? RequestResult.SUCCESS : RequestResult.FAILURE;
 
         domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "");
     }

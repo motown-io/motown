@@ -23,9 +23,7 @@ import com.google.gson.JsonSerializationContext;
 import io.motown.ocpp.websocketjson.gson.GsonFactoryBean;
 import io.motown.ocpp.websocketjson.gson.deserializer.*;
 import io.motown.ocpp.websocketjson.gson.serializer.*;
-import io.motown.ocpp.websocketjson.schema.generated.v15.Diagnosticsstatusnotification;
-import io.motown.ocpp.websocketjson.schema.generated.v15.Firmwarestatusnotification;
-import io.motown.ocpp.websocketjson.schema.generated.v15.Statusnotification;
+import io.motown.ocpp.websocketjson.schema.generated.v15.*;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResource;
@@ -61,10 +59,11 @@ public class OcppWebSocketJsonTestUtils {
                 .add(new StartTransactionIdTagStatusTypeAdapterSerializer())
                 .add(new ChangeAvailabilityTypeAdapterSerializer())
                 //The serializers below are only needed during testing, as they are used to verify the result
-                .add(new DiagnosticsStatusTypeAdapterSerializer())
-                .add(new FirmwareStatusTypeAdapterSerializer())
-                .add(new ChargePointErrorCodeTypeAdapterSerializer())
-                .add(new ChargePointStatusTypeAdapterSerializer())
+                .add(new ChangeAvailabilityStatusTypeAdapterSerializer())
+                //.add(new DiagnosticsStatusTypeAdapterSerializer())
+                //.add(new FirmwareStatusTypeAdapterSerializer())
+                //.add(new ChargePointErrorCodeTypeAdapterSerializer())
+                //.add(new ChargePointStatusTypeAdapterSerializer())
                 .build();
         gsonFactoryBean.setTypeAdapterSerializers(typeAdapterSerializers);
 
@@ -108,6 +107,20 @@ public class OcppWebSocketJsonTestUtils {
 
     public static String createAcceptedCallResult(String callId) {
         return String.format("[%d,\"%s\",{\"status\":\"%s\"}]", WampMessage.CALL_RESULT, callId, "Accepted");
+    }
+
+    /**
+     * Only needed during tests to translate object to json
+     */
+    private static class ChangeAvailabilityStatusTypeAdapterSerializer implements TypeAdapterSerializer<ChangeavailabilityResponse.Status> {
+        @Override
+        public JsonElement serialize(ChangeavailabilityResponse.Status status, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(status.toString());
+        }
+        @Override
+        public Class<?> getAdaptedType() {
+            return ChangeavailabilityResponse.Status.class;
+        }
     }
 
     /**
