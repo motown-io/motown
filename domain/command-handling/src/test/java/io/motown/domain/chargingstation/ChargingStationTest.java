@@ -515,4 +515,18 @@ public class ChargingStationTest {
                 .when(new MoveChargingStationCommand(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY))
                 .expectEvents(new ChargingStationMovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY));
     }
+
+    @Test
+    public void testSettingChargingStationOpeningTimes() {
+        fixture.given(CHARGING_STATION)
+                .when(new SetChargingStationOpeningTimesCommand(CHARGING_STATION_ID, OPENING_TIMES, IDENTITY_CONTEXT))
+                .expectEvents(new ChargingStationOpeningTimesSetEvent(CHARGING_STATION_ID, OPENING_TIMES, IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void testAddingChargingStationOpeningTimes() {
+        fixture.given(CHARGING_STATION)
+                .when(new AddChargingStationOpeningTimesCommand(CHARGING_STATION_ID, OPENING_TIMES, IDENTITY_CONTEXT))
+                .expectEvents(new ChargingStationOpeningTimesAddedEvent(CHARGING_STATION_ID, OPENING_TIMES, IDENTITY_CONTEXT));
+    }
 }
