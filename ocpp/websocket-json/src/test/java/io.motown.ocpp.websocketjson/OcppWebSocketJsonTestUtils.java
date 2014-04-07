@@ -63,6 +63,7 @@ public class OcppWebSocketJsonTestUtils {
                 .add(new CancelReservationStatusTypeAdapterSerializer())
                 .add(new ChangeConfigurationStatusTypeAdapterSerializer())
                 .add(new ClearCacheStatusTypeAdapterSerializer())
+                .add(new DataTransferResponseStatusTypeAdapterSerializer())
                 //.add(new DiagnosticsStatusTypeAdapterSerializer())
                 //.add(new FirmwareStatusTypeAdapterSerializer())
                 //.add(new ChargePointErrorCodeTypeAdapterSerializer())
@@ -165,6 +166,20 @@ public class OcppWebSocketJsonTestUtils {
         @Override
         public Class<?> getAdaptedType() {
             return ClearcacheResponse.Status.class;
+        }
+    }
+
+    /**
+     * Only needed during tests to translate object to json
+     */
+    private static class DatatransferStatusTypeAdapterSerializer implements TypeAdapterSerializer<DatatransferResponse.Status> {
+        @Override
+        public JsonElement serialize(DatatransferResponse.Status status, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(status.toString());
+        }
+        @Override
+        public Class<?> getAdaptedType() {
+            return DatatransferResponse.Status.class;
         }
     }
 
