@@ -18,12 +18,14 @@ package io.motown.ocpp.websocketjson.request.handler;
 import com.google.gson.Gson;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.OcppWebSocketRequestHandler;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Starttransaction;
 import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.UUID;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
@@ -51,16 +53,15 @@ public class StartTransactionRequestHandlerTest {
         String token = UUID.randomUUID().toString();
         StartTransactionRequestHandler handler = new StartTransactionRequestHandler(gson, domainService, OcppWebSocketRequestHandler.PROTOCOL_IDENTIFIER, ADD_ON_IDENTITY);
 
-        String requestPayload = "{\n" +
-                "  \"connectorId\": 2,\n" +
-                "  \"idTag\": \"B4F62CEF\",\n" +
-                "  \"timestamp\": \"2013-02-01T15:09:18Z\",\n" +
-                "  \"meterStart\": 0,\n" +
-                "  \"reservationId\": 0\n" +
-                "}";
+        Starttransaction requestPayload = new Starttransaction();
+        requestPayload.setConnectorId(2);
+        requestPayload.setIdTag("B4F62CEF");
+        requestPayload.setTimestamp(new Date());
+        requestPayload.setMeterStart(4);
+        requestPayload.setReservationId(0);
 
         WebSocket webSocket = getMockWebSocket();
-        handler.handleRequest(CHARGING_STATION_ID, token, requestPayload, webSocket);
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
 
         ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(webSocket).write(argumentCaptor.capture());

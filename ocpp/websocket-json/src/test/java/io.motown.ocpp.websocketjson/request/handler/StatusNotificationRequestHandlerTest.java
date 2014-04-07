@@ -17,12 +17,14 @@ package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Statusnotification;
 import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.UUID;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
@@ -49,18 +51,17 @@ public class StatusNotificationRequestHandlerTest {
         String token = UUID.randomUUID().toString();
         StatusNotificationRequestHandler handler = new StatusNotificationRequestHandler(gson, domainService);
 
-        String requestPayload = "{\n" +
-                "  \"connectorId\": 2,\n" +
-                "  \"status\": \"Available\",\n" +
-                "  \"errorCode\": \"NoError\",\n" +
-                "  \"info\": \"\",\n" +
-                "  \"timestamp\": \"2013-02-01T15:09:18Z\",\n" +
-                "  \"vendorId\": \"\",\n" +
-                "  \"vendorErrorCode\": \"\"\n" +
-                "}";
+        Statusnotification requestPayload = new Statusnotification();
+        requestPayload.setConnectorId(2);
+        requestPayload.setStatus(Statusnotification.Status.AVAILABLE);
+        requestPayload.setErrorCode(Statusnotification.ErrorCode.NO_ERROR);
+        requestPayload.setInfo("");
+        requestPayload.setTimestamp(new Date());
+        requestPayload.setVendorId("");
+        requestPayload.setVendorErrorCode("");
 
         WebSocket webSocket = getMockWebSocket();
-        handler.handleRequest(CHARGING_STATION_ID, token, requestPayload, webSocket);
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
 
         ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(webSocket).write(argumentCaptor.capture());

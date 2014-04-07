@@ -72,6 +72,8 @@ public class OcppWebSocketJsonTestUtils {
                 .add(new UnlockConnectorResponseStatusTypeAdapterSerializer())
                 .add(new DiagnosticsStatusNotificationStatusTypeAdapterSerializer())
                 .add(new FirmwareStatusNotificationStatusTypeAdapterSerializer())
+                .add(new StatusnotificationStatusTypeAdapterSerializer())
+                .add(new StatusnotificationErrorCodeTypeAdapterSerializer())
                 .build();
         gsonFactoryBean.setTypeAdapterSerializers(typeAdapterSerializers);
 
@@ -285,4 +287,31 @@ public class OcppWebSocketJsonTestUtils {
         }
     }
 
+    /**
+     * Only needed during tests to translate object to json
+     */
+    private static class StatusnotificationStatusTypeAdapterSerializer implements TypeAdapterSerializer<Statusnotification.Status> {
+        @Override
+        public JsonElement serialize(Statusnotification.Status status, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(status.toString());
+        }
+        @Override
+        public Class<?> getAdaptedType() {
+            return Statusnotification.Status.class;
+        }
+    }
+
+    /**
+     * Only needed during tests to translate object to json
+     */
+    private static class StatusnotificationErrorCodeTypeAdapterSerializer implements TypeAdapterSerializer<Statusnotification.ErrorCode> {
+        @Override
+        public JsonElement serialize(Statusnotification.ErrorCode code, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(code.toString());
+        }
+        @Override
+        public Class<?> getAdaptedType() {
+            return Statusnotification.ErrorCode.class;
+        }
+    }
 }
