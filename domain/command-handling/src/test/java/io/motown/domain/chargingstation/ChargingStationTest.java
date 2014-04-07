@@ -381,7 +381,7 @@ public class ChargingStationTest {
     public void testGetAuthorizationListVersionReceived() {
         int version = 1;
         fixture.given(CHARGING_STATION)
-                .when(new AuthorizationListVersionReceivedCommand(CHARGING_STATION_ID, version))
+                .when(new AuthorizationListVersionReceivedCommand(CHARGING_STATION_ID, version, NULL_USER_IDENTITY_CONTEXT))
                 .expectEvents(new AuthorizationListVersionReceivedEvent(CHARGING_STATION_ID, version));
     }
 

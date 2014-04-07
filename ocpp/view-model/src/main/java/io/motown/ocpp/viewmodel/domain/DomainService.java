@@ -156,8 +156,10 @@ public class DomainService {
         commandGateway.send(new DiagnosticsFileNameReceivedCommand(chargingStationId, diagnosticsFileName, identityContext), correlationToken);
     }
 
-    public void authorizationListVersionReceived(ChargingStationId chargingStationId, int currentVersion, CorrelationToken correlationToken) {
-        commandGateway.send(new AuthorizationListVersionReceivedCommand(chargingStationId, currentVersion), correlationToken);
+    public void authorizationListVersionReceived(ChargingStationId chargingStationId, int currentVersion, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        commandGateway.send(new AuthorizationListVersionReceivedCommand(chargingStationId, currentVersion, identityContext), correlationToken);
     }
 
     public void authorize(ChargingStationId chargingStationId, String idTag, FutureEventCallback future, AddOnIdentity addOnIdentity) {

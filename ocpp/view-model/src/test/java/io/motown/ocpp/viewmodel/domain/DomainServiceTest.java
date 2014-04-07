@@ -184,9 +184,9 @@ public class DomainServiceTest {
     @Test
     public void testAuthorizationListVersionReceived() {
         CorrelationToken correlationToken = new CorrelationToken();
-        domainService.authorizationListVersionReceived(CHARGING_STATION_ID, getAuthorizationListVersion(), correlationToken);
+        domainService.authorizationListVersionReceived(CHARGING_STATION_ID, getAuthorizationListVersion(), correlationToken, ADD_ON_IDENTITY);
 
-        verify(gateway).send(new AuthorizationListVersionReceivedCommand(CHARGING_STATION_ID, getAuthorizationListVersion()), correlationToken);
+        verify(gateway).send(new AuthorizationListVersionReceivedCommand(CHARGING_STATION_ID, getAuthorizationListVersion(), NULL_USER_IDENTITY_CONTEXT), correlationToken);
     }
 
     @Test

@@ -26,6 +26,7 @@ import org.junit.Test;
 import java.io.StringReader;
 import java.util.UUID;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static org.mockito.Mockito.mock;
@@ -56,9 +57,9 @@ public class GetLocalListVersionResponseHandlerTest {
 
         WampMessage message = new WampMessageParser(gson).parseMessage(new StringReader(String.format(responseMessage, WampMessage.CALL_RESULT, token, listVersion)));
 
-        handler.handle(CHARGING_STATION_ID, message, gson, domainService, null);
+        handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).authorizationListVersionReceived(CHARGING_STATION_ID, listVersion, correlationToken);
+        verify(domainService).authorizationListVersionReceived(CHARGING_STATION_ID, listVersion, correlationToken, ADD_ON_IDENTITY);
     }
 
 }

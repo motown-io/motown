@@ -17,11 +17,19 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.NULL_USER_IDENTITY_CONTEXT;
+
 
 public class AuthorizationListVersionReceivedCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new AuthorizationListVersionReceivedCommand(null, 1);
+        new AuthorizationListVersionReceivedCommand(null, 1, NULL_USER_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
+        new AuthorizationListVersionReceivedCommand(CHARGING_STATION_ID, 1, null);
     }
 }

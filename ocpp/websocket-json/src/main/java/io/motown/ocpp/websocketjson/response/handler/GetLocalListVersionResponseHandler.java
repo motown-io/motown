@@ -33,6 +33,6 @@ public class GetLocalListVersionResponseHandler extends ResponseHandler {
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         GetlocallistversionResponse response = gson.fromJson(wampMessage.getPayloadAsString(), GetlocallistversionResponse.class);
 
-        domainService.authorizationListVersionReceived(chargingStationId, response.getListVersion(), getCorrelationToken());
+        domainService.authorizationListVersionReceived(chargingStationId, response.getListVersion(), getCorrelationToken(), addOnIdentity);
     }
 }

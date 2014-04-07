@@ -165,7 +165,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
 
         int currentVersion = chargingStationOcpp15Client.getAuthorizationListVersion(event.getChargingStationId());
 
-        domainService.authorizationListVersionReceived(event.getChargingStationId(), currentVersion, statusCorrelationToken);
+        domainService.authorizationListVersionReceived(event.getChargingStationId(), currentVersion, statusCorrelationToken, addOnIdentity);
     }
 
     @Override

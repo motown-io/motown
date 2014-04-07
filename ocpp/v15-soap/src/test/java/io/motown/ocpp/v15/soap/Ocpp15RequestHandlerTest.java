@@ -16,6 +16,8 @@
 package io.motown.ocpp.v15.soap;
 
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.security.AddOnIdentity;
+import io.motown.domain.api.security.TypeBasedAddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
@@ -47,6 +49,8 @@ public class Ocpp15RequestHandlerTest {
     @Autowired
     private EntityManager entityManager;
 
+    private AddOnIdentity addOnIdentity = new TypeBasedAddOnIdentity(Ocpp15RequestHandler.ADD_ON_TYPE, ADD_ON_ID);
+
     @Before
     public void setUp() {
         entityManager.clear();
@@ -60,6 +64,7 @@ public class Ocpp15RequestHandlerTest {
 
         client = mock(ChargingStationOcpp15Client.class);
         requestHandler.setChargingStationOcpp15Client(client);
+        requestHandler.setAddOnId(ADD_ON_ID);
     }
 
     @Test
@@ -193,7 +198,7 @@ public class Ocpp15RequestHandlerTest {
         when(client.getAuthorizationListVersion(CHARGING_STATION_ID)).thenReturn(V15SOAPTestUtils.LIST_VERSION);
         requestHandler.handle(new AuthorizationListVersionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT), correlationToken);
 
-        verify(domainService).authorizationListVersionReceived(CHARGING_STATION_ID, V15SOAPTestUtils.LIST_VERSION, correlationToken);
+        verify(domainService).authorizationListVersionReceived(CHARGING_STATION_ID, V15SOAPTestUtils.LIST_VERSION, correlationToken, addOnIdentity);
     }
 
     @Test
