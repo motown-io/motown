@@ -39,7 +39,7 @@ public final class AuthorizationListVersionRequestedEvent implements Communicati
      * @param chargingStationId the identifier of the charging station.
      * @param protocol          protocol identifier.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId}, {@code protocol} or {@code identityContext} is {@code null}.
      */
     public AuthorizationListVersionRequestedEvent(ChargingStationId chargingStationId, String protocol, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
@@ -48,9 +48,7 @@ public final class AuthorizationListVersionRequestedEvent implements Communicati
     }
 
     /**
-     * Gets the charging station identifier.
-     *
-     * @return the charging station identifier.
+     * {@inheritDoc}
      */
     @Override
     public ChargingStationId getChargingStationId() {
@@ -58,11 +56,8 @@ public final class AuthorizationListVersionRequestedEvent implements Communicati
     }
 
     /**
-     * Gets the protocol identifier.
-     *
-     * @return the protocol identifier.
-     */
-    @Override
+     * {@inheritDoc}
+     */    @Override
     public String getProtocol() {
         return this.protocol;
     }

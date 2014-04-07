@@ -15,6 +15,10 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -27,16 +31,20 @@ public final class AuthorizationListVersionReceivedEvent {
 
     private final int version;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code AuthorizationListVersionReceivedEvent} with an identifier and a version.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param version           the current version of the authorization list on the charging station
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @param version           the current version of the authorization list on the charging station.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
      */
-    public AuthorizationListVersionReceivedEvent(ChargingStationId chargingStationId, int version) {
+    public AuthorizationListVersionReceivedEvent(ChargingStationId chargingStationId, int version, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.version = version;
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -53,5 +61,31 @@ public final class AuthorizationListVersionReceivedEvent {
      */
     public int getVersion() {
         return version;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, version, identityContext);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final AuthorizationListVersionReceivedEvent other = (AuthorizationListVersionReceivedEvent) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.version, other.version) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

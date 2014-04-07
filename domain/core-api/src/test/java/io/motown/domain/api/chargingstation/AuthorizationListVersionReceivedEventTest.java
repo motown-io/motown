@@ -18,21 +18,18 @@ package io.motown.domain.api.chargingstation;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static org.junit.Assert.assertEquals;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
 
 public class AuthorizationListVersionReceivedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new AuthorizationListVersionReceivedEvent(null, 1);
+        new AuthorizationListVersionReceivedEvent(null, 1, ROOT_IDENTITY_CONTEXT);
     }
 
-    @Test
-    public void constructorSetsFields() {
-        int version = 1;
-        AuthorizationListVersionReceivedEvent event = new AuthorizationListVersionReceivedEvent(CHARGING_STATION_ID, version);
-
-        assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
-        assertEquals(version, event.getVersion());
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
+        new AuthorizationListVersionReceivedEvent(CHARGING_STATION_ID, 1, null);
     }
+
 }
