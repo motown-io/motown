@@ -389,7 +389,7 @@ public class ChargingStationTest {
     public void testRequestReserveNowReservableChargingStation() {
         Date expiryDate = new Date();
         fixture.given(RESERVABLE_CHARGING_STATION)
-                .when(new RequestReserveNowCommand(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN))
+                .when(new RequestReserveNowCommand(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new ReserveNowRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN));
     }
 
@@ -397,7 +397,7 @@ public class ChargingStationTest {
     public void testRequestReserveNowNotReservableChargingStation() {
         Date expiryDate = new Date();
         fixture.given(CHARGING_STATION)
-                .when(new RequestReserveNowCommand(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN))
+                .when(new RequestReserveNowCommand(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN));
     }
 

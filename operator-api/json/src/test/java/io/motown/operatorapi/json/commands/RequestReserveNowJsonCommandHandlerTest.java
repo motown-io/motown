@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
 import static io.motown.operatorapi.json.commands.OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING;
 
 public class RequestReserveNowJsonCommandHandlerTest {
@@ -39,24 +40,24 @@ public class RequestReserveNowJsonCommandHandlerTest {
     @Test
     public void testCommand() {
         JsonObject commandObject = gson.fromJson("{evseId:'1',identifyingToken:{token:'1'},expiryDate:'2014-02-24T12:00:00Z'}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void testCommandNoDate() {
         JsonObject commandObject = gson.fromJson("{evseId:'1',identifyingToken:{token:'1'}}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCommandInvalidDate() {
         JsonObject commandObject = gson.fromJson("{evseId:'1',identifyingToken:{token:'1'},expiryDate:'2014-02-24'}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCommandInvalidStatus() {
         JsonObject commandObject = gson.fromJson("{evseId:'1',identifyingToken:{token:'1',status:'NEW'},expiryDate:'2014-02-24'}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID_STRING, commandObject, null);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 }
