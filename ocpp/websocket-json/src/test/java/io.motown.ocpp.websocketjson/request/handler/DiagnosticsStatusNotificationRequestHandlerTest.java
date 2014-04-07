@@ -17,6 +17,7 @@ package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Diagnosticsstatusnotification;
 import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,12 +51,11 @@ public class DiagnosticsStatusNotificationRequestHandlerTest {
         String token = UUID.randomUUID().toString();
         DiagnosticsStatusNotificationRequestHandler handler = new DiagnosticsStatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY);
 
-        String requestPayload = "{\n" +
-                "  \"status\": \"Uploaded\"\n" +
-                "}";
+        Diagnosticsstatusnotification requestPayload = new Diagnosticsstatusnotification();
+        requestPayload.setStatus(Diagnosticsstatusnotification.Status.UPLOADED);
 
         WebSocket webSocket = getMockWebSocket();
-        handler.handleRequest(CHARGING_STATION_ID, token, requestPayload, webSocket);
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
 
         ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(webSocket).write(argumentCaptor.capture());

@@ -16,9 +16,9 @@
 package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
-import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.wamp.WampMessage;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Datatransfer;
+import io.motown.ocpp.websocketjson.schema.generated.v15.DatatransferResponse;
 import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,9 +32,8 @@ import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class DataTransferRequestHandlerTest {
 
@@ -53,22 +52,20 @@ public class DataTransferRequestHandlerTest {
         String token = UUID.randomUUID().toString();
         DataTransferRequestHandler handler = new DataTransferRequestHandler(gson, domainService);
 
-        String requestPayload = "{\n" +
-                "  \"vendorId\": \"fr.tm.cnr\",\n" +
-                "  \"messageId\": \"GetChargeInstruction\",\n" +
-                "  \"data\": \"\"\n" +
-                "}";
+        Datatransfer requestPayload = new Datatransfer();
+        requestPayload.setVendorId("fr.tm.cnr");
+        requestPayload.setMessageId("GetChargeInstruction");
+        requestPayload.setData("");
 
         WebSocket webSocket = getMockWebSocket();
-        handler.handleRequest(CHARGING_STATION_ID, token, requestPayload, webSocket);
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
 
         ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(webSocket).write(argumentCaptor.capture());
         String response = argumentCaptor.getValue();
         assertNotNull(response);
 
-        String expected = String.format("[%d,\"%s\",{\"status\":\"Accepted\"", WampMessage.CALL_RESULT, token);
-        assertTrue(response.contains(expected));
+        assertTrue(response.contains(DatatransferResponse.Status.ACCEPTED.toString()));
     }
 
 }

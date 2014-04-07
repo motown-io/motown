@@ -17,6 +17,7 @@ package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Authorize;
 import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,12 +48,11 @@ public class AuthorizeRequestHandlerTest {
         String token = UUID.randomUUID().toString();
         AuthorizeRequestHandler handler = new AuthorizeRequestHandler(gson, domainService, ADD_ON_IDENTITY);
 
-        String requestPayload = "{\n" +
-                "  \"idTag\": \"B4F62CEF\"\n" +
-                "}";
+        Authorize requestPayload = new Authorize();
+        requestPayload.setIdTag("B4F62CEF");
 
         WebSocket webSocket = getMockWebSocket();
-        handler.handleRequest(CHARGING_STATION_ID, token, requestPayload, webSocket);
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
     }
 
 }

@@ -17,6 +17,7 @@ package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Firmwarestatusnotification;
 import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,12 +51,11 @@ public class FirmwareStatusNotificationRequestHandlerTest {
         String token = UUID.randomUUID().toString();
         FirmwareStatusNotificationRequestHandler handler = new FirmwareStatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY);
 
-        String requestPayload = "{\n" +
-                "  \"status\": \"DownloadFailed\"\n" +
-                "}";
+        Firmwarestatusnotification requestPayload = new Firmwarestatusnotification();
+        requestPayload.setStatus(Firmwarestatusnotification.Status.DOWNLOADED);
 
         WebSocket webSocket = getMockWebSocket();
-        handler.handleRequest(CHARGING_STATION_ID, token, requestPayload, webSocket);
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
 
         ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(webSocket).write(argumentCaptor.capture());

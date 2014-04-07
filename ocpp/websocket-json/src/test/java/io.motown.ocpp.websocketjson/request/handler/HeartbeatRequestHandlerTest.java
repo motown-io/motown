@@ -17,6 +17,7 @@ package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Heartbeat;
 import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,10 +51,10 @@ public class HeartbeatRequestHandlerTest {
         String token = UUID.randomUUID().toString();
         HeartbeatRequestHandler handler = new HeartbeatRequestHandler(gson, domainService, ADD_ON_IDENTITY);
 
-        String requestPayload = "{}";
+        Heartbeat requestPayload = new Heartbeat();
 
         WebSocket webSocket = getMockWebSocket();
-        handler.handleRequest(CHARGING_STATION_ID, token, requestPayload, webSocket);
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
 
         ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(webSocket).write(argumentCaptor.capture());

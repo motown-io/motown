@@ -20,7 +20,8 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.wamp.WampMessage;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Bootnotification;
+import io.motown.ocpp.websocketjson.schema.generated.v15.BootnotificationResponse;
 import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,28 +64,25 @@ public class BootNotificationRequestHandlerTest {
         String token = UUID.randomUUID().toString();
         BootNotificationRequestHandler handler = new BootNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY);
 
-        String requestPayload = "{\n" +
-                "\"chargePointVendor\": \"DBT\",\n" +
-                "\"chargePointModel\": \"NQC-ACDC\",\n" +
-                "\"chargePointSerialNumber\": \"gir.vat.mx.000e48\",\n" +
-                "\"chargeBoxSerialNumber\": \"gir.vat.mx.000e48\",\n" +
-                "\"firmwareVersion\": \"1.0.49\",\n" +
-                "\"iccid\": \"\",\n" +
-                "\"imsi\": \"\",\n" +
-                "\"meterType\": \"DBT NQC-ACDC\",\n" +
-                "\"meterSerialNumber\": \"gir.vat.mx.000e48\"\n" +
-                "}";
+        Bootnotification requestPayload = new Bootnotification();
+        requestPayload.setChargePointVendor("DBT");
+        requestPayload.setChargePointModel("NQC-ACDC");
+        requestPayload.setChargePointSerialNumber("gir.vat.mx.000e48");
+        requestPayload.setChargeBoxSerialNumber("gir.vat.mx.000e48");
+        requestPayload.setFirmwareVersion("1.0.49");
+        requestPayload.setIccid("");
+        requestPayload.setImsi("");
+        requestPayload.setMeterType("DBT NQC-ACDC");
+        requestPayload.setMeterSerialNumber("gir.vat.mx.000e48");
 
         WebSocket webSocket = getMockWebSocket();
-        handler.handleRequest(CHARGING_STATION_ID, token, requestPayload, webSocket);
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
 
         ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(webSocket).write(argumentCaptor.capture());
         String response = argumentCaptor.getValue();
         assertNotNull(response);
-
-        String expected =  String.format("[%d,\"%s\",{\"status\":\"Accepted\"", WampMessage.CALL_RESULT, token);
-        assertTrue(response.contains(expected));
+        assertTrue(response.contains(BootnotificationResponse.Status.ACCEPTED.toString()));
     }
 
 }

@@ -58,7 +58,7 @@ public class OcppWebSocketJsonTestUtils {
                 .add(new SendLocalListRequestUpdateTypeAdapterSerializer())
                 .add(new StartTransactionIdTagStatusTypeAdapterSerializer())
                 .add(new ChangeAvailabilityTypeAdapterSerializer())
-                //The serializers below are only needed during testing, as they are used to verify the result
+                //The serializers below are only needed during testing
                 .add(new ChangeAvailabilityStatusTypeAdapterSerializer())
                 .add(new CancelReservationStatusTypeAdapterSerializer())
                 .add(new ChangeConfigurationStatusTypeAdapterSerializer())
@@ -70,6 +70,8 @@ public class OcppWebSocketJsonTestUtils {
                 .add(new ResetStatusTypeAdapterSerializer())
                 .add(new SendLocalListStatusTypeAdapterSerializer())
                 .add(new UnlockConnectorResponseStatusTypeAdapterSerializer())
+                .add(new DiagnosticsStatusNotificationStatusTypeAdapterSerializer())
+                .add(new FirmwareStatusNotificationStatusTypeAdapterSerializer())
                 .build();
         gsonFactoryBean.setTypeAdapterSerializers(typeAdapterSerializers);
 
@@ -252,6 +254,34 @@ public class OcppWebSocketJsonTestUtils {
         @Override
         public Class<?> getAdaptedType() {
             return UnlockconnectorResponse.Status.class;
+        }
+    }
+
+    /**
+     * Only needed during tests to translate object to json
+     */
+    private static class DiagnosticsStatusNotificationStatusTypeAdapterSerializer implements TypeAdapterSerializer<Diagnosticsstatusnotification.Status> {
+        @Override
+        public JsonElement serialize(Diagnosticsstatusnotification.Status status, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(status.toString());
+        }
+        @Override
+        public Class<?> getAdaptedType() {
+            return Diagnosticsstatusnotification.Status.class;
+        }
+    }
+
+    /**
+     * Only needed during tests to translate object to json
+     */
+    private static class FirmwareStatusNotificationStatusTypeAdapterSerializer implements TypeAdapterSerializer<Firmwarestatusnotification.Status> {
+        @Override
+        public JsonElement serialize(Firmwarestatusnotification.Status status, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(status.toString());
+        }
+        @Override
+        public Class<?> getAdaptedType() {
+            return Firmwarestatusnotification.Status.class;
         }
     }
 
