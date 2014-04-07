@@ -15,7 +15,10 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
+
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -28,14 +31,18 @@ public final class RequestAuthorizationListVersionCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code RequestAuthorizationListVersionCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
      */
-    public RequestAuthorizationListVersionCommand(ChargingStationId chargingStationId) {
+    public RequestAuthorizationListVersionCommand(ChargingStationId chargingStationId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -45,5 +52,31 @@ public final class RequestAuthorizationListVersionCommand {
      */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, identityContext);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final RequestAuthorizationListVersionCommand other = (RequestAuthorizationListVersionCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

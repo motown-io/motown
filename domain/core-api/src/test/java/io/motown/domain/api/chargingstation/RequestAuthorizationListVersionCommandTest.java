@@ -15,12 +15,18 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
 import org.junit.Test;
 
 public class RequestAuthorizationListVersionCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new RequestAuthorizationListVersionCommand(null);
+        new RequestAuthorizationListVersionCommand(null, ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
+        new RequestAuthorizationListVersionCommand(ChargingStationTestUtils.CHARGING_STATION_ID, null);
     }
 }
