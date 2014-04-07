@@ -147,13 +147,13 @@
                 <executions>
                     <execution>
                         <id>All</id>
-                        <phase>validate</phase>
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
                             <sourceDirectory>${basedir}/src/main/resources/schemas/v15</sourceDirectory>
-                            <outputDirectory>${basedir}/src/main/java</outputDirectory>
+                            <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
                             <targetPackage>io.motown.ocpp.websocketjson.schema.generated.v15</targetPackage>
                             <generateBuilders>false</generateBuilders>
                             <annotationStyle>gson</annotationStyle>
