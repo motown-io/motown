@@ -18,12 +18,11 @@ package io.motown.ocpp.websocketjson.response.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.schema.generated.v15.GetlocallistversionResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
-import io.motown.ocpp.websocketjson.wamp.WampMessageParser;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.StringReader;
 import java.util.UUID;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
@@ -38,24 +37,26 @@ public class GetLocalListVersionResponseHandlerTest {
 
     private DomainService domainService;
 
+    private String token;
+    private CorrelationToken correlationToken;
+    private GetLocalListVersionResponseHandler handler;
+
     @Before
     public void setup() {
         gson = getGson();
         domainService = mock(DomainService.class);
+
+        token = UUID.randomUUID().toString();
+        correlationToken = new CorrelationToken(token);
+        handler = new GetLocalListVersionResponseHandler(correlationToken);
     }
 
     @Test
     public void handleValidResponse() {
-        String token = UUID.randomUUID().toString();
-        CorrelationToken correlationToken = new CorrelationToken(token);
-        GetLocalListVersionResponseHandler handler = new GetLocalListVersionResponseHandler(correlationToken);
-
-        int listVersion = 1;
-        String responseMessage = "[%d,\"%s\",{\n" +
-                "  \"listVersion\": %d\n" +
-                "}]";
-
-        WampMessage message = new WampMessageParser(gson).parseMessage(new StringReader(String.format(responseMessage, WampMessage.CALL_RESULT, token, listVersion)));
+        int listVersion = 2;
+        GetlocallistversionResponse payload = new GetlocallistversionResponse();
+        payload.setListVersion(listVersion);
+        WampMessage message = new WampMessage(WampMessage.CALL_RESULT, token, gson.toJson(payload));
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
