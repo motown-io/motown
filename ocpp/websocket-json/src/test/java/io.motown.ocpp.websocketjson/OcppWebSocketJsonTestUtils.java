@@ -66,6 +66,7 @@ public class OcppWebSocketJsonTestUtils {
                 .add(new DataTransferResponseStatusTypeAdapterSerializer())
                 .add(new RemoteStartTransactionStatusTypeAdapterSerializer())
                 .add(new RemoteStopTransactionStatusTypeAdapterSerializer())
+                .add(new ReserveNowStatusTypeAdapterSerializer())
                 .build();
         gsonFactoryBean.setTypeAdapterSerializers(typeAdapterSerializers);
 
@@ -192,6 +193,20 @@ public class OcppWebSocketJsonTestUtils {
         @Override
         public Class<?> getAdaptedType() {
             return RemotestoptransactionResponse.Status.class;
+        }
+    }
+
+    /**
+     * Only needed during tests to translate object to json
+     */
+    private static class ReserveNowStatusTypeAdapterSerializer implements TypeAdapterSerializer<ReservenowResponse.Status> {
+        @Override
+        public JsonElement serialize(ReservenowResponse.Status status, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(status.toString());
+        }
+        @Override
+        public Class<?> getAdaptedType() {
+            return ReservenowResponse.Status.class;
         }
     }
 
