@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -27,16 +29,20 @@ public final class DiagnosticsUploadStatusUpdatedEvent {
 
     private final boolean isUploaded;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code DiagnosticsUploadStatusUpdatedEvent}.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param isUploaded        indicator if the diagnostics file has been uploaded or not.
-     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} is {@code null}.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code protocol} or {@code identityContext} is {@code null}.
      */
-    public DiagnosticsUploadStatusUpdatedEvent(ChargingStationId chargingStationId, boolean isUploaded) {
+    public DiagnosticsUploadStatusUpdatedEvent(ChargingStationId chargingStationId, boolean isUploaded, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.isUploaded = isUploaded;
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -53,5 +59,14 @@ public final class DiagnosticsUploadStatusUpdatedEvent {
      */
     public boolean isUploaded() {
         return isUploaded;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 }

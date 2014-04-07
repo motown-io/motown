@@ -332,7 +332,7 @@ public class ChargingStationTest {
     public void testDiagnosticsStatusUpdate() {
         fixture.given(CHARGING_STATION)
                 .when(new UpdateDiagnosticsUploadStatusCommand(CHARGING_STATION_ID, true, NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new DiagnosticsUploadStatusUpdatedEvent(CHARGING_STATION_ID, true));
+                .expectEvents(new DiagnosticsUploadStatusUpdatedEvent(CHARGING_STATION_ID, true, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test

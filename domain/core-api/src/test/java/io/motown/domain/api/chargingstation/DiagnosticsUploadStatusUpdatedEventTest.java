@@ -15,12 +15,18 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
 import org.junit.Test;
 
 public class DiagnosticsUploadStatusUpdatedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new DiagnosticsUploadStatusUpdatedEvent(null, true);
+        new DiagnosticsUploadStatusUpdatedEvent(null, true, ChargingStationTestUtils.NULL_USER_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
+        new DiagnosticsUploadStatusUpdatedEvent(ChargingStationTestUtils.CHARGING_STATION_ID, true, null);
     }
 }

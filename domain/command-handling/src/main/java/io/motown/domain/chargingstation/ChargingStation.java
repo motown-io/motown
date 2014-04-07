@@ -243,7 +243,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(UpdateDiagnosticsUploadStatusCommand command) {
-        apply(new DiagnosticsUploadStatusUpdatedEvent(command.getChargingStationId(), command.isUploaded()));
+        apply(new DiagnosticsUploadStatusUpdatedEvent(command.getChargingStationId(), command.isUploaded(), command.getIdentityContext()));
     }
 
     @CommandHandler
