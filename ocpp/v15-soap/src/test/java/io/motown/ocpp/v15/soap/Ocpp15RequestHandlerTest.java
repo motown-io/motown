@@ -203,7 +203,8 @@ public class Ocpp15RequestHandlerTest {
 
     @Test
     public void testSendAuthorizationListRequestedEvent() {
-        requestHandler.handle(new SendAuthorizationListRequestedEvent(CHARGING_STATION_ID, PROTOCOL, V15SOAPTestUtils.getAuthorizationList(), V15SOAPTestUtils.getAuthorizationListVersion(), V15SOAPTestUtils.getAuthorizationListHash(), V15SOAPTestUtils.getAuthorizationListUpdateType()), CORRELATION_TOKEN);
+        requestHandler.handle(new SendAuthorizationListRequestedEvent(CHARGING_STATION_ID, PROTOCOL, V15SOAPTestUtils.getAuthorizationList(),
+                V15SOAPTestUtils.getAuthorizationListVersion(), V15SOAPTestUtils.getAuthorizationListHash(), V15SOAPTestUtils.getAuthorizationListUpdateType(), ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).sendAuthorizationList(CHARGING_STATION_ID, V15SOAPTestUtils.getAuthorizationListHash(), V15SOAPTestUtils.getAuthorizationListVersion(), V15SOAPTestUtils.getAuthorizationList(), V15SOAPTestUtils.getAuthorizationListUpdateType());
     }

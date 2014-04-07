@@ -16,8 +16,10 @@
 package io.motown.domain.api.chargingstation;
 
 import com.google.common.collect.ImmutableList;
+import io.motown.domain.api.security.IdentityContext;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -40,18 +42,22 @@ public final class SendAuthorizationListRequestedEvent implements CommunicationW
 
     private final AuthorizationListUpdateType updateType;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code SendAuthorizationListRequestedEvent}.
-     * @param chargingStationId         the charging station identifier
-     * @param protocol                  the protocol identifier
-     * @param authorizationList         the list of IdentifyingTokens to be updated/added
-     * @param authorizationListVersion  the authorization list version identifier
-     * @param authorizationListHash     the optional hash calculated over the elements in the list
-     * @param updateType                the update type
-     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code updateType} is {@code null}.
+     * @param chargingStationId         the charging station identifier.
+     * @param protocol                  the protocol identifier.
+     * @param authorizationList         the list of IdentifyingTokens to be updated/added.
+     * @param authorizationListVersion  the authorization list version identifier.
+     * @param authorizationListHash     the optional hash calculated over the elements in the list.
+     * @param updateType                the update type.
+     * @param identityContext           identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code updateType} or {@code identityContext} is {@code null}.
      * @throws IllegalArgumentException if {@code protocol} is empty.
      */
-    public SendAuthorizationListRequestedEvent(ChargingStationId chargingStationId, String protocol, List<IdentifyingToken> authorizationList, int authorizationListVersion, String authorizationListHash, AuthorizationListUpdateType updateType) {
+    public SendAuthorizationListRequestedEvent(ChargingStationId chargingStationId, String protocol, List<IdentifyingToken> authorizationList,
+                                               int authorizationListVersion, String authorizationListHash, AuthorizationListUpdateType updateType, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());
@@ -60,6 +66,7 @@ public final class SendAuthorizationListRequestedEvent implements CommunicationW
         this.authorizationListVersion = checkNotNull(authorizationListVersion);
         this.authorizationListHash = checkNotNull(authorizationListHash);
         this.updateType = checkNotNull(updateType);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -104,5 +111,31 @@ public final class SendAuthorizationListRequestedEvent implements CommunicationW
      */
     public String getAuthorizationListHash() {
         return authorizationListHash;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, protocol, authorizationList, authorizationListVersion, authorizationListHash, updateType, identityContext);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final SendAuthorizationListRequestedEvent other = (SendAuthorizationListRequestedEvent) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.protocol, other.protocol) && Objects.equals(this.authorizationList, other.authorizationList) && Objects.equals(this.authorizationListVersion, other.authorizationListVersion) && Objects.equals(this.authorizationListHash, other.authorizationListHash) && Objects.equals(this.updateType, other.updateType) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

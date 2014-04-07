@@ -367,7 +367,7 @@ public class ChargingStationTest {
 
         fixture.given(CHARGING_STATION)
                 .when(new SendAuthorizationListCommand(CHARGING_STATION_ID, IDENTIFYING_TOKENS, version, hash, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new SendAuthorizationListRequestedEvent(CHARGING_STATION_ID, PROTOCOL, IDENTIFYING_TOKENS, version, hash, AuthorizationListUpdateType.FULL));
+                .expectEvents(new SendAuthorizationListRequestedEvent(CHARGING_STATION_ID, PROTOCOL, IDENTIFYING_TOKENS, version, hash, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
