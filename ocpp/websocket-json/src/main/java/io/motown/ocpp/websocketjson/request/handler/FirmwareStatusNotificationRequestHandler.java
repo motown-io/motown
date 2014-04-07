@@ -17,6 +17,7 @@ package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Firmwarestatusnotification;
 import io.motown.ocpp.websocketjson.schema.generated.v15.FirmwarestatusnotificationResponse;
@@ -30,9 +31,12 @@ public class FirmwareStatusNotificationRequestHandler extends RequestHandler {
 
     private DomainService domainService;
 
-    public FirmwareStatusNotificationRequestHandler(Gson gson, DomainService domainService) {
+    private AddOnIdentity addOnIdentity;
+
+    public FirmwareStatusNotificationRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         this.gson = gson;
         this.domainService = domainService;
+        this.addOnIdentity = addOnIdentity;
     }
 
     @Override
@@ -53,7 +57,7 @@ public class FirmwareStatusNotificationRequestHandler extends RequestHandler {
             firmwareStatus = io.motown.domain.api.chargingstation.FirmwareStatus.DOWNLOAD_FAILED;
         }
 
-        domainService.firmwareStatusUpdate(chargingStationId, firmwareStatus);
+        domainService.firmwareStatusUpdate(chargingStationId, firmwareStatus, addOnIdentity);
 
         writeResponse(webSocket, new FirmwarestatusnotificationResponse(), callId, gson);
     }

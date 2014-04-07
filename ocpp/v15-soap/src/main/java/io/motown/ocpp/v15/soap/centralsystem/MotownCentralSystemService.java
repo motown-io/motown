@@ -234,7 +234,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
             firmwareStatus = io.motown.domain.api.chargingstation.FirmwareStatus.DOWNLOAD_FAILED;
         }
 
-        domainService.firmwareStatusUpdate(chargingStationId, firmwareStatus);
+        domainService.firmwareStatusUpdate(chargingStationId, firmwareStatus, addOnIdentity);
 
         return new FirmwareStatusNotificationResponse();
     }

@@ -25,6 +25,7 @@ import org.mockito.ArgumentCaptor;
 import java.io.IOException;
 import java.util.UUID;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
@@ -47,7 +48,7 @@ public class FirmwareStatusNotificationRequestHandlerTest {
     @Test
     public void handleValidRequest() throws IOException {
         String token = UUID.randomUUID().toString();
-        FirmwareStatusNotificationRequestHandler handler = new FirmwareStatusNotificationRequestHandler(gson, domainService);
+        FirmwareStatusNotificationRequestHandler handler = new FirmwareStatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY);
 
         String requestPayload = "{\n" +
                 "  \"status\": \"DownloadFailed\"\n" +

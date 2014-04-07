@@ -207,11 +207,11 @@ public class DomainServiceTest {
 
     @Test
     public void testFirmwareStatusUpdate() {
-        domainService.firmwareStatusUpdate(CHARGING_STATION_ID, FirmwareStatus.DOWNLOADED);
-        verify(gateway).send(new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOADED));
+        domainService.firmwareStatusUpdate(CHARGING_STATION_ID, FirmwareStatus.DOWNLOADED, ADD_ON_IDENTITY);
+        verify(gateway).send(new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOADED, NULL_USER_IDENTITY_CONTEXT));
 
-        domainService.firmwareStatusUpdate(CHARGING_STATION_ID, FirmwareStatus.INSTALLATION_FAILED);
-        verify(gateway).send(new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.INSTALLATION_FAILED));
+        domainService.firmwareStatusUpdate(CHARGING_STATION_ID, FirmwareStatus.INSTALLATION_FAILED, ADD_ON_IDENTITY);
+        verify(gateway).send(new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.INSTALLATION_FAILED, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test

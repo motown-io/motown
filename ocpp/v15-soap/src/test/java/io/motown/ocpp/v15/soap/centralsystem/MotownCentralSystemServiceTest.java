@@ -297,7 +297,7 @@ public class MotownCentralSystemServiceTest {
 
         motownCentralSystemService.firmwareStatusNotification(request, CHARGING_STATION_ID.getId());
 
-        verify(domainService).firmwareStatusUpdate(CHARGING_STATION_ID, io.motown.domain.api.chargingstation.FirmwareStatus.INSTALLED);
+        verify(domainService).firmwareStatusUpdate(CHARGING_STATION_ID, io.motown.domain.api.chargingstation.FirmwareStatus.INSTALLED, OCPPS15_ADD_ON_IDENTITY);
     }
 
     @Test
@@ -307,7 +307,7 @@ public class MotownCentralSystemServiceTest {
 
         motownCentralSystemService.firmwareStatusNotification(request, CHARGING_STATION_ID.getId());
 
-        verify(domainService).firmwareStatusUpdate(CHARGING_STATION_ID, io.motown.domain.api.chargingstation.FirmwareStatus.INSTALLATION_FAILED);
+        verify(domainService).firmwareStatusUpdate(CHARGING_STATION_ID, io.motown.domain.api.chargingstation.FirmwareStatus.INSTALLATION_FAILED, OCPPS15_ADD_ON_IDENTITY);
     }
 
     @Test
@@ -317,7 +317,7 @@ public class MotownCentralSystemServiceTest {
 
         motownCentralSystemService.firmwareStatusNotification(request, CHARGING_STATION_ID.getId());
 
-        verify(domainService).firmwareStatusUpdate(CHARGING_STATION_ID, io.motown.domain.api.chargingstation.FirmwareStatus.DOWNLOADED);
+        verify(domainService).firmwareStatusUpdate(CHARGING_STATION_ID, io.motown.domain.api.chargingstation.FirmwareStatus.DOWNLOADED, OCPPS15_ADD_ON_IDENTITY);
     }
 
     @Test
@@ -327,7 +327,7 @@ public class MotownCentralSystemServiceTest {
 
         motownCentralSystemService.firmwareStatusNotification(request, CHARGING_STATION_ID.getId());
 
-        verify(domainService).firmwareStatusUpdate(CHARGING_STATION_ID, io.motown.domain.api.chargingstation.FirmwareStatus.DOWNLOAD_FAILED);
+        verify(domainService).firmwareStatusUpdate(CHARGING_STATION_ID, io.motown.domain.api.chargingstation.FirmwareStatus.DOWNLOAD_FAILED, OCPPS15_ADD_ON_IDENTITY);
     }
 
     @Test

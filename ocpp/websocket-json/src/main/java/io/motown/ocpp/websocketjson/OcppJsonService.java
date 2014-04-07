@@ -368,7 +368,7 @@ public class OcppJsonService {
                     requestHandler = new DiagnosticsStatusNotificationRequestHandler(gson, domainService, addOnIdentity);
                     break;
                 case FirmwareStatusNotificationRequestHandler.PROC_URI:
-                    requestHandler = new FirmwareStatusNotificationRequestHandler(gson, domainService);
+                    requestHandler = new FirmwareStatusNotificationRequestHandler(gson, domainService, addOnIdentity);
                     break;
                 case HeartbeatRequestHandler.PROC_URI:
                     requestHandler = new HeartbeatRequestHandler(gson, domainService, addOnIdentity);

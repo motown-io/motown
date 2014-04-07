@@ -153,7 +153,7 @@ public class MotownCentralSystemService implements CentralSystemService {
 
         }
 
-        domainService.firmwareStatusUpdate(chargingStationId, firmwareStatus);
+        domainService.firmwareStatusUpdate(chargingStationId, firmwareStatus, addOnIdentity);
 
         return new FirmwareStatusNotificationResponse();
     }

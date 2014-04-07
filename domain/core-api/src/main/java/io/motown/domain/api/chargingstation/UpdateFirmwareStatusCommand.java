@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Objects;
@@ -32,16 +33,20 @@ public final class UpdateFirmwareStatusCommand {
 
     private final FirmwareStatus status;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code UpdateDiagnosticsUploadStatusCommand}.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param status            the status of the firmware update
-     * @throws NullPointerException if {@code chargingStationId} or {@code status} is {@code null}.
+     * @param status            the status of the firmware update.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code status} or {@code identityContext} is {@code null}.
      */
-    public UpdateFirmwareStatusCommand(ChargingStationId chargingStationId, FirmwareStatus status) {
+    public UpdateFirmwareStatusCommand(ChargingStationId chargingStationId, FirmwareStatus status, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.status = checkNotNull(status);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -60,9 +65,18 @@ public final class UpdateFirmwareStatusCommand {
         return status;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, status);
+        return Objects.hash(chargingStationId, status, identityContext);
     }
 
     @Override
@@ -74,6 +88,6 @@ public final class UpdateFirmwareStatusCommand {
             return false;
         }
         final UpdateFirmwareStatusCommand other = (UpdateFirmwareStatusCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.status, other.status);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.status, other.status) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

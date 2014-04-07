@@ -180,8 +180,10 @@ public class DomainService {
         commandGateway.send(command);
     }
 
-    public void firmwareStatusUpdate(ChargingStationId chargingStationId, FirmwareStatus firmwareStatus) {
-        UpdateFirmwareStatusCommand command = new UpdateFirmwareStatusCommand(chargingStationId, firmwareStatus);
+    public void firmwareStatusUpdate(ChargingStationId chargingStationId, FirmwareStatus firmwareStatus, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        UpdateFirmwareStatusCommand command = new UpdateFirmwareStatusCommand(chargingStationId, firmwareStatus, identityContext);
         commandGateway.send(command);
     }
 

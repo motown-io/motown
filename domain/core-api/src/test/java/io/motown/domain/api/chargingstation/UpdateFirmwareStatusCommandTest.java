@@ -20,6 +20,7 @@ import org.junit.Test;
 import java.util.Objects;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.NULL_USER_IDENTITY_CONTEXT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -27,17 +28,22 @@ public class UpdateFirmwareStatusCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new UpdateFirmwareStatusCommand(null, FirmwareStatus.DOWNLOAD_FAILED);
+        new UpdateFirmwareStatusCommand(null, FirmwareStatus.DOWNLOAD_FAILED, NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithoutStatus() {
-        new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, null);
+        new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, null, NULL_USER_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithoutUserIdentity() {
+        new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED, null);
     }
 
     @Test
     public void constructorSetsFields() {
-        UpdateFirmwareStatusCommand command = new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED);
+        UpdateFirmwareStatusCommand command = new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED, NULL_USER_IDENTITY_CONTEXT);
 
         assertEquals(CHARGING_STATION_ID, command.getChargingStationId());
         assertEquals(FirmwareStatus.DOWNLOAD_FAILED, command.getStatus());
@@ -45,20 +51,20 @@ public class UpdateFirmwareStatusCommandTest {
 
     @Test
     public void hashCodeEqualsChargingStationIdAndStatusHashCode() {
-        assertEquals(Objects.hash(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED), new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED).hashCode());
+        assertEquals(Objects.hash(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED, NULL_USER_IDENTITY_CONTEXT), new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED, NULL_USER_IDENTITY_CONTEXT).hashCode());
     }
 
     @Test
     public void equalsWithSameInstanceReturnsTrue() {
-        UpdateFirmwareStatusCommand command = new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED);
+        UpdateFirmwareStatusCommand command = new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED, NULL_USER_IDENTITY_CONTEXT);
 
         assertTrue(command.equals(command));
     }
 
     @Test
     public void equalsWithSameValuesReturnsTrue() {
-        UpdateFirmwareStatusCommand command = new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED);
+        UpdateFirmwareStatusCommand command = new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED, NULL_USER_IDENTITY_CONTEXT);
 
-        assertTrue(command.equals(new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED)));
+        assertTrue(command.equals(new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED, NULL_USER_IDENTITY_CONTEXT)));
     }
 }
