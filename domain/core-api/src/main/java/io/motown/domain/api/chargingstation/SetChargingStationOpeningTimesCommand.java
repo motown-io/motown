@@ -15,13 +15,24 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 import java.util.Set;
 
 /**
  * Command that is used to set opening times of the charging station.
  */
 public final class SetChargingStationOpeningTimesCommand extends ChangeChargingStationOpeningTimesCommand {
-    public SetChargingStationOpeningTimesCommand(ChargingStationId chargingStationId, Set<OpeningTime> openingTimes) {
-        super(chargingStationId, openingTimes);
+
+    /**
+     * Creates a command object that sets opening times of a charging station.
+     *
+     * @param chargingStationId The identifier of the charging station.
+     * @param openingTimes      The opening times of the charging station.
+     * @param identityContext   the identity context.
+     * @throws java.lang.NullPointerException if either {@code chargingStationId}, {@code openingTimes} or {@code identityContext} is {@code null}.
+     */
+    public SetChargingStationOpeningTimesCommand(ChargingStationId chargingStationId, Set<OpeningTime> openingTimes, IdentityContext identityContext) {
+        super(chargingStationId, openingTimes, identityContext);
     }
 }

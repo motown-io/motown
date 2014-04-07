@@ -46,7 +46,7 @@ class SetChargingStationOpeningTimesJsonCommandHandler implements JsonCommandHan
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
                 SetChargingStationOpeningTimesApiCommand command = gson.fromJson(commandObject, SetChargingStationOpeningTimesApiCommand.class);
-                commandGateway.send(new SetChargingStationOpeningTimesCommand(new ChargingStationId(chargingStationId), command.getOpeningTimes()));
+                commandGateway.send(new SetChargingStationOpeningTimesCommand(new ChargingStationId(chargingStationId), command.getOpeningTimes(), identityContext));
             }
         } catch (JsonSyntaxException e) {
             throw new IllegalArgumentException("Set charging station opening times command not able to parse the payload, is your JSON correctly formatted?", e);

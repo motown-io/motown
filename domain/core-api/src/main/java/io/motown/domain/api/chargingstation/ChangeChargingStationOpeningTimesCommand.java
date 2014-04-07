@@ -16,6 +16,7 @@
 package io.motown.domain.api.chargingstation;
 
 import com.google.common.collect.ImmutableSet;
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Objects;
@@ -30,21 +31,25 @@ public abstract class ChangeChargingStationOpeningTimesCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
     private final Set<OpeningTime> openingTimes;
+    private final IdentityContext identityContext;
 
     /**
      * Creates a command object that changes the opening times of a charging station.
      *
      * @param chargingStationId The identifier of the charging station.
-     * @param openingTimes The opening times of the charging station.
-     * @throws java.lang.NullPointerException if either {@code chargingStationId} or {@code openingTimes} is {@code null}.
+     * @param openingTimes      The opening times of the charging station.
+     * @param identityContext   the identity context.
+     * @throws java.lang.NullPointerException if either {@code chargingStationId}, {@code openingTimes} or {@code identityContext} is {@code null}.
      */
-    protected ChangeChargingStationOpeningTimesCommand(ChargingStationId chargingStationId, Set<OpeningTime> openingTimes) {
+    protected ChangeChargingStationOpeningTimesCommand(ChargingStationId chargingStationId, Set<OpeningTime> openingTimes, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.openingTimes = ImmutableSet.copyOf(checkNotNull(openingTimes));
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
      * Gets the charging station identifier.
+     *
      * @return the charging station identifier.
      */
     public ChargingStationId getChargingStationId() {
@@ -53,17 +58,33 @@ public abstract class ChangeChargingStationOpeningTimesCommand {
 
     /**
      * Gets the opening times of the charging station.
+     *
      * @return the opening times.
      */
     public Set<OpeningTime> getOpeningTimes() {
         return openingTimes;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(chargingStationId, openingTimes);
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, openingTimes, identityContext);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -73,6 +94,6 @@ public abstract class ChangeChargingStationOpeningTimesCommand {
             return false;
         }
         final ChangeChargingStationOpeningTimesCommand other = (ChangeChargingStationOpeningTimesCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.openingTimes, other.openingTimes);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.openingTimes, other.openingTimes) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

@@ -312,6 +312,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         apply(new RequestResultEvent(command.getChargingStationId(), command.getStatus(), command.getStatusMessage()), metaData);
 
     }
+
     @CommandHandler
     public void handle(GrantAuthorizationCommand command) {
         apply(new AuthorizationResultEvent(command.getChargingStationId(), command.getIdentifyingToken(), AuthorizationResultStatus.ACCEPTED));
@@ -339,12 +340,12 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(SetChargingStationOpeningTimesCommand command) {
-        apply(new ChargingStationOpeningTimesSetEvent(command.getChargingStationId(), command.getOpeningTimes()));
+        apply(new ChargingStationOpeningTimesSetEvent(command.getChargingStationId(), command.getOpeningTimes(), command.getIdentityContext()));
     }
 
     @CommandHandler
     public void handle(AddChargingStationOpeningTimesCommand command) {
-        apply(new ChargingStationOpeningTimesAddedEvent(command.getChargingStationId(), command.getOpeningTimes()));
+        apply(new ChargingStationOpeningTimesAddedEvent(command.getChargingStationId(), command.getOpeningTimes(), command.getIdentityContext()));
     }
 
     @EventSourcingHandler
@@ -407,10 +408,10 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
      * Ensures that the identityContext is allowed access to the command class.
      *
      * @param identityContext identity context.
-     * @param commandClass class of the command.
+     * @param commandClass    class of the command.
      */
     private void checkCommandAllowed(IdentityContext identityContext, Class commandClass) {
-        if(!commandAuthorization.isAuthorized(identityContext, this.authorizations.asMap(), commandClass)) {
+        if (!commandAuthorization.isAuthorized(identityContext, this.authorizations.asMap(), commandClass)) {
             // TODO decide on whether to throw an exception or an event... - Mark van den Bergh, March 26th 2014
             throw new IllegalStateException("No authorization for this action.");
         }

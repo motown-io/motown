@@ -15,39 +15,35 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
-public class ChargingStationOpeningTimesChangedEventTest {
+public class ChargingStationOpeningTimesSetEventTest {
 
     @Test(expected = NullPointerException.class)
     public void testChargingStationOpeningTimesSetEventWithNullChargingStationId() {
-        new ChargingStationOpeningTimesSetEvent(null, OPENING_TIMES);
+        new ChargingStationOpeningTimesSetEvent(null, OPENING_TIMES, IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void testChargingStationOpeningTimesSetEventWithNullOpeningTimes() {
-        new ChargingStationOpeningTimesSetEvent(CHARGING_STATION_ID, null);
+        new ChargingStationOpeningTimesSetEvent(CHARGING_STATION_ID, null, IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testChargingStationOpeningTimesSetEventWithNullIdentityContext() {
+        new ChargingStationOpeningTimesSetEvent(CHARGING_STATION_ID, OPENING_TIMES, null);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void testChargingStationOpeningTimesSetEventFinalOpeningTimes() {
-        new ChargingStationOpeningTimesSetEvent(CHARGING_STATION_ID, OPENING_TIMES).getOpeningTimes().add(OPENING_TIME);
+        new ChargingStationOpeningTimesSetEvent(CHARGING_STATION_ID, OPENING_TIMES, IDENTITY_CONTEXT).getOpeningTimes().add(OPENING_TIME);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testChargingStationOpeningTimesAddedEventWithNullChargingStationId() {
-        new ChargingStationOpeningTimesAddedEvent(null, OPENING_TIMES);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testChargingStationOpeningTimesAddedEventWithNullOpeningTimes() {
-        new ChargingStationOpeningTimesAddedEvent(CHARGING_STATION_ID, null);
-    }
-
-    @Test(expected = UnsupportedOperationException.class)
-    public void testChargingStationOpeningTimesAddedEventFinalOpeningTimes() {
-        new ChargingStationOpeningTimesAddedEvent(CHARGING_STATION_ID, OPENING_TIMES).getOpeningTimes().add(OPENING_TIME);
+    @Test
+    public void testEquals() {
+        EqualsVerifier.forClass(ChargingStationOpeningTimesSetEvent.class).usingGetClass().verify();
     }
 }

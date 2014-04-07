@@ -354,7 +354,7 @@ public class VasEventHandlerTest {
     @Test
     public void chargingStationOpeningTimesSetEvent() {
         chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
-        eventHandler.handle(new ChargingStationOpeningTimesSetEvent(CHARGING_STATION_ID, OPENING_TIMES));
+        eventHandler.handle(new ChargingStationOpeningTimesSetEvent(CHARGING_STATION_ID, OPENING_TIMES, IDENTITY_CONTEXT));
 
         ChargingStation chargingStation = getTestChargingStationFromRepository();
         assertEquals(OPENING_TIMES.size(), chargingStation.getOpeningTimes().size());
@@ -370,7 +370,7 @@ public class VasEventHandlerTest {
     @Test
     public void chargingStationOpeningTimesAddedEvent() {
         chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
-        eventHandler.handle(new ChargingStationOpeningTimesAddedEvent(CHARGING_STATION_ID, OPENING_TIMES));
+        eventHandler.handle(new ChargingStationOpeningTimesAddedEvent(CHARGING_STATION_ID, OPENING_TIMES, IDENTITY_CONTEXT));
 
         ChargingStation chargingStation = getTestChargingStationFromRepository();
         assertEquals(OPENING_TIMES.size(), chargingStation.getOpeningTimes().size());

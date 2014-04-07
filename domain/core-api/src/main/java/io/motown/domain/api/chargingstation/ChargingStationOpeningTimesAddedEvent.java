@@ -15,13 +15,24 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 import java.util.Set;
 
 /**
  * Event generated when new opening times have been added to existing ones.
  */
 public final class ChargingStationOpeningTimesAddedEvent extends ChargingStationOpeningTimesChangedEvent {
-    public ChargingStationOpeningTimesAddedEvent(ChargingStationId chargingStationId, Set<OpeningTime> openingTimes) {
-        super(chargingStationId, openingTimes);
+
+    /**
+     * Creates a new {@code ChargingStationOpeningTimesAddedEvent}.
+     *
+     * @param chargingStationId the identifier of the charging station.
+     * @param openingTimes      the new opening times.
+     * @param identityContext   the identity context.
+     * @throws java.lang.NullPointerException if one of the parameters is {@code null}.
+     */
+    public ChargingStationOpeningTimesAddedEvent(ChargingStationId chargingStationId, Set<OpeningTime> openingTimes, IdentityContext identityContext) {
+        super(chargingStationId, openingTimes, identityContext);
     }
 }

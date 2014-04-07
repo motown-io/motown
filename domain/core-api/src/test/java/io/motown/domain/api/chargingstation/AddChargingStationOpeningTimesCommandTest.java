@@ -20,41 +20,30 @@ import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
-public class ChangeChargingStationOpeningTimesCommandTest {
-
-    @Test(expected = NullPointerException.class)
-    public void testSetChargingStationOpeningTimesCommandWithNullChargingStationId() {
-        new SetChargingStationOpeningTimesCommand(null, OPENING_TIMES);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testSetChargingStationOpeningTimesCommandWithNullOpeningTimes() {
-        new SetChargingStationOpeningTimesCommand(CHARGING_STATION_ID, null);
-    }
-
-    @Test(expected = UnsupportedOperationException.class)
-    public void testSetChargingStationOpeningTimesCommandFinalOpeningTimes() {
-        new SetChargingStationOpeningTimesCommand(CHARGING_STATION_ID, OPENING_TIMES).getOpeningTimes().add(OPENING_TIME);
-    }
+public class AddChargingStationOpeningTimesCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void testAddChargingStationOpeningTimesCommandWithNullChargingStationId() {
-        new AddChargingStationOpeningTimesCommand(null, OPENING_TIMES);
+        new AddChargingStationOpeningTimesCommand(null, OPENING_TIMES, IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void testAddChargingStationOpeningTimesCommandWithNullOpeningTimes() {
-        new AddChargingStationOpeningTimesCommand(CHARGING_STATION_ID, null);
+        new AddChargingStationOpeningTimesCommand(CHARGING_STATION_ID, null, IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testAddChargingStationOpeningTimesCommandWithNullIdentityContext() {
+        new AddChargingStationOpeningTimesCommand(CHARGING_STATION_ID, OPENING_TIMES, null);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void testAddChargingStationOpeningTimesCommandFinalOpeningTimes() {
-        new AddChargingStationOpeningTimesCommand(CHARGING_STATION_ID, OPENING_TIMES).getOpeningTimes().add(OPENING_TIME);
+        new AddChargingStationOpeningTimesCommand(CHARGING_STATION_ID, OPENING_TIMES, IDENTITY_CONTEXT).getOpeningTimes().add(OPENING_TIME);
     }
 
     @Test
     public void testEquals() {
-        EqualsVerifier.forClass(SetChargingStationOpeningTimesCommand.class).usingGetClass().verify();
         EqualsVerifier.forClass(AddChargingStationOpeningTimesCommand.class).usingGetClass().verify();
     }
 }
