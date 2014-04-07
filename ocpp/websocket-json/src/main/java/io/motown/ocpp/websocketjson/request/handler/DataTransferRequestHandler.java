@@ -17,6 +17,7 @@ package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Datatransfer;
 import io.motown.ocpp.websocketjson.schema.generated.v15.DatatransferResponse;
@@ -30,16 +31,19 @@ public class DataTransferRequestHandler extends RequestHandler {
 
     private DomainService domainService;
 
-    public DataTransferRequestHandler(Gson gson, DomainService domainService) {
+    private AddOnIdentity addOnIdentity;
+
+    public DataTransferRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         this.gson = gson;
         this.domainService = domainService;
+        this.addOnIdentity = addOnIdentity;
     }
 
     @Override
     public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
         Datatransfer request = gson.fromJson(payload, Datatransfer.class);
 
-        domainService.dataTransfer(chargingStationId, request.getData(), request.getVendorId(), request.getMessageId());
+        domainService.dataTransfer(chargingStationId, request.getData(), request.getVendorId(), request.getMessageId(), addOnIdentity);
 
         DatatransferResponse response = new DatatransferResponse();
         response.setStatus(DatatransferResponse.Status.ACCEPTED);

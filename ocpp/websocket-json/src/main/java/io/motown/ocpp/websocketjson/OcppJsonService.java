@@ -362,7 +362,7 @@ public class OcppJsonService {
                     requestHandler = new BootNotificationRequestHandler(gson, domainService, addOnIdentity);
                     break;
                 case DataTransferRequestHandler.PROC_URI:
-                    requestHandler = new DataTransferRequestHandler(gson, domainService);
+                    requestHandler = new DataTransferRequestHandler(gson, domainService, addOnIdentity);
                     break;
                 case DiagnosticsStatusNotificationRequestHandler.PROC_URI:
                     requestHandler = new DiagnosticsStatusNotificationRequestHandler(gson, domainService, addOnIdentity);

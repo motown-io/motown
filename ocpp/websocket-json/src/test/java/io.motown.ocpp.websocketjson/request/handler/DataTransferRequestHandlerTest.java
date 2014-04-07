@@ -27,6 +27,7 @@ import org.mockito.ArgumentCaptor;
 import java.io.IOException;
 import java.util.UUID;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
@@ -50,7 +51,7 @@ public class DataTransferRequestHandlerTest {
     @Test
     public void handleValidRequest() throws IOException {
         String token = UUID.randomUUID().toString();
-        DataTransferRequestHandler handler = new DataTransferRequestHandler(gson, domainService);
+        DataTransferRequestHandler handler = new DataTransferRequestHandler(gson, domainService, ADD_ON_IDENTITY);
 
         Datatransfer requestPayload = new Datatransfer();
         requestPayload.setVendorId("fr.tm.cnr");

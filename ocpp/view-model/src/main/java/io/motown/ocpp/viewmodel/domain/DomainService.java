@@ -134,8 +134,10 @@ public class DomainService {
         return new BootChargingStationResult(chargingStation.isRegistered(), heartbeatInterval, new Date());
     }
 
-    public void dataTransfer(ChargingStationId chargingStationId, String data, String vendorId, String messageId) {
-        commandGateway.send(new IncomingDataTransferCommand(chargingStationId, vendorId, messageId, data));
+    public void dataTransfer(ChargingStationId chargingStationId, String data, String vendorId, String messageId, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        commandGateway.send(new IncomingDataTransferCommand(chargingStationId, vendorId, messageId, data, identityContext));
     }
 
     public void heartbeat(ChargingStationId chargingStationId, AddOnIdentity addOnIdentity) {

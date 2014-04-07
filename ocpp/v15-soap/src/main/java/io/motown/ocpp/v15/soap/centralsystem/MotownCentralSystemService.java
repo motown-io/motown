@@ -69,7 +69,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
     public DataTransferResponse dataTransfer(DataTransferRequest request, String chargeBoxIdentity) {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
-        domainService.dataTransfer(chargingStationId, request.getData(), request.getVendorId(), request.getMessageId());
+        domainService.dataTransfer(chargingStationId, request.getData(), request.getVendorId(), request.getMessageId(), addOnIdentity);
 
         DataTransferResponse response = new DataTransferResponse();
         response.setStatus(DataTransferStatus.ACCEPTED);
