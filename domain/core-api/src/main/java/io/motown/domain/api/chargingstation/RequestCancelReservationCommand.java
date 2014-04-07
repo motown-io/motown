@@ -15,7 +15,10 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
+
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -26,18 +29,23 @@ public final class RequestCancelReservationCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
+
     private final ReservationId reservationId;
+
+    private final IdentityContext identityContext;
 
     /**
      * Creates a {@code RequestCancelReservationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param reservationId
-     * @throws NullPointerException if {@code chargingStationId} or {@code reservationId} is {@code null}.
+     * @param reservationId     the identifier of the reservation.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code reservationId} or {@code identityContext} is {@code null}.
      */
-    public RequestCancelReservationCommand(ChargingStationId chargingStationId, ReservationId reservationId) {
+    public RequestCancelReservationCommand(ChargingStationId chargingStationId, ReservationId reservationId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.reservationId = checkNotNull(reservationId);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -56,5 +64,31 @@ public final class RequestCancelReservationCommand {
      */
     public ReservationId getReservationId() {
         return reservationId;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, reservationId, identityContext);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final RequestCancelReservationCommand other = (RequestCancelReservationCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.reservationId, other.reservationId) && Objects.equals(this.identityContext, other.identityContext);
     }
 }
