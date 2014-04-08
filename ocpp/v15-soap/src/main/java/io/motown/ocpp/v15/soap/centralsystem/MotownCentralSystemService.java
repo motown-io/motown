@@ -88,7 +88,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
             timestamp = new Date();
         }
 
-        domainService.statusNotification(chargingStationId, evseId, errorCode, componentStatus, request.getInfo(), timestamp, request.getVendorId(), request.getVendorErrorCode());
+        domainService.statusNotification(chargingStationId, evseId, errorCode, componentStatus, request.getInfo(), timestamp, request.getVendorId(), request.getVendorErrorCode(), addOnIdentity);
         return new StatusNotificationResponse();
     }
 

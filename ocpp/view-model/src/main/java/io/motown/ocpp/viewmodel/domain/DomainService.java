@@ -191,7 +191,8 @@ public class DomainService {
         commandGateway.send(command);
     }
 
-    public void statusNotification(ChargingStationId chargingStationId, EvseId evseId, String errorCode, ComponentStatus status, String info, Date timeStamp, String vendorId, String vendorErrorCode) {
+    public void statusNotification(ChargingStationId chargingStationId, EvseId evseId, String errorCode, ComponentStatus status,
+                                   String info, Date timeStamp, String vendorId, String vendorErrorCode, AddOnIdentity addOnIdentity) {
         //TODO: The attributes map can contain protocol specific key values, how to know what keys to expect on receiving end - Ingo Pak, 09 Jan 2014
         Map<String, String> attributes = new HashMap<>();
 
@@ -202,11 +203,13 @@ public class DomainService {
 
         StatusNotificationCommand command;
 
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
         if (evseId.getNumberedId() == CHARGING_STATION_EVSE_ID) {
             command = new ChargingStationStatusNotificationCommand(chargingStationId, status, timeStamp, attributes);
         } else {
             ChargingStationComponent component = ChargingStationComponent.CONNECTOR;
-            command = new ComponentStatusNotificationCommand(chargingStationId, component, evseId, status, timeStamp, attributes);
+            command = new ComponentStatusNotificationCommand(chargingStationId, component, evseId, status, timeStamp, attributes, identityContext);
         }
 
         commandGateway.send(command);

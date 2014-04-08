@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ComponentStatus;
 import io.motown.domain.api.chargingstation.EvseId;
+import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Statusnotification;
 import io.motown.ocpp.websocketjson.schema.generated.v15.StatusnotificationResponse;
@@ -34,9 +35,12 @@ public class StatusNotificationRequestHandler extends RequestHandler {
 
     private DomainService domainService;
 
-    public StatusNotificationRequestHandler(Gson gson, DomainService domainService) {
+    private AddOnIdentity addOnIdentity;
+
+    public StatusNotificationRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         this.gson = gson;
         this.domainService = domainService;
+        this.addOnIdentity = addOnIdentity;
     }
 
     @Override
@@ -49,7 +53,7 @@ public class StatusNotificationRequestHandler extends RequestHandler {
             timestamp = new Date();
         }
 
-        domainService.statusNotification(chargingStationId, new EvseId(request.getConnectorId()), errorCode, getComponentStatusFromChargePointStatus(request.getStatus()), request.getInfo(), timestamp, request.getVendorId(), request.getVendorErrorCode());
+        domainService.statusNotification(chargingStationId, new EvseId(request.getConnectorId()), errorCode, getComponentStatusFromChargePointStatus(request.getStatus()), request.getInfo(), timestamp, request.getVendorId(), request.getVendorErrorCode(), addOnIdentity);
 
         writeResponse(webSocket, new StatusnotificationResponse(), callId, gson);
     }

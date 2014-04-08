@@ -380,7 +380,7 @@ public class OcppJsonService {
                     requestHandler = new StartTransactionRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER, addOnIdentity);
                     break;
                 case StatusNotificationRequestHandler.PROC_URI:
-                    requestHandler = new StatusNotificationRequestHandler(gson, domainService);
+                    requestHandler = new StatusNotificationRequestHandler(gson, domainService, addOnIdentity);
                     break;
                 case StopTransactionRequestHandler.PROC_URI:
                     requestHandler = new StopTransactionRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER, addOnIdentity);

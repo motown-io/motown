@@ -218,7 +218,7 @@ public class MotownCentralSystemService implements CentralSystemService {
         Date timestamp = new Date();
         String vendorId = null;
         String vendorErrorCode = null;
-        domainService.statusNotification(chargingStationId, evseId, errorCode, componentStatus, info, timestamp, vendorId, vendorErrorCode);
+        domainService.statusNotification(chargingStationId, evseId, errorCode, componentStatus, info, timestamp, vendorId, vendorErrorCode, addOnIdentity);
         return new StatusNotificationResponse();
     }
 

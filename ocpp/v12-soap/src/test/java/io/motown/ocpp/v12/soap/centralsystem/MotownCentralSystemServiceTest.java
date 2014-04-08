@@ -88,7 +88,7 @@ public class MotownCentralSystemServiceTest {
         motownCentralSystemService.statusNotification(request, CHARGING_STATION_ID.getId());
 
         // using matchers because the generated date is unknown
-        verify(domainService).statusNotification(eq(CHARGING_STATION_ID), eq(EVSE_ID), eq(ChargePointErrorCode.CONNECTOR_LOCK_FAILURE.value()), eq(ComponentStatus.FAULTED), isNull(String.class), any(Date.class), isNull(String.class), isNull(String.class));
+        verify(domainService).statusNotification(eq(CHARGING_STATION_ID), eq(EVSE_ID), eq(ChargePointErrorCode.CONNECTOR_LOCK_FAILURE.value()), eq(ComponentStatus.FAULTED), isNull(String.class), any(Date.class), isNull(String.class), isNull(String.class), eq(OCPPS12_ADD_ON_IDENTITY));
     }
 
     @Test

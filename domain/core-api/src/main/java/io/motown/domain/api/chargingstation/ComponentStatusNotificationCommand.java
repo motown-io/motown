@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
@@ -31,6 +33,8 @@ public final class ComponentStatusNotificationCommand extends StatusNotification
 
     private final ComponentId componentId;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code ComponentStatusNotificationCommand}.
      *
@@ -40,12 +44,16 @@ public final class ComponentStatusNotificationCommand extends StatusNotification
      * @param status            the status of the component.
      * @param timeStamp         the optional date and time.
      * @param attributes        optional attributes.
-     * @throws NullPointerException if {@code chargingStationId}, {@code component}, {@code componentId}, {@code status} or {@code attributes} is {@code null}.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code component}, {@code componentId}, {@code status} or {@code attributes} or is
+     *                             {@code identityContext} is {@code null}.
      */
-    public ComponentStatusNotificationCommand(ChargingStationId chargingStationId, ChargingStationComponent component, ComponentId componentId, ComponentStatus status, Date timeStamp, Map<String, String> attributes) {
+    public ComponentStatusNotificationCommand(ChargingStationId chargingStationId, ChargingStationComponent component, ComponentId componentId,
+                                              ComponentStatus status, Date timeStamp, Map<String, String> attributes, IdentityContext identityContext) {
         super(chargingStationId, status, timeStamp, attributes);
         this.component = checkNotNull(component);
         this.componentId = checkNotNull(componentId);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -66,9 +74,18 @@ public final class ComponentStatusNotificationCommand extends StatusNotification
         return componentId;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(component, componentId);
+        return 31 * super.hashCode() + Objects.hash(component, componentId, identityContext);
     }
 
     @Override
@@ -79,8 +96,10 @@ public final class ComponentStatusNotificationCommand extends StatusNotification
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
+        if (!super.equals(obj)) {
+            return false;
+        }
         final ComponentStatusNotificationCommand other = (ComponentStatusNotificationCommand) obj;
-        return Objects.equals(this.component, other.component) && Objects.equals(this.componentId, other.componentId);
+        return Objects.equals(this.component, other.component) && Objects.equals(this.componentId, other.componentId) && Objects.equals(this.identityContext, other.identityContext);
     }
-
 }
