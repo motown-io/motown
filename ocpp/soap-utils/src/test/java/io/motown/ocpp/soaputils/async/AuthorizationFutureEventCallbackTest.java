@@ -40,7 +40,7 @@ public class AuthorizationFutureEventCallbackTest {
     public void onEventAuthorizationResultEvent() {
         AuthorizationFutureEventCallback callback = new AuthorizationFutureEventCallback();
         callback.setContinuation(mock(Continuation.class));
-        EventMessage eventMessage = asEventMessage(new AuthorizationResultEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, AuthorizationResultStatus.ACCEPTED));
+        EventMessage eventMessage = asEventMessage(new AuthorizationResultEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, AuthorizationResultStatus.ACCEPTED, NULL_USER_IDENTITY_CONTEXT));
 
         callback.onEvent(eventMessage);
     }
@@ -49,7 +49,7 @@ public class AuthorizationFutureEventCallbackTest {
     public void onEventAuthorizationResultEventVerifyAcceptedSetResult() throws ExecutionException, InterruptedException {
         AuthorizationFutureEventCallback callback = new AuthorizationFutureEventCallback();
         callback.setContinuation(mock(Continuation.class));
-        EventMessage eventMessage = asEventMessage(new AuthorizationResultEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, AuthorizationResultStatus.ACCEPTED));
+        EventMessage eventMessage = asEventMessage(new AuthorizationResultEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, AuthorizationResultStatus.ACCEPTED, NULL_USER_IDENTITY_CONTEXT));
         callback.onEvent(eventMessage);
 
         AuthorizationResult authorizationResult = callback.get();
@@ -63,7 +63,7 @@ public class AuthorizationFutureEventCallbackTest {
     public void onEventAuthorizationResultEventVerifyBlockedSetResult() throws ExecutionException, InterruptedException {
         AuthorizationFutureEventCallback callback = new AuthorizationFutureEventCallback();
         callback.setContinuation(mock(Continuation.class));
-        EventMessage eventMessage = asEventMessage(new AuthorizationResultEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, AuthorizationResultStatus.BLOCKED));
+        EventMessage eventMessage = asEventMessage(new AuthorizationResultEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, AuthorizationResultStatus.BLOCKED, NULL_USER_IDENTITY_CONTEXT));
         callback.onEvent(eventMessage);
 
         AuthorizationResult authorizationResult = callback.get();
@@ -75,7 +75,7 @@ public class AuthorizationFutureEventCallbackTest {
     @Test
     public void onEventAuthorizationResultEventNoContinuationNoExceptions() {
         AuthorizationFutureEventCallback callback = new AuthorizationFutureEventCallback();
-        EventMessage eventMessage = asEventMessage(new AuthorizationResultEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, AuthorizationResultStatus.ACCEPTED));
+        EventMessage eventMessage = asEventMessage(new AuthorizationResultEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, AuthorizationResultStatus.ACCEPTED, NULL_USER_IDENTITY_CONTEXT));
 
         callback.onEvent(eventMessage);
     }
@@ -85,7 +85,7 @@ public class AuthorizationFutureEventCallbackTest {
         AuthorizationFutureEventCallback callback = new AuthorizationFutureEventCallback();
         Continuation continuation = mock(Continuation.class);
         callback.setContinuation(continuation);
-        EventMessage eventMessage = asEventMessage(new AuthorizationResultEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, AuthorizationResultStatus.ACCEPTED));
+        EventMessage eventMessage = asEventMessage(new AuthorizationResultEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, AuthorizationResultStatus.ACCEPTED, NULL_USER_IDENTITY_CONTEXT));
 
         callback.onEvent(eventMessage);
 

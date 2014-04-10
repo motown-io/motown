@@ -15,6 +15,10 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -28,18 +32,22 @@ public class AuthorizationResultEvent {
 
     private final AuthorizationResultStatus authorizationResultStatus;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code AuthorizationResultEvent} with an identifier, identifier and result status.
      *
-     * @param chargingStationId the identifier of the charging station.
-     * @param identifyingToken  the identification that has been authorized.
+     * @param chargingStationId         the identifier of the charging station.
+     * @param identifyingToken          the identification that has been authorized.
      * @param authorizationResultStatus the status of authorization result.
-     * @throws NullPointerException if {@code chargingStationId}, {@code idTag} or {@code authorizationResultStatus} is {@code null}.
+     * @param identityContext           identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code idTag}, {@code authorizationResultStatus} or {@code identityContext} is {@code null}.
      */
-    public AuthorizationResultEvent(ChargingStationId chargingStationId, IdentifyingToken identifyingToken, AuthorizationResultStatus authorizationResultStatus) {
+    public AuthorizationResultEvent(ChargingStationId chargingStationId, IdentifyingToken identifyingToken, AuthorizationResultStatus authorizationResultStatus, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.identifyingToken = checkNotNull(identifyingToken);
         this.authorizationResultStatus = checkNotNull(authorizationResultStatus);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -69,4 +77,29 @@ public class AuthorizationResultEvent {
         return authorizationResultStatus;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, identifyingToken, authorizationResultStatus, identityContext);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final AuthorizationResultEvent other = (AuthorizationResultEvent) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.identifyingToken, other.identifyingToken) && Objects.equals(this.authorizationResultStatus, other.authorizationResultStatus) && Objects.equals(this.identityContext, other.identityContext);
+    }
 }
