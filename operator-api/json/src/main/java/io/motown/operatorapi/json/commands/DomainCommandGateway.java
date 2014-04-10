@@ -44,4 +44,5 @@ interface DomainCommandGateway {
     void send(MakeChargingStationNotReservableCommand command);
     void send(SetChargingStationOpeningTimesCommand command);
     void send(AddChargingStationOpeningTimesCommand command);
+    void send(GrantPermissionCommand command);
 }

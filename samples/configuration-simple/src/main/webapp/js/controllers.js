@@ -332,6 +332,20 @@ angular.module('demoApp.controllers', []).
                     console.log('Opening times added');
                 });
             };
+
+            $scope.grantPermission = function (chargingStation, commandClass, userIdentity) {
+                $http({
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
+                    method: 'POST',
+                    data: ['GrantPermission', {
+                        'commandClass': commandClass,
+                        'userIdentity': userIdentity
+
+                    }]
+                }).success(function (response) {
+                    console.log('Permission requested');
+                });
+            }
         }]).
     controller('TransactionController',
         ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {

@@ -149,4 +149,9 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
         LOG.debug("AddChargingStationOpeningTimesCommand: " + command.toString());
     }
 
+    @Override
+    public void send(GrantPermissionCommand command) {
+        LOG.debug("GrantPermissionCommand: " + command.toString());
+    }
+
 }
