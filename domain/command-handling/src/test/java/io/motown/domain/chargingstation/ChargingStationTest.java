@@ -470,7 +470,7 @@ public class ChargingStationTest {
     @Test
     public void testGrantAuthorization() {
         fixture.given(CHARGING_STATION)
-                .when(new GrantAuthorizationCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN))
+                .when(new GrantAuthorizationCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT))
                 .expectEvents(new AuthorizationResultEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, AuthorizationResultStatus.ACCEPTED));
     }
 

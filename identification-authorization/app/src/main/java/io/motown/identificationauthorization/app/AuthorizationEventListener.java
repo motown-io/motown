@@ -48,7 +48,7 @@ public class AuthorizationEventListener {
 
         CommandMessage commandMessage;
         if (valid) {
-            commandMessage = asCommandMessage(new GrantAuthorizationCommand(event.getChargingStationId(), event.getIdentifyingToken()));
+            commandMessage = asCommandMessage(new GrantAuthorizationCommand(event.getChargingStationId(), event.getIdentifyingToken(), event.getIdentityContext()));
         } else {
             commandMessage = asCommandMessage(new DenyAuthorizationCommand(event.getChargingStationId(), event.getIdentifyingToken()));
         }
