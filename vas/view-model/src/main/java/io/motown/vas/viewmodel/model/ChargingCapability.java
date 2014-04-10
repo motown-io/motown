@@ -16,6 +16,8 @@
 package io.motown.vas.viewmodel.model;
 
 import io.motown.domain.api.chargingstation.Connector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Charging Capability as per VAS spec
@@ -39,6 +41,8 @@ public enum ChargingCapability {
     DC_FAST_CHARGING("DcFastCharging");
 
     private final String value;
+
+    private static final Logger LOG = LoggerFactory.getLogger(ChargingCapability.class);
 
     private ChargingCapability(String v) {
         value = v;
@@ -70,9 +74,9 @@ public enum ChargingCapability {
 
         try {
             chargingCapability = ChargingCapability.fromValue(String.format("%dV%dPhase%dA", connector.getVoltage(), connector.getPhase(), connector.getMaxAmp()));
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException e) {
             // cannot convert to valid VAS charging capability.
-            //TODO log?
+            LOG.error("Illegal argument exception while trying to construct a ChargingCapability from value.", e);
         }
 
         return chargingCapability;
