@@ -81,7 +81,7 @@ public class AuthorizationEventListenerTest {
         verify(service).isValid(INVALID_IDENTIFYING_TOKEN);
 
         final CommandMessage command = asCommandMessage(
-                new DenyAuthorizationCommand(CHARGING_STATION_ID, INVALID_IDENTIFYING_TOKEN)).andMetaData(Collections.singletonMap("correlationId", CORRELATION_ID));
+                new DenyAuthorizationCommand(CHARGING_STATION_ID, INVALID_IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT)).andMetaData(Collections.singletonMap("correlationId", CORRELATION_ID));
 
         // because GenericCommandMessage doesn't implement 'equals' method we have to provide a ArgumentMatcher to validate the argument
         verify(gateway).send(argThat(new ArgumentMatcher<CommandMessage>() {

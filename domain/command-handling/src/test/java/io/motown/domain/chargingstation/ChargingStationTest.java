@@ -477,7 +477,7 @@ public class ChargingStationTest {
     @Test
     public void testDenyAuthorization() {
         fixture.given(CHARGING_STATION)
-                .when(new DenyAuthorizationCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN))
+                .when(new DenyAuthorizationCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT))
                 .expectEvents(new AuthorizationResultEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, AuthorizationResultStatus.INVALID, NULL_USER_IDENTITY_CONTEXT));
     }
 

@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Objects;
@@ -32,16 +33,20 @@ public final class DenyAuthorizationCommand {
 
     private final IdentifyingToken identifyingToken;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code DenyAuthorizationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param identifyingToken  the identification that has been authorized.
-     * @throws NullPointerException if {@code chargingStationId} or {@code identifyingToken} is {@code null}.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code identifyingToken} or {@code identityContext} is {@code null}.
      */
-    public DenyAuthorizationCommand(ChargingStationId chargingStationId, IdentifyingToken identifyingToken) {
+    public DenyAuthorizationCommand(ChargingStationId chargingStationId, IdentifyingToken identifyingToken, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.identifyingToken = checkNotNull(identifyingToken);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -62,9 +67,18 @@ public final class DenyAuthorizationCommand {
         return identifyingToken;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, identifyingToken);
+        return Objects.hash(chargingStationId, identifyingToken, identityContext);
     }
 
     @Override
@@ -76,6 +90,6 @@ public final class DenyAuthorizationCommand {
             return false;
         }
         final DenyAuthorizationCommand other = (DenyAuthorizationCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.identifyingToken, other.identifyingToken);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.identifyingToken, other.identifyingToken) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

@@ -48,9 +48,11 @@ public class AuthorizationEventListener {
 
         CommandMessage commandMessage;
         if (valid) {
+            //TODO re-use the identity context of the event? Or create a new one... - Mark van den Bergh, 10th april 2014
             commandMessage = asCommandMessage(new GrantAuthorizationCommand(event.getChargingStationId(), event.getIdentifyingToken(), event.getIdentityContext()));
         } else {
-            commandMessage = asCommandMessage(new DenyAuthorizationCommand(event.getChargingStationId(), event.getIdentifyingToken()));
+            //TODO re-use the identity context of the event? Or create a new one... - Mark van den Bergh, 10th april 2014
+            commandMessage = asCommandMessage(new DenyAuthorizationCommand(event.getChargingStationId(), event.getIdentifyingToken(), event.getIdentityContext()));
         }
 
         if (correlationId != null && !correlationId.isEmpty()) {
