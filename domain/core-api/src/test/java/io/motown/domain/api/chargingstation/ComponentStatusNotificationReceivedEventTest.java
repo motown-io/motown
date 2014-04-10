@@ -27,50 +27,43 @@ public class ComponentStatusNotificationReceivedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ComponentStatusNotificationReceivedEvent(null, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap());
+        new ComponentStatusNotificationReceivedEvent(null, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithComponentNull() {
-        new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, null, EVSE_ID, ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap());
+        new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, null, EVSE_ID, ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithComponentIdNull() {
-        new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, null, ComponentStatus.AVAILABLE, new Date(), null);
+        new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, null, ComponentStatus.AVAILABLE, new Date(), null, NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithStatusNull() {
-        new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, null, new Date(), Collections.<String, String>emptyMap());
+        new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, null, new Date(), Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithTimestampNull() {
-        new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, null, Collections.<String, String>emptyMap());
+        new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, null, Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithAttributesNull() {
-        new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, new Date(), null);
+        new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, new Date(), null, NULL_USER_IDENTITY_CONTEXT);
     }
 
-    @Test
-    public void constructorSetsFields() {
-        ComponentStatusNotificationReceivedEvent event = new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, FIVE_MINUTES_AGO, Collections.<String, String>emptyMap());
-
-        assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
-        assertEquals(ChargingStationComponent.CONNECTOR, event.getComponent());
-        assertEquals(EVSE_ID, event.getComponentId());
-        assertEquals(ComponentStatus.AVAILABLE, event.getStatus());
-        assertEquals(FIVE_MINUTES_AGO, event.getTimestamp());
-        assertEquals(Collections.<String, String>emptyMap(), event.getAttributes());
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingEventWithIdentityContextNull() {
+        new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap(), null);
     }
 
     @Test
     public void testImmutableDate() {
         Date now = new Date();
-        ComponentStatusNotificationReceivedEvent event = new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, now, BOOT_NOTIFICATION_ATTRIBUTES);
+        ComponentStatusNotificationReceivedEvent event = new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, now, BOOT_NOTIFICATION_ATTRIBUTES, NULL_USER_IDENTITY_CONTEXT);
         event.getTimestamp().setTime(TWO_MINUTES_AGO.getTime());
         assertEquals(now, event.getTimestamp());
     }

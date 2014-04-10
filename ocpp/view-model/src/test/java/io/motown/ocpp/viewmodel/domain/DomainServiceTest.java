@@ -229,7 +229,7 @@ public class DomainServiceTest {
 
         domainService.statusNotification(CHARGING_STATION_ID, getChargingStationComponentId(), getStatusNotifactionErrorCode(),
                 ComponentStatus.AVAILABLE, getStatusNotificationInfo(), now, getVendor(), getVendorErrorCode(), ADD_ON_IDENTITY);
-        verify(gateway).send(new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, now, attributes));
+        verify(gateway).send(new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
@@ -241,7 +241,7 @@ public class DomainServiceTest {
         verify(gateway).send(new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));
 
         domainService.statusNotification(CHARGING_STATION_ID, getChargingStationComponentId(), null, ComponentStatus.AVAILABLE, null, now, null, null, ADD_ON_IDENTITY);
-        verify(gateway).send(new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, now, attributes));
+        verify(gateway).send(new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test

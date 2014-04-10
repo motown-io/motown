@@ -206,7 +206,7 @@ public class DomainService {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         if (evseId.getNumberedId() == CHARGING_STATION_EVSE_ID) {
-            command = new ChargingStationStatusNotificationCommand(chargingStationId, status, timeStamp, attributes);
+            command = new ChargingStationStatusNotificationCommand(chargingStationId, status, timeStamp, attributes, identityContext);
         } else {
             ChargingStationComponent component = ChargingStationComponent.CONNECTOR;
             command = new ComponentStatusNotificationCommand(chargingStationId, component, evseId, status, timeStamp, attributes, identityContext);

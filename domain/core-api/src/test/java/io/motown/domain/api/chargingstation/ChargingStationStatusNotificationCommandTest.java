@@ -27,28 +27,33 @@ public class ChargingStationStatusNotificationCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new ChargingStationStatusNotificationCommand(null, ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap());
+        new ChargingStationStatusNotificationCommand(null, ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithStatusNull() {
-        new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, null, new Date(), Collections.<String, String>emptyMap());
+        new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, null, new Date(), Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithTimestampNull() {
-        new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, null, Collections.<String, String>emptyMap());
+        new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, null, Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithAttributesNull() {
-        new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, new Date(), null);
+        new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, new Date(), null, NULL_USER_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
+        new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap(), null);
     }
 
     @Test
     public void testImmutableDate() {
         Date now = new Date();
-        ChargingStationStatusNotificationCommand command = new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, now, BOOT_NOTIFICATION_ATTRIBUTES);
+        ChargingStationStatusNotificationCommand command = new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, now, BOOT_NOTIFICATION_ATTRIBUTES, NULL_USER_IDENTITY_CONTEXT);
         command.getTimestamp().setTime(TWO_MINUTES_AGO.getTime());
         assertEquals(now, command.getTimestamp());
     }

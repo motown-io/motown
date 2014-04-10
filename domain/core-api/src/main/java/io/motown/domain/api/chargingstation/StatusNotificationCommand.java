@@ -16,6 +16,7 @@
 package io.motown.domain.api.chargingstation;
 
 import com.google.common.collect.ImmutableMap;
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Date;
@@ -39,20 +40,26 @@ public abstract class StatusNotificationCommand {
 
     private final Map<String, String> attributes;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code StatusNotificationCommand}.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param status            the status of the component
-     * @param timestamp         the date and time
-     * @param attributes        optional attributes
-     * @throws NullPointerException if {@code chargingStationId}, {@code status}, {@code timestamp} or {@code attributes} is {@code null}.
+     * @param status            the status of the component.
+     * @param timestamp         the date and time.
+     * @param attributes        optional attributes.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code status}, {@code timestamp}, {@code attributes}
+     *                          {@code identityContext} is {@code null}.
      */
-    public StatusNotificationCommand(ChargingStationId chargingStationId, ComponentStatus status, Date timestamp, Map<String, String> attributes) {
+    public StatusNotificationCommand(ChargingStationId chargingStationId, ComponentStatus status, Date timestamp,
+                                     Map<String, String> attributes, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.status = checkNotNull(status);
         this.timestamp = new Date(checkNotNull(timestamp).getTime());
         this.attributes = ImmutableMap.copyOf(checkNotNull(attributes));
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -91,9 +98,18 @@ public abstract class StatusNotificationCommand {
         return attributes;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, status, timestamp, attributes);
+        return Objects.hash(chargingStationId, status, timestamp, attributes, identityContext);
     }
 
     @Override
@@ -105,6 +121,6 @@ public abstract class StatusNotificationCommand {
             return false;
         }
         final StatusNotificationCommand other = (StatusNotificationCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.status, other.status) && Objects.equals(this.timestamp, other.timestamp) && Objects.equals(this.attributes, other.attributes);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.status, other.status) && Objects.equals(this.timestamp, other.timestamp) && Objects.equals(this.attributes, other.attributes) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

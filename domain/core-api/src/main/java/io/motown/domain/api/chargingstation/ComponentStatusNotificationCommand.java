@@ -33,8 +33,6 @@ public final class ComponentStatusNotificationCommand extends StatusNotification
 
     private final ComponentId componentId;
 
-    private final IdentityContext identityContext;
-
     /**
      * Creates a {@code ComponentStatusNotificationCommand}.
      *
@@ -45,15 +43,14 @@ public final class ComponentStatusNotificationCommand extends StatusNotification
      * @param timeStamp         the optional date and time.
      * @param attributes        optional attributes.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code component}, {@code componentId}, {@code status} or {@code attributes} or is
+     * @throws NullPointerException if {@code chargingStationId}, {@code component}, {@code componentId}, {@code status}, {@code attributes} or
      *                             {@code identityContext} is {@code null}.
      */
     public ComponentStatusNotificationCommand(ChargingStationId chargingStationId, ChargingStationComponent component, ComponentId componentId,
                                               ComponentStatus status, Date timeStamp, Map<String, String> attributes, IdentityContext identityContext) {
-        super(chargingStationId, status, timeStamp, attributes);
+        super(chargingStationId, status, timeStamp, attributes, identityContext);
         this.component = checkNotNull(component);
         this.componentId = checkNotNull(componentId);
-        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -74,18 +71,9 @@ public final class ComponentStatusNotificationCommand extends StatusNotification
         return componentId;
     }
 
-    /**
-     * Gets the identity context.
-     *
-     * @return the identity context.
-     */
-    public IdentityContext getIdentityContext() {
-        return identityContext;
-    }
-
     @Override
     public int hashCode() {
-        return 31 * super.hashCode() + Objects.hash(component, componentId, identityContext);
+        return 31 * super.hashCode() + Objects.hash(component, componentId);
     }
 
     @Override
@@ -100,6 +88,6 @@ public final class ComponentStatusNotificationCommand extends StatusNotification
             return false;
         }
         final ComponentStatusNotificationCommand other = (ComponentStatusNotificationCommand) obj;
-        return Objects.equals(this.component, other.component) && Objects.equals(this.componentId, other.componentId) && Objects.equals(this.identityContext, other.identityContext);
+        return Objects.equals(this.component, other.component) && Objects.equals(this.componentId, other.componentId);
     }
 }

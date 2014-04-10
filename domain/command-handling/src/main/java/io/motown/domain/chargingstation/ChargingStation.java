@@ -301,12 +301,12 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(ComponentStatusNotificationCommand command) {
-        apply(new ComponentStatusNotificationReceivedEvent(command.getChargingStationId(), command.getComponent(), command.getComponentId(), command.getStatus(), command.getTimestamp(), command.getAttributes()));
+        apply(new ComponentStatusNotificationReceivedEvent(command.getChargingStationId(), command.getComponent(), command.getComponentId(), command.getStatus(), command.getTimestamp(), command.getAttributes(), command.getIdentityContext()));
     }
 
     @CommandHandler
     public void handle(ChargingStationStatusNotificationCommand command) {
-        apply(new ChargingStationStatusNotificationReceivedEvent(command.getChargingStationId(), command.getStatus(), command.getTimestamp(), command.getAttributes()));
+        apply(new ChargingStationStatusNotificationReceivedEvent(command.getChargingStationId(), command.getStatus(), command.getTimestamp(), command.getAttributes(), command.getIdentityContext()));
     }
 
     @CommandHandler

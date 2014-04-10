@@ -15,10 +15,12 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -37,6 +39,8 @@ public abstract class StatusNotificationReceivedEvent {
 
     private final Map<String, String> attributes;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code StatusNotificationReceivedEvent}.
      *
@@ -44,13 +48,16 @@ public abstract class StatusNotificationReceivedEvent {
      * @param status            the status of the component
      * @param timestamp         the date and time
      * @param attributes        optional attributes
+     * @param identityContext   identity context.
      * @throws NullPointerException if {@code chargingStationId}, {@code component}, {@code componentId}, {@code timestamp}, {@code status} or {@code attributes} is {@code null}.
      */
-    public StatusNotificationReceivedEvent(ChargingStationId chargingStationId, ComponentStatus status, Date timestamp, Map<String, String> attributes) {
+    public StatusNotificationReceivedEvent(ChargingStationId chargingStationId, ComponentStatus status, Date timestamp,
+                                           Map<String, String> attributes, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.status = checkNotNull(status);
         this.timestamp = new Date(checkNotNull(timestamp).getTime());
         this.attributes = checkNotNull(attributes);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -87,5 +94,31 @@ public abstract class StatusNotificationReceivedEvent {
      */
     public Map<String, String> getAttributes() {
         return attributes;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, status, timestamp, attributes, identityContext);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final StatusNotificationReceivedEvent other = (StatusNotificationReceivedEvent) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.status, other.status) && Objects.equals(this.timestamp, other.timestamp) && Objects.equals(this.attributes, other.attributes) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

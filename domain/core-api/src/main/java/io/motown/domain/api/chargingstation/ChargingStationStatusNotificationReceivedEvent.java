@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 import java.util.Date;
 import java.util.Map;
 
@@ -31,9 +33,12 @@ public class ChargingStationStatusNotificationReceivedEvent extends StatusNotifi
      * @param status            the status of the component
      * @param timestamp         the optional date and time
      * @param attributes        optional attributes
-     * @throws NullPointerException if {@code chargingStationId}, {@code component}, {@code componentId}, {@code status} or {@code attributes} is {@code null}.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code component}, {@code componentId}, {@code status},
+     *                          {@code attributes} or {@code identityContext} is {@code null}.
      */
-    public ChargingStationStatusNotificationReceivedEvent(ChargingStationId chargingStationId, ComponentStatus status, Date timestamp, Map<String, String> attributes) {
-        super(chargingStationId, status, timestamp, attributes);
+    public ChargingStationStatusNotificationReceivedEvent(ChargingStationId chargingStationId, ComponentStatus status, Date timestamp,
+                                                          Map<String, String> attributes, IdentityContext identityContext) {
+        super(chargingStationId, status, timestamp, attributes, identityContext);
     }
 }
