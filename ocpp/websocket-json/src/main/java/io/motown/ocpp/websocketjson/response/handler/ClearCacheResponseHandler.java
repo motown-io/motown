@@ -35,6 +35,6 @@ public class ClearCacheResponseHandler extends ResponseHandler {
         ClearcacheResponse response = gson.fromJson(wampMessage.getPayloadAsString(), ClearcacheResponse.class);
         RequestResult requestResult = response.getStatus().equals(ClearcacheResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "");
+        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "", addOnIdentity);
     }
 }

@@ -35,6 +35,6 @@ public class ReserveNowResponseHandler extends ResponseHandler {
         ReservenowResponse response = gson.fromJson(wampMessage.getPayloadAsString(), ReservenowResponse.class);
         RequestResult requestResult = response.getStatus().equals(ReservenowResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "");
+        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "", addOnIdentity);
     }
 }

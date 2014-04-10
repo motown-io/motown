@@ -35,6 +35,6 @@ public class CancelReservationResponseHandler extends ResponseHandler {
         CancelreservationResponse response = gson.fromJson(wampMessage.getPayloadAsString(), CancelreservationResponse.class);
         RequestResult requestResult = CancelreservationResponse.Status.ACCEPTED.equals(response.getStatus()) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "");
+        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "", addOnIdentity);
     }
 }

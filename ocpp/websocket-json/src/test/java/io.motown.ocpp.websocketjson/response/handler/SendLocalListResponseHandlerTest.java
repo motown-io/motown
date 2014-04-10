@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import java.util.UUID;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static org.mockito.Mockito.mock;
@@ -57,9 +58,9 @@ public class SendLocalListResponseHandlerTest {
         payload.setStatus(SendlocallistResponse.Status.ACCEPTED);
         WampMessage message = new WampMessage(WampMessage.CALL_RESULT, token, gson.toJson(payload));
 
-        handler.handle(CHARGING_STATION_ID, message, gson, domainService, null);
+        handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.SUCCESS, correlationToken, SendlocallistResponse.Status.ACCEPTED.toString());
+        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.SUCCESS, correlationToken, SendlocallistResponse.Status.ACCEPTED.toString(), ADD_ON_IDENTITY);
     }
 
     @Test
@@ -68,9 +69,9 @@ public class SendLocalListResponseHandlerTest {
         payload.setStatus(SendlocallistResponse.Status.FAILED);
         WampMessage message = new WampMessage(WampMessage.CALL_RESULT, token, gson.toJson(payload));
 
-        handler.handle(CHARGING_STATION_ID, message, gson, domainService, null);
+        handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, SendlocallistResponse.Status.FAILED.toString());
+        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, SendlocallistResponse.Status.FAILED.toString(), ADD_ON_IDENTITY);
     }
 
     @Test
@@ -79,9 +80,9 @@ public class SendLocalListResponseHandlerTest {
         payload.setStatus(SendlocallistResponse.Status.NOT_SUPPORTED);
         WampMessage message = new WampMessage(WampMessage.CALL_RESULT, token, gson.toJson(payload));
 
-        handler.handle(CHARGING_STATION_ID, message, gson, domainService, null);
+        handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, SendlocallistResponse.Status.NOT_SUPPORTED.toString());
+        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, SendlocallistResponse.Status.NOT_SUPPORTED.toString(), ADD_ON_IDENTITY);
     }
 
     @Test
@@ -90,9 +91,9 @@ public class SendLocalListResponseHandlerTest {
         payload.setStatus(SendlocallistResponse.Status.HASH_ERROR);
         WampMessage message = new WampMessage(WampMessage.CALL_RESULT, token, gson.toJson(payload));
 
-        handler.handle(CHARGING_STATION_ID, message, gson, domainService, null);
+        handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, SendlocallistResponse.Status.HASH_ERROR.toString());
+        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, SendlocallistResponse.Status.HASH_ERROR.toString(), ADD_ON_IDENTITY);
     }
 
     @Test
@@ -101,9 +102,9 @@ public class SendLocalListResponseHandlerTest {
         payload.setStatus(SendlocallistResponse.Status.VERSION_MISMATCH);
         WampMessage message = new WampMessage(WampMessage.CALL_RESULT, token, gson.toJson(payload));
 
-        handler.handle(CHARGING_STATION_ID, message, gson, domainService, null);
+        handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, SendlocallistResponse.Status.VERSION_MISMATCH.toString());
+        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, SendlocallistResponse.Status.VERSION_MISMATCH.toString(), ADD_ON_IDENTITY);
     }
 
 }

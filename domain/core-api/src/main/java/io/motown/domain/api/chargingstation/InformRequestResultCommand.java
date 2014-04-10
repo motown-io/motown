@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Objects;
@@ -34,18 +35,22 @@ public final class InformRequestResultCommand {
 
     private final String statusMessage;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code InformRequestResultCommand} with an identifier and new status.
      *
      * @param chargingStationId   the identifier of the charging station.
-     * @param status              the resulting status of the request
-     * @param statusMessage       status message, to primarily inform about the cause of a failure
-     * @throws NullPointerException if {@code chargingStationId}, {@code status} or {@code statusMessage} is {@code null}.
+     * @param status              the resulting status of the request.
+     * @param statusMessage       status message, to primarily inform about the cause of a failure.
+     * @param identityContext     identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code status}, {@code statusMessage} or {@code identityContext} is {@code null}.
      */
-    public InformRequestResultCommand(ChargingStationId chargingStationId, RequestResult status, String statusMessage) {
+    public InformRequestResultCommand(ChargingStationId chargingStationId, RequestResult status, String statusMessage, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.status = checkNotNull(status);
         this.statusMessage = checkNotNull(statusMessage);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -75,9 +80,18 @@ public final class InformRequestResultCommand {
         return statusMessage;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, status, statusMessage);
+        return Objects.hash(chargingStationId, status, statusMessage, identityContext);
     }
 
     @Override
@@ -89,6 +103,6 @@ public final class InformRequestResultCommand {
             return false;
         }
         final InformRequestResultCommand other = (InformRequestResultCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.status, other.status) && Objects.equals(this.statusMessage, other.statusMessage);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.status, other.status) && Objects.equals(this.statusMessage, other.statusMessage) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

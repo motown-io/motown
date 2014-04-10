@@ -35,6 +35,6 @@ public class ResetResponseHandler extends ResponseHandler {
         ResetResponse response = gson.fromJson(wampMessage.getPayloadAsString(), ResetResponse.class);
         RequestResult requestResult = response.getStatus().equals(ResetResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "");
+        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "", addOnIdentity);
     }
 }

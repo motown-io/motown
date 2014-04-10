@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import java.util.UUID;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static org.mockito.Mockito.mock;
@@ -57,9 +58,9 @@ public class RemoteStartTransactionResponseHandlerTest {
         payload.setStatus(RemotestarttransactionResponse.Status.ACCEPTED);
         WampMessage message = new WampMessage(WampMessage.CALL_RESULT, token, gson.toJson(payload));
 
-        handler.handle(CHARGING_STATION_ID, message, gson, domainService, null);
+        handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.SUCCESS, correlationToken, "");
+        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.SUCCESS, correlationToken, "", ADD_ON_IDENTITY);
     }
 
     @Test
@@ -68,9 +69,9 @@ public class RemoteStartTransactionResponseHandlerTest {
         payload.setStatus(RemotestarttransactionResponse.Status.REJECTED);
         WampMessage message = new WampMessage(WampMessage.CALL_RESULT, token, gson.toJson(payload));
 
-        handler.handle(CHARGING_STATION_ID, message, gson, domainService, null);
+        handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, "");
+        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, "", ADD_ON_IDENTITY);
     }
 
 }

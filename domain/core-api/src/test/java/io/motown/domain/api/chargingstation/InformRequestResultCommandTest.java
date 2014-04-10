@@ -18,16 +18,22 @@ package io.motown.domain.api.chargingstation;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.NULL_USER_IDENTITY_CONTEXT;
 
 public class InformRequestResultCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new InformRequestResultCommand(null, RequestResult.SUCCESS, "Test message");
+        new InformRequestResultCommand(null, RequestResult.SUCCESS, "Test message", NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithoutStatus() {
-        new InformRequestResultCommand(CHARGING_STATION_ID, null, "Test message");
+        new InformRequestResultCommand(CHARGING_STATION_ID, null, "Test message", NULL_USER_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithoutIdentityContext() {
+        new InformRequestResultCommand(CHARGING_STATION_ID, null, "Test message", null);
     }
 }

@@ -27,6 +27,7 @@ import org.junit.Test;
 
 import java.util.UUID;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static org.mockito.Matchers.any;
@@ -60,7 +61,7 @@ public class GetDiagnosticsResponseHandlerTest {
         payload.setFileName("diag-gir.vat.mx.000e48-20130131132608.txt");
         WampMessage message = new WampMessage(WampMessage.CALL_RESULT, token, gson.toJson(payload));
 
-        handler.handle(CHARGING_STATION_ID, message, gson, domainService, null);
+        handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
         verify(domainService).diagnosticsFileNameReceived(any(ChargingStationId.class), anyString(), any(CorrelationToken.class), any(AddOnIdentity.class));
     }

@@ -35,6 +35,6 @@ public class ChangeConfigurationResponseHandler extends ResponseHandler {
         ChangeconfigurationResponse response = gson.fromJson(wampMessage.getPayloadAsString(), ChangeconfigurationResponse.class);
         RequestResult requestResult = response.getStatus().equals(ChangeconfigurationResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "");
+        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "", addOnIdentity);
     }
 }

@@ -48,6 +48,6 @@ public class DataTransferResponseHandler extends ResponseHandler {
 
         RequestResult requestResult = DatatransferResponse.Status.ACCEPTED.equals(responseStatus) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "");
+        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "", addOnIdentity);
     }
 }

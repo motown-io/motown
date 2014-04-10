@@ -51,7 +51,7 @@ public abstract class StatusNotificationCommand {
      * @param attributes        optional attributes.
      * @param identityContext   identity context.
      * @throws NullPointerException if {@code chargingStationId}, {@code status}, {@code timestamp}, {@code attributes}
-     *                          {@code identityContext} is {@code null}.
+     *                          or {@code identityContext} is {@code null}.
      */
     public StatusNotificationCommand(ChargingStationId chargingStationId, ComponentStatus status, Date timestamp,
                                      Map<String, String> attributes, IdentityContext identityContext) {

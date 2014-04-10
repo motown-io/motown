@@ -35,7 +35,7 @@ public class RemoteStartTransactionResponseHandler extends ResponseHandler {
         RemotestarttransactionResponse response = gson.fromJson(wampMessage.getPayloadAsString(), RemotestarttransactionResponse.class);
         RequestResult requestResult = response.getStatus().equals(RemotestarttransactionResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "");
+        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "", addOnIdentity);
     }
 
 }

@@ -35,6 +35,6 @@ public class UnlockConnectorResponseHandler extends ResponseHandler {
         UnlockconnectorResponse response = gson.fromJson(wampMessage.getPayloadAsString(), UnlockconnectorResponse.class);
         RequestResult requestResult = response.getStatus().equals(UnlockconnectorResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "");
+        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "", addOnIdentity);
     }
 }

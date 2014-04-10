@@ -271,8 +271,10 @@ public class DomainService {
         }
     }
 
-    public void informRequestResult(ChargingStationId chargingStationId, RequestResult requestResult, CorrelationToken statusCorrelationToken, String statusMessage) {
-        commandGateway.send(new InformRequestResultCommand(chargingStationId, requestResult, statusMessage), statusCorrelationToken);
+    public void informRequestResult(ChargingStationId chargingStationId, RequestResult requestResult, CorrelationToken statusCorrelationToken, String statusMessage, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        commandGateway.send(new InformRequestResultCommand(chargingStationId, requestResult, statusMessage, identityContext), statusCorrelationToken);
     }
 
     public void setCommandGateway(DomainCommandGateway commandGateway) {
