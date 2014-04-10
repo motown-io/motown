@@ -53,6 +53,7 @@
                     <button class="btn btn-default" href="#" ng-click="setOpeningTimes(chargingStation, [{'day': 1, 'timeStart': '12:00', timeStop: '15:00'}, {'day': 1, 'timeStart': '20:00', timeStop: '22:00'}])">Set opening times</button>
                     <button class="btn btn-default" href="#" ng-click="addOpeningTimes(chargingStation, [{'day': 2, 'timeStart': '8:30', timeStop: '17:00'}])">Add opening times</button>
                     <button class="btn btn-default" href="#" ng-click="grantPermission(chargingStation, 'io.motown.domain.api.chargingstation.AddChargingStationOpeningTimesCommand', 'testUser')">Grant permission</button>
+                    <button class="btn btn-default" href="#" ng-click="revokePermission(chargingStation, 'io.motown.domain.api.chargingstation.AddChargingStationOpeningTimesCommand', 'testUser')">Revoke permission</button>
                 </div>
             </td>
         </tr>

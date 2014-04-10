@@ -154,4 +154,9 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
         LOG.debug("GrantPermissionCommand: " + command.toString());
     }
 
+    @Override
+    public void send(RevokePermissionCommand command) {
+        LOG.debug("RevokePermissionCommand: " + command.toString());
+    }
+
 }

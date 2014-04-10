@@ -345,6 +345,20 @@ angular.module('demoApp.controllers', []).
                 }).success(function (response) {
                     console.log('Permission requested');
                 });
+            };
+
+            $scope.revokePermission = function (chargingStation, commandClass, userIdentity) {
+                $http({
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
+                    method: 'POST',
+                    data: ['RevokePermission', {
+                        'commandClass': commandClass,
+                        'userIdentity': userIdentity
+
+                    }]
+                }).success(function (response) {
+                    console.log('Revoke permission requested');
+                });
             }
         }]).
     controller('TransactionController',
