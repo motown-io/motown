@@ -311,7 +311,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(InformRequestResultCommand command, MetaData metaData) {
-        apply(new RequestResultEvent(command.getChargingStationId(), command.getStatus(), command.getStatusMessage()), metaData);
+        apply(new RequestResultEvent(command.getChargingStationId(), command.getStatus(), command.getStatusMessage(), command.getIdentityContext()), metaData);
 
     }
 

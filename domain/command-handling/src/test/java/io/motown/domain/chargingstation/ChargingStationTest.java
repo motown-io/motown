@@ -412,8 +412,8 @@ public class ChargingStationTest {
     public void testInformRequestResult() {
         String statusMessage = "Test message";
         fixture.given(CHARGING_STATION)
-                .when(new InformRequestResultCommand(CHARGING_STATION_ID, RequestResult.SUCCESS, statusMessage, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new RequestResultEvent(CHARGING_STATION_ID, RequestResult.SUCCESS, statusMessage));
+                .when(new InformRequestResultCommand(CHARGING_STATION_ID, RequestResult.SUCCESS, statusMessage, NULL_USER_IDENTITY_CONTEXT))
+                .expectEvents(new RequestResultEvent(CHARGING_STATION_ID, RequestResult.SUCCESS, statusMessage, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
