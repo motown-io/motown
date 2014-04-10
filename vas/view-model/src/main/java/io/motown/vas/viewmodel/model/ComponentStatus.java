@@ -70,6 +70,7 @@ public enum ComponentStatus {
                 break;
             default:
                 componentStatus = ComponentStatus.UNKNOWN;
+                break;
         }
 
         return componentStatus;

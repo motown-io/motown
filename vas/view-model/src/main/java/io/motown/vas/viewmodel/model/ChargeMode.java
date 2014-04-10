@@ -69,6 +69,7 @@ public enum ChargeMode {
                 break;
             default:
                 chargeMode = ChargeMode.UNSPECIFIED;
+                break;
         }
 
         return chargeMode;
