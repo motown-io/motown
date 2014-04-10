@@ -46,7 +46,7 @@ public class ChargingStationRepository {
         } catch (EntityExistsException e) {
             // because the identifier of the charging station entity is not generated it can occur that (for example)
             // 2 event handlers try to create the same charging station, therefore we catch this exception.
-            LOG.warn("EntityExistsException while trying to persist chargingStation, other thread created charging station [{}] before we could.", chargingStation.getId());
+            LOG.warn("EntityExistsException while trying to persist chargingStation, other thread created charging station [{}] before we could.", chargingStation.getId(), e);
         } finally {
             if (transaction.isActive()) {
                 LOG.warn("Transaction is still active while it should not be, rolling back.");
