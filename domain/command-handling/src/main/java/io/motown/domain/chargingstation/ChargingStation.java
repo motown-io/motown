@@ -40,7 +40,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     private boolean isReservable = false;
 
-    private CommandAuthorization commandAuthorization = new SimpleCommandAuthorization();
+    private transient CommandAuthorization commandAuthorization = new SimpleCommandAuthorization();
 
     /**
      * Map of identities with command classes the identity is authorized to execute.
