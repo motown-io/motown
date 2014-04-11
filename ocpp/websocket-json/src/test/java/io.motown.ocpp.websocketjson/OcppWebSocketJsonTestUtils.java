@@ -58,11 +58,11 @@ public class OcppWebSocketJsonTestUtils {
         Set<TypeAdapterSerializer<?>> typeAdapterSerializers = ImmutableSet.<TypeAdapterSerializer<?>>builder()
                 .add(new AuthorizationListIdTagStatusTypeAdapterSerializer())
                 .add(new BootnotificationResponseStatusTypeAdapterSerializer())
+                .add(new ChangeAvailabilityTypeAdapterSerializer())
                 .add(new DataTransferResponseStatusTypeAdapterSerializer())
                 .add(new ResetTypeAdapterSerializer())
                 .add(new SendLocalListRequestUpdateTypeAdapterSerializer())
                 .add(new StartTransactionIdTagStatusTypeAdapterSerializer())
-                .add(new ChangeAvailabilityTypeAdapterSerializer())
                 .add(new MessageProcUriAdapterSerializer())
                 //The serializers below are only needed during testing
                 .add(new ChangeAvailabilityStatusTypeAdapterSerializer())

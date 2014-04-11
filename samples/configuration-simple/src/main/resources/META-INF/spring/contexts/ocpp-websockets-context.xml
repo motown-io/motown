@@ -33,6 +33,7 @@
                 <bean class="io.motown.ocpp.websocketjson.gson.serializer.ResetTypeAdapterSerializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.serializer.SendLocalListRequestUpdateTypeAdapterSerializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.serializer.StartTransactionIdTagStatusTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.MessageProcUriAdapterSerializer"/>
             </set>
         </property>
         <property name="typeAdapterDeserializers">
@@ -47,6 +48,7 @@
                 <bean class="io.motown.ocpp.websocketjson.gson.deserializer.DataTransferResponseStatusTypeAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.deserializer.DiagnosticsStatusTypeAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.deserializer.FirmwareStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.MessageProcUriAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.deserializer.RemoteStartTransactionResponseTypeAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.deserializer.RemoteStopTransactionResponseTypeAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ReserveNowResponseStatusTypeAdapterDeserializer"/>
