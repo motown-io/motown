@@ -16,6 +16,10 @@
 package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
+import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.ComponentStatus;
+import io.motown.domain.api.chargingstation.EvseId;
+import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Statusnotification;
 import org.atmosphere.websocket.WebSocket;
@@ -27,11 +31,11 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.UUID;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
 import static junit.framework.Assert.assertNotNull;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -49,11 +53,8 @@ public class StatusNotificationRequestHandlerTest {
 
     @Test
     public void handleValidRequest() throws IOException {
-        String token = UUID.randomUUID().toString();
-        StatusNotificationRequestHandler handler = new StatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY);
-
         Statusnotification requestPayload = new Statusnotification();
-        requestPayload.setConnectorId(2);
+        requestPayload.setConnectorId(EVSE_ID.getNumberedId());
         requestPayload.setStatus(Statusnotification.Status.AVAILABLE);
         requestPayload.setErrorCode(Statusnotification.ErrorCode.NO_ERROR);
         requestPayload.setInfo("");
@@ -61,13 +62,38 @@ public class StatusNotificationRequestHandlerTest {
         requestPayload.setVendorId("");
         requestPayload.setVendorErrorCode("");
 
+        String response = handleRequest(requestPayload);
+        verify(domainService).statusNotification(notNull(ChargingStationId.class), notNull(EvseId.class), anyString(), any(ComponentStatus.class), anyString(), notNull(Date.class), anyString(), anyString(), any(AddOnIdentity.class));
+        assertNotNull(response);
+    }
+
+    @Test
+    public void handleMissingTimestampRequest() throws IOException {
+        Statusnotification requestPayload = new Statusnotification();
+        requestPayload.setConnectorId(2);
+        requestPayload.setStatus(Statusnotification.Status.AVAILABLE);
+        requestPayload.setErrorCode(Statusnotification.ErrorCode.NO_ERROR);
+        requestPayload.setInfo("");
+        requestPayload.setTimestamp(null);
+        requestPayload.setVendorId("");
+        requestPayload.setVendorErrorCode("");
+
+        String response = handleRequest(requestPayload);
+        //In case the timestamp is missing it has to be created ('time of receipt')
+        verify(domainService).statusNotification(notNull(ChargingStationId.class), notNull(EvseId.class), anyString(), any(ComponentStatus.class), anyString(), notNull(Date.class), anyString(), anyString(), any(AddOnIdentity.class));
+        assertNotNull(response);
+    }
+
+    private String handleRequest(Statusnotification requestPayload) throws IOException {
+        String token = UUID.randomUUID().toString();
+        StatusNotificationRequestHandler handler = new StatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY);
+
         WebSocket webSocket = getMockWebSocket();
         handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
 
         ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(webSocket).write(argumentCaptor.capture());
-        String response = argumentCaptor.getValue();
-        assertNotNull(response);
+        return argumentCaptor.getValue();
     }
 
 }

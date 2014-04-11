@@ -39,7 +39,9 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class BootNotificationRequestHandlerTest {
 
@@ -54,13 +56,30 @@ public class BootNotificationRequestHandlerTest {
     public void setup() {
         gson = getGson();
         domainService = mock(DomainService.class);
-
-        when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(AddOnIdentity.class)))
-                .thenReturn(new BootChargingStationResult(true, HEARTBEAT_INTERVAL, NOW));
     }
 
     @Test
     public void handleValidRequest() throws IOException {
+        when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(AddOnIdentity.class)))
+                .thenReturn(new BootChargingStationResult(true, HEARTBEAT_INTERVAL, NOW));
+
+        String response = handleRequest();
+        assertNotNull(response);
+        assertTrue(response.contains(BootnotificationResponse.Status.ACCEPTED.toString()));
+    }
+
+    @Test
+    public void handleInvalidRequest() throws IOException {
+        when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(AddOnIdentity.class)))
+                .thenReturn(new BootChargingStationResult(false, HEARTBEAT_INTERVAL, NOW));
+
+        String response = handleRequest();
+
+        assertNotNull(response);
+        assertTrue(response.contains(BootnotificationResponse.Status.REJECTED.toString()));
+    }
+
+    private String handleRequest() throws IOException {
         String token = UUID.randomUUID().toString();
         BootNotificationRequestHandler handler = new BootNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY);
 
@@ -80,9 +99,8 @@ public class BootNotificationRequestHandlerTest {
 
         ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(webSocket).write(argumentCaptor.capture());
-        String response = argumentCaptor.getValue();
-        assertNotNull(response);
-        assertTrue(response.contains(BootnotificationResponse.Status.ACCEPTED.toString()));
+        return argumentCaptor.getValue();
+
     }
 
 }

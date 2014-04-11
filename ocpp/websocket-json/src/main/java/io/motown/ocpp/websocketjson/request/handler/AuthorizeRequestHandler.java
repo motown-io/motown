@@ -20,12 +20,11 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.domain.FutureEventCallback;
+import io.motown.ocpp.websocketjson.MessageProcUri;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Authorize;
 import org.atmosphere.websocket.WebSocket;
 
 public class AuthorizeRequestHandler extends RequestHandler {
-
-    public static final String PROC_URI = "authorize";
 
     private Gson gson;
 

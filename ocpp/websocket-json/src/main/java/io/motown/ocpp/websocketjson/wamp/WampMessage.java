@@ -16,6 +16,7 @@
 package io.motown.ocpp.websocketjson.wamp;
 
 import com.google.gson.Gson;
+import io.motown.ocpp.websocketjson.MessageProcUri;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class WampMessage {
 
     private int messageType;
     private String callId;
-    private String procUri;
+    private MessageProcUri procUri;
     private Object payload;
 
     private String errorCode;
@@ -51,7 +52,7 @@ public class WampMessage {
 
         switch (messageType) {
             case CALL:
-                procUri = list.get(CALL_PROC_URI_INDEX).toString();
+                procUri = MessageProcUri.fromValue(list.get(CALL_PROC_URI_INDEX).toString());
                 payload = list.get(CALL_PAYLOAD_INDEX);
                 break;
             case CALL_RESULT:
@@ -67,7 +68,7 @@ public class WampMessage {
         }
     }
 
-    public WampMessage(int messageType, String callId, String procUri, Object payload) {
+    public WampMessage(int messageType, String callId, MessageProcUri procUri, Object payload) {
         this.messageType = messageType;
         this.callId = callId;
         this.procUri = procUri;
@@ -122,7 +123,7 @@ public class WampMessage {
         return callId;
     }
 
-    public String getProcUri() {
+    public MessageProcUri getProcUri() {
         return procUri;
     }
 

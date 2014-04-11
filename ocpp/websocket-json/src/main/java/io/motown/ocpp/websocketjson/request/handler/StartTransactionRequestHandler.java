@@ -28,8 +28,6 @@ import java.util.GregorianCalendar;
 
 public class StartTransactionRequestHandler extends RequestHandler {
 
-    public static final String PROC_URI = "starttransaction";
-
     private Gson gson;
 
     private DomainService domainService;

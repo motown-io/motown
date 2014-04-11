@@ -25,11 +25,10 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.UUID;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.OCPPJ_RESERVATION_ID;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
 import static junit.framework.Assert.assertNotNull;
@@ -51,14 +50,15 @@ public class StartTransactionRequestHandlerTest {
     @Test
     public void handleValidRequest() throws IOException {
         String token = UUID.randomUUID().toString();
+        int meterStart = 4;
         StartTransactionRequestHandler handler = new StartTransactionRequestHandler(gson, domainService, OcppWebSocketRequestHandler.PROTOCOL_IDENTIFIER, ADD_ON_IDENTITY);
 
         Starttransaction requestPayload = new Starttransaction();
-        requestPayload.setConnectorId(2);
-        requestPayload.setIdTag("B4F62CEF");
-        requestPayload.setTimestamp(new Date());
-        requestPayload.setMeterStart(4);
-        requestPayload.setReservationId(0);
+        requestPayload.setConnectorId(EVSE_ID.getNumberedId());
+        requestPayload.setIdTag(IDENTIFYING_TOKEN.getToken());
+        requestPayload.setTimestamp(FIVE_MINUTES_AGO);
+        requestPayload.setMeterStart(meterStart);
+        requestPayload.setReservationId(OCPPJ_RESERVATION_ID.getNumber());
 
         WebSocket webSocket = getMockWebSocket();
         handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);

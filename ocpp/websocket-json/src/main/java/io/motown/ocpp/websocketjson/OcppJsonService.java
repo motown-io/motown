@@ -61,7 +61,7 @@ public class OcppJsonService {
     /**
      * Map of requestHandlers, key is lowercase procUri.
      */
-    private Map<String, RequestHandler> requestHandlers = new HashMap<>();
+    private Map<MessageProcUri, RequestHandler> requestHandlers = new HashMap<>();
 
     /**
      * Map of sockets, key is charging station identifier.
@@ -74,28 +74,33 @@ public class OcppJsonService {
     private Map<String, ResponseHandler> responseHandlers = new HashMap<>();
 
     public void handleMessage(ChargingStationId chargingStationId, Reader reader) {
-        WampMessage wampMessage = wampMessageParser.parseMessage(reader);
+        try {
+            WampMessage wampMessage = wampMessageParser.parseMessage(reader);
 
-        LOG.info("Received call from [{}]: {}", chargingStationId.getId(), wampMessage.getPayloadAsString());
+            LOG.info("Received call from [{}]: {}", chargingStationId.getId(), wampMessage.getPayloadAsString());
 
-        if (WampMessage.CALL == wampMessage.getMessageType()) {
-            if (!schemaValidator.isValidRequest(wampMessage.getPayloadAsString(), wampMessage.getProcUri())) {
-                LOG.error("Cannot continue processing invalid request for [{}].", chargingStationId.getId());
-                //TODO send back wamp error?
-                return;
+            if (WampMessage.CALL == wampMessage.getMessageType()) {
+                if (!schemaValidator.isValidRequest(wampMessage.getPayloadAsString(), wampMessage.getProcUri())) {
+                    LOG.error("Cannot continue processing invalid request for [{}].", chargingStationId.getId());
+                    //TODO send back wamp error?
+                    return;
+                }
+
+                processWampMessage(chargingStationId, wampMessage);
+            } else if (WampMessage.CALL_RESULT == wampMessage.getMessageType()) {
+                ResponseHandler responseHandler = responseHandlers.get(wampMessage.getCallId());
+                if (responseHandler != null) {
+                    responseHandler.handle(chargingStationId, wampMessage, gson, domainService, addOnIdentity);
+
+                    // handled so we remove the handler
+                    responseHandlers.remove(wampMessage.getCallId());
+                } else {
+                    LOG.warn("No response handler found for callId [{}]", wampMessage.getCallId());
+                }
             }
-
-            processWampMessage(chargingStationId, wampMessage);
-        } else if (WampMessage.CALL_RESULT == wampMessage.getMessageType()) {
-            ResponseHandler responseHandler = responseHandlers.get(wampMessage.getCallId());
-            if (responseHandler != null) {
-                responseHandler.handle(chargingStationId, wampMessage, gson, domainService, addOnIdentity);
-
-                // handled so we remove the handler
-                responseHandlers.remove(wampMessage.getCallId());
-            } else {
-                LOG.warn("No response handler found for callId [{}]", wampMessage.getCallId());
-            }
+        } catch (IllegalArgumentException iae) {
+            LOG.error("Unable to handle message", iae);
+            //TODO send back wamp error?
         }
     }
 
@@ -107,7 +112,7 @@ public class OcppJsonService {
 
         responseHandlers.put(statusCorrelationToken.getToken(), new ChangeConfigurationResponseHandler(statusCorrelationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "ChangeConfiguration", changeConfigurationRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.CHANGE_CONFIGURATION, changeConfigurationRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 
@@ -118,7 +123,7 @@ public class OcppJsonService {
 
         responseHandlers.put(statusCorrelationToken.getToken(), new GetConfigurationResponseHandler(statusCorrelationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "GetConfiguration", getConfigurationRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.GET_CONFIGURATION, getConfigurationRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 
@@ -133,7 +138,7 @@ public class OcppJsonService {
 
             responseHandlers.put(statusCorrelationToken.getToken(), new GetDiagnosticsResponseHandler(statusCorrelationToken));
 
-            WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "GetDiagnostics", getDiagnosticsRequest);
+            WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.GET_DIAGNOSTICS, getDiagnosticsRequest);
 
             sendWampMessage(wampMessage, chargingStationId);
         } catch (URISyntaxException e) {
@@ -150,16 +155,16 @@ public class OcppJsonService {
             updateFirmwareRequest.setLocation(new URI(updateLocation));
 
             String numRetries = attributes.get(FirmwareUpdateAttributeKey.NUM_RETRIES);
-            if(numRetries != null) {
+            if (numRetries != null) {
                 updateFirmwareRequest.setRetries(Double.parseDouble(numRetries));
             }
             String retryInterval = attributes.get(FirmwareUpdateAttributeKey.RETRY_INTERVAL);
-            if(retryInterval != null) {
+            if (retryInterval != null) {
                 updateFirmwareRequest.setRetryInterval(Double.parseDouble(retryInterval));
             }
 
             //No response handler is necessary. No data comes back from the firmwareupdaterequest, so there is nothing to communicate to the caller. Besides that the correlationtoken is not known to the caller.
-            WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "UpdateFirmware", updateFirmwareRequest);
+            WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.UPDATE_FIRMWARE, updateFirmwareRequest);
 
             sendWampMessage(wampMessage, chargingStationId);
         } catch (URISyntaxException e) {
@@ -189,7 +194,7 @@ public class OcppJsonService {
 
         responseHandlers.put(statusCorrelationToken.getToken(), new SendLocalListResponseHandler(statusCorrelationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "SendLocalList", sendLocalListRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.SEND_LOCALLIST, sendLocalListRequest);
 
         sendWampMessage(wampMessage, chargingStationId);
     }
@@ -200,7 +205,7 @@ public class OcppJsonService {
         Reservenow reserveNowRequest = new Reservenow();
         reserveNowRequest.setConnectorId(evseId.getNumberedId());
         reserveNowRequest.setIdTag(identifyingToken.getToken());
-        if(parentIdentifyingToken != null){
+        if (parentIdentifyingToken != null) {
             reserveNowRequest.setParentIdTag(parentIdentifyingToken.getToken());
         }
         reserveNowRequest.setExpiryDate(expiryDate);
@@ -208,7 +213,7 @@ public class OcppJsonService {
 
         responseHandlers.put(statusCorrelationToken.getToken(), new ReserveNowResponseHandler(statusCorrelationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "ReserveNow", reserveNowRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.RESERVE_NOW, reserveNowRequest);
 
         sendWampMessage(wampMessage, chargingStationId);
     }
@@ -219,24 +224,31 @@ public class OcppJsonService {
 
         responseHandlers.put(statusCorrelationToken.getToken(), new CancelReservationResponseHandler(statusCorrelationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "ReserveNow", cancelReservationRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.CANCEL_RESERVATION, cancelReservationRequest);
 
         sendWampMessage(wampMessage, chargingStationId);
     }
 
     /**
      * Converts the AuthenticationStatus into an OCPPJ specific status
+     *
      * @param status
      * @return
      */
     private IdTagInfo_.Status convertAuthenticationStatus(IdentifyingToken.AuthenticationStatus status) {
-        switch(status){
-            case ACCEPTED: return IdTagInfo_.Status.ACCEPTED;
-            case EXPIRED: return IdTagInfo_.Status.EXPIRED;
-            case DELETED: return IdTagInfo_.Status.EXPIRED;
-            case CONCURRENT_TX: return IdTagInfo_.Status.CONCURRENT_TX;
-            case BLOCKED: return IdTagInfo_.Status.BLOCKED;
-            default: return IdTagInfo_.Status.INVALID;
+        switch (status) {
+            case ACCEPTED:
+                return IdTagInfo_.Status.ACCEPTED;
+            case EXPIRED:
+                return IdTagInfo_.Status.EXPIRED;
+            case DELETED:
+                return IdTagInfo_.Status.EXPIRED;
+            case CONCURRENT_TX:
+                return IdTagInfo_.Status.CONCURRENT_TX;
+            case BLOCKED:
+                return IdTagInfo_.Status.BLOCKED;
+            default:
+                return IdTagInfo_.Status.INVALID;
         }
     }
 
@@ -246,7 +258,7 @@ public class OcppJsonService {
 
         responseHandlers.put(statusCorrelationToken.getToken(), new ResetResponseHandler(statusCorrelationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "Reset", softResetRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.RESET, softResetRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 
@@ -256,7 +268,7 @@ public class OcppJsonService {
 
         responseHandlers.put(statusCorrelationToken.getToken(), new ResetResponseHandler(statusCorrelationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "Reset", hardResetRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.RESET, hardResetRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 
@@ -267,7 +279,7 @@ public class OcppJsonService {
 
         responseHandlers.put(statusCorrelationToken.getToken(), new RemoteStartTransactionResponseHandler(statusCorrelationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "RemoteStartTransaction", remoteStartTransactionRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.REMOTE_START_TRANSACTION, remoteStartTransactionRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 
@@ -278,7 +290,7 @@ public class OcppJsonService {
 
         responseHandlers.put(statusCorrelationToken.getToken(), new RemoteStopTransactionResponseHandler(statusCorrelationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "RemoteStopTransaction", remoteStopTransactionRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.REMOTE_STOP_TRANSACTION, remoteStopTransactionRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 
@@ -288,7 +300,7 @@ public class OcppJsonService {
 
         responseHandlers.put(statusCorrelationToken.getToken(), new UnlockConnectorResponseHandler(statusCorrelationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "UnlockConnector", unlockConnectorRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.UNLOCK_CONNECTOR, unlockConnectorRequest);
 
         sendWampMessage(wampMessage, chargingStationId);
     }
@@ -298,7 +310,7 @@ public class OcppJsonService {
 
         responseHandlers.put(statusCorrelationToken.getToken(), new GetLocalListVersionResponseHandler(statusCorrelationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "GetLocalListVersion", getlocallistversionRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.GET_LOCALLIST_VERSION, getlocallistversionRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 
@@ -307,7 +319,7 @@ public class OcppJsonService {
 
         responseHandlers.put(statusCorrelationToken.getToken(), new ClearCacheResponseHandler(statusCorrelationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "ClearCache", clearCacheRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.CLEAR_CACHE, clearCacheRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 
@@ -317,7 +329,7 @@ public class OcppJsonService {
         changeAvailabilityRequest.setType(availabilityType);
         responseHandlers.put(statusCorrelationToken.getToken(), new ChangeAvailabilityResponseHandler(statusCorrelationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "ChangeAvailability", changeAvailabilityRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.CHANGE_AVAILABILITY, changeAvailabilityRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 
@@ -329,11 +341,9 @@ public class OcppJsonService {
 
         responseHandlers.put(statusCorrelationToken.getToken(), new DataTransferResponseHandler(statusCorrelationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), "DataTransfer", dataTransferRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.DATA_TRANSFER, dataTransferRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
-
-    //TODO: Add the rest of the outgoing calls towards the charging station - Ingo Pak, 02 Apr 2014
 
     private void sendWampMessage(WampMessage wampMessage, ChargingStationId chargingStationId) {
         WebSocket webSocket = sockets.get(chargingStationId.getId());
@@ -349,40 +359,39 @@ public class OcppJsonService {
     }
 
     private void processWampMessage(ChargingStationId chargingStationId, WampMessage wampMessage) {
-        String procUri = wampMessage.getProcUri().toLowerCase();
-
+        MessageProcUri procUri = wampMessage.getProcUri();
         RequestHandler requestHandler = requestHandlers.get(procUri);
 
-        if(requestHandler == null) {
+        if (requestHandler == null) {
             switch (procUri) {
-                case AuthorizeRequestHandler.PROC_URI:
+                case AUTHORIZE:
                     requestHandler = new AuthorizeRequestHandler(gson, domainService, addOnIdentity);
                     break;
-                case BootNotificationRequestHandler.PROC_URI:
+                case BOOT_NOTIFICATION:
                     requestHandler = new BootNotificationRequestHandler(gson, domainService, addOnIdentity);
                     break;
-                case DataTransferRequestHandler.PROC_URI:
+                case DATA_TRANSFER:
                     requestHandler = new DataTransferRequestHandler(gson, domainService, addOnIdentity);
                     break;
-                case DiagnosticsStatusNotificationRequestHandler.PROC_URI:
+                case DIAGNOSTICSS_STATUS_NOTIFICATION:
                     requestHandler = new DiagnosticsStatusNotificationRequestHandler(gson, domainService, addOnIdentity);
                     break;
-                case FirmwareStatusNotificationRequestHandler.PROC_URI:
+                case FIRMWARE_STATUS_NOTIFICATION:
                     requestHandler = new FirmwareStatusNotificationRequestHandler(gson, domainService, addOnIdentity);
                     break;
-                case HeartbeatRequestHandler.PROC_URI:
+                case HEARTBEAT:
                     requestHandler = new HeartbeatRequestHandler(gson, domainService, addOnIdentity);
                     break;
-                case MeterValuesRequestHandler.PROC_URI:
+                case METERVALUES:
                     requestHandler = new MeterValuesRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER, addOnIdentity);
                     break;
-                case StartTransactionRequestHandler.PROC_URI:
+                case START_TRANSACTION:
                     requestHandler = new StartTransactionRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER, addOnIdentity);
                     break;
-                case StatusNotificationRequestHandler.PROC_URI:
+                case STATUS_NOTIFICATION:
                     requestHandler = new StatusNotificationRequestHandler(gson, domainService, addOnIdentity);
                     break;
-                case StopTransactionRequestHandler.PROC_URI:
+                case STOP_TRANSACTION:
                     requestHandler = new StopTransactionRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER, addOnIdentity);
                     break;
                 default:
@@ -420,7 +429,7 @@ public class OcppJsonService {
         responseHandlers.put(callId, responseHandler);
     }
 
-    public void addRequestHandler(String procUri, RequestHandler requestHandler) {
+    public void addRequestHandler(MessageProcUri procUri, RequestHandler requestHandler) {
         requestHandlers.put(procUri, requestHandler);
     }
 

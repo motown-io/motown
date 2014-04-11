@@ -15,6 +15,7 @@
  */
 package io.motown.ocpp.websocketjson.schema;
 
+import io.motown.ocpp.websocketjson.MessageProcUri;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -23,19 +24,10 @@ import static org.junit.Assert.assertTrue;
 public class SchemaValidatorTest {
 
     @Test
-    public void validateUnknownRequest() {
-        SchemaValidator validator = new SchemaValidator();
-
-        boolean validRequest = validator.isValidRequest("{}", "Unknown");
-
-        assertFalse(validRequest);
-    }
-
-    @Test
     public void validateValidBootNotification() {
         SchemaValidator validator = new SchemaValidator();
 
-        boolean validRequest = validator.isValidRequest("{\"chargePointVendor\":\"DBT\",\"chargePointModel\":\"NQC-ACDC\",\"chargePointSerialNumber\":\"gir.vat.mx.000e48\",\"chargeBoxSerialNumber\":\"gir.vat.mx.000e48\",\"firmwareVersion\":\"1.0.49\",\"iccid\":\"\",\"imsi\":\"\",\"meterType\":\"DBT NQC-ACDC\",\"meterSerialNumber\":\"gir.vat.mx.000e48\"}", "BootNotification");
+        boolean validRequest = validator.isValidRequest("{\"chargePointVendor\":\"DBT\",\"chargePointModel\":\"NQC-ACDC\",\"chargePointSerialNumber\":\"gir.vat.mx.000e48\",\"chargeBoxSerialNumber\":\"gir.vat.mx.000e48\",\"firmwareVersion\":\"1.0.49\",\"iccid\":\"\",\"imsi\":\"\",\"meterType\":\"DBT NQC-ACDC\",\"meterSerialNumber\":\"gir.vat.mx.000e48\"}", MessageProcUri.BOOT_NOTIFICATION);
 
         assertTrue(validRequest);
     }
@@ -44,7 +36,7 @@ public class SchemaValidatorTest {
     public void validateInvalidBootNotification() {
         SchemaValidator validator = new SchemaValidator();
 
-        boolean validRequest = validator.isValidRequest("{\"chargePointModel\":\"NQC-ACDC\",\"chargePointSerialNumber\":\"gir.vat.mx.000e48\",\"chargeBoxSerialNumber\":\"gir.vat.mx.000e48\",\"firmwareVersion\":\"1.0.49\",\"iccid\":\"\",\"imsi\":\"\",\"meterType\":\"DBT NQC-ACDC\",\"meterSerialNumber\":\"gir.vat.mx.000e48\"}", "BootNotification");
+        boolean validRequest = validator.isValidRequest("{\"chargePointModel\":\"NQC-ACDC\",\"chargePointSerialNumber\":\"gir.vat.mx.000e48\",\"chargeBoxSerialNumber\":\"gir.vat.mx.000e48\",\"firmwareVersion\":\"1.0.49\",\"iccid\":\"\",\"imsi\":\"\",\"meterType\":\"DBT NQC-ACDC\",\"meterSerialNumber\":\"gir.vat.mx.000e48\"}", MessageProcUri.BOOT_NOTIFICATION);
 
         assertFalse(validRequest);
     }
@@ -53,7 +45,7 @@ public class SchemaValidatorTest {
     public void validateValidDataTransfer() {
         SchemaValidator validator = new SchemaValidator();
 
-        boolean validRequest = validator.isValidRequest("{\"vendorId\": \"fr.tm.cnr\",\"messageId\": \"GetChargeInstruction\",\"data\": \"\"}", "DataTransfer");
+        boolean validRequest = validator.isValidRequest("{\"vendorId\": \"fr.tm.cnr\",\"messageId\": \"GetChargeInstruction\",\"data\": \"\"}", MessageProcUri.DATA_TRANSFER);
 
         assertTrue(validRequest);
     }
@@ -62,7 +54,7 @@ public class SchemaValidatorTest {
     public void validateInvalidDataTransfer() {
         SchemaValidator validator = new SchemaValidator();
 
-        boolean validRequest = validator.isValidRequest("{\"messageId\": \"GetChargeInstruction\",\"data\": \"\"}", "DataTransfer");
+        boolean validRequest = validator.isValidRequest("{\"messageId\": \"GetChargeInstruction\",\"data\": \"\"}", MessageProcUri.DATA_TRANSFER);
 
         assertFalse(validRequest);
     }
@@ -71,7 +63,7 @@ public class SchemaValidatorTest {
     public void validateValidDiagnosticsStatusNotification() {
         SchemaValidator validator = new SchemaValidator();
 
-        boolean validRequest = validator.isValidRequest("{\"status\": \"Uploaded\"}", "DiagnosticsStatusNotification");
+        boolean validRequest = validator.isValidRequest("{\"status\": \"Uploaded\"}", MessageProcUri.DIAGNOSTICSS_STATUS_NOTIFICATION);
 
         assertTrue(validRequest);
     }
@@ -80,7 +72,7 @@ public class SchemaValidatorTest {
     public void validateInvalidDiagnosticsStatusNotification() {
         SchemaValidator validator = new SchemaValidator();
 
-        boolean validRequest = validator.isValidRequest("{\"status\": \"UPLOADED\"}", "DiagnosticsStatusNotification");
+        boolean validRequest = validator.isValidRequest("{\"status\": \"UPLOADED\"}", MessageProcUri.DIAGNOSTICSS_STATUS_NOTIFICATION);
 
         assertFalse(validRequest);
     }

@@ -21,6 +21,7 @@ import com.github.fge.jsonschema.exceptions.ProcessingException;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.github.fge.jsonschema.report.ProcessingReport;
+import io.motown.ocpp.websocketjson.MessageProcUri;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,20 +38,20 @@ public class SchemaValidator {
     /**
      * Key value is procUri (eg: BootNotification), value is JsonSchema for validation.
      */
-    private Map<String, JsonSchema> schemas = new HashMap<>();
+    private Map<MessageProcUri, JsonSchema> schemas = new HashMap<>();
 
     public SchemaValidator() {
         factory = JsonSchemaFactory.byDefault();
     }
 
-    public boolean isValidRequest(String request, String procUri) {
+    public boolean isValidRequest(String request, MessageProcUri procUri) {
         JsonSchema schema = schemas.get(procUri);
 
         ProcessingReport report = null;
 
         if(schema == null) {
             try {
-                String schemaName = procUri.toLowerCase();
+                String schemaName = procUri.toString().toLowerCase();
                 //TODO: Prepare for other ocpp versions - Ingo Pak, 31 Mar 2014
                 JsonNode fstabSchema = JsonLoader.fromResource("/schemas/v15/" + schemaName + ".json");
 

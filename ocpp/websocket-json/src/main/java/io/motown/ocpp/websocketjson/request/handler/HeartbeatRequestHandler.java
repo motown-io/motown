@@ -19,14 +19,13 @@ import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.MessageProcUri;
 import io.motown.ocpp.websocketjson.schema.generated.v15.HeartbeatResponse;
 import org.atmosphere.websocket.WebSocket;
 
 import java.util.Date;
 
 public class HeartbeatRequestHandler extends RequestHandler {
-
-    public static final String PROC_URI = "heartbeat";
 
     private Gson gson;
 

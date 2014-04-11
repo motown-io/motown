@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
+import io.motown.domain.api.chargingstation.NumberedReservationId;
 import io.motown.ocpp.websocketjson.gson.GsonFactoryBean;
 import io.motown.ocpp.websocketjson.gson.deserializer.*;
 import io.motown.ocpp.websocketjson.gson.serializer.*;
@@ -42,6 +43,10 @@ public class OcppWebSocketJsonTestUtils {
 
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
+    public static final String OCPPJ_PROTOCOL = "OCPPJ15";
+
+    public static final NumberedReservationId OCPPJ_RESERVATION_ID = new NumberedReservationId(CHARGING_STATION_ID, OCPPJ_PROTOCOL, 1);
+
     public static String formatDate(Date date) {
         SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
         return df.format(date);
@@ -58,6 +63,7 @@ public class OcppWebSocketJsonTestUtils {
                 .add(new SendLocalListRequestUpdateTypeAdapterSerializer())
                 .add(new StartTransactionIdTagStatusTypeAdapterSerializer())
                 .add(new ChangeAvailabilityTypeAdapterSerializer())
+                .add(new MessageProcUriAdapterSerializer())
                 //The serializers below are only needed during testing
                 .add(new ChangeAvailabilityStatusTypeAdapterSerializer())
                 .add(new CancelReservationStatusTypeAdapterSerializer())
@@ -88,6 +94,7 @@ public class OcppWebSocketJsonTestUtils {
                 .add(new DataTransferResponseStatusTypeAdapterDeserializer())
                 .add(new DiagnosticsStatusTypeAdapterDeserializer())
                 .add(new FirmwareStatusTypeAdapterDeserializer())
+                .add(new MessageProcUriAdapterDeserializer())
                 .add(new RemoteStartTransactionResponseTypeAdapterDeserializer())
                 .add(new RemoteStopTransactionResponseTypeAdapterDeserializer())
                 .add(new ReserveNowResponseStatusTypeAdapterDeserializer())

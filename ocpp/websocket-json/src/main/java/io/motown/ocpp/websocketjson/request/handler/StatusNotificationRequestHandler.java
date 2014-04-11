@@ -21,6 +21,7 @@ import io.motown.domain.api.chargingstation.ComponentStatus;
 import io.motown.domain.api.chargingstation.EvseId;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.MessageProcUri;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Statusnotification;
 import io.motown.ocpp.websocketjson.schema.generated.v15.StatusnotificationResponse;
 import org.atmosphere.websocket.WebSocket;
@@ -28,8 +29,6 @@ import org.atmosphere.websocket.WebSocket;
 import java.util.Date;
 
 public class StatusNotificationRequestHandler extends RequestHandler {
-
-    public static final String PROC_URI = "statusnotification";
 
     private Gson gson;
 

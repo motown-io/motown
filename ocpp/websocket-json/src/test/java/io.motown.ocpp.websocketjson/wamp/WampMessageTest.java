@@ -16,6 +16,7 @@
 package io.motown.ocpp.websocketjson.wamp;
 
 import com.google.gson.Gson;
+import io.motown.ocpp.websocketjson.MessageProcUri;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static org.junit.Assert.assertEquals;
 
 public class WampMessageTest {
@@ -31,13 +33,13 @@ public class WampMessageTest {
 
     @Before
     public void setup() {
-        gson = new Gson();
+        gson = getGson();
     }
 
     @Test
     public void constructCall() {
         String callId = UUID.randomUUID().toString();
-        String procUri = "BootNotification";
+        MessageProcUri procUri = MessageProcUri.BOOT_NOTIFICATION;
         String payload = "";
         List<Object> params = new LinkedList<>();
         params.add((double) WampMessage.CALL);
@@ -94,13 +96,13 @@ public class WampMessageTest {
     @Test
     public void callToJson() {
         String callId = UUID.randomUUID().toString();
-        String procUri = "BootNotification";
+        MessageProcUri procUri = MessageProcUri.BOOT_NOTIFICATION;
         String payload = "ThisIsThePayload";
         WampMessage message = new WampMessage(WampMessage.CALL, callId, procUri, payload);
 
         String jsonMessage = message.toJson(gson);
 
-        assertEquals(String.format("[%d,\"%s\",\"%s\",\"%s\"]", WampMessage.CALL, callId, procUri, payload), jsonMessage);
+        assertEquals(String.format("[%d,\"%s\",\"%s\",\"%s\"]", WampMessage.CALL, callId, procUri.toString(), payload), jsonMessage);
     }
 
     @Test

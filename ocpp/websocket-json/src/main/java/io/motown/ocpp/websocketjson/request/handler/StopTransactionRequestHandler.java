@@ -29,8 +29,6 @@ import java.util.*;
 
 public class StopTransactionRequestHandler extends RequestHandler {
 
-    public static final String PROC_URI = "stoptransaction";
-
     private String protocolIdentifier;
 
     private Gson gson;

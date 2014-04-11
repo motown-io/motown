@@ -22,23 +22,27 @@ import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.request.handler.DataTransferRequestHandler;
 import io.motown.ocpp.websocketjson.schema.SchemaValidator;
-import io.motown.ocpp.websocketjson.schema.generated.v15.Changeavailability;
-import io.motown.ocpp.websocketjson.schema.generated.v15.Datatransfer;
+import io.motown.ocpp.websocketjson.schema.generated.v15.*;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import io.motown.ocpp.websocketjson.wamp.WampMessageParser;
 import org.atmosphere.websocket.WebSocket;
 import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.*;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -52,6 +56,10 @@ public class OcppJsonServiceTest {
     private Gson gson;
 
     private WebSocket mockWebSocket;
+
+    private String createExpectedMessageCall(MessageProcUri messageProcUri, Object payload) {
+        return String.format("[%d,\"%s\",\"%s\",%s]", WampMessage.CALL, CORRELATION_TOKEN.getToken(), messageProcUri.toString(), gson.toJson(payload)).replaceAll("\\s+", "");
+    }
 
     @Before
     public void setup() {
@@ -86,9 +94,9 @@ public class OcppJsonServiceTest {
         request.setData("");
 
         String callId = UUID.randomUUID().toString();
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, callId, DataTransferRequestHandler.PROC_URI, request);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, callId, MessageProcUri.DATA_TRANSFER, request);
         DataTransferRequestHandler handler = mock(DataTransferRequestHandler.class);
-        service.addRequestHandler(DataTransferRequestHandler.PROC_URI, handler);
+        service.addRequestHandler(MessageProcUri.DATA_TRANSFER, handler);
 
         service.handleMessage(CHARGING_STATION_ID, new StringReader(wampMessage.toJson(gson)));
 
@@ -102,9 +110,9 @@ public class OcppJsonServiceTest {
         request.setMessageId("GetChargeInstruction");
         request.setData("");
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, UUID.randomUUID().toString(), DataTransferRequestHandler.PROC_URI, request);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, UUID.randomUUID().toString(), MessageProcUri.DATA_TRANSFER, request);
         DataTransferRequestHandler handler = mock(DataTransferRequestHandler.class);
-        service.addRequestHandler(DataTransferRequestHandler.PROC_URI, handler);
+        service.addRequestHandler(MessageProcUri.DATA_TRANSFER, handler);
 
         service.handleMessage(CHARGING_STATION_ID, new StringReader(wampMessage.toJson(gson)));
 
@@ -182,19 +190,42 @@ public class OcppJsonServiceTest {
     @Test
     public void softResetRequest() throws IOException{
         service.softReset(CHARGING_STATION_ID, CORRELATION_TOKEN);
-        verify(mockWebSocket).write(anyString());
+
+        Reset requestPayload = new Reset();
+        requestPayload.setType(Reset.Type.SOFT);
+
+        String expectedMessage = createExpectedMessageCall(MessageProcUri.RESET, requestPayload);
+        verify(mockWebSocket).write(expectedMessage);
     }
+
+
 
     @Test
     public void hardResetRequest() throws IOException{
         service.hardReset(CHARGING_STATION_ID, CORRELATION_TOKEN);
-        verify(mockWebSocket).write(anyString());
+
+        Reset requestPayload = new Reset();
+        requestPayload.setType(Reset.Type.HARD);
+
+        String expectedMessage = createExpectedMessageCall(MessageProcUri.RESET, requestPayload);
+        verify(mockWebSocket).write(expectedMessage);
     }
 
     @Test
-    public void updateFirmwareRequest() throws IOException{
-        service.updateFirmware(CHARGING_STATION_ID, new Date(), Maps.<String, String>newHashMap(), FTP_LOCATION);
-        verify(mockWebSocket).write(anyString());
+    public void updateFirmwareRequest() throws IOException, URISyntaxException{
+        Date timestamp = new Date();
+        Map attributes = Maps.<String, String>newHashMap();
+        service.updateFirmware(CHARGING_STATION_ID, timestamp, attributes, FTP_LOCATION);
+
+        Updatefirmware requestPayload = new Updatefirmware();
+        requestPayload.setRetries(null);
+        requestPayload.setRetryInterval(null);
+        requestPayload.setLocation(new URI(FTP_LOCATION));
+        requestPayload.setRetrieveDate(timestamp);
+
+        ArgumentCaptor<String> message = ArgumentCaptor.forClass(String.class);
+        verify(mockWebSocket).write(message.capture());
+        assertTrue(message.getValue().contains(gson.toJson(requestPayload)));
     }
 
     @Test
@@ -208,21 +239,21 @@ public class OcppJsonServiceTest {
         String listHash = "";
         service.sendLocalList(CHARGING_STATION_ID, AuthorizationListUpdateType.FULL, list, listVersion, listHash, CORRELATION_TOKEN);
 
-        String expectedMessage = String.format("[%d,\"%s\",\"%s\",{" +
-                "  \"updateType\": \"Full\"," +
-                "  \"listVersion\": 1," +
-                "  \"localAuthorisationList\": [" +
-                "    {" +
-                "      \"idTag\": \"%s\"," +
-                "      \"idTagInfo\": {" +
-                "        \"status\": \"Accepted\"" +
-                "      }" +
-                "    }" +
-                "  ]," +
-                "  \"hash\": \"\"" +
-                "}]", WampMessage.CALL, CORRELATION_TOKEN.getToken(), "SendLocalList", idTag)
-                .replaceAll("\\s+", "");
+        //Validate result
+        Sendlocallist requestPayload = new Sendlocallist();
+        requestPayload.setUpdateType(Sendlocallist.UpdateType.FULL);
+        List<LocalAuthorisationList> localAuthorizationList = Lists.newArrayList();
+        LocalAuthorisationList entry = new LocalAuthorisationList();
+        entry.setIdTag(idTag);
+        IdTagInfo_ info = new IdTagInfo_();
+        info.setStatus(IdTagInfo_.Status.ACCEPTED);
+        entry.setIdTagInfo(info);
+        localAuthorizationList.add(entry);
+        requestPayload.setLocalAuthorisationList(localAuthorizationList);
+        requestPayload.setListVersion(listVersion);
+        requestPayload.setHash(listHash);
 
+        String expectedMessage = createExpectedMessageCall(MessageProcUri.SEND_LOCALLIST, requestPayload);
         verify(mockWebSocket).write(expectedMessage);
     }
 
@@ -230,8 +261,7 @@ public class OcppJsonServiceTest {
     public void getLocalListVersionRequest() throws IOException{
         service.getLocalListVersion(CHARGING_STATION_ID, CORRELATION_TOKEN);
 
-        String expectedMessage = String.format("[%d,\"%s\",\"%s\",{}]", WampMessage.CALL, CORRELATION_TOKEN.getToken(), "GetLocalListVersion").replaceAll("\\s+", "");
-
+        String expectedMessage = createExpectedMessageCall(MessageProcUri.GET_LOCALLIST_VERSION, new Getlocallistversion());
         verify(mockWebSocket).write(expectedMessage);
     }
 
@@ -239,21 +269,19 @@ public class OcppJsonServiceTest {
     public void clearCacheRequest() throws IOException{
         service.clearCache(CHARGING_STATION_ID, CORRELATION_TOKEN);
 
-        String expectedMessage = String.format("[%d,\"%s\",\"%s\",{}]", WampMessage.CALL, CORRELATION_TOKEN.getToken(), "ClearCache").replaceAll("\\s+", "");
-
+        String expectedMessage = createExpectedMessageCall(MessageProcUri.CLEAR_CACHE, new Clearcache());
         verify(mockWebSocket).write(expectedMessage);
     }
 
     @Test
     public void changeAvailabilityRequest() throws IOException{
-        int connectorId = 2;
-        service.changeAvailability(CHARGING_STATION_ID, connectorId, Changeavailability.Type.INOPERATIVE, CORRELATION_TOKEN);
+        service.changeAvailability(CHARGING_STATION_ID, EVSE_ID.getNumberedId(), Changeavailability.Type.INOPERATIVE, CORRELATION_TOKEN);
 
-        String expectedMessage = String.format("[%d,\"%s\",\"%s\",{\n" +
-                "  \"connectorId\": %d,\n" +
-                "  \"type\": \"%s\"\n" +
-                "}]", WampMessage.CALL, CORRELATION_TOKEN.getToken(), "ChangeAvailability", connectorId, Changeavailability.Type.INOPERATIVE.toString()).replaceAll("\\s+", "");
+        Changeavailability requestPayload = new Changeavailability();
+        requestPayload.setConnectorId(EVSE_ID.getNumberedId());
+        requestPayload.setType(Changeavailability.Type.INOPERATIVE);
 
+        String expectedMessage = createExpectedMessageCall(MessageProcUri.CHANGE_AVAILABILITY, requestPayload);
         verify(mockWebSocket).write(expectedMessage);
     }
 
@@ -264,12 +292,12 @@ public class OcppJsonServiceTest {
         String data = "";
         service.dataTransfer(CHARGING_STATION_ID, vendorId, messageId, data, CORRELATION_TOKEN);
 
-        String expectedMessage = String.format("[%d,\"%s\",\"%s\",{\n" +
-                "  \"vendorId\": \"%s\",\n" +
-                "  \"messageId\": \"%s\",\n" +
-                "  \"data\": \"%s\"\n" +
-                "}]", WampMessage.CALL, CORRELATION_TOKEN.getToken(), "DataTransfer", vendorId, messageId, data).replaceAll("\\s+", "");
+        Datatransfer requestPayload = new Datatransfer();
+        requestPayload.setVendorId(vendorId);
+        requestPayload.setMessageId(messageId);
+        requestPayload.setData(data);
 
+        String expectedMessage = createExpectedMessageCall(MessageProcUri.DATA_TRANSFER, requestPayload);
         verify(mockWebSocket).write(expectedMessage);
     }
 
@@ -279,16 +307,25 @@ public class OcppJsonServiceTest {
 
         service.reserveNow(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, null, expiryDate, CORRELATION_TOKEN);
 
-        String expectedMessage = String.format("[%d,\"%s\",\"%s\",{\n" +
-                "  \"connectorId\": %d,\n" +
-                "  \"expiryDate\": \"%s\",\n" +
-                "  \"idTag\": \"%s\",\n" +
-                "  \"reservationId\": %d" +
-                "}]", WampMessage.CALL, CORRELATION_TOKEN.getToken(), "ReserveNow", EVSE_ID.getNumberedId(), formatDate(expiryDate), IDENTIFYING_TOKEN.getToken(), RESERVATION_ID.getNumber())
-                .replaceAll("\\s+", "");
+        Reservenow requestPayload = new Reservenow();
+        requestPayload.setReservationId(RESERVATION_ID.getNumber());
+        requestPayload.setIdTag(IDENTIFYING_TOKEN.getToken());
+        requestPayload.setExpiryDate(expiryDate);
+        requestPayload.setConnectorId(EVSE_ID.getNumberedId());
 
+        String expectedMessage = createExpectedMessageCall(MessageProcUri.RESERVE_NOW, requestPayload);
         verify(mockWebSocket).write(expectedMessage);
     }
 
+    @Test
+    public void cancelReservation() throws IOException{
+        service.cancelReservation(CHARGING_STATION_ID, RESERVATION_ID, CORRELATION_TOKEN);
+
+        Cancelreservation requestPayload = new Cancelreservation();
+        requestPayload.setReservationId(RESERVATION_ID.getNumber());
+
+        String expectedMessage = createExpectedMessageCall(MessageProcUri.CANCEL_RESERVATION, requestPayload);
+        verify(mockWebSocket).write(expectedMessage);
+    }
 
 }

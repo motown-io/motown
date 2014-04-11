@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.MessageProcUri;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Metervalues;
 import io.motown.ocpp.websocketjson.schema.generated.v15.MetervaluesResponse;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Value;
@@ -31,8 +32,6 @@ import java.util.List;
 import java.util.Map;
 
 public class MeterValuesRequestHandler extends RequestHandler {
-
-    public static final String PROC_URI = "metervalues";
 
     private String protocolIdentifier;
 

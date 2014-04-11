@@ -16,12 +16,12 @@
 package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
+import io.motown.domain.api.chargingstation.FirmwareStatus;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Firmwarestatusnotification;
 import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -30,7 +30,7 @@ import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
-import static junit.framework.Assert.assertNotNull;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -47,7 +47,7 @@ public class FirmwareStatusNotificationRequestHandlerTest {
     }
 
     @Test
-    public void handleValidRequest() throws IOException {
+    public void handleDownloadedRequest() throws IOException {
         String token = UUID.randomUUID().toString();
         FirmwareStatusNotificationRequestHandler handler = new FirmwareStatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY);
 
@@ -57,10 +57,53 @@ public class FirmwareStatusNotificationRequestHandlerTest {
         WebSocket webSocket = getMockWebSocket();
         handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
 
-        ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(webSocket).write(argumentCaptor.capture());
-        String response = argumentCaptor.getValue();
-        assertNotNull(response);
+        verify(domainService).firmwareStatusUpdate(CHARGING_STATION_ID, FirmwareStatus.DOWNLOADED, ADD_ON_IDENTITY);
+        verify(webSocket).write(anyString());
+    }
+
+    @Test
+    public void handleDownloadFailedRequest() throws IOException {
+        String token = UUID.randomUUID().toString();
+        FirmwareStatusNotificationRequestHandler handler = new FirmwareStatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY);
+
+        Firmwarestatusnotification requestPayload = new Firmwarestatusnotification();
+        requestPayload.setStatus(Firmwarestatusnotification.Status.DOWNLOAD_FAILED);
+
+        WebSocket webSocket = getMockWebSocket();
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
+
+        verify(domainService).firmwareStatusUpdate(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED, ADD_ON_IDENTITY);
+        verify(webSocket).write(anyString());
+    }
+
+    @Test
+    public void handleInstallationFailedRequest() throws IOException {
+        String token = UUID.randomUUID().toString();
+        FirmwareStatusNotificationRequestHandler handler = new FirmwareStatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY);
+
+        Firmwarestatusnotification requestPayload = new Firmwarestatusnotification();
+        requestPayload.setStatus(Firmwarestatusnotification.Status.INSTALLATION_FAILED);
+
+        WebSocket webSocket = getMockWebSocket();
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
+
+        verify(domainService).firmwareStatusUpdate(CHARGING_STATION_ID, FirmwareStatus.INSTALLATION_FAILED, ADD_ON_IDENTITY);
+        verify(webSocket).write(anyString());
+    }
+
+    @Test
+    public void handleInstalledRequest() throws IOException {
+        String token = UUID.randomUUID().toString();
+        FirmwareStatusNotificationRequestHandler handler = new FirmwareStatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY);
+
+        Firmwarestatusnotification requestPayload = new Firmwarestatusnotification();
+        requestPayload.setStatus(Firmwarestatusnotification.Status.INSTALLED);
+
+        WebSocket webSocket = getMockWebSocket();
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
+
+        verify(domainService).firmwareStatusUpdate(CHARGING_STATION_ID, FirmwareStatus.INSTALLED, ADD_ON_IDENTITY);
+        verify(webSocket).write(anyString());
     }
 
 }
