@@ -15,19 +15,25 @@
  */
 package io.motown.ocpp.websocketjson.request.handler;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import io.motown.domain.api.chargingstation.NumberedTransactionId;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.OcppWebSocketRequestHandler;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Metervalues;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Value;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Value_;
 import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
 import static junit.framework.Assert.assertNotNull;
@@ -51,45 +57,30 @@ public class MeterValuesRequestHandlerTest {
         String token = UUID.randomUUID().toString();
         MeterValuesRequestHandler handler = new MeterValuesRequestHandler(gson, domainService, OcppWebSocketRequestHandler.PROTOCOL_IDENTIFIER, ADD_ON_IDENTITY);
 
-        String requestPayload = "{\n" +
-                "  \"connectorId\": 2,\n" +
-                "  \"transactionId\": 0,\n" +
-                "  \"values\": [\n" +
-                "    {\n" +
-                "      \"timestamp\": \"2013-03-07T16:52:16Z\",\n" +
-                "      \"values\": [\n" +
-                "        {\n" +
-                "          \"value\": \"0\",\n" +
-                "          \"unit\": \"Wh\",\n" +
-                "          \"measurand\": \"Energy.Active.Import.Register\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "          \"value\": \"0\",\n" +
-                "          \"unit\": \"varh\",\n" +
-                "          \"measurand\": \"Energy.Reactive.Import.Register\"\n" +
-                "        }\n" +
-                "      ]\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"timestamp\": \"2013-03-07T19:52:16Z\",\n" +
-                "      \"values\": [\n" +
-                "        {\n" +
-                "          \"value\": \"20\",\n" +
-                "          \"unit\": \"Wh\",\n" +
-                "          \"measurand\": \"Energy.Active.Import.Register\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "          \"value\": \"20\",\n" +
-                "          \"unit\": \"varh\",\n" +
-                "          \"measurand\": \"Energy.Reactive.Import.Register\"\n" +
-                "        }\n" +
-                "      ]\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}";
+        Metervalues requestPayload = new Metervalues();
+        requestPayload.setConnectorId(2);
+        requestPayload.setTransactionId(((NumberedTransactionId) TRANSACTION_ID).getNumber());
+
+        List<Value> meterValues = Lists.newArrayList();
+
+        Value meterValue = new Value();
+        meterValue.setTimestamp(new Date());
+        List<Value_> values = Lists.newArrayList();
+        Value_ value = new Value_();
+        value.setValue("0");
+        value.setUnit(UNIT);
+        value.setLocation("Outlet");
+        value.setMeasurand(MEASURAND);
+        value.setFormat("Raw");
+        value.setContext("Sample.Periodic");
+        values.add(value);
+        meterValue.setValues(values);
+        meterValues.add(meterValue);
+
+        requestPayload.setValues(meterValues);
 
         WebSocket webSocket = getMockWebSocket();
-        handler.handleRequest(CHARGING_STATION_ID, token, requestPayload, webSocket);
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
 
         ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(webSocket).write(argumentCaptor.capture());

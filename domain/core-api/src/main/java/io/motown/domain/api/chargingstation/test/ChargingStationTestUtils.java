@@ -208,6 +208,16 @@ public final class ChargingStationTestUtils {
     public static final TransactionId TRANSACTION_ID = new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL, TRANSACTION_NUMBER);
 
     /**
+     * The default unit.
+     */
+    public static final String UNIT = "Wh";
+
+    /**
+     * The default measureand.
+     */
+    public static final String MEASURAND = "Energy.Active.Import.Register";
+
+    /**
      * The default EVSE identifier.
      */
     public static final EvseId EVSE_ID = new EvseId(1);

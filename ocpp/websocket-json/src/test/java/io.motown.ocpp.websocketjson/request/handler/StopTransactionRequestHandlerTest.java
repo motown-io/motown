@@ -15,19 +15,26 @@
  */
 package io.motown.ocpp.websocketjson.request.handler;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import io.motown.domain.api.chargingstation.NumberedTransactionId;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.OcppWebSocketRequestHandler;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Stoptransaction;
+import io.motown.ocpp.websocketjson.schema.generated.v15.TransactionDatum;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Value__;
+import io.motown.ocpp.websocketjson.schema.generated.v15.Value___;
 import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
 import static junit.framework.Assert.assertNotNull;
@@ -51,55 +58,32 @@ public class StopTransactionRequestHandlerTest {
         String token = UUID.randomUUID().toString();
         StopTransactionRequestHandler handler = new StopTransactionRequestHandler(gson, domainService, OcppWebSocketRequestHandler.PROTOCOL_IDENTIFIER, ADD_ON_IDENTITY);
 
-        String requestPayload = "{\n" +
-                "  \"transactionId\": 0,\n" +
-                "  \"idTag\": \"B4F62CEF\",\n" +
-                "  \"timestamp\": \"2013-02-01T15:09:18Z\",\n" +
-                "  \"meterStop\": 20,\n" +
-                "  \"transactionData\": [\n" +
-                "    {\n" +
-                "      \"values\": [\n" +
-                "        {\n" +
-                "          \"timestamp\": \"2013-03-07T16:52:16Z\",\n" +
-                "          \"values\": [\n" +
-                "            {\n" +
-                "              \"value\": \"0\",\n" +
-                "              \"unit\": \"Wh\",\n" +
-                "              \"measurand\": \"Energy.Active.Import.Register\"\n" +
-                "            },\n" +
-                "            {\n" +
-                "              \"value\": \"0\",\n" +
-                "              \"unit\": \"varh\",\n" +
-                "              \"measurand\": \"Energy.Reactive.Import.Register\"\n" +
-                "            }\n" +
-                "          ]\n" +
-                "        }\n" +
-                "      ]\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"values\": [\n" +
-                "        {\n" +
-                "          \"timestamp\": \"2013-03-07T16:52:16Z\",\n" +
-                "          \"values\": [\n" +
-                "            {\n" +
-                "              \"value\": \"0\",\n" +
-                "              \"unit\": \"Wh\",\n" +
-                "              \"measurand\": \"Energy.Active.Import.Register\"\n" +
-                "            },\n" +
-                "            {\n" +
-                "              \"value\": \"0\",\n" +
-                "              \"unit\": \"varh\",\n" +
-                "              \"measurand\": \"Energy.Reactive.Import.Register\"\n" +
-                "            }\n" +
-                "          ]\n" +
-                "        }\n" +
-                "      ]\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}";
+        Stoptransaction requestPayload = new Stoptransaction();
+        requestPayload.setIdTag(IDENTIFYING_TOKEN.getToken());
+        requestPayload.setTimestamp(new Date());
+        requestPayload.setTransactionId(((NumberedTransactionId) TRANSACTION_ID).getNumber());
+        requestPayload.setMeterStop(20);
+
+        List<TransactionDatum> transactionData = Lists.newArrayList();
+        TransactionDatum transactionDetails = new TransactionDatum();
+        List<Value__> values = Lists.newArrayList();
+        Value__ value = new Value__();
+        value.setTimestamp(new Date());
+
+        List<Value___> meterValues = Lists.newArrayList();
+        Value___ meterValue = new Value___();
+        meterValue.setValue("0");
+        meterValue.setUnit(UNIT);
+        meterValue.setMeasurand(MEASURAND);
+        meterValues.add(meterValue);
+
+        value.setValues(meterValues);
+        transactionDetails.setValues(values);
+        transactionData.add(transactionDetails);
+        requestPayload.setTransactionData(transactionData);
 
         WebSocket webSocket = getMockWebSocket();
-        handler.handleRequest(CHARGING_STATION_ID, token, requestPayload, webSocket);
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
 
         ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(webSocket).write(argumentCaptor.capture());
