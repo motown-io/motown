@@ -59,8 +59,7 @@ public class ChargingStationRepository {
     }
 
     public List<ChargingStation> findAll() {
-        Query query = entityManager.createQuery("SELECT cs FROM io.motown.vas.viewmodel.model.ChargingStation AS cs");
-        return (List<ChargingStation>) query.getResultList();
+        return entityManager.createQuery("SELECT cs FROM io.motown.vas.viewmodel.model.ChargingStation AS cs", ChargingStation.class).getResultList();
     }
 
     public void setEntityManager(EntityManager entityManager) {
