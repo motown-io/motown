@@ -262,6 +262,8 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
             case FULL:
                 request.setUpdateType(UpdateType.FULL);
                 break;
+            default:
+                throw new IllegalArgumentException(String.format("Unknown update type [%s].", updateType));
         }
 
         // Translate the authorization information to the OCPP specific info
