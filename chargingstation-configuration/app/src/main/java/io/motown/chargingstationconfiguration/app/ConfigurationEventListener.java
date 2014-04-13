@@ -32,7 +32,7 @@ import java.util.Set;
 
 public class ConfigurationEventListener {
 
-    private static final String ADD_ON_TYPE = "CHARGINGSTATION-CONFIGURATION";
+    public static final String ADD_ON_TYPE = "CHARGINGSTATION-CONFIGURATION";
     private static final Logger LOG = LoggerFactory.getLogger(ConfigurationEventListener.class);
     private static final String MODEL_ATTRIBUTE = "model";
     private static final String VENDOR_ATTRIBUTE = "vendor";
