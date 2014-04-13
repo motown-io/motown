@@ -43,6 +43,15 @@ public class ChargingStation {
     private String country;
     private Accessibility accessibility;
 
+    private ChargingStation() {
+        // Private no-arg constructor for Hibernate.
+    }
+
+    public ChargingStation(String id) {
+        this.id = id;
+        this.accepted = false;
+    }
+
     public String getProtocol() {
         return protocol;
     }
@@ -73,15 +82,6 @@ public class ChargingStation {
 
     public void setLastContact(Date lastContact) {
         this.lastContact = lastContact != null ? new Date(lastContact.getTime()) : null;
-    }
-
-    private ChargingStation() {
-        // Private no-arg constructor for Hibernate.
-    }
-
-    public ChargingStation(String id) {
-        this.id = id;
-        this.accepted = false;
     }
 
     public String getId() {
