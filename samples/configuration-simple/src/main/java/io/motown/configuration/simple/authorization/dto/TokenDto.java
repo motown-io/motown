@@ -20,14 +20,14 @@ package io.motown.configuration.simple.authorization.dto;
  */
 public class TokenDto {
 
-	private final String token;
+    private final String token;
 
-	public TokenDto(String token) {
-		this.token = token;
-	}
+    public TokenDto(String token) {
+        this.token = token;
+    }
 
-	public String getToken() {
-		return this.token;
-	}
+    public String getToken() {
+        return this.token;
+    }
 
 }

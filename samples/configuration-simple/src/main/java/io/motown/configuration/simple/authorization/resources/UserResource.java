@@ -22,35 +22,37 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.*;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Component
 @Path("/")
 public class UserResource {
 
-	private AuthenticationManager authManager;
+    private AuthenticationManager authManager;
 
-	/**
-	 * Authenticates a user and creates an authentication token.
-	 * 
-	 * @param username name of the user.
-	 * @param password password of the user.
-	 * @return authentication token.
-	 */
-	@Path("authenticate")
-	@POST
-	@Produces(MediaType.APPLICATION_JSON)
-	public TokenDto authenticate(@FormParam("username") String username, @FormParam("password") String password) {
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-		Authentication authentication = this.authManager.authenticate(authenticationToken);
-		SecurityContextHolder.getContext().setAuthentication(authentication);
+    /**
+     * Authenticates a user and creates an authentication token.
+     *
+     * @param username name of the user.
+     * @param password password of the user.
+     * @return authentication token.
+     */
+    @Path("authenticate")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public TokenDto authenticate(@FormParam("username") String username, @FormParam("password") String password) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+        Authentication authentication = this.authManager.authenticate(authenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return new TokenDto(TokenUtils.createToken( (UserDetails) authentication.getPrincipal()) );
-	}
+        return new TokenDto(TokenUtils.createToken((UserDetails) authentication.getPrincipal()));
+    }
 
     public void setAuthManager(AuthenticationManager authManager) {
         this.authManager = authManager;

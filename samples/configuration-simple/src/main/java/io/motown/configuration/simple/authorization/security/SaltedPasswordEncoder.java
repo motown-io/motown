@@ -27,30 +27,28 @@ import java.security.NoSuchAlgorithmException;
  */
 public class SaltedPasswordEncoder implements PasswordEncoder {
 
-	private final String salt;
-
-	private final MessageDigest digest;
-
     private static final String ENCODING = "UTF-8";
+    private final String salt;
+    private final MessageDigest digest;
 
-	public SaltedPasswordEncoder(String algorithm, String salt) throws NoSuchAlgorithmException {
-		this.salt = salt;
-		this.digest = MessageDigest.getInstance(algorithm);
-	}
+    public SaltedPasswordEncoder(String algorithm, String salt) throws NoSuchAlgorithmException {
+        this.salt = salt;
+        this.digest = MessageDigest.getInstance(algorithm);
+    }
 
-	@Override
-	public String encode(CharSequence rawPassword) {
-		String saltedPassword = rawPassword + this.salt;
-		try {
-			return new String(Hex.encode(this.digest.digest(saltedPassword.getBytes(ENCODING))));
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(ENCODING + " not supported", e);
-		}
-	}
+    @Override
+    public String encode(CharSequence rawPassword) {
+        String saltedPassword = rawPassword + this.salt;
+        try {
+            return new String(Hex.encode(this.digest.digest(saltedPassword.getBytes(ENCODING))));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(ENCODING + " not supported", e);
+        }
+    }
 
-	@Override
-	public boolean matches(CharSequence rawPassword, String encodedPassword) {
-		return this.encode(rawPassword).equals(encodedPassword);
-	}
+    @Override
+    public boolean matches(CharSequence rawPassword, String encodedPassword) {
+        return this.encode(rawPassword).equals(encodedPassword);
+    }
 
 }

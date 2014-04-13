@@ -31,44 +31,42 @@ import java.io.IOException;
 
 public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 
-	private final UserDetailsService userService;
-
     private static final String AUTH_TOKEN_HEADER_KEY = "X-Auth-Token";
-
     private static final String AUTH_TOKEN_PARAMETER_KEY = "token";
+    private final UserDetailsService userService;
 
-	public AuthenticationTokenProcessingFilter(UserDetailsService userService) {
-		this.userService = userService;
-	}
+    public AuthenticationTokenProcessingFilter(UserDetailsService userService) {
+        this.userService = userService;
+    }
 
     /**
      * Retrieves the authorization token from the request and validates it against the {@code UserService}.
      *
-     * @param request servlet request.
+     * @param request  servlet request.
      * @param response servlet response.
-     * @param chain filter chain.
+     * @param chain    filter chain.
      * @throws IOException
      * @throws ServletException
      */
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
 
         String authToken = getAuthTokenFromRequest(httpRequest);
-		String userName = TokenUtils.getUserNameFromToken(authToken);
+        String userName = TokenUtils.getUserNameFromToken(authToken);
 
-		if (userName != null) {
-			UserDetails userDetails = userService.loadUserByUsername(userName);
+        if (userName != null) {
+            UserDetails userDetails = userService.loadUserByUsername(userName);
 
-			if (TokenUtils.validateToken(authToken, userDetails)) {
-				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
-				SecurityContextHolder.getContext().setAuthentication(authentication);
-			}
-		}
+            if (TokenUtils.validateToken(authToken, userDetails)) {
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        }
 
-		chain.doFilter(request, response);
-	}
+        chain.doFilter(request, response);
+    }
 
     /**
      * Gets the authorization token from the request. First tries the header, if that's empty the parameter is checked.
@@ -77,13 +75,13 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
      * @return authorization token if it exists in the request.
      */
     private String getAuthTokenFromRequest(HttpServletRequest httpRequest) {
-		String authToken = httpRequest.getHeader(AUTH_TOKEN_HEADER_KEY);
+        String authToken = httpRequest.getHeader(AUTH_TOKEN_HEADER_KEY);
 
-		if (authToken == null) {
+        if (authToken == null) {
             // token can also exist as request parameter
-			authToken = httpRequest.getParameter(AUTH_TOKEN_PARAMETER_KEY);
-		}
+            authToken = httpRequest.getParameter(AUTH_TOKEN_PARAMETER_KEY);
+        }
 
-		return authToken;
-	}
+        return authToken;
+    }
 }
