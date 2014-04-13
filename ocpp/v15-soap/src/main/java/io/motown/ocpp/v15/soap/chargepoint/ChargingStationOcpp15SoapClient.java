@@ -30,6 +30,7 @@ import java.util.Map;
 public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Client {
 
     private static final Logger LOG = LoggerFactory.getLogger(ChargingStationOcpp15SoapClient.class);
+    private static final String UNKNOWN_STATUS = "[unknown status]";
 
     private DomainService domainService;
 
@@ -157,7 +158,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
             LOG.info("Data transfer to {} has been accepted", id);
             return RequestResult.SUCCESS;
         } else {
-            String responseStatus = (response.getStatus() != null) ? response.getStatus().value() : "-unknown status-";
+            String responseStatus = (response.getStatus() != null) ? response.getStatus().value() : UNKNOWN_STATUS;
             LOG.warn("Data transfer to {} has failed due to {}", id, responseStatus);
             return RequestResult.FAILURE;
         }
@@ -178,7 +179,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
             LOG.info("Configuration change of {} on {} has been accepted", key, id);
             return RequestResult.SUCCESS;
         } else {
-            String responseStatus = (response.getStatus() != null) ? response.getStatus().value() : "-unknown status-";
+            String responseStatus = (response.getStatus() != null) ? response.getStatus().value() : UNKNOWN_STATUS;
             LOG.warn("Configuration change of {} on {} has failed due to {}", key, id, responseStatus);
             return RequestResult.FAILURE;
         }
@@ -276,7 +277,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
             LOG.info("Update of local authorization list on {} has been accepted", id);
             return RequestResult.SUCCESS;
         } else {
-            String responseStatus = response.getStatus() != null ? response.getStatus().value() : "-unknown status-";
+            String responseStatus = response.getStatus() != null ? response.getStatus().value() : UNKNOWN_STATUS;
             LOG.warn("Update of local authorization list on {} has failed due to {}", id, responseStatus);
             return RequestResult.FAILURE;
         }
@@ -367,7 +368,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         ChangeAvailabilityResponse response = chargePointService.changeAvailability(request, id.getId());
 
         if (AvailabilityStatus.ACCEPTED.equals(response.getStatus()) ||
-            AvailabilityStatus.SCHEDULED.equals(response.getStatus())) {
+                AvailabilityStatus.SCHEDULED.equals(response.getStatus())) {
             return RequestResult.SUCCESS;
         } else {
             return RequestResult.FAILURE;

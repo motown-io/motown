@@ -65,22 +65,6 @@ public final class ChargingStationTestUtils {
      * Two minutes in milliseconds.
      */
     public static final int TWO_MINUTES = 120000;
-
-    /**
-     * The default correlation identifier used to correlate commands and events.
-     */
-    public static final String CORRELATION_ID = "d0052460-93d2-11e3-baa8-0800200c9a66";
-
-    /**
-     * The default status correlation identifier used to correlate status commands and events.
-     */
-    public static final CorrelationToken CORRELATION_TOKEN = new CorrelationToken();
-
-    /**
-     * An String containing a FTP URI
-     */
-    public static final String FTP_LOCATION = "ftp://somewhere.com";
-
     /**
      * The timestamp in milliseconds two minutes ago.
      * <p/>
@@ -88,7 +72,18 @@ public final class ChargingStationTestUtils {
      * ago from the time this class was loaded.
      */
     public static final Date TWO_MINUTES_AGO = new Date(DateTimeUtils.currentTimeMillis() - TWO_MINUTES);
-
+    /**
+     * The default correlation identifier used to correlate commands and events.
+     */
+    public static final String CORRELATION_ID = "d0052460-93d2-11e3-baa8-0800200c9a66";
+    /**
+     * The default status correlation identifier used to correlate status commands and events.
+     */
+    public static final CorrelationToken CORRELATION_TOKEN = new CorrelationToken();
+    /**
+     * An String containing a FTP URI
+     */
+    public static final String FTP_LOCATION = "ftp://somewhere.com";
     /**
      * Five minutes in milliseconds.
      */
@@ -116,97 +111,78 @@ public final class ChargingStationTestUtils {
      * The default charging station model.
      */
     public static final String CHARGING_STATION_MODEL = "WIDGET";
-
-    /**
-     * The default charging station serial number.
-     */
-    public static final String CHARGING_STATION_SERIAL_NUMBER = "SN001";
-
-    /**
-     * The default charging station serial number.
-     */
-    public static final String CHARGE_BOX_SERIAL_NUMBER = "CB_SN001";
-
-    /**
-     * The default firmware version.
-     */
-    public static final String FIRMWARE_VERSION = "0.0.1";
-
-    /**
-     * The default ICCID.
-     */
-    public static final String ICCID = "iccid";
-
-    /**
-     * The default IMSI.
-     */
-    public static final String IMSI = "imsi";
-
-    /**
-     * The default meter type.
-     */
-    public static final String METER_TYPE = "meterType";
-
-    /**
-     * The default meter serial number.
-     */
-    public static final String METER_SERIAL_NUMBER = "SN002";
-
-    /**
-     * The default data transfer vendor.
-     */
-    public static final String DATA_TRANSFER_VENDOR = "ACME_CORP";
-
-    /**
-     * The default data transfer message identifier.
-     */
-    public static final String DATA_TRANSFER_MESSAGE_ID = "WIDGET_MESSAGE";
-
-    /**
-     * The default data transfer data.
-     */
-    public static final String DATA_TRANSFER_DATA = "['acme', 'widget']";
-
-    /**
-     * The default meter start value.
-     */
-    public static final int METER_START = 100;
-
-    /**
-     * The default meter stop value.
-     */
-    public static final int METER_STOP = 105;
-
     /**
      * The default map of boot notification attributes.
      */
     public static final Map<String, String> BOOT_NOTIFICATION_ATTRIBUTES = getAttributes(CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL);
-
+    /**
+     * The default charging station serial number.
+     */
+    public static final String CHARGING_STATION_SERIAL_NUMBER = "SN001";
+    /**
+     * The default charging station serial number.
+     */
+    public static final String CHARGE_BOX_SERIAL_NUMBER = "CB_SN001";
+    /**
+     * The default firmware version.
+     */
+    public static final String FIRMWARE_VERSION = "0.0.1";
+    /**
+     * The default ICCID.
+     */
+    public static final String ICCID = "iccid";
+    /**
+     * The default IMSI.
+     */
+    public static final String IMSI = "imsi";
+    /**
+     * The default meter type.
+     */
+    public static final String METER_TYPE = "meterType";
+    /**
+     * The default meter serial number.
+     */
+    public static final String METER_SERIAL_NUMBER = "SN002";
+    /**
+     * The default data transfer vendor.
+     */
+    public static final String DATA_TRANSFER_VENDOR = "ACME_CORP";
+    /**
+     * The default data transfer message identifier.
+     */
+    public static final String DATA_TRANSFER_MESSAGE_ID = "WIDGET_MESSAGE";
+    /**
+     * The default data transfer data.
+     */
+    public static final String DATA_TRANSFER_DATA = "['acme', 'widget']";
+    /**
+     * The default meter start value.
+     */
+    public static final int METER_START = 100;
+    /**
+     * The default meter stop value.
+     */
+    public static final int METER_STOP = 105;
     /**
      * The default charging station identifier.
      */
     public static final ChargingStationId CHARGING_STATION_ID = new ChargingStationId("CS-001");
-
-    /**
-     * The default, unknown charging station identifier.
-     */
-    public static final ChargingStationId UNKNOWN_CHARGING_STATION_ID = new ChargingStationId("DT-112");
-
-    /**
-     * Ip address of localhost.
-     */
-    public static final String LOCALHOST = "127.0.0.1";
-
     /**
      * The default reservation identifier.
      */
     public static final NumberedReservationId RESERVATION_ID = new NumberedReservationId(CHARGING_STATION_ID, PROTOCOL, 1);
-
     /**
      * The default transaction identifier.
      */
     public static final TransactionId TRANSACTION_ID = new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL, TRANSACTION_NUMBER);
-
+    /**
+     * The default, unknown charging station identifier.
+     */
+    public static final ChargingStationId UNKNOWN_CHARGING_STATION_ID = new ChargingStationId("DT-112");
+    /**
+     * Ip address of localhost.
+     */
+    public static final String LOCALHOST = "127.0.0.1";
     /**
      * The default unit.
      */
@@ -245,40 +221,38 @@ public final class ChargingStationTestUtils {
     public static final TextualToken ANOTHER_IDENTIFYING_TOKEN = new TextualToken("67890BE");
 
     /**
+     * Invalid textual token.
+     */
+    public static final String INVALID_TEXTUAL_TOKEN = "INVALID";
+
+    /**
      * The default invalid identifying token.
      */
-    public static final TextualToken INVALID_IDENTIFYING_TOKEN = new TextualToken("INVALID");
-
+    public static final TextualToken INVALID_IDENTIFYING_TOKEN = new TextualToken(INVALID_TEXTUAL_TOKEN);
+    /**
+     * The default identifying token, status INVALID.
+     */
+    public static final IdentifyingToken IDENTIFYING_TOKEN_INVALID = new TextualToken(INVALID_TEXTUAL_TOKEN, IdentifyingToken.AuthenticationStatus.INVALID);
     /**
      * The default identifying token, status ACCEPTED.
      */
     public static final IdentifyingToken IDENTIFYING_TOKEN_ACCEPTED = new TextualToken("ACCEPTED", IdentifyingToken.AuthenticationStatus.ACCEPTED);
-
     /**
      * The default identifying token, status BLOCKED.
      */
     public static final IdentifyingToken IDENTIFYING_TOKEN_BLOCKED = new TextualToken("BLOCKED", IdentifyingToken.AuthenticationStatus.BLOCKED);
-
     /**
      * The default identifying token, status CONCURRENT_TX.
      */
     public static final IdentifyingToken IDENTIFYING_TOKEN_CONCURRENT_TX = new TextualToken("CONCURRENT_TX", IdentifyingToken.AuthenticationStatus.CONCURRENT_TX);
-
     /**
      * The default identifying token, status DELETED.
      */
     public static final IdentifyingToken IDENTIFYING_TOKEN_DELETED = new TextualToken("DELETED", IdentifyingToken.AuthenticationStatus.DELETED);
-
     /**
      * The default identifying token, status EXPIRED.
      */
     public static final IdentifyingToken IDENTIFYING_TOKEN_EXPIRED = new TextualToken("EXPIRED", IdentifyingToken.AuthenticationStatus.EXPIRED);
-
-    /**
-     * The default identifying token, status INVALID.
-     */
-    public static final IdentifyingToken IDENTIFYING_TOKEN_INVALID = new TextualToken("INVALID", IdentifyingToken.AuthenticationStatus.INVALID);
-
     /**
      * The default coordinates.
      */
@@ -308,34 +282,28 @@ public final class ChargingStationTestUtils {
      * The default add-on identity.
      */
     public static final AddOnIdentity ADD_ON_IDENTITY = new TypeBasedAddOnIdentity("ADD-ON", ADD_ON_ID);
-
+    /**
+     * The default identity context with NullUserIdentity.
+     * <p/>
+     * Used to test add-ons which do not pass a user identity in the identity context.
+     */
+    public static final IdentityContext NULL_USER_IDENTITY_CONTEXT = new IdentityContext(ADD_ON_IDENTITY, new NullUserIdentity());
     /**
      * The default user identity.
      */
     public static final UserIdentity USER_IDENTITY = new SimpleUserIdentity("USER-ID");
-
     /**
      * The default identity context.
      */
     public static final IdentityContext IDENTITY_CONTEXT = new IdentityContext(ADD_ON_IDENTITY, USER_IDENTITY);
-
     /**
      * The default root user identity.
      */
     public static final UserIdentity ROOT_USER_IDENTITY = new SimpleUserIdentity("root");
-
     /**
      * The default root identity context.
      */
     public static final IdentityContext ROOT_IDENTITY_CONTEXT = new IdentityContext(ADD_ON_IDENTITY, ROOT_USER_IDENTITY);
-
-    /**
-     * The default identity context with NullUserIdentity.
-     *
-     * Used to test add-ons which do not pass a user identity in the identity context.
-     */
-    public static final IdentityContext NULL_USER_IDENTITY_CONTEXT = new IdentityContext(ADD_ON_IDENTITY, new NullUserIdentity());
-
     /**
      * The default list of identifying tokens.
      */
@@ -432,19 +400,16 @@ public final class ChargingStationTestUtils {
             .add(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT))
             .add(new ChargingStationMadeReservableEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
             .build();
-
-    private static final int OPENING_TIME_START_HOUR = 12;
-    private static final int OPENING_TIME_START_MINUTES = 35;
-    private static final int OPENING_TIME_STOP_HOUR = 15;
-    private static final int OPENING_TIME_STOP_MINUTES = 13;
-
     /**
      * The default opening times.
      */
     public static final Set<OpeningTime> OPENING_TIMES = ImmutableSet.<OpeningTime>builder()
-            .add(new OpeningTime(Day.MONDAY, new TimeOfDay(OPENING_TIME_START_HOUR,OPENING_TIME_START_MINUTES), new TimeOfDay(OPENING_TIME_STOP_HOUR,OPENING_TIME_STOP_MINUTES)))
+            .add(new OpeningTime(Day.MONDAY, new TimeOfDay(OPENING_TIME_START_HOUR, OPENING_TIME_START_MINUTES), new TimeOfDay(OPENING_TIME_STOP_HOUR, OPENING_TIME_STOP_MINUTES)))
             .build();
-
+    private static final int OPENING_TIME_START_HOUR = 12;
+    private static final int OPENING_TIME_START_MINUTES = 35;
+    private static final int OPENING_TIME_STOP_HOUR = 15;
+    private static final int OPENING_TIME_STOP_MINUTES = 13;
     /**
      * A default opening times.
      */

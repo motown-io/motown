@@ -32,14 +32,12 @@ import java.util.Set;
 
 public class ConfigurationEventListener {
 
+    private static final String ADD_ON_TYPE = "CHARGINGSTATION-CONFIGURATION";
     private static final Logger LOG = LoggerFactory.getLogger(ConfigurationEventListener.class);
-
+    private static final String MODEL_ATTRIBUTE = "model";
+    private static final String VENDOR_ATTRIBUTE = "vendor";
     private ConfigurationCommandGateway commandGateway;
-
     private DomainService domainService;
-
-    public static final String ADD_ON_TYPE = "CHARGINGSTATION-CONFIGURATION";
-
     private AddOnIdentity addOnIdentity;
 
     /**
@@ -52,8 +50,8 @@ public class ConfigurationEventListener {
     protected void onEvent(UnconfiguredChargingStationBootedEvent event) {
         LOG.info("Handling UnconfiguredChargingStationBootedEvent");
 
-        Map<String,String> attributes = event.getAttributes();
-        Set<Evse> evses = domainService.getEvses(attributes.get("vendor"), attributes.get("model"));
+        Map<String, String> attributes = event.getAttributes();
+        Set<Evse> evses = domainService.getEvses(attributes.get(VENDOR_ATTRIBUTE), attributes.get(MODEL_ATTRIBUTE));
 
         if (evses != null && !evses.isEmpty()) {
             IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
@@ -61,7 +59,7 @@ public class ConfigurationEventListener {
             ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(event.getChargingStationId(), evses, identityContext);
             commandGateway.send(command);
         } else {
-            LOG.info("No Evses found for vender {} and model {}", attributes.get("vendor"), attributes.get("model"));
+            LOG.info("No Evses found for vender {} and model {}", attributes.get(VENDOR_ATTRIBUTE), attributes.get(MODEL_ATTRIBUTE));
         }
     }
 

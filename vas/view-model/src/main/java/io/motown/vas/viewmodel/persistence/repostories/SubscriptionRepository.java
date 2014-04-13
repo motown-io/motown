@@ -27,28 +27,29 @@ import java.util.List;
 public class SubscriptionRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(SubscriptionRepository.class);
+    private static final String SUBSCRIBER_IDENTITY_PARAMETER = "subscriberIdentity";
 
     private EntityManager entityManager;
 
-    public void insert(Subscription subscription) {
-        EntityTransaction transaction = entityManager.getTransaction();
-
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
-        try {
-            entityManager.persist(subscription);
-            transaction.commit();
-        } finally {
-            if (transaction.isActive()) {
-                LOG.warn("Transaction is still active while it should not be, rolling back.");
-                transaction.rollback();
+    public void insert(final Subscription subscription) {
+        executeWithinTransaction(new TransactionalTask() {
+            @Override
+            public void execute() {
+                entityManager.persist(subscription);
             }
-        }
+        });
     }
 
-    public void delete(Subscription subscription) {
+    public void delete(final Subscription subscription) {
+        executeWithinTransaction(new TransactionalTask() {
+            @Override
+            public void execute() {
+                entityManager.remove(subscription);
+            }
+        });
+    }
+
+    private void executeWithinTransaction(TransactionalTask task) {
         EntityTransaction transaction = entityManager.getTransaction();
 
         if (!transaction.isActive()) {
@@ -56,7 +57,7 @@ public class SubscriptionRepository {
         }
 
         try {
-            entityManager.remove(subscription);
+            task.execute();
             transaction.commit();
         } finally {
             if (transaction.isActive()) {
@@ -91,7 +92,7 @@ public class SubscriptionRepository {
     }
 
     public List<Subscription> findBySubscriberIdentity(String subscriberIdentity) {
-        Query query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriberIdentity = :subscriberIdentity").setParameter("subscriberIdentity", subscriberIdentity);
+        Query query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriberIdentity = :subscriberIdentity").setParameter(SUBSCRIBER_IDENTITY_PARAMETER, subscriberIdentity);
         return (List<Subscription>) query.getResultList();
     }
 
@@ -104,4 +105,7 @@ public class SubscriptionRepository {
         this.entityManager = entityManager;
     }
 
+    private static interface TransactionalTask {
+        void execute();
+    }
 }

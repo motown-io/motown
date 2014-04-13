@@ -21,6 +21,7 @@ import javax.persistence.*;
 public class OpeningTime {
 
     private static final int MINUTES_PER_HOUR = 60;
+    private static final String TIME_FORMAT = "%02d:%02d";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,12 +35,12 @@ public class OpeningTime {
 
     @Transient
     public String getTimeStartString() {
-        return String.format("%02d:%02d", (timeStart / MINUTES_PER_HOUR), (timeStart % MINUTES_PER_HOUR));
+        return String.format(TIME_FORMAT, (timeStart / MINUTES_PER_HOUR), (timeStart % MINUTES_PER_HOUR));
     }
 
     @Transient
     public String getTimeStopString() {
-        return String.format("%02d:%02d", (timeStop / MINUTES_PER_HOUR), timeStop % MINUTES_PER_HOUR);
+        return String.format(TIME_FORMAT, (timeStop / MINUTES_PER_HOUR), timeStop % MINUTES_PER_HOUR);
     }
 
     public Long getId() {
@@ -50,20 +51,20 @@ public class OpeningTime {
         return day;
     }
 
-    public Integer getTimeStart() {
-        return timeStart;
-    }
-
-    public Integer getTimeStop() {
-        return timeStop;
-    }
-
     public void setDay(Day day) {
         this.day = day;
     }
 
+    public Integer getTimeStart() {
+        return timeStart;
+    }
+
     public void setTimeStart(Integer timeStart) {
         this.timeStart = timeStart;
+    }
+
+    public Integer getTimeStop() {
+        return timeStop;
     }
 
     public void setTimeStop(Integer timeStop) {
