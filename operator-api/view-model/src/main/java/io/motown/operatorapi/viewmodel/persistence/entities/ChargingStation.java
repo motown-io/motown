@@ -29,6 +29,7 @@ public class ChargingStation {
     private String protocol;
     private Date lastContact;
     private Boolean accepted;
+    private boolean reservable;
     private Double latitude;
     private Double longitude;
     private String addressLine1;
@@ -38,10 +39,8 @@ public class ChargingStation {
     private String region;
     private String country;
     private Accessibility accessibility;
-
     @ElementCollection
     private Set<OpeningTime> openingTimes = new HashSet<>();
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Evse.class)
     private Set<Evse> evses = new HashSet<>();
 
@@ -52,6 +51,15 @@ public class ChargingStation {
     public ChargingStation(String id) {
         this.id = id;
         this.accepted = false;
+        this.reservable = false;
+    }
+
+    public boolean isReservable() {
+        return reservable;
+    }
+
+    public void setReservable(boolean reservable) {
+        this.reservable = reservable;
     }
 
     public String getProtocol() {

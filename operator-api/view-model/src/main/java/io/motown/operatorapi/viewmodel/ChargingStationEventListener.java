@@ -168,6 +168,26 @@ public class ChargingStationEventListener {
     }
 
     /**
+     * Handles the {@link ChargingStationMadeReservableEvent}.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(ChargingStationMadeReservableEvent event) {
+        setReservable(event.getChargingStationId(), true);
+    }
+
+    /**
+     * Handles the {@link ChargingStationMadeNotReservableEvent}.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(ChargingStationMadeNotReservableEvent event) {
+        setReservable(event.getChargingStationId(), false);
+    }
+
+    /**
      * Updates the opening times of the charging station.
      *
      * @param event The event which contains the opening times.
@@ -250,6 +270,21 @@ public class ChargingStationEventListener {
             repository.save(chargingStation);
         }
         return chargingStation != null;
+    }
+
+    /**
+     * Makes a charging station reservable or not reservable.
+     *
+     * @param chargingStationId the charging station to make reservable or not reservable.
+     * @param reservable        true if reservable, false if not.
+     */
+    private void setReservable(ChargingStationId chargingStationId, boolean reservable) {
+        ChargingStation chargingStation = repository.findOne(chargingStationId.getId());
+
+        if (chargingStation != null) {
+            chargingStation.setReservable(reservable);
+            repository.save(chargingStation);
+        }
     }
 
     public void setRepository(ChargingStationRepository repository) {
