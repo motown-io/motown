@@ -237,14 +237,14 @@ angular.module('demoApp.controllers', []).
                 });
             };
 
-            $scope.reserveNow = function (chargingStation, evseId, identifyingToken) {
+            $scope.reserveNow = function (chargingStation, evseId, identifyingToken, expiryDate) {
                 $http({
                     url: 'charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['RequestReserveNow', {
                         'evseId': evseId,
                         'identifyingToken': identifyingToken,
-                        'expiryDate': new Date()
+                        'expiryDate': expiryDate
                     }]
                 }).success(function (response) {
                     console.log('change availability requested');

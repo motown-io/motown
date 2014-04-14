@@ -57,7 +57,7 @@
                             <button class="btn btn-default" href="#" ng-click="updateFirmware(chargingStation, 'http://somewhere.xyz', '2014-01-01T21:00:00')">firmware-update</button>
                             <button class="btn btn-default" href="#" ng-click="getAuthorizationListVersion(chargingStation)">authorization list version</button>
                             <button class="btn btn-default" href="#" ng-click="sendAuthorizationList(chargingStation, 1, 'FULL', [{'token': 'token1', 'status': 'ACCEPTED'}, {'token': 'token2', 'status': 'BLOCKED'}, {'token': 'token3', 'status': 'EXPIRED'}])">send authorization list</button>
-                            <button class="btn btn-default" href="#" ng-click="reserveNow(chargingStation, 1, {'token': 'TOKEN'})">reserve now</button>
+                            <button class="btn btn-default" href="#" ng-click="reserveNow(chargingStation, 1, {'token': 'TOKEN'}, '2014-03-21T09:30:00Z')">reserve now</button>
                             <button class="btn btn-default" href="#" ng-click="updateReservable(chargingStation, true)">Set reservable</button>
                             <button class="btn btn-default" href="#" ng-click="updateReservable(chargingStation, false)">Set not reservable</button>
                             <button class="btn btn-default" href="#" ng-click="placeChargingStation(chargingStation, {'latitude': 51.464055, 'longitude': 5.794529}, undefined, 'public')">Place charging station</button>
