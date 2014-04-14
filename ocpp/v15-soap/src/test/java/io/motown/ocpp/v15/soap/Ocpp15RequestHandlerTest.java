@@ -69,7 +69,7 @@ public class Ocpp15RequestHandlerTest {
 
     @Test
     public void testConfigurationRequestedEvent() {
-        requestHandler.handle(new ConfigurationRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT));
+        requestHandler.handle(new ConfigurationRequestedEvent(CHARGING_STATION_ID, CONFIGURATION_KEYS, PROTOCOL, ROOT_IDENTITY_CONTEXT));
 
         verify(client).getConfiguration(CHARGING_STATION_ID);
     }

@@ -18,6 +18,7 @@ package io.motown.domain.api.chargingstation.test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.*;
 import org.joda.time.DateTimeUtils;
@@ -167,7 +168,7 @@ public final class ChargingStationTestUtils {
      * The default charging station identifier.
      */
     public static final ChargingStationId CHARGING_STATION_ID = new ChargingStationId("CS-001");
-    /**
+/**
      * The default reservation identifier.
      */
     public static final NumberedReservationId RESERVATION_ID = new NumberedReservationId(CHARGING_STATION_ID, PROTOCOL, 1);
@@ -282,6 +283,12 @@ public final class ChargingStationTestUtils {
      * The default add-on identity.
      */
     public static final AddOnIdentity ADD_ON_IDENTITY = new TypeBasedAddOnIdentity("ADD-ON", ADD_ON_ID);
+
+    /**
+     * The default configuration keys to retrieve from the charging station
+     */
+    public static final List<String> CONFIGURATION_KEYS = Lists.newArrayList();
+
     /**
      * The default identity context with NullUserIdentity.
      * <p/>

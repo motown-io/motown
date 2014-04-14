@@ -164,6 +164,11 @@
             <property name="gson" ref="gson" />
             <property name="repository" ref="chargingStationRepository" />
         </bean>
+        <bean class="io.motown.operatorapi.json.commands.RequestGetConfigurationJsonCommandHandler">
+            <property name="commandGateway" ref="domainCommandGateway" />
+            <property name="gson" ref="gson" />
+            <property name="repository" ref="chargingStationRepository" />
+        </bean>
     </util:list>
 
     <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">

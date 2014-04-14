@@ -115,6 +115,16 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
     }
 
     @Override
+    public void send(RequestCancelReservationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestCancelReservationCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestConfigurationCommand command) {
+        LOG.debug("RequestConfigurationCommand: " + command.toString());
+    }
+
+    @Override
     public void send(PlaceChargingStationCommand command) {
         LOG.debug("PlaceChargingStationCommand: " + command.toString());
     }

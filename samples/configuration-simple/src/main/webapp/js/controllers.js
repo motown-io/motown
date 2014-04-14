@@ -173,6 +173,17 @@ angular.module('demoApp.controllers', []).
                 });
             };
 
+            $scope.getConfiguration = function (chargingStation) {
+                $http({
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
+                    method: 'POST',
+                    data: ['RequestGetConfiguration', {
+                    }]
+                }).success(function (response) {
+                        console.log('get-configuration requested');
+                    });
+            };
+
             $scope.clearCache = function (chargingStation) {
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
@@ -253,6 +264,18 @@ angular.module('demoApp.controllers', []).
                 }).success(function (response) {
                     console.log('reserve now requested');
                 });
+            };
+
+            $scope.cancelReservation = function (chargingStation, reservationId) {
+                $http({
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
+                    method: 'POST',
+                    data: ['RequestCancelReservation', {
+                        'reservationId': reservationId
+                    }]
+                }).success(function (response) {
+                        console.log('cancel reservation requested');
+                    });
             };
 
             $scope.updateReservable = function (chargingStation, reservable) {

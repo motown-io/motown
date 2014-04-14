@@ -175,6 +175,11 @@
             <property name="gson" ref="operatorApiGson" />
             <property name="repository" ref="chargingStationRepositoryOperatorApi" />
         </bean>
+        <bean class="io.motown.operatorapi.json.commands.RequestGetConfigurationJsonCommandHandler">
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway" />
+            <property name="gson" ref="operatorApiGson" />
+            <property name="repository" ref="chargingStationRepositoryOperatorApi" />
+        </bean>
     </util:list>
 
     <bean id="operatorApiDomainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">

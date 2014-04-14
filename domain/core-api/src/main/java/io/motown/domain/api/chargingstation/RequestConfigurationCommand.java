@@ -18,6 +18,8 @@ package io.motown.domain.api.chargingstation;
 import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -29,17 +31,21 @@ public final class RequestConfigurationCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
+    private final List<String> keys;
+
     private final IdentityContext identityContext;
 
     /**
      * Creates a {@code RequestConfigurationCommand} with an identifier and identity context.
      *
      * @param chargingStationId the identifier of the charging station.
+     * @param keys              an optional list of keys to retrieve, or all keys in case this list is empty
      * @param identityContext   the identity context.
      * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
      */
-    public RequestConfigurationCommand(ChargingStationId chargingStationId, IdentityContext identityContext) {
+    public RequestConfigurationCommand(ChargingStationId chargingStationId, List<String> keys, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.keys = checkNotNull(keys);
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -50,6 +56,15 @@ public final class RequestConfigurationCommand {
      */
     public ChargingStationId getChargingStationId() {
         return this.chargingStationId;
+    }
+
+    /**
+     * The optional list of keys to be retrieved
+     *
+     * @return optional list of keys
+     */
+    public List<String> getKeys() {
+        return keys;
     }
 
     /**

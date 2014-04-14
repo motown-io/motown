@@ -17,6 +17,8 @@ package io.motown.domain.api.chargingstation;
 
 import io.motown.domain.api.security.IdentityContext;
 
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -27,6 +29,8 @@ public final class ConfigurationRequestedEvent implements CommunicationWithCharg
 
     private final ChargingStationId chargingStationId;
 
+    private final List<String> keys;
+
     private final String protocol;
 
     private final IdentityContext identityContext;
@@ -35,12 +39,14 @@ public final class ConfigurationRequestedEvent implements CommunicationWithCharg
      * Creates a {@code ConfigurationRequestedEvent} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
+     * @param keys              an optional list of keys to retrieve, or all keys in case this list is empty
      * @param protocol protocol identifier.
      * @param identityContext   identity context.
      * @throws NullPointerException if {@code chargingStationId} or {@code protocol} or {@code identityContext} is {@code null}.
      */
-    public ConfigurationRequestedEvent(ChargingStationId chargingStationId, String protocol, IdentityContext identityContext) {
+    public ConfigurationRequestedEvent(ChargingStationId chargingStationId, List<String> keys, String protocol, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.keys = checkNotNull(keys);
         this.protocol = checkNotNull(protocol);
         this.identityContext = checkNotNull(identityContext);
     }
@@ -53,6 +59,15 @@ public final class ConfigurationRequestedEvent implements CommunicationWithCharg
     @Override
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
+    }
+
+    /**
+     * The optional list of keys to be retrieved
+     *
+     * @return optional list of keys
+     */
+    public List<String> getKeys() {
+        return keys;
     }
 
     /**
