@@ -21,8 +21,6 @@ import io.motown.operatorapi.viewmodel.persistence.entities.Transaction;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -143,6 +141,11 @@ public class ChargingStationEventListener {
         updateChargingStationOpeningTimes(event, false);
     }
 
+    @EventHandler
+    public void handle(ChargingStationConfiguredEvent event) {
+        LOG.debug("ChargingStationConfiguredEvent for [{}] received!", event.getChargingStationId());
+    }
+
     /**
      * Updates the opening times of the charging station.
      *
@@ -159,14 +162,12 @@ public class ChargingStationEventListener {
                     chargingStation.getOpeningTimes().clear();
                 }
 
-                DateTimeFormatter fmt = DateTimeFormat.forPattern("HH:mm");
-
                 for (OpeningTime coreOpeningTime : event.getOpeningTimes()) {
                     Day dayOfWeek = coreOpeningTime.getDay();
                     String timeStart = String.format("%02d:%02d", coreOpeningTime.getTimeStart().getHourOfDay(), coreOpeningTime.getTimeStart().getMinutesInHour());
                     String timeStop = String.format("%02d:%02d", coreOpeningTime.getTimeStop().getHourOfDay(), coreOpeningTime.getTimeStop().getMinutesInHour());
 
-                    io.motown.operatorapi.viewmodel.persistence.entities.OpeningTime openingTime = new io.motown.operatorapi.viewmodel.persistence.entities.OpeningTime(dayOfWeek, fmt.parseDateTime(timeStart).toDate(), fmt.parseDateTime(timeStop).toDate());
+                    io.motown.operatorapi.viewmodel.persistence.entities.OpeningTime openingTime = new io.motown.operatorapi.viewmodel.persistence.entities.OpeningTime(dayOfWeek, timeStart, timeStop);
                     chargingStation.getOpeningTimes().add(openingTime);
                 }
 

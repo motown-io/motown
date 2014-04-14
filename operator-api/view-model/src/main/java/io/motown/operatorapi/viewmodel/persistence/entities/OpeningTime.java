@@ -18,27 +18,20 @@ package io.motown.operatorapi.viewmodel.persistence.entities;
 import io.motown.domain.api.chargingstation.Day;
 
 import javax.persistence.Embeddable;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import java.util.Date;
 
 @Embeddable
 public class OpeningTime {
     private Day day;
-
-    @Temporal(TemporalType.TIME)
-    private Date timeStart;
-
-    @Temporal(TemporalType.TIME)
-    private Date timeStop;
+    private String timeStart;
+    private String timeStop;
 
     public OpeningTime() {
     }
 
-    public OpeningTime(Day day, Date timeStart, Date timeStop) {
+    public OpeningTime(Day day, String timeStart, String timeStop) {
         this.day = day;
-        this.timeStart = new Date(timeStart.getTime());
-        this.timeStop = new Date(timeStop.getTime());
+        this.timeStart = timeStart;
+        this.timeStop = timeStop;
     }
 
     public Day getDay() {
@@ -49,19 +42,19 @@ public class OpeningTime {
         this.day = day;
     }
 
-    public Date getTimeStart() {
-        return new Date(timeStart.getTime());
+    public String getTimeStart() {
+        return timeStart;
     }
 
-    public void setTimeStart(Date timeStart) {
-        this.timeStart = new Date(timeStart.getTime());
+    public void setTimeStart(String timeStart) {
+        this.timeStart = timeStart;
     }
 
-    public Date getTimeStop() {
-        return new Date(timeStop.getTime());
+    public String getTimeStop() {
+        return timeStop;
     }
 
-    public void setTimeStop(Date timeStop) {
-        this.timeStop = new Date(timeStop.getTime());
+    public void setTimeStop(String timeStop) {
+        this.timeStop = timeStop;
     }
 }
