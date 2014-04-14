@@ -33,8 +33,8 @@ public class AddressTest {
 
         Address address = new Address(line1, line2, postalCode, city, region, country);
 
-        assertEquals(line1, address.getAddressline1());
-        assertEquals(line2, address.getAddressline2());
+        assertEquals(line1, address.getAddressLine1());
+        assertEquals(line2, address.getAddressLine2());
         assertEquals(postalCode, address.getPostalCode());
         assertEquals(city, address.getCity());
         assertEquals(region, address.getRegion());

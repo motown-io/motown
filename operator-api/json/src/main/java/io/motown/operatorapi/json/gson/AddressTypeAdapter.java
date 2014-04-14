@@ -25,8 +25,8 @@ import java.lang.reflect.Type;
  * <pre>
  * {@code
  * {
- *  addressline1:    "string",
- *  addressline2:    "string",
+ *  addressLine1:    "string",
+ *  addressLine2:    "string",
  *  postalCode:      "string",
  *  city:            "string",
  *  region:          "string",
@@ -54,16 +54,16 @@ public class AddressTypeAdapter implements TypeAdapter<Address> {
             throw new JsonParseException("Address must be a JSON object", e);
         }
 
-        String addressline1 = obj.getAsJsonPrimitive("addressline1").getAsString();
+        String addressLine1 = obj.getAsJsonPrimitive("addressLine1").getAsString();
         String city = obj.getAsJsonPrimitive("city").getAsString();
         String country = obj.getAsJsonPrimitive("country").getAsString();
 
-        JsonPrimitive addressline2Obj = obj.getAsJsonPrimitive("addressline2"), postalCodeObj = obj.getAsJsonPrimitive("postalCode"), regionObj = obj.getAsJsonPrimitive("region");
+        JsonPrimitive addressLine2Obj = obj.getAsJsonPrimitive("addressLine2"), postalCodeObj = obj.getAsJsonPrimitive("postalCode"), regionObj = obj.getAsJsonPrimitive("region");
 
-        String addressline2 = addressline2Obj != null ? addressline2Obj.getAsString() : "";
+        String addressLine2 = addressLine2Obj != null ? addressLine2Obj.getAsString() : "";
         String postalCode = postalCodeObj != null ? postalCodeObj.getAsString() : "";
         String region = regionObj != null ? regionObj.getAsString() : "";
 
-        return new Address(addressline1, addressline2, postalCode, city, region, country);
+        return new Address(addressLine1, addressLine2, postalCode, city, region, country);
     }
 }

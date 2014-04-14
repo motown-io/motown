@@ -22,8 +22,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * {@code Address} is used to interpret an address object sent to the core api.
  */
 public final class Address {
-    private final String addressline1;
-    private String addressline2;
+    private final String addressLine1;
+    private String addressLine2;
     private String postalCode;
     private final String city;
     private String region;
@@ -32,19 +32,19 @@ public final class Address {
     /**
      * Creates an {@code Address} instance
      *
-     * @param addressline1 This usually denotes a street including a house number.
-     * @param addressline2 This is used for e.g. a building number.
+     * @param addressLine1 This usually denotes a street including a house number.
+     * @param addressLine2 This is used for e.g. a building number.
      * @param postalCode The postal code of the address.
      * @param city The city of the address.
      * @param region The region of the address.
      * @param country The country of the address.
      * @throws java.lang.NullPointerException if one of the parameters is {@code null}.
      */
-    public Address(String addressline1, String addressline2, String postalCode, String city, String region, String country) {
-        checkNotNull(addressline1);
-        checkArgument(!addressline1.isEmpty());
-        this.addressline1 = addressline1;
-        this.addressline2 = checkNotNull(addressline2);
+    public Address(String addressLine1, String addressLine2, String postalCode, String city, String region, String country) {
+        checkNotNull(addressLine1);
+        checkArgument(!addressLine1.isEmpty());
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = checkNotNull(addressLine2);
         this.postalCode = checkNotNull(postalCode);
         checkNotNull(city);
         checkArgument(!city.isEmpty());
@@ -59,16 +59,16 @@ public final class Address {
      * Gets the first address line.
      * @return the first address line.
      */
-    public String getAddressline1() {
-        return addressline1;
+    public String getAddressLine1() {
+        return addressLine1;
     }
 
     /**
      * Gets the second address line.
      * @return the second address line.
      */
-    public String getAddressline2() {
-        return addressline2;
+    public String getAddressLine2() {
+        return addressLine2;
     }
 
     /**

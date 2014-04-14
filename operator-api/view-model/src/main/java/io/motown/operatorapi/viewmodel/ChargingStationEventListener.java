@@ -218,8 +218,8 @@ public class ChargingStationEventListener {
             }
 
             if (event.getAddress() != null) {
-                chargingStation.setAddressline1(event.getAddress().getAddressline1());
-                chargingStation.setAddressline2(event.getAddress().getAddressline2());
+                chargingStation.setAddressLine1(event.getAddress().getAddressLine1());
+                chargingStation.setAddressLine2(event.getAddress().getAddressLine2());
                 chargingStation.setPostalCode(event.getAddress().getPostalCode());
                 chargingStation.setCity(event.getAddress().getCity());
                 chargingStation.setRegion(event.getAddress().getRegion());

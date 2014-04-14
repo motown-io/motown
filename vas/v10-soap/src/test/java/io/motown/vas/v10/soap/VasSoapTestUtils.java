@@ -22,9 +22,7 @@ import io.motown.vas.viewmodel.model.*;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADDRESS;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.COORDINATES;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -51,7 +49,7 @@ public class VasSoapTestUtils {
 
         //TODO implement
 //        cs.setAccessibility();
-        cs.setAddress(ADDRESS.getAddressline1());
+        cs.setAddress(ADDRESS.getAddressLine1());
         cs.setChargeMode(ChargeMode.IEC_61851_MODE_3);
 
         ImmutableSet<ChargingCapability> chargingCapabilities = ImmutableSet.<ChargingCapability>builder()
@@ -121,7 +119,7 @@ public class VasSoapTestUtils {
 //        assertEquals(cs..., cp.getPublic());
 
         for (ConnectorType connectorType : cs.getConnectorTypes()) {
-            if(!connectorType.equals(ConnectorType.TEPCO_CHA_DE_MO)) {
+            if (!connectorType.equals(ConnectorType.TEPCO_CHA_DE_MO)) {
                 assertTrue(cp.getConnectorTypes().contains(io.motown.vas.v10.soap.schema.ConnectorType.fromValue(connectorType.value())));
             } else {
                 assertTrue(cp.getConnectorTypes().contains(io.motown.vas.v10.soap.schema.ConnectorType.TEPCO_CHA_ME_DO));

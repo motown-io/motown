@@ -123,7 +123,7 @@ public class VasEventHandlerTest {
         eventHandler.handle(new ChargingStationPlacedEvent(CHARGING_STATION_ID, null, ADDRESS, ACCESSIBILITY, IDENTITY_CONTEXT));
 
         ChargingStation cs = getTestChargingStationFromRepository();
-        assertEquals(ADDRESS.getAddressline1(), cs.getAddress());
+        assertEquals(ADDRESS.getAddressLine1(), cs.getAddress());
         assertEquals(ADDRESS.getPostalCode(), cs.getPostalCode());
         assertEquals(ADDRESS.getRegion(), cs.getRegion());
         assertEquals(ADDRESS.getCity(), cs.getCity());
@@ -141,7 +141,7 @@ public class VasEventHandlerTest {
         ChargingStation cs = getTestChargingStationFromRepository();
         assertEquals(Double.valueOf(COORDINATES.getLatitude()), cs.getLatitude());
         assertEquals(Double.valueOf(COORDINATES.getLongitude()), cs.getLongitude());
-        assertEquals(ADDRESS.getAddressline1(), cs.getAddress());
+        assertEquals(ADDRESS.getAddressLine1(), cs.getAddress());
         assertEquals(ADDRESS.getPostalCode(), cs.getPostalCode());
         assertEquals(ADDRESS.getRegion(), cs.getRegion());
         assertEquals(ADDRESS.getCity(), cs.getCity());
@@ -177,7 +177,7 @@ public class VasEventHandlerTest {
         eventHandler.handle(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, null, ADDRESS, ACCESSIBILITY, IDENTITY_CONTEXT));
 
         ChargingStation cs = getTestChargingStationFromRepository();
-        assertEquals(ADDRESS.getAddressline1(), cs.getAddress());
+        assertEquals(ADDRESS.getAddressLine1(), cs.getAddress());
         assertEquals(ADDRESS.getPostalCode(), cs.getPostalCode());
         assertEquals(ADDRESS.getRegion(), cs.getRegion());
         assertEquals(ADDRESS.getCity(), cs.getCity());
@@ -195,7 +195,7 @@ public class VasEventHandlerTest {
         ChargingStation cs = getTestChargingStationFromRepository();
         assertEquals(Double.valueOf(COORDINATES.getLatitude()), cs.getLatitude());
         assertEquals(Double.valueOf(COORDINATES.getLongitude()), cs.getLongitude());
-        assertEquals(ADDRESS.getAddressline1(), cs.getAddress());
+        assertEquals(ADDRESS.getAddressLine1(), cs.getAddress());
         assertEquals(ADDRESS.getPostalCode(), cs.getPostalCode());
         assertEquals(ADDRESS.getRegion(), cs.getRegion());
         assertEquals(ADDRESS.getCity(), cs.getCity());
@@ -231,7 +231,7 @@ public class VasEventHandlerTest {
         eventHandler.handle(new ChargingStationMovedEvent(CHARGING_STATION_ID, null, ADDRESS, ACCESSIBILITY, IDENTITY_CONTEXT));
 
         ChargingStation cs = getTestChargingStationFromRepository();
-        assertEquals(ADDRESS.getAddressline1(), cs.getAddress());
+        assertEquals(ADDRESS.getAddressLine1(), cs.getAddress());
         assertEquals(ADDRESS.getPostalCode(), cs.getPostalCode());
         assertEquals(ADDRESS.getRegion(), cs.getRegion());
         assertEquals(ADDRESS.getCity(), cs.getCity());
@@ -249,7 +249,7 @@ public class VasEventHandlerTest {
         ChargingStation cs = getTestChargingStationFromRepository();
         assertEquals(Double.valueOf(COORDINATES.getLatitude()), cs.getLatitude());
         assertEquals(Double.valueOf(COORDINATES.getLongitude()), cs.getLongitude());
-        assertEquals(ADDRESS.getAddressline1(), cs.getAddress());
+        assertEquals(ADDRESS.getAddressLine1(), cs.getAddress());
         assertEquals(ADDRESS.getPostalCode(), cs.getPostalCode());
         assertEquals(ADDRESS.getRegion(), cs.getRegion());
         assertEquals(ADDRESS.getCity(), cs.getCity());

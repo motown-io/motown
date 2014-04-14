@@ -97,6 +97,7 @@ public class VasEventHandler {
 
     /**
      * Handles the {@code ChargingStationPlacedEvent}.
+     *
      * @param event the actual event.
      */
     @EventHandler
@@ -108,6 +109,7 @@ public class VasEventHandler {
 
     /**
      * Handles the {@code ChargingStationLocationImprovedEvent}.
+     *
      * @param event the actual event.
      */
     @EventHandler
@@ -119,6 +121,7 @@ public class VasEventHandler {
 
     /**
      * Handles the {@code ChargingStationMovedEvent}.
+     *
      * @param event the actual event.
      */
     @EventHandler
@@ -130,6 +133,7 @@ public class VasEventHandler {
 
     /**
      * Handles the {@code ChargingStationOpeningTimesSetEvent}.
+     *
      * @param event the actual event.
      */
     @EventHandler
@@ -146,6 +150,7 @@ public class VasEventHandler {
 
     /**
      * Handles the {@code ChargingStationOpeningTimesAddedEvent}.
+     *
      * @param event the actual event.
      */
     @EventHandler
@@ -197,7 +202,7 @@ public class VasEventHandler {
         ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
 
         if (chargingStation != null && event.getComponentId() instanceof EvseId) {
-            io.motown.vas.viewmodel.model.Evse evse = chargingStation.getEvse( ((EvseId)event.getComponentId()).getNumberedId() );
+            io.motown.vas.viewmodel.model.Evse evse = chargingStation.getEvse(((EvseId) event.getComponentId()).getNumberedId());
             evse.setState(ComponentStatus.fromApiComponentStatus(event.getStatus()));
             chargingStationRepository.insert(chargingStation);
 
@@ -222,7 +227,7 @@ public class VasEventHandler {
      * Tries to find a {@code ChargingStation} by the passed id, if not found an error will be logged and null will be
      * returned.
      *
-     * @param chargingStationId    charging station identifier.
+     * @param chargingStationId charging station identifier.
      * @return charging station if found, null otherwise.
      */
     private ChargingStation getChargingStation(ChargingStationId chargingStationId) {
@@ -240,7 +245,7 @@ public class VasEventHandler {
      * repository an error is logged.
      *
      * @param chargingStationId charging station identifier.
-     * @param reservable true if the charging station is reservable, false otherwise.
+     * @param reservable        true if the charging station is reservable, false otherwise.
      */
     private void updateReservableForChargingStation(ChargingStationId chargingStationId, boolean reservable) {
         ChargingStation chargingStation = getChargingStation(chargingStationId);
@@ -256,9 +261,9 @@ public class VasEventHandler {
      * If the charging station cannot be found in the repository an error is logged.
      *
      * @param chargingStationId charging station identifier.
-     * @param coordinates the lat/long coordinates of the charging station.
-     * @param address the geographical address of the charging station.
-     * @param accessibility the accessibility of the charging station.
+     * @param coordinates       the lat/long coordinates of the charging station.
+     * @param address           the geographical address of the charging station.
+     * @param accessibility     the accessibility of the charging station.
      */
     private void updateLocationForChargingStation(ChargingStationId chargingStationId, Coordinates coordinates, Address address, Accessibility accessibility) {
         ChargingStation chargingStation = getChargingStation(chargingStationId);
@@ -271,7 +276,7 @@ public class VasEventHandler {
             }
 
             if (address != null) {
-                chargingStation.setAddress(address.getAddressline1());
+                chargingStation.setAddress(address.getAddressLine1());
                 chargingStation.setCity(address.getCity());
                 chargingStation.setCountry(address.getCountry());
                 chargingStation.setPostalCode(address.getPostalCode());

@@ -31,8 +31,8 @@ public class ChargingStation {
     private Boolean accepted;
     private Double latitude;
     private Double longitude;
-    private String addressline1;
-    private String addressline2;
+    private String addressLine1;
+    private String addressLine2;
     private String postalCode;
     private String city;
     private String region;
@@ -98,20 +98,20 @@ public class ChargingStation {
         this.longitude = longitude;
     }
 
-    public String getAddressline1() {
-        return addressline1;
+    public String getAddressLine1() {
+        return addressLine1;
     }
 
-    public void setAddressline1(String addressline1) {
-        this.addressline1 = addressline1;
+    public void setAddressLine1(String addressLine1) {
+        this.addressLine1 = addressLine1;
     }
 
-    public String getAddressline2() {
-        return addressline2;
+    public String getAddressLine2() {
+        return addressLine2;
     }
 
-    public void setAddressline2(String addressline2) {
-        this.addressline2 = addressline2;
+    public void setAddressLine2(String addressLine2) {
+        this.addressLine2 = addressLine2;
     }
 
     public String getPostalCode() {

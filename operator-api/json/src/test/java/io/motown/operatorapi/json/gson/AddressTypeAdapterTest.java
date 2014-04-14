@@ -31,8 +31,8 @@ public class AddressTypeAdapterTest {
         assertEquals(adapter.getAdaptedType(), Address.class);
 
         JsonObject addressJson = new JsonObject();
-        addressJson.addProperty("addressline1", "addressline1");
-        addressJson.addProperty("addressline2", "addressline2");
+        addressJson.addProperty("addressLine1", "addressLine1");
+        addressJson.addProperty("addressLine2", "addressLine2");
         addressJson.addProperty("postalCode", "postalCode");
         addressJson.addProperty("city", "city");
         addressJson.addProperty("region", "region");
@@ -40,8 +40,8 @@ public class AddressTypeAdapterTest {
 
         Address address = adapter.deserialize(addressJson, Address.class, null);
 
-        assertEquals(addressJson.get("addressline1").getAsString(), address.getAddressline1());
-        assertEquals(addressJson.get("addressline2").getAsString(), address.getAddressline2());
+        assertEquals(addressJson.get("addressLine1").getAsString(), address.getAddressLine1());
+        assertEquals(addressJson.get("addressLine2").getAsString(), address.getAddressLine2());
         assertEquals(addressJson.get("postalCode").getAsString(), address.getPostalCode());
         assertEquals(addressJson.get("city").getAsString(), address.getCity());
         assertEquals(addressJson.get("region").getAsString(), address.getRegion());
@@ -50,15 +50,15 @@ public class AddressTypeAdapterTest {
 
     @Test(expected = JsonParseException.class)
     public void testAddressAsPrimitive() {
-        JsonPrimitive jsonPrimitive = new JsonPrimitive("addressline1");
+        JsonPrimitive jsonPrimitive = new JsonPrimitive("addressLine1");
         adapter.deserialize(jsonPrimitive, Address.class, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testEmptyMandatoryFields() {
         JsonObject addressJson = new JsonObject();
-        addressJson.addProperty("addressline1", "");
-        addressJson.addProperty("addressline2", "");
+        addressJson.addProperty("addressLine1", "");
+        addressJson.addProperty("addressLine2", "");
         addressJson.addProperty("postalCode", "");
         addressJson.addProperty("city", "");
         addressJson.addProperty("region", "");

@@ -36,19 +36,19 @@ public class MoveChargingStationJsonCommandHandlerTest {
 
     @Test
     public void testAddress() {
-        JsonObject commandObject = gson.fromJson("{address:{addressline1:'Teststraat 1',city:'Deurne',country:'NL'},accessibility:'PUBLIC'}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{address:{addressLine1:'Teststraat 1',city:'Deurne',country:'NL'},accessibility:'PUBLIC'}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testAddressWrongAccessibility() {
-        JsonObject commandObject = gson.fromJson("{address:{addressline1:'Teststraat 1',city:'Deurne',country:'NL'},accessibility:'NON-PUBLIC'}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{address:{addressLine1:'Teststraat 1',city:'Deurne',country:'NL'},accessibility:'NON-PUBLIC'}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void testInvalidAddress() {
-        JsonObject commandObject = gson.fromJson("{address:{addressline:'Teststraat 1',city:'Deurne',country:'NL'},accessibility:'PUBLIC'}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{address:{addressLine:'Teststraat 1',city:'Deurne',country:'NL'},accessibility:'PUBLIC'}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, IDENTITY_CONTEXT);
     }
 
