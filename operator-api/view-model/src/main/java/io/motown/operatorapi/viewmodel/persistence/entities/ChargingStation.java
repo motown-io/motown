@@ -27,8 +27,6 @@ public class ChargingStation {
     @Id
     private String id;
     private String protocol;
-    private Date updated;
-    private Date created;
     private Date lastTimeBooted;
     private Date lastContact;
     private Boolean accepted;
@@ -91,14 +89,6 @@ public class ChargingStation {
 
     public String getId() {
         return id;
-    }
-
-    public Date getUpdated() {
-        return updated != null ? new Date(updated.getTime()) : null;
-    }
-
-    public Date getCreated() {
-        return created != null ? new Date(created.getTime()) : null;
     }
 
     public Double getLatitude() {
@@ -170,8 +160,7 @@ public class ChargingStation {
     }
 
     public void setAccessibility(Accessibility accessibility) {
-        this.accessibility = accessibility;
-    }
+        this.accessibility = accessibility;    }
 
     public Set<OpeningTime> getOpeningTimes() {
         return openingTimes;
@@ -187,17 +176,5 @@ public class ChargingStation {
 
     public void setEvses(Set<Evse> evses) {
         this.evses = evses;
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        Date now = new Date();
-        created = now;
-        updated = now;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updated = new Date();
     }
 }
