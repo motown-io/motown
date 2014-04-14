@@ -16,6 +16,7 @@
 package io.motown.operatorapi.viewmodel.persistence.entities;
 
 import io.motown.domain.api.chargingstation.Accessibility;
+import io.motown.domain.api.chargingstation.ComponentStatus;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -39,6 +40,7 @@ public class ChargingStation {
     private String region;
     private String country;
     private Accessibility accessibility;
+    private ComponentStatus status;
     @ElementCollection
     private Set<OpeningTime> openingTimes = new HashSet<>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Evse.class)
@@ -176,5 +178,13 @@ public class ChargingStation {
 
     public void setEvses(Set<Evse> evses) {
         this.evses = evses;
+    }
+
+    public ComponentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ComponentStatus status) {
+        this.status = status;
     }
 }

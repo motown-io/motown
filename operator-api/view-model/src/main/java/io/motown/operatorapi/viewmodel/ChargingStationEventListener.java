@@ -188,6 +188,21 @@ public class ChargingStationEventListener {
     }
 
     /**
+     * Handles the {@link ChargingStationStatusNotificationReceivedEvent}.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(ChargingStationStatusNotificationReceivedEvent event) {
+        ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
+
+        if (chargingStation != null) {
+            chargingStation.setStatus(event.getStatus());
+            repository.save(chargingStation);
+        }
+    }
+
+    /**
      * Updates the opening times of the charging station.
      *
      * @param event The event which contains the opening times.
