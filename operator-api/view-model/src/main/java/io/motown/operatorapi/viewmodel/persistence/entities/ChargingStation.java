@@ -17,11 +17,10 @@ package io.motown.operatorapi.viewmodel.persistence.entities;
 
 import io.motown.domain.api.chargingstation.Accessibility;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class ChargingStation {
@@ -42,6 +41,9 @@ public class ChargingStation {
     private String region;
     private String country;
     private Accessibility accessibility;
+
+    @ElementCollection
+    private Set<OpeningTime> openingTimes = new HashSet<>();
 
     private ChargingStation() {
         // Private no-arg constructor for Hibernate.
@@ -166,6 +168,14 @@ public class ChargingStation {
 
     public void setAccessibility(Accessibility accessibility) {
         this.accessibility = accessibility;
+    }
+
+    public Set<OpeningTime> getOpeningTimes() {
+        return openingTimes;
+    }
+
+    public void setOpeningTimes(Set<OpeningTime> openingTimes) {
+        this.openingTimes = openingTimes;
     }
 
     @PrePersist

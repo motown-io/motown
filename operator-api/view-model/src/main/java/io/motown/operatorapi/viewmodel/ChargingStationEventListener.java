@@ -21,6 +21,8 @@ import io.motown.operatorapi.viewmodel.persistence.entities.Transaction;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,6 +129,55 @@ public class ChargingStationEventListener {
     public void handle(ChargingStationLocationImprovedEvent event) {
         LOG.debug("ChargingStationLocationImprovedEvent for [{}] received!", event.getChargingStationId());
         updateChargingStationLocation(event);
+    }
+
+    @EventHandler
+    public void handle(ChargingStationOpeningTimesSetEvent event) {
+        LOG.debug("ChargingStationOpeningTimesSetEvent for [{}] received!", event.getChargingStationId());
+        updateChargingStationOpeningTimes(event, true);
+    }
+
+    @EventHandler
+    public void handle(ChargingStationOpeningTimesAddedEvent event) {
+        LOG.debug("ChargingStationOpeningTimesAddedEvent for [{}] received!", event.getChargingStationId());
+        updateChargingStationOpeningTimes(event, false);
+    }
+
+    /**
+     * Updates the opening times of the charging station.
+     *
+     * @param event The event which contains the opening times.
+     * @param clear Whether to clear the opening times or not.
+     * @return {@code true} if the update has been performed, {@code false} if the charging station can't be found.
+     */
+    private boolean updateChargingStationOpeningTimes(ChargingStationOpeningTimesChangedEvent event, boolean clear) {
+        ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
+
+        if (chargingStation != null) {
+            if (!event.getOpeningTimes().isEmpty()) {
+                if (clear) {
+                    chargingStation.getOpeningTimes().clear();
+                }
+
+                DateTimeFormatter fmt = DateTimeFormat.forPattern("HH:mm");
+
+                for (OpeningTime coreOpeningTime : event.getOpeningTimes()) {
+                    Day dayOfWeek = coreOpeningTime.getDay();
+                    String timeStart = String.format("%02d:%02d", coreOpeningTime.getTimeStart().getHourOfDay(), coreOpeningTime.getTimeStart().getMinutesInHour());
+                    String timeStop = String.format("%02d:%02d", coreOpeningTime.getTimeStop().getHourOfDay(), coreOpeningTime.getTimeStop().getMinutesInHour());
+
+                    io.motown.operatorapi.viewmodel.persistence.entities.OpeningTime openingTime = new io.motown.operatorapi.viewmodel.persistence.entities.OpeningTime(dayOfWeek, fmt.parseDateTime(timeStart).toDate(), fmt.parseDateTime(timeStop).toDate());
+                    chargingStation.getOpeningTimes().add(openingTime);
+                }
+
+                repository.save(chargingStation);
+            }
+
+        } else {
+            LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and update its opening times", event.getChargingStationId());
+        }
+
+        return chargingStation != null;
     }
 
     /**
