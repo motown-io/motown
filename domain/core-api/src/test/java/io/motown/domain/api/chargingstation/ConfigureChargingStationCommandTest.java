@@ -50,6 +50,6 @@ public class ConfigureChargingStationCommandTest {
     public void unsupportedOperationExceptionThrownWhenModifyingConfigurationItems() {
         ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(CHARGING_STATION_ID, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT);
 
-        command.getSettings().put("configItem", "configValue");
+        command.getConfigurationItems().put("configItem", "configValue");
     }
 }
