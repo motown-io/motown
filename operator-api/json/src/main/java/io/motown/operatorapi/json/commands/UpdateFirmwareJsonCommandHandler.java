@@ -54,7 +54,7 @@ class UpdateFirmwareJsonCommandHandler implements JsonCommandHandler {
                         command.getLocation(), command.getRetrieveDate(), new HashMap<String, String>(), identityContext), new CorrelationToken());
             }
         } catch (JsonSyntaxException ex) {
-            throw new IllegalArgumentException("Change configuration command not able to parse the payload, is your json correctly formatted?", ex);
+            throw new IllegalArgumentException("Update firmware command not able to parse the payload, is your json correctly formatted?", ex);
         }
 
     }
