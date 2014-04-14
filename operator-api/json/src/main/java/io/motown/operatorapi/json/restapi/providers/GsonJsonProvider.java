@@ -38,9 +38,11 @@ public final class GsonJsonProvider implements MessageBodyWriter<Object> {
     private final Gson gson;
 
     public GsonJsonProvider() {
+        // TODO: We should use the same GSON config for both serializing and deserializing. - Dennis Laumen, April 14th 2014
         gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
                 .create();
     }
 
