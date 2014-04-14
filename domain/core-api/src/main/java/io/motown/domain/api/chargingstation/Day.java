@@ -15,31 +15,38 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public enum Day {
-    MONDAY(1),
-    TUESDAY(2),
-    WEDNESDAY(3),
-    THURSDAY(4),
-    FRIDAY(5),
-    SATURDAY(6),
-    SUNDAY(7);
+    MONDAY("Monday"),
+    TUESDAY("Tuesday"),
+    WEDNESDAY("Wednesday"),
+    THURSDAY("Thursday"),
+    FRIDAY("Friday"),
+    SATURDAY("Saturday"),
+    SUNDAY("Sunday");
 
-    private final int value;
+    private final String value;
 
-    private Day(int value) {
+    private Day(String value) {
         this.value = value;
     }
 
-    public int value() {
+    public String value() {
         return value;
     }
 
-    public static Day fromValue(int value) {
+    public static Day fromValue(String value) {
         for (Day day : Day.values()) {
-            if (day.value == value) {
+            if (day.value.equalsIgnoreCase(checkNotNull(value))) {
                 return day;
             }
         }
-        throw new IllegalArgumentException(String.valueOf(value));
+        throw new IllegalArgumentException(value);
+    }
+
+    @Override
+    public String toString() {
+        return value;
     }
 }

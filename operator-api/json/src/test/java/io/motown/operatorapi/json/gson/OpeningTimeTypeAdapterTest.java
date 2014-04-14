@@ -31,13 +31,13 @@ public class OpeningTimeTypeAdapterTest {
         assertEquals(adapter.getAdaptedType(), OpeningTime.class);
 
         JsonObject openingTimeJson = new JsonObject();
-        openingTimeJson.addProperty("day", 1);
+        openingTimeJson.addProperty("day", "Monday");
         openingTimeJson.addProperty("timeStart", "12:00");
         openingTimeJson.addProperty("timeStop", "15:00");
 
         OpeningTime openingTime = adapter.deserialize(openingTimeJson, OpeningTime.class, null);
 
-        assertEquals(openingTimeJson.get("day").getAsInt(), openingTime.getDay().value());
+        assertEquals(openingTimeJson.get("day").getAsString(), openingTime.getDay().value());
         assertEquals(openingTimeJson.get("timeStart").getAsString(), String.format("%02d:%02d", openingTime.getTimeStart().getHourOfDay(), openingTime.getTimeStart().getMinutesInHour()));
         assertEquals(openingTimeJson.get("timeStop").getAsString(), String.format("%02d:%02d", openingTime.getTimeStop().getHourOfDay(), openingTime.getTimeStop().getMinutesInHour()));
     }
@@ -51,7 +51,7 @@ public class OpeningTimeTypeAdapterTest {
     @Test(expected = JsonParseException.class)
     public void testUnparsableTimeFormat() {
         JsonObject openingTimeJson = new JsonObject();
-        openingTimeJson.addProperty("day", 1);
+        openingTimeJson.addProperty("day", "Monday");
         openingTimeJson.addProperty("timeStart", "12.00");
         openingTimeJson.addProperty("timeStop", "15.00");
         adapter.deserialize(openingTimeJson, OpeningTime.class, null);

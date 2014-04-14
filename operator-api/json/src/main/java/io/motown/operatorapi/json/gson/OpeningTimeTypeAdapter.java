@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
  * <pre>
  * {@code
  * {
- *  day:        "int",      // 1-7 representing monday - sunday
+ *  day:        "string",   // monday - sunday (case insensitive)
  *  timeStart:  "string",   // valid 24-hour time (00:00 - 23:59)
  *  timeStop:   "string",   // same sa timeStart
  * }
@@ -62,7 +62,7 @@ public class OpeningTimeTypeAdapter implements TypeAdapter<OpeningTime> {
             throw new JsonParseException("OpeningTime must be a valid JSON object", e);
         }
 
-        Day day = Day.fromValue(obj.getAsJsonPrimitive("day").getAsInt());
+        Day day = Day.fromValue(obj.getAsJsonPrimitive("day").getAsString());
         String timeStartStr = obj.getAsJsonPrimitive("timeStart").getAsString();
         String timeStopStr = obj.getAsJsonPrimitive("timeStop").getAsString();
 

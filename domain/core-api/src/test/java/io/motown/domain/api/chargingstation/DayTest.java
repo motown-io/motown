@@ -32,9 +32,9 @@ public class DayTest {
     @RunWith(Parameterized.class)
     public static class FromValueTest {
         private Day day;
-        private int value;
+        private String value;
 
-        public FromValueTest(Day day, int value) {
+        public FromValueTest(Day day, String value) {
             this.day = day;
             this.value = value;
         }
@@ -42,13 +42,20 @@ public class DayTest {
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][] {
-                    {Day.MONDAY, 1},
-                    {Day.TUESDAY, 2},
-                    {Day.WEDNESDAY, 3},
-                    {Day.THURSDAY, 4},
-                    {Day.FRIDAY, 5},
-                    {Day.SATURDAY, 6},
-                    {Day.SUNDAY, 7}
+                    {Day.MONDAY, "Monday"},
+                    {Day.TUESDAY, "Tuesday"},
+                    {Day.WEDNESDAY, "Wednesday"},
+                    {Day.THURSDAY, "Thursday"},
+                    {Day.FRIDAY, "Friday"},
+                    {Day.SATURDAY, "Saturday"},
+                    {Day.SUNDAY, "Sunday"},
+                    {Day.MONDAY, "MONDAY"},
+                    {Day.TUESDAY, "TUESDAY"},
+                    {Day.WEDNESDAY, "WEDNESDAY"},
+                    {Day.THURSDAY, "THURSDAY"},
+                    {Day.FRIDAY, "FRIDAY"},
+                    {Day.SATURDAY, "SATURDAY"},
+                    {Day.SUNDAY, "SUNDAY"}
             });
         }
 
@@ -59,16 +66,21 @@ public class DayTest {
 
         @Test(expected = IllegalArgumentException.class)
         public void testIllegalValue() {
-            Day.fromValue(8);
+            Day.fromValue("Maandag");
+        }
+
+        @Test(expected = NullPointerException.class)
+        public void testNullValue() {
+            Day.fromValue(null);
         }
     }
 
     @RunWith(Parameterized.class)
     public static class ValueTest {
         private Day day;
-        private int value;
+        private String value;
 
-        public ValueTest(Day day, int value) {
+        public ValueTest(Day day, String value) {
             this.day = day;
             this.value = value;
         }
@@ -76,19 +88,19 @@ public class DayTest {
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][] {
-                    {Day.MONDAY, 1},
-                    {Day.TUESDAY, 2},
-                    {Day.WEDNESDAY, 3},
-                    {Day.THURSDAY, 4},
-                    {Day.FRIDAY, 5},
-                    {Day.SATURDAY, 6},
-                    {Day.SUNDAY, 7}
+                    {Day.MONDAY, "Monday"},
+                    {Day.TUESDAY, "Tuesday"},
+                    {Day.WEDNESDAY, "Wednesday"},
+                    {Day.THURSDAY, "Thursday"},
+                    {Day.FRIDAY, "Friday"},
+                    {Day.SATURDAY, "Saturday"},
+                    {Day.SUNDAY, "Sunday"}
             });
         }
 
         @Test
         public void testValue() {
-            assertTrue(day.value() == value);
+            assertTrue(day.toString().equals(value));
         }
     }
 }
