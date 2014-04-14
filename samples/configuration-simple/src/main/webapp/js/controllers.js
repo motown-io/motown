@@ -177,7 +177,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['ClearCache', {
+                    data: ['RequestClearCache', {
                     }]
                 }).success(function (response) {
                     console.log('clear cache requested');
