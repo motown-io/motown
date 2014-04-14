@@ -45,6 +45,9 @@ public class ChargingStation {
     @ElementCollection
     private Set<OpeningTime> openingTimes = new HashSet<>();
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Evse.class)
+    private Set<Evse> evses = new HashSet<>();
+
     private ChargingStation() {
         // Private no-arg constructor for Hibernate.
     }
@@ -176,6 +179,14 @@ public class ChargingStation {
 
     public void setOpeningTimes(Set<OpeningTime> openingTimes) {
         this.openingTimes = openingTimes;
+    }
+
+    public Set<Evse> getEvses() {
+        return evses;
+    }
+
+    public void setEvses(Set<Evse> evses) {
+        this.evses = evses;
     }
 
     @PrePersist
