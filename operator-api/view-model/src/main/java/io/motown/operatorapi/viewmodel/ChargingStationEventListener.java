@@ -51,7 +51,6 @@ public class ChargingStationEventListener {
 
         if (chargingStation != null) {
             chargingStation.setProtocol(event.getProtocol());
-            chargingStation.setLastTimeBooted(new Date());
             chargingStation.setLastContact(new Date());
             repository.save(chargingStation);
         } else {
@@ -100,7 +99,7 @@ public class ChargingStationEventListener {
 
         List<Transaction> transactions = transactionRepository.findByTransactionId(event.getTransactionId().getId());
 
-        if(transactions.isEmpty() || transactions.size() > 1) {
+        if (transactions.isEmpty() || transactions.size() > 1) {
             LOG.error("cannot find unique transaction with transaction id {}", event.getTransactionId());
         } else {
             Transaction transaction = transactions.get(0);

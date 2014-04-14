@@ -27,7 +27,6 @@ public class ChargingStation {
     @Id
     private String id;
     private String protocol;
-    private Date lastTimeBooted;
     private Date lastContact;
     private Boolean accepted;
     private Double latitude;
@@ -69,14 +68,6 @@ public class ChargingStation {
 
     public void setAccepted(Boolean accepted) {
         this.accepted = accepted;
-    }
-
-    public Date getLastTimeBooted() {
-        return lastTimeBooted != null ? new Date(lastTimeBooted.getTime()) : null;
-    }
-
-    public void setLastTimeBooted(Date lastTimeBooted) {
-        this.lastTimeBooted = lastTimeBooted != null ? new Date(lastTimeBooted.getTime()) : null;
     }
 
     public Date getLastContact() {
@@ -160,7 +151,8 @@ public class ChargingStation {
     }
 
     public void setAccessibility(Accessibility accessibility) {
-        this.accessibility = accessibility;    }
+        this.accessibility = accessibility;
+    }
 
     public Set<OpeningTime> getOpeningTimes() {
         return openingTimes;
