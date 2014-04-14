@@ -57,7 +57,7 @@ angular.module('demoApp.controllers', []).
                                         {
                                             'maxAmp': 32,
                                             'phase': 3,
-                                            'voltage': 230,
+                                            'voltage': 240,
                                             'chargingProtocol': 'MODE3',
                                             'current': 'AC',
                                             'connectorType': 'TESLA'
@@ -70,7 +70,7 @@ angular.module('demoApp.controllers', []).
                                         {
                                             'maxAmp': 32,
                                             'phase': 3,
-                                            'voltage': 230,
+                                            'voltage': 240,
                                             'chargingProtocol': 'MODE3',
                                             'current': 'AC',
                                             'connectorType': 'TESLA'
