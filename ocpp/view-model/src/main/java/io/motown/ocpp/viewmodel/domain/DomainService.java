@@ -271,6 +271,17 @@ public class DomainService {
         }
     }
 
+    public void informReservationResult(ChargingStationId chargingStationId, RequestResult requestResult, ReservationId reservationId, EvseId evseId, Date expiryDate, CorrelationToken statusCorrelationToken, String statusMessage, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        if(RequestResult.SUCCESS.equals(requestResult)) {
+            commandGateway.send(new ReserveNowCommand(chargingStationId, reservationId, evseId, expiryDate, identityContext), statusCorrelationToken);
+        } else {
+            commandGateway.send(new NotReserveNowCommand(chargingStationId, reservationId, evseId, expiryDate, statusMessage, identityContext), statusCorrelationToken);
+        }
+
+    }
+
     public void informRequestResult(ChargingStationId chargingStationId, RequestResult requestResult, CorrelationToken statusCorrelationToken, String statusMessage, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 

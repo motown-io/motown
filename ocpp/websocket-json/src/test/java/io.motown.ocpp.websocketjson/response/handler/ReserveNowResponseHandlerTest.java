@@ -24,10 +24,10 @@ import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Date;
 import java.util.UUID;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -49,7 +49,7 @@ public class ReserveNowResponseHandlerTest {
 
         token = UUID.randomUUID().toString();
         correlationToken = new CorrelationToken(token);
-        handler = new ReserveNowResponseHandler(correlationToken);
+        handler = new ReserveNowResponseHandler(RESERVATION_ID, EVSE_ID, new Date(), correlationToken);
     }
 
     @Test

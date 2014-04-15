@@ -536,4 +536,21 @@ public class ChargingStationTest {
                 .when(new AddChargingStationOpeningTimesCommand(CHARGING_STATION_ID, OPENING_TIMES, IDENTITY_CONTEXT))
                 .expectEvents(new ChargingStationOpeningTimesAddedEvent(CHARGING_STATION_ID, OPENING_TIMES, IDENTITY_CONTEXT));
     }
+
+    @Test
+    public void testReserveNowResult() {
+        Date reservationExpiryDate = new Date();
+        fixture.given(CHARGING_STATION)
+                .when(new ReserveNowCommand(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, reservationExpiryDate, IDENTITY_CONTEXT))
+                .expectEvents(new ReservedNowEvent(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, reservationExpiryDate, IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void testNotReserveNowResult() {
+        String failureReason = "OCCUPIED";
+        Date reservationExpiryDate = new Date();
+        fixture.given(CHARGING_STATION)
+                .when(new NotReserveNowCommand(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, reservationExpiryDate, failureReason, IDENTITY_CONTEXT))
+                .expectEvents(new NotReservedNowEvent(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, reservationExpiryDate, failureReason, IDENTITY_CONTEXT));
+    }
 }

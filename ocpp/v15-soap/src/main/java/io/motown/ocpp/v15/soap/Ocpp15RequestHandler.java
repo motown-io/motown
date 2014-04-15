@@ -99,6 +99,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         LOG.info("ChangeChargingStationAvailabilityToInoperativeRequestedEvent");
         RequestResult requestResult = chargingStationOcpp15Client.changeAvailabilityToInoperative(event.getChargingStationId(), event.getEvseId());
 
+        //TODO: Create specific Command Event structure instead of Request result - Ingo Pak, 14 Apr 2014
         domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
     }
 
@@ -107,6 +108,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         LOG.info("ChangeChargingStationAvailabilityToOperativeRequestedEvent");
         RequestResult requestResult = chargingStationOcpp15Client.changeAvailabilityToOperative(event.getChargingStationId(), event.getEvseId());
 
+        //TODO: Create specific Command Event structure instead of Request result - Ingo Pak, 14 Apr 2014
         domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
     }
 
@@ -115,6 +117,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         LOG.info("DataTransferEvent");
         RequestResult requestResult = chargingStationOcpp15Client.dataTransfer(event.getChargingStationId(), event.getVendorId(), event.getMessageId(), event.getData());
 
+        //TODO: Create specific Command Event structure instead of Request result - Ingo Pak, 14 Apr 2014
         domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
     }
 
@@ -188,7 +191,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
 
         RequestResult requestResult = ReservationStatus.ACCEPTED.equals(reservationStatus) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, reservationStatusMessage, addOnIdentity);
+        domainService.informReservationResult(event.getChargingStationId(), requestResult, reservationIdentifier, event.getEvseId(), event.getExpiryDate(), statusCorrelationToken, reservationStatusMessage, addOnIdentity);
     }
 
     @Override
@@ -197,6 +200,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
 
         RequestResult requestResult = chargingStationOcpp15Client.cancelReservation(event.getChargingStationId(), ((NumberedReservationId) event.getReservationId()).getNumber());
 
+        //TODO: Create specific Command Event structure instead of Request result - Ingo Pak, 14 Apr 2014
         domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
     }
 

@@ -16,18 +16,27 @@
 package io.motown.ocpp.websocketjson.response.handler;
 
 import com.google.gson.Gson;
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.CorrelationToken;
-import io.motown.domain.api.chargingstation.RequestResult;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.ReservenowResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 
+import java.util.Date;
+
 public class ReserveNowResponseHandler extends ResponseHandler {
 
-    public ReserveNowResponseHandler(CorrelationToken correlationToken) {
+    private final ReservationId reservationId;
+
+    private final EvseId evseId;
+
+    private final Date expiryDate;
+
+    public ReserveNowResponseHandler(ReservationId reservationId, EvseId evseId, Date expiryDate, CorrelationToken correlationToken) {
         this.setCorrelationToken(correlationToken);
+        this.reservationId = reservationId;
+        this.evseId = evseId;
+        this.expiryDate = expiryDate;
     }
 
     @Override
@@ -36,5 +45,6 @@ public class ReserveNowResponseHandler extends ResponseHandler {
         RequestResult requestResult = response.getStatus().equals(ReservenowResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
         domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "", addOnIdentity);
+        domainService.informReservationResult(chargingStationId, requestResult, reservationId, evseId, expiryDate, getCorrelationToken(), response.getStatus().toString(), addOnIdentity);
     }
 }

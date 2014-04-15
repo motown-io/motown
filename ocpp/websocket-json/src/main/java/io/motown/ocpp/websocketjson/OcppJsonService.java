@@ -211,7 +211,7 @@ public class OcppJsonService {
         reserveNowRequest.setExpiryDate(expiryDate);
         reserveNowRequest.setReservationId(reservationId.getNumber());
 
-        responseHandlers.put(statusCorrelationToken.getToken(), new ReserveNowResponseHandler(statusCorrelationToken));
+        responseHandlers.put(statusCorrelationToken.getToken(), new ReserveNowResponseHandler(reservationId, evseId, expiryDate, statusCorrelationToken));
 
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.RESERVE_NOW, reserveNowRequest);
 
