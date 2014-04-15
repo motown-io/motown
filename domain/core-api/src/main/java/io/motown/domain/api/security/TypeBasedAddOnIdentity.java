@@ -82,6 +82,14 @@ public class TypeBasedAddOnIdentity implements AddOnIdentity {
     }
 
     @Override
+    public String toString() {
+        return "TypeBasedAddOnIdentity{" +
+                "addOnType='" + addOnType + '\'' +
+                ", addOnId='" + addOnId + '\'' +
+                '}';
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(addOnType, addOnId);
     }

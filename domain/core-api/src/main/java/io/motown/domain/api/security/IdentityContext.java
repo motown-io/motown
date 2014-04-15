@@ -59,6 +59,14 @@ public class IdentityContext {
     }
 
     @Override
+    public String toString() {
+        return "IdentityContext{" +
+                "addOnIdentity=" + addOnIdentity +
+                ", userIdentity=" + userIdentity +
+                '}';
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(addOnIdentity, userIdentity);
     }

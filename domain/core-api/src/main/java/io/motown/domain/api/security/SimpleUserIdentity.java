@@ -48,6 +48,13 @@ public class SimpleUserIdentity implements UserIdentity {
     }
 
     @Override
+    public String toString() {
+        return "SimpleUserIdentity{" +
+                "identity='" + identity + '\'' +
+                '}';
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(identity);
     }
