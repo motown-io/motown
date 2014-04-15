@@ -407,15 +407,16 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     /**
-     * Ensures that the identityContext is allowed access to the command class.
+     * Checks if the identityContext is allowed access to the command class, if the identity context is not allowed
+     * to execute the passed command class a {@code IllegalStateException} is thrown.
      *
      * @param identityContext identity context.
      * @param commandClass    class of the command.
+     * @throws IllegalStateException if the identity context is not allowed to execute the command.
      */
     private void checkCommandAllowed(IdentityContext identityContext, Class commandClass) {
         if (!commandAuthorization.isAuthorized(identityContext, this.authorizations.asMap(), commandClass)) {
-            // TODO decide on whether to throw an exception or an event... - Mark van den Bergh, March 26th 2014
-            throw new IllegalStateException("No authorization for this action.");
+            throw new IllegalStateException(identityContext + " is not authorized to execute " + commandClass);
         }
     }
 

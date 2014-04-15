@@ -99,7 +99,7 @@ public class ChargingStationTest {
     @Test
     public void testRegisteringAcceptedChargingStation() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
-                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, IDENTITY_CONTEXT))
+                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
 
@@ -113,7 +113,7 @@ public class ChargingStationTest {
     @Test
     public void testRegisteringAlreadyRegisteredChargingStation() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
-                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, IDENTITY_CONTEXT))
+                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
 
@@ -137,6 +137,13 @@ public class ChargingStationTest {
         fixture.given(new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT))
                 .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new ChargingStationAcceptedEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void testChargeAcceptanceUnauthorizedIdentityContext() {
+        fixture.given(new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT))
+                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
     }
 
     @Test
