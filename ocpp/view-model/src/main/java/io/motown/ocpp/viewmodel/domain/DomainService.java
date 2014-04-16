@@ -279,13 +279,24 @@ public class DomainService {
         } else {
             commandGateway.send(new NotReserveNowCommand(chargingStationId, reservationId, evseId, expiryDate, statusMessage, identityContext), statusCorrelationToken);
         }
-
     }
 
     public void informRequestResult(ChargingStationId chargingStationId, RequestResult requestResult, CorrelationToken statusCorrelationToken, String statusMessage, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         commandGateway.send(new InformRequestResultCommand(chargingStationId, requestResult, statusMessage, identityContext), statusCorrelationToken);
+    }
+
+    public void informToOperative(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        commandGateway.send(new ToOperativeCommand(chargingStationId, evseId, identityContext), statusCorrelationToken);
+    }
+
+    public void informToInoperative(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        commandGateway.send(new ToInoperativeCommand(chargingStationId, evseId, identityContext), statusCorrelationToken);
     }
 
     public void setCommandGateway(DomainCommandGateway commandGateway) {

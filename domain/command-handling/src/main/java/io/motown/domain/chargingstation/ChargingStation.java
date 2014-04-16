@@ -316,6 +316,18 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
+    public void handle(ToOperativeCommand command, MetaData metaData) {
+        apply(new NowOperativeEvent(command.getChargingStationId(), command.getEvseId(), command.getIdentityContext()), metaData);
+
+    }
+
+    @CommandHandler
+    public void handle(ToInoperativeCommand command, MetaData metaData) {
+        apply(new NowInoperativeEvent(command.getChargingStationId(), command.getEvseId(), command.getIdentityContext()), metaData);
+
+    }
+
+    @CommandHandler
     public void handle(ReserveNowCommand command, MetaData metaData) {
         apply(new ReservedNowEvent(command.getChargingStationId(), command.getReservationId(), command.getEvseId(), command.getExpiryDate(), command.getIdentityContext()), metaData);
     }

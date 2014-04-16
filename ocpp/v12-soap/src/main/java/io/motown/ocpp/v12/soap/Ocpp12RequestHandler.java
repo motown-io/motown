@@ -94,7 +94,11 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
         LOG.info("OCPP 1.2 ChangeChargingStationAvailabilityToInoperativeRequestedEvent");
         RequestResult requestResult = chargingStationOcpp12Client.changeAvailabilityToInoperative(event.getChargingStationId(), event.getEvseId());
 
-        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
+        if(RequestResult.SUCCESS.equals(requestResult)) {
+            domainService.informToInoperative(event.getChargingStationId(), event.getEvseId(), statusCorrelationToken, addOnIdentity);
+        } else {
+            LOG.error("Failed to set availability of evse {} on chargingstation {} to inoperative", event.getEvseId().getId(), event.getChargingStationId().getId());
+        }
     }
 
     @Override
@@ -102,7 +106,11 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
         LOG.info("OCPP 1.2 ChangeChargingStationAvailabilityToOperativeRequestedEvent");
         RequestResult requestResult = chargingStationOcpp12Client.changeAvailabilityToOperative(event.getChargingStationId(), event.getEvseId());
 
-        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
+        if(RequestResult.SUCCESS.equals(requestResult)) {
+            domainService.informToOperative(event.getChargingStationId(), event.getEvseId(), statusCorrelationToken, addOnIdentity);
+        } else {
+            LOG.error("Failed to set availability of evse {} on chargingstation {} to operative", event.getEvseId().getId(), event.getChargingStationId().getId());
+        }
     }
 
     @Override

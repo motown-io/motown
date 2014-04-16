@@ -69,13 +69,13 @@ public class OcppWebSocketRequestHandler implements OcppRequestHandler {
     @Override
     public void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("ChangeChargingStationAvailabilityToInoperativeRequestedEvent");
-        ocppJsonService.changeAvailability(event.getChargingStationId(), event.getEvseId().getNumberedId(), Changeavailability.Type.INOPERATIVE, statusCorrelationToken);
+        ocppJsonService.changeAvailability(event.getChargingStationId(), event.getEvseId(), Changeavailability.Type.INOPERATIVE, statusCorrelationToken);
     }
 
     @Override
     public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("ChangeChargingStationAvailabilityToOperativeRequestedEvent");
-        ocppJsonService.changeAvailability(event.getChargingStationId(), event.getEvseId().getNumberedId(), Changeavailability.Type.OPERATIVE, statusCorrelationToken);
+        ocppJsonService.changeAvailability(event.getChargingStationId(), event.getEvseId(), Changeavailability.Type.OPERATIVE, statusCorrelationToken);
     }
 
     @Override

@@ -56,5 +56,9 @@ interface DomainCommandGateway {
     void send(ReserveNowCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
     void send(NotReserveNowCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(ToInoperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(ToOperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 }
 

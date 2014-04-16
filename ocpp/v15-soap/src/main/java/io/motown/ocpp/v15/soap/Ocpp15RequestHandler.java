@@ -99,8 +99,11 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         LOG.info("ChangeChargingStationAvailabilityToInoperativeRequestedEvent");
         RequestResult requestResult = chargingStationOcpp15Client.changeAvailabilityToInoperative(event.getChargingStationId(), event.getEvseId());
 
-        //TODO: Create specific Command Event structure instead of Request result - Ingo Pak, 14 Apr 2014
-        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
+        if(RequestResult.SUCCESS.equals(requestResult)) {
+            domainService.informToInoperative(event.getChargingStationId(), event.getEvseId(), statusCorrelationToken, addOnIdentity);
+        } else {
+            LOG.error("Failed to set availability of evse {} on chargingstation {} to inoperative", event.getEvseId().getId(), event.getChargingStationId().getId());
+        }
     }
 
     @Override
@@ -108,8 +111,11 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         LOG.info("ChangeChargingStationAvailabilityToOperativeRequestedEvent");
         RequestResult requestResult = chargingStationOcpp15Client.changeAvailabilityToOperative(event.getChargingStationId(), event.getEvseId());
 
-        //TODO: Create specific Command Event structure instead of Request result - Ingo Pak, 14 Apr 2014
-        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
+        if(RequestResult.SUCCESS.equals(requestResult)) {
+            domainService.informToOperative(event.getChargingStationId(), event.getEvseId(), statusCorrelationToken, addOnIdentity);
+        } else {
+            LOG.error("Failed to set availability of evse {} on chargingstation {} to operative", event.getEvseId().getId(), event.getChargingStationId().getId());
+        }
     }
 
     @Override

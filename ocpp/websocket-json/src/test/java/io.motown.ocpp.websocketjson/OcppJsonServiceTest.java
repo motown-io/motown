@@ -275,7 +275,7 @@ public class OcppJsonServiceTest {
 
     @Test
     public void changeAvailabilityRequest() throws IOException{
-        service.changeAvailability(CHARGING_STATION_ID, EVSE_ID.getNumberedId(), Changeavailability.Type.INOPERATIVE, CORRELATION_TOKEN);
+        service.changeAvailability(CHARGING_STATION_ID, EVSE_ID, Changeavailability.Type.INOPERATIVE, CORRELATION_TOKEN);
 
         Changeavailability requestPayload = new Changeavailability();
         requestPayload.setConnectorId(EVSE_ID.getNumberedId());

@@ -323,11 +323,11 @@ public class OcppJsonService {
         sendWampMessage(wampMessage, chargingStationId);
     }
 
-    public void changeAvailability(ChargingStationId chargingStationId, int connectorId, Changeavailability.Type availabilityType, CorrelationToken statusCorrelationToken) {
+    public void changeAvailability(ChargingStationId chargingStationId, EvseId evseId, Changeavailability.Type availabilityType, CorrelationToken statusCorrelationToken) {
         Changeavailability changeAvailabilityRequest = new Changeavailability();
-        changeAvailabilityRequest.setConnectorId(connectorId);
+        changeAvailabilityRequest.setConnectorId(evseId.getNumberedId());
         changeAvailabilityRequest.setType(availabilityType);
-        responseHandlers.put(statusCorrelationToken.getToken(), new ChangeAvailabilityResponseHandler(statusCorrelationToken));
+        responseHandlers.put(statusCorrelationToken.getToken(), new ChangeAvailabilityResponseHandler(evseId, availabilityType, statusCorrelationToken));
 
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.CHANGE_AVAILABILITY, changeAvailabilityRequest);
         sendWampMessage(wampMessage, chargingStationId);

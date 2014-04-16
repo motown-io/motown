@@ -553,4 +553,18 @@ public class ChargingStationTest {
                 .when(new NotReserveNowCommand(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, reservationExpiryDate, failureReason, IDENTITY_CONTEXT))
                 .expectEvents(new NotReservedNowEvent(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, reservationExpiryDate, failureReason, IDENTITY_CONTEXT));
     }
+
+    @Test
+    public void testToInoperative() {
+        fixture.given(CHARGING_STATION)
+                .when(new ToInoperativeCommand(CHARGING_STATION_ID, EVSE_ID, IDENTITY_CONTEXT))
+                .expectEvents(new NowInoperativeEvent(CHARGING_STATION_ID, EVSE_ID, IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void testToOperative() {
+        fixture.given(CHARGING_STATION)
+                .when(new ToOperativeCommand(CHARGING_STATION_ID, EVSE_ID, IDENTITY_CONTEXT))
+                .expectEvents(new NowOperativeEvent(CHARGING_STATION_ID, EVSE_ID, IDENTITY_CONTEXT));
+    }
 }
