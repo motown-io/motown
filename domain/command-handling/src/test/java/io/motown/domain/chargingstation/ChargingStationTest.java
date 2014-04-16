@@ -546,15 +546,6 @@ public class ChargingStationTest {
     }
 
     @Test
-    public void testNotReserveNowResult() {
-        String failureReason = "OCCUPIED";
-        Date reservationExpiryDate = new Date();
-        fixture.given(CHARGING_STATION)
-                .when(new NotReserveNowCommand(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, reservationExpiryDate, failureReason, IDENTITY_CONTEXT))
-                .expectEvents(new NotReservedNowEvent(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, reservationExpiryDate, failureReason, IDENTITY_CONTEXT));
-    }
-
-    @Test
     public void testToInoperative() {
         fixture.given(CHARGING_STATION)
                 .when(new ToInoperativeCommand(CHARGING_STATION_ID, EVSE_ID, IDENTITY_CONTEXT))

@@ -333,11 +333,6 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(NotReserveNowCommand command, MetaData metaData) {
-        apply(new NotReservedNowEvent(command.getChargingStationId(), command.getReservationId(), command.getEvseId(), command.getExpiryDate(), command.getReason(), command.getIdentityContext()), metaData);
-    }
-
-    @CommandHandler
     public void handle(GrantAuthorizationCommand command) {
         apply(new AuthorizationResultEvent(command.getChargingStationId(), command.getIdentifyingToken(), AuthorizationResultStatus.ACCEPTED, command.getIdentityContext()));
     }

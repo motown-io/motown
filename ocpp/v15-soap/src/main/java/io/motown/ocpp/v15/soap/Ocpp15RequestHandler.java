@@ -193,11 +193,13 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         NumberedReservationId reservationIdentifier = domainService.generateReservationIdentifier(event.getChargingStationId(), event.getProtocol());
 
         ReservationStatus reservationStatus = chargingStationOcpp15Client.reserveNow(event.getChargingStationId(), event.getEvseId(), event.getIdentifyingToken(), event.getExpiryDate(), event.getParentIdentifyingToken(), reservationIdentifier.getNumber());
-        String reservationStatusMessage = (reservationStatus != null) ? reservationStatus.name() : "";
 
-        RequestResult requestResult = ReservationStatus.ACCEPTED.equals(reservationStatus) ? RequestResult.SUCCESS : RequestResult.FAILURE;
-
-        domainService.informReservationResult(event.getChargingStationId(), requestResult, reservationIdentifier, event.getEvseId(), event.getExpiryDate(), statusCorrelationToken, reservationStatusMessage, addOnIdentity);
+        if(ReservationStatus.ACCEPTED.equals(reservationStatus)) {
+            domainService.informReserved(event.getChargingStationId(), reservationIdentifier, event.getEvseId(), event.getExpiryDate(), statusCorrelationToken, addOnIdentity);
+        } else {
+            String reservationStatusMessage = (reservationStatus != null) ? reservationStatus.name() : "";
+            LOG.error("Failed to reserve evse {} on charging station {}: {}", event.getEvseId().getId(), event.getChargingStationId().getId(), reservationStatusMessage);
+        }
     }
 
     @Override

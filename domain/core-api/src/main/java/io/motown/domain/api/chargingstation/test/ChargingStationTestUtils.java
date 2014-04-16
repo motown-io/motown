@@ -99,6 +99,14 @@ public final class ChargingStationTestUtils {
     public static final Date FIVE_MINUTES_AGO = new Date(DateTimeUtils.currentTimeMillis() - FIVE_MINUTES);
 
     /**
+     * The timestamp in milliseconds in five minutes.
+     * <p/>
+     * Note: this is a constant. This means this timestamp isn't in five minutes from the time you use but five minutes
+     * ago from the time this class was loaded.
+     */
+    public static final Date IN_FIVE_MINUTES = new Date(DateTimeUtils.currentTimeMillis() + FIVE_MINUTES);
+
+    /**
      * The default transaction number.
      */
     public static final int TRANSACTION_NUMBER = 123;

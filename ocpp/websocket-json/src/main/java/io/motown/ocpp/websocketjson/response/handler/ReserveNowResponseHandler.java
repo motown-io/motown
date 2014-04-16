@@ -21,10 +21,14 @@ import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.ReservenowResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
 public class ReserveNowResponseHandler extends ResponseHandler {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ReserveNowResponseHandler.class);
 
     private final ReservationId reservationId;
 
@@ -42,9 +46,11 @@ public class ReserveNowResponseHandler extends ResponseHandler {
     @Override
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         ReservenowResponse response = gson.fromJson(wampMessage.getPayloadAsString(), ReservenowResponse.class);
-        RequestResult requestResult = response.getStatus().equals(ReservenowResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "", addOnIdentity);
-        domainService.informReservationResult(chargingStationId, requestResult, reservationId, evseId, expiryDate, getCorrelationToken(), response.getStatus().toString(), addOnIdentity);
+        if(ReservenowResponse.Status.ACCEPTED.equals(response.getStatus())) {
+            domainService.informReserved(chargingStationId, reservationId, evseId, expiryDate, getCorrelationToken(), addOnIdentity);
+        } else {
+            LOG.error("Failed to reserve evse {} on charging station {}: {}", evseId.getId(), chargingStationId.getId(), response.getStatus().toString());
+        }
     }
 }
