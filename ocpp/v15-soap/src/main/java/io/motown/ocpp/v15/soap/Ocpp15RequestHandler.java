@@ -203,8 +203,11 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
 
         RequestResult requestResult = chargingStationOcpp15Client.cancelReservation(event.getChargingStationId(), ((NumberedReservationId) event.getReservationId()).getNumber());
 
-        //TODO: Create specific Command Event structure instead of Request result - Ingo Pak, 14 Apr 2014
-        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
+        if(RequestResult.SUCCESS.equals(requestResult)) {
+            domainService.informReservationCancelled(event.getChargingStationId(), event.getReservationId(), statusCorrelationToken, addOnIdentity);
+        } else {
+            LOG.error("Failed to cancel reservation with reservationId {}", event.getReservationId().getId());
+        }
     }
 
     public void setChargingStationOcpp15Client(ChargingStationOcpp15Client chargingStationOcpp15Client) {

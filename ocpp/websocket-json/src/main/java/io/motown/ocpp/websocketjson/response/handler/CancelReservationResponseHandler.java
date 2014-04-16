@@ -18,23 +18,33 @@ package io.motown.ocpp.websocketjson.response.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
-import io.motown.domain.api.chargingstation.RequestResult;
+import io.motown.domain.api.chargingstation.ReservationId;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.CancelreservationResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CancelReservationResponseHandler extends ResponseHandler {
 
-    public CancelReservationResponseHandler(CorrelationToken correlationToken) {
+    private static final Logger LOG = LoggerFactory.getLogger(CancelReservationResponseHandler.class);
+
+    private final ReservationId reservationId;
+
+    public CancelReservationResponseHandler(ReservationId reservationId, CorrelationToken correlationToken) {
+        this.reservationId = reservationId;
         this.setCorrelationToken(correlationToken);
     }
 
     @Override
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         CancelreservationResponse response = gson.fromJson(wampMessage.getPayloadAsString(), CancelreservationResponse.class);
-        RequestResult requestResult = CancelreservationResponse.Status.ACCEPTED.equals(response.getStatus()) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "", addOnIdentity);
+        if(CancelreservationResponse.Status.ACCEPTED.equals(response.getStatus())) {
+            domainService.informReservationCancelled(chargingStationId, this.reservationId, getCorrelationToken(), addOnIdentity);
+        } else {
+            LOG.error("Failed to cancel reservation with reservationId {}", this.reservationId.getId());
+        }
     }
 }

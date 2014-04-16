@@ -409,6 +409,13 @@ public class ChargingStationTest {
     }
 
     @Test
+    public void testCancelReservation() {
+        fixture.given(CHARGING_STATION)
+                .when(new CancelReservationCommand(CHARGING_STATION_ID, RESERVATION_ID, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new ReservationCancelledEvent(CHARGING_STATION_ID, PROTOCOL, RESERVATION_ID, ROOT_IDENTITY_CONTEXT));
+    }
+
+    @Test
     public void testInformRequestResult() {
         String statusMessage = "Test message";
         fixture.given(CHARGING_STATION)

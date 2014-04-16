@@ -222,7 +222,7 @@ public class OcppJsonService {
         Cancelreservation cancelReservationRequest = new Cancelreservation();
         cancelReservationRequest.setReservationId(reservationId.getNumber());
 
-        responseHandlers.put(statusCorrelationToken.getToken(), new CancelReservationResponseHandler(statusCorrelationToken));
+        responseHandlers.put(statusCorrelationToken.getToken(), new CancelReservationResponseHandler(reservationId, statusCorrelationToken));
 
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.CANCEL_RESERVATION, cancelReservationRequest);
 

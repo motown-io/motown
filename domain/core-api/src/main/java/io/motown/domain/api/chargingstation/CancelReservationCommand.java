@@ -18,44 +18,34 @@ package io.motown.domain.api.chargingstation;
 import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import java.util.Date;
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code InformRequestResultCommand} serves as a base class for commands which will inform about the resulting status of a request
- * that has been sent to the charging station.
+ * {@code CancelReservationCommand} is the command that triggers the cancellation of a reservation.
  */
-public final class ReserveNowCommand {
+public final class CancelReservationCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final IdentityContext identityContext;
-
     private final ReservationId reservationId;
 
-    private final EvseId evseId;
-
-    private final Date expiryDate;
+    private final IdentityContext identityContext;
 
     /**
      * Creates a {@code InformRequestResultCommand} with an identifier and new status.
      *
      * @param chargingStationId   the identifier of the charging station.
      * @param reservationId       the unique reservation identifier.
-     * @param evseId              the evse for which a reservatino attempt has been made.
-     * @param expiryDate          the desired end time of the reservation.
      * @param identityContext     identity context.
      * @throws NullPointerException if {@code chargingStationId}, {@code status}, {@code statusMessage} or {@code identityContext} is {@code null}.
      */
-    public ReserveNowCommand(ChargingStationId chargingStationId, ReservationId reservationId, EvseId evseId, Date expiryDate, IdentityContext identityContext) {
+    public CancelReservationCommand(ChargingStationId chargingStationId, ReservationId reservationId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.identityContext = checkNotNull(identityContext);
         this.reservationId = checkNotNull(reservationId);
-        this.evseId = checkNotNull(evseId);
-        this.expiryDate = checkNotNull(expiryDate);
     }
 
     /**
@@ -86,26 +76,9 @@ public final class ReserveNowCommand {
         return reservationId;
     }
 
-    /**
-     * Gets the evse identifier.
-     *
-     * @return evse identifier
-     */
-    public EvseId getEvseId() {
-        return evseId;
-    }
-
-    /**
-     * The expiration date of the reservation.
-     * @return expiration Date
-     */
-    public Date getExpiryDate() {
-        return expiryDate != null ? new Date(expiryDate.getTime()) : null;
-    }
-
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, identityContext, reservationId, evseId, expiryDate);
+        return Objects.hash(chargingStationId, identityContext, reservationId);
     }
 
     @Override
@@ -116,7 +89,7 @@ public final class ReserveNowCommand {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final ReserveNowCommand other = (ReserveNowCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.identityContext, other.identityContext) && Objects.equals(this.reservationId, other.reservationId) && Objects.equals(this.evseId, other.evseId) && Objects.equals(this.expiryDate, other.expiryDate);
+        final CancelReservationCommand other = (CancelReservationCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.identityContext, other.identityContext) && Objects.equals(this.reservationId, other.reservationId);
     }
 }

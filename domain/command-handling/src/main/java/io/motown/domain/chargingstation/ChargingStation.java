@@ -295,6 +295,11 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
+    public void handle(CancelReservationCommand command) {
+        apply(new ReservationCancelledEvent(command.getChargingStationId(), this.protocol, command.getReservationId(), command.getIdentityContext()));
+    }
+
+    @CommandHandler
     public void handle(IncomingDataTransferCommand command) {
         apply(new IncomingDataTransferReceivedEvent(command.getChargingStationId(), command.getVendorId(), command.getMessageId(), command.getData(), command.getIdentityContext()));
     }

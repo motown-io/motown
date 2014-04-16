@@ -286,6 +286,12 @@ public class DomainService {
         commandGateway.send(new ReserveNowCommand(chargingStationId, reservationId, evseId, expiryDate, identityContext), statusCorrelationToken);
     }
 
+    public void informReservationCancelled(ChargingStationId chargingStationId, ReservationId reservationId, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        commandGateway.send(new CancelReservationCommand(chargingStationId, reservationId, identityContext), statusCorrelationToken);
+    }
+
     public void informRequestResult(ChargingStationId chargingStationId, RequestResult requestResult, CorrelationToken statusCorrelationToken, String statusMessage, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
