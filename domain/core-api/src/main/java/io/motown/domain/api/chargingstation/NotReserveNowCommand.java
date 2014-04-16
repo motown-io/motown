@@ -112,7 +112,7 @@ public final class NotReserveNowCommand {
      * @return expiration Date
      */
     public Date getExpiryDate() {
-        return expiryDate;
+        return expiryDate != null ? new Date(expiryDate.getTime()) : null;
     }
 
     @Override

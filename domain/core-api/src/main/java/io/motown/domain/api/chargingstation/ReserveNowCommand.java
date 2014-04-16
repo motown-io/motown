@@ -99,7 +99,7 @@ public final class ReserveNowCommand {
      * @return expiration Date
      */
     public Date getExpiryDate() {
-        return expiryDate;
+        return expiryDate != null ? new Date(expiryDate.getTime()) : null;
     }
 
     @Override
