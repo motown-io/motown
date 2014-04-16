@@ -36,7 +36,7 @@ public class ReserveNowResponseHandler extends ResponseHandler {
         this.setCorrelationToken(correlationToken);
         this.reservationId = reservationId;
         this.evseId = evseId;
-        this.expiryDate = expiryDate;
+        this.expiryDate = new Date(expiryDate.getTime());
     }
 
     @Override

@@ -20,7 +20,6 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.websocketjson.MessageProcUri;
 import io.motown.ocpp.websocketjson.OcppJsonService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Bootnotification;
 import io.motown.ocpp.websocketjson.schema.generated.v15.BootnotificationResponse;
