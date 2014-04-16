@@ -17,9 +17,7 @@ package io.motown.operatorapi.viewmodel.persistence.entities;
 
 import io.motown.domain.api.chargingstation.ComponentStatus;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,29 +25,38 @@ import java.util.List;
 public class Evse {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String evseId;
     private ComponentStatus status;
-
     @ElementCollection
     private List<Connector> connectors = new ArrayList<>();
 
     private Evse() {
     }
 
-    public Evse(String id) {
-        this.id = id;
+    public Evse(String evseId) {
+        this.evseId = evseId;
     }
 
-    public Evse(String id, ComponentStatus status) {
-        this.id = id;
+    public Evse(String evseId, ComponentStatus status) {
+        this.evseId = evseId;
         this.status = status;
     }
 
-    public String getId() {
+    public String getEvseId() {
+        return evseId;
+    }
+
+    public void setEvseId(String evseId) {
+        this.evseId = evseId;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

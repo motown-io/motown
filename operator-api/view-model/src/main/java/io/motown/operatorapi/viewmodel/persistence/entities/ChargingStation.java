@@ -19,9 +19,7 @@ import io.motown.domain.api.chargingstation.Accessibility;
 import io.motown.domain.api.chargingstation.ComponentStatus;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class ChargingStation {
@@ -46,10 +44,14 @@ public class ChargingStation {
     private Set<OpeningTime> openingTimes = new HashSet<>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Evse.class)
     private Set<Evse> evses = new HashSet<>();
+    @ElementCollection
+    @MapKeyColumn
+    private Map<String, String> attributes = new HashMap<>();
 
     private ChargingStation() {
         // Private no-arg constructor for Hibernate.
     }
+
     public ChargingStation(String id) {
         this.id = id;
         this.accepted = false;
@@ -195,5 +197,13 @@ public class ChargingStation {
 
     public void setStatus(ComponentStatus status) {
         this.status = status;
+    }
+
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(Map<String, String> attributes) {
+        this.attributes = attributes;
     }
 }

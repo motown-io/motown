@@ -51,6 +51,7 @@ public class ChargingStationEventListener {
 
         if (chargingStation != null) {
             chargingStation.setProtocol(event.getProtocol());
+            chargingStation.setAttributes(event.getAttributes());
             chargingStation.setLastContact(new Date());
             repository.save(chargingStation);
         } else {
@@ -147,21 +148,19 @@ public class ChargingStationEventListener {
 
         ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
         if (chargingStation != null) {
-            if (!event.getEvses().isEmpty()) {
-                for (io.motown.domain.api.chargingstation.Evse coreEvse : event.getEvses()) {
-                    Evse evse = new Evse(coreEvse.getEvseId().getId());
+            for (io.motown.domain.api.chargingstation.Evse coreEvse : event.getEvses()) {
+                Evse evse = new Evse(coreEvse.getEvseId().getId());
 
-                    for (Connector coreConnector : coreEvse.getConnectors()) {
-                        io.motown.operatorapi.viewmodel.persistence.entities.Connector connector = new io.motown.operatorapi.viewmodel.persistence.entities.Connector(
-                                coreConnector.getMaxAmp(), coreConnector.getPhase(), coreConnector.getVoltage(), coreConnector.getChargingProtocol(), coreConnector.getCurrent(), coreConnector.getConnectorType()
-                        );
-                        evse.getConnectors().add(connector);
-                    }
-                    chargingStation.getEvses().add(evse);
+                for (Connector coreConnector : coreEvse.getConnectors()) {
+                    io.motown.operatorapi.viewmodel.persistence.entities.Connector connector = new io.motown.operatorapi.viewmodel.persistence.entities.Connector(
+                            coreConnector.getMaxAmp(), coreConnector.getPhase(), coreConnector.getVoltage(), coreConnector.getChargingProtocol(), coreConnector.getCurrent(), coreConnector.getConnectorType()
+                    );
+                    evse.getConnectors().add(connector);
                 }
-
-                repository.save(chargingStation);
+                chargingStation.getEvses().add(evse);
             }
+
+            repository.save(chargingStation);
         } else {
             LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and configure it", event.getChargingStationId());
         }
