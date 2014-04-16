@@ -201,6 +201,29 @@ public class ChargingStationEventListener {
         }
     }
 
+
+    /**
+     * Handles the {@link ComponentStatusNotificationReceivedEvent}.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(ComponentStatusNotificationReceivedEvent event) {
+        if (event.getComponent() == ChargingStationComponent.EVSE) {
+            ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
+
+            if (chargingStation != null) {
+                for (Evse evse : chargingStation.getEvses()) {
+                    if (evse.getEvseId().equals(event.getComponentId().getId())) {
+                        evse.setStatus(event.getStatus());
+                    }
+                }
+
+                repository.save(chargingStation);
+            }
+        }
+    }
+
     /**
      * Handles the {@link ConfigurationItemsReceivedEvent}.
      *

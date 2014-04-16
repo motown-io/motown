@@ -225,7 +225,7 @@ public class DomainServiceTest {
         attributes.put(DomainService.VENDOR_ID_KEY, getVendor());
         attributes.put(DomainService.VENDOR_ERROR_CODE_KEY, getVendorErrorCode());
 
-        verify(gateway).send(new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));
+        verify(gateway).send(new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));
 
         domainService.statusNotification(CHARGING_STATION_ID, getChargingStationComponentId(), getStatusNotifactionErrorCode(),
                 ComponentStatus.AVAILABLE, getStatusNotificationInfo(), now, getVendor(), getVendorErrorCode(), ADD_ON_IDENTITY);
@@ -238,7 +238,7 @@ public class DomainServiceTest {
         domainService.statusNotification(CHARGING_STATION_ID, EVSE_ID, null, ComponentStatus.AVAILABLE, null, now, null, null, ADD_ON_IDENTITY);
         Map<String, String> attributes = new HashMap<>();
 
-        verify(gateway).send(new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));
+        verify(gateway).send(new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));
 
         domainService.statusNotification(CHARGING_STATION_ID, getChargingStationComponentId(), null, ComponentStatus.AVAILABLE, null, now, null, null, ADD_ON_IDENTITY);
         verify(gateway).send(new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));

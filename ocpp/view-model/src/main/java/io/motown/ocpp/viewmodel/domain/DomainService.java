@@ -217,7 +217,7 @@ public class DomainService {
         if (evseId.getNumberedId() == CHARGING_STATION_EVSE_ID) {
             command = new ChargingStationStatusNotificationCommand(chargingStationId, status, timeStamp, attributes, identityContext);
         } else {
-            ChargingStationComponent component = ChargingStationComponent.CONNECTOR;
+            ChargingStationComponent component = ChargingStationComponent.EVSE;
             command = new ComponentStatusNotificationCommand(chargingStationId, component, evseId, status, timeStamp, attributes, identityContext);
         }
 
