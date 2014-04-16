@@ -202,6 +202,21 @@ public class ChargingStationEventListener {
     }
 
     /**
+     * Handles the {@link ConfigurationItemsReceivedEvent}.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(ConfigurationItemsReceivedEvent event) {
+        ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
+
+        if (chargingStation != null) {
+            chargingStation.setConfigurationItems(event.getConfigurationItems());
+            repository.save(chargingStation);
+        }
+    }
+
+    /**
      * Updates the opening times of the charging station.
      *
      * @param event The event which contains the opening times.

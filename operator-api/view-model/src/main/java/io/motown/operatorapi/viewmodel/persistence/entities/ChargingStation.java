@@ -47,6 +47,9 @@ public class ChargingStation {
     @ElementCollection
     @MapKeyColumn
     private Map<String, String> attributes = new HashMap<>();
+    @ElementCollection
+    @MapKeyColumn
+    private Map<String, String> configurationItems = new HashMap<>();
 
     private ChargingStation() {
         // Private no-arg constructor for Hibernate.
@@ -205,5 +208,13 @@ public class ChargingStation {
 
     public void setAttributes(Map<String, String> attributes) {
         this.attributes = attributes;
+    }
+
+    public void setConfigurationItems(Map<String, String> configurationItems) {
+        this.configurationItems = configurationItems;
+    }
+
+    public Map<String, String> getConfigurationItems() {
+        return configurationItems;
     }
 }
