@@ -69,7 +69,7 @@ public class Ocpp15RequestHandlerTest {
 
     @Test
     public void testConfigurationRequestedEvent() {
-        requestHandler.handle(new ConfigurationRequestedEvent(CHARGING_STATION_ID, CONFIGURATION_KEYS, PROTOCOL, ROOT_IDENTITY_CONTEXT));
+        requestHandler.handle(new ConfigurationItemsRequestedEvent(CHARGING_STATION_ID, CONFIGURATION_KEYS, PROTOCOL, ROOT_IDENTITY_CONTEXT));
 
         verify(client).getConfiguration(CHARGING_STATION_ID);
     }
@@ -163,7 +163,7 @@ public class Ocpp15RequestHandlerTest {
 
     @Test
     public void testChangeConfigurationEvent() {
-        requestHandler.handle(new ChangeConfigurationEvent(CHARGING_STATION_ID, PROTOCOL, V15SOAPTestUtils.getConfigurationKey(), V15SOAPTestUtils.getConfigurationValue(), ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
+        requestHandler.handle(new ChangeConfigurationItemEvent(CHARGING_STATION_ID, PROTOCOL, V15SOAPTestUtils.getConfigurationKey(), V15SOAPTestUtils.getConfigurationValue(), ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).changeConfiguration(CHARGING_STATION_ID, V15SOAPTestUtils.getConfigurationKey(), V15SOAPTestUtils.getConfigurationValue());
     }
@@ -186,7 +186,8 @@ public class Ocpp15RequestHandlerTest {
 
         requestHandler.handle(new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, V15SOAPTestUtils.getFirmwareUpdateLocation(),
                 retrievedDate, V15SOAPTestUtils.getUpdateFirmwareAttributes(Integer.toString(V15SOAPTestUtils.NUMBER_OF_RETRIES),
-                Integer.toString(V15SOAPTestUtils.RETRY_INTERVAL)), ROOT_IDENTITY_CONTEXT));
+                Integer.toString(V15SOAPTestUtils.RETRY_INTERVAL)), ROOT_IDENTITY_CONTEXT
+        ));
 
         verify(client).updateFirmware(CHARGING_STATION_ID, V15SOAPTestUtils.getFirmwareUpdateLocation(), retrievedDate, V15SOAPTestUtils.NUMBER_OF_RETRIES, V15SOAPTestUtils.RETRY_INTERVAL);
     }

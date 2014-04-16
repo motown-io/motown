@@ -127,7 +127,7 @@ public class Ocpp12RequestHandlerTest {
 
     @Test
     public void testChangeConfigurationEvent() {
-        requestHandler.handle(new ChangeConfigurationEvent(CHARGING_STATION_ID, PROTOCOL, V12SOAPTestUtils.getConfigurationKey(), V12SOAPTestUtils.getConfigurationValue(), ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
+        requestHandler.handle(new ChangeConfigurationItemEvent(CHARGING_STATION_ID, PROTOCOL, V12SOAPTestUtils.getConfigurationKey(), V12SOAPTestUtils.getConfigurationValue(), ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).changeConfiguration(CHARGING_STATION_ID, V12SOAPTestUtils.getConfigurationKey(), V12SOAPTestUtils.getConfigurationValue());
     }

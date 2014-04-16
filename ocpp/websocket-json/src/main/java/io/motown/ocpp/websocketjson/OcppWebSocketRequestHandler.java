@@ -23,16 +23,14 @@ import org.slf4j.LoggerFactory;
 
 public class OcppWebSocketRequestHandler implements OcppRequestHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OcppWebSocketRequestHandler.class);
-
-    private OcppJsonService ocppJsonService;
-
     // TODO ocppj 1.2?
     public static final String PROTOCOL_IDENTIFIER = "OCPPJ15";
+    private static final Logger LOG = LoggerFactory.getLogger(OcppWebSocketRequestHandler.class);
+    private OcppJsonService ocppJsonService;
 
     @Override
-    public void handle(ConfigurationRequestedEvent event) {
-        LOG.info("Handling ConfigurationRequestedEvent");
+    public void handle(ConfigurationItemsRequestedEvent event) {
+        LOG.info("Handling ConfigurationItemsRequestedEvent");
         ocppJsonService.getConfiguration(event.getChargingStationId());
     }
 
@@ -85,8 +83,8 @@ public class OcppWebSocketRequestHandler implements OcppRequestHandler {
     }
 
     @Override
-    public void handle(ChangeConfigurationEvent event, CorrelationToken statusCorrelationToken) {
-        LOG.info("ChangeConfigurationEvent");
+    public void handle(ChangeConfigurationItemEvent event, CorrelationToken statusCorrelationToken) {
+        LOG.info("ChangeConfigurationItemEvent");
         ocppJsonService.changeConfiguration(event.getChargingStationId(), event.getKey(), event.getValue(), statusCorrelationToken);
     }
 

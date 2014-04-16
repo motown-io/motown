@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:axon="http://www.axonframework.org/schema/core"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:rabbit="http://www.springframework.org/schema/rabbit"
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xmlns:axon-amqp="http://www.axonframework.org/schema/amqp"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
                            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
@@ -31,143 +31,141 @@
         </property>
     </bean>
 
-    <bean id="chargingStationRepository" class="io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository">
-        <property name="entityManager" ref="entityManager" />
+    <bean id="chargingStationRepository"
+          class="io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository">
+        <property name="entityManager" ref="entityManager"/>
     </bean>
 
-    <bean id="transactionRepository" class="io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository">
-        <property name="entityManager" ref="entityManager" />
+    <bean id="transactionRepository"
+          class="io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository">
+        <property name="entityManager" ref="entityManager"/>
     </bean>
 
 
     <bean class="io.motown.operatorapi.viewmodel.ChargingStationEventListener">
-        <property name="repository" ref="chargingStationRepository" />
-        <property name="transactionRepository" ref="transactionRepository" />
+        <property name="repository" ref="chargingStationRepository"/>
+        <property name="transactionRepository" ref="transactionRepository"/>
     </bean>
 
     <bean id="jsonCommandService" class="io.motown.operatorapi.json.commands.JsonCommandService">
-        <property name="gson" ref="gson" />
-        <property name="jsonCommandHandlers" ref="jsonCommandHandlers" />
-        <property name="addOnId" value="1" />
+        <property name="gson" ref="gson"/>
+        <property name="jsonCommandHandlers" ref="jsonCommandHandlers"/>
+        <property name="addOnId" value="1"/>
     </bean>
 
     <bean id="operatorApiService" class="io.motown.operatorapi.json.queries.OperatorApiService">
-        <property name="repository" ref="chargingStationRepository" />
-        <property name="transactionRepository" ref="transactionRepository" />
+        <property name="repository" ref="chargingStationRepository"/>
+        <property name="transactionRepository" ref="transactionRepository"/>
     </bean>
 
     <util:list id="jsonCommandHandlers">
         <bean class="io.motown.operatorapi.json.commands.AddChargingStationOpeningTimesJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.ChangeConfigurationJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
-            <property name="repository" ref="chargingStationRepository" />
-        </bean>
-        <bean class="io.motown.operatorapi.json.commands.ConfigureJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.DataTransferJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.DataTransferJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.ImproveChargingStationLocationJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.MoveChargingStationJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.PlaceChargingStationJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.RegisterJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.RequestAuthorizationListVersionJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.RequestChangeChargingStationAvailabilityJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.RequestClearCacheJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.RequestDiagnosticsJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.RequestReserveNowJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.RequestResetChargingStationJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.RequestStartTransactionJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.RequestStopTransactionJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.SendAuthorizationListJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
             <!--<property name="repository" ref="chargingStationRepository" />-->
         </bean>
         <bean class="io.motown.operatorapi.json.commands.SetChargingStationOpeningTimesJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.UnlockEvseJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.UpdateChargingStationReservableJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.UpdateFirmwareJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.RequestGetConfigurationJsonCommandHandler">
-            <property name="commandGateway" ref="domainCommandGateway" />
-            <property name="gson" ref="gson" />
-            <property name="repository" ref="chargingStationRepository" />
+            <property name="commandGateway" ref="domainCommandGateway"/>
+            <property name="gson" ref="gson"/>
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
     </util:list>
 
@@ -208,7 +206,7 @@
                         connection-factory="amqpConnection"
                         serializer="serializer"
                         exchange-name="${io.motown.operatorapi.json.eventbus.amqp.rabbit.exchange.name}">
-        <axon-amqp:default-configuration />
+        <axon-amqp:default-configuration/>
     </axon-amqp:terminal>
 
     <axon:cluster id="cluster" default="true">
@@ -259,7 +257,7 @@
         </property>
     </bean>
 
-    <bean id="entityManager" factory-bean="entityManagerFactory" factory-method="createEntityManager" />
+    <bean id="entityManager" factory-bean="entityManagerFactory" factory-method="createEntityManager"/>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>

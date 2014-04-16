@@ -17,33 +17,31 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.PROTOCOL;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
-public class ChangeConfigurationEventTest {
+public class ChangeConfigurationItemEventTest {
 
     private static final String KEY = "testKey";
     private static final String VALUE = "testValue";
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ChangeConfigurationEvent(null, PROTOCOL, KEY, VALUE, ROOT_IDENTITY_CONTEXT);
+        new ChangeConfigurationItemEvent(null, PROTOCOL, KEY, VALUE, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithProtocolNull() {
-        new ChangeConfigurationEvent(CHARGING_STATION_ID, null, KEY, VALUE, ROOT_IDENTITY_CONTEXT);
+        new ChangeConfigurationItemEvent(CHARGING_STATION_ID, null, KEY, VALUE, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithKeyNull() {
-        new ChangeConfigurationEvent(CHARGING_STATION_ID, PROTOCOL, null, VALUE, ROOT_IDENTITY_CONTEXT);
+        new ChangeConfigurationItemEvent(CHARGING_STATION_ID, PROTOCOL, null, VALUE, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithValueNull() {
-        new ChangeConfigurationEvent(CHARGING_STATION_ID, PROTOCOL, KEY, null, ROOT_IDENTITY_CONTEXT);
+        new ChangeConfigurationItemEvent(CHARGING_STATION_ID, PROTOCOL, KEY, null, ROOT_IDENTITY_CONTEXT);
     }
 
 }

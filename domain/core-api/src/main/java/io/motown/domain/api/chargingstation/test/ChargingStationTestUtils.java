@@ -176,7 +176,7 @@ public final class ChargingStationTestUtils {
      * The default charging station identifier.
      */
     public static final ChargingStationId CHARGING_STATION_ID = new ChargingStationId("CS-001");
-/**
+    /**
      * The default reservation identifier.
      */
     public static final NumberedReservationId RESERVATION_ID = new NumberedReservationId(CHARGING_STATION_ID, PROTOCOL, 1);
@@ -291,18 +291,16 @@ public final class ChargingStationTestUtils {
      * The default add-on identity.
      */
     public static final AddOnIdentity ADD_ON_IDENTITY = new TypeBasedAddOnIdentity("ADD-ON", ADD_ON_ID);
-
-    /**
-     * The default configuration keys to retrieve from the charging station
-     */
-    public static final List<String> CONFIGURATION_KEYS = Lists.newArrayList();
-
     /**
      * The default identity context with NullUserIdentity.
      * <p/>
      * Used to test add-ons which do not pass a user identity in the identity context.
      */
     public static final IdentityContext NULL_USER_IDENTITY_CONTEXT = new IdentityContext(ADD_ON_IDENTITY, new NullUserIdentity());
+    /**
+     * The default configuration keys to retrieve from the charging station
+     */
+    public static final List<String> CONFIGURATION_KEYS = Lists.newArrayList();
     /**
      * The default user identity.
      */
@@ -402,7 +400,7 @@ public final class ChargingStationTestUtils {
             .add(new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT))
             .add(new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT))
             .add(new ChargingStationAcceptedEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
-            .add(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT))
+            .add(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, NULL_USER_IDENTITY_CONTEXT))
             .build();
 
     /**
@@ -412,7 +410,7 @@ public final class ChargingStationTestUtils {
             .add(new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT))
             .add(new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT))
             .add(new ChargingStationAcceptedEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
-            .add(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT))
+            .add(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, NULL_USER_IDENTITY_CONTEXT))
             .add(new ChargingStationMadeReservableEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
             .build();
 

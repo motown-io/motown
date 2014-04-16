@@ -17,23 +17,32 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
 
-public class ConfigurationRequestedEventTest {
+public class ChangeConfigurationItemCommandTest {
+
+    private static final String KEY = "testKey";
+    private static final String VALUE = "testValue";
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ConfigurationRequestedEvent(null, CONFIGURATION_KEYS, PROTOCOL, ROOT_IDENTITY_CONTEXT);
+        new ChangeConfigurationItemCommand(null, KEY, VALUE, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingEventWithProtocolNull() {
-        new ConfigurationRequestedEvent(CHARGING_STATION_ID, CONFIGURATION_KEYS, null, ROOT_IDENTITY_CONTEXT);
+    public void nullPointerExceptionThrownWhenCreatingEventWithKeyNull() {
+        new ChangeConfigurationItemCommand(CHARGING_STATION_ID, null, VALUE, ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingEventWithValueNull() {
+        new ChangeConfigurationItemCommand(CHARGING_STATION_ID, KEY, null, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithIdentityContextNull() {
-        new ConfigurationRequestedEvent(CHARGING_STATION_ID, CONFIGURATION_KEYS, PROTOCOL, null);
+        new ChangeConfigurationItemCommand(CHARGING_STATION_ID, KEY, VALUE, null);
     }
 
 }

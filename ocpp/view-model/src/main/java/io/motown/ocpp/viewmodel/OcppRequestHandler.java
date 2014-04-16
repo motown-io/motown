@@ -20,7 +20,7 @@ import org.axonframework.common.annotation.MetaData;
 
 public interface OcppRequestHandler {
 
-    void handle(ConfigurationRequestedEvent event);
+    void handle(ConfigurationItemsRequestedEvent event);
 
     void handle(StopTransactionRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
@@ -38,7 +38,7 @@ public interface OcppRequestHandler {
 
     void handle(DataTransferEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
-    void handle(ChangeConfigurationEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void handle(ChangeConfigurationItemEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
     void handle(DiagnosticsRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 

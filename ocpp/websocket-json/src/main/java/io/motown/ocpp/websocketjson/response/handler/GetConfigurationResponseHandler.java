@@ -42,6 +42,6 @@ public class GetConfigurationResponseHandler extends ResponseHandler {
             configurationItems.put(configurationKey.getKey(), configurationKey.getValue());
         }
 
-        domainService.configureChargingStation(chargingStationId, configurationItems, addOnIdentity);
+        domainService.receiveConfigurationItems(chargingStationId, configurationItems, addOnIdentity);
     }
 }

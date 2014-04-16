@@ -15,39 +15,39 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableMap;
 import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code ConfigureChargingStationCommand} is the command which is published when a charging station should be
- * configured.
+ * {@code ConfigurationItemsReceivedEvent} is the event which is published when Motown has received configuration
+ * items from a charging station.
  */
-public final class ConfigureChargingStationCommand {
+public class ConfigurationItemsReceivedEvent {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final Set<Evse> evses;
+    private final ImmutableMap<String, String> configurationItems;
 
     private final IdentityContext identityContext;
 
     /**
-     * Creates a {@code ConfigureChargingStationCommand} with an identifier.
+     * Creates a {@code ConfigurationItemsReceivedEvent} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param evses             the evses with which the charging station should be configured.
      * @param identityContext   the identity context.
      * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
      */
-    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Evse> evses, IdentityContext identityContext) {
+    public ConfigurationItemsReceivedEvent(ChargingStationId chargingStationId, Map<String, String> configurationItems, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.evses = ImmutableSet.copyOf(checkNotNull(evses));
+        this.configurationItems = ImmutableMap.copyOf(checkNotNull(configurationItems));
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -57,16 +57,16 @@ public final class ConfigureChargingStationCommand {
      * @return the charging station identifier.
      */
     public ChargingStationId getChargingStationId() {
-        return this.chargingStationId;
+        return chargingStationId;
     }
 
     /**
-     * Gets the evses with which the charging station should be configured.
+     * Gets the configuration items received from the charging station.
      *
-     * @return an immutable {@link java.util.Set} of evses.
+     * @return an immutable {@link java.util.Map} of configuration items.
      */
-    public Set<Evse> getEvses() {
-        return evses;
+    public ImmutableMap<String, String> getConfigurationItems() {
+        return configurationItems;
     }
 
     /**
@@ -83,7 +83,7 @@ public final class ConfigureChargingStationCommand {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, evses, identityContext);
+        return Objects.hash(chargingStationId, configurationItems, identityContext);
     }
 
     /**
@@ -97,8 +97,8 @@ public final class ConfigureChargingStationCommand {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final ConfigureChargingStationCommand other = (ConfigureChargingStationCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.evses, other.evses) && Objects.equals(this.identityContext, other.identityContext);
+        final ConfigurationItemsReceivedEvent other = (ConfigurationItemsReceivedEvent) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.configurationItems, other.configurationItems) && Objects.equals(this.identityContext, other.identityContext);
     }
 
     /**
@@ -106,9 +106,9 @@ public final class ConfigureChargingStationCommand {
      */
     @Override
     public String toString() {
-        return com.google.common.base.Objects.toStringHelper(this.getClass())
+        return toStringHelper(this)
                 .add("chargingStationId", chargingStationId)
-                .add("evses", evses)
+                .add("configurationItems", configurationItems)
                 .add("identityContext", identityContext)
                 .toString();
     }

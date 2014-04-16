@@ -15,39 +15,37 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import java.util.Set;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code ChargingStationConfiguredEvent} is the event which is published when a charging station has been configured.
+ * {@code RequestConfigurationItemsCommand} is the command which is published when a charging station's configuration should
+ * be requested from the charging station.
  */
-public final class ChargingStationConfiguredEvent {
+public final class RequestConfigurationItemsCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final Set<Evse> evses;
+    private final List<String> keys;
 
     private final IdentityContext identityContext;
 
     /**
-     * Creates a {@code ChargingStationConfiguredEvent} with an identifier.
+     * Creates a {@code RequestConfigurationItemsCommand} with an identifier and identity context.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param evses             the Evses with which the charging station has been configured.
-     * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code evses}, or {@code identityContext} is
-     *                              {@code null}.
+     * @param keys              an optional list of keys to retrieve, or all keys in case this list is empty
+     * @param identityContext   the identity context.
+     * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
      */
-    public ChargingStationConfiguredEvent(ChargingStationId chargingStationId, Set<Evse> evses, IdentityContext identityContext) {
+    public RequestConfigurationItemsCommand(ChargingStationId chargingStationId, List<String> keys, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.evses = ImmutableSet.copyOf(checkNotNull(evses));
+        this.keys = checkNotNull(keys);
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -61,12 +59,12 @@ public final class ChargingStationConfiguredEvent {
     }
 
     /**
-     * Gets the Evses with which the charging station has been configured.
+     * The optional list of keys to be retrieved
      *
-     * @return an immutable {@link java.util.Set} of Evses.
+     * @return optional list of keys
      */
-    public Set<Evse> getEvses() {
-        return evses;
+    public List<String> getKeys() {
+        return keys;
     }
 
     /**
@@ -76,14 +74,5 @@ public final class ChargingStationConfiguredEvent {
      */
     public IdentityContext getIdentityContext() {
         return identityContext;
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this.getClass())
-                .add("chargingStationId", chargingStationId)
-                .add("evses", evses)
-                .add("identityContext", identityContext)
-                .toString();
     }
 }

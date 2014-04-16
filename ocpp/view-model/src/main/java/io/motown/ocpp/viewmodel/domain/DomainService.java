@@ -31,17 +31,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManagerFactory;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DomainService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DomainService.class);
     public static final int CHARGING_STATION_EVSE_ID = 0;
     public static final String ERROR_CODE_KEY = "errorCode";
     public static final String INFO_KEY = "info";
     public static final String VENDOR_ID_KEY = "vendorId";
     public static final String VENDOR_ERROR_CODE_KEY = "vendorErrorCode";
-
     public static final String VENDOR_KEY = "vendor";
     public static final String MODEL_KEY = "model";
     public static final String ADDRESS_KEY = "address";
@@ -52,34 +53,28 @@ public class DomainService {
     public static final String IMSI_KEY = "imsi";
     public static final String METER_TYPE_KEY = "meterType";
     public static final String METER_SERIALNUMBER_KEY = "meterSerialNumber";
-
     public static final String RESERVATION_ID_KEY = "reservationId";
-
     /**
      * Meter value context attribute key.
      */
     public static final String CONTEXT_KEY = "context";
-
     /**
      * Meter value format attribute key.
      */
     public static final String FORMAT_KEY = "format";
-
     /**
      * Meter value measurand attribute key.
      */
     public static final String MEASURAND_KEY = "measurand";
-
     /**
      * Meter value location attribute key.
      */
     public static final String LOCATION_KEY = "location";
-
     /**
      * Meter value unit attribute key.
      */
     public static final String UNIT_KEY = "unit";
-
+    private static final Logger LOG = LoggerFactory.getLogger(DomainService.class);
     private DomainCommandGateway commandGateway;
 
     private ChargingStationRepository chargingStationRepository;
@@ -93,6 +88,19 @@ public class DomainService {
     private int heartbeatInterval;
 
     private EventWaitingGateway eventWaitingGateway;
+
+    /**
+     * Adds the attribute to the map using the key and value if the value is not null.
+     *
+     * @param attributes map of keys and values.
+     * @param key        key of the attribute.
+     * @param value      value of the attribute.
+     */
+    public static void addAttributeIfNotNull(Map<String, String> attributes, String key, String value) {
+        if (value != null) {
+            attributes.put(key, value);
+        }
+    }
 
     public BootChargingStationResult bootChargingStation(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model,
                                                          String protocol, String chargingStationSerialNumber, String chargeBoxSerialNumber, String firmwareVersion, String iccid,
@@ -170,10 +178,11 @@ public class DomainService {
         eventWaitingGateway.sendAndWaitForEvent(new AuthorizeCommand(chargingStationId, new TextualToken(idTag), identityContext), future);
     }
 
-    public void configureChargingStation(ChargingStationId chargingStationId, Map<String, String> configurationItems, AddOnIdentity addOnIdentity) {
+    public void receiveConfigurationItems(ChargingStationId chargingStationId, Map<String, String> configurationItems, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(chargingStationId, configurationItems, identityContext);
+        ReceiveConfigurationItemsCommand command = new ReceiveConfigurationItemsCommand(chargingStationId, configurationItems, identityContext);
+
         commandGateway.send(command);
     }
 
@@ -349,23 +358,10 @@ public class DomainService {
     }
 
     /**
-     * Adds the attribute to the map using the key and value if the value is not null.
-     *
-     * @param attributes    map of keys and values.
-     * @param key           key of the attribute.
-     * @param value         value of the attribute.
-     */
-    public static void addAttributeIfNotNull(Map<String, String> attributes, String key, String value) {
-        if (value != null) {
-            attributes.put(key, value);
-        }
-    }
-
-    /**
      * Creates a transaction based on the charging station and protocol identifier. The evse identifier is
      * stored for later usage.
      *
-     * @param evseId             evse identifier that's stored in the transaction
+     * @param evseId evse identifier that's stored in the transaction
      * @return transaction
      */
     private Transaction createTransaction(EvseId evseId) {

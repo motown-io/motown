@@ -38,12 +38,12 @@ public class OcppRequestEventHandler {
     private ChargingStationRepository chargingStationRepository;
 
     @EventHandler
-    public void handle(ConfigurationRequestedEvent event) {
-        LOG.info("Handling ConfigurationRequestedEvent");
+    public void handle(ConfigurationItemsRequestedEvent event) {
+        LOG.info("Handling ConfigurationItemsRequestedEvent");
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
-        if(ocppRequestHandler != null) {
+        if (ocppRequestHandler != null) {
             ocppRequestHandler.handle(event);
         }
     }
@@ -54,7 +54,7 @@ public class OcppRequestEventHandler {
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
-        if(ocppRequestHandler != null) {
+        if (ocppRequestHandler != null) {
             ocppRequestHandler.handle(event, statusCorrelationToken);
         }
     }
@@ -65,7 +65,7 @@ public class OcppRequestEventHandler {
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
-        if(ocppRequestHandler != null) {
+        if (ocppRequestHandler != null) {
             ocppRequestHandler.handle(event, statusCorrelationToken);
         }
     }
@@ -76,7 +76,7 @@ public class OcppRequestEventHandler {
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
-        if(ocppRequestHandler != null) {
+        if (ocppRequestHandler != null) {
             ocppRequestHandler.handle(event, statusCorrelationToken);
         }
     }
@@ -87,7 +87,7 @@ public class OcppRequestEventHandler {
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
-        if(ocppRequestHandler != null) {
+        if (ocppRequestHandler != null) {
             ocppRequestHandler.handle(event, statusCorrelationToken);
         }
     }
@@ -98,7 +98,7 @@ public class OcppRequestEventHandler {
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
-        if(ocppRequestHandler != null) {
+        if (ocppRequestHandler != null) {
             ocppRequestHandler.handle(event, statusCorrelationToken);
         }
     }
@@ -109,7 +109,7 @@ public class OcppRequestEventHandler {
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
-        if(ocppRequestHandler != null) {
+        if (ocppRequestHandler != null) {
             ocppRequestHandler.handle(event, statusCorrelationToken);
         }
     }
@@ -120,7 +120,7 @@ public class OcppRequestEventHandler {
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
-        if(ocppRequestHandler != null) {
+        if (ocppRequestHandler != null) {
             ocppRequestHandler.handle(event, statusCorrelationToken);
         }
     }
@@ -131,18 +131,18 @@ public class OcppRequestEventHandler {
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
-        if(ocppRequestHandler != null) {
+        if (ocppRequestHandler != null) {
             ocppRequestHandler.handle(event, statusCorrelationToken);
         }
     }
 
     @EventHandler
-    public void handle(ChangeConfigurationEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
-        LOG.info("ChangeConfigurationEvent");
+    public void handle(ChangeConfigurationItemEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.info("ChangeConfigurationItemEvent");
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
-        if(ocppRequestHandler != null) {
+        if (ocppRequestHandler != null) {
             ocppRequestHandler.handle(event, statusCorrelationToken);
         }
     }
@@ -153,7 +153,7 @@ public class OcppRequestEventHandler {
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
-        if(ocppRequestHandler != null) {
+        if (ocppRequestHandler != null) {
             ocppRequestHandler.handle(event, statusCorrelationToken);
         }
     }
@@ -164,7 +164,7 @@ public class OcppRequestEventHandler {
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
-        if(ocppRequestHandler != null) {
+        if (ocppRequestHandler != null) {
             ocppRequestHandler.handle(event, statusCorrelationToken);
         }
     }
@@ -175,7 +175,7 @@ public class OcppRequestEventHandler {
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
-        if(ocppRequestHandler != null) {
+        if (ocppRequestHandler != null) {
             ocppRequestHandler.handle(event);
         }
     }
@@ -186,7 +186,7 @@ public class OcppRequestEventHandler {
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
-        if(ocppRequestHandler != null) {
+        if (ocppRequestHandler != null) {
             ocppRequestHandler.handle(event, statusCorrelationToken);
         }
     }
@@ -197,7 +197,7 @@ public class OcppRequestEventHandler {
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
-        if(ocppRequestHandler != null) {
+        if (ocppRequestHandler != null) {
             ocppRequestHandler.handle(event, statusCorrelationToken);
         }
     }
@@ -208,7 +208,7 @@ public class OcppRequestEventHandler {
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
-        if(ocppRequestHandler != null) {
+        if (ocppRequestHandler != null) {
             ocppRequestHandler.handle(event, statusCorrelationToken);
         }
     }

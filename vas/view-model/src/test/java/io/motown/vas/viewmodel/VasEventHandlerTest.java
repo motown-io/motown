@@ -294,7 +294,7 @@ public class VasEventHandlerTest {
     public void chargingStationConfiguredEventUnknownChargingStationShouldCreateChargingStation() {
         assertNull(getTestChargingStationFromRepository());
 
-        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT));
+        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, NULL_USER_IDENTITY_CONTEXT));
 
         assertNotNull(getTestChargingStationFromRepository());
     }
@@ -303,7 +303,7 @@ public class VasEventHandlerTest {
     public void chargingStationConfiguredEventChargingStationShouldBeConfigured() {
         chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
 
-        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT));
+        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, NULL_USER_IDENTITY_CONTEXT));
 
         assertTrue(getTestChargingStationFromRepository().isConfigured());
     }
@@ -313,7 +313,7 @@ public class VasEventHandlerTest {
         chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
         ChargeMode expectedChargeMode = ChargeMode.fromChargingProtocol(EVSES.iterator().next().getConnectors().get(0).getChargingProtocol());
 
-        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT));
+        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, NULL_USER_IDENTITY_CONTEXT));
 
         assertEquals(expectedChargeMode, getTestChargingStationFromRepository().getChargeMode());
     }
@@ -323,7 +323,7 @@ public class VasEventHandlerTest {
         chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
         Set<ConnectorType> expectedConnectorTypes = configurationConversionService.getConnectorTypesFromEvses(EVSES);
 
-        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT));
+        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, NULL_USER_IDENTITY_CONTEXT));
 
         // not testing if Set with expected values contain the correct values, configurationConversionService has its own test set
         assertEquals(expectedConnectorTypes, getTestChargingStationFromRepository().getConnectorTypes());
@@ -334,7 +334,7 @@ public class VasEventHandlerTest {
         chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
         Set<Evse> expectedEvses = configurationConversionService.getEvsesFromEventEvses(EVSES);
 
-        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT));
+        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, NULL_USER_IDENTITY_CONTEXT));
 
         // not testing if Set with expected values contain the correct values, configurationConversionService has its own test set
         assertEquals(expectedEvses, getTestChargingStationFromRepository().getEvses());
@@ -345,7 +345,7 @@ public class VasEventHandlerTest {
         chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
         Set<ChargingCapability> expectedChargingCapabilities = configurationConversionService.getChargingCapabilitiesFromEvses(EVSES);
 
-        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT));
+        eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, NULL_USER_IDENTITY_CONTEXT));
 
         // not testing if Set with expected values contain the correct values, configurationConversionService has its own test set
         assertEquals(expectedChargingCapabilities, getTestChargingStationFromRepository().getChargingCapabilities());

@@ -76,7 +76,7 @@ public class GetConfigurationResponseHandlerTest {
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
         ArgumentCaptor<HashMap> configurationKeysCaptor = ArgumentCaptor.forClass(HashMap.class);
-        verify(domainService).configureChargingStation(any(ChargingStationId.class), configurationKeysCaptor.capture(), eq(ADD_ON_IDENTITY));
+        verify(domainService).receiveConfigurationItems(any(ChargingStationId.class), configurationKeysCaptor.capture(), eq(ADD_ON_IDENTITY));
         assertEquals(configurationKeysCaptor.getValue().size(), 1);
     }
 

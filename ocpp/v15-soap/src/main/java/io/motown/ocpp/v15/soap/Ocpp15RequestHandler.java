@@ -28,24 +28,19 @@ import java.util.Map;
 
 public class Ocpp15RequestHandler implements OcppRequestHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Ocpp15RequestHandler.class);
-
-    private DomainService domainService;
-
-    private ChargingStationOcpp15Client chargingStationOcpp15Client;
-
     public static final String PROTOCOL_IDENTIFIER = "OCPPS15";
-
     public static final String ADD_ON_TYPE = "OCPPS15";
-
+    private static final Logger LOG = LoggerFactory.getLogger(Ocpp15RequestHandler.class);
+    private DomainService domainService;
+    private ChargingStationOcpp15Client chargingStationOcpp15Client;
     private AddOnIdentity addOnIdentity;
 
     @Override
-    public void handle(ConfigurationRequestedEvent event) {
-        LOG.info("Handling ConfigurationRequestedEvent");
+    public void handle(ConfigurationItemsRequestedEvent event) {
+        LOG.info("Handling ConfigurationItemsRequestedEvent");
         Map<String, String> configurationItems = chargingStationOcpp15Client.getConfiguration(event.getChargingStationId());
 
-        domainService.configureChargingStation(event.getChargingStationId(), configurationItems, addOnIdentity);
+        domainService.receiveConfigurationItems(event.getChargingStationId(), configurationItems, addOnIdentity);
     }
 
     @Override
@@ -81,7 +76,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
     @Override
     public void handle(StartTransactionRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("StartTransactionRequestedEvent");
-        RequestResult requestResult =  chargingStationOcpp15Client.startTransaction(event.getChargingStationId(), event.getIdentifyingToken(), event.getEvseId());
+        RequestResult requestResult = chargingStationOcpp15Client.startTransaction(event.getChargingStationId(), event.getIdentifyingToken(), event.getEvseId());
 
         domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
     }
@@ -128,8 +123,8 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
     }
 
     @Override
-    public void handle(ChangeConfigurationEvent event, CorrelationToken statusCorrelationToken) {
-        LOG.info("ChangeConfigurationEvent");
+    public void handle(ChangeConfigurationItemEvent event, CorrelationToken statusCorrelationToken) {
+        LOG.info("ChangeConfigurationItemEvent");
         RequestResult requestResult = chargingStationOcpp15Client.changeConfiguration(event.getChargingStationId(), event.getKey(), event.getValue());
 
         domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
@@ -154,16 +149,16 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
     @Override
     public void handle(FirmwareUpdateRequestedEvent event) {
         LOG.info("FirmwareUpdateRequestedEvent");
-        Map<String,String> attributes = event.getAttributes();
+        Map<String, String> attributes = event.getAttributes();
 
         String attrNumRetries = null;
         String attrRetryInterval = null;
-        if(attributes != null) {
+        if (attributes != null) {
             attrNumRetries = attributes.get(FirmwareUpdateAttributeKey.NUM_RETRIES);
             attrRetryInterval = attributes.get(FirmwareUpdateAttributeKey.RETRY_INTERVAL);
         }
-        Integer numRetries = (attrNumRetries != null && !"".equals(attrNumRetries))? Integer.parseInt(attrNumRetries): null;
-        Integer retryInterval = (attrRetryInterval != null && !"".equals(attrRetryInterval))? Integer.parseInt(attrRetryInterval): null;
+        Integer numRetries = (attrNumRetries != null && !"".equals(attrNumRetries)) ? Integer.parseInt(attrNumRetries) : null;
+        Integer retryInterval = (attrRetryInterval != null && !"".equals(attrRetryInterval)) ? Integer.parseInt(attrRetryInterval) : null;
 
         chargingStationOcpp15Client.updateFirmware(event.getChargingStationId(), event.getUpdateLocation(), event.getRetrieveDate(), numRetries, retryInterval);
     }

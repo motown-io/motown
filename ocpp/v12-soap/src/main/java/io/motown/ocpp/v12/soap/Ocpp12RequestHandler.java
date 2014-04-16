@@ -27,19 +27,15 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 public class Ocpp12RequestHandler implements OcppRequestHandler {
-    
-    private static final Logger LOG = LoggerFactory.getLogger(Ocpp12RequestHandler.class);
-
-    private DomainService domainService;
-
-    private ChargingStationOcpp12Client chargingStationOcpp12Client;
 
     public static final String ADD_ON_TYPE = "OCPPS12";
-
+    private static final Logger LOG = LoggerFactory.getLogger(Ocpp12RequestHandler.class);
+    private DomainService domainService;
+    private ChargingStationOcpp12Client chargingStationOcpp12Client;
     private AddOnIdentity addOnIdentity;
 
     @Override
-    public void handle(ConfigurationRequestedEvent event) {
+    public void handle(ConfigurationItemsRequestedEvent event) {
         // no implementation in OCPP 1.2
     }
 
@@ -76,7 +72,7 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
     @Override
     public void handle(StartTransactionRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("OCPP 1.2 StartTransactionRequestedEvent");
-        RequestResult requestResult =  chargingStationOcpp12Client.startTransaction(event.getChargingStationId(), event.getIdentifyingToken(), event.getEvseId());
+        RequestResult requestResult = chargingStationOcpp12Client.startTransaction(event.getChargingStationId(), event.getIdentifyingToken(), event.getEvseId());
 
         domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
     }
@@ -119,8 +115,8 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
     }
 
     @Override
-    public void handle(ChangeConfigurationEvent event, CorrelationToken statusCorrelationToken) {
-        LOG.info("OCPP 1.2 ChangeConfigurationEvent");
+    public void handle(ChangeConfigurationItemEvent event, CorrelationToken statusCorrelationToken) {
+        LOG.info("OCPP 1.2 ChangeConfigurationItemEvent");
         RequestResult requestResult = chargingStationOcpp12Client.changeConfiguration(event.getChargingStationId(), event.getKey(), event.getValue());
 
         domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
@@ -145,16 +141,16 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
     @Override
     public void handle(FirmwareUpdateRequestedEvent event) {
         LOG.info("OCPP 1.2 FirmwareUpdateRequestedEvent");
-        Map<String,String> attributes = event.getAttributes();
+        Map<String, String> attributes = event.getAttributes();
 
         String attrNumRetries = null;
         String attrRetryInterval = null;
-        if(attributes != null) {
+        if (attributes != null) {
             attrNumRetries = attributes.get(FirmwareUpdateAttributeKey.NUM_RETRIES);
             attrRetryInterval = attributes.get(FirmwareUpdateAttributeKey.RETRY_INTERVAL);
         }
-        Integer numRetries = (attrNumRetries != null && !"".equals(attrNumRetries))? Integer.parseInt(attrNumRetries): null;
-        Integer retryInterval = (attrRetryInterval != null && !"".equals(attrRetryInterval))? Integer.parseInt(attrRetryInterval): null;
+        Integer numRetries = (attrNumRetries != null && !"".equals(attrNumRetries)) ? Integer.parseInt(attrNumRetries) : null;
+        Integer retryInterval = (attrRetryInterval != null && !"".equals(attrRetryInterval)) ? Integer.parseInt(attrRetryInterval) : null;
 
         chargingStationOcpp12Client.updateFirmware(event.getChargingStationId(), event.getUpdateLocation(), event.getRetrieveDate(), numRetries, retryInterval);
     }

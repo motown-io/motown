@@ -149,22 +149,22 @@ public class ChargingStationTest {
     @Test
     public void testRequestConfigurationForUnconfiguredChargingStation() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
-                .when(new RequestConfigurationCommand(CHARGING_STATION_ID, CONFIGURATION_KEYS, ROOT_IDENTITY_CONTEXT))
+                .when(new RequestConfigurationItemsCommand(CHARGING_STATION_ID, CONFIGURATION_KEYS, ROOT_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRequestConfigurationForUnregisteredChargingStation() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
-                .when(new RequestConfigurationCommand(CHARGING_STATION_ID, CONFIGURATION_KEYS, ROOT_IDENTITY_CONTEXT))
+                .when(new RequestConfigurationItemsCommand(CHARGING_STATION_ID, CONFIGURATION_KEYS, ROOT_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testRequestConfiguration() {
         fixture.given(CHARGING_STATION)
-                .when(new RequestConfigurationCommand(CHARGING_STATION_ID, CONFIGURATION_KEYS, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new ConfigurationRequestedEvent(CHARGING_STATION_ID, CONFIGURATION_KEYS, PROTOCOL, ROOT_IDENTITY_CONTEXT));
+                .when(new RequestConfigurationItemsCommand(CHARGING_STATION_ID, CONFIGURATION_KEYS, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new ConfigurationItemsRequestedEvent(CHARGING_STATION_ID, CONFIGURATION_KEYS, PROTOCOL, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
@@ -206,22 +206,15 @@ public class ChargingStationTest {
     @Test
     public void testConfigureChargingStation() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
-                .when(new ConfigureChargingStationCommand(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT));
-    }
-
-    @Test
-    public void testConfigureChargingStationWithoutEvses() {
-        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
-                .when(new ConfigureChargingStationCommand(CHARGING_STATION_ID, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, Collections.<Evse>emptySet(), CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT));
-    }
-
-    @Test
-    public void testConfigureChargingStationWithoutConfigurationItems() {
-        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
                 .when(new ConfigureChargingStationCommand(CHARGING_STATION_ID, EVSES, NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT));
+                .expectEvents(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, NULL_USER_IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void testReceiveConfigurationItems() {
+        fixture.given(CHARGING_STATION)
+                .when(new ReceiveConfigurationItemsCommand(CHARGING_STATION_ID, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT))
+                .expectEvents(new ConfigurationItemsReceivedEvent(CHARGING_STATION_ID, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
@@ -455,8 +448,8 @@ public class ChargingStationTest {
         String configKey = "heartbeatInterval";
         String configValue = "800";
         fixture.given(CHARGING_STATION)
-                .when(new ChangeConfigurationCommand(CHARGING_STATION_ID, configKey, configValue, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new ChangeConfigurationEvent(CHARGING_STATION_ID, PROTOCOL, configKey, configValue, ROOT_IDENTITY_CONTEXT));
+                .when(new ChangeConfigurationItemCommand(CHARGING_STATION_ID, configKey, configValue, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new ChangeConfigurationItemEvent(CHARGING_STATION_ID, PROTOCOL, configKey, configValue, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test

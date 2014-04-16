@@ -45,12 +45,12 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
     }
 
     @Override
-    public void send(RequestStartTransactionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken){
+    public void send(RequestStartTransactionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.debug("RequestStartTransactionCommand:" + command.toString());
     }
 
     @Override
-    public void send(RequestStopTransactionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken){
+    public void send(RequestStopTransactionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.debug("RequestStopTransactionCommand:" + command.toString());
     }
 
@@ -80,8 +80,8 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
     }
 
     @Override
-    public void send(ChangeConfigurationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
-        LOG.debug("ChangeConfigurationCommand: " + command.toString());
+    public void send(ChangeConfigurationItemCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("ChangeConfigurationItemCommand: " + command.toString());
     }
 
     @Override
@@ -120,8 +120,8 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
     }
 
     @Override
-    public void send(RequestConfigurationCommand command) {
-        LOG.debug("RequestConfigurationCommand: " + command.toString());
+    public void send(RequestConfigurationItemsCommand command) {
+        LOG.debug("RequestConfigurationItemsCommand: " + command.toString());
     }
 
     @Override

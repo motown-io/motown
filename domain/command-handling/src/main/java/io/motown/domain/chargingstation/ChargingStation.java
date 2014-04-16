@@ -168,16 +168,16 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(RequestConfigurationCommand command) {
+    public void handle(RequestConfigurationItemsCommand command) {
         checkCommunicationAllowed();
 
-        apply(new ConfigurationRequestedEvent(this.id, command.getKeys(), this.protocol, command.getIdentityContext()));
+        apply(new ConfigurationItemsRequestedEvent(this.id, command.getKeys(), this.protocol, command.getIdentityContext()));
     }
 
     @CommandHandler
     public void handle(ConfigureChargingStationCommand command) {
         // TODO should we allow reconfiguring of charging stations? - Dennis Laumen, Nov 28th 2013
-        apply(new ChargingStationConfiguredEvent(this.id, command.getEvses(), command.getConfigurationItems(), command.getIdentityContext()));
+        apply(new ChargingStationConfiguredEvent(this.id, command.getEvses(), command.getIdentityContext()));
     }
 
     @CommandHandler
@@ -222,8 +222,8 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(ChangeConfigurationCommand command, MetaData metaData) {
-        apply(new ChangeConfigurationEvent(this.id, this.protocol, command.getKey(), command.getValue(), command.getIdentityContext()), metaData);
+    public void handle(ChangeConfigurationItemCommand command, MetaData metaData) {
+        apply(new ChangeConfigurationItemEvent(this.id, this.protocol, command.getKey(), command.getValue(), command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
@@ -365,6 +365,11 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @CommandHandler
     public void handle(AddChargingStationOpeningTimesCommand command) {
         apply(new ChargingStationOpeningTimesAddedEvent(command.getChargingStationId(), command.getOpeningTimes(), command.getIdentityContext()));
+    }
+
+    @CommandHandler
+    public void handle(ReceiveConfigurationItemsCommand command) {
+        apply(new ConfigurationItemsReceivedEvent(command.getChargingStationId(), command.getConfigurationItems(), command.getIdentityContext()));
     }
 
     @EventSourcingHandler

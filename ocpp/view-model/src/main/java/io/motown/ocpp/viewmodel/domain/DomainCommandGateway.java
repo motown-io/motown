@@ -58,5 +58,7 @@ interface DomainCommandGateway {
     void send(ToInoperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
     void send(ToOperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(ReceiveConfigurationItemsCommand command);
 }
 

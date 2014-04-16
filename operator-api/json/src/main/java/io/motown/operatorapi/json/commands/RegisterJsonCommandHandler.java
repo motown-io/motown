@@ -16,11 +16,9 @@
 package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.AcceptChargingStationCommand;
 import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.ConfigureChargingStationCommand;
 import io.motown.domain.api.chargingstation.CreateAndAcceptChargingStationCommand;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
@@ -52,14 +50,6 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
             commandGateway.send(new AcceptChargingStationCommand(new ChargingStationId(chargingStationId), identityContext));
         } else {
             throw new IllegalStateException("Charging station { %s } is already in accepted state, you can't register this station".format(chargingStationId));
-        }
-
-        if (commandObject != null) {
-            JsonElement jsConfiguration = commandObject.get("configuration");
-            if (jsConfiguration != null && jsConfiguration.isJsonObject()) {
-                ConfigureChargingStationCommand newCommand = JsonCommandParser.parseConfigureChargingStation(new ChargingStationId(chargingStationId), jsConfiguration.getAsJsonObject(), gson, identityContext);
-                commandGateway.send(newCommand);
-            }
         }
     }
 

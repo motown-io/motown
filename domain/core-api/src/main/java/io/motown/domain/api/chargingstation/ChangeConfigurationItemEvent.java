@@ -17,44 +17,47 @@ package io.motown.domain.api.chargingstation;
 
 import io.motown.domain.api.security.IdentityContext;
 
-import java.util.List;
-
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code RequestConfigurationCommand} is the event which is published when a charging station's configuration should
- * be requested from the charging station.
+ * {@code ChangeConfigurationItemEvent} is the event which is published when a configuration change has been requested.
  */
-public final class ConfigurationRequestedEvent implements CommunicationWithChargingStationRequestedEvent{
+public final class ChangeConfigurationItemEvent implements CommunicationWithChargingStationRequestedEvent {
 
     private final ChargingStationId chargingStationId;
 
-    private final List<String> keys;
-
     private final String protocol;
+
+    private final String key;
+
+    private final String value;
 
     private final IdentityContext identityContext;
 
     /**
-     * Creates a {@code ConfigurationRequestedEvent} with an identifier.
+     * Creates a {@code DataTransferEvent} with an identifier, vendor identifier, message identifier, free format data and identity context.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param keys              an optional list of keys to retrieve, or all keys in case this list is empty
-     * @param protocol protocol identifier.
+     * @param protocol          the protocol identifier.
+     * @param key               the key to be changed.
+     * @param value             the new value.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} or {@code identityContext} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code key}, {@code value} or
+     *                          {@code identityContext} is {@code null}.
      */
-    public ConfigurationRequestedEvent(ChargingStationId chargingStationId, List<String> keys, String protocol, IdentityContext identityContext) {
+    public ChangeConfigurationItemEvent(ChargingStationId chargingStationId, String protocol, String key, String value, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.keys = checkNotNull(keys);
-        this.protocol = checkNotNull(protocol);
+        checkNotNull(protocol);
+        checkArgument(!protocol.isEmpty());
+        this.protocol = protocol;
+        this.key = checkNotNull(key);
+        this.value = checkNotNull(value);
         this.identityContext = checkNotNull(identityContext);
     }
 
     /**
-     * Gets the charging station identifier.
-     *
-     * @return the charging station identifier.
+     * @return the charging station identifier
      */
     @Override
     public ChargingStationId getChargingStationId() {
@@ -62,22 +65,25 @@ public final class ConfigurationRequestedEvent implements CommunicationWithCharg
     }
 
     /**
-     * The optional list of keys to be retrieved
-     *
-     * @return optional list of keys
-     */
-    public List<String> getKeys() {
-        return keys;
-    }
-
-    /**
-     * Gets the protocol identifier.
-     *
-     * @return the protocol identifier.
+     * @return the protocol identifier
      */
     @Override
     public String getProtocol() {
-        return protocol;
+        return this.protocol;
+    }
+
+    /**
+     * @return the key.
+     */
+    public String getKey() {
+        return key;
+    }
+
+    /**
+     * @return the new value for the key.
+     */
+    public String getValue() {
+        return value;
     }
 
     /**

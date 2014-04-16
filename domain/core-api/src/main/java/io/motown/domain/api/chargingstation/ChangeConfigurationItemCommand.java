@@ -23,22 +23,19 @@ import java.util.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code ChangeConfigurationCommand} is the command which is published when a single configuration parameter is to
+ * {@code ChangeConfigurationItemCommand} is the command which is published when a single configuration parameter is to
  * be changed on the charging station.
  */
-public final class ChangeConfigurationCommand {
+public final class ChangeConfigurationItemCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
-
+    private final IdentityContext identityContext;
     private String key;
-
     private String value;
 
-    private final IdentityContext identityContext;
-
     /**
-     * Creates a {@code ChangeConfigurationCommand} with an identifier.
+     * Creates a {@code ChangeConfigurationItemCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param key               the key to change.
@@ -46,7 +43,7 @@ public final class ChangeConfigurationCommand {
      * @param identityContext   identity context.
      * @throws NullPointerException if {@code key}, {@code value} or {@code identityContext} is {@code null}.
      */
-    public ChangeConfigurationCommand(ChargingStationId chargingStationId, String key, String value, IdentityContext identityContext) {
+    public ChangeConfigurationItemCommand(ChargingStationId chargingStationId, String key, String value, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.key = checkNotNull(key);
         this.value = checkNotNull(value);
@@ -96,7 +93,7 @@ public final class ChangeConfigurationCommand {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final ChangeConfigurationCommand other = (ChangeConfigurationCommand) obj;
+        final ChangeConfigurationItemCommand other = (ChangeConfigurationItemCommand) obj;
         return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.key, other.key) && Objects.equals(this.value, other.value) && Objects.equals(this.identityContext, other.identityContext);
     }
 }
