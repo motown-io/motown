@@ -29,7 +29,7 @@ public class ChargingStation {
     private String id;
     private String protocol;
     private Date lastContact;
-    private Boolean accepted;
+    private boolean accepted;
     private boolean reservable;
     private Double latitude;
     private Double longitude;
@@ -40,6 +40,7 @@ public class ChargingStation {
     private String region;
     private String country;
     private Accessibility accessibility;
+    private Availability availability;
     private ComponentStatus status;
     @ElementCollection
     private Set<OpeningTime> openingTimes = new HashSet<>();
@@ -49,11 +50,19 @@ public class ChargingStation {
     private ChargingStation() {
         // Private no-arg constructor for Hibernate.
     }
-
     public ChargingStation(String id) {
         this.id = id;
         this.accepted = false;
         this.reservable = false;
+        this.availability = Availability.OPERATIVE;
+    }
+
+    public Availability getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(Availability availability) {
+        this.availability = availability;
     }
 
     public boolean isReservable() {
@@ -72,11 +81,11 @@ public class ChargingStation {
         this.protocol = protocol;
     }
 
-    public Boolean isAccepted() {
+    public boolean isAccepted() {
         return accepted;
     }
 
-    public void setAccepted(Boolean accepted) {
+    public void setAccepted(boolean accepted) {
         this.accepted = accepted;
     }
 
