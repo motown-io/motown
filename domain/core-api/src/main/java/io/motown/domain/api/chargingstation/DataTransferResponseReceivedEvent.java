@@ -17,46 +17,30 @@ package io.motown.domain.api.chargingstation;
 
 import io.motown.domain.api.security.IdentityContext;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code DataTransferEvent} is the event which is published when a datatransfer to a charging station is requested.
+ * {@code DataTransferResponseReceivedEvent} is the event which is published when a datatransfer response contains
+ * data. This will most likely result in custom processing.
  */
-public final class DataTransferEvent implements CommunicationWithChargingStationRequestedEvent  {
+public final class DataTransferResponseReceivedEvent {
 
     private final ChargingStationId chargingStationId;
-
-    private final String protocol;
-
-    private String vendorId;
-
-    private String messageId;
 
     private String data;
 
     private final IdentityContext identityContext;
 
     /**
-     * Creates a {@code DataTransferEvent} with an identifier, vendor identifier, message identifier, and free format data.
+     * Creates a {@code DataTransferResponseReceivedEvent}.
      * @param chargingStationId the identifier of the charging station.
-     * @param protocol          the protocol identifier.
-     * @param vendorId          the vendor identifier.
-     * @param messageId         the optional additional message identifier.
      * @param data              the free format data to send to the charging station.
      * @param identityContext   identity context.
      * @throws NullPointerException if {@code chargingStationId} or {@code protocol}, {@code vendorId} or
      *                              {@code identityContext} is {@code null}.
      */
-    public DataTransferEvent(ChargingStationId chargingStationId, String protocol, String vendorId, String messageId, String data, IdentityContext identityContext) {
+    public DataTransferResponseReceivedEvent(ChargingStationId chargingStationId, String data, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        checkNotNull(protocol);
-        checkArgument(!protocol.isEmpty());
-        this.protocol = protocol;
-        checkNotNull(vendorId);
-        checkArgument(!vendorId.isEmpty());
-        this.vendorId = vendorId;
-        this.messageId = checkNotNull(messageId);
         this.data = checkNotNull(data);
         this.identityContext = checkNotNull(identityContext);
     }
@@ -64,31 +48,8 @@ public final class DataTransferEvent implements CommunicationWithChargingStation
     /**
      * @return the charging station identifier
      */
-    @Override
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
-    }
-
-    /**
-     * @return the protocol identifier
-     */
-    @Override
-    public String getProtocol() {
-        return this.protocol;
-    }
-
-    /**
-     * @return the vendor identifier
-     */
-    public String getVendorId() {
-        return vendorId;
-    }
-
-    /**
-     * @return the optional additional message identifier
-     */
-    public String getMessageId() {
-        return messageId;
     }
 
     /**

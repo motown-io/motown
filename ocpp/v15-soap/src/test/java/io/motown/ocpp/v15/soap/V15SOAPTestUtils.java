@@ -16,15 +16,13 @@
 package io.motown.ocpp.v15.soap;
 
 import com.google.common.collect.ImmutableMap;
-import io.motown.domain.api.chargingstation.AuthorizationListUpdateType;
-import io.motown.domain.api.chargingstation.FirmwareUpdateAttributeKey;
-import io.motown.domain.api.chargingstation.IdentifyingToken;
-import io.motown.domain.api.chargingstation.TextualToken;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.chargingstation.MeterValue;
 import io.motown.ocpp.v15.soap.centralsystem.schema.*;
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
 import io.motown.ocpp.v15.soap.chargepoint.schema.DataTransferResponse;
 import io.motown.ocpp.v15.soap.chargepoint.schema.DataTransferStatus;
+import io.motown.ocpp.v15.soap.chargepoint.schema.ReservationStatus;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 
 import javax.persistence.EntityManager;

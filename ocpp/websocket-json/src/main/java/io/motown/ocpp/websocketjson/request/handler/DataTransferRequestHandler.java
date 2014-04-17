@@ -41,7 +41,7 @@ public class DataTransferRequestHandler extends RequestHandler {
     public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
         Datatransfer request = gson.fromJson(payload, Datatransfer.class);
 
-        domainService.dataTransfer(chargingStationId, request.getData(), request.getVendorId(), request.getMessageId(), addOnIdentity);
+        domainService.incomingDataTransfer(chargingStationId, request.getData(), request.getVendorId(), request.getMessageId(), addOnIdentity);
 
         DatatransferResponse response = new DatatransferResponse();
         response.setStatus(DatatransferResponse.Status.ACCEPTED);

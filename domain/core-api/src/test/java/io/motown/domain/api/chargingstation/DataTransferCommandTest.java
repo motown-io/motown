@@ -25,32 +25,32 @@ public class DataTransferCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new DataTransferCommand(null, DATA_TRANSFER_VENDOR, "", "", ROOT_IDENTITY_CONTEXT);
+        new RequestDataTransferCommand(null, DATA_TRANSFER_VENDOR, "", "", ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithVendorIdNull() {
-        new DataTransferCommand(CHARGING_STATION_ID, null, "", "", ROOT_IDENTITY_CONTEXT);
+        new RequestDataTransferCommand(CHARGING_STATION_ID, null, "", "", ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingCommandWithVendorIdEmpty() {
-        new DataTransferCommand(CHARGING_STATION_ID, "", "", "", ROOT_IDENTITY_CONTEXT);
+        new RequestDataTransferCommand(CHARGING_STATION_ID, "", "", "", ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithMessageIdNull() {
-        new DataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, null, "", ROOT_IDENTITY_CONTEXT);
+        new RequestDataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, null, "", ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithDataNull() {
-        new DataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, "", null, ROOT_IDENTITY_CONTEXT);
+        new RequestDataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, "", null, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
-        new DataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, "", "", null);
+        new RequestDataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, "", "", null);
     }
 
 }

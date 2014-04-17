@@ -75,8 +75,8 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
     }
 
     @Override
-    public void send(DataTransferCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
-        LOG.debug("DataTransferCommand: " + command.toString());
+    public void send(RequestDataTransferCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestDataTransferCommand: " + command.toString());
     }
 
     @Override

@@ -86,7 +86,7 @@ public class MotownCentralSystemServiceTest {
 
         motownCentralSystemService.dataTransfer(request, CHARGING_STATION_ID.getId());
 
-        verify(domainService).dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_DATA, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, OCPPS15_ADD_ON_IDENTITY);
+        verify(domainService).incomingDataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_DATA, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, OCPPS15_ADD_ON_IDENTITY);
     }
 
     @Test

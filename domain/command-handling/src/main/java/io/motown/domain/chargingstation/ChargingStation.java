@@ -217,8 +217,13 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(DataTransferCommand command, MetaData metaData) {
-        apply(new DataTransferEvent(this.id, this.protocol, command.getVendorId(), command.getMessageId(), command.getData(), command.getIdentityContext()), metaData);
+    public void handle(RequestDataTransferCommand command, MetaData metaData) {
+        apply(new DataTransferRequestedEvent(this.id, this.protocol, command.getVendorId(), command.getMessageId(), command.getData(), command.getIdentityContext()), metaData);
+    }
+
+    @CommandHandler
+    public void handle(DataTransferResponseCommand command, MetaData metaData) {
+        apply(new DataTransferResponseReceivedEvent(this.id, command.getData(), command.getIdentityContext()), metaData);
     }
 
     @CommandHandler

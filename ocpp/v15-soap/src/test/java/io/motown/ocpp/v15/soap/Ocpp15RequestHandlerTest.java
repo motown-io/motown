@@ -155,10 +155,25 @@ public class Ocpp15RequestHandlerTest {
     }
 
     @Test
-    public void testDataTransferEvent() {
-        requestHandler.handle(new DataTransferEvent(CHARGING_STATION_ID, PROTOCOL, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
+    public void testDataTransferEventWithResponseData() {
+        String expectedResponse = "some test data to transfer";
+        when(client.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA)).thenReturn(new DataTransferRequestResult(RequestResult.SUCCESS, expectedResponse));
+
+        requestHandler.handle(new DataTransferRequestedEvent(CHARGING_STATION_ID, PROTOCOL, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
+        verify(domainService).informDataTransferResponse(CHARGING_STATION_ID, expectedResponse, CORRELATION_TOKEN, addOnIdentity);
+    }
+
+    @Test
+    public void testDataTransferEventWithoutResponseData() {
+        String expectedResponse = null;
+        when(client.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA)).thenReturn(new DataTransferRequestResult(RequestResult.SUCCESS, expectedResponse));
+
+        requestHandler.handle(new DataTransferRequestedEvent(CHARGING_STATION_ID, PROTOCOL, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
+
+        verify(client).dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
+        verifyNoMoreInteractions(domainService);
     }
 
     @Test

@@ -17,7 +17,6 @@ package io.motown.ocpp.websocketjson.response.handler;
 
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.CorrelationToken;
-import io.motown.domain.api.chargingstation.RequestResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.DatatransferResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
@@ -29,8 +28,7 @@ import java.util.UUID;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class DataTransferResponseHandlerTest {
 
@@ -54,14 +52,27 @@ public class DataTransferResponseHandlerTest {
 
     @Test
     public void handleAcceptedResponse() {
+        String data = "response data";
         DatatransferResponse payload = new DatatransferResponse();
         payload.setStatus(DatatransferResponse.Status.ACCEPTED);
-        payload.setData("");
+        payload.setData(data);
         WampMessage message = new WampMessage(WampMessage.CALL_RESULT, token, gson.toJson(payload));
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.SUCCESS, correlationToken, "", ADD_ON_IDENTITY);
+        verify(domainService).informDataTransferResponse(CHARGING_STATION_ID, data, correlationToken, ADD_ON_IDENTITY);
+    }
+
+    @Test
+    public void handleAcceptedResponseNoData() {
+        DatatransferResponse payload = new DatatransferResponse();
+        payload.setStatus(DatatransferResponse.Status.ACCEPTED);
+        payload.setData(null);
+        WampMessage message = new WampMessage(WampMessage.CALL_RESULT, token, gson.toJson(payload));
+
+        handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
+
+        verifyNoMoreInteractions(domainService);
     }
 
     @Test
@@ -73,7 +84,7 @@ public class DataTransferResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, "", ADD_ON_IDENTITY);
+        verifyNoMoreInteractions(domainService);
     }
 
     @Test
@@ -85,7 +96,7 @@ public class DataTransferResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, "", ADD_ON_IDENTITY);
+        verifyNoMoreInteractions(domainService);
     }
 
     @Test
@@ -97,6 +108,6 @@ public class DataTransferResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, "", ADD_ON_IDENTITY);
+        verifyNoMoreInteractions(domainService);
     }
 }

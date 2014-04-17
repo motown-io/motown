@@ -110,7 +110,7 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
     }
 
     @Override
-    public void handle(DataTransferEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(DataTransferRequestedEvent event, CorrelationToken statusCorrelationToken) {
         // no implementation in OCPP 1.2
     }
 

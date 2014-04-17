@@ -142,7 +142,7 @@ public class DomainService {
         return new BootChargingStationResult(chargingStation.isRegistered(), heartbeatInterval, new Date());
     }
 
-    public void dataTransfer(ChargingStationId chargingStationId, String data, String vendorId, String messageId, AddOnIdentity addOnIdentity) {
+    public void incomingDataTransfer(ChargingStationId chargingStationId, String data, String vendorId, String messageId, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         commandGateway.send(new IncomingDataTransferCommand(chargingStationId, vendorId, messageId, data, identityContext));
@@ -302,6 +302,12 @@ public class DomainService {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         commandGateway.send(new ToOperativeCommand(chargingStationId, evseId, identityContext), statusCorrelationToken);
+    }
+
+    public void informDataTransferResponse(ChargingStationId chargingStationId, String data, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        commandGateway.send(new DataTransferResponseCommand(chargingStationId, data, identityContext), statusCorrelationToken);
     }
 
     public void informToInoperative(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {

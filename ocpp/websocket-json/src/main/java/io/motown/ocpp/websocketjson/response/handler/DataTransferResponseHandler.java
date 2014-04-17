@@ -18,7 +18,6 @@ package io.motown.ocpp.websocketjson.response.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
-import io.motown.domain.api.chargingstation.RequestResult;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.DatatransferResponse;
@@ -38,16 +37,18 @@ public class DataTransferResponseHandler extends ResponseHandler {
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         DatatransferResponse response = gson.fromJson(wampMessage.getPayloadAsString(), DatatransferResponse.class);
 
-        DatatransferResponse.Status responseStatus =  response.getStatus();
-        if(DatatransferResponse.Status.UNKNOWN_MESSAGE_ID.equals(responseStatus)) {
-            LOG.warn(String.format("Unknown message id for datatransfer request with correlation %s", getCorrelationToken().getToken()));
+        switch(response.getStatus()){
+            case UNKNOWN_VENDOR_ID: LOG.error(String.format("Unknown vendor id for datatransfer request with correlation token %s", getCorrelationToken().getToken()));
+                break;
+            case UNKNOWN_MESSAGE_ID: LOG.error(String.format("Unknown message id for datatransfer request with correlation token %s", getCorrelationToken().getToken()));
+                break;
+            case REJECTED: LOG.error(String.format("Datatransfer request with correlation token %s has been rejected", getCorrelationToken().getToken()));
+                break;
+            case ACCEPTED:
+                if (response.getData() != null) {
+                    domainService.informDataTransferResponse(chargingStationId, response.getData(), getCorrelationToken(), addOnIdentity);
+                }
+                break;
         }
-        if(DatatransferResponse.Status.UNKNOWN_VENDOR_ID.equals(responseStatus)) {
-            LOG.warn(String.format("Unknown vendor id for datatransfer request with correlation %s", getCorrelationToken().getToken()));
-        }
-
-        RequestResult requestResult = DatatransferResponse.Status.ACCEPTED.equals(responseStatus) ? RequestResult.SUCCESS : RequestResult.FAILURE;
-
-        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "", addOnIdentity);
     }
 }

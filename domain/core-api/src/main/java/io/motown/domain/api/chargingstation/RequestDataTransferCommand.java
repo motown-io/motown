@@ -24,10 +24,10 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code DataTransferCommand} is the command which is published when a custom data message has to be sent to
+ * {@code RequestDataTransferCommand} is the command which is published when a custom data message has to be sent to
  * the charging station.
  */
-public final class DataTransferCommand {
+public final class RequestDataTransferCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
@@ -41,7 +41,7 @@ public final class DataTransferCommand {
     private final IdentityContext identityContext;
 
     /**
-     * Creates a {@code DataTransferCommand} with an identifier.
+     * Creates a {@code RequestDataTransferCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param vendorId          the charging station vendor.
@@ -52,7 +52,7 @@ public final class DataTransferCommand {
      *                              or {@code identityContext} is {@code null}.
      * @throws IllegalArgumentException if {@code vendorId} is empty.
      */
-    public DataTransferCommand(ChargingStationId chargingStationId, String vendorId, String messageId, String data, IdentityContext identityContext) {
+    public RequestDataTransferCommand(ChargingStationId chargingStationId, String vendorId, String messageId, String data, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(vendorId);
         checkArgument(!vendorId.isEmpty());
@@ -112,7 +112,7 @@ public final class DataTransferCommand {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final DataTransferCommand other = (DataTransferCommand) obj;
+        final RequestDataTransferCommand other = (RequestDataTransferCommand) obj;
         return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.vendorId, other.vendorId) && Objects.equals(this.messageId, other.messageId) && Objects.equals(this.data, other.data) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

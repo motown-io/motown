@@ -126,8 +126,8 @@ public class OcppRequestEventHandler {
     }
 
     @EventHandler
-    public void handle(DataTransferEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
-        LOG.info("DataTransferEvent");
+    public void handle(DataTransferRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.info("DataTransferRequestedEvent");
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 

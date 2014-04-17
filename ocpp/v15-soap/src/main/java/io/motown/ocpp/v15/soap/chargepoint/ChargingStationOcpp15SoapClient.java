@@ -143,7 +143,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     }
 
     @Override
-    public RequestResult dataTransfer(ChargingStationId id, String vendorId, String messageId, String data) {
+    public DataTransferRequestResult dataTransfer(ChargingStationId id, String vendorId, String messageId, String data) {
         LOG.debug("Data transfer to {}", id);
         ChargePointService chargePointService = this.createChargingStationService(id);
 
@@ -154,14 +154,15 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
         DataTransferResponse response = chargePointService.dataTransfer(request, id.getId());
 
-        if (DataTransferStatus.ACCEPTED.equals(response.getStatus())) {
-            LOG.info("Data transfer to {} has been accepted", id);
-            return RequestResult.SUCCESS;
-        } else {
-            String responseStatus = (response.getStatus() != null) ? response.getStatus().value() : UNKNOWN_STATUS;
-            LOG.warn("Data transfer to {} has failed due to {}", id, responseStatus);
-            return RequestResult.FAILURE;
+        switch(response.getStatus()){
+            case UNKNOWN_MESSAGE_ID: LOG.error("Unknown message id {} for datatransfer request", messageId);
+                break;
+            case UNKNOWN_VENDOR_ID: LOG.error("Unknown vendor id {} for datatransfer request", vendorId);
+                break;
         }
+
+        RequestResult requestResult = DataTransferStatus.ACCEPTED.equals(response.getStatus()) ? RequestResult.SUCCESS : RequestResult.FAILURE;
+        return new DataTransferRequestResult(requestResult, response.getData());
     }
 
     @Override

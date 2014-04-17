@@ -114,12 +114,19 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
     }
 
     @Override
-    public void handle(DataTransferEvent event, CorrelationToken statusCorrelationToken) {
-        LOG.info("DataTransferEvent");
-        RequestResult requestResult = chargingStationOcpp15Client.dataTransfer(event.getChargingStationId(), event.getVendorId(), event.getMessageId(), event.getData());
+    public void handle(DataTransferRequestedEvent event, CorrelationToken statusCorrelationToken) {
+        LOG.info("DataTransferRequestedEvent");
+        DataTransferRequestResult result = chargingStationOcpp15Client.dataTransfer(event.getChargingStationId(), event.getVendorId(), event.getMessageId(), event.getData());
 
-        //TODO: Create specific Command Event structure instead of Request result - Ingo Pak, 14 Apr 2014
-        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
+        if(result.isSuccessfull()) {
+            String responseData = result.getData();
+            //In case data has been returned, we treat that as if it was incoming data
+            if (responseData != null) {
+                domainService.informDataTransferResponse(event.getChargingStationId(), responseData, statusCorrelationToken, addOnIdentity);
+            }
+        } else {
+            LOG.error("Failed to request datatransfer to chargingstation {}", event.getChargingStationId().getId());
+        }
     }
 
     @Override

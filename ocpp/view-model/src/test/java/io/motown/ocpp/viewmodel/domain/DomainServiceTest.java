@@ -161,7 +161,7 @@ public class DomainServiceTest {
 
     @Test
     public void testDataTransfer() {
-        domainService.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_DATA, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, ADD_ON_IDENTITY);
+        domainService.incomingDataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_DATA, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, ADD_ON_IDENTITY);
 
         verify(gateway).send(new IncomingDataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA, NULL_USER_IDENTITY_CONTEXT));
     }

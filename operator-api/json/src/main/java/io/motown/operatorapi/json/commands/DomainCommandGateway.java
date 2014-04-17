@@ -39,7 +39,7 @@ interface DomainCommandGateway {
 
     void send(RequestChangeChargingStationAvailabilityToOperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
-    void send(DataTransferCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(RequestDataTransferCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
     void send(ChangeConfigurationItemCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 

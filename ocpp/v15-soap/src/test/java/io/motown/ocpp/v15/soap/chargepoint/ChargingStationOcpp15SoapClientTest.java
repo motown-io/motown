@@ -16,6 +16,7 @@
 package io.motown.ocpp.v15.soap.chargepoint;
 
 import io.motown.domain.api.chargingstation.AuthorizationListUpdateType;
+import io.motown.domain.api.chargingstation.DataTransferRequestResult;
 import io.motown.domain.api.chargingstation.NumberedTransactionId;
 import io.motown.domain.api.chargingstation.RequestResult;
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
@@ -292,18 +293,18 @@ public class ChargingStationOcpp15SoapClientTest {
     public void dataTransferAcceptedVerifyReturnValue() {
         when(chargePointService.dataTransfer(any(DataTransferRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getDataTransferResponse(DataTransferStatus.ACCEPTED));
 
-        RequestResult requestResult = client.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
+        DataTransferRequestResult result = client.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
 
-        assertEquals(RequestResult.SUCCESS, requestResult);
+        assertEquals(RequestResult.SUCCESS, result.getRequestResult());
     }
 
     @Test
     public void dataTransferRejectedVerifyReturnValue() {
         when(chargePointService.dataTransfer(any(DataTransferRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getDataTransferResponse(DataTransferStatus.REJECTED));
 
-        RequestResult requestResult = client.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
+        DataTransferRequestResult result = client.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
 
-        assertEquals(RequestResult.FAILURE, requestResult);
+        assertEquals(RequestResult.FAILURE, result.getRequestResult());
     }
 
     @Test

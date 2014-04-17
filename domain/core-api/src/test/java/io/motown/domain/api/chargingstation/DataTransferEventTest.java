@@ -23,42 +23,42 @@ public class DataTransferEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new DataTransferEvent(null, DATA_TRANSFER_VENDOR, PROTOCOL, "", "", ROOT_IDENTITY_CONTEXT);
+        new DataTransferRequestedEvent(null, DATA_TRANSFER_VENDOR, PROTOCOL, "", "", ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithVendorIdNull() {
-        new DataTransferEvent(CHARGING_STATION_ID, null, PROTOCOL, "", "", ROOT_IDENTITY_CONTEXT);
+        new DataTransferRequestedEvent(CHARGING_STATION_ID, null, PROTOCOL, "", "", ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingEventWithVendorIdEmpty() {
-        new DataTransferEvent(CHARGING_STATION_ID, "", PROTOCOL, "", "", ROOT_IDENTITY_CONTEXT);
+        new DataTransferRequestedEvent(CHARGING_STATION_ID, "", PROTOCOL, "", "", ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithProtocolNull() {
-        new DataTransferEvent(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, null, "", "", ROOT_IDENTITY_CONTEXT);
+        new DataTransferRequestedEvent(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, null, "", "", ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingEventWithProtocolEmpty() {
-        new DataTransferEvent(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, "", "", "", ROOT_IDENTITY_CONTEXT);
+        new DataTransferRequestedEvent(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, "", "", "", ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithMessageIdNull() {
-        new DataTransferEvent(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, PROTOCOL, null, "", ROOT_IDENTITY_CONTEXT);
+        new DataTransferRequestedEvent(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, PROTOCOL, null, "", ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithDataNull() {
-        new DataTransferEvent(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, PROTOCOL, "", null, ROOT_IDENTITY_CONTEXT);
+        new DataTransferRequestedEvent(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, PROTOCOL, "", null, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithIdentityContextNull() {
-        new DataTransferEvent(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, PROTOCOL, "", "", null);
+        new DataTransferRequestedEvent(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, PROTOCOL, "", "", null);
     }
 
 }

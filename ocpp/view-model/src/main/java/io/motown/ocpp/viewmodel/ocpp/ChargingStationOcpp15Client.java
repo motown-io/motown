@@ -40,7 +40,7 @@ public interface ChargingStationOcpp15Client {
 
     RequestResult changeAvailabilityToOperative(ChargingStationId id, EvseId evseId);
 
-    RequestResult dataTransfer(ChargingStationId id, String vendorId, String messageId, String data);
+    DataTransferRequestResult dataTransfer(ChargingStationId id, String vendorId, String messageId, String data);
 
     RequestResult changeConfiguration(ChargingStationId id, String key, String value);
 

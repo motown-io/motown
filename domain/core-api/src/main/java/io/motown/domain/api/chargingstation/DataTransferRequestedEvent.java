@@ -21,38 +21,43 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code ChangeConfigurationItemEvent} is the event which is published when a configuration change has been requested.
+ * {@code DataTransferRequestedEvent} is the event which is published when a datatransfer to a charging station is requested.
  */
-public final class ChangeConfigurationItemEvent implements CommunicationWithChargingStationRequestedEvent {
+public final class DataTransferRequestedEvent implements CommunicationWithChargingStationRequestedEvent  {
 
     private final ChargingStationId chargingStationId;
 
     private final String protocol;
 
-    private final String key;
+    private String vendorId;
 
-    private final String value;
+    private String messageId;
+
+    private String data;
 
     private final IdentityContext identityContext;
 
     /**
-     * Creates a {@code ChangeConfigurationItemEvent} with an identifier, vendor identifier, message identifier, free format data and identity context.
-     *
+     * Creates a {@code DataTransferRequestedEvent} with an identifier, vendor identifier, message identifier, and free format data.
      * @param chargingStationId the identifier of the charging station.
      * @param protocol          the protocol identifier.
-     * @param key               the key to be changed.
-     * @param value             the new value.
+     * @param vendorId          the vendor identifier.
+     * @param messageId         the optional additional message identifier.
+     * @param data              the free format data to send to the charging station.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code key}, {@code value} or
-     *                          {@code identityContext} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId} or {@code protocol}, {@code vendorId} or
+     *                              {@code identityContext} is {@code null}.
      */
-    public ChangeConfigurationItemEvent(ChargingStationId chargingStationId, String protocol, String key, String value, IdentityContext identityContext) {
+    public DataTransferRequestedEvent(ChargingStationId chargingStationId, String protocol, String vendorId, String messageId, String data, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());
         this.protocol = protocol;
-        this.key = checkNotNull(key);
-        this.value = checkNotNull(value);
+        checkNotNull(vendorId);
+        checkArgument(!vendorId.isEmpty());
+        this.vendorId = vendorId;
+        this.messageId = checkNotNull(messageId);
+        this.data = checkNotNull(data);
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -73,17 +78,24 @@ public final class ChangeConfigurationItemEvent implements CommunicationWithChar
     }
 
     /**
-     * @return the key.
+     * @return the vendor identifier
      */
-    public String getKey() {
-        return key;
+    public String getVendorId() {
+        return vendorId;
     }
 
     /**
-     * @return the new value for the key.
+     * @return the optional additional message identifier
      */
-    public String getValue() {
-        return value;
+    public String getMessageId() {
+        return messageId;
+    }
+
+    /**
+     * @return the free format data
+     */
+    public String getData() {
+        return data;
     }
 
     /**
