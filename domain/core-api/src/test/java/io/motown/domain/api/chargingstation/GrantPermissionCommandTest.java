@@ -21,11 +21,6 @@ import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils
 
 public class GrantPermissionCommandTest {
 
-    @Test
-    public void createCommand() {
-        new GrantPermissionCommand(CHARGING_STATION_ID, ROOT_USER_IDENTITY, CreateChargingStationCommand.class, ROOT_IDENTITY_CONTEXT);
-    }
-
     @Test(expected = NullPointerException.class)
     public void createCommandWithNullChargingStationId() {
         new GrantPermissionCommand(null, ROOT_USER_IDENTITY, CreateChargingStationCommand.class, ROOT_IDENTITY_CONTEXT);
