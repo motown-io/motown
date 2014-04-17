@@ -21,7 +21,6 @@ import com.github.fge.jsonschema.exceptions.ProcessingException;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.github.fge.jsonschema.report.ProcessingReport;
-import io.motown.ocpp.websocketjson.MessageProcUri;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

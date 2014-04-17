@@ -18,7 +18,7 @@ package io.motown.ocpp.websocketjson.gson.serializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
-import io.motown.ocpp.websocketjson.MessageProcUri;
+import io.motown.ocpp.websocketjson.schema.MessageProcUri;
 
 import java.lang.reflect.Type;
 

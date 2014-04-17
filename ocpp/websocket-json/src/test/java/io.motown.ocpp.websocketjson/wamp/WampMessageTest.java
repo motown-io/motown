@@ -16,7 +16,7 @@
 package io.motown.ocpp.websocketjson.wamp;
 
 import com.google.gson.Gson;
-import io.motown.ocpp.websocketjson.MessageProcUri;
+import io.motown.ocpp.websocketjson.schema.MessageProcUri;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -17,7 +17,7 @@ package io.motown.ocpp.websocketjson.gson.deserializer;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
-import io.motown.ocpp.websocketjson.MessageProcUri;
+import io.motown.ocpp.websocketjson.schema.MessageProcUri;
 
 import java.lang.reflect.Type;
 

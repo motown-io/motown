@@ -15,7 +15,6 @@
  */
 package io.motown.ocpp.websocketjson.schema;
 
-import io.motown.ocpp.websocketjson.MessageProcUri;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
