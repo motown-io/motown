@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
-import java.util.List;
 
 public class TransactionEventListener {
 
@@ -53,12 +52,11 @@ public class TransactionEventListener {
     public void handle(TransactionStoppedEvent event) {
         LOG.debug("TransactionStoppedEvent for [{}] received!", event.getChargingStationId());
 
-        List<Transaction> transactions = repository.findByTransactionId(event.getTransactionId().getId());
+        Transaction transaction = repository.findByTransactionId(event.getTransactionId().getId());
 
-        if (transactions.isEmpty() || transactions.size() > 1) {
+        if (transaction == null) {
             LOG.error("cannot find unique transaction with transaction id {}", event.getTransactionId());
         } else {
-            Transaction transaction = transactions.get(0);
             transaction.setMeterStop(event.getMeterStop());
             transaction.setStoppedTimestamp(event.getTimestamp());
             repository.save(transaction);

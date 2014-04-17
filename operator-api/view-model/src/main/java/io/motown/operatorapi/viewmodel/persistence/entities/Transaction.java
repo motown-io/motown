@@ -33,6 +33,7 @@ public class Transaction {
 
     private String chargingStationId;
 
+    @Column(unique = true)
     private String transactionId;
 
     private String idTag;

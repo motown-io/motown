@@ -21,6 +21,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import java.util.List;
 
 public class TransactionRepository {
@@ -32,10 +34,14 @@ public class TransactionRepository {
     /**
      * Find transactions by transaction id (not the auto-increment transaction.id)
      */
-    public List<Transaction> findByTransactionId(String transactionId) {
-        return entityManager.createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t WHERE t.transactionId = :transactionId", Transaction.class)
-                .setParameter("transactionId", transactionId)
-                .getResultList();
+    public Transaction findByTransactionId(String transactionId) {
+        try {
+            return entityManager.createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t WHERE t.transactionId = :transactionId", Transaction.class)
+                    .setParameter("transactionId", transactionId)
+                    .getSingleResult();
+        } catch (NoResultException | NonUniqueResultException e) {
+            return null;
+        }
     }
 
     public List<Transaction> findAll() {
