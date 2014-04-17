@@ -17,6 +17,7 @@ package io.motown.operatorapi.viewmodel;
 
 import io.motown.domain.api.chargingstation.*;
 import io.motown.operatorapi.viewmodel.persistence.entities.CommandClasses;
+import io.motown.operatorapi.viewmodel.persistence.entities.Availability;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.entities.Evse;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -242,6 +243,93 @@ public class ChargingStationEventListener {
             if (commandClasses != null) {
                 commandClasses.getCommandClasses().remove(event.getCommandClass());
 
+                repository.save(chargingStation);
+            }
+        }
+    }
+
+    /**
+     * Handles the {@code ChargingStationAvailabilityChangedToInoperativeEvent}.
+     *
+     * Sets the charging station to inoperative.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(ChargingStationAvailabilityChangedToInoperativeEvent event) {
+        updateChargingStationAvailability(event.getChargingStationId(), Availability.INOPERATIVE);
+    }
+
+    /**
+     * Handles the {@code ChargingStationAvailabilityChangedToOperativeEvent}.
+     * <p/>
+     * Sets the charging station to operative.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(ChargingStationAvailabilityChangedToOperativeEvent event) {
+        updateChargingStationAvailability(event.getChargingStationId(), Availability.OPERATIVE);
+    }
+
+    /**
+     * Handles the {@code ComponentAvailabilityChangedToInoperativeEvent}.
+     * <p/>
+     * Sets the charging station's component to inoperative.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(ComponentAvailabilityChangedToInoperativeEvent event) {
+        updateComponentAvailability(event.getChargingStationId(), event.getComponentId(), event.getComponent(), Availability.INOPERATIVE);
+    }
+
+    /**
+     * Handles the {@code ComponentAvailabilityChangedToOperativeEvent}.
+     * <p/>
+     * Sets the charging station's component to operative.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(ComponentAvailabilityChangedToOperativeEvent event) {
+        updateComponentAvailability(event.getChargingStationId(), event.getComponentId(), event.getComponent(), Availability.OPERATIVE);
+    }
+
+    /**
+     * Updates the charging station's availability.
+     *
+     * @param chargingStationId the charging station's id.
+     * @param availability      the charging station's new availability.
+     */
+    private void updateChargingStationAvailability(ChargingStationId chargingStationId, Availability availability) {
+        ChargingStation chargingStation = repository.findOne(chargingStationId.getId());
+
+        if (chargingStation != null) {
+            chargingStation.setAvailability(availability);
+            repository.save(chargingStation);
+        }
+    }
+
+    /**
+     * Updates a charging station's component availability.
+     *
+     * @param chargingStationId the charging station's id.
+     * @param componentId       the component's id.
+     * @param component         the component type.
+     * @param availability      the the charging station's new availability.
+     */
+    private void updateComponentAvailability(ChargingStationId chargingStationId, ComponentId componentId, ChargingStationComponent component, Availability availability) {
+        if (component.equals(ChargingStationComponent.EVSE) && componentId instanceof EvseId) {
+            ChargingStation chargingStation = repository.findOne(chargingStationId.getId());
+
+            if (chargingStation != null) {
+                for (Evse evse : chargingStation.getEvses()) {
+                    if (evse.getEvseId().equals(componentId.getId())) {
+                        evse.setAvailability(availability);
+                        break;
+                    }
+                }
                 repository.save(chargingStation);
             }
         }

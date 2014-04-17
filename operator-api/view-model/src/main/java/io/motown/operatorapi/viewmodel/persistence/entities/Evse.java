@@ -31,6 +31,7 @@ public class Evse {
     private ComponentStatus status;
     @ElementCollection
     private List<Connector> connectors = new ArrayList<>();
+    private Availability availability;
 
     private Evse() {
     }
@@ -74,5 +75,13 @@ public class Evse {
 
     public void setConnectors(List<Connector> connectors) {
         this.connectors = connectors;
+    }
+
+    public void setAvailability(Availability availability) {
+        this.availability = availability;
+    }
+
+    public Availability getAvailability() {
+        return availability;
     }
 }
