@@ -17,6 +17,7 @@ package io.motown.operatorapi.viewmodel;
 
 import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.security.UserIdentity;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.entities.Evse;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -47,18 +48,17 @@ public class ChargingStationEventListenerTest {
     public void setUp() throws Exception {
         listener = new ChargingStationEventListener();
         listener.setRepository(repository);
+
+        listener.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
     }
 
     @Test
     public void testHandleChargingStationCreatedEvent() {
-        listener.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
         assertNotNull(repository.findOne(CHARGING_STATION_ID.getId()));
     }
 
     @Test
     public void testHandleChargingStationBootedEvent() {
-        listener.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
-
         ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertNull(cs.getProtocol());
         assertTrue(cs.getAttributes().isEmpty());
@@ -73,15 +73,14 @@ public class ChargingStationEventListenerTest {
     @Test
     public void testHandleChargingStationSentHeartBeatEvent() {
         Date start = new Date();
-        listener.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
         listener.handle(new ChargingStationSentHeartbeatEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
 
-        assertTrue(repository.findOne(CHARGING_STATION_ID.getId()).getLastContact().after(start));
+        Date lastContact = repository.findOne(CHARGING_STATION_ID.getId()).getLastContact();
+        assertTrue(lastContact.after(start) || lastContact.equals(start));
     }
 
     @Test
     public void testHandleChargingStationAcceptedEvent() {
-        listener.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
         ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertFalse(cs.isAccepted());
 
@@ -91,7 +90,6 @@ public class ChargingStationEventListenerTest {
 
     @Test
     public void testHandleChargingStationPlacedEvent() {
-        listener.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
         ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertNull(cs.getLatitude());
         assertNull(cs.getLongitude());
@@ -121,7 +119,6 @@ public class ChargingStationEventListenerTest {
 
     @Test
     public void testHandleChargingStationMovedEvent() {
-        listener.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
         ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertNull(cs.getLatitude());
         assertNull(cs.getLongitude());
@@ -151,7 +148,6 @@ public class ChargingStationEventListenerTest {
 
     @Test
     public void testHandleChargingStationLocationImprovedEvent() {
-        listener.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
         ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertNull(cs.getLatitude());
         assertNull(cs.getLongitude());
@@ -181,7 +177,6 @@ public class ChargingStationEventListenerTest {
 
     @Test
     public void testHandleChargingStationOpeningTimesSetEvent() {
-        listener.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
         ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertTrue(cs.getOpeningTimes().isEmpty());
 
@@ -196,7 +191,6 @@ public class ChargingStationEventListenerTest {
 
     @Test
     public void testHandleChargingStationOpeningTimesAddedEvent() {
-        listener.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
         ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertTrue(cs.getOpeningTimes().isEmpty());
 
@@ -211,7 +205,6 @@ public class ChargingStationEventListenerTest {
 
     @Test
     public void testHandleChargingStationConfiguredEvent() {
-        listener.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
         ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertTrue(cs.getEvses().isEmpty());
 
@@ -221,7 +214,6 @@ public class ChargingStationEventListenerTest {
 
     @Test
     public void testHandleChargingStationMadeReservableEventAndChargingStationMadeNotReservableEvent() {
-        listener.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
         ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertFalse(cs.isReservable());
 
@@ -234,7 +226,6 @@ public class ChargingStationEventListenerTest {
 
     @Test
     public void testHandleChargingStationStatusNotificationReceivedEvent() {
-        listener.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
         ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertNull(cs.getStatus());
 
@@ -245,7 +236,6 @@ public class ChargingStationEventListenerTest {
 
     @Test
     public void testHandleComponentStatusNotificationReceivedEvent() {
-        listener.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
         listener.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, IDENTITY_CONTEXT));
         ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
         for (Evse evse : cs.getEvses()) {
@@ -264,11 +254,68 @@ public class ChargingStationEventListenerTest {
 
     @Test
     public void testHandleConfigurationItemsReceivedEvent() {
-        listener.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
         ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertTrue(cs.getConfigurationItems().isEmpty());
 
         listener.handle(new ConfigurationItemsReceivedEvent(CHARGING_STATION_ID, CONFIGURATION_ITEMS, IDENTITY_CONTEXT));
         assertFalse(cs.getConfigurationItems().isEmpty());
+    }
+
+
+    @Test
+    public void handlePermissionGrantedEventNullChargingStation() {
+        // should throw no exception
+        listener.handle(new PermissionGrantedEvent(UNKNOWN_CHARGING_STATION_ID, ROOT_USER_IDENTITY, AcceptChargingStationCommand.class, ROOT_IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void handlePermissionGrantedEventNoPriorAuthorizations() {
+        Class command = AcceptChargingStationCommand.class;
+        UserIdentity userIdentity = ROOT_USER_IDENTITY;
+        // pre-condition, the userIdentity has no access to the command prior to the handling we're about to test
+        assertFalse(repository.findOne(CHARGING_STATION_ID.getId()).hasAuthorization(userIdentity, command));
+
+        listener.handle(new PermissionGrantedEvent(CHARGING_STATION_ID, userIdentity, command, ROOT_IDENTITY_CONTEXT));
+
+        assertTrue(repository.findOne(CHARGING_STATION_ID.getId()).hasAuthorization(userIdentity, command));
+    }
+
+    @Test
+    public void handlePermissionGrantedEventWithPriorAuthorizations() {
+        UserIdentity userIdentity = ROOT_USER_IDENTITY;
+        Class existingAuthorizationCommand = AcceptChargingStationCommand.class;
+        Class newCommand = RequestUnlockEvseCommand.class;
+        // make sure there is at least one existing authorization before we handle a new one
+        listener.handle(new PermissionGrantedEvent(CHARGING_STATION_ID, userIdentity, existingAuthorizationCommand, ROOT_IDENTITY_CONTEXT));
+
+        listener.handle(new PermissionGrantedEvent(CHARGING_STATION_ID, userIdentity, newCommand, ROOT_IDENTITY_CONTEXT));
+
+        assertTrue(repository.findOne(CHARGING_STATION_ID.getId()).hasAuthorization(userIdentity, existingAuthorizationCommand));
+        assertTrue(repository.findOne(CHARGING_STATION_ID.getId()).hasAuthorization(userIdentity, newCommand));
+    }
+
+    @Test
+    public void handlePermissionRevokedEventNullChargingStation() {
+        // should throw no exception
+        listener.handle(new PermissionRevokedEvent(UNKNOWN_CHARGING_STATION_ID, ROOT_USER_IDENTITY, AcceptChargingStationCommand.class, ROOT_IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void handlePermissionRevokedEventNoAuthorizations() {
+        // should throw no exception
+        listener.handle(new PermissionRevokedEvent(CHARGING_STATION_ID, ROOT_USER_IDENTITY, AcceptChargingStationCommand.class, ROOT_IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void handlePermissionRevokedEvent() {
+        UserIdentity userIdentity = ROOT_USER_IDENTITY;
+        Class command = AcceptChargingStationCommand.class;
+        // make sure the user has authorization for the command
+        listener.handle(new PermissionGrantedEvent(CHARGING_STATION_ID, userIdentity, command, ROOT_IDENTITY_CONTEXT));
+        assertTrue(repository.findOne(CHARGING_STATION_ID.getId()).hasAuthorization(userIdentity, command));
+
+        listener.handle(new PermissionRevokedEvent(CHARGING_STATION_ID, userIdentity, command, ROOT_IDENTITY_CONTEXT));
+
+        assertFalse(repository.findOne(CHARGING_STATION_ID.getId()).hasAuthorization(userIdentity, command));
     }
 }

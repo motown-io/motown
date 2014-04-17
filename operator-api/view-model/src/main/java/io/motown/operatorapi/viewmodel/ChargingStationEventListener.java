@@ -16,6 +16,7 @@
 package io.motown.operatorapi.viewmodel;
 
 import io.motown.domain.api.chargingstation.*;
+import io.motown.operatorapi.viewmodel.persistence.entities.CommandClasses;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.entities.Evse;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -201,6 +202,48 @@ public class ChargingStationEventListener {
         if (chargingStation != null) {
             chargingStation.setConfigurationItems(event.getConfigurationItems());
             repository.save(chargingStation);
+        }
+    }
+
+    /**
+     * Handles the {@link PermissionGrantedEvent} by updating the local map of authorizations.
+     *
+     * @param event contains the identity and command class for which permission has been granted.
+     */
+    @EventHandler
+    public void handle(PermissionGrantedEvent event) {
+        ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
+
+        if (chargingStation != null) {
+            CommandClasses commandClasses = chargingStation.getAuthorizations().get(event.getUserIdentity().getId());
+
+            if (commandClasses == null) {
+                commandClasses = new CommandClasses();
+                chargingStation.getAuthorizations().put(event.getUserIdentity().getId(), commandClasses);
+            }
+
+            commandClasses.getCommandClasses().add(event.getCommandClass());
+            repository.save(chargingStation);
+        }
+    }
+
+    /**
+     * Handles the {@link PermissionRevokedEvent} by updating the local map of authorizations.
+     *
+     * @param event contains the identity and command class for which permission has been revoked.
+     */
+    @EventHandler
+    public void handle(PermissionRevokedEvent event) {
+        ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
+
+        if (chargingStation != null) {
+            CommandClasses commandClasses = chargingStation.getAuthorizations().get(event.getUserIdentity().getId());
+
+            if (commandClasses != null) {
+                commandClasses.getCommandClasses().remove(event.getCommandClass());
+
+                repository.save(chargingStation);
+            }
         }
     }
 
