@@ -41,7 +41,11 @@
 
     <bean class="io.motown.operatorapi.viewmodel.ChargingStationEventListener">
         <property name="repository" ref="chargingStationRepositoryOperatorApi"/>
-        <property name="transactionRepository" ref="transactionRepositoryOperatorApi"/>
+    </bean>
+
+    <bean class="io.motown.operatorapi.viewmodel.TransactionEventListener">
+        <property name="repository" ref="transactionRepositoryOperatorApi"/>
+        <property name="chargingStationRepository" ref="chargingStationRepositoryOperatorApi"/>
     </bean>
 
     <bean id="chargingStationRepositoryOperatorApi"

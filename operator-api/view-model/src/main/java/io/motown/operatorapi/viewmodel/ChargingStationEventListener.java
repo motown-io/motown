@@ -18,23 +18,18 @@ package io.motown.operatorapi.viewmodel;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.entities.Evse;
-import io.motown.operatorapi.viewmodel.persistence.entities.Transaction;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
-import io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
-import java.util.List;
 
 public class ChargingStationEventListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(ChargingStationEventListener.class);
 
     private ChargingStationRepository repository;
-
-    private TransactionRepository transactionRepository;
 
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
@@ -80,36 +75,6 @@ public class ChargingStationEventListener {
         } else {
             LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as accepted", event.getChargingStationId());
         }
-    }
-
-    @EventHandler
-    public void handle(TransactionStartedEvent event) {
-        LOG.debug("TransactionStartedEvent for [{}] received!", event.getChargingStationId());
-
-        Transaction transaction = new Transaction(event.getChargingStationId().getId(), event.getTransactionId().getId(), event.getEvseId(), event.getIdentifyingToken().getToken(), event.getMeterStart(), event.getTimestamp());
-        transactionRepository.save(transaction);
-
-        if (!updateLastContactChargingStation(event.getChargingStationId())) {
-            LOG.warn("registered transaction (start) in operator api repo for unknown chargepoint {}", event.getChargingStationId());
-        }
-    }
-
-    @EventHandler
-    public void handle(TransactionStoppedEvent event) {
-        LOG.debug("TransactionStoppedEvent for [{}] received!", event.getChargingStationId());
-
-        List<Transaction> transactions = transactionRepository.findByTransactionId(event.getTransactionId().getId());
-
-        if (transactions.isEmpty() || transactions.size() > 1) {
-            LOG.error("cannot find unique transaction with transaction id {}", event.getTransactionId());
-        } else {
-            Transaction transaction = transactions.get(0);
-            transaction.setMeterStop(event.getMeterStop());
-            transaction.setStoppedTimestamp(event.getTimestamp());
-            transactionRepository.save(transaction);
-        }
-
-        updateLastContactChargingStation(event.getChargingStationId());
     }
 
     @EventHandler
@@ -341,9 +306,5 @@ public class ChargingStationEventListener {
 
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
-    }
-
-    public void setTransactionRepository(TransactionRepository transactionRepository) {
-        this.transactionRepository = transactionRepository;
     }
 }
