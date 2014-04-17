@@ -121,7 +121,7 @@ public class DomainServiceTest {
         cs.setRegistered(true);
         cs.setNumberOfEvses(2);
         cs.setConfigured(true);
-        chargingStationRepository.insert(cs);
+        chargingStationRepository.createOrUpdate(cs);
 
         BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(CHARGING_STATION_ID, CHARGING_STATION_ADDRESS, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL,
                 CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER, getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber(), ADD_ON_IDENTITY);
@@ -268,7 +268,7 @@ public class DomainServiceTest {
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionUnregisteredChargingStation() {
-        chargingStationRepository.insert(new ChargingStation(CHARGING_STATION_ID.getId()));
+        chargingStationRepository.createOrUpdate(new ChargingStation(CHARGING_STATION_ID.getId()));
 
         domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), RESERVATION_ID, PROTOCOL, ADD_ON_IDENTITY);
     }
@@ -277,28 +277,28 @@ public class DomainServiceTest {
     public void testStartTransactionUnconfiguredChargingStation() {
         ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
         cs.setRegistered(true);
-        chargingStationRepository.insert(cs);
+        chargingStationRepository.createOrUpdate(cs);
 
         domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), RESERVATION_ID, PROTOCOL, ADD_ON_IDENTITY);
     }
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionInvalidEvse() {
-        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.createOrUpdate(getRegisteredAndConfiguredChargingStation());
 
         domainService.startTransaction(CHARGING_STATION_ID, UNKNOWN_EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), RESERVATION_ID, PROTOCOL, ADD_ON_IDENTITY);
     }
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionUnknownEvse() {
-        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.createOrUpdate(getRegisteredAndConfiguredChargingStation());
 
         domainService.startTransaction(CHARGING_STATION_ID, UNKNOWN_EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), RESERVATION_ID, PROTOCOL, ADD_ON_IDENTITY);
     }
 
     @Test
     public void testStartTransactionEmptyAttributesChargingStation() {
-        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.createOrUpdate(getRegisteredAndConfiguredChargingStation());
 
         Date now = new Date();
         int ocppTransactionId = domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, now, null, PROTOCOL, ADD_ON_IDENTITY);
@@ -312,7 +312,7 @@ public class DomainServiceTest {
     @Test
     public void testStartTransactionChargingStation() {
         System.err.println("testStartTransactionChargingStation");
-        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.createOrUpdate(getRegisteredAndConfiguredChargingStation());
 
         Date now = new Date();
         int ocppTransactionId = domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, now, RESERVATION_ID, PROTOCOL, ADD_ON_IDENTITY);
@@ -340,7 +340,7 @@ public class DomainServiceTest {
      */
     @Test
     public void testStopTransactionWithMeterValues() {
-        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.createOrUpdate(getRegisteredAndConfiguredChargingStation());
 
         // registers a transaction in the transactionRepository
         Date startTransactionDate = new Date();
@@ -362,7 +362,7 @@ public class DomainServiceTest {
         String address = domainService.retrieveChargingStationAddress(CHARGING_STATION_ID);
         assertEquals(address, "");
 
-        chargingStationRepository.insert(getRegisteredAndConfiguredChargingStation());
+        chargingStationRepository.createOrUpdate(getRegisteredAndConfiguredChargingStation());
 
         address = domainService.retrieveChargingStationAddress(CHARGING_STATION_ID);
         assertEquals(address, CHARGING_STATION_ADDRESS);

@@ -40,7 +40,7 @@ public class OcppEventHandler {
         if (chargingStation == null) {
             chargingStation = new ChargingStation(chargingStationId);
         }
-        chargingStationRepository.insert(chargingStation);
+        chargingStationRepository.createOrUpdate(chargingStation);
     }
 
     @EventHandler
@@ -79,11 +79,13 @@ public class OcppEventHandler {
         if (chargingStation == null) {
             LOG.warn("Received a ChargingStationConfiguredEvent for unknown charging station. Creating the chargingStation.");
             chargingStation = new ChargingStation(chargingStationId);
-            chargingStationRepository.insert(chargingStation);
+            chargingStation = chargingStationRepository.createOrUpdate(chargingStation);
         }
 
-        chargingStation.setNumberOfEvses(event.getEvses().size());
-        chargingStation.setConfigured(true);
+        if (chargingStation != null) {
+            chargingStation.setNumberOfEvses(event.getEvses().size());
+            chargingStation.setConfigured(true);
+        }
     }
 
     public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {

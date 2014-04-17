@@ -64,7 +64,7 @@ public class CreateChargingStationCommandCallback implements CommandCallback<Obj
 
     @Override
     public void onSuccess(Object o) {
-        chargingStationRepository.insert(new ChargingStation(chargingStationId.getId()));
+        chargingStationRepository.createOrUpdate(new ChargingStation(chargingStationId.getId()));
 
         domainService.bootChargingStation(chargingStationId, chargingStationAddress, vendor, model, protocol, chargePointSerialNumber, chargeBoxSerialNumber, firmwareVersion, iccid, imsi, meterType, meterSerialNumber, addOnIdentity);
     }
