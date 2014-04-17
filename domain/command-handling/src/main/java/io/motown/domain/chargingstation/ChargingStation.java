@@ -202,13 +202,27 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
+    public void handle(RequestChangeComponentAvailabilityToInoperativeCommand command, MetaData metaData) {
+        checkCommunicationAllowed();
+        apply(new ChangeComponentAvailabilityToInoperativeRequestedEvent(this.id, this.protocol, command.getComponentId(), command.getComponent(), command.getIdentityContext()), metaData);
+    }
+
+    @CommandHandler
+    public void handle(RequestChangeComponentAvailabilityToOperativeCommand command, MetaData metaData) {
+        checkCommunicationAllowed();
+        apply(new ChangeComponentAvailabilityToOperativeRequestedEvent(this.id, this.protocol, command.getComponentId(), command.getComponent(), command.getIdentityContext()), metaData);
+    }
+
+    @CommandHandler
     public void handle(RequestChangeChargingStationAvailabilityToInoperativeCommand command, MetaData metaData) {
-        apply(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(this.id, this.protocol, command.getEvseId(), command.getIdentityContext()), metaData);
+        checkCommunicationAllowed();
+        apply(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(this.id, this.protocol, command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
     public void handle(RequestChangeChargingStationAvailabilityToOperativeCommand command, MetaData metaData) {
-        apply(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(this.id, this.protocol, command.getEvseId(), command.getIdentityContext()), metaData);
+        checkCommunicationAllowed();
+        apply(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(this.id, this.protocol, command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
@@ -326,15 +340,23 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(ToOperativeCommand command, MetaData metaData) {
-        apply(new NowOperativeEvent(command.getChargingStationId(), command.getEvseId(), command.getIdentityContext()), metaData);
-
+    public void handle(ChangeChargingStationAvailabilityToOperativeCommand command, MetaData metaData) {
+        apply(new ChargingStationAvailabilityChangedToOperativeEvent(command.getChargingStationId(), command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
-    public void handle(ToInoperativeCommand command, MetaData metaData) {
-        apply(new NowInoperativeEvent(command.getChargingStationId(), command.getEvseId(), command.getIdentityContext()), metaData);
+    public void handle(ChangeChargingStationAvailabilityToInoperativeCommand command, MetaData metaData) {
+        apply(new ChargingStationAvailabilityChangedToInoperativeEvent(command.getChargingStationId(), command.getIdentityContext()), metaData);
+    }
 
+    @CommandHandler
+    public void handle(ChangeComponentAvailabilityToOperativeCommand command, MetaData metaData) {
+        apply(new ComponentAvailabilityChangedToOperativeEvent(command.getChargingStationId(), command.getComponentId(), command.getComponent(), command.getIdentityContext()), metaData);
+    }
+
+    @CommandHandler
+    public void handle(ChangeComponentAvailabilityToInoperativeCommand command, MetaData metaData) {
+        apply(new ComponentAvailabilityChangedToInoperativeEvent(command.getChargingStationId(), command.getComponentId(), command.getComponent(), command.getIdentityContext()), metaData);
     }
 
     @CommandHandler

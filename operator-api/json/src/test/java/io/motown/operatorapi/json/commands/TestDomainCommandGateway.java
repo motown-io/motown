@@ -65,7 +65,17 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
     }
 
     @Override
-    public void send(RequestChangeChargingStationAvailabilityToInoperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    public void send(RequestChangeComponentAvailabilityToInoperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestChangeComponentAvailabilityToInoperativeCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestChangeComponentAvailabilityToOperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
+        LOG.debug("RequestChangeComponentAvailabilityToOperativeCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestChangeChargingStationAvailabilityToInoperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
         LOG.debug("RequestChangeChargingStationAvailabilityToInoperativeCommand: " + command.toString());
     }
 

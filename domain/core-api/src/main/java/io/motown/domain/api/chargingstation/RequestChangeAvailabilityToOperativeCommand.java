@@ -16,33 +16,33 @@
 package io.motown.domain.api.chargingstation;
 
 import io.motown.domain.api.security.IdentityContext;
+import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Objects;
 
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code NowOperativeEvent} informs that the evse is in an operative state (again).
+ * {@code RequestChangeAvailabilityToOperativeCommand} is the command which is published when a change to operative
+ * of the availability is requested.
  */
-public class NowOperativeEvent {
+public abstract class RequestChangeAvailabilityToOperativeCommand {
 
+    @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
-
-    private final EvseId evseId;
 
     private final IdentityContext identityContext;
 
     /**
-     * Creates a {@code NowOperativeEvent}.
+     * Creates a {@code RequestChangeAvailabilityToOperativeCommand}.
      *
-     * @param chargingStationId   the identifier of the charging station.
-     * @param evseId              the evse identifier of the evse being operative
-     * @param identityContext     identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code evseId}, {@code status}, {@code statusMessage} or {@code identityContext} is {@code null}.
+     * @param chargingStationId the charging station's id.
+     * @param identityContext   the identity context.
+     * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is null.
      */
-    public NowOperativeEvent(ChargingStationId chargingStationId, EvseId evseId, IdentityContext identityContext) {
+    public RequestChangeAvailabilityToOperativeCommand(ChargingStationId chargingStationId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.evseId = checkNotNull(evseId);
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -56,14 +56,6 @@ public class NowOperativeEvent {
     }
 
     /**
-     * Gets the evse identifier.
-     * @return evse identifier
-     */
-    public EvseId getEvseId() {
-        return evseId;
-    }
-
-    /**
      * Gets the identity context.
      *
      * @return the identity context.
@@ -72,11 +64,17 @@ public class NowOperativeEvent {
         return identityContext;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, evseId, identityContext);
+        return Objects.hash(chargingStationId, identityContext);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -85,7 +83,18 @@ public class NowOperativeEvent {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final NowOperativeEvent other = (NowOperativeEvent) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.evseId, other.evseId) && Objects.equals(this.identityContext, other.identityContext);
+        final RequestChangeAvailabilityToOperativeCommand other = (RequestChangeAvailabilityToOperativeCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.identityContext, other.identityContext);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return toStringHelper(this)
+                .add("chargingStationId", chargingStationId)
+                .add("identityContext", identityContext)
+                .toString();
     }
 }

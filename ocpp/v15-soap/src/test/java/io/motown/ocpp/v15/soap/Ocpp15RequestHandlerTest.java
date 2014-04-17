@@ -118,16 +118,30 @@ public class Ocpp15RequestHandlerTest {
 
     @Test
     public void testChangeChargingStationAvailabilityToInoperativeRequested() {
-        requestHandler.handle(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
+        requestHandler.handle(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
-        verify(client).changeAvailabilityToInoperative(CHARGING_STATION_ID, EVSE_ID);
+        verify(client).changeAvailabilityToInoperative(CHARGING_STATION_ID, new EvseId(0));
     }
 
     @Test
     public void testChangeChargingStationAvailabilityToOperativeRequested() {
-        requestHandler.handle(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
+        requestHandler.handle(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
+
+        verify(client).changeAvailabilityToOperative(CHARGING_STATION_ID, new EvseId(0));
+    }
+
+    @Test
+    public void testChangeComponentAvailabilityToOperativeRequested() {
+        requestHandler.handle(new ChangeComponentAvailabilityToOperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, ChargingStationComponent.EVSE, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).changeAvailabilityToOperative(CHARGING_STATION_ID, EVSE_ID);
+    }
+
+    @Test
+    public void testChangeComponentAvailabilityToInoperativeRequested() {
+        requestHandler.handle(new ChangeComponentAvailabilityToInoperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, ChargingStationComponent.EVSE, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
+
+        verify(client).changeAvailabilityToInoperative(CHARGING_STATION_ID, EVSE_ID);
     }
 
     @Test

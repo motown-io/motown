@@ -16,6 +16,7 @@
 package io.motown.ocpp.websocketjson.response.handler;
 
 import com.google.gson.Gson;
+import io.motown.domain.api.chargingstation.ChargingStationComponent;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Changeavailability;
@@ -29,9 +30,7 @@ import java.util.UUID;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static io.motown.ocpp.websocketjson.schema.generated.v15.ChangeavailabilityResponse.Status;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.*;
 
 public class ChangeAvailabilityResponseHandlerTest {
 
@@ -61,7 +60,7 @@ public class ChangeAvailabilityResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informToOperative(CHARGING_STATION_ID, EVSE_ID, correlationToken, ADD_ON_IDENTITY);
+        verify(domainService).changeComponentAvailabilityToOperative(CHARGING_STATION_ID, EVSE_ID, ChargingStationComponent.EVSE, correlationToken, ADD_ON_IDENTITY);
     }
 
     @Test
@@ -72,7 +71,7 @@ public class ChangeAvailabilityResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informToOperative(CHARGING_STATION_ID, EVSE_ID, correlationToken, ADD_ON_IDENTITY);
+        verify(domainService).changeComponentAvailabilityToOperative(CHARGING_STATION_ID, EVSE_ID, ChargingStationComponent.EVSE, correlationToken, ADD_ON_IDENTITY);
     }
 
     @Test

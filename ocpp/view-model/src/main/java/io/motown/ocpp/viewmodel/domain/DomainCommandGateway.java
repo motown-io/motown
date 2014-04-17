@@ -59,9 +59,13 @@ interface DomainCommandGateway {
 
     void send(CancelReservationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
-    void send(ToInoperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(ChangeComponentAvailabilityToInoperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
-    void send(ToOperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(ChangeChargingStationAvailabilityToInoperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(ChangeComponentAvailabilityToOperativeCommand changeComponentAvailabilityToOperativeCommand, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(ChangeChargingStationAvailabilityToOperativeCommand changeChargingStationAvailabilityToOperativeCommand, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
     void send(ReceiveConfigurationItemsCommand command);
 }

@@ -17,68 +17,21 @@ package io.motown.domain.api.chargingstation;
 
 import io.motown.domain.api.security.IdentityContext;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * {@code ChangeChargingStationAvailabilityToInoperativeRequestedEvent} is the event which is published when a request has been made to
  * change the availability of a charging station to inoperative.
  */
-public final class ChangeChargingStationAvailabilityToInoperativeRequestedEvent implements ChangeAvailabilityChargingStationRequestedEvent {
-
-    private final ChargingStationId chargingStationId;
-
-    private final String protocol;
-
-    private final EvseId evseId;
-
-    private final IdentityContext identityContext;
+public final class ChangeChargingStationAvailabilityToInoperativeRequestedEvent extends ChangeAvailabilityToInoperativeRequestedEvent {
 
     /**
-     * Creates a {@code SoftResetChargingStationRequestedEvent} with an identifier, a protocol and evse identifier.
+     * Creates a {@code ChangeChargingStationAvailabilityToInoperativeRequestedEvent}.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param protocol          protocol identifier.
-     * @param evseId            the identifier of the evse.
      * @param identityContext   identity context.
      * @throws NullPointerException if {@code chargingStationId}, {@code protocol} or {@code evseId} is {@code null}.
      */
-    public ChangeChargingStationAvailabilityToInoperativeRequestedEvent(ChargingStationId chargingStationId, String protocol, EvseId evseId, IdentityContext identityContext) {
-        this.chargingStationId = checkNotNull(chargingStationId);
-        this.protocol = checkNotNull(protocol);
-        this.evseId = checkNotNull(evseId);
-        this.identityContext = checkNotNull(identityContext);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ChargingStationId getChargingStationId() {
-        return chargingStationId;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getProtocol() {
-        return protocol;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public EvseId getEvseId() {
-        return evseId;
-    }
-
-    /**
-     * Gets the identity context.
-     *
-     * @return the identity context.
-     */
-    public IdentityContext getIdentityContext() {
-        return identityContext;
+    public ChangeChargingStationAvailabilityToInoperativeRequestedEvent(ChargingStationId chargingStationId, String protocol, IdentityContext identityContext) {
+        super(chargingStationId, protocol, identityContext);
     }
 }

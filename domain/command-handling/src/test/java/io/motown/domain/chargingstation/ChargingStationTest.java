@@ -284,15 +284,57 @@ public class ChargingStationTest {
     @Test
     public void testRequestChangeChargingStationAvailabilityToInoperative() {
         fixture.given(CHARGING_STATION)
-                .when(new RequestChangeChargingStationAvailabilityToInoperativeCommand(CHARGING_STATION_ID, EVSE_ID, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, ROOT_IDENTITY_CONTEXT));
+                .when(new RequestChangeChargingStationAvailabilityToInoperativeCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testRequestChangeChargingStationAvailabilityToOperative() {
         fixture.given(CHARGING_STATION)
-                .when(new RequestChangeChargingStationAvailabilityToOperativeCommand(CHARGING_STATION_ID, EVSE_ID, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, ROOT_IDENTITY_CONTEXT));
+                .when(new RequestChangeChargingStationAvailabilityToOperativeCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void testRequestChangeComponentAvailabilityToInoperative() {
+        fixture.given(CHARGING_STATION)
+                .when(new RequestChangeComponentAvailabilityToInoperativeCommand(CHARGING_STATION_ID, EVSE_ID, ChargingStationComponent.EVSE, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new ChangeComponentAvailabilityToInoperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, ChargingStationComponent.EVSE, ROOT_IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void testRequestChangeComponentAvailabilityToOperative() {
+        fixture.given(CHARGING_STATION)
+                .when(new RequestChangeComponentAvailabilityToOperativeCommand(CHARGING_STATION_ID, EVSE_ID, ChargingStationComponent.EVSE, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new ChangeComponentAvailabilityToOperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, ChargingStationComponent.EVSE, ROOT_IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void testChangingChargingStationAvailabilityToInoperative() {
+        fixture.given(CHARGING_STATION)
+                .when(new ChangeChargingStationAvailabilityToInoperativeCommand(CHARGING_STATION_ID, IDENTITY_CONTEXT))
+                .expectEvents(new ChargingStationAvailabilityChangedToInoperativeEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void testChangingChargingStationAvailabilityToOperative() {
+        fixture.given(CHARGING_STATION)
+                .when(new ChangeChargingStationAvailabilityToOperativeCommand(CHARGING_STATION_ID, IDENTITY_CONTEXT))
+                .expectEvents(new ChargingStationAvailabilityChangedToOperativeEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void testChangingComponentAvailabilityToInoperative() {
+        fixture.given(CHARGING_STATION)
+                .when(new ChangeComponentAvailabilityToInoperativeCommand(CHARGING_STATION_ID, EVSE_ID, ChargingStationComponent.EVSE, NULL_USER_IDENTITY_CONTEXT))
+                .expectEvents(new ComponentAvailabilityChangedToInoperativeEvent(CHARGING_STATION_ID, EVSE_ID, ChargingStationComponent.EVSE, NULL_USER_IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void testChangingComponentAvailabilityToOperative() {
+        fixture.given(CHARGING_STATION)
+                .when(new ChangeComponentAvailabilityToOperativeCommand(CHARGING_STATION_ID, EVSE_ID, ChargingStationComponent.EVSE, NULL_USER_IDENTITY_CONTEXT))
+                .expectEvents(new ComponentAvailabilityChangedToOperativeEvent(CHARGING_STATION_ID, EVSE_ID, ChargingStationComponent.EVSE, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
@@ -551,19 +593,5 @@ public class ChargingStationTest {
         fixture.given(CHARGING_STATION)
                 .when(new ReserveNowCommand(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, reservationExpiryDate, IDENTITY_CONTEXT))
                 .expectEvents(new ReservedNowEvent(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, reservationExpiryDate, IDENTITY_CONTEXT));
-    }
-
-    @Test
-    public void testToInoperative() {
-        fixture.given(CHARGING_STATION)
-                .when(new ToInoperativeCommand(CHARGING_STATION_ID, EVSE_ID, IDENTITY_CONTEXT))
-                .expectEvents(new NowInoperativeEvent(CHARGING_STATION_ID, EVSE_ID, IDENTITY_CONTEXT));
-    }
-
-    @Test
-    public void testToOperative() {
-        fixture.given(CHARGING_STATION)
-                .when(new ToOperativeCommand(CHARGING_STATION_ID, EVSE_ID, IDENTITY_CONTEXT))
-                .expectEvents(new NowOperativeEvent(CHARGING_STATION_ID, EVSE_ID, IDENTITY_CONTEXT));
     }
 }

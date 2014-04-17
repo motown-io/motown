@@ -35,7 +35,11 @@ interface DomainCommandGateway {
 
     void send(RequestHardResetChargingStationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
-    void send(RequestChangeChargingStationAvailabilityToInoperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(RequestChangeComponentAvailabilityToInoperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(RequestChangeComponentAvailabilityToOperativeCommand requestChangeComponentAvailabilityToOperativeCommand, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
+
+    void send(RequestChangeChargingStationAvailabilityToInoperativeCommand requestChangeChargingStationAvailabilityToInoperativeCommand, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
     void send(RequestChangeChargingStationAvailabilityToOperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 

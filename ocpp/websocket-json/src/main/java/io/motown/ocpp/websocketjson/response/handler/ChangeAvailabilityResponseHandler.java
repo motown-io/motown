@@ -16,6 +16,7 @@
 package io.motown.ocpp.websocketjson.response.handler;
 
 import com.google.gson.Gson;
+import io.motown.domain.api.chargingstation.ChargingStationComponent;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.EvseId;
@@ -50,9 +51,17 @@ public class ChangeAvailabilityResponseHandler extends ResponseHandler {
         if (Status.ACCEPTED.equals(response.getStatus()) || Status.SCHEDULED.equals(response.getStatus())) {
             //Upon a successfull change in availability we inform about the new state the evse is in
             if (Changeavailability.Type.INOPERATIVE.equals(availabilityType)) {
-                domainService.informToOperative(chargingStationId, evseId, getCorrelationToken(), addOnIdentity);
+                if (evseId.getNumberedId() == 0) {
+                    domainService.changeChargingStationAvailabilityToInoperative(chargingStationId, getCorrelationToken(), addOnIdentity);
+                } else {
+                    domainService.changeComponentAvailabilityToInoperative(chargingStationId, evseId, ChargingStationComponent.EVSE, getCorrelationToken(), addOnIdentity);
+                }
             } else {
-                domainService.informToOperative(chargingStationId, evseId, getCorrelationToken(), addOnIdentity);
+                if (evseId.getNumberedId() == 0) {
+                    domainService.changeChargingStationAvailabilityToOperative(chargingStationId, getCorrelationToken(), addOnIdentity);
+                } else {
+                    domainService.changeComponentAvailabilityToOperative(chargingStationId, evseId, ChargingStationComponent.EVSE, getCorrelationToken(), addOnIdentity);
+                }
             }
         } else {
             LOG.error("Failed to set availability of evse {} on chargingstation {} to {}", evseId, chargingStationId, availabilityType.toString());

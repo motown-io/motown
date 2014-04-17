@@ -18,6 +18,7 @@ package io.motown.ocpp.websocketjson;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.OcppRequestHandler;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Changeavailability;
+import org.axonframework.common.annotation.MetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,14 +67,22 @@ public class OcppWebSocketRequestHandler implements OcppRequestHandler {
 
     @Override
     public void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event, CorrelationToken statusCorrelationToken) {
-        LOG.info("ChangeChargingStationAvailabilityToInoperativeRequestedEvent");
-        ocppJsonService.changeAvailability(event.getChargingStationId(), event.getEvseId(), Changeavailability.Type.INOPERATIVE, statusCorrelationToken);
+        ocppJsonService.changeAvailability(event.getChargingStationId(), new EvseId(0), Changeavailability.Type.INOPERATIVE, statusCorrelationToken);
     }
 
     @Override
-    public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, CorrelationToken statusCorrelationToken) {
-        LOG.info("ChangeChargingStationAvailabilityToOperativeRequestedEvent");
-        ocppJsonService.changeAvailability(event.getChargingStationId(), event.getEvseId(), Changeavailability.Type.OPERATIVE, statusCorrelationToken);
+    public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        ocppJsonService.changeAvailability(event.getChargingStationId(), new EvseId(0), Changeavailability.Type.OPERATIVE, statusCorrelationToken);
+    }
+
+    @Override
+    public void handle(ChangeComponentAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        ocppJsonService.changeAvailability(event.getChargingStationId(), (EvseId) event.getComponentId(), Changeavailability.Type.INOPERATIVE, statusCorrelationToken);
+    }
+
+    @Override
+    public void handle(ChangeComponentAvailabilityToOperativeRequestedEvent event, CorrelationToken statusCorrelationToken) {
+        ocppJsonService.changeAvailability(event.getChargingStationId(), (EvseId) event.getComponentId(), Changeavailability.Type.OPERATIVE, statusCorrelationToken);
     }
 
     @Override

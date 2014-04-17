@@ -298,22 +298,34 @@ public class DomainService {
         commandGateway.send(new InformRequestResultCommand(chargingStationId, requestResult, statusMessage, identityContext), statusCorrelationToken);
     }
 
-    public void informToOperative(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
+    public void changeComponentAvailabilityToOperative(ChargingStationId chargingStationId, ComponentId componentId, ChargingStationComponent component, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        commandGateway.send(new ToOperativeCommand(chargingStationId, evseId, identityContext), statusCorrelationToken);
+        commandGateway.send(new ChangeComponentAvailabilityToOperativeCommand(chargingStationId, componentId, component, identityContext), statusCorrelationToken);
+    }
+
+    public void changeComponentAvailabilityToInoperative(ChargingStationId chargingStationId, ComponentId componentId, ChargingStationComponent component, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        commandGateway.send(new ChangeComponentAvailabilityToInoperativeCommand(chargingStationId, componentId, component, identityContext), statusCorrelationToken);
+    }
+
+    public void changeChargingStationAvailabilityToOperative(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        commandGateway.send(new ChangeChargingStationAvailabilityToOperativeCommand(chargingStationId, identityContext), statusCorrelationToken);
+    }
+
+    public void changeChargingStationAvailabilityToInoperative(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        commandGateway.send(new ChangeChargingStationAvailabilityToInoperativeCommand(chargingStationId, identityContext), statusCorrelationToken);
     }
 
     public void informDataTransferResponse(ChargingStationId chargingStationId, String data, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         commandGateway.send(new DataTransferResponseCommand(chargingStationId, data, identityContext), statusCorrelationToken);
-    }
-
-    public void informToInoperative(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
-        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
-
-        commandGateway.send(new ToInoperativeCommand(chargingStationId, evseId, identityContext), statusCorrelationToken);
     }
 
     public void setCommandGateway(DomainCommandGateway commandGateway) {

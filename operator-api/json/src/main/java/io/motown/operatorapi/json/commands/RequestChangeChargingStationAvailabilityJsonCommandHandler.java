@@ -18,10 +18,7 @@ package io.motown.operatorapi.json.commands;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.RequestChangeChargingStationAvailabilityToInoperativeCommand;
-import io.motown.domain.api.chargingstation.RequestChangeChargingStationAvailabilityToOperativeCommand;
-import io.motown.domain.api.chargingstation.CorrelationToken;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.operatorapi.viewmodel.model.RequestChangeChargingStationAvailabilityApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
@@ -50,9 +47,17 @@ class RequestChangeChargingStationAvailabilityJsonCommandHandler implements Json
                 RequestChangeChargingStationAvailabilityApiCommand command = gson.fromJson(commandObject, RequestChangeChargingStationAvailabilityApiCommand.class);
 
                 if ("inoperative".equalsIgnoreCase(command.getAvailability())) {
-                    commandGateway.send(new RequestChangeChargingStationAvailabilityToInoperativeCommand(new ChargingStationId(chargingStationId), command.getEvseId(), identityContext), new CorrelationToken());
+                    if (command.getEvseId().getNumberedId() == 0) {
+                        commandGateway.send(new RequestChangeChargingStationAvailabilityToInoperativeCommand(new ChargingStationId(chargingStationId), identityContext), new CorrelationToken());
+                    } else {
+                        commandGateway.send(new RequestChangeComponentAvailabilityToInoperativeCommand(new ChargingStationId(chargingStationId), command.getEvseId(), ChargingStationComponent.EVSE, identityContext), new CorrelationToken());
+                    }
                 } else {
-                    commandGateway.send(new RequestChangeChargingStationAvailabilityToOperativeCommand(new ChargingStationId(chargingStationId), command.getEvseId(), identityContext), new CorrelationToken());
+                    if (command.getEvseId().getNumberedId() == 0) {
+                        commandGateway.send(new RequestChangeChargingStationAvailabilityToOperativeCommand(new ChargingStationId(chargingStationId), identityContext), new CorrelationToken());
+                    } else {
+                        commandGateway.send(new RequestChangeComponentAvailabilityToOperativeCommand(new ChargingStationId(chargingStationId), command.getEvseId(), ChargingStationComponent.EVSE, identityContext), new CorrelationToken());
+                    }
                 }
             }
         } catch (JsonSyntaxException ex) {

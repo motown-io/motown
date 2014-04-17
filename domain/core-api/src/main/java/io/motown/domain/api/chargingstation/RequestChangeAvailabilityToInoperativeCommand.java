@@ -20,49 +20,39 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Objects;
 
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code ToInoperativeCommand} is the command that is published to inform that the evse is in an inoperative state.
+ * {@code RequestChangeAvailabilityToInoperativeCommand} is the command which is published when a change to inoperative
+ * of the availability is requested.
  */
-public final class ToInoperativeCommand {
+public abstract class RequestChangeAvailabilityToInoperativeCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final EvseId evseId;
-
     private final IdentityContext identityContext;
 
     /**
-     * Creates a {@code ToInoperativeCommand}.
+     * Creates a {@code RequestChangeAvailabilityToInoperativeCommand}.
      *
-     * @param chargingStationId   the identifier of the charging station.
-     * @param evseId              the evse identifier of the evse being inoperative
-     * @param identityContext     identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code evseId}, {@code status}, {@code statusMessage} or {@code identityContext} is {@code null}.
+     * @param chargingStationId the charging station's id.
+     * @param identityContext   the identity context.
+     * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is null.
      */
-    public ToInoperativeCommand(ChargingStationId chargingStationId, EvseId evseId, IdentityContext identityContext) {
+    public RequestChangeAvailabilityToInoperativeCommand(ChargingStationId chargingStationId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.evseId = checkNotNull(evseId);
         this.identityContext = checkNotNull(identityContext);
     }
 
     /**
      * Gets the charging station identifier.
      *
-     * @return the charging station identifier
+     * @return the charging station identifier.
      */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
-    }
-
-    /**
-     * Gets the evse identifier.
-     * @return evse identifier
-     */
-    public EvseId getEvseId() {
-        return evseId;
     }
 
     /**
@@ -74,11 +64,17 @@ public final class ToInoperativeCommand {
         return identityContext;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, evseId, identityContext);
+        return Objects.hash(chargingStationId, identityContext);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -87,7 +83,18 @@ public final class ToInoperativeCommand {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final ToInoperativeCommand other = (ToInoperativeCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.evseId, other.evseId) && Objects.equals(this.identityContext, other.identityContext);
+        final RequestChangeAvailabilityToInoperativeCommand other = (RequestChangeAvailabilityToInoperativeCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.identityContext, other.identityContext);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return toStringHelper(this)
+                .add("chargingStationId", chargingStationId)
+                .add("identityContext", identityContext)
+                .toString();
     }
 }

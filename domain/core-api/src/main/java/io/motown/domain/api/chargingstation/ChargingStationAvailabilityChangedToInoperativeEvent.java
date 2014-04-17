@@ -18,19 +18,19 @@ package io.motown.domain.api.chargingstation;
 import io.motown.domain.api.security.IdentityContext;
 
 /**
- * {@code RequestChangeChargingStationAvailabilityToOperativeCommand} is the command which is published when a change
- * availability to operative of a charging station is requested.
+ * {@code ChargingStationAvailabilityChangedToInoperativeEvent} is the event which is published when a charging
+ * station's availability has changed to inoperative.
  */
-public final class RequestChangeChargingStationAvailabilityToOperativeCommand extends RequestChangeAvailabilityToOperativeCommand {
+public class ChargingStationAvailabilityChangedToInoperativeEvent extends AvailabilityChangedToInoperativeEvent {
 
     /**
-     * Creates a {@code RequestChangeChargingStationAvailabilityToOperativeCommand} with an identifier.
+     * Creates a {@code ChargingStationAvailabilityChangedToInoperativeEvent}.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param identityContext   the identity context.
+     * @param identityContext   identity context.
      * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
      */
-    public RequestChangeChargingStationAvailabilityToOperativeCommand(ChargingStationId chargingStationId, IdentityContext identityContext) {
+    public ChargingStationAvailabilityChangedToInoperativeEvent(ChargingStationId chargingStationId, IdentityContext identityContext) {
         super(chargingStationId, identityContext);
     }
 }

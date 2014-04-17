@@ -21,6 +21,7 @@ import io.motown.domain.api.security.TypeBasedAddOnIdentity;
 import io.motown.ocpp.viewmodel.OcppRequestHandler;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp12Client;
+import org.axonframework.common.annotation.MetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,24 +89,50 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
     @Override
     public void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("OCPP 1.2 ChangeChargingStationAvailabilityToInoperativeRequestedEvent");
-        RequestResult requestResult = chargingStationOcpp12Client.changeAvailabilityToInoperative(event.getChargingStationId(), event.getEvseId());
+        EvseId chargingStationEvseId = new EvseId(0);
+        RequestResult requestResult = chargingStationOcpp12Client.changeAvailabilityToInoperative(event.getChargingStationId(), chargingStationEvseId);
 
-        if(RequestResult.SUCCESS.equals(requestResult)) {
-            domainService.informToInoperative(event.getChargingStationId(), event.getEvseId(), statusCorrelationToken, addOnIdentity);
+        if (RequestResult.SUCCESS.equals(requestResult)) {
+            domainService.changeChargingStationAvailabilityToInoperative(event.getChargingStationId(), statusCorrelationToken, addOnIdentity);
         } else {
-            LOG.error("Failed to set availability of evse {} on chargingstation {} to inoperative", event.getEvseId().getId(), event.getChargingStationId().getId());
+            LOG.error("Failed to set availability of chargingstation {} to inoperative", event.getChargingStationId().getId());
         }
     }
 
     @Override
-    public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         LOG.info("OCPP 1.2 ChangeChargingStationAvailabilityToOperativeRequestedEvent");
-        RequestResult requestResult = chargingStationOcpp12Client.changeAvailabilityToOperative(event.getChargingStationId(), event.getEvseId());
+        EvseId chargingStationEvseId = new EvseId(0);
+        RequestResult requestResult = chargingStationOcpp12Client.changeAvailabilityToOperative(event.getChargingStationId(), chargingStationEvseId);
 
-        if(RequestResult.SUCCESS.equals(requestResult)) {
-            domainService.informToOperative(event.getChargingStationId(), event.getEvseId(), statusCorrelationToken, addOnIdentity);
+        if (RequestResult.SUCCESS.equals(requestResult)) {
+            domainService.changeChargingStationAvailabilityToOperative(event.getChargingStationId(), statusCorrelationToken, addOnIdentity);
         } else {
-            LOG.error("Failed to set availability of evse {} on chargingstation {} to operative", event.getEvseId().getId(), event.getChargingStationId().getId());
+            LOG.error("Failed to set availability of chargingstation {} to operative", event.getChargingStationId().getId());
+        }
+    }
+
+    @Override
+    public void handle(ChangeComponentAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.info("OCPP 1.2 ChangeComponentAvailabilityToInoperativeRequestedEvent");
+        RequestResult requestResult = chargingStationOcpp12Client.changeAvailabilityToInoperative(event.getChargingStationId(), (EvseId) event.getComponentId());
+
+        if (RequestResult.SUCCESS.equals(requestResult)) {
+            domainService.changeComponentAvailabilityToInoperative(event.getChargingStationId(), event.getComponentId(), ChargingStationComponent.EVSE, statusCorrelationToken, addOnIdentity);
+        } else {
+            LOG.error("Failed to set availability of evse {} on chargingstation {} to inoperative", event.getComponentId().getId(), event.getChargingStationId().getId());
+        }
+    }
+
+    @Override
+    public void handle(ChangeComponentAvailabilityToOperativeRequestedEvent event, CorrelationToken statusCorrelationToken) {
+        LOG.info("OCPP 1.2 ChangeComponentAvailabilityToOperativeRequestedEvent");
+        RequestResult requestResult = chargingStationOcpp12Client.changeAvailabilityToOperative(event.getChargingStationId(), (EvseId) event.getComponentId());
+
+        if (RequestResult.SUCCESS.equals(requestResult)) {
+            domainService.changeComponentAvailabilityToOperative(event.getChargingStationId(), event.getComponentId(), ChargingStationComponent.EVSE, statusCorrelationToken, addOnIdentity);
+        } else {
+            LOG.error("Failed to set availability of evse {} on chargingstation {} to operative", event.getComponentId().getId(), event.getChargingStationId().getId());
         }
     }
 

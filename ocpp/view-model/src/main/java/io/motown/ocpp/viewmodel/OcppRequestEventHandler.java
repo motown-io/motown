@@ -104,9 +104,7 @@ public class OcppRequestEventHandler {
     }
 
     @EventHandler
-    public void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
-        LOG.info("ChangeChargingStationAvailabilityToInoperativeRequestedEvent");
-
+    public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
         if (ocppRequestHandler != null) {
@@ -115,9 +113,25 @@ public class OcppRequestEventHandler {
     }
 
     @EventHandler
-    public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
-        LOG.info("ChangeChargingStationAvailabilityToOperativeRequestedEvent");
+    public void handle(ChangeComponentAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
+        if (ocppRequestHandler != null) {
+            ocppRequestHandler.handle(event, statusCorrelationToken);
+        }
+    }
+
+    @EventHandler
+    public void handle(ChangeComponentAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
+
+        if (ocppRequestHandler != null) {
+            ocppRequestHandler.handle(event, statusCorrelationToken);
+        }
+    }
+
+    @EventHandler
+    public void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
         if (ocppRequestHandler != null) {

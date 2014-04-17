@@ -36,6 +36,10 @@ public interface OcppRequestHandler {
 
     void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
+    void handle(ChangeComponentAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void handle(ChangeComponentAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
     void handle(DataTransferRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
     void handle(ChangeConfigurationItemEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);

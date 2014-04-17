@@ -16,61 +16,21 @@
 package io.motown.domain.api.chargingstation;
 
 import io.motown.domain.api.security.IdentityContext;
-import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code RequestChangeChargingStationAvailabilityToInoperativeCommand} is the command which is published when a change availability to inoperative
- * of a charging station is requested.
+ * {@code RequestChangeChargingStationAvailabilityToInoperativeCommand} is the command which is published when a change
+ * availability to inoperative of a charging station is requested.
  */
-public final class RequestChangeChargingStationAvailabilityToInoperativeCommand {
-
-    @TargetAggregateIdentifier
-    private final ChargingStationId chargingStationId;
-
-    private final EvseId evseId;
-
-    private final IdentityContext identityContext;
+public final class RequestChangeChargingStationAvailabilityToInoperativeCommand extends RequestChangeAvailabilityToInoperativeCommand {
 
     /**
-     * Creates a {@code RequestChangeChargingStationAvailabilityToInoperativeCommand} with an identifier.
+     * Creates a {@code RequestChangeComponentAvailabilityToInoperativeCommand}.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param evseId            the identifier of the evse.
      * @param identityContext   the identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code evseId} or {@code identityContext} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
      */
-    public RequestChangeChargingStationAvailabilityToInoperativeCommand(ChargingStationId chargingStationId, EvseId evseId, IdentityContext identityContext) {
-        this.chargingStationId = checkNotNull(chargingStationId);
-        this.evseId = checkNotNull(evseId);
-        this.identityContext = checkNotNull(identityContext);
-    }
-
-    /**
-     * Gets the charging station identifier.
-     *
-     * @return the charging station identifier.
-     */
-    public ChargingStationId getChargingStationId() {
-        return chargingStationId;
-    }
-
-    /**
-     * Gets the evse id.
-     *
-     * @return the evse id.
-     */
-    public EvseId getEvseId() {
-        return evseId;
-    }
-
-    /**
-     * Gets the identity context.
-     *
-     * @return the identity context.
-     */
-    public IdentityContext getIdentityContext() {
-        return identityContext;
+    public RequestChangeChargingStationAvailabilityToInoperativeCommand(ChargingStationId chargingStationId, IdentityContext identityContext) {
+        super(chargingStationId, identityContext);
     }
 }
