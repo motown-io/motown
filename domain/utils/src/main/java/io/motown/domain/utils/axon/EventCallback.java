@@ -17,9 +17,6 @@ package io.motown.domain.utils.axon;
 
 import org.axonframework.domain.EventMessage;
 
-/**
- * @author Allard Buijze
- */
 public interface EventCallback {
 
     boolean onEvent(EventMessage<?> event);

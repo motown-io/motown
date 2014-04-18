@@ -31,9 +31,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.axonframework.commandhandling.GenericCommandMessage.asCommandMessage;
 
-/**
- * @author Allard Buijze
- */
 public class EventWaitingGateway {
 
     private static final String CORRELATION_ID_KEY = "correlationId";
