@@ -90,8 +90,8 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
     }
 
     @Override
-    public void send(ChangeConfigurationItemCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
-        LOG.debug("ChangeConfigurationItemCommand: " + command.toString());
+    public void send(RequestChangeConfigurationItemCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestChangeConfigurationItemCommand: " + command.toString());
     }
 
     @Override

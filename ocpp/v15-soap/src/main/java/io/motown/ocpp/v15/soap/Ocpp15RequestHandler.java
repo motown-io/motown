@@ -96,7 +96,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         EvseId chargingStationEvseId = new EvseId(0);
         RequestResult requestResult = chargingStationOcpp15Client.changeAvailabilityToInoperative(event.getChargingStationId(), chargingStationEvseId);
 
-        if(RequestResult.SUCCESS.equals(requestResult)) {
+        if (RequestResult.SUCCESS.equals(requestResult)) {
             domainService.changeChargingStationAvailabilityToInoperative(event.getChargingStationId(), statusCorrelationToken, addOnIdentity);
         } else {
             LOG.error("Failed to set availability of chargingstation {} to inoperative", event.getChargingStationId().getId());
@@ -109,7 +109,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         EvseId chargingStationEvseId = new EvseId(0);
         RequestResult requestResult = chargingStationOcpp15Client.changeAvailabilityToOperative(event.getChargingStationId(), chargingStationEvseId);
 
-        if(RequestResult.SUCCESS.equals(requestResult)) {
+        if (RequestResult.SUCCESS.equals(requestResult)) {
             domainService.changeChargingStationAvailabilityToOperative(event.getChargingStationId(), statusCorrelationToken, addOnIdentity);
         } else {
             LOG.error("Failed to set availability of chargingstation {} to operative", event.getChargingStationId().getId());
@@ -145,7 +145,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         LOG.info("DataTransferRequestedEvent");
         DataTransferRequestResult result = chargingStationOcpp15Client.dataTransfer(event.getChargingStationId(), event.getVendorId(), event.getMessageId(), event.getData());
 
-        if(result.isSuccessfull()) {
+        if (result.isSuccessfull()) {
             String responseData = result.getData();
             //In case data has been returned, we treat that as if it was incoming data
             if (responseData != null) {
@@ -157,8 +157,8 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
     }
 
     @Override
-    public void handle(ChangeConfigurationItemEvent event, CorrelationToken statusCorrelationToken) {
-        LOG.info("ChangeConfigurationItemEvent");
+    public void handle(ChangeConfigurationItemRequestedEvent event, CorrelationToken statusCorrelationToken) {
+        LOG.info("ChangeConfigurationItemRequestedEvent");
         RequestResult requestResult = chargingStationOcpp15Client.changeConfiguration(event.getChargingStationId(), event.getKey(), event.getValue());
 
         domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
@@ -223,7 +223,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
 
         ReservationStatus reservationStatus = chargingStationOcpp15Client.reserveNow(event.getChargingStationId(), event.getEvseId(), event.getIdentifyingToken(), event.getExpiryDate(), event.getParentIdentifyingToken(), reservationIdentifier.getNumber());
 
-        if(ReservationStatus.ACCEPTED.equals(reservationStatus)) {
+        if (ReservationStatus.ACCEPTED.equals(reservationStatus)) {
             domainService.informReserved(event.getChargingStationId(), reservationIdentifier, event.getEvseId(), event.getExpiryDate(), statusCorrelationToken, addOnIdentity);
         } else {
             String reservationStatusMessage = (reservationStatus != null) ? reservationStatus.name() : "";
@@ -237,7 +237,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
 
         RequestResult requestResult = chargingStationOcpp15Client.cancelReservation(event.getChargingStationId(), ((NumberedReservationId) event.getReservationId()).getNumber());
 
-        if(RequestResult.SUCCESS.equals(requestResult)) {
+        if (RequestResult.SUCCESS.equals(requestResult)) {
             domainService.informReservationCancelled(event.getChargingStationId(), event.getReservationId(), statusCorrelationToken, addOnIdentity);
         } else {
             LOG.error("Failed to cancel reservation with reservationId {}", event.getReservationId().getId());

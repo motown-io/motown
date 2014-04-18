@@ -151,8 +151,8 @@ public class OcppRequestEventHandler {
     }
 
     @EventHandler
-    public void handle(ChangeConfigurationItemEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
-        LOG.info("ChangeConfigurationItemEvent");
+    public void handle(ChangeConfigurationItemRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.info("ChangeConfigurationItemRequestedEvent");
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 

@@ -21,9 +21,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code ChangeConfigurationItemEvent} is the event which is published when a configuration change has been requested.
+ * {@code ChangeConfigurationItemRequestedEvent} is the event which is published when a configuration change has been requested.
  */
-public final class ChangeConfigurationItemEvent implements CommunicationWithChargingStationRequestedEvent {
+public final class ChangeConfigurationItemRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
 
     private final ChargingStationId chargingStationId;
 
@@ -36,7 +36,7 @@ public final class ChangeConfigurationItemEvent implements CommunicationWithChar
     private final IdentityContext identityContext;
 
     /**
-     * Creates a {@code ChangeConfigurationItemEvent} with an identifier, vendor identifier, message identifier, free format data and identity context.
+     * Creates a {@code ChangeConfigurationItemRequestedEvent} with an identifier, vendor identifier, message identifier, free format data and identity context.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param protocol          the protocol identifier.
@@ -46,7 +46,7 @@ public final class ChangeConfigurationItemEvent implements CommunicationWithChar
      * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code key}, {@code value} or
      *                          {@code identityContext} is {@code null}.
      */
-    public ChangeConfigurationItemEvent(ChargingStationId chargingStationId, String protocol, String key, String value, IdentityContext identityContext) {
+    public ChangeConfigurationItemRequestedEvent(ChargingStationId chargingStationId, String protocol, String key, String value, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());

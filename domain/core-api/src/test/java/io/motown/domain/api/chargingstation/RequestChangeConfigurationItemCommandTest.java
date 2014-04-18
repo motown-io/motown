@@ -17,31 +17,32 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
 
-public class ChangeConfigurationItemEventTest {
+public class RequestChangeConfigurationItemCommandTest {
 
     private static final String KEY = "testKey";
     private static final String VALUE = "testValue";
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ChangeConfigurationItemEvent(null, PROTOCOL, KEY, VALUE, ROOT_IDENTITY_CONTEXT);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingEventWithProtocolNull() {
-        new ChangeConfigurationItemEvent(CHARGING_STATION_ID, null, KEY, VALUE, ROOT_IDENTITY_CONTEXT);
+        new RequestChangeConfigurationItemCommand(null, KEY, VALUE, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithKeyNull() {
-        new ChangeConfigurationItemEvent(CHARGING_STATION_ID, PROTOCOL, null, VALUE, ROOT_IDENTITY_CONTEXT);
+        new RequestChangeConfigurationItemCommand(CHARGING_STATION_ID, null, VALUE, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithValueNull() {
-        new ChangeConfigurationItemEvent(CHARGING_STATION_ID, PROTOCOL, KEY, null, ROOT_IDENTITY_CONTEXT);
+        new RequestChangeConfigurationItemCommand(CHARGING_STATION_ID, KEY, null, ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingEventWithIdentityContextNull() {
+        new RequestChangeConfigurationItemCommand(CHARGING_STATION_ID, KEY, VALUE, null);
     }
 
 }

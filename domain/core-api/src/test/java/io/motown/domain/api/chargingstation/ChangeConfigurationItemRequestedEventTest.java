@@ -17,32 +17,31 @@ package io.motown.domain.api.chargingstation;
 
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
-public class ChangeConfigurationItemCommandTest {
+public class ChangeConfigurationItemRequestedEventTest {
 
     private static final String KEY = "testKey";
     private static final String VALUE = "testValue";
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ChangeConfigurationItemCommand(null, KEY, VALUE, ROOT_IDENTITY_CONTEXT);
+        new ChangeConfigurationItemRequestedEvent(null, PROTOCOL, KEY, VALUE, ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingEventWithProtocolNull() {
+        new ChangeConfigurationItemRequestedEvent(CHARGING_STATION_ID, null, KEY, VALUE, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithKeyNull() {
-        new ChangeConfigurationItemCommand(CHARGING_STATION_ID, null, VALUE, ROOT_IDENTITY_CONTEXT);
+        new ChangeConfigurationItemRequestedEvent(CHARGING_STATION_ID, PROTOCOL, null, VALUE, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithValueNull() {
-        new ChangeConfigurationItemCommand(CHARGING_STATION_ID, KEY, null, ROOT_IDENTITY_CONTEXT);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingEventWithIdentityContextNull() {
-        new ChangeConfigurationItemCommand(CHARGING_STATION_ID, KEY, VALUE, null);
+        new ChangeConfigurationItemRequestedEvent(CHARGING_STATION_ID, PROTOCOL, KEY, null, ROOT_IDENTITY_CONTEXT);
     }
 
 }

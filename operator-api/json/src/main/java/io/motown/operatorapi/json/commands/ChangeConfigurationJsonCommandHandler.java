@@ -18,9 +18,9 @@ package io.motown.operatorapi.json.commands;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import io.motown.domain.api.chargingstation.ChangeConfigurationItemCommand;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
+import io.motown.domain.api.chargingstation.RequestChangeConfigurationItemCommand;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.operatorapi.viewmodel.model.ChangeConfigurationApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
@@ -48,7 +48,7 @@ class ChangeConfigurationJsonCommandHandler implements JsonCommandHandler {
             if (chargingStation != null && chargingStation.isAccepted()) {
                 ChangeConfigurationApiCommand command = gson.fromJson(commandObject, ChangeConfigurationApiCommand.class);
 
-                commandGateway.send(new ChangeConfigurationItemCommand(new ChargingStationId(chargingStationId), command.getKey(), command.getValue(), identityContext), new CorrelationToken());
+                commandGateway.send(new RequestChangeConfigurationItemCommand(new ChargingStationId(chargingStationId), command.getKey(), command.getValue(), identityContext), new CorrelationToken());
             }
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Change configuration command not able to parse the payload, is your json correctly formatted?", ex);

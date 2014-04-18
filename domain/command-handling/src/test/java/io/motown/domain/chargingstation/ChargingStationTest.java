@@ -505,8 +505,8 @@ public class ChargingStationTest {
         String configKey = "heartbeatInterval";
         String configValue = "800";
         fixture.given(CHARGING_STATION)
-                .when(new ChangeConfigurationItemCommand(CHARGING_STATION_ID, configKey, configValue, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new ChangeConfigurationItemEvent(CHARGING_STATION_ID, PROTOCOL, configKey, configValue, ROOT_IDENTITY_CONTEXT));
+                .when(new RequestChangeConfigurationItemCommand(CHARGING_STATION_ID, configKey, configValue, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new ChangeConfigurationItemRequestedEvent(CHARGING_STATION_ID, PROTOCOL, configKey, configValue, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test

@@ -42,7 +42,7 @@ public interface OcppRequestHandler {
 
     void handle(DataTransferRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
-    void handle(ChangeConfigurationItemEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void handle(ChangeConfigurationItemRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
     void handle(DiagnosticsRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
