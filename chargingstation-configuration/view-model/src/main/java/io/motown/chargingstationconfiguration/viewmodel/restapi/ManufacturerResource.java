@@ -19,24 +19,23 @@ import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Manufacturer;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/manufacturers")
-@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+@Produces(ApiVersion.V1_JSON)
 public final class ManufacturerResource {
 
     private DomainService domainService;
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(ApiVersion.V1_JSON)
     public Response createManufacturer(Manufacturer manufacturer) {
         return Response.status(Response.Status.CREATED).entity(domainService.createManufacturer(manufacturer)).build();
     }
 
     @PUT
     @Path("/{id: [0-9]+}")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(ApiVersion.V1_JSON)
     public Response updateManufacturer(@PathParam("id") Long id, Manufacturer manufacturer) {
         return Response.ok(domainService.updateManufacturer(id, manufacturer)).build();
     }

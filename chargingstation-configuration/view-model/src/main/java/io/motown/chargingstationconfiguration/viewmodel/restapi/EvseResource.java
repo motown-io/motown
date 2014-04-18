@@ -19,24 +19,23 @@ import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/evses")
-@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+@Produces(ApiVersion.V1_JSON)
 public final class EvseResource {
 
     private DomainService domainService;
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(ApiVersion.V1_JSON)
     public Response createEvse(Evse evse) {
         return Response.status(Response.Status.CREATED).entity(domainService.createEvse(evse)).build();
     }
 
     @PUT
     @Path("/{id: [0-9]+}")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(ApiVersion.V1_JSON)
     public Response updateEvse(@PathParam("id") Long id, Evse evse) {
         return Response.ok(domainService.updateEvse(id, evse)).build();
     }
