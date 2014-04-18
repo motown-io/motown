@@ -31,7 +31,8 @@ public class WampMessageParser {
     }
 
     public WampMessage parseMessage(Reader reader) {
-        Type listType = new TypeToken<List<Object>>() {}.getType();
+        Type listType = new TypeToken<List<Object>>() {
+        }.getType();
         List<Object> wampMessage = gson.fromJson(reader, listType);
 
         return new WampMessage(wampMessage);
