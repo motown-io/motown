@@ -76,7 +76,7 @@ public class MotownVasPublisherService implements VasPublisherService {
 
         //TODO: Right now we return info on all chargingstations known in the system (might have to exclude certain chargingstation 'pools') - Ingo Pak, 24 Jan 2014
         GetChargePointInfoResponse response = new GetChargePointInfoResponse();
-        if (subscriptionRepository.findBySubscriberIdentity(subscriberIdentity).size() > 0) {
+        if (!subscriptionRepository.findBySubscriberIdentity(subscriberIdentity).isEmpty()) {
             List<ChargePoint> chargePoints = response.getChargePoints();
             for (ChargingStation chargingStation : chargingStationRepository.findAll()) {
                 chargePoints.add(vasConversionService.getVasRepresentation(chargingStation));
