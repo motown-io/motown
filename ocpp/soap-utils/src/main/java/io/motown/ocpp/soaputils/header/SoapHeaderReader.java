@@ -48,7 +48,7 @@ public class SoapHeaderReader {
         for (Header h : headers) {
             Element n = (Element) h.getObject();
 
-            if (n.getLocalName().equals("From")) {
+            if ("From".equals(n.getLocalName())) {
                 return n.getTextContent();
             }
         }
