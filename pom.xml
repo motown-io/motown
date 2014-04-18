@@ -26,6 +26,7 @@
     <inceptionYear>2013</inceptionYear>
     <modules>
         <module>domain/app</module>
+        <module>domain/command-authorization</module>
         <module>domain/command-handling</module>
         <module>domain/core-api</module>
         <module>domain/utils</module>
@@ -89,6 +90,7 @@
         <spring.security.version>3.2.1.RELEASE</spring.security.version>
         <spring.version>4.0.3.RELEASE</spring.version>
         <xml-apis.version>1.0.b2</xml-apis.version>
+        <cxf-xjc-runtime.version>2.7.0</cxf-xjc-runtime.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -201,7 +203,7 @@
             <dependency>
                 <groupId>org.apache.cxf.xjc-utils</groupId>
                 <artifactId>cxf-xjc-runtime</artifactId>
-                <version>${cxf.version}</version>
+                <version>${cxf-xjc-runtime.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.atmosphere</groupId>
