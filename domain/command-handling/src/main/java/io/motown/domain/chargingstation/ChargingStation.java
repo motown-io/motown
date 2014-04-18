@@ -27,6 +27,8 @@ import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
 
 public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
+    private static final long serialVersionUID = -7260002079024555928L;
+
     @AggregateIdentifier
     private ChargingStationId id;
 
