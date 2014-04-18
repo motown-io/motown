@@ -36,7 +36,6 @@ public class RegisterJsonCommandHandlerTest {
     public void setUp() {
         gson = OperatorApiJsonTestUtils.getGson();
 
-        handler.setGson(gson);
         handler.setCommandGateway(new TestDomainCommandGateway());
 
         // setup mocking for JPA / spring repo.
