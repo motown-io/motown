@@ -35,12 +35,12 @@ public class OpeningTime {
 
     @Transient
     public String getTimeStartString() {
-        return String.format(TIME_FORMAT, (timeStart / MINUTES_PER_HOUR), (timeStart % MINUTES_PER_HOUR));
+        return String.format(TIME_FORMAT, timeStart / MINUTES_PER_HOUR, timeStart % MINUTES_PER_HOUR);
     }
 
     @Transient
     public String getTimeStopString() {
-        return String.format(TIME_FORMAT, (timeStop / MINUTES_PER_HOUR), timeStop % MINUTES_PER_HOUR);
+        return String.format(TIME_FORMAT, timeStop / MINUTES_PER_HOUR, timeStop % MINUTES_PER_HOUR);
     }
 
     public Long getId() {
