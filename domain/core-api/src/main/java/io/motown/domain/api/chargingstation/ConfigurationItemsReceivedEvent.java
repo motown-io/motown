@@ -27,7 +27,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * {@code ConfigurationItemsReceivedEvent} is the event which is published when Motown has received configuration
- * items from a charging station.
+ * items from a charging station. This is the complete list of configuration items a charging station has so any locally
+ * stored configuration items need to be completely overwritten.
  */
 public class ConfigurationItemsReceivedEvent {
 
