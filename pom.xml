@@ -48,7 +48,7 @@
     </modules>
     <properties>
         <atmosphere.version>2.1.0</atmosphere.version>
-        <axon.version>2.1</axon.version>
+        <axon.version>2.1.2</axon.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
         <!-- using 2.7.0 instead of newer versions of CXF, as newer versions have a problem with continuations resulting
              in very bad performance and stack traces if several requests arrive short after each other (6 seconds in between or less).
