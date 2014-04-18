@@ -297,6 +297,12 @@ public final class ChargingStationTestUtils {
      * Used to test add-ons which do not pass a user identity in the identity context.
      */
     public static final IdentityContext NULL_USER_IDENTITY_CONTEXT = new IdentityContext(ADD_ON_IDENTITY, new NullUserIdentity());
+
+    /**
+     * The default configuration item.
+     */
+    public static final ConfigurationItem CONFIGURATION_ITEM = new ConfigurationItem("key", "value");
+
     /**
      * The default configuration keys to retrieve from the charging station
      */

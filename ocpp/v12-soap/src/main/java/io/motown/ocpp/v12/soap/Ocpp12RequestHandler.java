@@ -144,7 +144,7 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
     @Override
     public void handle(ChangeConfigurationItemRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("OCPP 1.2 ChangeConfigurationItemRequestedEvent");
-        RequestResult requestResult = chargingStationOcpp12Client.changeConfiguration(event.getChargingStationId(), event.getKey(), event.getValue());
+        RequestResult requestResult = chargingStationOcpp12Client.changeConfiguration(event.getChargingStationId(), event.getConfigurationItem().getKey(), event.getConfigurationItem().getValue());
 
         domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
     }

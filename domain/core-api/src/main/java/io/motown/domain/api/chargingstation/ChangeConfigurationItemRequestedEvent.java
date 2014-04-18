@@ -17,11 +17,15 @@ package io.motown.domain.api.chargingstation;
 
 import io.motown.domain.api.security.IdentityContext;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code ChangeConfigurationItemRequestedEvent} is the event which is published when a configuration change has been requested.
+ * {@code ChangeConfigurationItemRequestedEvent} is the event which is published when a configuration change has been
+ * requested. Protocol add-ons should respond to this event (if applicable) and request a charging station for its
+ * configuration items.
  */
 public final class ChangeConfigurationItemRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
 
@@ -29,9 +33,7 @@ public final class ChangeConfigurationItemRequestedEvent implements Communicatio
 
     private final String protocol;
 
-    private final String key;
-
-    private final String value;
+    private final ConfigurationItem configurationItem;
 
     private final IdentityContext identityContext;
 
@@ -40,19 +42,17 @@ public final class ChangeConfigurationItemRequestedEvent implements Communicatio
      *
      * @param chargingStationId the identifier of the charging station.
      * @param protocol          the protocol identifier.
-     * @param key               the key to be changed.
-     * @param value             the new value.
+     * @param configurationItem the configuration item to change.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code key}, {@code value} or
-     *                          {@code identityContext} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code configurationItem}, or
+     * {@code identityContext} is {@code null}.
      */
-    public ChangeConfigurationItemRequestedEvent(ChargingStationId chargingStationId, String protocol, String key, String value, IdentityContext identityContext) {
+    public ChangeConfigurationItemRequestedEvent(ChargingStationId chargingStationId, String protocol, ConfigurationItem configurationItem, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());
         this.protocol = protocol;
-        this.key = checkNotNull(key);
-        this.value = checkNotNull(value);
+        this.configurationItem = checkNotNull(configurationItem);
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -73,17 +73,12 @@ public final class ChangeConfigurationItemRequestedEvent implements Communicatio
     }
 
     /**
-     * @return the key.
+     * Gets the configuration item.
+     *
+     * @return the configuration item.
      */
-    public String getKey() {
-        return key;
-    }
-
-    /**
-     * @return the new value for the key.
-     */
-    public String getValue() {
-        return value;
+    public ConfigurationItem getConfigurationItem() {
+        return configurationItem;
     }
 
     /**
@@ -93,5 +88,41 @@ public final class ChangeConfigurationItemRequestedEvent implements Communicatio
      */
     public IdentityContext getIdentityContext() {
         return identityContext;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, protocol, configurationItem, identityContext);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final ChangeConfigurationItemRequestedEvent other = (ChangeConfigurationItemRequestedEvent) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.protocol, other.protocol) && Objects.equals(this.configurationItem, other.configurationItem) && Objects.equals(this.identityContext, other.identityContext);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return com.google.common.base.Objects.toStringHelper(this)
+                .add("chargingStationId", chargingStationId)
+                .add("protocol", protocol)
+                .add("configurationItem", configurationItem)
+                .add("identityContext", identityContext)
+                .toString();
     }
 }

@@ -15,33 +15,30 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class ChangeConfigurationItemRequestedEventTest {
 
-    private static final String KEY = "testKey";
-    private static final String VALUE = "testValue";
-
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ChangeConfigurationItemRequestedEvent(null, PROTOCOL, KEY, VALUE, ROOT_IDENTITY_CONTEXT);
+        new ChangeConfigurationItemRequestedEvent(null, PROTOCOL, CONFIGURATION_ITEM, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithProtocolNull() {
-        new ChangeConfigurationItemRequestedEvent(CHARGING_STATION_ID, null, KEY, VALUE, ROOT_IDENTITY_CONTEXT);
+        new ChangeConfigurationItemRequestedEvent(CHARGING_STATION_ID, null, CONFIGURATION_ITEM, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingEventWithKeyNull() {
-        new ChangeConfigurationItemRequestedEvent(CHARGING_STATION_ID, PROTOCOL, null, VALUE, ROOT_IDENTITY_CONTEXT);
+    public void nullPointerExceptionThrownWhenCreatingEventWithConfigurationItemNull() {
+        new ChangeConfigurationItemRequestedEvent(CHARGING_STATION_ID, PROTOCOL, null, ROOT_IDENTITY_CONTEXT);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingEventWithValueNull() {
-        new ChangeConfigurationItemRequestedEvent(CHARGING_STATION_ID, PROTOCOL, KEY, null, ROOT_IDENTITY_CONTEXT);
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(ChangeConfigurationItemRequestedEvent.class).usingGetClass().verify();
     }
-
 }
