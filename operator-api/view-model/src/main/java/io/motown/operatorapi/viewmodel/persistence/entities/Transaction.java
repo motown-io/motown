@@ -19,6 +19,8 @@ import io.motown.domain.api.chargingstation.EvseId;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -49,6 +51,9 @@ public class Transaction {
     private Date startedTimestamp;
 
     private Date stoppedTimestamp;
+
+    @ElementCollection
+    private Set<MeterValue> meterValues = new HashSet<>();
 
     private Transaction() {
         // Private no-arg constructor for Hibernate.
@@ -141,6 +146,14 @@ public class Transaction {
 
     public Date getCreated() {
         return created != null ? new Date(created.getTime()) : null;
+    }
+
+    public Set<MeterValue> getMeterValues() {
+        return meterValues;
+    }
+
+    public void setMeterValues(Set<MeterValue> meterValues) {
+        this.meterValues = meterValues;
     }
 
     @PrePersist

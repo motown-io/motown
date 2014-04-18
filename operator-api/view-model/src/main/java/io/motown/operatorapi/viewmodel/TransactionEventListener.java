@@ -15,10 +15,11 @@
  */
 package io.motown.operatorapi.viewmodel;
 
+import io.motown.domain.api.chargingstation.ChargingStationSentMeterValuesEvent;
+import io.motown.domain.api.chargingstation.MeterValue;
 import io.motown.domain.api.chargingstation.TransactionStartedEvent;
 import io.motown.domain.api.chargingstation.TransactionStoppedEvent;
 import io.motown.operatorapi.viewmodel.persistence.entities.Transaction;
-import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
@@ -29,8 +30,6 @@ public class TransactionEventListener {
     private static final Logger LOG = LoggerFactory.getLogger(TransactionEventListener.class);
 
     private TransactionRepository repository;
-
-    private ChargingStationRepository chargingStationRepository;
 
     @EventHandler
     public void handle(TransactionStartedEvent event) {
@@ -55,11 +54,24 @@ public class TransactionEventListener {
         }
     }
 
-    public void setRepository(TransactionRepository repository) {
-        this.repository = repository;
+    @EventHandler
+    public void handle(ChargingStationSentMeterValuesEvent event) {
+        LOG.debug("ChargingStationSentMeterValuesEvent for [{}] received!", event.getChargingStationId());
+
+        if (event.getTransactionId() != null) {
+            Transaction transaction = repository.findByTransactionId(event.getTransactionId().getId());
+
+            if (transaction != null) {
+                for (MeterValue coreMeterValue : event.getMeterValueList()) {
+                    transaction.getMeterValues().add(new io.motown.operatorapi.viewmodel.persistence.entities.MeterValue(coreMeterValue.getTimestamp(), coreMeterValue.getValue()));
+                }
+                repository.save(transaction);
+            }
+        }
+
     }
 
-    public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {
-        this.chargingStationRepository = chargingStationRepository;
+    public void setRepository(TransactionRepository repository) {
+        this.repository = repository;
     }
 }

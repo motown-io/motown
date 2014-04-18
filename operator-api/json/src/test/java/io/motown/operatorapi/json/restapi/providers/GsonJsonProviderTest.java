@@ -15,6 +15,8 @@
  */
 package io.motown.operatorapi.json.restapi.providers;
 
+import com.google.gson.GsonBuilder;
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
@@ -35,6 +37,11 @@ public class GsonJsonProviderTest {
     private static final ByteArrayOutputStream OS = new ByteArrayOutputStream();
 
     private GsonJsonProvider provider = new GsonJsonProvider();
+
+    @Before
+    public void setUp() {
+        provider.setGson(new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").create());
+    }
 
     @Test
     public void testIsWriteable() {

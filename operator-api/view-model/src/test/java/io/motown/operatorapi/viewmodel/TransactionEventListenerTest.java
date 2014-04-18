@@ -16,6 +16,7 @@
 package io.motown.operatorapi.viewmodel;
 
 import com.google.common.collect.ImmutableSet;
+import io.motown.domain.api.chargingstation.ChargingStationSentMeterValuesEvent;
 import io.motown.domain.api.chargingstation.ComponentStatus;
 import io.motown.domain.api.chargingstation.TransactionStartedEvent;
 import io.motown.domain.api.chargingstation.TransactionStoppedEvent;
@@ -54,12 +55,10 @@ public class TransactionEventListenerTest {
     public void setUp() throws Exception {
         listener = new TransactionEventListener();
         listener.setRepository(repository);
-        listener.setChargingStationRepository(chargingStationRepository);
     }
 
     @Test
     public void testHandleTransactionStartedEvent() {
-        Date start = new Date();
         ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
         cs.setEvses(ImmutableSet.<Evse>builder().add(new Evse("1", ComponentStatus.AVAILABLE)).build());
         chargingStationRepository.save(cs);
@@ -73,7 +72,6 @@ public class TransactionEventListenerTest {
 
     @Test
     public void testHandleTransactionStoppedEvent() {
-        Date start = new Date();
         ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
         cs.setEvses(ImmutableSet.<Evse>builder().add(new Evse("1", ComponentStatus.AVAILABLE)).build());
         chargingStationRepository.save(cs);
@@ -87,5 +85,18 @@ public class TransactionEventListenerTest {
         listener.handle(new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN_ACCEPTED, METER_STOP, new Date(), IDENTITY_CONTEXT));
         assertTrue(transaction.getMeterStop() > 0 && transaction.getMeterStop() > transaction.getMeterStart());
         assertNotNull(transaction.getStoppedTimestamp());
+        assertTrue(transaction.getStoppedTimestamp().after(transaction.getStartedTimestamp()));
+    }
+
+    @Test
+    public void testHandleChargingStationSentMeterValuesEvent() {
+        Transaction transaction = new Transaction(CHARGING_STATION_ID.getId(), TRANSACTION_ID.getId());
+        transaction.setEvseId(EVSE_ID);
+        repository.save(transaction);
+        assertTrue(transaction.getMeterValues().isEmpty());
+
+        listener.handle(new ChargingStationSentMeterValuesEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, METER_VALUES, IDENTITY_CONTEXT));
+        assertFalse(transaction.getMeterValues().isEmpty());
+        assertEquals(2, transaction.getMeterValues().size());
     }
 }
