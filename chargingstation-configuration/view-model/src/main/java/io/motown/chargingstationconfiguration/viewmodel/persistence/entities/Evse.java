@@ -32,7 +32,8 @@ public class Evse {
     @OneToMany(cascade = CascadeType.ALL, targetEntity = Connector.class, fetch = FetchType.EAGER)
     private Set<Connector> connectors = new HashSet<>();
 
-    public Evse() {}
+    public Evse() {
+    }
 
     public Long getId() {
         return id;
