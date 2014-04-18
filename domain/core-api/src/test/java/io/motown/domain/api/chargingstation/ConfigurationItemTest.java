@@ -35,7 +35,7 @@ public class ConfigurationItemTest {
         new ConfigurationItem("foo", null);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void creatingWithValueEmptyShouldThrowIllegalArgumentException() {
         new ConfigurationItem("foo", "");
     }
