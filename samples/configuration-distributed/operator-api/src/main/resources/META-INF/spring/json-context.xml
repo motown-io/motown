@@ -278,4 +278,8 @@
         <property name="service" ref="operatorApiService"/>
     </bean>
 
+    <bean class="io.motown.operatorapi.json.restapi.providers.GsonJsonProvider" scope="singleton">
+        <property name="gson" ref="gson"/>
+    </bean>
+
 </beans>

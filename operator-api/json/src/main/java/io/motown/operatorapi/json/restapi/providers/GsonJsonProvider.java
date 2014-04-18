@@ -16,7 +16,6 @@
 package io.motown.operatorapi.json.restapi.providers;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonWriter;
 
 import javax.ws.rs.WebApplicationException;
@@ -35,16 +34,7 @@ import java.nio.charset.Charset;
 public final class GsonJsonProvider implements MessageBodyWriter<Object> {
     private static final String UTF_8 = "UTF-8";
 
-    private final Gson gson;
-
-    public GsonJsonProvider() {
-        // TODO: We should use the same GSON config for both serializing and deserializing. - Dennis Laumen, April 14th 2014
-        gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .disableHtmlEscaping()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                .create();
-    }
+    private Gson gson;
 
     @Override
     public boolean isWriteable(Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType) {
@@ -61,5 +51,9 @@ public final class GsonJsonProvider implements MessageBodyWriter<Object> {
         JsonWriter writer = new JsonWriter(new OutputStreamWriter(outputStream, Charset.forName(UTF_8)));
         gson.toJson(src, type, writer);
         writer.close();
+    }
+
+    public void setGson(Gson gson) {
+        this.gson = gson;
     }
 }
