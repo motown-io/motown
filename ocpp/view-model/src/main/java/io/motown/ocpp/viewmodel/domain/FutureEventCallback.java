@@ -15,13 +15,13 @@
  */
 package io.motown.ocpp.viewmodel.domain;
 
-import org.axonframework.commandhandling.gateway.EventCallback;
+import io.motown.domain.utils.axon.EventCallback;
 
 import java.util.concurrent.*;
 
 /**
  * Defines an interface that can be used when using
- * {@link org.axonframework.commandhandling.gateway.EventWaitingGateway#sendAndWaitForEvent}.
+ * {@link io.motown.domain.utils.axon.EventWaitingGateway#sendAndWaitForEvent}.
  *
  * @param <T> The result type returned by future's get method
  */

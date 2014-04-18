@@ -62,7 +62,7 @@
                         <exclude>**/README</exclude>
                         <exclude>src/test/resources/**</exclude>
                         <exclude>src/main/resources/**</exclude>
-                        <exclude>src/main/java/org/axonframework/**</exclude>
+                        <exclude>src/main/java/io/motown/domain/utils/axon/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>

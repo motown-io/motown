@@ -64,14 +64,15 @@
                             name="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.exchange.events.ocpp.name}"
                             durable="true">
         <rabbit:bindings>
-            <rabbit:binding queue="ocppRequestsQueue" key="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.routing.key.base}.${io.motown.ocpp.v15.soap.protocol.identifier}"/>
+            <rabbit:binding queue="ocppRequestsQueue"
+                            key="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.routing.key.base}.${io.motown.ocpp.v15.soap.protocol.identifier}"/>
             <rabbit:binding exchange="eventsExchange"/>
         </rabbit:bindings>
     </rabbit:direct-exchange>
 
     <axon:event-bus id="eventBus" terminal="terminal"/>
 
-    <bean id="eventWaitingGateway" class="org.axonframework.commandhandling.gateway.EventWaitingGateway">
+    <bean id="eventWaitingGateway" class="io.motown.domain.utils.axon.EventWaitingGateway">
         <property name="commandBus" ref="commandBus"/>
         <property name="eventBus" ref="eventBus"/>
     </bean>
@@ -83,7 +84,7 @@
         <axon-amqp:default-configuration exclusive="true"/>
     </axon-amqp:terminal>
 
-    <axon:jpa-event-store id="eventStore" />
+    <axon:jpa-event-store id="eventStore"/>
 
     <axon:cluster id="eventCluster" default="true">
         <axon:selectors>

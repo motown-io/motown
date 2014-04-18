@@ -17,6 +17,7 @@ package io.motown.ocpp.viewmodel.domain;
 
 import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.utils.axon.EventWaitingGateway;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.entities.ReservationIdentifier;
 import io.motown.ocpp.viewmodel.persistence.entities.Transaction;
@@ -24,7 +25,6 @@ import io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationReposito
 import io.motown.ocpp.viewmodel.persistence.repositories.ReservationIdentifierRepository;
 import io.motown.ocpp.viewmodel.persistence.repositories.TransactionRepository;
 import org.axonframework.commandhandling.CommandCallback;
-import org.axonframework.commandhandling.gateway.EventWaitingGateway;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

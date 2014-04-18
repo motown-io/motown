@@ -27,30 +27,30 @@
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
 
     <bean class="io.motown.ocpp.viewmodel.OcppEventHandler">
-        <property name="chargingStationRepository" ref="chargingStationRepositoryOcppWebServices" />
+        <property name="chargingStationRepository" ref="chargingStationRepositoryOcppWebServices"/>
     </bean>
 
     <bean class="io.motown.ocpp.viewmodel.OcppRequestEventHandler">
-        <property name="chargingStationRepository" ref="chargingStationRepositoryOcppWebServices" />
+        <property name="chargingStationRepository" ref="chargingStationRepositoryOcppWebServices"/>
         <property name="requestHandlers">
             <map>
                 <entry key="OCPPS15">
                     <bean class="io.motown.ocpp.v15.soap.Ocpp15RequestHandler">
-                        <property name="domainService" ref="ocppDomainService" />
-                        <property name="chargingStationOcpp15Client" ref="ocpp15SoapClient" />
-                        <property name="addOnId" value="1" />
+                        <property name="domainService" ref="ocppDomainService"/>
+                        <property name="chargingStationOcpp15Client" ref="ocpp15SoapClient"/>
+                        <property name="addOnId" value="1"/>
                     </bean>
                 </entry>
                 <entry key="OCPPS12">
                     <bean class="io.motown.ocpp.v12.soap.Ocpp12RequestHandler">
-                        <property name="domainService" ref="ocppDomainService" />
-                        <property name="chargingStationOcpp12Client" ref="ocpp12SoapClient" />
-                        <property name="addOnId" value="1" />
+                        <property name="domainService" ref="ocppDomainService"/>
+                        <property name="chargingStationOcpp12Client" ref="ocpp12SoapClient"/>
+                        <property name="addOnId" value="1"/>
                     </bean>
                 </entry>
                 <entry key="OCPPJ15">
                     <bean class="io.motown.ocpp.websocketjson.OcppWebSocketRequestHandler">
-                        <property name="ocppJsonService" ref="ocppJsonService" />
+                        <property name="ocppJsonService" ref="ocppJsonService"/>
                     </bean>
                 </entry>
             </map>
@@ -67,13 +67,13 @@
     <!-- START OF OCPP 1.5 CONFIG -->
 
     <bean id="centralSystemServiceOcpp15" class="io.motown.ocpp.v15.soap.centralsystem.MotownCentralSystemService">
-        <property name="domainService" ref="ocppDomainService" />
-        <property name="continuationTimeout" value="${io.motown.ocpp.v15.soap.cxf.continuation.timeout}" />
-        <property name="heartbeatIntervalFallback" value="${io.motown.ocpp.viewmodel.heartbeat.interval}" />
+        <property name="domainService" ref="ocppDomainService"/>
+        <property name="continuationTimeout" value="${io.motown.ocpp.v15.soap.cxf.continuation.timeout}"/>
+        <property name="heartbeatIntervalFallback" value="${io.motown.ocpp.viewmodel.heartbeat.interval}"/>
         <property name="soapHeaderReader">
-            <bean class="io.motown.ocpp.soaputils.header.SoapHeaderReader" />
+            <bean class="io.motown.ocpp.soaputils.header.SoapHeaderReader"/>
         </property>
-        <property name="addOnId" value="1" />
+        <property name="addOnId" value="1"/>
     </bean>
 
     <jaxws:endpoint implementor="#centralSystemServiceOcpp15"
@@ -83,26 +83,27 @@
         </jaxws:inInterceptors>
     </jaxws:endpoint>
 
-    <bean id="chargingStationOcpp15ProxyFactory" class="io.motown.ocpp.v15.soap.chargepoint.ChargingStationProxyFactory" />
+    <bean id="chargingStationOcpp15ProxyFactory"
+          class="io.motown.ocpp.v15.soap.chargepoint.ChargingStationProxyFactory"/>
 
     <bean id="ocpp15SoapClient" class="io.motown.ocpp.v15.soap.chargepoint.ChargingStationOcpp15SoapClient">
-        <property name="domainService" ref="ocppDomainService" />
-        <property name="chargingStationProxyFactory" ref="chargingStationOcpp15ProxyFactory" />
+        <property name="domainService" ref="ocppDomainService"/>
+        <property name="chargingStationProxyFactory" ref="chargingStationOcpp15ProxyFactory"/>
         <property name="identifyingTokenConverterService">
-            <bean class="io.motown.ocpp.v15.soap.chargepoint.IdentifyingTokenConverterService" />
+            <bean class="io.motown.ocpp.v15.soap.chargepoint.IdentifyingTokenConverterService"/>
         </property>
     </bean>
 
     <bean class="io.motown.ocpp.v15.soap.centralsystem.schema.ObjectFactory"/>
 
     <bean id="ocppDomainService" class="io.motown.ocpp.viewmodel.domain.DomainService">
-        <property name="chargingStationRepository" ref="chargingStationRepositoryOcppWebServices" />
-        <property name="commandGateway" ref="domainCommandGateway" />
-        <property name="eventWaitingGateway" ref="eventWaitingGateway" />
-        <property name="entityManagerFactory" ref="entityManagerFactoryOcppWebServices" />
-        <property name="heartbeatInterval" value="${io.motown.ocpp.viewmodel.heartbeat.interval}" />
-        <property name="reservationIdentifierRepository" ref="reservationIdentifierRepositoryOcppWebServices" />
-        <property name="transactionRepository" ref="transactionRepositoryOcppWebServices" />
+        <property name="chargingStationRepository" ref="chargingStationRepositoryOcppWebServices"/>
+        <property name="commandGateway" ref="domainCommandGateway"/>
+        <property name="eventWaitingGateway" ref="eventWaitingGateway"/>
+        <property name="entityManagerFactory" ref="entityManagerFactoryOcppWebServices"/>
+        <property name="heartbeatInterval" value="${io.motown.ocpp.viewmodel.heartbeat.interval}"/>
+        <property name="reservationIdentifierRepository" ref="reservationIdentifierRepositoryOcppWebServices"/>
+        <property name="transactionRepository" ref="transactionRepositoryOcppWebServices"/>
     </bean>
 
     <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
@@ -115,16 +116,19 @@
         <property name="gatewayInterface" value="io.motown.ocpp.viewmodel.configuration.ConfigurationCommandGateway"/>
     </bean>
 
-    <bean id="chargingStationRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository">
-        <property name="entityManager" ref="jpaEntityManagerOcppWebServices" />
+    <bean id="chargingStationRepositoryOcppWebServices"
+          class="io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository">
+        <property name="entityManager" ref="jpaEntityManagerOcppWebServices"/>
     </bean>
 
-    <bean id="reservationIdentifierRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repositories.ReservationIdentifierRepository">
-        <property name="entityManager" ref="jpaEntityManagerOcppWebServices" />
+    <bean id="reservationIdentifierRepositoryOcppWebServices"
+          class="io.motown.ocpp.viewmodel.persistence.repositories.ReservationIdentifierRepository">
+        <property name="entityManager" ref="jpaEntityManagerOcppWebServices"/>
     </bean>
 
-    <bean id="transactionRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repositories.TransactionRepository">
-        <property name="entityManager" ref="jpaEntityManagerOcppWebServices" />
+    <bean id="transactionRepositoryOcppWebServices"
+          class="io.motown.ocpp.viewmodel.persistence.repositories.TransactionRepository">
+        <property name="entityManager" ref="jpaEntityManagerOcppWebServices"/>
     </bean>
 
     <bean id="ocppWebServicesTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
@@ -133,12 +137,13 @@
 
     <jdbc:embedded-database id="ocppWebservicesDataSource" type="HSQL"/>
 
-    <bean id="eventWaitingGateway" class="org.axonframework.commandhandling.gateway.EventWaitingGateway">
+    <bean id="eventWaitingGateway" class="io.motown.domain.utils.axon.EventWaitingGateway">
         <property name="commandBus" ref="commandBus"/>
         <property name="eventBus" ref="eventBus"/>
     </bean>
 
-    <bean id="entityManagerFactoryOcppWebServices" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <bean id="entityManagerFactoryOcppWebServices"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="ocppWebservicesDataSource"/>
         <property name="packagesToScan" value="io.motown.ocpp.viewmodel.persistence.entities"/>
         <property name="jpaVendorAdapter">
@@ -149,20 +154,21 @@
         </property>
     </bean>
 
-    <bean id="jpaEntityManagerOcppWebServices" factory-bean="entityManagerFactoryOcppWebServices" factory-method="createEntityManager" />
+    <bean id="jpaEntityManagerOcppWebServices" factory-bean="entityManagerFactoryOcppWebServices"
+          factory-method="createEntityManager"/>
 
 
     <!-- END OF OCPP 1.5 CONFIG -->
 
     <!-- OCPP 1.2 SOAP CONFIG -->
     <bean id="centralSystemServiceOcpp12" class="io.motown.ocpp.v12.soap.centralsystem.MotownCentralSystemService">
-        <property name="domainService" ref="ocppDomainService" />
-        <property name="continuationTimeout" value="${io.motown.ocpp.v12.soap.cxf.continuation.timeout}" />
-        <property name="heartbeatIntervalFallback" value="${io.motown.ocpp.viewmodel.heartbeat.interval}" />
+        <property name="domainService" ref="ocppDomainService"/>
+        <property name="continuationTimeout" value="${io.motown.ocpp.v12.soap.cxf.continuation.timeout}"/>
+        <property name="heartbeatIntervalFallback" value="${io.motown.ocpp.viewmodel.heartbeat.interval}"/>
         <property name="soapHeaderReader">
-            <bean class="io.motown.ocpp.soaputils.header.SoapHeaderReader" />
+            <bean class="io.motown.ocpp.soaputils.header.SoapHeaderReader"/>
         </property>
-        <property name="addOnId" value="1" />
+        <property name="addOnId" value="1"/>
     </bean>
 
     <jaxws:endpoint implementor="#centralSystemServiceOcpp12"
@@ -172,11 +178,12 @@
         </jaxws:inInterceptors>
     </jaxws:endpoint>
 
-    <bean id="chargingStationOcpp12ProxyFactory" class="io.motown.ocpp.v12.soap.chargepoint.ChargingStationProxyFactory" />
+    <bean id="chargingStationOcpp12ProxyFactory"
+          class="io.motown.ocpp.v12.soap.chargepoint.ChargingStationProxyFactory"/>
 
     <bean id="ocpp12SoapClient" class="io.motown.ocpp.v12.soap.chargepoint.ChargingStationOcpp12SoapClient">
-        <property name="domainService" ref="ocppDomainService" />
-        <property name="chargingStationProxyFactory" ref="chargingStationOcpp12ProxyFactory" />
+        <property name="domainService" ref="ocppDomainService"/>
+        <property name="chargingStationProxyFactory" ref="chargingStationOcpp12ProxyFactory"/>
     </bean>
 
     <bean class="io.motown.ocpp.v12.soap.centralsystem.schema.ObjectFactory"/>
@@ -184,41 +191,43 @@
 
 
     <!-- START OF VAS 1.0 SOAP CONFIG -->
-    <bean id="vasWebServicesChargingStationRepository" class="io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository">
-        <property name="entityManager" ref="vasWebServicesEntityManager" />
+    <bean id="vasWebServicesChargingStationRepository"
+          class="io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository">
+        <property name="entityManager" ref="vasWebServicesEntityManager"/>
     </bean>
 
-    <bean id="vasWebServicesSubscriptionRepository" class="io.motown.vas.viewmodel.persistence.repostories.SubscriptionRepository">
-        <property name="entityManager" ref="vasWebServicesEntityManager" />
+    <bean id="vasWebServicesSubscriptionRepository"
+          class="io.motown.vas.viewmodel.persistence.repostories.SubscriptionRepository">
+        <property name="entityManager" ref="vasWebServicesEntityManager"/>
     </bean>
 
     <bean class="io.motown.vas.viewmodel.VasEventHandler">
-        <property name="chargingStationRepository" ref="vasWebServicesChargingStationRepository" />
+        <property name="chargingStationRepository" ref="vasWebServicesChargingStationRepository"/>
         <property name="configurationConversionService">
-            <bean class="io.motown.vas.viewmodel.ConfigurationConversionService" />
+            <bean class="io.motown.vas.viewmodel.ConfigurationConversionService"/>
         </property>
         <property name="subscriberService">
             <bean class="io.motown.vas.viewmodel.VasSubscriberService">
-                <property name="subscriptionRepository" ref="vasWebServicesSubscriptionRepository" />
-                <property name="executorService" ref="vasExecutorService" />
-                <property name="subscriberClient" ref="vasSubscriberSoapClient" />
+                <property name="subscriptionRepository" ref="vasWebServicesSubscriptionRepository"/>
+                <property name="executorService" ref="vasExecutorService"/>
+                <property name="subscriberClient" ref="vasSubscriberSoapClient"/>
             </bean>
         </property>
     </bean>
 
     <bean id="vasSubscriberSoapClient" class="io.motown.vas.v10.soap.subscriber.VasSubscriberSoapClient">
         <property name="proxyFactory">
-            <bean class="io.motown.vas.v10.soap.subscriber.VasSubscriberServiceProxyFactory" />
+            <bean class="io.motown.vas.v10.soap.subscriber.VasSubscriberServiceProxyFactory"/>
         </property>
-        <property name="publisherIdentity" value="${io.motown.vas.v10.soap.publisher.identity}" />
+        <property name="publisherIdentity" value="${io.motown.vas.v10.soap.publisher.identity}"/>
     </bean>
 
     <bean id="vasPublisherService" class="io.motown.vas.v10.soap.publisher.MotownVasPublisherService">
         <property name="vasConversionService">
-            <bean class="io.motown.vas.v10.soap.VasConversionService" />
+            <bean class="io.motown.vas.v10.soap.VasConversionService"/>
         </property>
-        <property name="chargingStationRepository" ref="vasWebServicesChargingStationRepository" />
-        <property name="subscriptionRepository" ref="vasWebServicesSubscriptionRepository" />
+        <property name="chargingStationRepository" ref="vasWebServicesChargingStationRepository"/>
+        <property name="subscriptionRepository" ref="vasWebServicesSubscriptionRepository"/>
     </bean>
 
     <jaxws:endpoint implementor="#vasPublisherService"
@@ -228,7 +237,8 @@
         </jaxws:inInterceptors>
     </jaxws:endpoint>
 
-    <bean id="vasWebServicesEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <bean id="vasWebServicesEntityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="vasWebServicesDataSource"/>
         <property name="packagesToScan" value="io.motown.vas.viewmodel.model"/>
         <property name="jpaVendorAdapter">
@@ -239,14 +249,15 @@
         </property>
     </bean>
 
-    <bean id="vasWebServicesEntityManager" factory-bean="vasWebServicesEntityManagerFactory" factory-method="createEntityManager" />
+    <bean id="vasWebServicesEntityManager" factory-bean="vasWebServicesEntityManagerFactory"
+          factory-method="createEntityManager"/>
 
-    <jdbc:embedded-database id="vasWebServicesDataSource" type="HSQL" />
+    <jdbc:embedded-database id="vasWebServicesDataSource" type="HSQL"/>
 
     <!-- executorService for pushing status changes to subscribers -->
     <bean id="vasExecutorService" class="java.util.concurrent.Executors"
           factory-method="newCachedThreadPool"
-          destroy-method="shutdownNow" />
+          destroy-method="shutdownNow"/>
 
     <!-- END OF VAS 1.0 SOAP CONFIG -->
 

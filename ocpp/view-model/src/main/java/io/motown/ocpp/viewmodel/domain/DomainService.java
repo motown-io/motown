@@ -20,13 +20,13 @@ import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.api.security.NullUserIdentity;
+import io.motown.domain.utils.axon.EventWaitingGateway;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.entities.ReservationIdentifier;
 import io.motown.ocpp.viewmodel.persistence.entities.Transaction;
 import io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository;
 import io.motown.ocpp.viewmodel.persistence.repositories.ReservationIdentifierRepository;
 import io.motown.ocpp.viewmodel.persistence.repositories.TransactionRepository;
-import org.axonframework.commandhandling.gateway.EventWaitingGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
