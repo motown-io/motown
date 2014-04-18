@@ -62,21 +62,10 @@ public class ChargingStationEventListenerTest {
         ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertNull(cs.getProtocol());
         assertTrue(cs.getAttributes().isEmpty());
-        assertNull(cs.getLastContact());
 
         listener.handle(new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT));
         assertNotNull(cs.getProtocol());
         assertFalse(cs.getAttributes().isEmpty());
-        assertNotNull(cs.getLastContact());
-    }
-
-    @Test
-    public void testHandleChargingStationSentHeartBeatEvent() {
-        Date start = new Date();
-        listener.handle(new ChargingStationSentHeartbeatEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
-
-        Date lastContact = repository.findOne(CHARGING_STATION_ID.getId()).getLastContact();
-        assertTrue(lastContact.after(start) || lastContact.equals(start));
     }
 
     @Test
@@ -198,7 +187,7 @@ public class ChargingStationEventListenerTest {
         assertFalse(cs.getOpeningTimes().isEmpty());
         assertEquals(1, cs.getOpeningTimes().size());
 
-        listener.handle(new ChargingStationOpeningTimesAddedEvent(CHARGING_STATION_ID, ImmutableSet.<OpeningTime>builder().add(new OpeningTime(Day.FRIDAY, new TimeOfDay(18,0), new TimeOfDay(21,0))).build(), IDENTITY_CONTEXT));
+        listener.handle(new ChargingStationOpeningTimesAddedEvent(CHARGING_STATION_ID, ImmutableSet.<OpeningTime>builder().add(new OpeningTime(Day.FRIDAY, new TimeOfDay(18, 0), new TimeOfDay(21, 0))).build(), IDENTITY_CONTEXT));
         assertFalse(cs.getOpeningTimes().isEmpty());
         assertEquals(2, cs.getOpeningTimes().size());
     }

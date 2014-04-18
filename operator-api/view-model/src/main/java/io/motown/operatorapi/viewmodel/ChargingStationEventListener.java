@@ -16,16 +16,14 @@
 package io.motown.operatorapi.viewmodel;
 
 import io.motown.domain.api.chargingstation.*;
-import io.motown.operatorapi.viewmodel.persistence.entities.CommandClasses;
 import io.motown.operatorapi.viewmodel.persistence.entities.Availability;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
+import io.motown.operatorapi.viewmodel.persistence.entities.CommandClasses;
 import io.motown.operatorapi.viewmodel.persistence.entities.Evse;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Date;
 
 public class ChargingStationEventListener {
 
@@ -49,19 +47,9 @@ public class ChargingStationEventListener {
         if (chargingStation != null) {
             chargingStation.setProtocol(event.getProtocol());
             chargingStation.setAttributes(event.getAttributes());
-            chargingStation.setLastContact(new Date());
             repository.save(chargingStation);
         } else {
             LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as booted", event.getChargingStationId());
-        }
-    }
-
-    @EventHandler
-    public void handle(ChargingStationSentHeartbeatEvent event) {
-        LOG.debug("ChargingStationSentHeartbeatEvent for [{}] received!", event.getChargingStationId());
-
-        if (!updateLastContactChargingStation(event.getChargingStationId())) {
-            LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark last contact", event.getChargingStationId());
         }
     }
 
@@ -401,22 +389,6 @@ public class ChargingStationEventListener {
             LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and update its location", event.getChargingStationId());
         }
 
-        return chargingStation != null;
-    }
-
-    /**
-     * Updates the last contact field of the charging station if it can be found in the repository. Returns true if
-     * the update has been performed, false if the charging station cannot be found.
-     *
-     * @param id charging station identifier.
-     * @return true if the field has been updated, false if the charging station cannot be found.
-     */
-    private boolean updateLastContactChargingStation(ChargingStationId id) {
-        ChargingStation chargingStation = repository.findOne(id.getId());
-        if (chargingStation != null) {
-            chargingStation.setLastContact(new Date());
-            repository.save(chargingStation);
-        }
         return chargingStation != null;
     }
 

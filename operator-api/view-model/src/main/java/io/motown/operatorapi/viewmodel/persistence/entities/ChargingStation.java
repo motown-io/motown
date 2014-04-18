@@ -20,14 +20,16 @@ import io.motown.domain.api.chargingstation.ComponentStatus;
 import io.motown.domain.api.security.UserIdentity;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @Entity
 public class ChargingStation {
     @Id
     private String id;
     private String protocol;
-    private Date lastContact;
     private boolean accepted;
     private boolean reservable;
     private Double latitude;
@@ -99,14 +101,6 @@ public class ChargingStation {
 
     public void setAccepted(boolean accepted) {
         this.accepted = accepted;
-    }
-
-    public Date getLastContact() {
-        return lastContact != null ? new Date(lastContact.getTime()) : null;
-    }
-
-    public void setLastContact(Date lastContact) {
-        this.lastContact = lastContact != null ? new Date(lastContact.getTime()) : null;
     }
 
     public String getId() {

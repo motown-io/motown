@@ -69,7 +69,6 @@ public class TransactionEventListenerTest {
         assertNotNull(transaction);
         assertEquals(0, transaction.getMeterStop());
         assertNull(transaction.getStoppedTimestamp());
-        assertTrue(cs.getLastContact().after(start));
     }
 
     @Test
@@ -84,13 +83,9 @@ public class TransactionEventListenerTest {
         assertNotNull(transaction);
         assertEquals(0, transaction.getMeterStop());
         assertNull(transaction.getStoppedTimestamp());
-        assertTrue(cs.getLastContact().after(start));
-
-        Date lastContact = cs.getLastContact();
 
         listener.handle(new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN_ACCEPTED, METER_STOP, new Date(), IDENTITY_CONTEXT));
         assertTrue(transaction.getMeterStop() > 0 && transaction.getMeterStop() > transaction.getMeterStart());
         assertNotNull(transaction.getStoppedTimestamp());
-        assertTrue(cs.getLastContact().after(lastContact));
     }
 }

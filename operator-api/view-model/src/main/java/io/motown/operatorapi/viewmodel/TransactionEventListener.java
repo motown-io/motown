@@ -15,18 +15,14 @@
  */
 package io.motown.operatorapi.viewmodel;
 
-import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.TransactionStartedEvent;
 import io.motown.domain.api.chargingstation.TransactionStoppedEvent;
-import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.entities.Transaction;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Date;
 
 public class TransactionEventListener {
 
@@ -42,10 +38,6 @@ public class TransactionEventListener {
 
         Transaction transaction = new Transaction(event.getChargingStationId().getId(), event.getTransactionId().getId(), event.getEvseId(), event.getIdentifyingToken().getToken(), event.getMeterStart(), event.getTimestamp());
         repository.save(transaction);
-
-        if (!updateLastContactChargingStation(event.getChargingStationId())) {
-            LOG.warn("registered transaction (start) in operator api repo for unknown chargepoint {}", event.getChargingStationId());
-        }
     }
 
     @EventHandler
@@ -61,24 +53,6 @@ public class TransactionEventListener {
             transaction.setStoppedTimestamp(event.getTimestamp());
             repository.save(transaction);
         }
-
-        updateLastContactChargingStation(event.getChargingStationId());
-    }
-
-    /**
-     * Updates the last contact field of the charging station if it can be found in the repository. Returns true if
-     * the update has been performed, false if the charging station cannot be found.
-     *
-     * @param id charging station identifier.
-     * @return true if the field has been updated, false if the charging station cannot be found.
-     */
-    private boolean updateLastContactChargingStation(ChargingStationId id) {
-        ChargingStation chargingStation = chargingStationRepository.findOne(id.getId());
-        if (chargingStation != null) {
-            chargingStation.setLastContact(new Date());
-            chargingStationRepository.save(chargingStation);
-        }
-        return chargingStation != null;
     }
 
     public void setRepository(TransactionRepository repository) {
