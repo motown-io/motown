@@ -66,6 +66,8 @@ public class TransactionEventListener {
                     transaction.getMeterValues().add(new io.motown.operatorapi.viewmodel.persistence.entities.MeterValue(coreMeterValue.getTimestamp(), coreMeterValue.getValue()));
                 }
                 repository.save(transaction);
+            } else {
+                LOG.error("cannot find unique transaction with transaction id {}", event.getTransactionId());
             }
         }
     }
