@@ -24,7 +24,14 @@ package io.motown.domain.api.chargingstation;
  */
 public interface IdentifyingToken {
 
-    enum AuthenticationStatus { ACCEPTED, BLOCKED, EXPIRED, INVALID, CONCURRENT_TX, DELETED }
+    enum AuthenticationStatus {
+        ACCEPTED,
+        BLOCKED,
+        EXPIRED,
+        INVALID,
+        CONCURRENT_TX,
+        DELETED
+    }
 
     /**
      * Gets a unique textual representation of the token.
