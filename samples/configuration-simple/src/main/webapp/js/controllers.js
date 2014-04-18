@@ -48,6 +48,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
+                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['Register', {
                         'configuration': {
                             'evses': [

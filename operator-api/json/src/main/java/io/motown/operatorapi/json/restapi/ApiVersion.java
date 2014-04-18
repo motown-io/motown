@@ -15,25 +15,18 @@
  */
 package io.motown.operatorapi.json.restapi;
 
-import io.motown.operatorapi.json.queries.OperatorApiService;
+/**
+ * A set of constants describing the Operator API's version.
+ * <p/>
+ * Used to keep track of the vendor media MIME types used to version the Operator API.
+ */
+public class ApiVersion {
+    /**
+     * Version 1 producing and consuming JSON.
+     */
+    public static final String V1_JSON = "application/vnd.io.motown.operator-api-v1+json";
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
-
-@Path("/transactions")
-@Produces(ApiVersion.V1_JSON)
-public final class TransactionResource {
-
-    private OperatorApiService service;
-
-    @GET
-    public Response getTransactions() {
-        return Response.ok().entity(service.findAllTransactions()).build();
-    }
-
-    public void setService(OperatorApiService service) {
-        this.service = service;
+    private ApiVersion() {
+        // Hidden constructor to prevent instantiation of class with constants.
     }
 }
