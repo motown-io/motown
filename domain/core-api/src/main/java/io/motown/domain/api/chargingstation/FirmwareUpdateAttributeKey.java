@@ -19,6 +19,11 @@ package io.motown.domain.api.chargingstation;
  * The {@code FirmwareUpdateAttributeKey} holds the keys of the optional firmware update attributes.
  */
 public final class FirmwareUpdateAttributeKey {
+
+    private FirmwareUpdateAttributeKey() {
+        // Private constructor to avoid instantiating this class
+    }
+
     /**
      * The number of retries for firmware update.
      */
