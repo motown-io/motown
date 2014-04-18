@@ -15,7 +15,6 @@
  */
 package io.motown.operatorapi.json.commands;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.AcceptChargingStationCommand;
 import io.motown.domain.api.chargingstation.ChargingStationId;
@@ -31,8 +30,6 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
     private static final String COMMAND_NAME = "Register";
 
     private DomainCommandGateway commandGateway;
-
-    private Gson gson;
 
     private ChargingStationRepository repository;
 
@@ -55,10 +52,6 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
 
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
-    }
-
-    public void setGson(Gson gson) {
-        this.gson = gson;
     }
 
     public void setRepository(ChargingStationRepository repository) {

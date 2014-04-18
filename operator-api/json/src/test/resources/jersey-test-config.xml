@@ -82,7 +82,6 @@
         </bean>
         <bean class="io.motown.operatorapi.json.commands.RegisterJsonCommandHandler">
             <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
-            <property name="gson" ref="operatorApiGson"/>
             <property name="repository" ref="chargingStationRepositoryOperatorApi"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.RequestAuthorizationListVersionJsonCommandHandler">
