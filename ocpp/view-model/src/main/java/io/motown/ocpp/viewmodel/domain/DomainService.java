@@ -90,6 +90,11 @@ public class DomainService {
     private EventWaitingGateway eventWaitingGateway;
 
     /**
+     * The timeout in milliseconds to wait for the events indicating
+     */
+    private long authorizationTimeoutInMillis = 10000;
+
+    /**
      * Adds the attribute to the map using the key and value if the value is not null.
      *
      * @param attributes map of keys and values.
@@ -175,7 +180,7 @@ public class DomainService {
     public void authorize(ChargingStationId chargingStationId, String idTag, FutureEventCallback future, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        eventWaitingGateway.sendAndWaitForEvent(new AuthorizeCommand(chargingStationId, new TextualToken(idTag), identityContext), future);
+        eventWaitingGateway.sendAndWaitForEvent(new AuthorizeCommand(chargingStationId, new TextualToken(idTag), identityContext), future, authorizationTimeoutInMillis);
     }
 
     public void receiveConfigurationItems(ChargingStationId chargingStationId, Map<String, String> configurationItems, AddOnIdentity addOnIdentity) {
@@ -354,6 +359,10 @@ public class DomainService {
 
     public void setHeartbeatInterval(int heartbeatInterval) {
         this.heartbeatInterval = heartbeatInterval;
+    }
+
+    public void setAuthorizationTimeoutInMillis(long authorizationTimeoutInMillis) {
+        this.authorizationTimeoutInMillis = authorizationTimeoutInMillis;
     }
 
     public String retrieveChargingStationAddress(ChargingStationId id) {

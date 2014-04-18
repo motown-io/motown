@@ -52,6 +52,8 @@ import static org.mockito.Mockito.verify;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DomainServiceTest {
 
+    private static final int AUTHORIZATION_TIMEOUT_IN_MILLIS = 1000;
+
     private DomainService domainService;
 
     private DomainCommandGateway gateway;
@@ -87,6 +89,7 @@ public class DomainServiceTest {
         domainService.setTransactionRepository(transactionRepository);
         domainService.setReservationIdentifierRepository(reservationIdentifierRepository);
         domainService.setEntityManagerFactory(entityManagerFactory);
+        domainService.setAuthorizationTimeoutInMillis(AUTHORIZATION_TIMEOUT_IN_MILLIS);
 
         gateway = mock(DomainCommandGateway.class);
         domainService.setCommandGateway(gateway);
@@ -193,7 +196,7 @@ public class DomainServiceTest {
     public void testAuthorize() {
         FutureEventCallback futureEventCallback = getFutureEventCallback();
         domainService.authorize(CHARGING_STATION_ID, IDENTIFYING_TOKEN.getToken(), futureEventCallback, ADD_ON_IDENTITY);
-        verify(eventWaitingGateway).sendAndWaitForEvent(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT), futureEventCallback);
+        verify(eventWaitingGateway).sendAndWaitForEvent(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT), futureEventCallback, AUTHORIZATION_TIMEOUT_IN_MILLIS);
     }
 
     @Test

@@ -27,6 +27,9 @@ import org.axonframework.eventhandling.annotation.EventHandler;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.axonframework.commandhandling.GenericCommandMessage.asCommandMessage;
@@ -38,13 +41,21 @@ public class EventWaitingGateway {
     private CommandBus commandBus;
     private EventBus eventBus;
 
-    private final Map<String, EventCallback> callbacks = new ConcurrentHashMap<>();
+    private final Map<String, TimedEventCallback> callbacks = new ConcurrentHashMap<>();
 
     private AtomicBoolean started = new AtomicBoolean(false);
 
-    public void sendAndWaitForEvent(Object command, EventCallback callback) {
-        String correlationId = IdentifierFactory.getInstance().generateIdentifier();
-        callbacks.put(correlationId, callback);
+    public void sendAndWaitForEvent(Object command, final EventCallback callback, final long timeoutInMillis) {
+        final String correlationId = IdentifierFactory.getInstance().generateIdentifier();
+
+        final TimedEventCallback timedEventCallback = new TimedEventCallback(callback);
+        callbacks.put(correlationId, timedEventCallback);
+        timedEventCallback.scheduleTimer(new Runnable() {
+            @Override
+            public void run() {
+                callbacks.remove(correlationId);
+            }
+        }, timeoutInMillis);
 
         if (started.compareAndSet(false, true)) {
             eventBus.subscribe(new AnnotationEventListenerAdapter(this));
@@ -58,10 +69,11 @@ public class EventWaitingGateway {
     @EventHandler
     protected void onEvent(EventMessage<?> message,
                            @MetaData(value = CORRELATION_ID_KEY, required = true) String correlationId) {
-        final EventCallback callback = callbacks.get(correlationId);
-        if (callback != null) {
-            boolean handled = callback.onEvent(message);
+        final TimedEventCallback timedEventCallback = callbacks.get(correlationId);
+        if (timedEventCallback != null) {
+            boolean handled = timedEventCallback.onEvent(message);
             if (handled) {
+                timedEventCallback.cancelTimer();
                 callbacks.remove(correlationId);
             }
         }
@@ -73,5 +85,29 @@ public class EventWaitingGateway {
 
     public void setCommandBus(CommandBus commandBus) {
         this.commandBus = commandBus;
+    }
+
+    private static class TimedEventCallback implements EventCallback {
+
+        private final EventCallback callback;
+        private final ScheduledExecutorService scheduledExecutorService;
+
+        public TimedEventCallback(EventCallback callback) {
+            this.callback = callback;
+            this.scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        }
+
+        public void scheduleTimer(Runnable task, long delayInMillis) {
+            this.scheduledExecutorService.schedule(task, delayInMillis, TimeUnit.MILLISECONDS);
+        }
+
+        public void cancelTimer() {
+            this.scheduledExecutorService.shutdownNow();
+        }
+
+        @Override
+        public boolean onEvent(EventMessage<?> event) {
+            return callback.onEvent(event);
+        }
     }
 }
