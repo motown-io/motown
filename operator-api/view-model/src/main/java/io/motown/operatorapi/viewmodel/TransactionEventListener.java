@@ -67,10 +67,7 @@ public class TransactionEventListener {
                 }
                 repository.save(transaction);
             }
-        } else {
-            LOG.debug("No transaction found with transactionId [{}]", event.getTransactionId());
         }
-
     }
 
     public void setRepository(TransactionRepository repository) {

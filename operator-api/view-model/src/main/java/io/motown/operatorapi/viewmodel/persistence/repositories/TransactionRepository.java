@@ -40,6 +40,7 @@ public class TransactionRepository {
                     .setParameter("transactionId", transactionId)
                     .getSingleResult();
         } catch (NoResultException | NonUniqueResultException e) {
+            LOG.debug("No transaction found with transactionId [{}]", transactionId);
             return null;
         }
     }
