@@ -20,10 +20,6 @@ package io.motown.domain.api.chargingstation;
  */
 public final class FirmwareUpdateAttributeKey {
 
-    private FirmwareUpdateAttributeKey() {
-        // Private constructor to avoid instantiating this class
-    }
-
     /**
      * The number of retries for firmware update.
      */
@@ -34,4 +30,7 @@ public final class FirmwareUpdateAttributeKey {
      */
     public static final String RETRY_INTERVAL = "RETRY_INTERVAL";
 
+    private FirmwareUpdateAttributeKey() {
+        // Private constructor to avoid instantiating this class
+    }
 }
