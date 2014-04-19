@@ -31,6 +31,8 @@ public class CorrelationCommandHandlerInterceptor implements CommandHandlerInter
     /**
      * Handler method which registers a {@link CorrelationUnitOfWorkListener} if the given command contains the required
      * meta data to correlate this command to the resulting events.
+     *
+     * @throws Throwable no checked exceptions will be thrown. This is required to implement the {@code CommandHandlerInterceptor} interface.
      */
     @Override
     public Object handle(CommandMessage<?> command, UnitOfWork unitOfWork, InterceptorChain chain) throws Throwable {
