@@ -20,7 +20,8 @@ import io.motown.domain.api.security.IdentityContext;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code SoftResetChargingStationRequestedEvent} is the event which is published when a request has been made to soft reset a charging station.
+ * {@code SoftResetChargingStationRequestedEvent} is the event which is published when a request has been made to soft
+ * reset a charging station. Protocol add-ons should respond to this event and request a charging station to soft reset.
  */
 public final class SoftResetChargingStationRequestedEvent implements ResetChargingStationRequestedEvent {
 

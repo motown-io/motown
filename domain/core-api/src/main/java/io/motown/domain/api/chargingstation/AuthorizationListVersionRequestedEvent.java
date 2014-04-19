@@ -23,7 +23,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * {@code AuthorizationListVersionRequestedEvent} is the event which is published when a request has been made to
- * retrieve the version of the charging stations authorization list.
+ * retrieve the version of the charging stations authorization list. Protocol add-ons should respond to this event (if
+ * applicable) and request a charging station for its authorization list version.
  */
 public final class AuthorizationListVersionRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
 
@@ -57,7 +58,8 @@ public final class AuthorizationListVersionRequestedEvent implements Communicati
 
     /**
      * {@inheritDoc}
-     */    @Override
+     */
+    @Override
     public String getProtocol() {
         return this.protocol;
     }

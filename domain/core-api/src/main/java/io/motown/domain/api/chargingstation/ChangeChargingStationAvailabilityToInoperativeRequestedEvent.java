@@ -18,8 +18,9 @@ package io.motown.domain.api.chargingstation;
 import io.motown.domain.api.security.IdentityContext;
 
 /**
- * {@code ChangeChargingStationAvailabilityToInoperativeRequestedEvent} is the event which is published when a request has been made to
- * change the availability of a charging station to inoperative.
+ * {@code ChangeChargingStationAvailabilityToInoperativeRequestedEvent} is the event which is published when a request
+ * has been made to change the availability of a charging station to inoperative. Protocol add-ons should respond to
+ * this event (if applicable) and request a charging station to change its availability.
  */
 public final class ChangeChargingStationAvailabilityToInoperativeRequestedEvent extends ChangeAvailabilityToInoperativeRequestedEvent {
 

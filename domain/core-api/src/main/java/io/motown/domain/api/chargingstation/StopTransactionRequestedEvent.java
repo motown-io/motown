@@ -22,6 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * {@code StopTransactionRequestedEvent} is the event which is published when a request has been made to stop the
+ * transaction. Protocol add-ons should respond to this event (if applicable) and request a charging station to stop a
  * transaction.
  */
 public final class StopTransactionRequestedEvent implements CommunicationWithChargingStationRequestedEvent {

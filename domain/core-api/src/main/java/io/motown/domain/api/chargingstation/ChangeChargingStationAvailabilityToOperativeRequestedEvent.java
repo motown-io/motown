@@ -19,7 +19,8 @@ import io.motown.domain.api.security.IdentityContext;
 
 /**
  * {@code ChangeChargingStationAvailabilityToOperativeRequestedEvent} is the event which is published when a request has
- * been made to change the availability of a charging station to operative.
+ * been made to change the availability of a charging station to operative.  Protocol add-ons should respond to this
+ * event (if applicable) and request a charging station to change its availability.
  */
 public final class ChangeChargingStationAvailabilityToOperativeRequestedEvent extends ChangeAvailabilityToOperativeRequestedEvent {
 

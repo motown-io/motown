@@ -26,7 +26,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * {@code SendAuthorizationListRequestedEvent} is the event which is published when a new authorization list (or update
- * of the list) should be synchronised towards the charging station.
+ * of the list) should be synchronised towards the charging station. Protocol add-ons should respond to this event (if
+ * applicable) and request a charging station to update its authorization list with the one provided.
  */
 public final class SendAuthorizationListRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
 

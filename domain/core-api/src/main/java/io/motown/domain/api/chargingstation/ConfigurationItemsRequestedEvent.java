@@ -25,8 +25,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code RequestConfigurationItemsCommand} is the event which is published when a charging station's configuration should
- * be requested from the charging station.
+ * {@code RequestConfigurationItemsCommand} is the event which is published when a charging station's configuration
+ * should be requested from the charging station. Protocol add-ons should respond to this event (if applicable) and
+ * request a charging station to send its configuration items.
  */
 public final class ConfigurationItemsRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
 

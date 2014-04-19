@@ -25,7 +25,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * {@code ChangeAvailabilityToOperativeRequestedEvent} is the event which is published when a charging station or one
- * of its components' availability should be changed to operative.
+ * of its components' availability should be changed to operative. Protocol add-ons should respond to this event or
+ * one of its subclasses (if applicable) and request a charging station to change its availability.
  */
 public abstract class ChangeAvailabilityToOperativeRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
 

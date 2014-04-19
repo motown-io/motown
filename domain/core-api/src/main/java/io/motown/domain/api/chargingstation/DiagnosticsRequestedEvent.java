@@ -25,7 +25,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code DiagnosticsRequestedEvent} is the event which is published when a charging station's diagnostics are requested.
+ * {@code DiagnosticsRequestedEvent} is the event which is published when a charging station's diagnostics are
+ * requested. Protocol add-ons should respond to this event (if applicable) and request a charging station to send its
+ * diagnostics.
  */
 public final class DiagnosticsRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
 
@@ -54,7 +56,7 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
      * @param uploadLocation    the location where the diagnostics file should be uploaded to
      * @param identityContext   identity context.
      * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code uploadLocation} or
-     *                          {@code identityContext} is {@code null}.
+     *                              {@code identityContext} is {@code null}.
      */
     public DiagnosticsRequestedEvent(ChargingStationId chargingStationId, String protocol, String uploadLocation, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
@@ -76,9 +78,8 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
      * @param periodStartTime   the optional date and time of the oldest logging information to include in the diagnostics report
      * @param periodStopTime    the optional date and time of the latest logging information to include in the diagnostics report
      * @param identityContext   identity context.
-     *
      * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code uploadLocation} or
-     *                          {@code identityContext} is {@code null}.
+     *                              {@code identityContext} is {@code null}.
      */
     public DiagnosticsRequestedEvent(ChargingStationId chargingStationId, String protocol, String uploadLocation, @Nullable Integer numRetries,
                                      @Nullable Integer retryInterval, @Nullable Date periodStartTime, @Nullable Date periodStopTime, IdentityContext identityContext) {
@@ -107,7 +108,6 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
     }
 
     /**
-     *
      * @return the location where the diagnostics file should be uploaded to
      */
     public String getUploadLocation() {

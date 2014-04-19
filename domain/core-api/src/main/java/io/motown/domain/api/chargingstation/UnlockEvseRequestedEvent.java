@@ -20,7 +20,8 @@ import io.motown.domain.api.security.IdentityContext;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Published when the unlock of a Evse is requested.
+ * Published when the unlock of a EVSE is requested. Protocol add-ons should respond to this event (if applicable) and
+ * request a charging station to unlock an EVSE.
  */
 public final class UnlockEvseRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
 

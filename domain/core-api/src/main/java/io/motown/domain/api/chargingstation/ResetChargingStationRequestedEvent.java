@@ -16,9 +16,11 @@
 package io.motown.domain.api.chargingstation;
 
 /**
- * {@code ResetChargingStationRequestedEvent} is the event which is published when a request has been made to reset a charging station.
+ * {@code ResetChargingStationRequestedEvent} is the event which is published when a request has been made to reset a
+ * charging station. Protocol add-ons should respond to this event or one of its subclasses (if applicable) and request
+ * a charging station to reset.
  */
-public interface ResetChargingStationRequestedEvent extends CommunicationWithChargingStationRequestedEvent{
+public interface ResetChargingStationRequestedEvent extends CommunicationWithChargingStationRequestedEvent {
 
     /**
      * Gets the charging station identifier.

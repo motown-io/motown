@@ -21,7 +21,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code StartTransactionRequestedEvent} is the event which is published when a request has been made to start a transaction.
+ * {@code StartTransactionRequestedEvent} is the event which is published when a request has been made to remote start a
+ * transaction. Protocol add-ons should respond to this event (if applicable) and request a charging station to start a
+ * transaction.
  */
 public final class StartTransactionRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
 

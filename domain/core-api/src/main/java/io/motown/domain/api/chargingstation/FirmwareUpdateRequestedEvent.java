@@ -25,10 +25,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code FirmwareUpdateRequestedEvent} is the event which is published upon the request to update the
- * charging station's firmware.
+ * {@code FirmwareUpdateRequestedEvent} is the event which is published upon the request to update the charging
+ * station's firmware. Protocol add-ons should respond to this event (if applicable) and request a charging station to
+ * update its firmware.
  */
-public final class FirmwareUpdateRequestedEvent implements CommunicationWithChargingStationRequestedEvent{
+public final class FirmwareUpdateRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
 
     private final ChargingStationId chargingStationId;
 
@@ -51,8 +52,8 @@ public final class FirmwareUpdateRequestedEvent implements CommunicationWithChar
      * @param retrieveDate      the moment the charging station should start retrieving the firmware update from the update location.
      * @param attributes        optional attributes like retry settings.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code updateLocation}, {@code retrieveDate}
-     *                          or {@code identityContext} is {@code null}.
+     * @throws NullPointerException     if {@code chargingStationId}, {@code protocol}, {@code updateLocation}, {@code retrieveDate}
+     *                                  or {@code identityContext} is {@code null}.
      * @throws IllegalArgumentException if {@code updateLocation} is empty.
      */
     public FirmwareUpdateRequestedEvent(ChargingStationId chargingStationId, String protocol, String updateLocation,

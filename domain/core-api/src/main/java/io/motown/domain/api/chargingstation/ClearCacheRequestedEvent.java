@@ -21,7 +21,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * {@code ClearCacheRequestedEvent} is the event which is published when a request has been made clear the authorization
- * cache on the charging station.
+ * cache on the charging station. Protocol add-ons should respond to this event (if applicable) and request a charging
+ * station to clear its cache.
  */
 public final class ClearCacheRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
 

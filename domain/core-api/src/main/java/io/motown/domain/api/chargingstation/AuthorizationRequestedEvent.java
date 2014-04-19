@@ -21,7 +21,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * {@code AuthorizationRequestedEvent} is the event which is published when a request has been made to
- * authorize a identification.
+ * authorize a identification. Note that unlike most events ending in Requested this event should not be handled by
+ * protocol add-ons. The command leading to this event is sent by protocol add-ons to request an identification
+ * authorization.
  */
 public final class AuthorizationRequestedEvent {
 
@@ -36,7 +38,7 @@ public final class AuthorizationRequestedEvent {
      *
      * @param chargingStationId the identifier of the charging station.
      * @param identifyingToken  identification which should be authorized.
-     * @param identityContext the identity context.
+     * @param identityContext   the identity context.
      * @throws NullPointerException if {@code chargingStationId}, {@code identifyingToken} or {@code identityContext} is {@code null}.
      */
     public AuthorizationRequestedEvent(ChargingStationId chargingStationId, IdentifyingToken identifyingToken, IdentityContext identityContext) {

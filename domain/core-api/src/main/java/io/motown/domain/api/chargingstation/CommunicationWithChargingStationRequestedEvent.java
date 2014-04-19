@@ -15,6 +15,10 @@
  */
 package io.motown.domain.api.chargingstation;
 
+/**
+ * Protocol add-ons should respond to this event or one of its subclasses (if applicable) and request a charging station
+ * to do the specified action.
+ */
 public interface CommunicationWithChargingStationRequestedEvent {
 
     /**

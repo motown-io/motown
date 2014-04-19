@@ -22,7 +22,8 @@ import java.util.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code CancelReservationRequestedEvent} is request is made to cancel a reservation.
+ * {@code CancelReservationRequestedEvent} is request is made to cancel a reservation. Protocol add-ons should respond
+ * to this event (if applicable) and request a charging station to cancel a reservation.
  */
 public final class CancelReservationRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
 

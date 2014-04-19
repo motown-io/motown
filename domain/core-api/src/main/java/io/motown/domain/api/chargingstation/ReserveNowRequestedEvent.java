@@ -22,6 +22,10 @@ import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * {@code ReserveNowRequestedEvent} is the event which is published when a request has been made to reserve a charging
+ * station. Protocol add-ons should respond to this event (if applicable) and request a charging station to reserve.
+ */
 public final class ReserveNowRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
 
     private final ChargingStationId chargingStationId;
@@ -49,7 +53,7 @@ public final class ReserveNowRequestedEvent implements CommunicationWithCharging
      * @param parentIdentifyingToken parent identifier that has reserved the charging station.
      * @param identityContext        the identity context.
      * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code evseId}, {@code identifyingToken},
-     *                               {@code expiryDate}, {@code parentIdentifyingToken} or {@code identityContext} is {@code null}.
+     *                              {@code expiryDate}, {@code parentIdentifyingToken} or {@code identityContext} is {@code null}.
      */
     public ReserveNowRequestedEvent(ChargingStationId chargingStationId, String protocol, EvseId evseId, IdentifyingToken identifyingToken,
                                     Date expiryDate, IdentifyingToken parentIdentifyingToken, IdentityContext identityContext) {

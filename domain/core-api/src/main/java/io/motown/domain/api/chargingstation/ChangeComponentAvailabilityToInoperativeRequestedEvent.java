@@ -22,8 +22,9 @@ import java.util.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code ChangeComponentAvailabilityToInoperativeRequestedEvent} is the event which is published when a request has been made to
- * change the availability of a charging station to inoperative.
+ * {@code ChangeComponentAvailabilityToInoperativeRequestedEvent} is the event which is published when a request has
+ * been made to change the availability of a charging station to inoperative. Protocol add-ons should respond to this
+ * event (if applicable) and request a charging station to change its availability.
  */
 public final class ChangeComponentAvailabilityToInoperativeRequestedEvent extends ChangeAvailabilityToInoperativeRequestedEvent {
 

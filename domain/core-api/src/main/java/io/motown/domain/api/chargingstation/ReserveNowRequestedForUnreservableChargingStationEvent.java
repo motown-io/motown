@@ -25,7 +25,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * {@code ReserveNowRequestedForUnreservableChargingStationEvent} is thrown when an attempt is made to reserve a
- * charging station which is not reservable.
+ * charging station which is not reservable. Protocol add-ons should not respond to this event with a request to the
+ * charging station as it is not reservable.
  */
 public final class ReserveNowRequestedForUnreservableChargingStationEvent {
 
@@ -45,17 +46,17 @@ public final class ReserveNowRequestedForUnreservableChargingStationEvent {
      * Creates a {@code ReserveNowRequestedForUnreservableChargingStationEvent} with a charging station identifier, evse
      * identifier, identifying token, expiry date and parent identifying token.
      *
-     * @param chargingStationId         charging station identifier.
-     * @param evseId                    identifier of the EVSE.
-     * @param identifyingToken          identifier of the token that would have reserved the charging station.
-     * @param expiryDate                date at which the reservation would expire.
-     * @param parentIdentifyingToken    parent identifier that would have reserved the charging station.
-     * @param identityContext           the identity context.
-     * @throws NullPointerException     if {@code chargingStationId}, {@code evseId}, {@code identifyingToken}, {@code expiryDate}
-     *                                  or {@code identityContext} is {@code null}.
+     * @param chargingStationId      charging station identifier.
+     * @param evseId                 identifier of the EVSE.
+     * @param identifyingToken       identifier of the token that would have reserved the charging station.
+     * @param expiryDate             date at which the reservation would expire.
+     * @param parentIdentifyingToken parent identifier that would have reserved the charging station.
+     * @param identityContext        the identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code evseId}, {@code identifyingToken}, {@code expiryDate}
+     *                              or {@code identityContext} is {@code null}.
      */
     public ReserveNowRequestedForUnreservableChargingStationEvent(ChargingStationId chargingStationId, EvseId evseId,
-                             IdentifyingToken identifyingToken, Date expiryDate, @Nullable IdentifyingToken parentIdentifyingToken, IdentityContext identityContext) {
+                                                                  IdentifyingToken identifyingToken, Date expiryDate, @Nullable IdentifyingToken parentIdentifyingToken, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.evseId = checkNotNull(evseId);
         this.identifyingToken = checkNotNull(identifyingToken);
