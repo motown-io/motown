@@ -135,8 +135,6 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
      */
     @CommandHandler
     public void handle(StartTransactionCommand command, MetaData metaData) {
-        checkCommunicationAllowed();
-
         // TODO mark socket (mentioned in command) 'in transaction' - Mark van den Bergh, December 2nd 2013
         // TODO store transaction identifier so we can validate 'stop transaction' commands? - Mark van den Bergh, December 2nd 2013
 
@@ -184,22 +182,26 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestStartTransactionCommand command, MetaData metaData) {
+        checkCommunicationAllowed();
         apply(new StartTransactionRequestedEvent(this.id, this.protocol, command.getIdentifyingToken(), command.getEvseId(), command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
     public void handle(RequestStopTransactionCommand command) {
+        checkCommunicationAllowed();
         //TODO: Check if transaction belongs to the specified chargingstation - Ingo Pak, 03 dec 2013
         apply(new StopTransactionRequestedEvent(this.id, this.protocol, command.getTransactionId(), command.getIdentityContext()));
     }
 
     @CommandHandler
     public void handle(RequestSoftResetChargingStationCommand command, MetaData metaData) {
+        checkCommunicationAllowed();
         apply(new SoftResetChargingStationRequestedEvent(this.id, this.protocol, command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
     public void handle(RequestHardResetChargingStationCommand command, MetaData metaData) {
+        checkCommunicationAllowed();
         apply(new HardResetChargingStationRequestedEvent(this.id, this.protocol, command.getIdentityContext()), metaData);
     }
 
@@ -250,6 +252,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestDiagnosticsCommand command) {
+        checkCommunicationAllowed();
         apply(new DiagnosticsRequestedEvent(this.id, this.protocol, command.getUploadLocation(), command.getNumRetries(), command.getRetryInterval(), command.getPeriodStartTime(), command.getPeriodEndTime(), command.getIdentityContext()));
     }
 
@@ -275,17 +278,20 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestClearCacheCommand command, MetaData metaData) {
+        checkCommunicationAllowed();
         apply(new ClearCacheRequestedEvent(command.getChargingStationId(), this.protocol, command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
     public void handle(RequestFirmwareUpdateCommand command) {
+        checkCommunicationAllowed();
         apply(new FirmwareUpdateRequestedEvent(command.getChargingStationId(), this.protocol, command.getUpdateLocation(),
                 command.getRetrieveDate(), command.getAttributes(), command.getIdentityContext()));
     }
 
     @CommandHandler
     public void handle(RequestAuthorizationListVersionCommand command) {
+        checkCommunicationAllowed();
         apply(new AuthorizationListVersionRequestedEvent(command.getChargingStationId(), this.protocol, command.getIdentityContext()));
     }
 
@@ -296,12 +302,14 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(SendAuthorizationListCommand command, MetaData metaData) {
+        checkCommunicationAllowed();
         apply(new SendAuthorizationListRequestedEvent(command.getChargingStationId(), this.protocol, command.getAuthorizationList(),
                 command.getAuthorizationListVersion(), command.getAuthorizationListHash(), command.getUpdateType(), command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
     public void handle(RequestReserveNowCommand command, MetaData metaData) {
+        checkCommunicationAllowed();
         if (isReservable) {
             apply(new ReserveNowRequestedEvent(command.getChargingStationId(), this.protocol, command.getEvseId(), command.getIdentifyingToken(),
                     command.getExpiryDate(), command.getParentIdentifyingToken(), command.getIdentityContext()), metaData);
@@ -313,6 +321,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestCancelReservationCommand command) {
+        checkCommunicationAllowed();
         apply(new CancelReservationRequestedEvent(command.getChargingStationId(), this.protocol, command.getReservationId(), command.getIdentityContext()));
     }
 

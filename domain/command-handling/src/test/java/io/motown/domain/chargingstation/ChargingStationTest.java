@@ -147,14 +147,14 @@ public class ChargingStationTest {
     }
 
     @Test
-    public void testRequestConfigurationForUnconfiguredChargingStation() {
-        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+    public void testRequestConfigurationForNotAcceptedChargingStation() {
+        fixture.given(UNCONFIGURED_CHARGING_STATION)
                 .when(new RequestConfigurationItemsCommand(CHARGING_STATION_ID, CONFIGURATION_KEYS, ROOT_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
 
     @Test
-    public void testRequestConfigurationForUnregisteredChargingStation() {
+    public void testRequestConfigurationForUnconfiguredChargingStation() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
                 .when(new RequestConfigurationItemsCommand(CHARGING_STATION_ID, CONFIGURATION_KEYS, ROOT_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
@@ -219,7 +219,7 @@ public class ChargingStationTest {
 
     @Test
     public void testRequestingToUnlockEvseForUnregisteredChargingStation() {
-        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+        fixture.given(UNCONFIGURED_CHARGING_STATION)
                 .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, EVSE_ID, ROOT_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
@@ -228,13 +228,6 @@ public class ChargingStationTest {
     public void testRequestingToUnlockEvseForUnconfiguredChargingStation() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
                 .when(new RequestUnlockEvseCommand(CHARGING_STATION_ID, EVSE_ID, ROOT_IDENTITY_CONTEXT))
-                .expectException(IllegalStateException.class);
-    }
-
-    @Test
-    public void testRequestingToStartTransactionForUnconfiguredChargingStation() {
-        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
-                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), NULL_USER_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
 
@@ -275,10 +268,38 @@ public class ChargingStationTest {
     }
 
     @Test
+    public void testRequestSoftResetUnconfiguredChargingStation() {
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new RequestSoftResetChargingStationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void testRequestSoftResetNotAcceptedChargingStation() {
+        fixture.given(UNCONFIGURED_CHARGING_STATION)
+                .when(new RequestSoftResetChargingStationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
     public void testRequestHardResetChargingStation() {
         fixture.given(CHARGING_STATION)
                 .when(new RequestHardResetChargingStationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new HardResetChargingStationRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void testRequestHardResetUnconfiguredChargingStation() {
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new RequestHardResetChargingStationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void testRequestHardResetNotAcceptedChargingStation() {
+        fixture.given(UNCONFIGURED_CHARGING_STATION)
+                .when(new RequestHardResetChargingStationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
     }
 
     @Test
@@ -289,10 +310,38 @@ public class ChargingStationTest {
     }
 
     @Test
+    public void testRequestChangeNotAcceptedChargingStationAvailabilityToInoperative() {
+        fixture.given(UNCONFIGURED_CHARGING_STATION)
+                .when(new RequestChangeChargingStationAvailabilityToInoperativeCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void testRequestChangeUnconfiguredChargingStationAvailabilityToInoperative() {
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new RequestChangeChargingStationAvailabilityToInoperativeCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
     public void testRequestChangeChargingStationAvailabilityToOperative() {
         fixture.given(CHARGING_STATION)
                 .when(new RequestChangeChargingStationAvailabilityToOperativeCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void testRequestChangeNotAcceptedChargingStationAvailabilityToOperative() {
+        fixture.given(UNCONFIGURED_CHARGING_STATION)
+                .when(new RequestChangeChargingStationAvailabilityToOperativeCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void testRequestChangeUnconfiguredChargingStationAvailabilityToOperative() {
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new RequestChangeChargingStationAvailabilityToOperativeCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
     }
 
     @Test
@@ -303,10 +352,38 @@ public class ChargingStationTest {
     }
 
     @Test
+    public void testRequestChangeNotAcceptedComponentAvailabilityToInoperative() {
+        fixture.given(UNCONFIGURED_CHARGING_STATION)
+                .when(new RequestChangeComponentAvailabilityToInoperativeCommand(CHARGING_STATION_ID, EVSE_ID, ChargingStationComponent.EVSE, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void testRequestChangeUnconfiguredComponentAvailabilityToInoperative() {
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new RequestChangeComponentAvailabilityToInoperativeCommand(CHARGING_STATION_ID, EVSE_ID, ChargingStationComponent.EVSE, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
     public void testRequestChangeComponentAvailabilityToOperative() {
         fixture.given(CHARGING_STATION)
                 .when(new RequestChangeComponentAvailabilityToOperativeCommand(CHARGING_STATION_ID, EVSE_ID, ChargingStationComponent.EVSE, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new ChangeComponentAvailabilityToOperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, ChargingStationComponent.EVSE, ROOT_IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void testRequestChangeNotAcceptedComponentAvailabilityToOperative() {
+        fixture.given(UNCONFIGURED_CHARGING_STATION)
+                .when(new RequestChangeComponentAvailabilityToOperativeCommand(CHARGING_STATION_ID, EVSE_ID, ChargingStationComponent.EVSE, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void testRequestChangeUnconfiguredComponentAvailabilityToOperative() {
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new RequestChangeComponentAvailabilityToOperativeCommand(CHARGING_STATION_ID, EVSE_ID, ChargingStationComponent.EVSE, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
     }
 
     @Test
@@ -363,6 +440,22 @@ public class ChargingStationTest {
     }
 
     @Test
+    public void testGetDiagnosticsForNotAcceptedChargingStation() {
+        String targetLocation = "ftp://abc.com/";
+        fixture.given(UNCONFIGURED_CHARGING_STATION)
+                .when(new RequestDiagnosticsCommand(CHARGING_STATION_ID, targetLocation, null, null, null, null, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void testGetDiagnosticsForUnconfiguredChargingStation() {
+        String targetLocation = "ftp://abc.com/";
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new RequestDiagnosticsCommand(CHARGING_STATION_ID, targetLocation, null, null, null, null, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
     public void testGetDiagnosticsFileNameReceived() {
         String diagnosticsFileName = "diagnostics.zip";
         fixture.given(CHARGING_STATION)
@@ -400,6 +493,20 @@ public class ChargingStationTest {
     }
 
     @Test
+    public void testClearCacheForNotAcceptedChargingStation() {
+        fixture.given(UNCONFIGURED_CHARGING_STATION)
+                .when(new RequestClearCacheCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void testClearCacheForUnconfiguredChargingStation() {
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new RequestClearCacheCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
     public void testRequestFirmwareUpdate() {
         String updateLocation = "https://somewhere.nl";
         Date retrieveDate = new Date();
@@ -408,6 +515,28 @@ public class ChargingStationTest {
         fixture.given(CHARGING_STATION)
                 .when(new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, updateLocation, retrieveDate, attributes, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new FirmwareUpdateRequestedEvent(CHARGING_STATION_ID, PROTOCOL, updateLocation, retrieveDate, attributes, ROOT_IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void testRequestFirmwareUpdateForNotAcceptedChargingStation() {
+        String updateLocation = "https://somewhere.nl";
+        Date retrieveDate = new Date();
+        Map<String, String> attributes = new HashMap<>();
+
+        fixture.given(UNCONFIGURED_CHARGING_STATION)
+                .when(new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, updateLocation, retrieveDate, attributes, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void testRequestFirmwareUpdateForUnconfiguredChargingStation() {
+        String updateLocation = "https://somewhere.nl";
+        Date retrieveDate = new Date();
+        Map<String, String> attributes = new HashMap<>();
+
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, updateLocation, retrieveDate, attributes, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
     }
 
     @Test
@@ -421,10 +550,44 @@ public class ChargingStationTest {
     }
 
     @Test
+    public void testSendAuthorizationListToNotAcceptedChargingStation() {
+        final int version = 1;
+        final String hash = "4894007260";
+
+        fixture.given(UNCONFIGURED_CHARGING_STATION)
+                .when(new SendAuthorizationListCommand(CHARGING_STATION_ID, IDENTIFYING_TOKENS, version, hash, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void testSendAuthorizationListToUnconfiguredChargingStation() {
+        final int version = 1;
+        final String hash = "4894007260";
+
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new SendAuthorizationListCommand(CHARGING_STATION_ID, IDENTIFYING_TOKENS, version, hash, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
     public void testGetAuthorizationListVersionRequest() {
         fixture.given(CHARGING_STATION)
                 .when(new RequestAuthorizationListVersionCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new AuthorizationListVersionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void testGetAuthorizationListVersionRequestFromNotAcceptedChargingStation() {
+        fixture.given(UNCONFIGURED_CHARGING_STATION)
+                .when(new RequestAuthorizationListVersionCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void testGetAuthorizationListVersionRequestFromUnconfiguredChargingStation() {
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new RequestAuthorizationListVersionCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
     }
 
     @Test
@@ -452,10 +615,40 @@ public class ChargingStationTest {
     }
 
     @Test
+    public void testRequestReserveNowNotAcceptedChargingStation() {
+        Date expiryDate = new Date();
+        fixture.given(UNCONFIGURED_CHARGING_STATION)
+                .when(new RequestReserveNowCommand(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void testRequestReserveNowUnconfiguredChargingStation() {
+        Date expiryDate = new Date();
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new RequestReserveNowCommand(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, PARENT_IDENTIFYING_TOKEN, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
     public void testRequestCancelReservation() {
         fixture.given(CHARGING_STATION)
                 .when(new RequestCancelReservationCommand(CHARGING_STATION_ID, RESERVATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new CancelReservationRequestedEvent(CHARGING_STATION_ID, PROTOCOL, RESERVATION_ID, ROOT_IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void testRequestCancelReservationForNotAcceptedChargingStation() {
+        fixture.given(UNCONFIGURED_CHARGING_STATION)
+                .when(new RequestCancelReservationCommand(CHARGING_STATION_ID, RESERVATION_ID, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void testRequestCancelReservationForUnconfiguredChargingStation() {
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new RequestCancelReservationCommand(CHARGING_STATION_ID, RESERVATION_ID, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
     }
 
     @Test
@@ -505,6 +698,20 @@ public class ChargingStationTest {
         fixture.given(CHARGING_STATION)
                 .when(new RequestChangeConfigurationItemCommand(CHARGING_STATION_ID, CONFIGURATION_ITEM, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new ChangeConfigurationItemRequestedEvent(CHARGING_STATION_ID, PROTOCOL, CONFIGURATION_ITEM, ROOT_IDENTITY_CONTEXT));
+    }
+
+    @Test
+    public void testChangeConfigurationForNotAcceptedChargingStation() {
+        fixture.given(UNCONFIGURED_CHARGING_STATION)
+                .when(new RequestChangeConfigurationItemCommand(CHARGING_STATION_ID, CONFIGURATION_ITEM, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void testChangeConfigurationForUnconfiguredChargingStation() {
+        fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
+                .when(new RequestChangeConfigurationItemCommand(CHARGING_STATION_ID, CONFIGURATION_ITEM, ROOT_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
     }
 
     @Test
