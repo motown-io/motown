@@ -44,7 +44,7 @@ public final class RequestConfigurationItemsCommand {
      * @param chargingStationId the identifier of the charging station.
      * @param keys              an optional list of keys to retrieve, or all keys in case this list is empty
      * @param identityContext   the identity context.
-     * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId}, {@code keys}, or {@code identityContext} is {@code null}.
      */
     public RequestConfigurationItemsCommand(ChargingStationId chargingStationId, List<String> keys, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);

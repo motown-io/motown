@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
@@ -27,8 +28,18 @@ public class ConfigurationItemsRequestedEventTest {
     }
 
     @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingEventWithConfigurationKeysNull() {
+        new ConfigurationItemsRequestedEvent(CHARGING_STATION_ID, null, PROTOCOL, ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithProtocolNull() {
         new ConfigurationItemsRequestedEvent(CHARGING_STATION_ID, CONFIGURATION_KEYS, null, ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalArgumentExceptionThrownWhenCreatingEventWithProtocolEmpty() {
+        new ConfigurationItemsRequestedEvent(CHARGING_STATION_ID, CONFIGURATION_KEYS, "", ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
@@ -36,4 +47,8 @@ public class ConfigurationItemsRequestedEventTest {
         new ConfigurationItemsRequestedEvent(CHARGING_STATION_ID, CONFIGURATION_KEYS, PROTOCOL, null);
     }
 
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(ConfigurationItemsRequestedEvent.class).usingGetClass().verify();
+    }
 }
