@@ -32,6 +32,11 @@ public class ChangeConfigurationItemRequestedEventTest {
         new ChangeConfigurationItemRequestedEvent(CHARGING_STATION_ID, null, CONFIGURATION_ITEM, ROOT_IDENTITY_CONTEXT);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalArgumentExceptionThrownWhenCreatingEventWithProtocolEmpty() {
+        new ChangeConfigurationItemRequestedEvent(CHARGING_STATION_ID, "", CONFIGURATION_ITEM, ROOT_IDENTITY_CONTEXT);
+    }
+
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithConfigurationItemNull() {
         new ChangeConfigurationItemRequestedEvent(CHARGING_STATION_ID, PROTOCOL, null, ROOT_IDENTITY_CONTEXT);
