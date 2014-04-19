@@ -43,7 +43,7 @@ public class MessageIdHeaderInterceptor extends AbstractPhaseInterceptor<Message
 
     @Override
     public void handleMessage(Message message) {
-        ArrayList<SoapHeader> headers = (ArrayList<SoapHeader>) message.get(SOAP_HEADER_KEY);
+        List<SoapHeader> headers = (ArrayList<SoapHeader>) message.get(SOAP_HEADER_KEY);
 
         // if the header doesn't exist and we have at least one header to access 'owner document' we can create and add our own MessageID header
         if(!messageIdHeaderExists(headers) && !headers.isEmpty()) {
