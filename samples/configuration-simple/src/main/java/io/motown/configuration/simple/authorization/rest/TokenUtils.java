@@ -15,6 +15,7 @@
  */
 package io.motown.configuration.simple.authorization.rest;
 
+import com.google.common.base.Charsets;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.codec.Hex;
 
@@ -88,7 +89,7 @@ public class TokenUtils {
             throw new IllegalStateException("No " + MESSAGE_DIGEST_ALGORITHM + " algorithm available!", e);
         }
 
-        return new String(Hex.encode(digest.digest(signatureBuilder.toString().getBytes())));
+        return new String(Hex.encode(digest.digest(signatureBuilder.toString().getBytes(Charsets.UTF_8))));
     }
 
     /**
