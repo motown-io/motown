@@ -41,6 +41,10 @@ public class TokenUtils {
      */
     private static final long TOKEN_VALIDITY_DURATION = 1000L * 60 * 60;
 
+    private TokenUtils() {
+        // Hidden constructor to prevent instantiation of a utility class.
+    }
+
     /**
      * Creates a token based on {@code UserDetails}, the current time and TOKEN_VALIDITY_DURATION.
      *
