@@ -15,34 +15,30 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class RequestChangeConfigurationItemCommandTest {
 
-    private static final String KEY = "testKey";
-    private static final String VALUE = "testValue";
-
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new RequestChangeConfigurationItemCommand(null, KEY, VALUE, ROOT_IDENTITY_CONTEXT);
+        new RequestChangeConfigurationItemCommand(null, CONFIGURATION_ITEM, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingEventWithKeyNull() {
-        new RequestChangeConfigurationItemCommand(CHARGING_STATION_ID, null, VALUE, ROOT_IDENTITY_CONTEXT);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingEventWithValueNull() {
-        new RequestChangeConfigurationItemCommand(CHARGING_STATION_ID, KEY, null, ROOT_IDENTITY_CONTEXT);
+    public void nullPointerExceptionThrownWhenCreatingEventWithConfigurationItemNull() {
+        new RequestChangeConfigurationItemCommand(CHARGING_STATION_ID, null, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithIdentityContextNull() {
-        new RequestChangeConfigurationItemCommand(CHARGING_STATION_ID, KEY, VALUE, null);
+        new RequestChangeConfigurationItemCommand(CHARGING_STATION_ID, CONFIGURATION_ITEM, null);
     }
 
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(RequestChangeConfigurationItemCommand.class).usingGetClass().verify();
+    }
 }

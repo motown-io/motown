@@ -503,7 +503,7 @@ public class ChargingStationTest {
     @Test
     public void testChangeConfiguration() {
         fixture.given(CHARGING_STATION)
-                .when(new RequestChangeConfigurationItemCommand(CHARGING_STATION_ID, CONFIGURATION_ITEM.getKey(), CONFIGURATION_ITEM.getValue(), ROOT_IDENTITY_CONTEXT))
+                .when(new RequestChangeConfigurationItemCommand(CHARGING_STATION_ID, CONFIGURATION_ITEM, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new ChangeConfigurationItemRequestedEvent(CHARGING_STATION_ID, PROTOCOL, CONFIGURATION_ITEM, ROOT_IDENTITY_CONTEXT));
     }
 

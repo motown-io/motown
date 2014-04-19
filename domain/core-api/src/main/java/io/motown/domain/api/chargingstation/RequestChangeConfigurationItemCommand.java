@@ -23,52 +23,49 @@ import java.util.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code RequestChangeConfigurationItemCommand} is the command which is published when a single configuration parameter is to
- * be changed on the charging station.
+ * {@code RequestChangeConfigurationItemCommand} is the command which is published when a single configuration parameter
+ * is to be changed on the charging station. This command will lead to communication with the charging station.
  */
 public final class RequestChangeConfigurationItemCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
+
+    private final ConfigurationItem configurationItem;
+
     private final IdentityContext identityContext;
-    private String key;
-    private String value;
 
     /**
-     * Creates a {@code RequestChangeConfigurationItemCommand} with an identifier.
+     * Creates a {@code RequestChangeConfigurationItemCommand}.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param key               the key to change.
-     * @param value             the new value.
+     * @param configurationItem the configuration item to change.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code key}, {@code value} or {@code identityContext} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId}, {@code configurationItem}, or
+     *                              {@code identityContext} is {@code null}.
      */
-    public RequestChangeConfigurationItemCommand(ChargingStationId chargingStationId, String key, String value, IdentityContext identityContext) {
+    public RequestChangeConfigurationItemCommand(ChargingStationId chargingStationId, ConfigurationItem configurationItem, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.key = checkNotNull(key);
-        this.value = checkNotNull(value);
+        this.configurationItem = checkNotNull(configurationItem);
         this.identityContext = checkNotNull(identityContext);
     }
 
     /**
-     * @return the charging station identifier.
+     * Gets the charging station's id.
+     *
+     * @return the charging station's id.
      */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
     }
 
     /**
-     * @return the configuration key to change.
+     * Gets the configuration item.
+     *
+     * @return the configuration item to change.
      */
-    public String getKey() {
-        return key;
-    }
-
-    /**
-     * @return the new configuration value.
-     */
-    public String getValue() {
-        return value;
+    public ConfigurationItem getConfigurationItem() {
+        return configurationItem;
     }
 
     /**
@@ -80,11 +77,17 @@ public final class RequestChangeConfigurationItemCommand {
         return identityContext;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, key, value, identityContext);
+        return Objects.hash(chargingStationId, configurationItem, identityContext);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -94,6 +97,18 @@ public final class RequestChangeConfigurationItemCommand {
             return false;
         }
         final RequestChangeConfigurationItemCommand other = (RequestChangeConfigurationItemCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.key, other.key) && Objects.equals(this.value, other.value) && Objects.equals(this.identityContext, other.identityContext);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.configurationItem, other.configurationItem) && Objects.equals(this.identityContext, other.identityContext);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return com.google.common.base.Objects.toStringHelper(this)
+                .add("chargingStationId", chargingStationId)
+                .add("configurationItem", configurationItem)
+                .add("identityContext", identityContext)
+                .toString();
     }
 }

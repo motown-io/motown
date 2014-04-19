@@ -17,9 +17,17 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
+import io.motown.domain.api.chargingstation.ConfigurationItem;
+import io.motown.domain.api.chargingstation.CorrelationToken;
+import io.motown.domain.api.chargingstation.RequestChangeConfigurationItemCommand;
 import org.junit.Before;
 import org.junit.Test;
+
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class ChangeConfigurationJsonCommandHandlerTest {
 
@@ -27,18 +35,26 @@ public class ChangeConfigurationJsonCommandHandlerTest {
 
     private ChangeConfigurationJsonCommandHandler handler = new ChangeConfigurationJsonCommandHandler();
 
+    private DomainCommandGateway gateway;
+
     @Before
     public void setUp() {
         gson = OperatorApiJsonTestUtils.getGson();
 
         handler.setGson(gson);
-        handler.setCommandGateway(new TestDomainCommandGateway());
+
+        this.gateway = mock(DomainCommandGateway.class);
+        handler.setCommandGateway(this.gateway);
         handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
     }
 
     @Test
     public void testHandleChangeConfigurationOnRegisteredStation() {
         JsonObject commandObject = gson.fromJson("{'key' : 'foo', 'value': 'bar'}", JsonObject.class);
-        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT);
+
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID.getId(), commandObject, ROOT_IDENTITY_CONTEXT);
+
+        RequestChangeConfigurationItemCommand command = new RequestChangeConfigurationItemCommand(OperatorApiJsonTestUtils.CHARGING_STATION_ID, new ConfigurationItem("foo", "bar"), ROOT_IDENTITY_CONTEXT);
+        verify(this.gateway).send(eq(command), any(CorrelationToken.class));
     }
 }
