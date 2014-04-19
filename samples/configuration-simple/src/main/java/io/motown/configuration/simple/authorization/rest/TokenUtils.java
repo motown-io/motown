@@ -24,7 +24,6 @@ import java.security.NoSuchAlgorithmException;
 
 public class TokenUtils {
 
-    //TODO
     public static final String MAGIC_KEY = "obfuscate";
 
     /**

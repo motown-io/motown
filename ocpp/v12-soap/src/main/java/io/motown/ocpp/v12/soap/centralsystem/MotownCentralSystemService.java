@@ -76,23 +76,23 @@ public class MotownCentralSystemService implements CentralSystemService {
         FutureRequestHandler<AuthorizeResponse, AuthorizationResult> handler = new FutureRequestHandler<>(context.getMessageContext(), continuationTimeout);
 
         return handler.handle(future, new CallInitiator() {
-                @Override
-                public void initiateCall() {
-                    domainService.authorize(chargingStationId, request.getIdTag(), future, addOnIdentity);
-                }
+                    @Override
+                    public void initiateCall() {
+                        domainService.authorize(chargingStationId, request.getIdTag(), future, addOnIdentity);
+                    }
                 }, new AuthorizeResponseFactory(), new ResponseFactory<AuthorizeResponse>() {
                     @Override
-                public AuthorizeResponse createResponse() {
-                    LOG.error("Error while handling 'authorize' request, returning invalid for idTag: {}", request.getIdTag());
+                    public AuthorizeResponse createResponse() {
+                        LOG.error("Error while handling 'authorize' request, returning invalid for idTag: {}", request.getIdTag());
 
-                    AuthorizeResponse response = new AuthorizeResponse();
-                    IdTagInfo tagInfo = new IdTagInfo();
-                    tagInfo.setStatus(AuthorizationStatus.INVALID);
-                    response.setIdTagInfo(tagInfo);
+                        AuthorizeResponse response = new AuthorizeResponse();
+                        IdTagInfo tagInfo = new IdTagInfo();
+                        tagInfo.setStatus(AuthorizationStatus.INVALID);
+                        response.setIdTagInfo(tagInfo);
 
-                    return response;
+                        return response;
+                    }
                 }
-            }
         );
     }
 
@@ -101,7 +101,7 @@ public class MotownCentralSystemService implements CentralSystemService {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
         String chargingStationAddress = soapHeaderReader.getChargingStationAddress(context.getMessageContext());
-        if(chargingStationAddress == null || chargingStationAddress.isEmpty()) {
+        if (chargingStationAddress == null || chargingStationAddress.isEmpty()) {
             BootNotificationResponse response = new BootNotificationResponse();
             response.setStatus(RegistrationStatus.REJECTED);
             response.setHeartbeatInterval(heartbeatIntervalFallback);
@@ -192,7 +192,6 @@ public class MotownCentralSystemService implements CentralSystemService {
         int transactionId = domainService.startTransaction(chargingStationId, new EvseId(parameters.getConnectorId()), new TextualToken(parameters.getIdTag()),
                 parameters.getMeterStart(), parameters.getTimestamp(), reservationId, PROTOCOL_IDENTIFIER, addOnIdentity);
 
-        // TODO locally store identifications, so we can use these in the response. - Dennis Laumen, December 16th 2013
         IdTagInfo idTagInfo = new IdTagInfo();
         idTagInfo.setStatus(AuthorizationStatus.ACCEPTED);
         idTagInfo.setParentIdTag(parameters.getIdTag());

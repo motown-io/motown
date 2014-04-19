@@ -26,7 +26,6 @@ public class Evse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // TODO it's probably nicer to create a 'real' object for this, just like EvseId (see API). - Mark van den Bergh, Januari 31st 2014
     private int identifier;
 
     @OneToMany(cascade = CascadeType.ALL, targetEntity = Connector.class, fetch = FetchType.EAGER)

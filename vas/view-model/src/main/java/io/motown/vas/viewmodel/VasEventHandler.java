@@ -140,7 +140,6 @@ public class VasEventHandler {
     public void handle(ChargingStationOpeningTimesSetEvent event) {
         LOG.info("ChargingStationOpeningTimesSetEvent");
 
-        // TODO maybe there's a better solution for converting classes of the same name - Mark Manders (2014-02-14)
         ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
         if (chargingStation != null) {
             chargingStation.setOpeningTimes(convertFromApiOpeningTimes(event.getOpeningTimes()));
@@ -157,7 +156,6 @@ public class VasEventHandler {
     public void handle(ChargingStationOpeningTimesAddedEvent event) {
         LOG.info("ChargingStationOpeningTimesAddedEvent");
 
-        // TODO maybe there's a better solution for converting classes of the same name - Mark Manders (2014-02-14)
         ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
         if (chargingStation != null) {
             if (chargingStation.getOpeningTimes() == null) {

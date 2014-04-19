@@ -49,9 +49,9 @@ public class StopTransactionRequestHandler extends RequestHandler {
         Stoptransaction request = gson.fromJson(payload, Stoptransaction.class);
 
         List<MeterValue> meterValues = new ArrayList<>();
-        for(TransactionDatum data : request.getTransactionData()) {
-            for(Value__ meterValue : data.getValues()) {
-                for(Value___ value : meterValue.getValues()) {
+        for (TransactionDatum data : request.getTransactionData()) {
+            for (Value__ meterValue : data.getValues()) {
+                for (Value___ value : meterValue.getValues()) {
                     Map<String, String> attributes = new HashMap<>();
                     DomainService.addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getContext());
                     DomainService.addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getFormat());
@@ -65,13 +65,12 @@ public class StopTransactionRequestHandler extends RequestHandler {
 
         NumberedTransactionId transactionId = null;
         Integer requestTransactionId = request.getTransactionId();
-        if(requestTransactionId > 0) {
+        if (requestTransactionId > 0) {
             transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, requestTransactionId);
         }
 
         domainService.stopTransaction(chargingStationId, transactionId, new TextualToken(request.getIdTag()), request.getMeterStop(), request.getTimestamp(), meterValues, addOnIdentity);
 
-        // TODO locally store identifications, so we can use these in the response. - Dennis Laumen, December 16th 2013
         GregorianCalendar expDate = new GregorianCalendar();
         expDate.add(GregorianCalendar.YEAR, 1);
 

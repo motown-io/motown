@@ -84,7 +84,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         String errorCode = request.getErrorCode() != null ? request.getErrorCode().value() : null;
 
         Date timestamp = request.getTimestamp();
-        if(timestamp == null) {
+        if (timestamp == null) {
             timestamp = new Date();
         }
 
@@ -103,7 +103,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         List<TransactionData> transactionData = request.getTransactionData();
         Map<String, String> attributes = Maps.newHashMap();
         for (TransactionData data : transactionData) {
-            for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue mv : data.getValues()){
+            for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue mv : data.getValues()) {
                 for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value value : mv.getValue()) {
                     addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getContext() != null ? value.getContext().value() : null);
                     addAttributeIfNotNull(attributes, DomainService.FORMAT_KEY, value.getFormat() != null ? value.getFormat().value() : null);
@@ -125,7 +125,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
         String chargingStationAddress = soapHeaderReader.getChargingStationAddress(context.getMessageContext());
-        if(chargingStationAddress == null || chargingStationAddress.isEmpty()) {
+        if (chargingStationAddress == null || chargingStationAddress.isEmpty()) {
             BootNotificationResponse response = new BootNotificationResponse();
             response.setStatus(RegistrationStatus.REJECTED);
             response.setHeartbeatInterval(heartbeatIntervalFallback);
@@ -134,7 +134,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
             return response;
         }
 
-        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel(),PROTOCOL_IDENTIFIER,
+        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel(), PROTOCOL_IDENTIFIER,
                 request.getChargePointSerialNumber(), request.getChargeBoxSerialNumber(), request.getFirmwareVersion(), request.getIccid(), request.getImsi(), request.getMeterType(), request.getMeterSerialNumber(),
                 addOnIdentity);
 
@@ -251,7 +251,6 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         int transactionId = domainService.startTransaction(chargingStationId, new EvseId(parameters.getConnectorId()), new TextualToken(parameters.getIdTag()),
                 parameters.getMeterStart(), parameters.getTimestamp(), reservationId, PROTOCOL_IDENTIFIER, addOnIdentity);
 
-        // TODO locally store identifications, so we can use these in the response. - Dennis Laumen, December 16th 2013
         IdTagInfo idTagInfo = new IdTagInfo();
         idTagInfo.setStatus(AuthorizationStatus.ACCEPTED);
         idTagInfo.setParentIdTag(parameters.getIdTag());
@@ -269,9 +268,9 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
     /**
      * Adds the attribute to the map using the key and value if the value is not null.
      *
-     * @param attributes    map of keys and values.
-     * @param key           key of the attribute.
-     * @param value         value of the attribute.
+     * @param attributes map of keys and values.
+     * @param key        key of the attribute.
+     * @param value      value of the attribute.
      */
     private void addAttributeIfNotNull(Map<String, String> attributes, String key, String value) {
         if (value != null) {

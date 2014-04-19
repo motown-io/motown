@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 
 public class OcppWebSocketRequestHandler implements OcppRequestHandler {
 
-    // TODO ocppj 1.2?
     public static final String PROTOCOL_IDENTIFIER = "OCPPJ15";
     private static final Logger LOG = LoggerFactory.getLogger(OcppWebSocketRequestHandler.class);
     private OcppJsonService ocppJsonService;

@@ -135,9 +135,6 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
      */
     @CommandHandler
     public void handle(StartTransactionCommand command, MetaData metaData) {
-        // TODO mark socket (mentioned in command) 'in transaction' - Mark van den Bergh, December 2nd 2013
-        // TODO store transaction identifier so we can validate 'stop transaction' commands? - Mark van den Bergh, December 2nd 2013
-
         if (command.getEvseId().getNumberedId() > numberOfEvses) {
             apply(new EvseNotFoundEvent(id, command.getEvseId(), command.getIdentityContext()), metaData);
             return;
@@ -176,7 +173,6 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(ConfigureChargingStationCommand command) {
-        // TODO should we allow reconfiguring of charging stations? - Dennis Laumen, Nov 28th 2013
         apply(new ChargingStationConfiguredEvent(this.id, command.getEvses(), command.getIdentityContext()));
     }
 
@@ -189,7 +185,6 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @CommandHandler
     public void handle(RequestStopTransactionCommand command) {
         checkCommunicationAllowed();
-        //TODO: Check if transaction belongs to the specified chargingstation - Ingo Pak, 03 dec 2013
         apply(new StopTransactionRequestedEvent(this.id, this.protocol, command.getTransactionId(), command.getIdentityContext()));
     }
 

@@ -23,7 +23,6 @@ import org.apache.cxf.ws.addressing.AttributedURIType;
 import org.apache.cxf.ws.addressing.ContextUtils;
 import org.apache.cxf.ws.addressing.EndpointReferenceType;
 
-//TODO: Duplicate of MessageIdHeaderInterceptor in ocpp 1.2 and ocpp 1.5 addons - Ingo Pak, 21 Jan 2014
 public class ReplyToHeaderInInterceptor extends AbstractSoapInterceptor {
 
     public ReplyToHeaderInInterceptor() {

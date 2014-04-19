@@ -33,7 +33,6 @@ public class ConfigureChargingStationCommandTest {
         new ConfigureChargingStationCommand(CHARGING_STATION_ID, null, NULL_USER_IDENTITY_CONTEXT);
     }
 
-    //TODO refactor
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedOperationExceptionThrownWhenModifyingEvses() {
         ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(CHARGING_STATION_ID, EVSES, NULL_USER_IDENTITY_CONTEXT);

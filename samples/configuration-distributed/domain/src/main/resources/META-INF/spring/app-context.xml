@@ -24,29 +24,22 @@
     <bean id="commandBus"
           class="org.axonframework.commandhandling.distributed.DistributedCommandBus">
         <constructor-arg ref="jgroupsConnector"/>
-
-        <!-- TODO: Add command validation in a different way, as the DistributedCommandBus does not have the handlerInterceptors property the SimpleCommandBus is having. - Ingo Pak, November 15th 2013
-        <property name="handlerInterceptors">
-            <list>
-                <bean class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor" />
-            </list>
-        </property>-->
     </bean>
 
     <!-- Begin configuration of JPA EventStore -->
 
     <axon:jpa-event-store id="eventStore"
-                          data-source="dataSource" />
+                          data-source="dataSource"/>
 
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
         <property name="driverClassName"
-                  value="${jdbc.driverclass}" />
+                  value="${jdbc.driverclass}"/>
         <property name="url"
-                  value="${jdbc.url}" />
+                  value="${jdbc.url}"/>
         <property name="username"
-                  value="${jdbc.username}" />
+                  value="${jdbc.username}"/>
         <property name="password"
-                  value="${jdbc.password}" />
+                  value="${jdbc.password}"/>
     </bean>
 
     <bean id="entityManagerFactory"
@@ -67,7 +60,7 @@
 
     <bean id="commandTransactionManager"
           class="org.axonframework.unitofwork.SpringTransactionManager">
-        <constructor-arg >
+        <constructor-arg>
             <bean class="org.springframework.orm.jpa.JpaTransactionManager">
                 <property name="entityManagerFactory"
                           ref="entityManagerFactory"/>
@@ -92,9 +85,9 @@
     </bean>
 
     <bean id="jCacheManager" class="net.sf.ehcache.jcache.JCacheManager">
-        <constructor-arg name="name" value="cacheManager" />
+        <constructor-arg name="name" value="cacheManager"/>
         <constructor-arg name="ehcacheManager">
-            <bean class="net.sf.ehcache.CacheManager" factory-method="create" />
+            <bean class="net.sf.ehcache.CacheManager" factory-method="create"/>
         </constructor-arg>
         <constructor-arg name="classLoader">
             <bean class="java.security.SecureClassLoader"/>
@@ -106,7 +99,7 @@
         <constructor-arg>
             <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean"/>
         </constructor-arg>
-        <constructor-arg ref="jCacheManager" />
+        <constructor-arg ref="jCacheManager"/>
         <constructor-arg>
             <bean class="java.security.SecureClassLoader"/>
         </constructor-arg>

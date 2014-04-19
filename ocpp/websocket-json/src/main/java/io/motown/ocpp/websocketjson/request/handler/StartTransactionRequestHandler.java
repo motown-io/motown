@@ -57,8 +57,6 @@ public class StartTransactionRequestHandler extends RequestHandler {
         GregorianCalendar expDate = new GregorianCalendar();
         expDate.add(GregorianCalendar.YEAR, 1);
 
-        // TODO locally store identifications, so we can use these in the response. - Dennis Laumen, December 16th 2013
-
         IdTagInfo__ idTagInfo = new IdTagInfo__();
         idTagInfo.setExpiryDate(expDate.getTime());
         idTagInfo.setStatus(IdTagInfo__.Status.ACCEPTED);
