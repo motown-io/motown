@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
@@ -27,7 +28,23 @@ public class RequestConfigurationItemsCommandTest {
     }
 
     @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithKeysNull() {
+        new RequestConfigurationItemsCommand(CHARGING_STATION_ID, null, ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
         new RequestConfigurationItemsCommand(CHARGING_STATION_ID, CONFIGURATION_KEYS, null);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void unsupportedOperationExceptionThrownWhenModifyingKeys() {
+        RequestConfigurationItemsCommand command = new RequestConfigurationItemsCommand(CHARGING_STATION_ID, CONFIGURATION_KEYS, ROOT_IDENTITY_CONTEXT);
+        command.getKeys().add("baz");
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(RequestConfigurationItemsCommand.class).usingGetClass().verify();
     }
 }
