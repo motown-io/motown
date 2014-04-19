@@ -82,7 +82,7 @@ public class SubscriptionRepository {
     }
 
     public Subscription findBySubscriberIdentityAndDeliveryAddress(String subscriberIdentity, String deliveryAddress) {
-        Query query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriberIdentity = :subscriberIdentity AND s.deliveryAddress = :deliveryAddress").setParameter("subscriberIdentity", subscriberIdentity).setParameter("deliveryAddress", deliveryAddress);
+        Query query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriberIdentity = :subscriberIdentity AND s.deliveryAddress = :deliveryAddress").setParameter(SUBSCRIBER_IDENTITY_PARAMETER, subscriberIdentity).setParameter("deliveryAddress", deliveryAddress);
         List resultList = query.getResultList();
         if (!resultList.isEmpty()) {
             return (Subscription) resultList.get(0);
