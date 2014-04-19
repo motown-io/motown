@@ -38,14 +38,15 @@ public final class ChangeConfigurationItemRequestedEvent implements Communicatio
     private final IdentityContext identityContext;
 
     /**
-     * Creates a {@code ChangeConfigurationItemRequestedEvent} with an identifier, vendor identifier, message identifier, free format data and identity context.
+     * Creates a {@code ChangeConfigurationItemRequestedEvent}.
      *
      * @param chargingStationId the identifier of the charging station.
      * @param protocol          the protocol identifier.
      * @param configurationItem the configuration item to change.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code configurationItem}, or
-     * {@code identityContext} is {@code null}.
+     * @throws NullPointerException     if {@code chargingStationId}, {@code protocol}, {@code configurationItem}, or
+     *                                  {@code identityContext} is {@code null}.
+     * @throws IllegalArgumentException if {@code protocol} is empty.
      */
     public ChangeConfigurationItemRequestedEvent(ChargingStationId chargingStationId, String protocol, ConfigurationItem configurationItem, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
