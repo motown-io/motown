@@ -29,6 +29,8 @@ public class ChargingStationEventListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(ChargingStationEventListener.class);
 
+    private static final String TIME_FORMAT = "%02d:%02d";
+
     private ChargingStationRepository repository;
 
     @EventHandler
@@ -341,8 +343,8 @@ public class ChargingStationEventListener {
 
                 for (OpeningTime coreOpeningTime : event.getOpeningTimes()) {
                     Day dayOfWeek = coreOpeningTime.getDay();
-                    String timeStart = String.format("%02d:%02d", coreOpeningTime.getTimeStart().getHourOfDay(), coreOpeningTime.getTimeStart().getMinutesInHour());
-                    String timeStop = String.format("%02d:%02d", coreOpeningTime.getTimeStop().getHourOfDay(), coreOpeningTime.getTimeStop().getMinutesInHour());
+                    String timeStart = String.format(TIME_FORMAT, coreOpeningTime.getTimeStart().getHourOfDay(), coreOpeningTime.getTimeStart().getMinutesInHour());
+                    String timeStop = String.format(TIME_FORMAT, coreOpeningTime.getTimeStop().getHourOfDay(), coreOpeningTime.getTimeStop().getMinutesInHour());
 
                     io.motown.operatorapi.viewmodel.persistence.entities.OpeningTime openingTime = new io.motown.operatorapi.viewmodel.persistence.entities.OpeningTime(dayOfWeek, timeStart, timeStop);
                     chargingStation.getOpeningTimes().add(openingTime);
