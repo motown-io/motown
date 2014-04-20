@@ -15,15 +15,14 @@
  */
 package io.motown.ocpp.v15.soap.centralsystem;
 
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.ComponentStatus;
-import io.motown.domain.api.chargingstation.MeterValue;
-import io.motown.domain.api.chargingstation.IncomingDataTransferResultStatus;
-import io.motown.domain.api.chargingstation.NumberedTransactionId;
+import io.motown.domain.api.chargingstation.*;
+
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.api.security.TypeBasedAddOnIdentity;
 import io.motown.ocpp.soaputils.header.SoapHeaderReader;
 import io.motown.ocpp.v15.soap.centralsystem.schema.*;
+import io.motown.ocpp.v15.soap.centralsystem.schema.FirmwareStatus;
+import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.domain.IncomingDataTransferResult;
@@ -73,6 +72,31 @@ public class MotownCentralSystemServiceTest {
         motownCentralSystemService.setDomainService(domainService);
         motownCentralSystemService.setAddOnId(ADD_ON_ID);
         motownCentralSystemService.setContext(mock(WebServiceContext.class));
+    }
+
+    @Test
+    public void authorizeAcceptedVerifyResponse() throws InterruptedException, ExecutionException {
+        WebServiceContext webServiceContext = mock(WebServiceContext.class);
+        MessageContext messageContext = mock(MessageContext.class);
+        ContinuationProvider continuationProvider = mock(ContinuationProvider.class);
+        Continuation continuation = mock(Continuation.class);
+        Future future = mock(Future.class);
+        AuthorizationResult authorizationResult = mock(AuthorizationResult.class);
+        when(authorizationResult.getStatus()).thenReturn(AuthorizationResultStatus.ACCEPTED);
+        when(future.isDone()).thenReturn(true);
+        when(future.get()).thenReturn(authorizationResult);
+        when(continuation.getObject()).thenReturn(future);
+        when(continuationProvider.getContinuation()).thenReturn(continuation);
+        when(messageContext.get(any())).thenReturn(continuationProvider);
+        when(webServiceContext.getMessageContext()).thenReturn(messageContext);
+        motownCentralSystemService.setContext(webServiceContext);
+
+        AuthorizeRequest request = new AuthorizeRequest();
+        request.setIdTag(IDENTIFYING_TOKEN.getToken());
+
+        AuthorizeResponse response = motownCentralSystemService.authorize(request, CHARGING_STATION_ID.getId());
+
+        assertEquals(AuthorizationStatus.ACCEPTED, response.getIdTagInfo().getStatus());
     }
 
     @Test
@@ -272,10 +296,10 @@ public class MotownCentralSystemServiceTest {
         request.setTransactionId(TRANSACTION_NUMBER);
         List<io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue> meterValuesSoap = getMeterValuesSoap(4);
         request.getValues().addAll(meterValuesSoap);
-        List<MeterValue> expectedMeterValuesList = new ArrayList<>();
+        List<io.motown.domain.api.chargingstation.MeterValue> expectedMeterValuesList = new ArrayList<>();
         for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue mv : meterValuesSoap) {
             for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value value : mv.getValue()) {
-                expectedMeterValuesList.add(new MeterValue(mv.getTimestamp(), value.getValue()));
+                expectedMeterValuesList.add(new io.motown.domain.api.chargingstation.MeterValue(mv.getTimestamp(), value.getValue()));
             }
         }
 
