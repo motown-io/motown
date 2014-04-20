@@ -371,7 +371,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
                     response.setStatus(DataTransferStatus.ACCEPTED);
                     break;
                 case REJECTED:
-                    response.setStatus(DataTransferStatus.ACCEPTED);
+                    response.setStatus(DataTransferStatus.REJECTED);
                     break;
             }
             response.setData(futureResponse.getData());
