@@ -23,31 +23,35 @@ import java.util.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code DataTransferResponseCommand} is the command for processing the optional data a charging station can return
- * upon a datatransfer towards the charging station.
+ * {@code IncomingDataTransferResponseCommand} is the command which communicates the processed response to an initial
+ * datatransfer request that was made from the charging station.
  */
-public final class DataTransferResponseCommand {
+public final class IncomingDataTransferResponseCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private String data;
+    private String responseData;
+
+    private IncomingDataTransferResultStatus status;
 
     private final IdentityContext identityContext;
 
     /**
-     * Creates a {@code DataTransferResponseCommand} with an identifier.
+     * Creates a {@code IncomingDataTransferResponseCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param data              the data to transfer (use an empty string to signify no value).
+     * @param responseData              the responseData to transfer back to the charging station (empty if no value).
+     * @param status            the status of the processing of the datatransfer responseData from the charging station.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code vendorId}, {@code messageId}, {@code data}
-     *                              or {@code identityContext} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId}, {@code vendorId}, {@code messageId}, {@code responseData} or is
+     *                             {@code identityContext} is {@code null}.
      * @throws IllegalArgumentException if {@code vendorId} is empty.
      */
-    public DataTransferResponseCommand(ChargingStationId chargingStationId, String data, IdentityContext identityContext) {
+    public IncomingDataTransferResponseCommand(ChargingStationId chargingStationId, String responseData, IncomingDataTransferResultStatus status, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.data = checkNotNull(data);
+        this.status = checkNotNull(status);
+        this.responseData = checkNotNull(responseData);
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -58,11 +62,15 @@ public final class DataTransferResponseCommand {
         return chargingStationId;
     }
 
+    public IncomingDataTransferResultStatus getStatus() {
+        return status;
+    }
+
     /**
-     * @return the data.
+     * @return the responseData.
      */
-    public String getData() {
-        return data;
+    public String getResponseData() {
+        return responseData;
     }
 
     /**
@@ -76,7 +84,7 @@ public final class DataTransferResponseCommand {
 
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, data, identityContext);
+        return Objects.hash(chargingStationId, responseData, status, identityContext);
     }
 
     @Override
@@ -87,7 +95,7 @@ public final class DataTransferResponseCommand {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final DataTransferResponseCommand other = (DataTransferResponseCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.data, other.data) && Objects.equals(this.identityContext, other.identityContext);
+        final IncomingDataTransferResponseCommand other = (IncomingDataTransferResponseCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.responseData, other.responseData) && Objects.equals(this.status, other.status) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

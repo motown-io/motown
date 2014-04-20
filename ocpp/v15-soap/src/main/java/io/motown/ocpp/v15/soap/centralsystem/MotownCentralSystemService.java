@@ -28,6 +28,7 @@ import io.motown.ocpp.v15.soap.centralsystem.schema.FirmwareStatus;
 import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.viewmodel.domain.IncomingDataTransferResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,14 +67,27 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
     private AddOnIdentity addOnIdentity;
 
     @Override
-    public DataTransferResponse dataTransfer(DataTransferRequest request, String chargeBoxIdentity) {
-        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
+    public DataTransferResponse dataTransfer(final DataTransferRequest request, final String chargeBoxIdentity) {
+        final DataTransferFutureEventCallback future = new DataTransferFutureEventCallback();
+        final ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
-        domainService.incomingDataTransfer(chargingStationId, request.getData(), request.getVendorId(), request.getMessageId(), addOnIdentity);
+        FutureRequestHandler<DataTransferResponse, IncomingDataTransferResult> handler = new FutureRequestHandler<>(context.getMessageContext(), continuationTimeout);
 
-        DataTransferResponse response = new DataTransferResponse();
-        response.setStatus(DataTransferStatus.ACCEPTED);
-        return response;
+        return handler.handle(future, new CallInitiator() {
+                    @Override
+                    public void initiateCall() {
+                        domainService.incomingDataTransfer(chargingStationId, request.getData(), request.getVendorId(), request.getMessageId(), future, addOnIdentity);
+                    }
+                }, new IncomingDataTransferResponseFactory(), new ResponseFactory<DataTransferResponse>() {
+                    @Override
+                    public DataTransferResponse createResponse() {
+                        LOG.error("Error while io.motown.configuration.simple.handling incoming 'data transfer' request, returning rejected");
+
+                        DataTransferResponse response = new DataTransferResponse();
+                        response.setStatus(DataTransferStatus.REJECTED);
+                        return response;
+                    }
+                });
     }
 
     @Override
@@ -205,7 +219,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         }, new AuthorizeResponseFactory(), new ResponseFactory<AuthorizeResponse>() {
             @Override
             public AuthorizeResponse createResponse() {
-                LOG.error("Error while handling 'authorize' request, returning invalid for idTag: {}", request.getIdTag());
+                LOG.error("Error while io.motown.configuration.simple.handling 'authorize' request, returning invalid for idTag: {}", request.getIdTag());
 
                 AuthorizeResponse response = new AuthorizeResponse();
                 IdTagInfo tagInfo = new IdTagInfo();
@@ -344,6 +358,23 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
                     break;
             }
             response.setIdTagInfo(tagInfo);
+            return response;
+        }
+    }
+
+    private static class IncomingDataTransferResponseFactory implements FutureResponseFactory<DataTransferResponse, IncomingDataTransferResult> {
+        @Override
+        public DataTransferResponse createResponse(IncomingDataTransferResult futureResponse) {
+            DataTransferResponse response = new DataTransferResponse();
+            switch (futureResponse.getStatus()) {
+                case ACCEPTED:
+                    response.setStatus(DataTransferStatus.ACCEPTED);
+                    break;
+                case REJECTED:
+                    response.setStatus(DataTransferStatus.ACCEPTED);
+                    break;
+            }
+            response.setData(futureResponse.getData());
             return response;
         }
     }

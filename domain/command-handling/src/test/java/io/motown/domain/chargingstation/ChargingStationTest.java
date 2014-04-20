@@ -676,6 +676,15 @@ public class ChargingStationTest {
     }
 
     @Test
+    public void testIncomingDataTransferResult() {
+        String dataToTransfer = "Data to return in response";
+        IncomingDataTransferResultStatus status = IncomingDataTransferResultStatus.ACCEPTED;
+        fixture.given(CHARGING_STATION)
+                .when(new IncomingDataTransferResponseCommand(CHARGING_STATION_ID, dataToTransfer, status, NULL_USER_IDENTITY_CONTEXT))
+                .expectEvents(new IncomingDataTransferResultEvent(CHARGING_STATION_ID, dataToTransfer, status, NULL_USER_IDENTITY_CONTEXT));
+    }
+
+    @Test
     public void testChargingStationStatusNotification() {
         Date timeStamp = new Date();
 

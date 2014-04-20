@@ -41,4 +41,6 @@
 
     <import resource="contexts/security-context.xml" />
 
+    <import resource="contexts/datatransfer-handling-configuration-context.xml" />
+
 </beans>

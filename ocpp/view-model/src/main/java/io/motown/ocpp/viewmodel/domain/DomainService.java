@@ -90,9 +90,14 @@ public class DomainService {
     private EventWaitingGateway eventWaitingGateway;
 
     /**
-     * The timeout in milliseconds to wait for the events indicating
+     * The timeout in milliseconds to wait for the authorization response events
      */
     private long authorizationTimeoutInMillis = 10000;
+
+    /**
+     * The timeout in milliseconds to wait for the datatransfer response events
+     */
+    private long dataTransferTimeoutInMillis = 10000;
 
     /**
      * Adds the attribute to the map using the key and value if the value is not null.
@@ -147,10 +152,10 @@ public class DomainService {
         return new BootChargingStationResult(chargingStation.isRegistered(), heartbeatInterval, new Date());
     }
 
-    public void incomingDataTransfer(ChargingStationId chargingStationId, String data, String vendorId, String messageId, AddOnIdentity addOnIdentity) {
+    public void incomingDataTransfer(ChargingStationId chargingStationId, String data, String vendorId, String messageId, FutureEventCallback future, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        commandGateway.send(new IncomingDataTransferCommand(chargingStationId, vendorId, messageId, data, identityContext));
+        eventWaitingGateway.sendAndWaitForEvent(new IncomingDataTransferCommand(chargingStationId, vendorId, messageId, data, identityContext), future, dataTransferTimeoutInMillis);
     }
 
     public void heartbeat(ChargingStationId chargingStationId, AddOnIdentity addOnIdentity) {

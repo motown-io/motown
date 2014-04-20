@@ -16,42 +16,43 @@
 package io.motown.domain.api.chargingstation;
 
 import io.motown.domain.api.security.IdentityContext;
-import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code DataTransferResponseCommand} is the command for processing the optional data a charging station can return
- * upon a datatransfer towards the charging station.
+ * {@code AuthorizationResultEvent} is the event which is published as a result of a request for authorization.
  */
-public final class DataTransferResponseCommand {
+public class IncomingDataTransferResultEvent {
 
-    @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private String data;
+    private final String data;
+
+    private final IncomingDataTransferResultStatus status;
 
     private final IdentityContext identityContext;
 
     /**
-     * Creates a {@code DataTransferResponseCommand} with an identifier.
+     * Creates a {@code AuthorizationResultEvent} with an identifier, identifier and result status.
      *
-     * @param chargingStationId the identifier of the charging station.
-     * @param data              the data to transfer (use an empty string to signify no value).
-     * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code vendorId}, {@code messageId}, {@code data}
-     *                              or {@code identityContext} is {@code null}.
-     * @throws IllegalArgumentException if {@code vendorId} is empty.
+     * @param chargingStationId         the identifier of the charging station.
+     * @param data                      the data to return to the initiator of the data transfer.
+     * @param status                    the status of the acceptance of the sent data.
+     * @param identityContext           identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code idTag}, {@code authorizationResultStatus} or {@code identityContext} is {@code null}.
      */
-    public DataTransferResponseCommand(ChargingStationId chargingStationId, String data, IdentityContext identityContext) {
+    public IncomingDataTransferResultEvent(ChargingStationId chargingStationId, String data, IncomingDataTransferResultStatus status, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.data = checkNotNull(data);
+        this.status = checkNotNull(status);
         this.identityContext = checkNotNull(identityContext);
     }
 
     /**
+     * Gets the charging station identifier.
+     *
      * @return the charging station identifier.
      */
     public ChargingStationId getChargingStationId() {
@@ -59,10 +60,19 @@ public final class DataTransferResponseCommand {
     }
 
     /**
-     * @return the data.
+     * Gets the data to return to the initiator of the data transfer.
+     * @return the data string
      */
     public String getData() {
         return data;
+    }
+
+    /**
+     * Gets the status of the acceptance of the sent data.
+     * @return the result status
+     */
+    public IncomingDataTransferResultStatus getStatus() {
+        return status;
     }
 
     /**
@@ -76,7 +86,7 @@ public final class DataTransferResponseCommand {
 
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, data, identityContext);
+        return Objects.hash(chargingStationId, data, status, identityContext);
     }
 
     @Override
@@ -87,7 +97,7 @@ public final class DataTransferResponseCommand {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final DataTransferResponseCommand other = (DataTransferResponseCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.data, other.data) && Objects.equals(this.identityContext, other.identityContext);
+        final IncomingDataTransferResultEvent other = (IncomingDataTransferResultEvent) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.data, other.data) && Objects.equals(this.status, other.status) && Objects.equals(this.identityContext, other.identityContext);
     }
 }
