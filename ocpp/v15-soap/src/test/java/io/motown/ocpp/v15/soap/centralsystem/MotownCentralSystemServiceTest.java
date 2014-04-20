@@ -18,6 +18,7 @@ package io.motown.ocpp.v15.soap.centralsystem;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ComponentStatus;
 import io.motown.domain.api.chargingstation.MeterValue;
+import io.motown.domain.api.chargingstation.IncomingDataTransferResultStatus;
 import io.motown.domain.api.chargingstation.NumberedTransactionId;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.api.security.TypeBasedAddOnIdentity;
@@ -25,6 +26,9 @@ import io.motown.ocpp.soaputils.header.SoapHeaderReader;
 import io.motown.ocpp.v15.soap.centralsystem.schema.*;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.viewmodel.domain.IncomingDataTransferResult;
+import org.apache.cxf.continuations.Continuation;
+import org.apache.cxf.continuations.ContinuationProvider;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,6 +37,8 @@ import javax.xml.ws.handler.MessageContext;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.v15.soap.V15SOAPTestUtils.*;
@@ -57,6 +63,7 @@ public class MotownCentralSystemServiceTest {
     @Before
     public void setup() {
         motownCentralSystemService = new MotownCentralSystemService();
+        motownCentralSystemService.setContinuationTimeout(100);
 
         soapHeaderReader = mock(SoapHeaderReader.class);
         when(soapHeaderReader.getChargingStationAddress(any(MessageContext.class))).thenReturn(LOCALHOST);
@@ -64,37 +71,56 @@ public class MotownCentralSystemServiceTest {
 
         domainService = mock(DomainService.class);
         motownCentralSystemService.setDomainService(domainService);
-        motownCentralSystemService.setContext(mock(WebServiceContext.class));
         motownCentralSystemService.setAddOnId(ADD_ON_ID);
+        motownCentralSystemService.setContext(mock(WebServiceContext.class));
     }
 
     @Test
-    public void dataTransferAcceptedVerifyResponse() {
+    public void dataTransferAcceptedVerifyResponse() throws InterruptedException, ExecutionException {
+        WebServiceContext webServiceContext = mock(WebServiceContext.class);
+        MessageContext messageContext = mock(MessageContext.class);
+        ContinuationProvider continuationProvider = mock(ContinuationProvider.class);
+        Continuation continuation = mock(Continuation.class);
+        Future future = mock(Future.class);
+        IncomingDataTransferResult incomingDataTransferResult = mock(IncomingDataTransferResult.class);
+        when(incomingDataTransferResult.getStatus()).thenReturn(IncomingDataTransferResultStatus.ACCEPTED);
+        when(future.isDone()).thenReturn(true);
+        when(future.get()).thenReturn(incomingDataTransferResult);
+        when(continuation.getObject()).thenReturn(future);
+        when(continuationProvider.getContinuation()).thenReturn(continuation);
+        when(messageContext.get(any())).thenReturn(continuationProvider);
+        when(webServiceContext.getMessageContext()).thenReturn(messageContext);
+        motownCentralSystemService.setContext(webServiceContext);
+
         DataTransferRequest request = new DataTransferRequest();
 
-        //TODO: Test incoming datatransfer processing - Ingo Pak, 17 Apr 2014
-//        DataTransferResponse response = motownCentralSystemService.dataTransfer(request, CHARGING_STATION_ID.getId());
-//
-//        assertEquals(DataTransferStatus.ACCEPTED, response.getStatus());
+        DataTransferResponse response = motownCentralSystemService.dataTransfer(request, CHARGING_STATION_ID.getId());
+
+        assertEquals(DataTransferStatus.ACCEPTED, response.getStatus());
     }
 
     @Test
-    public void dataTransferVerifyServiceCall() {
+    public void dataTransferRejectedVerifyResponse() throws InterruptedException, ExecutionException {
+        WebServiceContext webServiceContext = mock(WebServiceContext.class);
+        MessageContext messageContext = mock(MessageContext.class);
+        ContinuationProvider continuationProvider = mock(ContinuationProvider.class);
+        Continuation continuation = mock(Continuation.class);
+        Future future = mock(Future.class);
+        IncomingDataTransferResult incomingDataTransferResult = mock(IncomingDataTransferResult.class);
+        when(incomingDataTransferResult.getStatus()).thenReturn(IncomingDataTransferResultStatus.REJECTED);
+        when(future.isDone()).thenReturn(true);
+        when(future.get()).thenReturn(incomingDataTransferResult);
+        when(continuation.getObject()).thenReturn(future);
+        when(continuationProvider.getContinuation()).thenReturn(continuation);
+        when(messageContext.get(any())).thenReturn(continuationProvider);
+        when(webServiceContext.getMessageContext()).thenReturn(messageContext);
+        motownCentralSystemService.setContext(webServiceContext);
+
         DataTransferRequest request = new DataTransferRequest();
-        request.setData(DATA_TRANSFER_DATA);
-        request.setVendorId(DATA_TRANSFER_VENDOR);
-        request.setMessageId(DATA_TRANSFER_MESSAGE_ID);
 
-        //TODO: Test incoming datatransfer processing - Ingo Pak, 17 Apr 2014
-//        motownCentralSystemService.dataTransfer(request, CHARGING_STATION_ID.getId());
+        DataTransferResponse response = motownCentralSystemService.dataTransfer(request, CHARGING_STATION_ID.getId());
 
-//        FutureEventCallback futureEventCallback = new FutureEventCallback() {
-//            @Override
-//            public boolean onEvent(EventMessage<?> event) {
-//                return false;
-//            }
-//        };
-//        verify(domainService).incomingDataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_DATA, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, futureEventCallback, OCPPS15_ADD_ON_IDENTITY);
+        assertEquals(DataTransferStatus.REJECTED, response.getStatus());
     }
 
     @Test
