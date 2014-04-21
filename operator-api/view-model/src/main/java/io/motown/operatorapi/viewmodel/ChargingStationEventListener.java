@@ -15,7 +15,6 @@
  */
 package io.motown.operatorapi.viewmodel;
 
-import com.google.common.collect.ImmutableMap;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.operatorapi.viewmodel.persistence.entities.Availability;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
@@ -245,7 +244,7 @@ public class ChargingStationEventListener {
 
     /**
      * Handles the {@code ChargingStationAvailabilityChangedToInoperativeEvent}.
-     *
+     * <p/>
      * Sets the charging station to inoperative.
      *
      * @param event the event to handle.
@@ -425,7 +424,6 @@ public class ChargingStationEventListener {
      * @return a {@code Map} of {@code String} and {@code String}.
      */
     private Map<String, String> toConfigurationItemMap(Set<ConfigurationItem> configurationItems) {
-        ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
         Map<String, String> map = new HashMap<>(configurationItems.size());
 
         for (ConfigurationItem configurationItem : configurationItems) {
