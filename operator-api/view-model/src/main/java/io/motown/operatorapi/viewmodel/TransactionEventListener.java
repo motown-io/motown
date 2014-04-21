@@ -45,9 +45,7 @@ public class TransactionEventListener {
 
         Transaction transaction = repository.findByTransactionId(event.getTransactionId().getId());
 
-        if (transaction == null) {
-            LOG.error("cannot find unique transaction with transaction id {}", event.getTransactionId());
-        } else {
+        if (transaction != null) {
             transaction.setMeterStop(event.getMeterStop());
             transaction.setStoppedTimestamp(event.getTimestamp());
             repository.save(transaction);
@@ -66,8 +64,6 @@ public class TransactionEventListener {
                     transaction.getMeterValues().add(new io.motown.operatorapi.viewmodel.persistence.entities.MeterValue(coreMeterValue.getTimestamp(), coreMeterValue.getValue()));
                 }
                 repository.save(transaction);
-            } else {
-                LOG.error("cannot find unique transaction with transaction id {}", event.getTransactionId());
             }
         }
     }
