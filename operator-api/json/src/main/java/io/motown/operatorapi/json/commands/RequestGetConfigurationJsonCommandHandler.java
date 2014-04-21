@@ -25,6 +25,8 @@ import io.motown.operatorapi.viewmodel.model.RequestGetConfigurationApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
+import java.util.HashSet;
+
 class RequestGetConfigurationJsonCommandHandler implements JsonCommandHandler {
 
     private static final String COMMAND_NAME = "RequestGetConfiguration";
@@ -48,7 +50,7 @@ class RequestGetConfigurationJsonCommandHandler implements JsonCommandHandler {
 
                 RequestGetConfigurationApiCommand command = gson.fromJson(commandObject, RequestGetConfigurationApiCommand.class);
 
-                commandGateway.send(new RequestConfigurationItemsCommand(new ChargingStationId(chargingStationId), command.getKeys(), identityContext));
+                commandGateway.send(new RequestConfigurationItemsCommand(new ChargingStationId(chargingStationId), new HashSet<>(command.getKeys()), identityContext));
             } else {
                 throw new IllegalStateException("It is not possible to get configuration for a charging station that is not registered");
             }

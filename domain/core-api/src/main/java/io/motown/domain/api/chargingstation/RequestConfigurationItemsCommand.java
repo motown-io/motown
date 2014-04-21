@@ -15,12 +15,12 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -34,7 +34,7 @@ public final class RequestConfigurationItemsCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final List<String> keys;
+    private final Set<String> keys;
 
     private final IdentityContext identityContext;
 
@@ -42,13 +42,13 @@ public final class RequestConfigurationItemsCommand {
      * Creates a {@code RequestConfigurationItemsCommand} with an identifier and identity context.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param keys              an optional list of keys to retrieve, or all keys in case this list is empty
+     * @param keys              an optional set of keys to retrieve, or all keys in case this set is empty
      * @param identityContext   the identity context.
      * @throws NullPointerException if {@code chargingStationId}, {@code keys}, or {@code identityContext} is {@code null}.
      */
-    public RequestConfigurationItemsCommand(ChargingStationId chargingStationId, List<String> keys, IdentityContext identityContext) {
+    public RequestConfigurationItemsCommand(ChargingStationId chargingStationId, Set<String> keys, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.keys = ImmutableList.copyOf(checkNotNull(keys));
+        this.keys = ImmutableSet.copyOf(checkNotNull(keys));
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -62,11 +62,11 @@ public final class RequestConfigurationItemsCommand {
     }
 
     /**
-     * The optional list of keys to be retrieved. The retrieved list is immutable.
+     * The optional set of keys to be retrieved. The retrieved list is immutable.
      *
-     * @return optional list of keys
+     * @return optional set of keys
      */
-    public List<String> getKeys() {
+    public Set<String> getKeys() {
         return keys;
     }
 

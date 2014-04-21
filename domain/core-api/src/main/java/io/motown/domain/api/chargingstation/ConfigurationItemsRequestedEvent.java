@@ -15,11 +15,11 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.security.IdentityContext;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -33,7 +33,7 @@ public final class ConfigurationItemsRequestedEvent implements CommunicationWith
 
     private final ChargingStationId chargingStationId;
 
-    private final List<String> keys;
+    private final Set<String> keys;
 
     private final String protocol;
 
@@ -43,14 +43,14 @@ public final class ConfigurationItemsRequestedEvent implements CommunicationWith
      * Creates a {@code ConfigurationItemsRequestedEvent} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param keys              an optional list of keys to retrieve, or all keys in case this list is empty
+     * @param keys              an optional set of keys to retrieve, or all keys in case this set is empty
      * @param protocol          protocol identifier.
      * @param identityContext   identity context.
      * @throws NullPointerException if {@code chargingStationId}, {@code keys}, {@code protocol} or {@code identityContext} is {@code null}.
      */
-    public ConfigurationItemsRequestedEvent(ChargingStationId chargingStationId, List<String> keys, String protocol, IdentityContext identityContext) {
+    public ConfigurationItemsRequestedEvent(ChargingStationId chargingStationId, Set<String> keys, String protocol, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.keys = ImmutableList.copyOf(checkNotNull(keys));
+        this.keys = ImmutableSet.copyOf(checkNotNull(keys));
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());
         this.protocol = protocol;
@@ -68,11 +68,11 @@ public final class ConfigurationItemsRequestedEvent implements CommunicationWith
     }
 
     /**
-     * The optional list of keys to be retrieved
+     * The optional set of keys to be retrieved
      *
-     * @return optional list of keys
+     * @return optional set of keys
      */
-    public List<String> getKeys() {
+    public Set<String> getKeys() {
         return keys;
     }
 

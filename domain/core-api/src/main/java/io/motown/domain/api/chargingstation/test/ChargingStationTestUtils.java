@@ -18,7 +18,6 @@ package io.motown.domain.api.chargingstation.test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.*;
 import org.joda.time.DateTimeUtils;
@@ -306,7 +305,7 @@ public final class ChargingStationTestUtils {
     /**
      * The default configuration keys to retrieve from the charging station
      */
-    public static final List<String> CONFIGURATION_KEYS = Lists.newArrayList();
+    public static final Set<String> CONFIGURATION_KEYS = new HashSet<>();
     /**
      * The default user identity.
      */
