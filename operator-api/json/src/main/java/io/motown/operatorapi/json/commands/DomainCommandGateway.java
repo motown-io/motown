@@ -55,7 +55,7 @@ interface DomainCommandGateway {
 
     void send(RequestAuthorizationListVersionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
-    void send(SendAuthorizationListCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(RequestSendAuthorizationListCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
     void send(RequestReserveNowCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 

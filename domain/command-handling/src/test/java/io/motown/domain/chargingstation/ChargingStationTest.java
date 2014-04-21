@@ -545,7 +545,7 @@ public class ChargingStationTest {
         final String hash = "4894007260";
 
         fixture.given(CHARGING_STATION)
-                .when(new SendAuthorizationListCommand(CHARGING_STATION_ID, IDENTIFYING_TOKENS, version, hash, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT))
+                .when(new RequestSendAuthorizationListCommand(CHARGING_STATION_ID, IDENTIFYING_TOKENS, version, hash, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new SendAuthorizationListRequestedEvent(CHARGING_STATION_ID, PROTOCOL, IDENTIFYING_TOKENS, version, hash, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT));
     }
 
@@ -555,7 +555,7 @@ public class ChargingStationTest {
         final String hash = "4894007260";
 
         fixture.given(UNCONFIGURED_CHARGING_STATION)
-                .when(new SendAuthorizationListCommand(CHARGING_STATION_ID, IDENTIFYING_TOKENS, version, hash, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT))
+                .when(new RequestSendAuthorizationListCommand(CHARGING_STATION_ID, IDENTIFYING_TOKENS, version, hash, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
 
@@ -565,7 +565,7 @@ public class ChargingStationTest {
         final String hash = "4894007260";
 
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
-                .when(new SendAuthorizationListCommand(CHARGING_STATION_ID, IDENTIFYING_TOKENS, version, hash, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT))
+                .when(new RequestSendAuthorizationListCommand(CHARGING_STATION_ID, IDENTIFYING_TOKENS, version, hash, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
 

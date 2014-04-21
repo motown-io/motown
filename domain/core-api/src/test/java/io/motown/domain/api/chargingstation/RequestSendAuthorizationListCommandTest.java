@@ -22,31 +22,31 @@ import java.util.Collections;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
 
-public class SendAuthorizationListCommandTest {
+public class RequestSendAuthorizationListCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new SendAuthorizationListCommand(null, Collections.<IdentifyingToken>emptyList(), 1, "", AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT);
+        new RequestSendAuthorizationListCommand(null, Collections.<IdentifyingToken>emptyList(), 1, "", AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithTokensNull() {
-        new SendAuthorizationListCommand(CHARGING_STATION_ID, null, 1, "", AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT);
+        new RequestSendAuthorizationListCommand(CHARGING_STATION_ID, null, 1, "", AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithHashNull() {
-        new SendAuthorizationListCommand(CHARGING_STATION_ID, Collections.<IdentifyingToken>emptyList(), 1, null, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT);
+        new RequestSendAuthorizationListCommand(CHARGING_STATION_ID, Collections.<IdentifyingToken>emptyList(), 1, null, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithUpdateTypeNull() {
-        new SendAuthorizationListCommand(CHARGING_STATION_ID, Collections.<IdentifyingToken>emptyList(), 1, "", null, ROOT_IDENTITY_CONTEXT);
+        new RequestSendAuthorizationListCommand(CHARGING_STATION_ID, Collections.<IdentifyingToken>emptyList(), 1, "", null, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
-        new SendAuthorizationListCommand(CHARGING_STATION_ID, Collections.<IdentifyingToken>emptyList(), 1, "", AuthorizationListUpdateType.FULL, null);
+        new RequestSendAuthorizationListCommand(CHARGING_STATION_ID, Collections.<IdentifyingToken>emptyList(), 1, "", AuthorizationListUpdateType.FULL, null);
     }
 
 }

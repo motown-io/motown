@@ -25,10 +25,10 @@ import java.util.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code SendAuthorizationListCommand} is the command which is published in order to update the local authorization
+ * {@code RequestSendAuthorizationListCommand} is the command which is published in order to update the local authorization
  * list of the charging station.
  */
-public final class SendAuthorizationListCommand {
+public final class RequestSendAuthorizationListCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
@@ -44,7 +44,7 @@ public final class SendAuthorizationListCommand {
     private final IdentityContext identityContext;
 
     /**
-     * Creates a {@code SendAuthorizationListCommand}
+     * Creates a {@code RequestSendAuthorizationListCommand}
      *
      * @param chargingStationId        the identifier of the charging station.
      * @param authorizationList        in case of a full update this contains the list of values that form the new local
@@ -56,10 +56,10 @@ public final class SendAuthorizationListCommand {
      * @param authorizationListHash    hash value calculated over the contents of the list.
      * @param identityContext          identity context.
      * @throws NullPointerException if {@code chargingStationId}, {@code authorizationList}, {@code authorizationListHash},
-     *                                 {@code updateType} or {@code identityContext} is {@code null}.
+     *                              {@code updateType} or {@code identityContext} is {@code null}.
      */
-    public SendAuthorizationListCommand(ChargingStationId chargingStationId, List<IdentifyingToken> authorizationList, int authorizationListVersion,
-                                        String authorizationListHash, AuthorizationListUpdateType updateType, IdentityContext identityContext) {
+    public RequestSendAuthorizationListCommand(ChargingStationId chargingStationId, List<IdentifyingToken> authorizationList, int authorizationListVersion,
+                                               String authorizationListHash, AuthorizationListUpdateType updateType, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.authorizationList = ImmutableList.copyOf(checkNotNull(authorizationList));
         this.authorizationListVersion = authorizationListVersion;
@@ -137,7 +137,7 @@ public final class SendAuthorizationListCommand {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final SendAuthorizationListCommand other = (SendAuthorizationListCommand) obj;
+        final RequestSendAuthorizationListCommand other = (RequestSendAuthorizationListCommand) obj;
         return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.authorizationList, other.authorizationList) && Objects.equals(this.authorizationListVersion, other.authorizationListVersion) && Objects.equals(this.authorizationListHash, other.authorizationListHash) && Objects.equals(this.updateType, other.updateType) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

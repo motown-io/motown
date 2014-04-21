@@ -51,7 +51,7 @@ class SendAuthorizationListJsonCommandHandler implements JsonCommandHandler {
 
             // TODO other command handlers check if a charging station exists in the repository, why is that not done here? - Mark van den Bergh, Februari 26th 2014
             // TODO enable usage of hash in API - Dennis Laumen, January 13th 2014
-            commandGateway.send(new SendAuthorizationListCommand(new ChargingStationId(chargingStationId), authorizationList, command.getListVersion(), "", updateType, identityContext), new CorrelationToken());
+            commandGateway.send(new RequestSendAuthorizationListCommand(new ChargingStationId(chargingStationId), authorizationList, command.getListVersion(), "", updateType, identityContext), new CorrelationToken());
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("SendAuthorizationList command not able to parse the payload, is your json correctly formatted ?", ex);
         }

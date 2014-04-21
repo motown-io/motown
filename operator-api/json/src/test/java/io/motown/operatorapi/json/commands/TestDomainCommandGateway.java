@@ -115,8 +115,8 @@ public class TestDomainCommandGateway implements DomainCommandGateway {
     }
 
     @Override
-    public void send(SendAuthorizationListCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
-        LOG.debug("SendAuthorizationListCommand: " + command.toString());
+    public void send(RequestSendAuthorizationListCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestSendAuthorizationListCommand: " + command.toString());
     }
 
     @Override
