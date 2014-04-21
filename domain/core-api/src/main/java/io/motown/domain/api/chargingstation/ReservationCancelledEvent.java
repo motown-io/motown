@@ -24,11 +24,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * {@code ReservationCancelledEvent} is published when a reservation cancellation has been successfully processed.
  */
-public final class ReservationCancelledEvent implements CommunicationWithChargingStationRequestedEvent {
+public final class ReservationCancelledEvent {
 
     private final ChargingStationId chargingStationId;
-
-    private final String protocol;
 
     private final ReservationId reservationId;
 
@@ -38,32 +36,23 @@ public final class ReservationCancelledEvent implements CommunicationWithChargin
      * Creates a {@code ReservationCancelledEvent}.
      *
      * @param chargingStationId charging station identifier.
-     * @param protocol          protocol identifier.
      * @param reservationId     reservation identifier.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code reservationId} or {@code identityContext} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId}, {@code reservationId} or {@code identityContext} is {@code null}.
      */
-    public ReservationCancelledEvent(ChargingStationId chargingStationId, String protocol, ReservationId reservationId, IdentityContext identityContext) {
+    public ReservationCancelledEvent(ChargingStationId chargingStationId, ReservationId reservationId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.protocol = checkNotNull(protocol);
         this.reservationId = checkNotNull(reservationId);
         this.identityContext = checkNotNull(identityContext);
     }
 
     /**
-     * {@inheritDoc}
+     * Gets the charging station's id.
+     *
+     * @return the charging station's id.
      */
-    @Override
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getProtocol() {
-        return protocol;
     }
 
     /**
@@ -84,11 +73,17 @@ public final class ReservationCancelledEvent implements CommunicationWithChargin
         return identityContext;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, protocol, reservationId, identityContext);
+        return Objects.hash(chargingStationId, reservationId, identityContext);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -98,6 +93,18 @@ public final class ReservationCancelledEvent implements CommunicationWithChargin
             return false;
         }
         final ReservationCancelledEvent other = (ReservationCancelledEvent) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.protocol, other.protocol) && Objects.equals(this.reservationId, other.reservationId) && Objects.equals(this.identityContext, other.identityContext);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.reservationId, other.reservationId) && Objects.equals(this.identityContext, other.identityContext);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return com.google.common.base.Objects.toStringHelper(this)
+                .add("chargingStationId", chargingStationId)
+                .add("reservationId", reservationId)
+                .add("identityContext", identityContext)
+                .toString();
     }
 }
