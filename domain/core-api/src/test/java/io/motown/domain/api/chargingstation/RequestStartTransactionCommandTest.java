@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
@@ -34,5 +35,10 @@ public class RequestStartTransactionCommandTest {
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullIdentityContext() {
         new RequestStartTransactionCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, EVSE_ID, null);
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(RequestStartTransactionCommand.class).usingGetClass().verify();
     }
 }

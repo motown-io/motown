@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -49,5 +50,10 @@ public class ChargingStationConfiguredEventTest {
         assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
         assertEquals(EVSES, event.getEvses());
         assertNotNull(event.toString());
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(ChargingStationConfiguredEvent.class).usingGetClass().verify();
     }
 }

@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
@@ -51,4 +52,8 @@ public class AddressTest {
         new Address("", "", "", "", "", "");
     }
 
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(Address.class).usingGetClass().verify();
+    }
 }

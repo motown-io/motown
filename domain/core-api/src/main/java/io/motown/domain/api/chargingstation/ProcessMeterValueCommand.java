@@ -32,11 +32,11 @@ public final class ProcessMeterValueCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private TransactionId transactionId;
+    private final TransactionId transactionId;
 
-    private EvseId evseId;
+    private final EvseId evseId;
 
-    private List<MeterValue> meterValueList;
+    private final List<MeterValue> meterValueList;
 
     private final IdentityContext identityContext;
 

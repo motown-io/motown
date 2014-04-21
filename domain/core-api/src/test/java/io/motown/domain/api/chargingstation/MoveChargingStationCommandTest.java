@@ -43,7 +43,7 @@ public class MoveChargingStationCommandTest {
     }
 
     @Test
-    public void equalsAndHashcodeShouldBeImplementedAccordingToTheContract() {
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
         EqualsVerifier.forClass(MoveChargingStationCommand.class).usingGetClass().verify();
     }
 }

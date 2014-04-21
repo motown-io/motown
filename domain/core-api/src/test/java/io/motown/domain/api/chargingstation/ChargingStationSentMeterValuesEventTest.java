@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -53,5 +54,10 @@ public class ChargingStationSentMeterValuesEventTest {
         assertEquals(EVSE_ID, event.getEvseId());
         assertEquals(new ArrayList<MeterValue>(), event.getMeterValueList());
         assertEquals(NULL_USER_IDENTITY_CONTEXT, event.getIdentityContext());
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(ChargingStationSentMeterValuesEvent.class).usingGetClass().verify();
     }
 }

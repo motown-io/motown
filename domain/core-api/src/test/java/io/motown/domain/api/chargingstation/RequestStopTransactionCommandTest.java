@@ -15,11 +15,10 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.TRANSACTION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class RequestStopTransactionCommandTest {
 
@@ -36,5 +35,10 @@ public class RequestStopTransactionCommandTest {
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullIdentityContext() {
         new RequestStopTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, null);
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(RequestStopTransactionCommand.class).usingGetClass().verify();
     }
 }

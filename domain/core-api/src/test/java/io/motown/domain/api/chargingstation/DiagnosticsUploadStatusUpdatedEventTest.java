@@ -16,6 +16,7 @@
 package io.motown.domain.api.chargingstation;
 
 import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 public class DiagnosticsUploadStatusUpdatedEventTest {
@@ -28,5 +29,10 @@ public class DiagnosticsUploadStatusUpdatedEventTest {
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
         new DiagnosticsUploadStatusUpdatedEvent(ChargingStationTestUtils.CHARGING_STATION_ID, true, null);
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(DiagnosticsUploadStatusUpdatedEvent.class).usingGetClass().verify();
     }
 }

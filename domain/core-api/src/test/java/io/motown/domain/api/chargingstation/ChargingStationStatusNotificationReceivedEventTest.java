@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -56,5 +57,10 @@ public class ChargingStationStatusNotificationReceivedEventTest {
         ChargingStationStatusNotificationReceivedEvent event = new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, now, BOOT_NOTIFICATION_ATTRIBUTES, NULL_USER_IDENTITY_CONTEXT);
         event.getTimestamp().setTime(TWO_MINUTES_AGO.getTime());
         assertEquals(now, event.getTimestamp());
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(ChargingStationStatusNotificationReceivedEvent.class).usingGetClass().verify();
     }
 }

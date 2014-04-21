@@ -15,13 +15,12 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import java.util.Collections;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.PROTOCOL;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class SendAuthorizationListEventTest {
 
@@ -58,5 +57,10 @@ public class SendAuthorizationListEventTest {
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithIdentityContextNull() {
         new SendAuthorizationListRequestedEvent(CHARGING_STATION_ID, PROTOCOL, Collections.<IdentifyingToken>emptyList(), 1, "", AuthorizationListUpdateType.FULL, null);
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(SendAuthorizationListRequestedEvent.class).usingGetClass().verify();
     }
 }

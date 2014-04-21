@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -38,5 +39,10 @@ public class ConfigureChargingStationCommandTest {
         ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(CHARGING_STATION_ID, EVSES, NULL_USER_IDENTITY_CONTEXT);
 
         command.getEvses().add(new Evse(EVSE_ID, CONNECTORS));
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(ConfigureChargingStationCommand.class).usingGetClass().verify();
     }
 }

@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -43,4 +44,8 @@ public class ProcessMeterValuesCommandTest {
         new ProcessMeterValueCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, Collections.<MeterValue>emptyList(), null);
     }
 
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(ProcessMeterValueCommand.class).usingGetClass().verify();
+    }
 }

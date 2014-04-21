@@ -15,14 +15,12 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
-
-import java.util.Objects;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.NULL_USER_IDENTITY_CONTEXT;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class UpdateFirmwareStatusCommandTest {
 
@@ -50,21 +48,7 @@ public class UpdateFirmwareStatusCommandTest {
     }
 
     @Test
-    public void hashCodeEqualsChargingStationIdAndStatusHashCode() {
-        assertEquals(Objects.hash(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED, NULL_USER_IDENTITY_CONTEXT), new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED, NULL_USER_IDENTITY_CONTEXT).hashCode());
-    }
-
-    @Test
-    public void equalsWithSameInstanceReturnsTrue() {
-        UpdateFirmwareStatusCommand command = new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED, NULL_USER_IDENTITY_CONTEXT);
-
-        assertTrue(command.equals(command));
-    }
-
-    @Test
-    public void equalsWithSameValuesReturnsTrue() {
-        UpdateFirmwareStatusCommand command = new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED, NULL_USER_IDENTITY_CONTEXT);
-
-        assertTrue(command.equals(new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED, NULL_USER_IDENTITY_CONTEXT)));
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(UpdateFirmwareStatusCommand.class).usingGetClass().verify();
     }
 }

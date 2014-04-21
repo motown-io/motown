@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
@@ -49,5 +50,10 @@ public class IncomingDataTransferCommandTest {
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenIdentityContextNull() {
         new IncomingDataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA, null);
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(IncomingDataTransferCommand.class).usingGetClass().verify();
     }
 }

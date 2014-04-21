@@ -30,11 +30,11 @@ public final class IncomingDataTransferReceivedEvent {
 
     private final ChargingStationId chargingStationId;
 
-    private String vendorId;
+    private final String vendorId;
 
-    private String messageId;
+    private final String messageId;
 
-    private String data;
+    private final String data;
 
     private final IdentityContext identityContext;
 

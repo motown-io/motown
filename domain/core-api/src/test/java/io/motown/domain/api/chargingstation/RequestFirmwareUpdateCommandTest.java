@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -61,5 +62,10 @@ public class RequestFirmwareUpdateCommandTest {
         RequestFirmwareUpdateCommand command = new RequestFirmwareUpdateCommand(CHARGING_STATION_ID, UPDATE_LOCATION, now, BOOT_NOTIFICATION_ATTRIBUTES, ROOT_IDENTITY_CONTEXT);
         command.getRetrieveDate().setTime(TWO_MINUTES_AGO.getTime());
         assertEquals(now, command.getRetrieveDate());
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(RequestFirmwareUpdateCommand.class).usingGetClass().verify();
     }
 }

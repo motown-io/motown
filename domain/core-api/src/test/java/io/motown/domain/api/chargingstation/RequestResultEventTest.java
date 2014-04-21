@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
@@ -40,5 +41,10 @@ public class RequestResultEventTest {
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithoutIdentityContext() {
         new RequestResultEvent(CHARGING_STATION_ID, RequestResult.FAILURE, "Test message", null);
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(RequestResultEvent.class).usingGetClass().verify();
     }
 }

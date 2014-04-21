@@ -43,7 +43,7 @@ public class ImproveChargingStationLocationCommandTest {
     }
 
     @Test
-    public void equalsAndHashcodeShouldBeImplementedAccordingToTheContract() {
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
         EqualsVerifier.forClass(ImproveChargingStationLocationCommand.class).usingGetClass().verify();
     }
 }

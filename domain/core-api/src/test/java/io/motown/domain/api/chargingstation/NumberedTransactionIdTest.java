@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
@@ -41,5 +42,10 @@ public class NumberedTransactionIdTest {
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithNegativeNumber() {
         new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL, NEGATIVE_TRANSACTION_NUMBER);
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(NumberedTransactionId.class).usingGetClass().verify();
     }
 }

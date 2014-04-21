@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import java.util.Date;
@@ -50,5 +51,10 @@ public class StartTransactionCommandTest {
         StartTransactionCommand command = new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, TRANSACTION_NUMBER, now, NULL_USER_IDENTITY_CONTEXT);
         command.getTimestamp().setTime(TWO_MINUTES_AGO.getTime());
         assertEquals(now, command.getTimestamp());
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(StartTransactionCommand.class).usingGetClass().verify();
     }
 }

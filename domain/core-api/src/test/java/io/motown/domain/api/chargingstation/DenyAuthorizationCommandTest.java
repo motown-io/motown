@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
@@ -36,4 +37,8 @@ public class DenyAuthorizationCommandTest {
         new DenyAuthorizationCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, null);
     }
 
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(DenyAuthorizationCommand.class).usingGetClass().verify();
+    }
 }

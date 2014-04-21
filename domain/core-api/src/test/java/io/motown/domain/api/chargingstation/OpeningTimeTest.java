@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
@@ -60,4 +61,10 @@ public class OpeningTimeTest {
     public void testNullPointerExceptionBeingThrown() {
         new OpeningTime(null, null, null);
     }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(OpeningTime.class).usingGetClass().verify();
+    }
+
 }

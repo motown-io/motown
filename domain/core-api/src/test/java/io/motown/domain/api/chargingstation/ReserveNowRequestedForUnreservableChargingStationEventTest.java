@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import java.util.Date;
@@ -56,7 +57,6 @@ public class ReserveNowRequestedForUnreservableChargingStationEventTest {
         new ReserveNowRequestedForUnreservableChargingStationEvent(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, EXPIRY_DATE, IDENTIFYING_TOKEN, null);
     }
 
-
     @Test
     public void testImmutableDate() {
         Date now = new Date();
@@ -66,4 +66,8 @@ public class ReserveNowRequestedForUnreservableChargingStationEventTest {
         assertEquals(now, event.getExpiryDate());
     }
 
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(ReserveNowRequestedForUnreservableChargingStationEvent.class).usingGetClass().verify();
+    }
 }

@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -43,5 +44,10 @@ public class BootChargingStationCommandTest {
         BootChargingStationCommand command = new BootChargingStationCommand(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT);
 
         command.getAttributes().put("foo", "bar");
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(BootChargingStationCommand.class).usingGetClass().verify();
     }
 }

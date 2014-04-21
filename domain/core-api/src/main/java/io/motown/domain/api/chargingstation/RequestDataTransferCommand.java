@@ -32,11 +32,11 @@ public final class RequestDataTransferCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private String vendorId;
+    private final String vendorId;
 
-    private String messageId;
+    private final String messageId;
 
-    private String data;
+    private final String data;
 
     private final IdentityContext identityContext;
 
@@ -48,8 +48,8 @@ public final class RequestDataTransferCommand {
      * @param messageId         optional additional identification field (use an empty string to signify no value).
      * @param data              the data to transfer (use an empty string to signify no value).
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code vendorId}, {@code messageId}, {@code data}
-     *                              or {@code identityContext} is {@code null}.
+     * @throws NullPointerException     if {@code chargingStationId}, {@code vendorId}, {@code messageId}, {@code data}
+     *                                  or {@code identityContext} is {@code null}.
      * @throws IllegalArgumentException if {@code vendorId} is empty.
      */
     public RequestDataTransferCommand(ChargingStationId chargingStationId, String vendorId, String messageId, String data, IdentityContext identityContext) {

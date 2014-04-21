@@ -15,11 +15,10 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.EVSE_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static org.junit.Assert.assertEquals;
 
 public class EvseNotFoundEventTest {
@@ -48,4 +47,8 @@ public class EvseNotFoundEventTest {
         assertEquals(ROOT_IDENTITY_CONTEXT, event.getIdentityContext());
     }
 
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(EvseNotFoundEvent.class).usingGetClass().verify();
+    }
 }

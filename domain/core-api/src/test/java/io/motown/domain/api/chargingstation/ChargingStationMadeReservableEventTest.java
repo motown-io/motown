@@ -15,9 +15,11 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
 
 public class ChargingStationMadeReservableEventTest {
 
@@ -31,4 +33,8 @@ public class ChargingStationMadeReservableEventTest {
         new ChargingStationMadeReservableEvent(CHARGING_STATION_ID, null);
     }
 
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(ChargingStationMadeReservableEvent.class).usingGetClass().verify();
+    }
 }

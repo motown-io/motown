@@ -23,22 +23,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * {@code DataTransferRequestedEvent} is the event which is published when a datatransfer to a charging station is requested.
  */
-public final class DataTransferRequestedEvent implements CommunicationWithChargingStationRequestedEvent  {
+public final class DataTransferRequestedEvent implements CommunicationWithChargingStationRequestedEvent {
 
     private final ChargingStationId chargingStationId;
 
     private final String protocol;
 
-    private String vendorId;
+    private final String vendorId;
 
-    private String messageId;
+    private final String messageId;
 
-    private String data;
+    private final String data;
 
     private final IdentityContext identityContext;
 
     /**
      * Creates a {@code DataTransferRequestedEvent} with an identifier, vendor identifier, message identifier, and free format data.
+     *
      * @param chargingStationId the identifier of the charging station.
      * @param protocol          the protocol identifier.
      * @param vendorId          the vendor identifier.

@@ -39,7 +39,7 @@ public final class FirmwareUpdateRequestedEvent implements CommunicationWithChar
 
     private final Date retrieveDate;
 
-    private Map<String, String> attributes;
+    private final Map<String, String> attributes;
 
     private final IdentityContext identityContext;
 

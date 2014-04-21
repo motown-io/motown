@@ -38,13 +38,13 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
 
     private final String uploadLocation;
 
-    private Integer numRetries;
+    private final Integer numRetries;
 
-    private Integer retryInterval;
+    private final Integer retryInterval;
 
-    private Date periodStartTime;
+    private final Date periodStartTime;
 
-    private Date periodStopTime;
+    private final Date periodStopTime;
 
     private final IdentityContext identityContext;
 
@@ -59,12 +59,7 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
      *                              {@code identityContext} is {@code null}.
      */
     public DiagnosticsRequestedEvent(ChargingStationId chargingStationId, String protocol, String uploadLocation, IdentityContext identityContext) {
-        this.chargingStationId = checkNotNull(chargingStationId);
-        checkNotNull(protocol);
-        checkArgument(!protocol.isEmpty());
-        this.protocol = protocol;
-        this.uploadLocation = checkNotNull(uploadLocation);
-        this.identityContext = checkNotNull(identityContext);
+        this(chargingStationId, protocol, uploadLocation, null, null, null, null, identityContext);
     }
 
     /**
@@ -83,12 +78,16 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
      */
     public DiagnosticsRequestedEvent(ChargingStationId chargingStationId, String protocol, String uploadLocation, @Nullable Integer numRetries,
                                      @Nullable Integer retryInterval, @Nullable Date periodStartTime, @Nullable Date periodStopTime, IdentityContext identityContext) {
-        this(chargingStationId, protocol, uploadLocation, identityContext);
-
+        this.chargingStationId = checkNotNull(chargingStationId);
+        checkNotNull(protocol);
+        checkArgument(!protocol.isEmpty());
+        this.protocol = protocol;
+        this.uploadLocation = checkNotNull(uploadLocation);
         this.numRetries = numRetries;
         this.retryInterval = retryInterval;
         this.periodStartTime = periodStartTime != null ? new Date(periodStartTime.getTime()) : null;
         this.periodStopTime = periodStopTime != null ? new Date(periodStopTime.getTime()) : null;
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**

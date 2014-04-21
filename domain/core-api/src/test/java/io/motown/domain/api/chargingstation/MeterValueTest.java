@@ -52,7 +52,7 @@ public class MeterValueTest {
     }
 
     @Test
-    public void equalsAndHashcodeShouldBeImplementedAccordingToTheContract() {
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
         EqualsVerifier.forClass(MeterValue.class).verify();
     }
 

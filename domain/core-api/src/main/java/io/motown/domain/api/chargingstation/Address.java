@@ -23,10 +23,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public final class Address {
     private final String addressLine1;
-    private String addressLine2;
-    private String postalCode;
+    private final String addressLine2;
+    private final String postalCode;
     private final String city;
-    private String region;
+    private final String region;
     private final String country;
 
     /**
@@ -34,10 +34,10 @@ public final class Address {
      *
      * @param addressLine1 This usually denotes a street including a house number.
      * @param addressLine2 This is used for e.g. a building number.
-     * @param postalCode The postal code of the address.
-     * @param city The city of the address.
-     * @param region The region of the address.
-     * @param country The country of the address.
+     * @param postalCode   The postal code of the address.
+     * @param city         The city of the address.
+     * @param region       The region of the address.
+     * @param country      The country of the address.
      * @throws java.lang.NullPointerException if one of the parameters is {@code null}.
      */
     public Address(String addressLine1, String addressLine2, String postalCode, String city, String region, String country) {
@@ -57,6 +57,7 @@ public final class Address {
 
     /**
      * Gets the first address line.
+     *
      * @return the first address line.
      */
     public String getAddressLine1() {
@@ -65,6 +66,7 @@ public final class Address {
 
     /**
      * Gets the second address line.
+     *
      * @return the second address line.
      */
     public String getAddressLine2() {
@@ -73,6 +75,7 @@ public final class Address {
 
     /**
      * Gets the postal code.
+     *
      * @return the postal code.
      */
     public String getPostalCode() {
@@ -81,6 +84,7 @@ public final class Address {
 
     /**
      * Gets the city.
+     *
      * @return the city.
      */
     public String getCity() {
@@ -89,6 +93,7 @@ public final class Address {
 
     /**
      * Gets the region.
+     *
      * @return the region.
      */
     public String getRegion() {
@@ -97,6 +102,7 @@ public final class Address {
 
     /**
      * Gets the country.
+     *
      * @return the country.
      */
     public String getCountry() {

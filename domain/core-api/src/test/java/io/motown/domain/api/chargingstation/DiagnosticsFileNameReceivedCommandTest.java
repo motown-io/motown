@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
@@ -35,5 +36,10 @@ public class DiagnosticsFileNameReceivedCommandTest {
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithDiagnosticsIdentityContextNull() {
         new DiagnosticsFileNameReceivedCommand(CHARGING_STATION_ID, "diagnostics.zip", null);
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(DiagnosticsFileNameReceivedCommand.class).usingGetClass().verify();
     }
 }

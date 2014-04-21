@@ -15,11 +15,10 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.PROTOCOL;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class AuthorizationListVersionRequestedEventTest {
 
@@ -36,5 +35,10 @@ public class AuthorizationListVersionRequestedEventTest {
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
         new AuthorizationListVersionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, null);
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(AuthorizationListVersionRequestedEvent.class).usingGetClass().verify();
     }
 }

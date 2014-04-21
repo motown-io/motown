@@ -15,11 +15,10 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.PROTOCOL;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class DiagnosticsRequestedEventTest {
 
@@ -43,4 +42,8 @@ public class DiagnosticsRequestedEventTest {
         new DiagnosticsRequestedEvent(CHARGING_STATION_ID, PROTOCOL, "ftp://abc.com", null);
     }
 
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(DiagnosticsRequestedEvent.class).usingGetClass().verify();
+    }
 }

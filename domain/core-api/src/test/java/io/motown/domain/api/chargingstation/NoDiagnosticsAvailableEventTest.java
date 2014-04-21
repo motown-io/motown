@@ -16,6 +16,7 @@
 package io.motown.domain.api.chargingstation;
 
 import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 public class NoDiagnosticsAvailableEventTest {
@@ -28,5 +29,10 @@ public class NoDiagnosticsAvailableEventTest {
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithIdentityContextNull() {
         new NoDiagnosticsInformationAvailableEvent(ChargingStationTestUtils.CHARGING_STATION_ID, null);
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(NoDiagnosticsInformationAvailableEvent.class).usingGetClass().verify();
     }
 }

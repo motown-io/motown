@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
@@ -30,5 +31,10 @@ public class CoordinatesTest {
 
         assertEquals(coordinates.getLatitude(), latitude);
         assertEquals(coordinates.getLongitude(), longitude);
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(Coordinates.class).usingGetClass().verify();
     }
 }

@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -27,7 +28,7 @@ public final class TextualToken implements IdentifyingToken {
 
     private final String token;
 
-    private AuthenticationStatus authenticationStatus = null;
+    private final AuthenticationStatus authenticationStatus;
 
     /**
      * Create a {@code TextualToken} with a {@String} based token.
@@ -37,10 +38,7 @@ public final class TextualToken implements IdentifyingToken {
      * @throws IllegalArgumentException if {@token} is empty.
      */
     public TextualToken(String token) {
-        checkNotNull(token);
-        checkArgument(!token.isEmpty());
-
-        this.token = token;
+        this(token, null);
     }
 
     /**
@@ -51,9 +49,10 @@ public final class TextualToken implements IdentifyingToken {
      * @throws NullPointerException     if {@token} is null.
      * @throws IllegalArgumentException if {@token} is empty.
      */
-    public TextualToken(String token, AuthenticationStatus status) {
-        this(token);
-
+    public TextualToken(String token, @Nullable AuthenticationStatus status) {
+        checkNotNull(token);
+        checkArgument(!token.isEmpty());
+        this.token = token;
         this.authenticationStatus = status;
     }
 
@@ -69,6 +68,7 @@ public final class TextualToken implements IdentifyingToken {
      * {@inheritDoc}
      */
     @Override
+    @Nullable
     public AuthenticationStatus getAuthenticationStatus() {
         return authenticationStatus;
     }

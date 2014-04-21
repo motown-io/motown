@@ -15,9 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
-
-import java.util.Objects;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.IDENTITY_CONTEXT;
@@ -51,14 +50,7 @@ public class CreateAndAcceptChargingStationCommandTest {
     }
 
     @Test
-    public void equalsTrueWithSameChargingStationId() {
-        CreateAndAcceptChargingStationCommand command = new CreateAndAcceptChargingStationCommand(CHARGING_STATION_ID, IDENTITY_CONTEXT);
-
-        assertTrue(command.equals(new CreateAndAcceptChargingStationCommand(CHARGING_STATION_ID, IDENTITY_CONTEXT)));
-    }
-
-    @Test
-    public void hashCodeEqualsChargingStationIdHash() {
-        assertEquals(Objects.hash(CHARGING_STATION_ID, IDENTITY_CONTEXT), new CreateAndAcceptChargingStationCommand(CHARGING_STATION_ID, IDENTITY_CONTEXT).hashCode());
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(CreateAndAcceptChargingStationCommand.class).usingGetClass().verify();
     }
 }

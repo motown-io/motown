@@ -15,11 +15,10 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.DATA_TRANSFER_VENDOR;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class DataTransferCommandTest {
 
@@ -53,4 +52,8 @@ public class DataTransferCommandTest {
         new RequestDataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, "", "", null);
     }
 
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(RequestDataTransferCommand.class).usingGetClass().verify();
+    }
 }

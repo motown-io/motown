@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
@@ -32,4 +33,8 @@ public class CreateChargingStationCommandTest {
         new CreateChargingStationCommand(CHARGING_STATION_ID, null);
     }
 
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(CreateChargingStationCommand.class).usingGetClass().verify();
+    }
 }

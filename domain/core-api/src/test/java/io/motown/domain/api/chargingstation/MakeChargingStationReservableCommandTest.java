@@ -16,6 +16,7 @@
 package io.motown.domain.api.chargingstation;
 
 import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 public class MakeChargingStationReservableCommandTest {
@@ -28,5 +29,10 @@ public class MakeChargingStationReservableCommandTest {
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
         new MakeChargingStationReservableCommand(ChargingStationTestUtils.CHARGING_STATION_ID, null);
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(MakeChargingStationReservableCommand.class).usingGetClass().verify();
     }
 }

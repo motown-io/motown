@@ -43,7 +43,7 @@ public class ChargingStationLocationImprovedEventTest {
     }
 
     @Test
-    public void equalsAndHashcodeShouldBeImplementedAccordingToTheContract() {
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
         EqualsVerifier.forClass(ChargingStationLocationImprovedEvent.class).usingGetClass().verify();
     }
 }

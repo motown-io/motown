@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
@@ -41,4 +42,8 @@ public class RevokePermissionCommandTest {
         new RevokePermissionCommand(CHARGING_STATION_ID, ROOT_USER_IDENTITY, CreateChargingStationCommand.class, null);
     }
 
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(RevokePermissionCommand.class).usingGetClass().verify();
+    }
 }

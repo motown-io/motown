@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
@@ -36,5 +37,10 @@ public class UnconfiguredChargingStationBootedEventTest {
         UnconfiguredChargingStationBootedEvent command = new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT);
 
         command.getAttributes().put("foo", "bar");
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(UnconfiguredChargingStationBootedEvent.class).usingGetClass().verify();
     }
 }

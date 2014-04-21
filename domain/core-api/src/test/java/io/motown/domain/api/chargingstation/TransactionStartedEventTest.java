@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -67,5 +68,10 @@ public class TransactionStartedEventTest {
     @Test(expected = UnsupportedOperationException.class)
     public void testImmutableMap() {
         new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 1, new Date(), new HashMap<String, String>(), NULL_USER_IDENTITY_CONTEXT).getAttributes().put("key", "value");
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(TransactionStartedEvent.class).usingGetClass().verify();
     }
 }

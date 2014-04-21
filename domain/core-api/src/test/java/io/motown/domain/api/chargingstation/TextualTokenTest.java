@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 public class TextualTokenTest {
@@ -27,5 +28,10 @@ public class TextualTokenTest {
     @Test(expected = IllegalArgumentException.class)
     public void nullPointerExceptionThrownWhenCreatingWithEmptyString() {
         new TextualToken("");
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(TextualToken.class).usingGetClass().verify();
     }
 }

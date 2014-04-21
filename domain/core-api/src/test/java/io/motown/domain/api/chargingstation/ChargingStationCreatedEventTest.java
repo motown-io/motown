@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
@@ -38,5 +39,10 @@ public class ChargingStationCreatedEventTest {
         ChargingStationCreatedEvent event = new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT);
 
         assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(ChargingStationCreatedEvent.class).usingGetClass().verify();
     }
 }

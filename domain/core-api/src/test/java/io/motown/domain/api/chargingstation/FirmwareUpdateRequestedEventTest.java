@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -63,4 +64,8 @@ public class FirmwareUpdateRequestedEventTest {
         assertEquals(now, event.getRetrieveDate());
     }
 
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(FirmwareUpdateRequestedEvent.class).usingGetClass().verify();
+    }
 }

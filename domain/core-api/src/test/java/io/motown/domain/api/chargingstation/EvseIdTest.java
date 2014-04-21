@@ -15,9 +15,9 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.EVSE_ID;
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
@@ -36,5 +36,10 @@ public class EvseIdTest {
 
         assertEquals(evseId, id.getNumberedId());
         assertNotNull(id.toString());
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(EvseId.class).usingGetClass().verify();
     }
 }
