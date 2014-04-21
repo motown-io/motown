@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class ChargingStationRepository {
@@ -49,10 +49,10 @@ public class ChargingStationRepository {
     }
 
     public ChargingStation findByChargingStationId(String chargingStationId) {
-        Query query = entityManager.createQuery("SELECT cs FROM io.motown.vas.viewmodel.model.ChargingStation AS cs WHERE cs.chargingStationId = :chargingStationId").setParameter("chargingStationId", chargingStationId);
-        List resultList = query.getResultList();
+        TypedQuery<ChargingStation> query = entityManager.createQuery("SELECT cs FROM io.motown.vas.viewmodel.model.ChargingStation AS cs WHERE cs.chargingStationId = :chargingStationId", ChargingStation.class).setParameter("chargingStationId", chargingStationId);
+        List<ChargingStation> resultList = query.getResultList();
         if (!resultList.isEmpty()) {
-            return (ChargingStation) resultList.get(0);
+            return resultList.get(0);
         } else {
             return null;
         }

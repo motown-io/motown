@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class SubscriptionRepository {
@@ -72,33 +72,33 @@ public class SubscriptionRepository {
     }
 
     public Subscription findBySubscriptionId(String subscriptionId) {
-        Query query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriptionId = :subscriptionId").setParameter("subscriptionId", subscriptionId);
-        List resultList = query.getResultList();
+        TypedQuery<Subscription> query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriptionId = :subscriptionId", Subscription.class).setParameter("subscriptionId", subscriptionId);
+        List<Subscription> resultList = query.getResultList();
         if (!resultList.isEmpty()) {
-            return (Subscription) resultList.get(0);
+            return resultList.get(0);
         } else {
             return null;
         }
     }
 
     public Subscription findBySubscriberIdentityAndDeliveryAddress(String subscriberIdentity, String deliveryAddress) {
-        Query query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriberIdentity = :subscriberIdentity AND s.deliveryAddress = :deliveryAddress").setParameter(SUBSCRIBER_IDENTITY_PARAMETER, subscriberIdentity).setParameter("deliveryAddress", deliveryAddress);
-        List resultList = query.getResultList();
+        TypedQuery<Subscription> query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriberIdentity = :subscriberIdentity AND s.deliveryAddress = :deliveryAddress", Subscription.class).setParameter(SUBSCRIBER_IDENTITY_PARAMETER, subscriberIdentity).setParameter("deliveryAddress", deliveryAddress);
+        List<Subscription> resultList = query.getResultList();
         if (!resultList.isEmpty()) {
-            return (Subscription) resultList.get(0);
+            return resultList.get(0);
         } else {
             return null;
         }
     }
 
     public List<Subscription> findBySubscriberIdentity(String subscriberIdentity) {
-        Query query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriberIdentity = :subscriberIdentity").setParameter(SUBSCRIBER_IDENTITY_PARAMETER, subscriberIdentity);
-        return (List<Subscription>) query.getResultList();
+        TypedQuery<Subscription> query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriberIdentity = :subscriberIdentity", Subscription.class).setParameter(SUBSCRIBER_IDENTITY_PARAMETER, subscriberIdentity);
+        return query.getResultList();
     }
 
     public List<Subscription> findAll() {
-        Query query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s");
-        return (List<Subscription>) query.getResultList();
+        TypedQuery<Subscription> query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s", Subscription.class);
+        return query.getResultList();
     }
 
     public void setEntityManager(EntityManager entityManager) {
