@@ -15,9 +15,10 @@
  */
 package io.motown.ocpp.websocketjson.response.handler;
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.ConfigurationItem;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
@@ -25,7 +26,8 @@ import io.motown.ocpp.websocketjson.schema.generated.v15.ConfigurationKey;
 import io.motown.ocpp.websocketjson.schema.generated.v15.GetconfigurationResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 
-import java.util.Map;
+import java.util.List;
+import java.util.Set;
 
 public class GetConfigurationResponseHandler extends ResponseHandler {
 
@@ -37,11 +39,22 @@ public class GetConfigurationResponseHandler extends ResponseHandler {
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         GetconfigurationResponse response = gson.fromJson(wampMessage.getPayloadAsString(), GetconfigurationResponse.class);
 
-        Map<String, String> configurationItems = Maps.newHashMap();
-        for (ConfigurationKey configurationKey : response.getConfigurationKey()) {
-            configurationItems.put(configurationKey.getKey(), configurationKey.getValue());
+        domainService.receiveConfigurationItems(chargingStationId, toConfigurationItems(response.getConfigurationKey()), addOnIdentity);
+    }
+
+    /**
+     * Converts a {@code List} of {@code ConfigurationKey}s to a {@code Set} of {@code ConfigurationItem}s.
+     *
+     * @param configurationItemMap a {@code List} of {@code ConfigurationKey}s.
+     * @return a {@code Set} of {@code ConfigurationItem}s.
+     */
+    private Set<ConfigurationItem> toConfigurationItems(List<ConfigurationKey> configurationItemMap) {
+        ImmutableSet.Builder<ConfigurationItem> configurationItemsBuilder = ImmutableSet.builder();
+
+        for (ConfigurationKey key : configurationItemMap) {
+            configurationItemsBuilder.add(new ConfigurationItem(key.getKey(), key.getValue()));
         }
 
-        domainService.receiveConfigurationItems(chargingStationId, configurationItems, addOnIdentity);
+        return configurationItemsBuilder.build();
     }
 }

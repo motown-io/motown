@@ -31,10 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManagerFactory;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DomainService {
 
@@ -188,7 +185,7 @@ public class DomainService {
         eventWaitingGateway.sendAndWaitForEvent(new AuthorizeCommand(chargingStationId, new TextualToken(idTag), identityContext), future, authorizationTimeoutInMillis);
     }
 
-    public void receiveConfigurationItems(ChargingStationId chargingStationId, Map<String, String> configurationItems, AddOnIdentity addOnIdentity) {
+    public void receiveConfigurationItems(ChargingStationId chargingStationId, Set<ConfigurationItem> configurationItems, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         ReceiveConfigurationItemsCommand command = new ReceiveConfigurationItemsCommand(chargingStationId, configurationItems, identityContext);

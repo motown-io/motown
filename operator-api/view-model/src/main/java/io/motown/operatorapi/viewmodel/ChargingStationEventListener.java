@@ -15,6 +15,7 @@
  */
 package io.motown.operatorapi.viewmodel;
 
+import com.google.common.collect.ImmutableMap;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.operatorapi.viewmodel.persistence.entities.Availability;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
@@ -24,6 +25,10 @@ import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationR
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class ChargingStationEventListener {
 
@@ -191,7 +196,7 @@ public class ChargingStationEventListener {
         ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
 
         if (chargingStation != null) {
-            chargingStation.setConfigurationItems(event.getConfigurationItems());
+            chargingStation.setConfigurationItems(toConfigurationItemMap(event.getConfigurationItems()));
             repository.save(chargingStation);
         }
     }
@@ -411,5 +416,22 @@ public class ChargingStationEventListener {
 
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
+    }
+
+    /**
+     * Converts a {@code Set} of {@code ConfigurationItem}s to a {@code Map} of {@code String} and {@code String}.
+     *
+     * @param configurationItems a {@code Set} of {@code ConfigurationItem}s.
+     * @return a {@code Map} of {@code String} and {@code String}.
+     */
+    private Map<String, String> toConfigurationItemMap(Set<ConfigurationItem> configurationItems) {
+        ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
+        Map<String, String> map = new HashMap<>(configurationItems.size());
+
+        for (ConfigurationItem configurationItem : configurationItems) {
+            map.put(configurationItem.getKey(), configurationItem.getValue());
+        }
+
+        return map;
     }
 }

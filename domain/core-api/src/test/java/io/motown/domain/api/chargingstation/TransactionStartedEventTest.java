@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static junit.framework.Assert.assertEquals;
@@ -52,7 +53,7 @@ public class TransactionStartedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullIdentityContext() {
-        new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 1, new Date(),  Collections.<String, String>emptyMap(), null);
+        new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 1, new Date(), Collections.<String, String>emptyMap(), null);
     }
 
     @Test
@@ -65,6 +66,6 @@ public class TransactionStartedEventTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void testImmutableMap() {
-        new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 1, new Date(), CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT).getAttributes().put("key", "value");
+        new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 1, new Date(), new HashMap<String, String>(), NULL_USER_IDENTITY_CONTEXT).getAttributes().put("key", "value");
     }
 }

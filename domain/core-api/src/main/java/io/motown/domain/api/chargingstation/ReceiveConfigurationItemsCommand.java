@@ -15,12 +15,12 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -34,20 +34,21 @@ public class ReceiveConfigurationItemsCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final ImmutableMap<String, String> configurationItems;
+    private final Set<ConfigurationItem> configurationItems;
 
     private final IdentityContext identityContext;
 
     /**
      * Creates a {@code ReceiveConfigurationItemsCommand} with an identifier.
      *
-     * @param chargingStationId the identifier of the charging station.
-     * @param identityContext   the identity context.
+     * @param chargingStationId  the identifier of the charging station.
+     * @param configurationItems the configuration items to receive.
+     * @param identityContext    the identity context.
      * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
      */
-    public ReceiveConfigurationItemsCommand(ChargingStationId chargingStationId, Map<String, String> configurationItems, IdentityContext identityContext) {
+    public ReceiveConfigurationItemsCommand(ChargingStationId chargingStationId, Set<ConfigurationItem> configurationItems, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.configurationItems = ImmutableMap.copyOf(checkNotNull(configurationItems));
+        this.configurationItems = ImmutableSet.copyOf(checkNotNull(configurationItems));
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -63,9 +64,9 @@ public class ReceiveConfigurationItemsCommand {
     /**
      * Gets the configuration items received from the charging station.
      *
-     * @return an immutable {@link java.util.Map} of configuration items.
+     * @return an immutable {@link Set} of configuration items.
      */
-    public ImmutableMap<String, String> getConfigurationItems() {
+    public Set<ConfigurationItem> getConfigurationItems() {
         return configurationItems;
     }
 

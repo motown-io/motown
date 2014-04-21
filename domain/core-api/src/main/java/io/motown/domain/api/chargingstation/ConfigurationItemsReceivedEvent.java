@@ -15,12 +15,12 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -35,7 +35,7 @@ public class ConfigurationItemsReceivedEvent {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final ImmutableMap<String, String> configurationItems;
+    private final Set<ConfigurationItem> configurationItems;
 
     private final IdentityContext identityContext;
 
@@ -46,9 +46,9 @@ public class ConfigurationItemsReceivedEvent {
      * @param identityContext   the identity context.
      * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
      */
-    public ConfigurationItemsReceivedEvent(ChargingStationId chargingStationId, Map<String, String> configurationItems, IdentityContext identityContext) {
+    public ConfigurationItemsReceivedEvent(ChargingStationId chargingStationId, Set<ConfigurationItem> configurationItems, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.configurationItems = ImmutableMap.copyOf(checkNotNull(configurationItems));
+        this.configurationItems = ImmutableSet.copyOf(checkNotNull(configurationItems));
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -66,7 +66,7 @@ public class ConfigurationItemsReceivedEvent {
      *
      * @return an immutable {@link java.util.Map} of configuration items.
      */
-    public ImmutableMap<String, String> getConfigurationItems() {
+    public Set<ConfigurationItem> getConfigurationItems() {
         return configurationItems;
     }
 

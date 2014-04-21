@@ -353,11 +353,11 @@ public final class ChargingStationTestUtils {
     /**
      * The default map of configuration items.
      */
-    public static final ImmutableMap<String, String> CONFIGURATION_ITEMS = ImmutableMap.<String, String>builder()
-            .put("io.motown.sockets.amount", "2")
-            .put("io.motown.random.config.item", "true")
-            .put("io.motown.another.random.config.item", "12")
-            .put("io.motown.yet.another.one", "blue")
+    public static final Set<ConfigurationItem> CONFIGURATION_ITEMS = ImmutableSet.<ConfigurationItem>builder()
+            .add(new ConfigurationItem("io.motown.sockets.amount", "2"))
+            .add(new ConfigurationItem("io.motown.random.config.item", "true"))
+            .add(new ConfigurationItem("io.motown.another.random.config.item", "12"))
+            .add(new ConfigurationItem("io.motown.yet.another.one", "blue"))
             .build();
 
     /**

@@ -27,8 +27,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
@@ -75,7 +75,7 @@ public class GetConfigurationResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        ArgumentCaptor<HashMap> configurationKeysCaptor = ArgumentCaptor.forClass(HashMap.class);
+        ArgumentCaptor<Set> configurationKeysCaptor = ArgumentCaptor.forClass(Set.class);
         verify(domainService).receiveConfigurationItems(any(ChargingStationId.class), configurationKeysCaptor.capture(), eq(ADD_ON_IDENTITY));
         assertEquals(configurationKeysCaptor.getValue().size(), 1);
     }

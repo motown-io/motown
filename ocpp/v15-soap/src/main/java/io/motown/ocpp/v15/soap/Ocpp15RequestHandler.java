@@ -15,6 +15,7 @@
  */
 package io.motown.ocpp.v15.soap;
 
+import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.api.security.TypeBasedAddOnIdentity;
@@ -26,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.Set;
 
 public class Ocpp15RequestHandler implements OcppRequestHandler {
 
@@ -39,9 +41,9 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
     @Override
     public void handle(ConfigurationItemsRequestedEvent event) {
         LOG.info("Handling ConfigurationItemsRequestedEvent");
-        Map<String, String> configurationItems = chargingStationOcpp15Client.getConfiguration(event.getChargingStationId());
+        Map<String, String> configurationItemMap = chargingStationOcpp15Client.getConfiguration(event.getChargingStationId());
 
-        domainService.receiveConfigurationItems(event.getChargingStationId(), configurationItems, addOnIdentity);
+        domainService.receiveConfigurationItems(event.getChargingStationId(), toConfigurationItems(configurationItemMap), addOnIdentity);
     }
 
     @Override
@@ -262,4 +264,19 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         addOnIdentity = new TypeBasedAddOnIdentity(ADD_ON_TYPE, id);
     }
 
+    /**
+     * Converts a {@code Map} of {@code String}s and {@code String}s to a {@code Set} of {@code ConfigurationItem}s.
+     *
+     * @param configurationItemMap a {@code Map} of {@code String}s and {@code String}s
+     * @return a {@code Set} of {@code ConfigurationItem}s.
+     */
+    private Set<ConfigurationItem> toConfigurationItems(Map<String, String> configurationItemMap) {
+        ImmutableSet.Builder<ConfigurationItem> configurationItemsBuilder = ImmutableSet.builder();
+
+        for (Map.Entry<String, String> item : configurationItemMap.entrySet()) {
+            configurationItemsBuilder.add(new ConfigurationItem(item.getKey(), item.getValue()));
+        }
+
+        return configurationItemsBuilder.build();
+    }
 }
