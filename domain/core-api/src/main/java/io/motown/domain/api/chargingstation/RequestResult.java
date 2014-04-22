@@ -20,5 +20,5 @@ package io.motown.domain.api.chargingstation;
  */
 public enum RequestResult {
     SUCCESS,
-    FAILURE;
+    FAILURE
 }
