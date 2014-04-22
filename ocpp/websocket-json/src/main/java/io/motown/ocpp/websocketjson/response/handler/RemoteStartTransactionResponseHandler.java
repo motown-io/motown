@@ -18,24 +18,45 @@ package io.motown.ocpp.websocketjson.response.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
-import io.motown.domain.api.chargingstation.RequestResult;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.RemotestarttransactionResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * The {@code ResponseHandler} which handles responses for start transaction.
+ */
 public class RemoteStartTransactionResponseHandler extends ResponseHandler {
 
+    private static final Logger LOG = LoggerFactory.getLogger(RemoteStartTransactionResponseHandler.class);
+
+    /**
+     * Creates a new {@code RemoteStartTransactionResponseHandler}.
+     *
+     * @param correlationToken the correlation token.
+     */
     public RemoteStartTransactionResponseHandler(CorrelationToken correlationToken) {
         this.setCorrelationToken(correlationToken);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         RemotestarttransactionResponse response = gson.fromJson(wampMessage.getPayloadAsString(), RemotestarttransactionResponse.class);
-        RequestResult requestResult = response.getStatus().equals(RemotestarttransactionResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "", addOnIdentity);
+        switch (response.getStatus()) {
+            case ACCEPTED:
+                LOG.info("Remote start transaction request on {} has been accepted", chargingStationId);
+                break;
+            case REJECTED:
+                LOG.info("Remote start transaction request on {} has been rejected", chargingStationId);
+                break;
+            default:
+                throw new AssertionError("Start transaction returned unknown response status " + response.getStatus());
+        }
     }
-
 }

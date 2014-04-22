@@ -17,7 +17,6 @@ package io.motown.ocpp.websocketjson.response.handler;
 
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.CorrelationToken;
-import io.motown.domain.api.chargingstation.RequestResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.RemotestarttransactionResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
@@ -30,7 +29,7 @@ import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 public class RemoteStartTransactionResponseHandlerTest {
 
@@ -39,7 +38,6 @@ public class RemoteStartTransactionResponseHandlerTest {
     private DomainService domainService;
 
     private String token;
-    private CorrelationToken correlationToken;
     private RemoteStartTransactionResponseHandler handler;
 
     @Before
@@ -48,7 +46,7 @@ public class RemoteStartTransactionResponseHandlerTest {
         domainService = mock(DomainService.class);
 
         token = UUID.randomUUID().toString();
-        correlationToken = new CorrelationToken(token);
+        CorrelationToken correlationToken = new CorrelationToken(token);
         handler = new RemoteStartTransactionResponseHandler(correlationToken);
     }
 
@@ -60,7 +58,7 @@ public class RemoteStartTransactionResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.SUCCESS, correlationToken, "", ADD_ON_IDENTITY);
+        verifyZeroInteractions(domainService);
     }
 
     @Test
@@ -71,7 +69,6 @@ public class RemoteStartTransactionResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, "", ADD_ON_IDENTITY);
+        verifyZeroInteractions(domainService);
     }
-
 }
