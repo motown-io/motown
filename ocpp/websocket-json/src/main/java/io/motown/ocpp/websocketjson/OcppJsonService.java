@@ -429,7 +429,15 @@ public class OcppJsonService {
     }
 
     public void addWebSocket(String chargingStationIdentifier, WebSocket webSocket) {
-        sockets.put(chargingStationIdentifier, webSocket);
+        WebSocket existingSocket = sockets.put(chargingStationIdentifier, webSocket);
+
+        if (existingSocket != null) {
+            existingSocket.close();
+        }
+    }
+
+    public void removeWebSocket(String chargingStationIdentifier) {
+        sockets.remove(chargingStationIdentifier);
     }
 
     public void addResponseHandler(String callId, ResponseHandler responseHandler) {

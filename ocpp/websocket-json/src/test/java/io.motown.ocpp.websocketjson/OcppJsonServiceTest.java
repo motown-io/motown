@@ -155,6 +155,31 @@ public class OcppJsonServiceTest {
     }
 
     @Test
+    public void closeWebSocketWhenNewSocketOverwritesExisting() {
+        WebSocket webSocket = getMockWebSocket();
+        service.addWebSocket(CHARGING_STATION_ID.getId(), webSocket);
+        WebSocket newWebSocket = getMockWebSocket();
+        service.addWebSocket(CHARGING_STATION_ID.getId(), newWebSocket);
+
+        verify(webSocket).close();
+    }
+
+    @Test
+    public void removeWebSocketFromServiceVerifyNoCalls() throws IOException {
+        WebSocket webSocket = getMockWebSocket();
+        service.addWebSocket(CHARGING_STATION_ID.getId(), webSocket);
+        service.removeWebSocket(CHARGING_STATION_ID.getId());
+
+        // using 'cancelReservation' to trigger a write on the socket.. which should not occur
+        service.cancelReservation(CHARGING_STATION_ID, RESERVATION_ID, CORRELATION_TOKEN);
+        Cancelreservation requestPayload = new Cancelreservation();
+        requestPayload.setReservationId(RESERVATION_ID.getNumber());
+        String expectedMessage = createExpectedMessageCall(MessageProcUri.CANCEL_RESERVATION, requestPayload);
+
+        verify(webSocket, never()).write(expectedMessage);
+    }
+
+    @Test
     public void remoteStartTransactionRequest() throws IOException {
         service.remoteStartTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, CORRELATION_TOKEN);
         verify(mockWebSocket).write(anyString());

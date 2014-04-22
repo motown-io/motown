@@ -19,8 +19,12 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.ocpp.websocketjson.OcppJsonService;
 import org.atmosphere.config.service.WebSocketHandlerService;
 import org.atmosphere.cpr.AtmosphereRequest;
+import org.atmosphere.cpr.AtmosphereResourceEvent;
 import org.atmosphere.websocket.WebSocket;
+import org.atmosphere.websocket.WebSocketEventListenerAdapter;
 import org.atmosphere.websocket.WebSocketStreamingHandlerAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
@@ -28,6 +32,8 @@ import java.io.Reader;
 
 @WebSocketHandlerService
 public class OcppWebSocketServlet extends WebSocketStreamingHandlerAdapter {
+
+    private static final Logger LOG = LoggerFactory.getLogger(OcppWebSocketServlet.class);
 
     private OcppJsonService ocppJsonService;
 
@@ -44,20 +50,17 @@ public class OcppWebSocketServlet extends WebSocketStreamingHandlerAdapter {
 
     @Override
     public void onOpen(WebSocket webSocket) throws IOException {
-        String chargingStationIdentifier = determineIdentifier(webSocket);
+        final String chargingStationIdentifier = determineIdentifier(webSocket);
 
         ocppJsonService.addWebSocket(chargingStationIdentifier, webSocket);
 
-//        webSocket.resource().addEventListener(new WebSocketEventListenerAdapter() {
-//            @Override
-//            public void onDisconnect(AtmosphereResourceEvent event) {
-//                if (event.isCancelled()) {
-//                    LOG.info("Client [{}] unexpectedly disconnected", determineIdentifierFromRequest(event.getResource().getRequest()));
-//                } else if (event.isClosedByClient()) {
-//                    LOG.info("Client [{}] closed the connection", determineIdentifierFromRequest(event.getResource().getRequest()));
-//                }
-//            }
-//        });
+        webSocket.resource().addEventListener(new WebSocketEventListenerAdapter() {
+            @Override
+            public void onDisconnect(AtmosphereResourceEvent event) {
+                LOG.info("Client [{}] disconnected", chargingStationIdentifier);
+                ocppJsonService.removeWebSocket(chargingStationIdentifier);
+            }
+        });
     }
 
     @Override
