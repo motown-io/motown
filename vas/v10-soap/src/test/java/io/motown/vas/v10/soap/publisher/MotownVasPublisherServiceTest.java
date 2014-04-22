@@ -176,7 +176,7 @@ public class MotownVasPublisherServiceTest {
 
         UnsubscribeResponse response = service.unsubscribe(request, SUBSCRIBER_IDENTITY);
 
-        assertEquals(SubscribeStatus.DUPLICATE_IGNORED, response.getStatus());
+        assertEquals(SubscribeStatus.REJECTED, response.getStatus());
     }
 
     @Test
@@ -201,7 +201,7 @@ public class MotownVasPublisherServiceTest {
 
         UnsubscribeResponse response = service.unsubscribe(request, SUBSCRIBER_IDENTITY);
 
-        assertEquals(SubscribeStatus.DUPLICATE_IGNORED, response.getStatus());
+        assertEquals(SubscribeStatus.REJECTED, response.getStatus());
     }
 
 
