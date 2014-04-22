@@ -43,22 +43,14 @@ import java.util.Map;
 
 public class OcppJsonService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OcppJsonService.class);
-
-    private static final String ADD_ON_TYPE = "OCPPJ15";
-
-    private WampMessageParser wampMessageParser;
-
-    private SchemaValidator schemaValidator;
-
-    private DomainService domainService;
-
-    private Gson gson;
-
-    private AddOnIdentity addOnIdentity;
-
     public static final String PROTOCOL_IDENTIFIER = OcppWebSocketRequestHandler.PROTOCOL_IDENTIFIER;
-
+    private static final Logger LOG = LoggerFactory.getLogger(OcppJsonService.class);
+    private static final String ADD_ON_TYPE = "OCPPJ15";
+    private WampMessageParser wampMessageParser;
+    private SchemaValidator schemaValidator;
+    private DomainService domainService;
+    private Gson gson;
+    private AddOnIdentity addOnIdentity;
     /**
      * Map of requestHandlers, key is lowercase procUri.
      */
@@ -105,15 +97,21 @@ public class OcppJsonService {
         }
     }
 
-    public void changeConfiguration(ChargingStationId chargingStationId, String key, String value, CorrelationToken statusCorrelationToken) {
-
+    /**
+     * Send a request to a charging station to change a configuration item.
+     *
+     * @param chargingStationId the charging station's id.
+     * @param configurationItem the configuration item to change.
+     * @param correlationToken  the token to correlate commands and events that belong together.
+     */
+    public void changeConfiguration(ChargingStationId chargingStationId, ConfigurationItem configurationItem, CorrelationToken correlationToken) {
         Changeconfiguration changeConfigurationRequest = new Changeconfiguration();
-        changeConfigurationRequest.setKey(key);
-        changeConfigurationRequest.setValue(value);
+        changeConfigurationRequest.setKey(configurationItem.getKey());
+        changeConfigurationRequest.setValue(configurationItem.getValue());
 
-        responseHandlers.put(statusCorrelationToken.getToken(), new ChangeConfigurationResponseHandler(statusCorrelationToken));
+        responseHandlers.put(correlationToken.getToken(), new ChangeConfigurationResponseHandler(correlationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.CHANGE_CONFIGURATION, changeConfigurationRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, correlationToken.getToken(), MessageProcUri.CHANGE_CONFIGURATION, changeConfigurationRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 

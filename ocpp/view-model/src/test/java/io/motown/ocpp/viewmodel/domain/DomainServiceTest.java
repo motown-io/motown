@@ -202,6 +202,14 @@ public class DomainServiceTest {
     }
 
     @Test
+    public void testChangeConfiguration() {
+        CorrelationToken correlationToken = new CorrelationToken();
+
+        domainService.changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_ITEM, correlationToken, ADD_ON_IDENTITY);
+        verify(gateway).send(new ChangeConfigurationItemCommand(CHARGING_STATION_ID, CONFIGURATION_ITEM, NULL_USER_IDENTITY_CONTEXT), correlationToken);
+    }
+
+    @Test
     public void testDiagnosticsUploadStatusUpdate() {
         domainService.diagnosticsUploadStatusUpdate(CHARGING_STATION_ID, true, ADD_ON_IDENTITY);
         verify(gateway).send(new UpdateDiagnosticsUploadStatusCommand(CHARGING_STATION_ID, true, NULL_USER_IDENTITY_CONTEXT));

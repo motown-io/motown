@@ -16,6 +16,8 @@
 package io.motown.ocpp.v12.soap;
 
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.security.AddOnIdentity;
+import io.motown.domain.api.security.TypeBasedAddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp12Client;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
@@ -42,6 +44,10 @@ public class Ocpp12RequestHandlerTest {
 
     private ChargingStationOcpp12Client client;
 
+    private DomainService service;
+
+    private AddOnIdentity addOnIdentity = new TypeBasedAddOnIdentity(Ocpp12RequestHandler.ADD_ON_TYPE, ADD_ON_ID);
+
     @Autowired
     private EntityManager entityManager;
 
@@ -52,12 +58,14 @@ public class Ocpp12RequestHandlerTest {
 
         requestHandler = new Ocpp12RequestHandler();
 
-        DomainService domainService = mock(DomainService.class);
-        when(domainService.generateReservationIdentifier(any(ChargingStationId.class), any(String.class))).thenReturn(new NumberedReservationId(CHARGING_STATION_ID, PROTOCOL, 1));
-        requestHandler.setDomainService(domainService);
+        this.service = mock(DomainService.class);
+        when(this.service.generateReservationIdentifier(any(ChargingStationId.class), any(String.class))).thenReturn(new NumberedReservationId(CHARGING_STATION_ID, PROTOCOL, 1));
+        requestHandler.setDomainService(this.service);
 
         client = mock(ChargingStationOcpp12Client.class);
         requestHandler.setChargingStationOcpp12Client(client);
+
+        requestHandler.setAddOnId(ADD_ON_ID);
     }
 
     @Test
@@ -140,10 +148,21 @@ public class Ocpp12RequestHandlerTest {
     }
 
     @Test
-    public void testChangeConfigurationEvent() {
+    public void testChangeConfigurationServiceShouldBeCalledIfClientReturnsTrue() {
+        when(client.changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_ITEM)).thenReturn(true);
+
+        requestHandler.handle(new ChangeConfigurationItemRequestedEvent(CHARGING_STATION_ID, PROTOCOL, CONFIGURATION_ITEM, NULL_USER_IDENTITY_CONTEXT), CORRELATION_TOKEN);
+
+        verify(this.service).changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_ITEM, CORRELATION_TOKEN, this.addOnIdentity);
+    }
+
+    @Test
+    public void testChangeConfigurationServiceShouldNotBeCalledIfClientReturnsFalse() {
+        when(client.changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_ITEM)).thenReturn(false);
+
         requestHandler.handle(new ChangeConfigurationItemRequestedEvent(CHARGING_STATION_ID, PROTOCOL, CONFIGURATION_ITEM, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
-        verify(client).changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_ITEM.getKey(), CONFIGURATION_ITEM.getValue());
+        verifyZeroInteractions(this.service);
     }
 
     @Test

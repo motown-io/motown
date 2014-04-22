@@ -16,20 +16,27 @@
 
 package io.motown.ocpp.viewmodel.ocpp;
 
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.EvseId;
-import io.motown.domain.api.chargingstation.IdentifyingToken;
-import io.motown.domain.api.chargingstation.RequestResult;
+import io.motown.domain.api.chargingstation.*;
 
 import java.util.Date;
 
+/**
+ * Client for communicating with OCPP 1.2 charging stations.
+ */
 public interface ChargingStationOcpp12Client {
 
     RequestResult changeAvailabilityToInoperative(ChargingStationId id, EvseId evseId);
 
     RequestResult changeAvailabilityToOperative(ChargingStationId id, EvseId evseId);
 
-    RequestResult changeConfiguration(ChargingStationId id, String key, String value);
+    /**
+     * Requests the charging station to change a configuration item.
+     *
+     * @param id                the charging station's id.
+     * @param configurationItem the configuration item to change.
+     * @return true if the configuration item has changed, false if it hasn't.
+     */
+    boolean changeConfiguration(ChargingStationId id, ConfigurationItem configurationItem);
 
     RequestResult clearCache(ChargingStationId id);
 

@@ -27,6 +27,14 @@ interface DomainCommandGateway {
 
     void send(HeartbeatCommand command);
 
+    /**
+     * Send a {@code ChangeConfigurationItemCommand}.
+     *
+     * @param command          the command to send.
+     * @param correlationToken the correlation token.
+     */
+    void send(ChangeConfigurationItemCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
+
     void send(ConfigureChargingStationCommand command);
 
     void send(StartTransactionCommand command);

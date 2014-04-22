@@ -93,7 +93,7 @@ public class OcppWebSocketRequestHandler implements OcppRequestHandler {
     @Override
     public void handle(ChangeConfigurationItemRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("ChangeConfigurationItemRequestedEvent");
-        ocppJsonService.changeConfiguration(event.getChargingStationId(), event.getConfigurationItem().getKey(), event.getConfigurationItem().getValue(), statusCorrelationToken);
+        ocppJsonService.changeConfiguration(event.getChargingStationId(), event.getConfigurationItem(), statusCorrelationToken);
     }
 
     @Override

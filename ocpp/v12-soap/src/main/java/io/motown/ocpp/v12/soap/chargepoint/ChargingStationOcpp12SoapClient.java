@@ -16,10 +16,7 @@
 
 package io.motown.ocpp.v12.soap.chargepoint;
 
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.EvseId;
-import io.motown.domain.api.chargingstation.IdentifyingToken;
-import io.motown.domain.api.chargingstation.RequestResult;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.v12.soap.chargepoint.schema.*;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp12Client;
@@ -27,6 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Client {
 
@@ -125,9 +124,17 @@ public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Cli
         return changeAvailability(id, evseId, AvailabilityType.OPERATIVE);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public RequestResult changeConfiguration(ChargingStationId id, String key, String value) {
-        LOG.debug("Change configuration of {}", id);
+    public boolean changeConfiguration(ChargingStationId id, ConfigurationItem configurationItem) {
+        checkNotNull(id);
+        checkNotNull(configurationItem);
+
+        final String key = configurationItem.getKey();
+        final String value = configurationItem.getValue();
+
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         ChangeConfigurationRequest request = new ChangeConfigurationRequest();
@@ -136,14 +143,26 @@ public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Cli
 
         ChangeConfigurationResponse response = chargePointService.changeConfiguration(request, id.getId());
 
-        if (ConfigurationStatus.ACCEPTED.equals(response.getStatus())) {
-            LOG.info("Configuration change of {} on {} has been accepted", key, id);
-            return RequestResult.SUCCESS;
-        } else {
-            String responseStatus = (response.getStatus() != null) ? response.getStatus().value() : "-unknown status-";
-            LOG.warn("Configuration change of {} on {} has failed due to {}", key, id, responseStatus);
-            return RequestResult.FAILURE;
+        boolean hasConfigurationChanged;
+
+        switch (response.getStatus()) {
+            case ACCEPTED:
+                LOG.info("Configuration change of {} on {} has been accepted", key, id);
+                hasConfigurationChanged = true;
+                break;
+            case REJECTED:
+                LOG.info("Configuration change of {} on {} was rejected", key, id);
+                hasConfigurationChanged = false;
+                break;
+            case NOT_SUPPORTED:
+                LOG.info("Configuration change of {} on {} was not supported", key, id);
+                hasConfigurationChanged = false;
+                break;
+            default:
+                throw new AssertionError("Configuration change returned unknown response status " + response.getStatus());
         }
+
+        return hasConfigurationChanged;
     }
 
     @Override
@@ -229,7 +248,7 @@ public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Cli
         ChangeAvailabilityResponse response = chargePointService.changeAvailability(request, id.getId());
 
         if (AvailabilityStatus.ACCEPTED.equals(response.getStatus()) ||
-            AvailabilityStatus.SCHEDULED.equals(response.getStatus())) {
+                AvailabilityStatus.SCHEDULED.equals(response.getStatus())) {
             return RequestResult.SUCCESS;
         } else {
             return RequestResult.FAILURE;

@@ -44,12 +44,12 @@ public class Ocpp15RequestHandlerTest {
 
     private ChargingStationOcpp15Client client;
 
-    private DomainService domainService;
+    private DomainService service;
+
+    private AddOnIdentity addOnIdentity = new TypeBasedAddOnIdentity(Ocpp15RequestHandler.ADD_ON_TYPE, ADD_ON_ID);
 
     @Autowired
     private EntityManager entityManager;
-
-    private AddOnIdentity addOnIdentity = new TypeBasedAddOnIdentity(Ocpp15RequestHandler.ADD_ON_TYPE, ADD_ON_ID);
 
     @Before
     public void setUp() {
@@ -58,9 +58,9 @@ public class Ocpp15RequestHandlerTest {
 
         requestHandler = new Ocpp15RequestHandler();
 
-        domainService = mock(DomainService.class);
-        when(domainService.generateReservationIdentifier(any(ChargingStationId.class), any(String.class))).thenReturn(new NumberedReservationId(CHARGING_STATION_ID, PROTOCOL, 1));
-        requestHandler.setDomainService(domainService);
+        this.service = mock(DomainService.class);
+        when(this.service.generateReservationIdentifier(any(ChargingStationId.class), any(String.class))).thenReturn(new NumberedReservationId(CHARGING_STATION_ID, PROTOCOL, 1));
+        requestHandler.setDomainService(this.service);
 
         client = mock(ChargingStationOcpp15Client.class);
         requestHandler.setChargingStationOcpp15Client(client);
@@ -176,7 +176,7 @@ public class Ocpp15RequestHandlerTest {
         requestHandler.handle(new DataTransferRequestedEvent(CHARGING_STATION_ID, PROTOCOL, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
-        verify(domainService).informDataTransferResponse(CHARGING_STATION_ID, expectedResponse, CORRELATION_TOKEN, addOnIdentity);
+        verify(this.service).informDataTransferResponse(CHARGING_STATION_ID, expectedResponse, CORRELATION_TOKEN, addOnIdentity);
     }
 
     @Test
@@ -187,14 +187,25 @@ public class Ocpp15RequestHandlerTest {
         requestHandler.handle(new DataTransferRequestedEvent(CHARGING_STATION_ID, PROTOCOL, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
-        verifyNoMoreInteractions(domainService);
+        verifyNoMoreInteractions(this.service);
     }
 
     @Test
-    public void testChangeConfigurationEvent() {
+    public void testChangeConfigurationServiceShouldBeCalledIfClientReturnsTrue() {
+        when(client.changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_ITEM)).thenReturn(true);
+
+        requestHandler.handle(new ChangeConfigurationItemRequestedEvent(CHARGING_STATION_ID, PROTOCOL, CONFIGURATION_ITEM, NULL_USER_IDENTITY_CONTEXT), CORRELATION_TOKEN);
+
+        verify(this.service).changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_ITEM, CORRELATION_TOKEN, this.addOnIdentity);
+    }
+
+    @Test
+    public void testChangeConfigurationServiceShouldNotBeCalledIfClientReturnsFalse() {
+        when(client.changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_ITEM)).thenReturn(false);
+
         requestHandler.handle(new ChangeConfigurationItemRequestedEvent(CHARGING_STATION_ID, PROTOCOL, CONFIGURATION_ITEM, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
-        verify(client).changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_ITEM.getKey(), CONFIGURATION_ITEM.getValue());
+        verifyZeroInteractions(this.service);
     }
 
     @Test
@@ -228,7 +239,7 @@ public class Ocpp15RequestHandlerTest {
         when(client.getAuthorizationListVersion(CHARGING_STATION_ID)).thenReturn(V15SOAPTestUtils.LIST_VERSION);
         requestHandler.handle(new AuthorizationListVersionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT), correlationToken);
 
-        verify(domainService).authorizationListVersionReceived(CHARGING_STATION_ID, V15SOAPTestUtils.LIST_VERSION, correlationToken, addOnIdentity);
+        verify(this.service).authorizationListVersionReceived(CHARGING_STATION_ID, V15SOAPTestUtils.LIST_VERSION, correlationToken, addOnIdentity);
     }
 
     @Test

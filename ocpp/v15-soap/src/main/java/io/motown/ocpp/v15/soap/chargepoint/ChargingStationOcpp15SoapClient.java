@@ -27,6 +27,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Client {
 
     private static final Logger LOG = LoggerFactory.getLogger(ChargingStationOcpp15SoapClient.class);
@@ -154,10 +156,12 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
         DataTransferResponse response = chargePointService.dataTransfer(request, id.getId());
 
-        switch(response.getStatus()){
-            case UNKNOWN_MESSAGE_ID: LOG.error("Unknown message id {} for datatransfer request", messageId);
+        switch (response.getStatus()) {
+            case UNKNOWN_MESSAGE_ID:
+                LOG.error("Unknown message id {} for datatransfer request", messageId);
                 break;
-            case UNKNOWN_VENDOR_ID: LOG.error("Unknown vendor id {} for datatransfer request", vendorId);
+            case UNKNOWN_VENDOR_ID:
+                LOG.error("Unknown vendor id {} for datatransfer request", vendorId);
                 break;
         }
 
@@ -165,9 +169,17 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         return new DataTransferRequestResult(requestResult, response.getData());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public RequestResult changeConfiguration(ChargingStationId id, String key, String value) {
-        LOG.debug("Change configuration of {}", id);
+    public boolean changeConfiguration(ChargingStationId id, ConfigurationItem configurationItem) {
+        checkNotNull(id);
+        checkNotNull(configurationItem);
+
+        final String key = configurationItem.getKey();
+        final String value = configurationItem.getValue();
+
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         ChangeConfigurationRequest request = new ChangeConfigurationRequest();
@@ -176,14 +188,26 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
         ChangeConfigurationResponse response = chargePointService.changeConfiguration(request, id.getId());
 
-        if (ConfigurationStatus.ACCEPTED.equals(response.getStatus())) {
-            LOG.info("Configuration change of {} on {} has been accepted", key, id);
-            return RequestResult.SUCCESS;
-        } else {
-            String responseStatus = (response.getStatus() != null) ? response.getStatus().value() : UNKNOWN_STATUS;
-            LOG.warn("Configuration change of {} on {} has failed due to {}", key, id, responseStatus);
-            return RequestResult.FAILURE;
+        boolean hasConfigurationChanged;
+
+        switch (response.getStatus()) {
+            case ACCEPTED:
+                LOG.info("Configuration change of {} on {} has been accepted", key, id);
+                hasConfigurationChanged = true;
+                break;
+            case REJECTED:
+                LOG.info("Configuration change of {} on {} was rejected", key, id);
+                hasConfigurationChanged = false;
+                break;
+            case NOT_SUPPORTED:
+                LOG.info("Configuration change of {} on {} was not supported", key, id);
+                hasConfigurationChanged = false;
+                break;
+            default:
+                throw new AssertionError("Configuration change returned unknown response status " + response.getStatus());
         }
+
+        return hasConfigurationChanged;
     }
 
     @Override

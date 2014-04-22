@@ -155,25 +155,25 @@ public class OcppJsonServiceTest {
     }
 
     @Test
-    public void remoteStartTransactionRequest() throws IOException{
+    public void remoteStartTransactionRequest() throws IOException {
         service.remoteStartTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, CORRELATION_TOKEN);
         verify(mockWebSocket).write(anyString());
     }
 
     @Test
-    public void changeConfigurationRequest() throws IOException{
-        service.changeConfiguration(CHARGING_STATION_ID, "KVCBX_LANG", "NL", CORRELATION_TOKEN);
+    public void changeConfigurationRequest() throws IOException {
+        service.changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_ITEM, CORRELATION_TOKEN);
         verify(mockWebSocket).write(anyString());
     }
 
     @Test
-    public void getConfigurationRequest() throws IOException{
+    public void getConfigurationRequest() throws IOException {
         service.getConfiguration(CHARGING_STATION_ID);
         verify(mockWebSocket).write(anyString());
     }
 
     @Test
-    public void getDiagnosticsRequest() throws IOException{
+    public void getDiagnosticsRequest() throws IOException {
         int numRetries = 3;
         int retryInterval = 1000;
         Date startTime = new Date();
@@ -183,13 +183,13 @@ public class OcppJsonServiceTest {
     }
 
     @Test
-    public void remoteStopTransactionRequest() throws IOException{
+    public void remoteStopTransactionRequest() throws IOException {
         service.remoteStopTransaction(CHARGING_STATION_ID, TRANSACTION_ID, CORRELATION_TOKEN);
         verify(mockWebSocket).write(anyString());
     }
 
     @Test
-    public void softResetRequest() throws IOException{
+    public void softResetRequest() throws IOException {
         service.softReset(CHARGING_STATION_ID, CORRELATION_TOKEN);
 
         Reset requestPayload = new Reset();
@@ -200,9 +200,8 @@ public class OcppJsonServiceTest {
     }
 
 
-
     @Test
-    public void hardResetRequest() throws IOException{
+    public void hardResetRequest() throws IOException {
         service.hardReset(CHARGING_STATION_ID, CORRELATION_TOKEN);
 
         Reset requestPayload = new Reset();
@@ -213,7 +212,7 @@ public class OcppJsonServiceTest {
     }
 
     @Test
-    public void updateFirmwareRequest() throws IOException, URISyntaxException{
+    public void updateFirmwareRequest() throws IOException, URISyntaxException {
         Date timestamp = new Date();
         Map attributes = Maps.<String, String>newHashMap();
         service.updateFirmware(CHARGING_STATION_ID, timestamp, attributes, FTP_LOCATION);
@@ -230,7 +229,7 @@ public class OcppJsonServiceTest {
     }
 
     @Test
-    public void sendLocalListRequest() throws IOException{
+    public void sendLocalListRequest() throws IOException {
         List<IdentifyingToken> list = Lists.newArrayList();
         String idTag = "044943121F1D80";
         TextualToken id = new TextualToken(idTag, IdentifyingToken.AuthenticationStatus.ACCEPTED);
@@ -259,7 +258,7 @@ public class OcppJsonServiceTest {
     }
 
     @Test
-    public void getLocalListVersionRequest() throws IOException{
+    public void getLocalListVersionRequest() throws IOException {
         service.getLocalListVersion(CHARGING_STATION_ID, CORRELATION_TOKEN);
 
         String expectedMessage = createExpectedMessageCall(MessageProcUri.GET_LOCALLIST_VERSION, new Getlocallistversion());
@@ -267,7 +266,7 @@ public class OcppJsonServiceTest {
     }
 
     @Test
-    public void clearCacheRequest() throws IOException{
+    public void clearCacheRequest() throws IOException {
         service.clearCache(CHARGING_STATION_ID, CORRELATION_TOKEN);
 
         String expectedMessage = createExpectedMessageCall(MessageProcUri.CLEAR_CACHE, new Clearcache());
@@ -275,7 +274,7 @@ public class OcppJsonServiceTest {
     }
 
     @Test
-    public void changeAvailabilityRequest() throws IOException{
+    public void changeAvailabilityRequest() throws IOException {
         service.changeAvailability(CHARGING_STATION_ID, EVSE_ID, Changeavailability.Type.INOPERATIVE, CORRELATION_TOKEN);
 
         Changeavailability requestPayload = new Changeavailability();
@@ -287,7 +286,7 @@ public class OcppJsonServiceTest {
     }
 
     @Test
-    public void dataTransferRequest() throws IOException{
+    public void dataTransferRequest() throws IOException {
         String vendorId = "fr.tm.cnr";
         String messageId = "GetChargeInstruction";
         String data = "";
@@ -303,7 +302,7 @@ public class OcppJsonServiceTest {
     }
 
     @Test
-    public void reserveNowRequest() throws IOException{
+    public void reserveNowRequest() throws IOException {
         Date expiryDate = new Date(DateTimeUtils.currentTimeMillis() + FIVE_MINUTES);
 
         service.reserveNow(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, null, expiryDate, CORRELATION_TOKEN);
@@ -319,7 +318,7 @@ public class OcppJsonServiceTest {
     }
 
     @Test
-    public void cancelReservation() throws IOException{
+    public void cancelReservation() throws IOException {
         service.cancelReservation(CHARGING_STATION_ID, RESERVATION_ID, CORRELATION_TOKEN);
 
         Cancelreservation requestPayload = new Cancelreservation();

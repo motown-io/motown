@@ -25,13 +25,11 @@ import org.mockito.ArgumentCaptor;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.v12.soap.V12SOAPTestUtils.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ChargingStationOcpp12SoapClientTest {
 
@@ -262,18 +260,27 @@ public class ChargingStationOcpp12SoapClientTest {
     public void changeConfigurationAcceptedVerifyReturnValue() {
         when(chargePointService.changeConfiguration(any(ChangeConfigurationRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getChangeConfigurationResponse(ConfigurationStatus.ACCEPTED));
 
-        RequestResult requestResult = client.changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_KEY, CONFIGURATION_VALUE);
+        boolean hasConfigurationChanged = client.changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_ITEM);
 
-        assertEquals(RequestResult.SUCCESS, requestResult);
+        assertTrue(hasConfigurationChanged);
+    }
+
+    @Test
+    public void changeConfigurationNotSupportedVerifyReturnValue() {
+        when(chargePointService.changeConfiguration(any(ChangeConfigurationRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getChangeConfigurationResponse(ConfigurationStatus.NOT_SUPPORTED));
+
+        boolean hasConfigurationChanged = client.changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_ITEM);
+
+        assertFalse(hasConfigurationChanged);
     }
 
     @Test
     public void changeConfigurationRejectedVerifyReturnValue() {
         when(chargePointService.changeConfiguration(any(ChangeConfigurationRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getChangeConfigurationResponse(ConfigurationStatus.REJECTED));
 
-        RequestResult requestResult = client.changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_KEY, CONFIGURATION_VALUE);
+        boolean hasConfigurationChanged = client.changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_ITEM);
 
-        assertEquals(RequestResult.FAILURE, requestResult);
+        assertFalse(hasConfigurationChanged);
     }
 
     @Test
@@ -281,11 +288,11 @@ public class ChargingStationOcpp12SoapClientTest {
         when(chargePointService.changeConfiguration(any(ChangeConfigurationRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getChangeConfigurationResponse(ConfigurationStatus.ACCEPTED));
         ArgumentCaptor<ChangeConfigurationRequest> changeConfigurationArgument = ArgumentCaptor.forClass(ChangeConfigurationRequest.class);
 
-        client.changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_KEY, CONFIGURATION_VALUE);
+        client.changeConfiguration(CHARGING_STATION_ID, CONFIGURATION_ITEM);
 
         verify(chargePointService).changeConfiguration(changeConfigurationArgument.capture(), eq(CHARGING_STATION_ID.getId()));
-        assertEquals(CONFIGURATION_KEY, changeConfigurationArgument.getValue().getKey());
-        assertEquals(CONFIGURATION_VALUE, changeConfigurationArgument.getValue().getValue());
+        assertEquals(CONFIGURATION_ITEM.getKey(), changeConfigurationArgument.getValue().getKey());
+        assertEquals(CONFIGURATION_ITEM.getValue(), changeConfigurationArgument.getValue().getValue());
     }
 
     @Test

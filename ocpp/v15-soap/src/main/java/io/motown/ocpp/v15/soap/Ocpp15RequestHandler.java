@@ -158,12 +158,16 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(ChangeConfigurationItemRequestedEvent event, CorrelationToken statusCorrelationToken) {
-        LOG.info("ChangeConfigurationItemRequestedEvent");
-        RequestResult requestResult = chargingStationOcpp15Client.changeConfiguration(event.getChargingStationId(), event.getConfigurationItem().getKey(), event.getConfigurationItem().getValue());
+        boolean hasConfigurationChanged = chargingStationOcpp15Client.changeConfiguration(event.getChargingStationId(), event.getConfigurationItem());
 
-        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
+        if (hasConfigurationChanged) {
+            domainService.changeConfiguration(event.getChargingStationId(), event.getConfigurationItem(), statusCorrelationToken, addOnIdentity);
+        }
     }
 
     @Override

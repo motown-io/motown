@@ -731,6 +731,13 @@ public class ChargingStationTest {
     }
 
     @Test
+    public void testChangeConfigurationItem() {
+        fixture.given(CHARGING_STATION)
+                .when(new ChangeConfigurationItemCommand(CHARGING_STATION_ID, CONFIGURATION_ITEM, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new ConfigurationItemChangedEvent(CHARGING_STATION_ID, CONFIGURATION_ITEM, ROOT_IDENTITY_CONTEXT));
+    }
+
+    @Test
     public void testStopTransaction() {
         Date now = new Date();
         fixture.given(CHARGING_STATION)

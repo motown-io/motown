@@ -22,6 +22,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Client for communicating with OCPP 1.5 charging stations.
+ */
 public interface ChargingStationOcpp15Client {
 
     Map<String, String> getConfiguration(ChargingStationId id);
@@ -42,7 +45,14 @@ public interface ChargingStationOcpp15Client {
 
     DataTransferRequestResult dataTransfer(ChargingStationId id, String vendorId, String messageId, String data);
 
-    RequestResult changeConfiguration(ChargingStationId id, String key, String value);
+    /**
+     * Requests the charging station to change a configuration item.
+     *
+     * @param id                the charging station's id.
+     * @param configurationItem the configuration item to change.
+     * @return true if the configuration item has changed, false if it hasn't.
+     */
+    boolean changeConfiguration(ChargingStationId id, ConfigurationItem configurationItem);
 
     String getDiagnostics(ChargingStationId id, String uploadLocation, Integer numRetries, Integer retryInterval, Date periodStartTime, Date periodStopTime);
 

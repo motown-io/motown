@@ -336,6 +336,21 @@ public class DomainService {
         commandGateway.send(new ChangeChargingStationAvailabilityToInoperativeCommand(chargingStationId, identityContext), statusCorrelationToken);
     }
 
+    /**
+     * Change the configuration in the charging station. It has already happened on the physical charging station, but
+     * the Domain has not been updated yet.
+     *
+     * @param chargingStationId the charging station id.
+     * @param configurationItem the configuration item which has changed.
+     * @param correlationToken  the token to correlate commands and events that belong together.
+     * @param addOnIdentity     the identity of the add-on.
+     */
+    public void changeConfiguration(ChargingStationId chargingStationId, ConfigurationItem configurationItem, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        commandGateway.send(new ChangeConfigurationItemCommand(chargingStationId, configurationItem, identityContext), correlationToken);
+    }
+
     public void informDataTransferResponse(ChargingStationId chargingStationId, String data, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
@@ -419,5 +434,4 @@ public class DomainService {
 
         return transaction;
     }
-
 }
