@@ -15,6 +15,7 @@
  */
 package io.motown.configuration.simple.authorization.security;
 
+import io.motown.configuration.simple.authorization.exceptions.UnsupportedEncodingConfiguredException;
 import org.springframework.security.crypto.codec.Hex;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -42,7 +43,7 @@ public class SaltedPasswordEncoder implements PasswordEncoder {
         try {
             return new String(Hex.encode(this.digest.digest(saltedPassword.getBytes(ENCODING))));
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(ENCODING + " not supported", e);
+            throw new UnsupportedEncodingConfiguredException(ENCODING + " not supported", e);
         }
     }
 
