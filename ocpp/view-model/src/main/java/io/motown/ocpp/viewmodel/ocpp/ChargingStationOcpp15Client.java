@@ -33,9 +33,21 @@ public interface ChargingStationOcpp15Client {
 
     RequestResult stopTransaction(ChargingStationId id, int transactionId);
 
-    RequestResult softReset(ChargingStationId id);
+    /**
+     * Requests the charging station to soft reset.
+     *
+     * @param id the charging station's id.
+     * @return true if the charging station has reset, false if it won't.
+     */
+    boolean softReset(ChargingStationId id);
 
-    RequestResult hardReset(ChargingStationId id);
+    /**
+     * Requests the charging station to hard reset.
+     *
+     * @param id the charging station's id.
+     * @return true if the charging station has reset, false if it won't.
+     */
+    boolean hardReset(ChargingStationId id);
 
     RequestResult unlockConnector(ChargingStationId id, EvseId evseId);
 

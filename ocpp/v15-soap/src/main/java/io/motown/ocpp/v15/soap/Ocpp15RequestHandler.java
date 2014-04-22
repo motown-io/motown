@@ -60,20 +60,22 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(SoftResetChargingStationRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("SoftResetChargingStationRequestedEvent");
-        RequestResult requestResult = chargingStationOcpp15Client.softReset(event.getChargingStationId());
-
-        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
+        chargingStationOcpp15Client.softReset(event.getChargingStationId());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(HardResetChargingStationRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("HardResetChargingStationRequestedEvent");
-        RequestResult requestResult = chargingStationOcpp15Client.hardReset(event.getChargingStationId());
-
-        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
+        chargingStationOcpp15Client.hardReset(event.getChargingStationId());
     }
 
     @Override
