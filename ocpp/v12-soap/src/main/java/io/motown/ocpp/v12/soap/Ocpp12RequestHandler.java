@@ -37,7 +37,7 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
 
     @Override
     public void handle(ConfigurationItemsRequestedEvent event) {
-        // no implementation in OCPP 1.2
+        throw new UnsupportedOperationException("GetConfigurationItems not supported in OCPP/S 1.2");
     }
 
     /**
@@ -146,7 +146,7 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
 
     @Override
     public void handle(DataTransferRequestedEvent event, CorrelationToken statusCorrelationToken) {
-        // no implementation in OCPP 1.2
+        throw new UnsupportedOperationException("DataTransfer not supported in OCPP/S 1.2");
     }
 
     /**
@@ -200,22 +200,22 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
 
     @Override
     public void handle(AuthorizationListVersionRequestedEvent event, CorrelationToken statusCorrelationToken) {
-        // no implementation in OCPP 1.2
+        throw new UnsupportedOperationException("GetAuthorizationListVersion not supported in OCPP/S 1.2");
     }
 
     @Override
     public void handle(SendAuthorizationListRequestedEvent event, CorrelationToken statusCorrelationToken) {
-        // no implementation in OCPP 1.2
+        throw new UnsupportedOperationException("SendAuthorizationList not supported in OCPP/S 1.2");
     }
 
     @Override
     public void handle(ReserveNowRequestedEvent event, CorrelationToken statusCorrelationToken) {
-        // no implementation in OCPP 1.2
+        throw new UnsupportedOperationException("ReserveNow not supported in OCPP/S 1.2");
     }
 
     @Override
     public void handle(CancelReservationRequestedEvent event, CorrelationToken statusCorrelationToken) {
-        // no implementation in OCPP 1.2
+        throw new UnsupportedOperationException("CancelReservation not supported in OCPP/S 1.2");
     }
 
     public void setChargingStationOcpp12Client(ChargingStationOcpp12Client chargingStationOcpp12Client) {
