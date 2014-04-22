@@ -104,6 +104,7 @@
         <property name="heartbeatInterval" value="${io.motown.ocpp.viewmodel.heartbeat.interval}"/>
         <property name="reservationIdentifierRepository" ref="reservationIdentifierRepositoryOcppWebServices"/>
         <property name="transactionRepository" ref="transactionRepositoryOcppWebServices"/>
+        <property name="userIdentitiesWithAllPermissions" ref="userIdentitiesWithAllPermissions"/>
     </bean>
 
     <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">

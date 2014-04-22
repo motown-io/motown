@@ -65,7 +65,7 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
         this.repository = repository;
     }
 
-    void setUserIdentitiesWithAllPermissions(Set<UserIdentity> userIdentitiesWithAllPermissions) {
+    public void setUserIdentitiesWithAllPermissions(Set<UserIdentity> userIdentitiesWithAllPermissions) {
         this.userIdentitiesWithAllPermissions = userIdentitiesWithAllPermissions;
     }
 }

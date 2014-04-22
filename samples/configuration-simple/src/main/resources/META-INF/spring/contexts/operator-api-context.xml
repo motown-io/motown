@@ -108,6 +108,7 @@
         <bean class="io.motown.operatorapi.json.commands.RegisterJsonCommandHandler">
             <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
             <property name="repository" ref="chargingStationRepositoryOperatorApi"/>
+            <property name="userIdentitiesWithAllPermissions" ref="userIdentitiesWithAllPermissions"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.RequestAuthorizationListVersionJsonCommandHandler">
             <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>

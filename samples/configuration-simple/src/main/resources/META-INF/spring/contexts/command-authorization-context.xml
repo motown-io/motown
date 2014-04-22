@@ -54,4 +54,14 @@
         <property name="commandAuthorizationRepository" ref="commandAuthorizationRepository" />
     </bean>
 
+    <bean id="userIdentitiesWithAllPermissions" class="java.util.HashSet">
+        <constructor-arg>
+            <set>
+                <bean class="io.motown.domain.api.security.SimpleUserIdentity">
+                    <constructor-arg name="identity" value="root" />
+                </bean>
+            </set>
+        </constructor-arg>
+    </bean>
+
 </beans>
