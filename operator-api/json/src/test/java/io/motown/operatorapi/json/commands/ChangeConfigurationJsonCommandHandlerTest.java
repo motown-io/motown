@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ConfigurationItem;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.RequestChangeConfigurationItemCommand;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,7 +51,7 @@ public class ChangeConfigurationJsonCommandHandlerTest {
     }
 
     @Test
-    public void testHandleChangeConfigurationOnRegisteredStation() {
+    public void testHandleChangeConfigurationOnRegisteredStation() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{'key' : 'foo', 'value': 'bar'}", JsonObject.class);
 
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID.getId(), commandObject, ROOT_IDENTITY_CONTEXT);

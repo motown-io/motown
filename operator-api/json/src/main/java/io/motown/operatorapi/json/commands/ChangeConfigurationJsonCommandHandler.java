@@ -21,6 +21,7 @@ import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.commandauthorization.CommandAuthorizationService;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.model.ChangeConfigurationApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -52,16 +53,20 @@ class ChangeConfigurationJsonCommandHandler implements JsonCommandHandler {
      * {@inheritDoc}
      */
     @Override
-    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) {
+    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) throws UserIdentityUnauthorizedException {
+        ChargingStationId csId = new ChargingStationId(chargingStationId);
+
+        if (!commandAuthorizationService.isAuthorized(csId, identityContext.getUserIdentity(), RequestChangeConfigurationItemCommand.class)) {
+            throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), RequestChangeConfigurationItemCommand.class);
+        }
+
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
-            ChargingStationId chargingStationIdObject = new ChargingStationId(chargingStationId);
 
-            if (chargingStation != null && chargingStation.isAccepted() &&
-                    commandAuthorizationService.isAuthorized(chargingStationIdObject, identityContext.getUserIdentity(), ChangeConfigurationApiCommand.class)) {
+            if (chargingStation != null && chargingStation.isAccepted()) {
                 ChangeConfigurationApiCommand command = gson.fromJson(commandObject, ChangeConfigurationApiCommand.class);
 
-                commandGateway.send(new RequestChangeConfigurationItemCommand(chargingStationIdObject, new ConfigurationItem(command.getKey(), command.getValue()), identityContext), new CorrelationToken());
+                commandGateway.send(new RequestChangeConfigurationItemCommand(csId, new ConfigurationItem(command.getKey(), command.getValue()), identityContext), new CorrelationToken());
             }
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Change configuration command not able to parse the payload, is your json correctly formatted?", ex);
