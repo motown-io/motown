@@ -110,7 +110,7 @@ public class OcppJsonService {
         changeConfigurationRequest.setKey(configurationItem.getKey());
         changeConfigurationRequest.setValue(configurationItem.getValue());
 
-        responseHandlers.put(correlationToken.getToken(), new ChangeConfigurationResponseHandler(correlationToken));
+        responseHandlers.put(correlationToken.getToken(), new ChangeConfigurationResponseHandler(configurationItem, correlationToken));
 
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, correlationToken.getToken(), MessageProcUri.CHANGE_CONFIGURATION, changeConfigurationRequest);
         sendWampMessage(wampMessage, chargingStationId);

@@ -17,24 +17,55 @@ package io.motown.ocpp.websocketjson.response.handler;
 
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.ConfigurationItem;
 import io.motown.domain.api.chargingstation.CorrelationToken;
-import io.motown.domain.api.chargingstation.RequestResult;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.ChangeconfigurationResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * The {@code ResponseHandler} which handles responses for changing configuration.
+ */
 public class ChangeConfigurationResponseHandler extends ResponseHandler {
 
-    public ChangeConfigurationResponseHandler(CorrelationToken correlationToken) {
+    private static final Logger LOG = LoggerFactory.getLogger(ChangeConfigurationResponseHandler.class);
+
+    private final ConfigurationItem configurationItem;
+
+    /**
+     * Creates a new {@code ChangeConfigurationResponseHandler}.
+     *
+     * @param configurationItem the configuration item which was changed with the request.
+     * @param correlationToken  the correlation token.
+     */
+    public ChangeConfigurationResponseHandler(ConfigurationItem configurationItem, CorrelationToken correlationToken) {
+        this.configurationItem = configurationItem;
         this.setCorrelationToken(correlationToken);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         ChangeconfigurationResponse response = gson.fromJson(wampMessage.getPayloadAsString(), ChangeconfigurationResponse.class);
-        RequestResult requestResult = response.getStatus().equals(ChangeconfigurationResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "", addOnIdentity);
+        switch (response.getStatus()) {
+            case ACCEPTED:
+                LOG.info("Configuration change of {} on {} has been accepted", configurationItem.getKey(), configurationItem.getValue());
+                domainService.changeConfiguration(chargingStationId, configurationItem, getCorrelationToken(), addOnIdentity);
+                break;
+            case REJECTED:
+                LOG.info("Configuration change of {} on {} was rejected", configurationItem.getKey(), configurationItem.getValue());
+                break;
+            case NOT_SUPPORTED:
+                LOG.info("Configuration change of {} on {} was not supported", configurationItem.getKey(), configurationItem.getValue());
+                break;
+            default:
+                throw new AssertionError("Configuration change returned unknown response status " + response.getStatus());
+        }
     }
 }
