@@ -21,6 +21,7 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CreateChargingStationCommand;
 import io.motown.domain.api.chargingstation.RevokePermissionCommand;
 import io.motown.domain.api.security.SimpleUserIdentity;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,16 +47,17 @@ public class RevokePermissionJsonCommandHandlerTest {
         handler.setGson(gson);
         handler.setCommandGateway(gateway);
         handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
+        handler.setCommandAuthorizationService(OperatorApiJsonTestUtils.getCommandAuthorizationService());
     }
 
     @Test
-    public void handleGrantPermission() {
+    public void handleGrantPermission() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{'commandClass': 'io.motown.domain.api.chargingstation.CreateChargingStationCommand', 'userIdentity': 'testUser'}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID_STRING, commandObject, IDENTITY_CONTEXT);
     }
 
     @Test
-    public void handleGrantPermissionVerifyGatewayCall() {
+    public void handleGrantPermissionVerifyGatewayCall() throws UserIdentityUnauthorizedException {
         Class commandClass = CreateChargingStationCommand.class;
         String user = "testUser";
 
@@ -66,7 +68,7 @@ public class RevokePermissionJsonCommandHandlerTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void handleGrantPermissionInvalidCommandClass() {
+    public void handleGrantPermissionInvalidCommandClass() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{'commandClass': 'io.motown.domain.api.chargingstation.NotExistingCommandClass', 'userIdentity': 'testUser'}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID_STRING, commandObject, IDENTITY_CONTEXT);
     }

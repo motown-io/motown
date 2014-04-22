@@ -23,6 +23,8 @@ import io.motown.domain.api.chargingstation.RevokePermissionCommand;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.api.security.SimpleUserIdentity;
 import io.motown.domain.api.security.UserIdentity;
+import io.motown.domain.commandauthorization.CommandAuthorizationService;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.model.RevokePermissionApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -37,6 +39,8 @@ class RevokePermissionJsonCommandHandler implements JsonCommandHandler {
 
     private Gson gson;
 
+    private CommandAuthorizationService commandAuthorizationService;
+
     /**
      * {@inheritDoc}
      */
@@ -45,8 +49,17 @@ class RevokePermissionJsonCommandHandler implements JsonCommandHandler {
         return COMMAND_NAME;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) {
+    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) throws UserIdentityUnauthorizedException {
+        ChargingStationId csId = new ChargingStationId(chargingStationId);
+
+        if (!commandAuthorizationService.isAuthorized(csId, identityContext.getUserIdentity(), RevokePermissionCommand.class)) {
+            throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), RevokePermissionCommand.class);
+        }
+
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
@@ -55,7 +68,7 @@ class RevokePermissionJsonCommandHandler implements JsonCommandHandler {
                 Class commandClass = Class.forName(command.getCommandClass());
                 UserIdentity userIdentity = new SimpleUserIdentity(command.getUserIdentity());
 
-                commandGateway.send(new RevokePermissionCommand(new ChargingStationId(chargingStationId), userIdentity, commandClass, identityContext));
+                commandGateway.send(new RevokePermissionCommand(csId, userIdentity, commandClass, identityContext));
             }
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Revoke permission command not able to parse the payload, is your json correctly formatted?", ex);
@@ -64,16 +77,40 @@ class RevokePermissionJsonCommandHandler implements JsonCommandHandler {
         }
     }
 
+    /**
+     * Sets the command gateway.
+     *
+     * @param commandGateway the command gateway.
+     */
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
 
+    /**
+     * Sets the charging station repository.
+     *
+     * @param repository the charging station repository.
+     */
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
     }
 
+    /**
+     * Sets the GSON instance.
+     *
+     * @param gson the GSON instance.
+     */
     public void setGson(Gson gson) {
         this.gson = gson;
     }
 
+    /**
+     * Sets the command authorization service to use. The command authorization service checks if a certain user is
+     * allowed to execute a certain command.
+     *
+     * @param commandAuthorizationService    command authorization.
+     */
+    public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
+        this.commandAuthorizationService = commandAuthorizationService;
+    }
 }
