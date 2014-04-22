@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.junit.Before;
@@ -48,23 +49,24 @@ public class RegisterJsonCommandHandlerTest {
         when(repo.findOne(OperatorApiJsonTestUtils.UNREGISTERED_CHARGING_STATION_ID_STRING)).thenReturn(unregisteredStation);
 
         handler.setRepository(repo);
+        handler.setCommandAuthorizationService(OperatorApiJsonTestUtils.getCommandAuthorizationService());
     }
 
     @Test
-    public void testHandleComplete() {
+    public void testHandleComplete() throws UserIdentityUnauthorizedException {
 
         JsonObject commandObject = gson.fromJson("{'configuration' : {'evses' : [{'evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}]}], 'settings' : {'key':'value', 'key2':'value2'}}}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.UNREGISTERED_CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected=IllegalStateException.class)
-    public void testHandleCompleteUnRegistered() {
+    public void testHandleCompleteUnRegistered() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{'configuration' : {'evses' : [{'evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}]}], 'settings' : {'key':'value', 'key2':'value2'}}}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test
-    public void testHandleConfigNull() {
+    public void testHandleConfigNull() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{'configuration' : null }", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.UNREGISTERED_CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
