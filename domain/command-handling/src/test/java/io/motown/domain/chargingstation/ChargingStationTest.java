@@ -493,24 +493,31 @@ public class ChargingStationTest {
     }
 
     @Test
-    public void testClearCache() {
+    public void testRequestClearCache() {
         fixture.given(CHARGING_STATION)
                 .when(new RequestClearCacheCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new ClearCacheRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
-    public void testClearCacheForNotAcceptedChargingStation() {
+    public void testRequestClearCacheForNotAcceptedChargingStation() {
         fixture.given(UNCONFIGURED_CHARGING_STATION)
                 .when(new RequestClearCacheCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
 
     @Test
-    public void testClearCacheForUnconfiguredChargingStation() {
+    public void testRequestClearCacheForUnconfiguredChargingStation() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
                 .when(new RequestClearCacheCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void testClearCache() {
+        fixture.given(CHARGING_STATION)
+                .when(new ClearCacheCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new CacheClearedEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
