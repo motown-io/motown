@@ -77,17 +77,21 @@ public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Cli
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public RequestResult softReset(ChargingStationId id) {
+    public boolean softReset(ChargingStationId id) {
         LOG.info("Requesting soft reset on {}", id);
-
         return reset(id, ResetType.SOFT);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public RequestResult hardReset(ChargingStationId id) {
+    public boolean hardReset(ChargingStationId id) {
         LOG.info("Requesting hard reset on {}", id);
-
         return reset(id, ResetType.HARD);
     }
 
@@ -224,7 +228,14 @@ public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Cli
         this.chargingStationProxyFactory = chargingStationProxyFactory;
     }
 
-    private RequestResult reset(ChargingStationId id, ResetType type) {
+    /**
+     * Reset a charging station.
+     *
+     * @param id   the charging station's id.
+     * @param type the type of reset (i.e. soft or hard).
+     * @return true if the charging station has reset, false if it hasn't.
+     */
+    private boolean reset(ChargingStationId id, ResetType type) {
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         ResetRequest request = new ResetRequest();
@@ -232,11 +243,22 @@ public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Cli
 
         ResetResponse response = chargePointService.reset(request, id.getId());
 
-        if (ResetStatus.ACCEPTED.equals(response.getStatus())) {
-            return RequestResult.SUCCESS;
-        } else {
-            return RequestResult.FAILURE;
+        boolean hasReset;
+
+        switch (response.getStatus()) {
+            case ACCEPTED:
+                LOG.info("Reset was accepted");
+                hasReset = true;
+                break;
+            case REJECTED:
+                LOG.info("Reset was rejected");
+                hasReset = false;
+                break;
+            default:
+                throw new AssertionError("Unknown ResetStatus: " + response.getStatus());
         }
+
+        return hasReset;
     }
 
     private RequestResult changeAvailability(ChargingStationId id, EvseId evseId, AvailabilityType type) {

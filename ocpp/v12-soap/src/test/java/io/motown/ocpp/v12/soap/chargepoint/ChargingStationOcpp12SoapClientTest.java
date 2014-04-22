@@ -113,18 +113,18 @@ public class ChargingStationOcpp12SoapClientTest {
     public void softResetAcceptedVerifyReturnValue() {
         when(chargePointService.reset(any(ResetRequest.class), anyString())).thenReturn(getResetResponse(ResetStatus.ACCEPTED));
 
-        RequestResult requestResult = client.softReset(CHARGING_STATION_ID);
+        boolean hasReset = client.softReset(CHARGING_STATION_ID);
 
-        assertEquals(RequestResult.SUCCESS, requestResult);
+        assertTrue(hasReset);
     }
 
     @Test
     public void softResetRejectedVerifyReturnValue() {
         when(chargePointService.reset(any(ResetRequest.class), anyString())).thenReturn(getResetResponse(ResetStatus.REJECTED));
 
-        RequestResult requestResult = client.softReset(CHARGING_STATION_ID);
+        boolean hasReset = client.softReset(CHARGING_STATION_ID);
 
-        assertEquals(RequestResult.FAILURE, requestResult);
+        assertFalse(hasReset);
     }
 
     @Test
@@ -142,18 +142,18 @@ public class ChargingStationOcpp12SoapClientTest {
     public void hardResetAcceptedVerifyReturnValue() {
         when(chargePointService.reset(any(ResetRequest.class), anyString())).thenReturn(getResetResponse(ResetStatus.ACCEPTED));
 
-        RequestResult requestResult = client.hardReset(CHARGING_STATION_ID);
+        boolean hasReset = client.hardReset(CHARGING_STATION_ID);
 
-        assertEquals(RequestResult.SUCCESS, requestResult);
+        assertTrue(hasReset);
     }
 
     @Test
     public void hardResetRejectedVerifyReturnValue() {
         when(chargePointService.reset(any(ResetRequest.class), anyString())).thenReturn(getResetResponse(ResetStatus.REJECTED));
 
-        RequestResult requestResult = client.hardReset(CHARGING_STATION_ID);
+        boolean hasReset = client.hardReset(CHARGING_STATION_ID);
 
-        assertEquals(RequestResult.FAILURE, requestResult);
+        assertFalse(hasReset);
     }
 
     @Test
