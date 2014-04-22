@@ -96,11 +96,11 @@ public class MotownVasPublisherService implements VasPublisherService {
                 subscriptionRepository.delete(subscription);
                 unsubscribeResponse.setStatus(SubscribeStatus.ACCEPTED);
             } else {
-                //TODO duplicate? the subscription was not found... is this the right response? - Mark van den Bergh, Februari 18th 2014
-                unsubscribeResponse.setStatus(SubscribeStatus.DUPLICATE_IGNORED);
+                LOG.warn("Unable to unsubscribe unkown subscription {}", subscriberIdentity);
+                unsubscribeResponse.setStatus(SubscribeStatus.REJECTED);
             }
         } catch (Exception e) {
-            LOG.error("Unsubscription of {} failed", subscriberIdentity, e);
+            LOG.error("Unsubscribing of {} failed", subscriberIdentity, e);
             unsubscribeResponse.setStatus(SubscribeStatus.REJECTED);
         }
 
