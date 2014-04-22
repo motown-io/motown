@@ -97,6 +97,13 @@ public class ChargingStationTest {
     }
 
     @Test
+    public void testRegisteringUnacceptedChargingStationUserWithoutRights() {
+        fixture.given(CREATED_CHARGING_STATION)
+                .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT))
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
     public void testRegisteringAcceptedChargingStation() {
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
                 .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
