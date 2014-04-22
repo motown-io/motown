@@ -216,6 +216,11 @@ public final class ChargingStationTestUtils {
     /**
      * The default identifying token.
      */
+    public static final TextualToken EMPTY_IDENTIFYING_TOKEN = new TextualToken("");
+
+    /**
+     * The default identifying token.
+     */
     public static final TextualToken IDENTIFYING_TOKEN = new TextualToken("12345AF");
 
     /**

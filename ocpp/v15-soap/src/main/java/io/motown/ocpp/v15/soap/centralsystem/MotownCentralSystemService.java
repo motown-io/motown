@@ -110,8 +110,10 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
     public StopTransactionResponse stopTransaction(StopTransactionRequest request, String chargeBoxIdentity) {
         ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
         NumberedTransactionId transactionId = new NumberedTransactionId(chargingStationId, PROTOCOL_IDENTIFIER, request.getTransactionId());
-        //TODO idTag is optional in the web service. TextualToken doesn't accept null/empty string. - Mark van den Bergh, Februari 13th 2014
-        IdentifyingToken identifyingToken = new TextualToken(request.getIdTag());
+
+        // In case the idTag is missing we create an empty token
+        String idTag = request.getIdTag() != null ? request.getIdTag() : "";
+        IdentifyingToken identifyingToken = new TextualToken(idTag);
 
         List<MeterValue> meterValues = new ArrayList<>();
         List<TransactionData> transactionData = request.getTransactionData();
@@ -129,7 +131,6 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
                 }
             }
         }
-        //TODO: timestamp is optional in the webservice, this currently 'breaks' the code ahead - Ingo Pak, 19 Mar 2014
         domainService.stopTransaction(chargingStationId, transactionId, identifyingToken, request.getMeterStop(), request.getTimestamp(), meterValues, addOnIdentity);
         return new StopTransactionResponse();
     }

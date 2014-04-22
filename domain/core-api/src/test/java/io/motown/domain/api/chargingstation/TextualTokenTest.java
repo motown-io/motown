@@ -25,8 +25,8 @@ public class TextualTokenTest {
         new TextualToken(null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void nullPointerExceptionThrownWhenCreatingWithEmptyString() {
+    @Test()
+    public void EmptyTokenAllowed() {
         new TextualToken("");
     }
 

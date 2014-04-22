@@ -18,7 +18,6 @@ package io.motown.domain.api.chargingstation;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -47,11 +46,9 @@ public final class TextualToken implements IdentifyingToken {
      * @param token  the token.
      * @param status the authentication status
      * @throws NullPointerException     if {@token} is null.
-     * @throws IllegalArgumentException if {@token} is empty.
      */
     public TextualToken(String token, @Nullable AuthenticationStatus status) {
         checkNotNull(token);
-        checkArgument(!token.isEmpty());
         this.token = token;
         this.authenticationStatus = status;
     }

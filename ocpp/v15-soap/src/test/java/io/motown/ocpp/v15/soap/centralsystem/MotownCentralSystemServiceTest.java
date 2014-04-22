@@ -229,6 +229,20 @@ public class MotownCentralSystemServiceTest {
     }
 
     @Test
+    public void stopTransactionWithoutIdTag() {
+        StopTransactionRequest request = new StopTransactionRequest();
+        request.setIdTag(null);
+        request.setMeterStop(METER_STOP);
+        request.setTimestamp(FIVE_MINUTES_AGO);
+        request.setTransactionId(TRANSACTION_NUMBER);
+        request.getTransactionData().addAll(getTransactionDataForMeterValues(METER_VALUES));
+
+        motownCentralSystemService.stopTransaction(request, CHARGING_STATION_ID.getId());
+
+        verify(domainService).stopTransaction(CHARGING_STATION_ID, new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL_IDENTIFIER, TRANSACTION_NUMBER), EMPTY_IDENTIFYING_TOKEN, METER_STOP, FIVE_MINUTES_AGO, METER_VALUES, OCPPS15_ADD_ON_IDENTITY);
+    }
+
+    @Test
     public void bootNotificationNoAddressVerifyResponse() {
         when(soapHeaderReader.getChargingStationAddress(any(MessageContext.class))).thenReturn("");
         BootNotificationRequest request = new BootNotificationRequest();
