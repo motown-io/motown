@@ -75,7 +75,8 @@ public class OcppJsonService {
             if (WampMessage.CALL == wampMessage.getMessageType()) {
                 if (!schemaValidator.isValidRequest(wampMessage.getPayloadAsString(), wampMessage.getProcUri())) {
                     LOG.error("Cannot continue processing invalid request for [{}].", chargingStationId.getId());
-                    //TODO send back wamp error?
+                    WampMessage wampErrorMessage = new WampMessage(WampMessage.CALL_ERROR, wampMessage.getCallId(), null);
+                    sendWampMessage(wampErrorMessage, chargingStationId);
                     return;
                 }
 
@@ -92,8 +93,8 @@ public class OcppJsonService {
                 }
             }
         } catch (IllegalArgumentException iae) {
+            //Unable to send back a WAMP error at this level, as we are not able to access the callId
             LOG.error("Unable to handle message", iae);
-            //TODO send back wamp error?
         }
     }
 
