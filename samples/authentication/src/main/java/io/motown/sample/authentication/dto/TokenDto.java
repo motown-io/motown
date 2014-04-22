@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.configuration.simple.authorization.dto;
+package io.motown.sample.authentication.dto;
 
 /**
  * Dto to transfer a authorization token.

@@ -22,12 +22,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 			               http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
-    <bean id="passwordEncoder" class="io.motown.configuration.simple.authorization.security.SaltedPasswordEncoder">
+    <bean id="passwordEncoder" class="io.motown.sample.authentication.security.SaltedPasswordEncoder">
         <constructor-arg name="algorithm" value="SHA-256" />
         <constructor-arg name="salt" value="secret" />
     </bean>
 
-    <bean id="userDetailsService" class="io.motown.configuration.simple.authorization.userdetails.UserDetailsService" />
+    <bean id="userDetailsService" class="io.motown.sample.authentication.userdetails.UserDetailsService" />
 
     <security:authentication-manager id="authenticationManager">
         <security:authentication-provider user-service-ref="userDetailsService">
@@ -48,13 +48,13 @@
         <security:intercept-url pattern="/rest/operator-api/**" access="isAuthenticated()" />
     </security:http>
 
-    <bean id="unauthorizedEntryPoint" class="io.motown.configuration.simple.authorization.rest.UnauthorizedEntryPoint" />
+    <bean id="unauthorizedEntryPoint" class="io.motown.sample.authentication.rest.UnauthorizedEntryPoint" />
 
-    <bean class="io.motown.configuration.simple.authorization.rest.AuthenticationTokenProcessingFilter" id="authenticationTokenProcessingFilter">
+    <bean class="io.motown.sample.authentication.rest.AuthenticationTokenProcessingFilter" id="authenticationTokenProcessingFilter">
         <constructor-arg ref="userDetailsService" />
     </bean>
 
-    <bean class="io.motown.configuration.simple.authorization.resources.UserResource">
+    <bean class="io.motown.sample.authentication.resources.UserResource">
         <property name="authManager" ref="authenticationManager" />
     </bean>
 

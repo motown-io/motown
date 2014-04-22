@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.configuration.simple.authorization.rest;
+package io.motown.sample.authentication.rest;
 
 import com.google.common.base.Charsets;
 import org.springframework.security.core.userdetails.UserDetails;

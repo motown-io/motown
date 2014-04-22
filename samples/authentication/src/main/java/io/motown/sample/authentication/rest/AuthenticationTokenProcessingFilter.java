@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.configuration.simple.authorization.rest;
+package io.motown.sample.authentication.rest;
 
-import io.motown.configuration.simple.authorization.userdetails.UserDetailsService;
+import io.motown.sample.authentication.userdetails.UserDetailsService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

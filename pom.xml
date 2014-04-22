@@ -47,6 +47,7 @@
         <module>samples/configuration-distributed</module>
         <module>samples/configuration-simple</module>
         <module>samples/incoming-datatransfer-handling</module>
+        <module>samples/authentication</module>
     </modules>
     <properties>
         <atmosphere.version>2.1.0</atmosphere.version>

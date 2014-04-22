@@ -116,6 +116,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.motown</groupId>
+            <artifactId>samples-authentication</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <scope>runtime</scope>
@@ -154,10 +159,6 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
             <scope>compile</scope>
         </dependency>
@@ -165,16 +166,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-            <version>${spring.security.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-            <version>${spring.security.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>

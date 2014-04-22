@@ -13,17 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.configuration.simple.authorization.userdetails;
+package io.motown.sample.authentication.exceptions;
 
-import org.springframework.security.core.userdetails.UserDetails;
+public class UnsupportedEncodingConfiguredException extends RuntimeException {
 
-public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
-
-    @Override
-    public UserDetails loadUserByUsername(String username) {
-        //TODO load user from DB
-        // hardcoded hash of password: passw
-        return new io.motown.configuration.simple.authorization.userdetails.UserDetails(username, "653ba57ecd25f175010ac9a7e0ad0973a033dc61a59ee5c8b10b8e73e5407022");
+    public UnsupportedEncodingConfiguredException(String message, Throwable cause) {
+        super(message, cause);
     }
-
 }

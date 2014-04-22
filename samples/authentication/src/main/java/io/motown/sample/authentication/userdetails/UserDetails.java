@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.configuration.simple.authorization.userdetails;
+package io.motown.sample.authentication.userdetails;
 
 import org.springframework.security.core.GrantedAuthority;
 

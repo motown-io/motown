@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.configuration.simple.authorization.security;
+package io.motown.sample.authentication.security;
 
-import io.motown.configuration.simple.authorization.exceptions.UnsupportedEncodingConfiguredException;
+import io.motown.sample.authentication.exceptions.UnsupportedEncodingConfiguredException;
 import org.springframework.security.crypto.codec.Hex;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

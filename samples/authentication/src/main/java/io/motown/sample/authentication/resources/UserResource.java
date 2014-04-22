@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.configuration.simple.authorization.resources;
+package io.motown.sample.authentication.resources;
 
-import io.motown.configuration.simple.authorization.dto.TokenDto;
-import io.motown.configuration.simple.authorization.rest.TokenUtils;
+import io.motown.sample.authentication.dto.TokenDto;
+import io.motown.sample.authentication.rest.TokenUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
