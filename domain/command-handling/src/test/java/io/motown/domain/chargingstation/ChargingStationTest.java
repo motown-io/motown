@@ -121,27 +121,27 @@ public class ChargingStationTest {
     public void testChargePointCreation() {
         fixture.given()
                 .when(new CreateChargingStationCommand(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT));
+                .expectEvents(new ChargingStationCreatedEvent(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testCreatingAndAcceptingChargingStation() {
         fixture.given()
-                .when(new CreateAndAcceptChargingStationCommand(CHARGING_STATION_ID, IDENTITY_CONTEXT))
-                .expectEvents(new ChargingStationCreatedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT),
+                .when(new CreateAndAcceptChargingStationCommand(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, IDENTITY_CONTEXT))
+                .expectEvents(new ChargingStationCreatedEvent(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, IDENTITY_CONTEXT),
                         new ChargingStationAcceptedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
     }
 
     @Test
     public void testChargeAcceptance() {
-        fixture.given(new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT))
+        fixture.given(new ChargingStationCreatedEvent(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, NULL_USER_IDENTITY_CONTEXT))
                 .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new ChargingStationAcceptedEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testChargeAcceptanceUnauthorizedIdentityContext() {
-        fixture.given(new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT))
+        fixture.given(new ChargingStationCreatedEvent(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, NULL_USER_IDENTITY_CONTEXT))
                 .when(new AcceptChargingStationCommand(CHARGING_STATION_ID, IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }

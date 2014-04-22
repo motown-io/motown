@@ -60,13 +60,13 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     public ChargingStation(CreateChargingStationCommand command) {
         this();
 
-        apply(new ChargingStationCreatedEvent(command.getChargingStationId(), command.getIdentityContext()));
+        apply(new ChargingStationCreatedEvent(command.getChargingStationId(), command.getUserIdentitiesWithAllPermissions(), command.getIdentityContext()));
     }
 
     @CommandHandler
     public ChargingStation(CreateAndAcceptChargingStationCommand command) {
         this();
-        apply(new ChargingStationCreatedEvent(command.getChargingStationId(), command.getIdentityContext()));
+        apply(new ChargingStationCreatedEvent(command.getChargingStationId(), command.getUserIdentitiesWithAllPermissions(), command.getIdentityContext()));
         apply(new ChargingStationAcceptedEvent(command.getChargingStationId(), command.getIdentityContext()));
     }
 
@@ -435,6 +435,10 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @EventSourcingHandler
     public void handle(ChargingStationCreatedEvent event) {
         this.id = event.getChargingStationId();
+
+        for(UserIdentity identity : event.getUserIdentitiesWithAllPermissions()) {
+            this.authorizations.put(identity, AllPermissions.class);
+        }
     }
 
     @EventSourcingHandler

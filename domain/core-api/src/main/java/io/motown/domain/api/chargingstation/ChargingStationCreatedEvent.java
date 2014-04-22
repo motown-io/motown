@@ -15,8 +15,14 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.security.IdentityContext;
+import io.motown.domain.api.security.UserIdentity;
 
+import java.util.Objects;
+import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -26,17 +32,23 @@ public final class ChargingStationCreatedEvent {
 
     private final ChargingStationId chargingStationId;
 
+    private final Set<UserIdentity> userIdentitiesWithAllPermissions;
+
     private final IdentityContext identityContext;
 
     /**
      * Creates a {@code ChargingStationCreatedEvent} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
+     * @param userIdentitiesWithAllPermissions set of user identities which have all permissions on the created charging station.
      * @param identityContext the identity context.
-     * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId}, {@code userIdentitiesWithAllPermissions} or {@code identityContext} is {@code null}.
+     * @throws IllegalArgumentException if {@code usersWithAllPermissions} is empty.
      */
-    public ChargingStationCreatedEvent(ChargingStationId chargingStationId, IdentityContext identityContext) {
+    public ChargingStationCreatedEvent(ChargingStationId chargingStationId, Set<UserIdentity> userIdentitiesWithAllPermissions, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.userIdentitiesWithAllPermissions = ImmutableSet.copyOf(checkNotNull(userIdentitiesWithAllPermissions));
+        checkArgument(!this.userIdentitiesWithAllPermissions.isEmpty());
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -50,6 +62,15 @@ public final class ChargingStationCreatedEvent {
     }
 
     /**
+     * Gets the set of user identities which have all permissions on the created charging station.
+     *
+     * @return set of user identities.
+     */
+    public Set<UserIdentity> getUserIdentitiesWithAllPermissions() {
+        return userIdentitiesWithAllPermissions;
+    }
+
+    /**
      * Gets the identity context.
      *
      * @return the identity context.
@@ -58,4 +79,20 @@ public final class ChargingStationCreatedEvent {
         return identityContext;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, userIdentitiesWithAllPermissions, identityContext);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final ChargingStationCreatedEvent other = (ChargingStationCreatedEvent) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.userIdentitiesWithAllPermissions, other.userIdentitiesWithAllPermissions) && Objects.equals(this.identityContext, other.identityContext);
+    }
 }

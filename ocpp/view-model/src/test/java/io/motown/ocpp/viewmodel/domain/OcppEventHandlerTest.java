@@ -64,7 +64,7 @@ public class OcppEventHandlerTest {
     public void chargingStationCreatedEvent() {
         assertNull(chargingStationRepository.findOne(CHARGING_STATION_ID.getId()));
 
-        eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT));
+        eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, NULL_USER_IDENTITY_CONTEXT));
 
         ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
         assertNotNull(cs);
@@ -74,7 +74,7 @@ public class OcppEventHandlerTest {
 
     @Test
     public void chargingStationBootedEvent() {
-        eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT));
+        eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, NULL_USER_IDENTITY_CONTEXT));
         ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
         Assert.assertNull(cs.getProtocol());
 
@@ -86,7 +86,7 @@ public class OcppEventHandlerTest {
 
     @Test
     public void chargingStationAcceptedEvent() {
-        eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT));
+        eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, NULL_USER_IDENTITY_CONTEXT));
 
         eventHandler.handle(new ChargingStationAcceptedEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT));
 
@@ -102,7 +102,7 @@ public class OcppEventHandlerTest {
 
     @Test
     public void chargingStationConfiguredEvent() {
-        eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT));
+        eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, NULL_USER_IDENTITY_CONTEXT));
         ChargingStation cs = chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
         assertFalse(cs.isConfigured());
         assertNotSame(cs.getNumberOfEvses(), EVSES.size());

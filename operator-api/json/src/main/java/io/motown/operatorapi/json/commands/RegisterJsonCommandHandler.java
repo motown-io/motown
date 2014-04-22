@@ -20,10 +20,11 @@ import io.motown.domain.api.chargingstation.AcceptChargingStationCommand;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CreateAndAcceptChargingStationCommand;
 import io.motown.domain.api.security.IdentityContext;
+import io.motown.domain.api.security.UserIdentity;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
+import java.util.Set;
 
 class RegisterJsonCommandHandler implements JsonCommandHandler {
 
@@ -32,6 +33,12 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
     private DomainCommandGateway commandGateway;
 
     private ChargingStationRepository repository;
+
+    /**
+     * Set of user identities which shall be used in the {@code CreateChargingStationCommand} to indicate those users
+     * are authorized to execute all commands on the created aggregate.
+     */
+    private Set<UserIdentity> userIdentitiesWithAllPermissions;
 
     @Override
     public String getCommandName() {
@@ -42,7 +49,7 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
     public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) {
         ChargingStation chargingStation = repository.findOne(chargingStationId);
         if (chargingStation == null) {
-            commandGateway.send(new CreateAndAcceptChargingStationCommand(new ChargingStationId(chargingStationId), ROOT_IDENTITY_CONTEXT));
+            commandGateway.send(new CreateAndAcceptChargingStationCommand(new ChargingStationId(chargingStationId), userIdentitiesWithAllPermissions, identityContext));
         } else if (!chargingStation.isAccepted()) {
             commandGateway.send(new AcceptChargingStationCommand(new ChargingStationId(chargingStationId), identityContext));
         } else {
@@ -56,5 +63,9 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
 
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
+    }
+
+    void setUserIdentitiesWithAllPermissions(Set<UserIdentity> userIdentitiesWithAllPermissions) {
+        this.userIdentitiesWithAllPermissions = userIdentitiesWithAllPermissions;
     }
 }

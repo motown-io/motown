@@ -78,7 +78,7 @@ public class VasEventHandlerTest {
     public void chargingStationBootedEventChargingStationCreated() {
         assertNull(getTestChargingStationFromRepository());
 
-        eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT));
+        eventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, NULL_USER_IDENTITY_CONTEXT));
 
         ChargingStation cs = getTestChargingStationFromRepository();
 

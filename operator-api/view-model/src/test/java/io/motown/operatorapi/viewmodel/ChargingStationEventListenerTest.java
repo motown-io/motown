@@ -49,7 +49,7 @@ public class ChargingStationEventListenerTest {
         listener = new ChargingStationEventListener();
         listener.setRepository(repository);
 
-        listener.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
+        listener.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, IDENTITY_CONTEXT));
     }
 
     @Test
