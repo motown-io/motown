@@ -312,6 +312,12 @@ public class DomainService {
         commandGateway.send(new InformRequestResultCommand(chargingStationId, requestResult, statusMessage, identityContext), statusCorrelationToken);
     }
 
+    public void informCacheCleared(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        commandGateway.send(new ClearCacheCommand(chargingStationId, identityContext), statusCorrelationToken);
+    }
+
     public void changeComponentAvailabilityToOperative(ChargingStationId chargingStationId, ComponentId componentId, ChargingStationComponent component, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 

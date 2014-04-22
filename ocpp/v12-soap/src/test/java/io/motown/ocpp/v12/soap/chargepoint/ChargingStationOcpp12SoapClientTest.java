@@ -323,18 +323,18 @@ public class ChargingStationOcpp12SoapClientTest {
     public void clearCacheAcceptedVerifyReturnValue() {
         when(chargePointService.clearCache(any(ClearCacheRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getClearCacheResponse(ClearCacheStatus.ACCEPTED));
 
-        RequestResult requestResult = client.clearCache(CHARGING_STATION_ID);
+        boolean requestResult = client.clearCache(CHARGING_STATION_ID);
 
-        assertEquals(RequestResult.SUCCESS, requestResult);
+        assertTrue(requestResult);
     }
 
     @Test
     public void clearCacheRejectedVerifyReturnValue() {
         when(chargePointService.clearCache(any(ClearCacheRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getClearCacheResponse(ClearCacheStatus.REJECTED));
 
-        RequestResult requestResult = client.clearCache(CHARGING_STATION_ID);
+        boolean requestResult = client.clearCache(CHARGING_STATION_ID);
 
-        assertEquals(RequestResult.FAILURE, requestResult);
+        assertFalse(requestResult);
     }
 
     @Test

@@ -18,7 +18,6 @@ package io.motown.ocpp.websocketjson.response.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
-import io.motown.domain.api.chargingstation.RequestResult;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.ClearcacheResponse;
@@ -33,8 +32,13 @@ public class ClearCacheResponseHandler extends ResponseHandler {
     @Override
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         ClearcacheResponse response = gson.fromJson(wampMessage.getPayloadAsString(), ClearcacheResponse.class);
-        RequestResult requestResult = response.getStatus().equals(ClearcacheResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "", addOnIdentity);
+        switch(response.getStatus()) {
+            case ACCEPTED:
+                domainService.informCacheCleared(chargingStationId, getCorrelationToken(), addOnIdentity);
+                break;
+            default:
+                break;
+        }
     }
 }

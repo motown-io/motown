@@ -230,20 +230,20 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     }
 
     @Override
-    public RequestResult clearCache(ChargingStationId id) {
+    public boolean clearCache(ChargingStationId id) {
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         ClearCacheRequest request = new ClearCacheRequest();
 
-        RequestResult requestResult;
+        boolean requestResult;
         ClearCacheResponse response = chargePointService.clearCache(request, id.getId());
 
         if (ClearCacheStatus.ACCEPTED.equals(response.getStatus())) {
             LOG.info("Clear cache on {} has been accepted", id.getId());
-            requestResult = RequestResult.SUCCESS;
+            requestResult = true;
         } else {
             LOG.warn("Clear cache on {} has been rejected", id.getId());
-            requestResult = RequestResult.FAILURE;
+            requestResult = false;
         }
 
         return requestResult;

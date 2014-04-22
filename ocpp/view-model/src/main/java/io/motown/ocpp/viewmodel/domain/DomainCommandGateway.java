@@ -76,5 +76,7 @@ interface DomainCommandGateway {
     void send(ChangeChargingStationAvailabilityToOperativeCommand changeChargingStationAvailabilityToOperativeCommand, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
     void send(ReceiveConfigurationItemsCommand command);
+
+    void send(ClearCacheCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 }
 

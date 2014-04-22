@@ -183,9 +183,13 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
     @Override
     public void handle(ClearCacheRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("ClearCacheRequestedEvent");
-        RequestResult requestResult = chargingStationOcpp15Client.clearCache(event.getChargingStationId());
+        boolean result = chargingStationOcpp15Client.clearCache(event.getChargingStationId());
 
-        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
+        if (result) {
+            domainService.informCacheCleared(event.getChargingStationId(), statusCorrelationToken, addOnIdentity);
+        } else {
+            LOG.error("Unable to clear cache for [{}]", event.getChargingStationId());
+        }
     }
 
     @Override

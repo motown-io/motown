@@ -491,6 +491,11 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         apply(new ConfigurationItemChangedEvent(command.getChargingStationId(), command.getConfigurationItem(), command.getIdentityContext()));
     }
 
+    @CommandHandler
+    public void handle(ClearCacheCommand command) {
+        apply(new CacheClearedEvent(command.getChargingStationId(), command.getIdentityContext()));
+    }
+
     @EventSourcingHandler
     public void handle(ChargingStationBootedEvent event) {
         this.protocol = event.getProtocol();
