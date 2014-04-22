@@ -21,6 +21,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.IdentityContext;
+import io.motown.domain.commandauthorization.CommandAuthorizationService;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.model.SendAuthorizationListApiCommand;
 
 import java.util.List;
@@ -33,13 +35,27 @@ class SendAuthorizationListJsonCommandHandler implements JsonCommandHandler {
 
     private Gson gson;
 
+    private CommandAuthorizationService commandAuthorizationService;
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getCommandName() {
         return COMMAND_NAME;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) {
+    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) throws UserIdentityUnauthorizedException {
+        ChargingStationId csId = new ChargingStationId(chargingStationId);
+
+        if (!commandAuthorizationService.isAuthorized(csId, identityContext.getUserIdentity(), RequestSendAuthorizationListCommand.class)) {
+            throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), RequestSendAuthorizationListCommand.class);
+        }
+
         try {
             List<IdentifyingToken> authorizationList = Lists.newArrayList();
 
@@ -51,17 +67,37 @@ class SendAuthorizationListJsonCommandHandler implements JsonCommandHandler {
 
             // TODO other command handlers check if a charging station exists in the repository, why is that not done here? - Mark van den Bergh, Februari 26th 2014
             // TODO enable usage of hash in API - Dennis Laumen, January 13th 2014
-            commandGateway.send(new RequestSendAuthorizationListCommand(new ChargingStationId(chargingStationId), authorizationList, command.getListVersion(), "", updateType, identityContext), new CorrelationToken());
+            commandGateway.send(new RequestSendAuthorizationListCommand(csId, authorizationList, command.getListVersion(), "", updateType, identityContext), new CorrelationToken());
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("SendAuthorizationList command not able to parse the payload, is your json correctly formatted ?", ex);
         }
     }
 
+    /**
+     * Sets the command gateway.
+     *
+     * @param commandGateway the command gateway.
+     */
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
 
+    /**
+     * Sets the GSON instance.
+     *
+     * @param gson the GSON instance.
+     */
     public void setGson(Gson gson) {
         this.gson = gson;
+    }
+
+    /**
+     * Sets the command authorization service to use. The command authorization service checks if a certain user is
+     * allowed to execute a certain command.
+     *
+     * @param commandAuthorizationService    command authorization.
+     */
+    public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
+        this.commandAuthorizationService = commandAuthorizationService;
     }
 }

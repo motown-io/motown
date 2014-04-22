@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,28 +36,29 @@ public class SendAuthorizationListJsonCommandHandlerTest {
 
         handler.setGson(gson);
         handler.setCommandGateway(new TestDomainCommandGateway());
+        handler.setCommandAuthorizationService(OperatorApiJsonTestUtils.getCommandAuthorizationService());
     }
 
     @Test
-    public void testSendAuthorizationListCommand() {
+    public void testSendAuthorizationListCommand() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'FULL',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test
-    public void testDifferentialUpdateType() {
+    public void testDifferentialUpdateType() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'DIFFERENTIAL',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testInvalidUpdateType() {
+    public void testInvalidUpdateType() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'NEW',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testInvalidAuthenticationStatus() {
+    public void testInvalidAuthenticationStatus() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'FULL',items:[{token:'1',status:'NEW'}]}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID, commandObject, ROOT_IDENTITY_CONTEXT);
     }
