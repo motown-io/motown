@@ -22,6 +22,7 @@ import io.motown.domain.api.chargingstation.AddChargingStationOpeningTimesComman
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.commandauthorization.CommandAuthorizationService;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.model.AddChargingStationOpeningTimesApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -53,15 +54,19 @@ class AddChargingStationOpeningTimesJsonCommandHandler implements JsonCommandHan
      * {@inheritDoc}
      */
     @Override
-    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) {
+    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) throws UserIdentityUnauthorizedException {
+        ChargingStationId csId = new ChargingStationId(chargingStationId);
+
+        if (!commandAuthorizationService.isAuthorized(csId, identityContext.getUserIdentity(), AddChargingStationOpeningTimesCommand.class)) {
+            throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), AddChargingStationOpeningTimesCommand.class);
+        }
+
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
-            ChargingStationId chargingStationIdObject = new ChargingStationId(chargingStationId);
 
-            if (chargingStation != null && chargingStation.isAccepted() &&
-                    commandAuthorizationService.isAuthorized(chargingStationIdObject, identityContext.getUserIdentity(), AddChargingStationOpeningTimesCommand.class)) {
+            if (chargingStation != null && chargingStation.isAccepted()) {
                 AddChargingStationOpeningTimesApiCommand command = gson.fromJson(commandObject, AddChargingStationOpeningTimesApiCommand.class);
-                commandGateway.send(new AddChargingStationOpeningTimesCommand(chargingStationIdObject, command.getOpeningTimes(), identityContext));
+                commandGateway.send(new AddChargingStationOpeningTimesCommand(csId, command.getOpeningTimes(), identityContext));
             }
         } catch (JsonSyntaxException e) {
             throw new IllegalArgumentException("Set charging station opening times command not able to parse the payload, is your JSON correctly formatted?", e);
