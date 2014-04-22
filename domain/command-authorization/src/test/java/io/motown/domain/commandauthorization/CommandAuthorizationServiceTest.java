@@ -16,6 +16,7 @@
 package io.motown.domain.commandauthorization;
 
 import io.motown.domain.api.chargingstation.AcceptChargingStationCommand;
+import io.motown.domain.api.security.AllPermissions;
 import io.motown.domain.commandauthorization.model.CommandAuthorization;
 import io.motown.domain.commandauthorization.model.CommandAuthorizationId;
 import io.motown.domain.commandauthorization.repositories.CommandAuthorizationRepository;
@@ -48,6 +49,14 @@ public class CommandAuthorizationServiceTest {
     @Test
     public void isAuthorized() {
         when(commandAuthorizationRepository.find(CHARGING_STATION_ID.getId(), USER_IDENTITY.getId(), COMMAND_CLASS)).thenReturn(new CommandAuthorization(new CommandAuthorizationId(CHARGING_STATION_ID.getId(), USER_IDENTITY.getId(), AcceptChargingStationCommand.class)));
+
+        assertTrue(commandAuthorizationService.isAuthorized(CHARGING_STATION_ID, USER_IDENTITY, COMMAND_CLASS));
+    }
+
+    @Test
+    public void isAuthorizedAllPermissions() {
+        when(commandAuthorizationRepository.find(CHARGING_STATION_ID.getId(), USER_IDENTITY.getId(), COMMAND_CLASS)).thenReturn(null);
+        when(commandAuthorizationRepository.find(CHARGING_STATION_ID.getId(), USER_IDENTITY.getId(), AllPermissions.class)).thenReturn(new CommandAuthorization(new CommandAuthorizationId(CHARGING_STATION_ID.getId(), USER_IDENTITY.getId(), AllPermissions.class)));
 
         assertTrue(commandAuthorizationService.isAuthorized(CHARGING_STATION_ID, USER_IDENTITY, COMMAND_CLASS));
     }

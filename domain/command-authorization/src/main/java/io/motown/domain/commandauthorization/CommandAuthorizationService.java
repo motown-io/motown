@@ -16,6 +16,7 @@
 package io.motown.domain.commandauthorization;
 
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.security.AllPermissions;
 import io.motown.domain.api.security.UserIdentity;
 import io.motown.domain.commandauthorization.repositories.CommandAuthorizationRepository;
 
@@ -32,13 +33,21 @@ public class CommandAuthorizationService {
      * @return true if the user is authorized to execute the command for the charging station, false if not.
      */
     public boolean isAuthorized(ChargingStationId chargingStationId, UserIdentity userIdentity, Class commandClass) {
-        return commandAuthorizationRepository.find(chargingStationId.getId(), userIdentity.getId(), commandClass) != null;
+        // first search for this specific authorization
+        boolean isAuthorized = commandAuthorizationRepository.find(chargingStationId.getId(), userIdentity.getId(), commandClass) != null;
+
+        if (!isAuthorized) {
+            // maybe the user identity has access to 'allPermissions'
+            isAuthorized = commandAuthorizationRepository.find(chargingStationId.getId(), userIdentity.getId(), AllPermissions.class) != null;
+        }
+
+        return isAuthorized;
     }
 
     /**
      * Sets the repository to use.
      *
-     * @param commandAuthorizationRepository    command authorization repository.
+     * @param commandAuthorizationRepository command authorization repository.
      */
     public void setCommandAuthorizationRepository(CommandAuthorizationRepository commandAuthorizationRepository) {
         this.commandAuthorizationRepository = commandAuthorizationRepository;
