@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Objects;
@@ -32,15 +33,18 @@ public class ChangeConfigurationItemCommand {
 
     private final ConfigurationItem configurationItem;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code ChangeConfigurationItemCommand}
      *
      * @param chargingStationId the charging station's id.
      * @param configurationItem the configuration item.
      */
-    public ChangeConfigurationItemCommand(ChargingStationId chargingStationId, ConfigurationItem configurationItem) {
+    public ChangeConfigurationItemCommand(ChargingStationId chargingStationId, ConfigurationItem configurationItem, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.configurationItem = checkNotNull(configurationItem);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -62,11 +66,20 @@ public class ChangeConfigurationItemCommand {
     }
 
     /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, configurationItem);
+        return Objects.hash(chargingStationId, configurationItem, identityContext);
     }
 
     /**
@@ -81,7 +94,7 @@ public class ChangeConfigurationItemCommand {
             return false;
         }
         final ChangeConfigurationItemCommand other = (ChangeConfigurationItemCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.configurationItem, other.configurationItem);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.configurationItem, other.configurationItem) && Objects.equals(this.identityContext, other.identityContext);
     }
 
     /**
@@ -92,6 +105,7 @@ public class ChangeConfigurationItemCommand {
         return toStringHelper(this)
                 .add("chargingStationId", chargingStationId)
                 .add("configurationItem", configurationItem)
+                .add("identityContext", identityContext)
                 .toString();
     }
 }

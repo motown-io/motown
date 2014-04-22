@@ -18,19 +18,23 @@ package io.motown.domain.api.chargingstation;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CONFIGURATION_ITEM;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class ConfigurationItemChangedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ConfigurationItemChangedEvent(null, CONFIGURATION_ITEM);
+        new ConfigurationItemChangedEvent(null, CONFIGURATION_ITEM, NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithConfigurationItemNull() {
-        new ConfigurationItemChangedEvent(CHARGING_STATION_ID, null);
+        new ConfigurationItemChangedEvent(CHARGING_STATION_ID, null, NULL_USER_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingEventWithIdentityContextNull() {
+        new ConfigurationItemChangedEvent(CHARGING_STATION_ID, CONFIGURATION_ITEM, null);
     }
 
     @Test

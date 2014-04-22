@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Objects;
@@ -33,15 +34,18 @@ public class ConfigurationItemChangedEvent {
 
     private final ConfigurationItem configurationItem;
 
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code ConfigurationItemChangedEvent}
      *
      * @param chargingStationId the charging station's id.
      * @param configurationItem the configuration item.
      */
-    public ConfigurationItemChangedEvent(ChargingStationId chargingStationId, ConfigurationItem configurationItem) {
+    public ConfigurationItemChangedEvent(ChargingStationId chargingStationId, ConfigurationItem configurationItem, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.configurationItem = checkNotNull(configurationItem);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -60,6 +64,15 @@ public class ConfigurationItemChangedEvent {
      */
     public ConfigurationItem getConfigurationItem() {
         return configurationItem;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 
     /**
