@@ -22,6 +22,8 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.RequestReserveNowCommand;
 import io.motown.domain.api.security.IdentityContext;
+import io.motown.domain.commandauthorization.CommandAuthorizationService;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.model.RequestReserveNowApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -36,19 +38,33 @@ class RequestReserveNowJsonCommandHandler implements JsonCommandHandler {
 
     private Gson gson;
 
+    private CommandAuthorizationService commandAuthorizationService;
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getCommandName() {
         return COMMAND_NAME;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) {
+    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) throws UserIdentityUnauthorizedException {
+        ChargingStationId csId = new ChargingStationId(chargingStationId);
+
+        if (!commandAuthorizationService.isAuthorized(csId, identityContext.getUserIdentity(), RequestReserveNowCommand.class)) {
+            throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), RequestReserveNowCommand.class);
+        }
+
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
                 RequestReserveNowApiCommand command = gson.fromJson(commandObject, RequestReserveNowApiCommand.class);
 
-                commandGateway.send(new RequestReserveNowCommand(new ChargingStationId(chargingStationId), command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), null, identityContext), new CorrelationToken());
+                commandGateway.send(new RequestReserveNowCommand(csId, command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), null, identityContext), new CorrelationToken());
             } else {
                 throw new IllegalStateException("It is not possible to request a reservation on a charging station that is not registered");
             }
@@ -57,15 +73,41 @@ class RequestReserveNowJsonCommandHandler implements JsonCommandHandler {
         }
     }
 
+
+    /**
+     * Sets the command gateway.
+     *
+     * @param commandGateway the command gateway.
+     */
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
 
+    /**
+     * Sets the charging station repository.
+     *
+     * @param repository the charging station repository.
+     */
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
     }
 
+    /**
+     * Sets the GSON instance.
+     *
+     * @param gson the GSON instance.
+     */
     public void setGson(Gson gson) {
         this.gson = gson;
+    }
+
+    /**
+     * Sets the command authorization service to use. The command authorization service checks if a certain user is
+     * allowed to execute a certain command.
+     *
+     * @param commandAuthorizationService    command authorization.
+     */
+    public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
+        this.commandAuthorizationService = commandAuthorizationService;
     }
 }
