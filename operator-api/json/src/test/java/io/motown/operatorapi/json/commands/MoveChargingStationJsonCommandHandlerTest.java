@@ -32,6 +32,7 @@ public class MoveChargingStationJsonCommandHandlerTest {
         handler.setGson(gson);
         handler.setCommandGateway(new TestDomainCommandGateway());
         handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
+        handler.setCommandAuthorizationService(OperatorApiJsonTestUtils.getCommandAuthorizationService());
     }
 
     @Test
