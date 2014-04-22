@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,16 +35,17 @@ public class RequestResetChargingStationJsonCommandHandlerTest {
         handler.setGson(gson);
         handler.setCommandGateway(new TestDomainCommandGateway());
         handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
+        handler.setCommandAuthorizationService(OperatorApiJsonTestUtils.getCommandAuthorizationService());
     }
 
     @Test
-    public void testResetCommand() {
+    public void testResetCommand() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{type:'soft'}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test
-    public void testHardResetCommand() {
+    public void testHardResetCommand() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{type:'hard'}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
