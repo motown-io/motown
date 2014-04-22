@@ -40,15 +40,16 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
         // no implementation in OCPP 1.2
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(StopTransactionRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("OCPP 1.2 StopTransactionRequestedEvent");
 
         if (event.getTransactionId() instanceof NumberedTransactionId) {
             NumberedTransactionId transactionId = (NumberedTransactionId) event.getTransactionId();
-            RequestResult requestResult = chargingStationOcpp12Client.stopTransaction(event.getChargingStationId(), transactionId.getNumber());
-
-            domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
+            chargingStationOcpp12Client.stopTransaction(event.getChargingStationId(), transactionId.getNumber());
         } else {
             LOG.warn("StopTransactionRequestedEvent does not contain a NumberedTransactionId. Event: {}", event);
         }
