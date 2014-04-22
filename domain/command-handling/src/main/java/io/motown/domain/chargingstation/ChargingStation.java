@@ -50,10 +50,6 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     private Multimap<UserIdentity, Class<?>> authorizations = HashMultimap.create();
 
     protected ChargingStation() {
-        //TODO fix bootstrapping of authorization. - Mark van den Bergh, March 26th 2014
-        SimpleUserIdentity rootUserIdentity = new SimpleUserIdentity("root");
-
-        authorizations.put(rootUserIdentity, AllPermissions.class);
     }
 
     @CommandHandler
