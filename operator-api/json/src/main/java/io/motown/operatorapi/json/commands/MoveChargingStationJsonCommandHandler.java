@@ -22,6 +22,7 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.MoveChargingStationCommand;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.commandauthorization.CommandAuthorizationService;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.model.MoveChargingStationApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -44,15 +45,19 @@ class MoveChargingStationJsonCommandHandler implements JsonCommandHandler {
     }
 
     @Override
-    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) {
+    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) throws UserIdentityUnauthorizedException {
+        ChargingStationId csId = new ChargingStationId(chargingStationId);
+
+        if (!commandAuthorizationService.isAuthorized(csId, identityContext.getUserIdentity(), MoveChargingStationCommand.class)) {
+            throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), MoveChargingStationCommand.class);
+        }
+
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
-            ChargingStationId chargingStationIdObject = new ChargingStationId(chargingStationId);
 
-            if (chargingStation != null && chargingStation.isAccepted() &&
-                    commandAuthorizationService.isAuthorized(chargingStationIdObject, identityContext.getUserIdentity(), MoveChargingStationCommand.class)) {
+            if (chargingStation != null && chargingStation.isAccepted()) {
                 MoveChargingStationApiCommand command = gson.fromJson(commandObject, MoveChargingStationApiCommand.class);
-                commandGateway.send(new MoveChargingStationCommand(chargingStationIdObject, command.getCoordinates(), command.getAddress(), command.getAccessibility(), identityContext));
+                commandGateway.send(new MoveChargingStationCommand(csId, command.getCoordinates(), command.getAddress(), command.getAccessibility(), identityContext));
             }
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Move charging station command not able to parse the payload, is your JSON correctly formatted?", ex);
