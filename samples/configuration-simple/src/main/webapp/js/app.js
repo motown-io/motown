@@ -15,7 +15,6 @@
  */
 angular.module('demoApp', ['ngRoute', 'ngCookies', 'demoApp.controllers', 'demoApp.services']).
     config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
-        $httpProvider.defaults.headers.common['Content-Type'] = 'application/vnd.io.motown.operator-api-v1+json';
         $httpProvider.defaults.headers.common['Accept'] = '*/*';
 
         $routeProvider.when('/login', {
@@ -42,14 +41,14 @@ angular.module('demoApp', ['ngRoute', 'ngCookies', 'demoApp.controllers', 'demoA
         // redirect browser to login page on HTTP status 401, otherwise show message
         $httpProvider.interceptors.push(function ($q, $rootScope, $location) {
                 return {
-                    'responseError': function(rejection) {
+                    'responseError': function (rejection) {
                         var status = rejection.status;
                         var config = rejection.config;
                         var method = config.method;
                         var url = config.url;
 
                         if (status == 401) {
-                            $location.path( "/login" );
+                            $location.path("/login");
                         } else {
                             $rootScope.error = method + " on " + url + " failed with status " + status;
                         }
@@ -63,7 +62,7 @@ angular.module('demoApp', ['ngRoute', 'ngCookies', 'demoApp.controllers', 'demoA
         // every request should contain the authToken if it exists.
         $httpProvider.interceptors.push(function ($q, $rootScope, $location) {
             return {
-                'request': function(config) {
+                'request': function (config) {
 //                    var isRestCall = config.url.indexOf('user') == 0;
                     var isRestCall = true;
                     //demoApp.useAuthTokenHeader = true;
@@ -82,12 +81,12 @@ angular.module('demoApp', ['ngRoute', 'ngCookies', 'demoApp.controllers', 'demoA
             };
         });
     }]
-    ).run(function($rootScope, $location, $cookieStore) {
-        $rootScope.$on('$viewContentLoaded', function() {
+).run(function ($rootScope, $location, $cookieStore) {
+        $rootScope.$on('$viewContentLoaded', function () {
             delete $rootScope.error;
         });
 
-        $rootScope.logout = function() {
+        $rootScope.logout = function () {
             delete $rootScope.authToken;
             $cookieStore.remove('authToken');
             $location.path("/login");
@@ -106,13 +105,13 @@ angular.module('demoApp', ['ngRoute', 'ngCookies', 'demoApp.controllers', 'demoA
 
 var services = angular.module('demoApp.services', ['ngResource']);
 
-services.factory('UserService', function($resource) {
+services.factory('UserService', function ($resource) {
     return $resource('rest/user/:action', {},
         {
             authenticate: {
                 method: 'POST',
-                params: {'action' : 'authenticate'},
-                headers : {'Content-Type': 'application/x-www-form-urlencoded'}
+                params: {'action': 'authenticate'},
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }
         }
     );
