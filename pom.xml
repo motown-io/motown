@@ -60,7 +60,10 @@
         <gson.version>2.2.4</gson.version>
         <guava.version>16.0.1</guava.version>
         <hibernate-validator.version>5.1.0.Final</hibernate-validator.version>
-        <hibernate.version>4.3.5.Final</hibernate.version>
+        <hibernate.version>4.2.2.Final</hibernate.version>
+        <!-- use older version of hibernate to ensure tomcat can start the simple config app. -->
+        <!-- TODO find out which dependency breaks when using new version of hibernate. - Mark van den Bergh, april 22nd 2014 -->
+        <!--<hibernate.version>4.3.5.Final</hibernate.version>-->
         <hsqldb.version>2.3.2</hsqldb.version>
         <jackson-coreutils.version>1.4</jackson-coreutils.version>
         <jackson-schema-core.version>1.1.8</jackson-schema-core.version>
