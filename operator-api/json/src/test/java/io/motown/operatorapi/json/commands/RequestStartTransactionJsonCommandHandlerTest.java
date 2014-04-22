@@ -18,6 +18,7 @@ package io.motown.operatorapi.json.commands;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,46 +38,47 @@ public class RequestStartTransactionJsonCommandHandlerTest {
         handler.setGson(gson);
         handler.setCommandGateway(new TestDomainCommandGateway());
         handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
+        handler.setCommandAuthorizationService(OperatorApiJsonTestUtils.getCommandAuthorizationService());
     }
 
     @Test
-    public void testStartTransaction() {
+    public void testStartTransaction() throws UserIdentityUnauthorizedException {
         JsonObject command = gson.fromJson("{evseId:'1',identifyingToken:{token:'1',status:'ACCEPTED'}}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID_STRING, command, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test
-    public void testStartTransactionNoStatus() {
+    public void testStartTransactionNoStatus() throws UserIdentityUnauthorizedException {
         JsonObject command = gson.fromJson("{evseId:'1',identifyingToken:{token:'1'}}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID_STRING, command, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
-    public void testStartTransactionNoToken() {
+    public void testStartTransactionNoToken() throws UserIdentityUnauthorizedException {
         JsonObject command = gson.fromJson("{evseId:'1'}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID_STRING, command, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = JsonParseException.class)
-    public void testStartTransactionIdentifyingTokenIsString() {
+    public void testStartTransactionIdentifyingTokenIsString() throws UserIdentityUnauthorizedException {
         JsonObject command = gson.fromJson("{evseId:'1',identifyingToken:'ACCEPTED'}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID_STRING, command, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = JsonParseException.class)
-    public void testStartTransactionTokenIsObject() {
+    public void testStartTransactionTokenIsObject() throws UserIdentityUnauthorizedException {
         JsonObject command = gson.fromJson("{evseId:'1',identifyingToken:{token:{status:'ACCEPTED'}}}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID_STRING, command, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = JsonParseException.class)
-    public void testStartTransactionStatusIsObject() {
+    public void testStartTransactionStatusIsObject() throws UserIdentityUnauthorizedException {
         JsonObject command = gson.fromJson("{evseId:'1',identifyingToken:{token:'1',status:{status:'ACCEPTED'}}}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID_STRING, command, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testStartTransactionStatusInvalid() {
+    public void testStartTransactionStatusInvalid() throws UserIdentityUnauthorizedException {
         JsonObject command = gson.fromJson("{evseId:'1',identifyingToken:{token:'1',status:'NEW'}}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID_STRING, command, ROOT_IDENTITY_CONTEXT);
     }

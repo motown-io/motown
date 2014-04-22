@@ -22,6 +22,8 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestStartTransactionCommand;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.security.IdentityContext;
+import io.motown.domain.commandauthorization.CommandAuthorizationService;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.model.RequestStartTransactionApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -36,19 +38,33 @@ class RequestStartTransactionJsonCommandHandler implements JsonCommandHandler {
 
     private Gson gson;
 
+    private CommandAuthorizationService commandAuthorizationService;
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getCommandName() {
         return COMMAND_NAME;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) {
+    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) throws UserIdentityUnauthorizedException {
+        ChargingStationId csId = new ChargingStationId(chargingStationId);
+
+        if (!commandAuthorizationService.isAuthorized(csId, identityContext.getUserIdentity(), RequestStartTransactionCommand.class)) {
+            throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), RequestStartTransactionCommand.class);
+        }
+
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
                 RequestStartTransactionApiCommand command = gson.fromJson(commandObject, RequestStartTransactionApiCommand.class);
 
-                commandGateway.send(new RequestStartTransactionCommand(new ChargingStationId(chargingStationId), command.getIdentifyingToken(), command.getEvseId(), identityContext), new CorrelationToken());
+                commandGateway.send(new RequestStartTransactionCommand(csId, command.getIdentifyingToken(), command.getEvseId(), identityContext), new CorrelationToken());
             } else {
                 throw new IllegalStateException("It is not possible to request a start transaction on a charging station that is not registered");
             }
@@ -57,15 +73,40 @@ class RequestStartTransactionJsonCommandHandler implements JsonCommandHandler {
         }
     }
 
+    /**
+     * Sets the command gateway.
+     *
+     * @param commandGateway the command gateway.
+     */
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
 
+    /**
+     * Sets the charging station repository.
+     *
+     * @param repository the charging station repository.
+     */
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
     }
 
+    /**
+     * Sets the GSON instance.
+     *
+     * @param gson the GSON instance.
+     */
     public void setGson(Gson gson) {
         this.gson = gson;
+    }
+
+    /**
+     * Sets the command authorization service to use. The command authorization service checks if a certain user is
+     * allowed to execute a certain command.
+     *
+     * @param commandAuthorizationService    command authorization.
+     */
+    public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
+        this.commandAuthorizationService = commandAuthorizationService;
     }
 }
