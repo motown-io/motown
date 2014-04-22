@@ -71,7 +71,6 @@ public class CreateChargingStationCommandCallback implements CommandCallback<Obj
 
     @Override
     public void onFailure(Throwable throwable) {
-        //TODO what do we do now? Do we still send out a BootChargingStationCommand so other components can react on it? - Mark van den Bergh, December 11th 2013
         LOG.error("CreateChargingStationCommand failed. " + throwable.getMessage());
     }
 }
