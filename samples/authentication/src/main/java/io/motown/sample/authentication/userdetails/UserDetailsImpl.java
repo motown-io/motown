@@ -24,7 +24,7 @@ import java.util.Collection;
  * Simple implementation of user details, the only methods that have a 'real' implementation are getUserName
  * and getPassword. The rest is hardcoded.
  */
-public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
+public class UserDetailsImpl implements org.springframework.security.core.userdetails.UserDetails {
 
     private String username;
 
@@ -33,7 +33,7 @@ public class UserDetails implements org.springframework.security.core.userdetail
      */
     private String password;
 
-    public UserDetails(String username, String hashedPassword) {
+    public UserDetailsImpl(String username, String hashedPassword) {
         this.username = username;
         this.password = hashedPassword;
     }

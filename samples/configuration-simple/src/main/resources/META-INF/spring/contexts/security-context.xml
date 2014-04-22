@@ -27,7 +27,7 @@
         <constructor-arg name="salt" value="secret" />
     </bean>
 
-    <bean id="userDetailsService" class="io.motown.sample.authentication.userdetails.UserDetailsService" />
+    <bean id="userDetailsService" class="io.motown.sample.authentication.userdetails.UserDetailsServiceImpl" />
 
     <security:authentication-manager id="authenticationManager">
         <security:authentication-provider user-service-ref="userDetailsService">

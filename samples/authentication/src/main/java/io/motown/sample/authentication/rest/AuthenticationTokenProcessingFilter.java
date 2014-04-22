@@ -15,7 +15,7 @@
  */
 package io.motown.sample.authentication.rest;
 
-import io.motown.sample.authentication.userdetails.UserDetailsService;
+import io.motown.sample.authentication.userdetails.UserDetailsServiceImpl;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,9 +33,9 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
 
     private static final String AUTH_TOKEN_HEADER_KEY = "X-Auth-Token";
     private static final String AUTH_TOKEN_PARAMETER_KEY = "token";
-    private final UserDetailsService userService;
+    private final UserDetailsServiceImpl userService;
 
-    public AuthenticationTokenProcessingFilter(UserDetailsService userService) {
+    public AuthenticationTokenProcessingFilter(UserDetailsServiceImpl userService) {
         this.userService = userService;
     }
 
