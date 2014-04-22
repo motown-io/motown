@@ -44,7 +44,7 @@ public final class CreateChargingStationCommand {
      * @param chargingStationId                the identifier of the charging station.
      * @param userIdentitiesWithAllPermissions set of user identities which have all permissions on the created charging station.
      * @param identityContext                  the identity context.
-     * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId}, {@code userIdentitiesWithAllPermissions} or {@code identityContext} is {@code null}.
      * @throws IllegalArgumentException if {@code usersWithAllPermissions} is empty.
      */
     public CreateChargingStationCommand(ChargingStationId chargingStationId, Set<UserIdentity> userIdentitiesWithAllPermissions, IdentityContext identityContext) {
