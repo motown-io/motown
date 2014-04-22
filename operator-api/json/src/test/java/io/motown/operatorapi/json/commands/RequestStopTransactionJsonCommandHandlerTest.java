@@ -18,6 +18,7 @@ package io.motown.operatorapi.json.commands;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,10 +37,11 @@ public class RequestStopTransactionJsonCommandHandlerTest {
         handler.setGson(gson);
         handler.setCommandGateway(new TestDomainCommandGateway());
         handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
+        handler.setCommandAuthorizationService(OperatorApiJsonTestUtils.getCommandAuthorizationService());
     }
 
     @Test
-    public void testHandleStopTransactionOnRegisteredStation() {
+    public void testHandleStopTransactionOnRegisteredStation() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{'id' : 123}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID_STRING, commandObject, ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT);
     }
