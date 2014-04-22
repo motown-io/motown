@@ -88,25 +88,36 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         return willTransactionStart;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public RequestResult stopTransaction(ChargingStationId id, int transactionId) {
+    public boolean stopTransaction(ChargingStationId id, int transactionId) {
         LOG.debug("Stopping transaction {} on {}", transactionId, id);
 
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         RemoteStopTransactionRequest request = new RemoteStopTransactionRequest();
         request.setTransactionId(transactionId);
-        RemoteStopTransactionResponse response;
 
-        response = chargePointService.remoteStopTransaction(request, id.getId());
+        RemoteStopTransactionResponse response = chargePointService.remoteStopTransaction(request, id.getId());
 
-        if (RemoteStartStopStatus.ACCEPTED.equals(response.getStatus())) {
-            LOG.info("Stop transaction {} on {} has been accepted", transactionId, id);
-            return RequestResult.SUCCESS;
-        } else {
-            LOG.warn("Stop transaction {} on {} has been rejected", transactionId, id);
-            return RequestResult.FAILURE;
+        boolean willTransactionStop;
+
+        switch (response.getStatus()) {
+            case ACCEPTED:
+                LOG.info("Remote stop transaction request on {} has been accepted", id);
+                willTransactionStop = true;
+                break;
+            case REJECTED:
+                LOG.info("Remote stop transaction request on {} has been rejected", id);
+                willTransactionStop = false;
+                break;
+            default:
+                throw new AssertionError("Stop transaction returned unknown response status " + response.getStatus());
         }
+
+        return willTransactionStop;
     }
 
     /**

@@ -116,18 +116,18 @@ public class ChargingStationOcpp15SoapClientTest {
     public void stopTransactionAcceptedVerifyReturnValue() {
         when(chargePointService.remoteStopTransaction(any(RemoteStopTransactionRequest.class), anyString())).thenReturn(getRemoteStopTransactionResponse(RemoteStartStopStatus.ACCEPTED));
 
-        RequestResult requestResult = client.stopTransaction(CHARGING_STATION_ID, ((NumberedTransactionId) TRANSACTION_ID).getNumber());
+        boolean willTransactionStop = client.stopTransaction(CHARGING_STATION_ID, ((NumberedTransactionId) TRANSACTION_ID).getNumber());
 
-        assertEquals(RequestResult.SUCCESS, requestResult);
+        assertTrue(willTransactionStop);
     }
 
     @Test
     public void stopTransactionRejectedVerifyReturnValue() {
         when(chargePointService.remoteStopTransaction(any(RemoteStopTransactionRequest.class), anyString())).thenReturn(getRemoteStopTransactionResponse(RemoteStartStopStatus.REJECTED));
 
-        RequestResult requestResult = client.stopTransaction(CHARGING_STATION_ID, ((NumberedTransactionId) TRANSACTION_ID).getNumber());
+        boolean willTransactionStop = client.stopTransaction(CHARGING_STATION_ID, ((NumberedTransactionId) TRANSACTION_ID).getNumber());
 
-        assertEquals(RequestResult.FAILURE, requestResult);
+        assertFalse(willTransactionStop);
     }
 
     @Test

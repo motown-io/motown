@@ -39,7 +39,14 @@ public interface ChargingStationOcpp15Client {
      */
     boolean startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, EvseId evseId);
 
-    RequestResult stopTransaction(ChargingStationId id, int transactionId);
+    /**
+     * Requests the charging station to stop a transaction.
+     *
+     * @param id            the charging station's id.
+     * @param transactionId the transaction's id.
+     * @return true if the transaction will be stopped, false if it won't.
+     */
+    boolean stopTransaction(ChargingStationId id, int transactionId);
 
     /**
      * Requests the charging station to soft reset.

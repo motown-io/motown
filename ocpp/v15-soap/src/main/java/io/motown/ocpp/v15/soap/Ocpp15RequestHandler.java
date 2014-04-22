@@ -46,15 +46,16 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         domainService.receiveConfigurationItems(event.getChargingStationId(), toConfigurationItems(configurationItemMap), addOnIdentity);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(StopTransactionRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("StopTransactionRequestedEvent");
 
         if (event.getTransactionId() instanceof NumberedTransactionId) {
             NumberedTransactionId transactionId = (NumberedTransactionId) event.getTransactionId();
-            RequestResult requestResult = chargingStationOcpp15Client.stopTransaction(event.getChargingStationId(), transactionId.getNumber());
-
-            domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
+            chargingStationOcpp15Client.stopTransaction(event.getChargingStationId(), transactionId.getNumber());
         } else {
             LOG.warn("StopTransactionRequestedEvent does not contain a NumberedTransactionId. Event: {}", event);
         }
