@@ -51,7 +51,7 @@ public class SchemaValidator {
         if(schema == null) {
             try {
                 String schemaName = procUri.toString().toLowerCase();
-                //TODO: Prepare for other ocpp versions - Ingo Pak, 31 Mar 2014
+
                 JsonNode fstabSchema = JsonLoader.fromResource("/schemas/v15/" + schemaName + ".json");
 
                 schema = factory.getJsonSchema(fstabSchema);
