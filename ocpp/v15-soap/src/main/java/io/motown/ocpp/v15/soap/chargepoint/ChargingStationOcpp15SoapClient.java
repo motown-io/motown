@@ -160,13 +160,10 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
         DataTransferResponse response = chargePointService.dataTransfer(request, id.getId());
 
-        switch (response.getStatus()) {
-            case UNKNOWN_MESSAGE_ID:
-                LOG.error("Unknown message id {} for datatransfer request", messageId);
-                break;
-            case UNKNOWN_VENDOR_ID:
-                LOG.error("Unknown vendor id {} for datatransfer request", vendorId);
-                break;
+        if (response.getStatus() == DataTransferStatus.UNKNOWN_MESSAGE_ID) {
+            LOG.error("Unknown message id {} for datatransfer request", messageId);
+        } else if(response.getStatus() == DataTransferStatus.UNKNOWN_VENDOR_ID) {
+            LOG.error("Unknown vendor id {} for datatransfer request", vendorId);
         }
 
         RequestResult requestResult = DataTransferStatus.ACCEPTED.equals(response.getStatus()) ? RequestResult.SUCCESS : RequestResult.FAILURE;

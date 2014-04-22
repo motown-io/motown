@@ -33,12 +33,8 @@ public class ClearCacheResponseHandler extends ResponseHandler {
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         ClearcacheResponse response = gson.fromJson(wampMessage.getPayloadAsString(), ClearcacheResponse.class);
 
-        switch(response.getStatus()) {
-            case ACCEPTED:
-                domainService.informCacheCleared(chargingStationId, getCorrelationToken(), addOnIdentity);
-                break;
-            default:
-                break;
+        if (response.getStatus() == ClearcacheResponse.Status.ACCEPTED) {
+            domainService.informCacheCleared(chargingStationId, getCorrelationToken(), addOnIdentity);
         }
     }
 }
