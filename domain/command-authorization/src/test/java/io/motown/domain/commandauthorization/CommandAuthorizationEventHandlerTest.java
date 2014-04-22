@@ -16,15 +16,15 @@
 package io.motown.domain.commandauthorization;
 
 import io.motown.domain.api.chargingstation.AcceptChargingStationCommand;
+import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
 import io.motown.domain.api.chargingstation.PermissionGrantedEvent;
 import io.motown.domain.api.chargingstation.PermissionRevokedEvent;
+import io.motown.domain.api.security.AllPermissions;
 import io.motown.domain.commandauthorization.repositories.CommandAuthorizationRepository;
 import org.junit.Before;
 import org.junit.Test;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.IDENTITY_CONTEXT;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.USER_IDENTITY;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static org.mockito.Mockito.*;
 
 public class CommandAuthorizationEventHandlerTest {
@@ -41,6 +41,13 @@ public class CommandAuthorizationEventHandlerTest {
 
         commandAuthorizationEventHandler = new CommandAuthorizationEventHandler();
         commandAuthorizationEventHandler.setCommandAuthorizationRepository(commandAuthorizationRepository);
+    }
+
+    @Test
+    public void handleChargingStationCreatedEvent() {
+        commandAuthorizationEventHandler.handle(new ChargingStationCreatedEvent(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, IDENTITY_CONTEXT));
+
+        verify(commandAuthorizationRepository).createOrUpdate(CHARGING_STATION_ID.getId(), ROOT_USER_IDENTITY.getId(), AllPermissions.class);
     }
 
     @Test

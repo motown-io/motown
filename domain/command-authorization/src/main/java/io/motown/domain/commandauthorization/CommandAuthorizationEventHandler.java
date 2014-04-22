@@ -15,8 +15,11 @@
  */
 package io.motown.domain.commandauthorization;
 
+import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
 import io.motown.domain.api.chargingstation.PermissionGrantedEvent;
 import io.motown.domain.api.chargingstation.PermissionRevokedEvent;
+import io.motown.domain.api.security.AllPermissions;
+import io.motown.domain.api.security.UserIdentity;
 import io.motown.domain.commandauthorization.repositories.CommandAuthorizationRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 
@@ -28,8 +31,22 @@ public class CommandAuthorizationEventHandler {
     private CommandAuthorizationRepository commandAuthorizationRepository;
 
     /**
+     * Handles {@code ChargingStationCreatedEvent} which contains the initial authorizations. Initial authorizations
+     * are updated in the command authorization repository.
+     *
+     * @param event contains information about command authorization.
+     */
+    @EventHandler
+    public void handle(ChargingStationCreatedEvent event) {
+        for (UserIdentity userIdentity : event.getUserIdentitiesWithAllPermissions()) {
+            commandAuthorizationRepository.createOrUpdate(event.getChargingStationId().getId(), userIdentity.getId(), AllPermissions.class);
+        }
+    }
+
+    /**
      * Handles {@code PermissionGrantedEvent} by calling repository to create or update the command authorization.
-     * @param event    contains information about command authorization.
+     *
+     * @param event contains information about command authorization.
      */
     @EventHandler
     public void handle(PermissionGrantedEvent event) {
@@ -38,7 +55,8 @@ public class CommandAuthorizationEventHandler {
 
     /**
      * Handles {@code PermissionRevokedEvent} by calling repository to remove the command authorization.
-     * @param event    contains information about command authorization.
+     *
+     * @param event contains information about command authorization.
      */
     @EventHandler
     public void handle(PermissionRevokedEvent event) {
@@ -46,9 +64,9 @@ public class CommandAuthorizationEventHandler {
     }
 
     /**
-     * Sets the repository to use.
+     * Sets the command authorization repository to use.
      *
-     * @param commandAuthorizationRepository    repository containing command authorization.
+     * @param commandAuthorizationRepository repository containing command authorization.
      */
     public void setCommandAuthorizationRepository(CommandAuthorizationRepository commandAuthorizationRepository) {
         this.commandAuthorizationRepository = commandAuthorizationRepository;
