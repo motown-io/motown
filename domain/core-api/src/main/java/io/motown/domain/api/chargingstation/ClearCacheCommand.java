@@ -22,6 +22,10 @@ import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * {@code ClearCacheCommand} is the command which is published when a clearing of the charginstations
+ * authorization cache request is granted.
+ */
 public final class ClearCacheCommand {
 
     @TargetAggregateIdentifier
@@ -29,15 +33,32 @@ public final class ClearCacheCommand {
 
     private final IdentityContext identityContext;
 
+    /**
+     * Creates a {@code ClearCacheCommand} with an identifier
+     *
+     * @param chargingStationId the identifier of the charging station.
+     * @param identityContext   identity context.
+     * @throws java.lang.NullPointerException if {@code chargingStationId} or {@code identityContext} is null.
+     */
     public ClearCacheCommand(ChargingStationId chargingStationId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.identityContext = checkNotNull(identityContext);
     }
 
+    /**
+     * Gets the charging station identifier.
+     *
+     * @return the charging station identifier.
+     */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
     public IdentityContext getIdentityContext() {
         return identityContext;
     }

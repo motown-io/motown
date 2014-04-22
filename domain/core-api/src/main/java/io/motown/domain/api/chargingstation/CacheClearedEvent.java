@@ -21,21 +21,43 @@ import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * {@code CacheClearedEvent} is the event which is published when a request has been granted to make clear the authorization
+ * cache on the charging station. Protocol add-ons should respond to this event (if applicable) and make the charging station
+ * perform a clear cache.
+ */
 public final class CacheClearedEvent {
 
     private final ChargingStationId chargingStationId;
 
     private final IdentityContext identityContext;
 
+    /**
+     * Creates a {@code CacheClearedEvent} with an identifier.
+     *
+     * @param chargingStationId the charging station identifier.
+     * @param identityContext   the identity context.
+     * @throws java.lang.NullPointerException if {@code chargingStationId} or {@code identityContext} is null.
+     */
     public CacheClearedEvent(ChargingStationId chargingStationId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.identityContext = checkNotNull(identityContext);
     }
 
+    /**
+     * Gets the charging station identifier.
+     *
+     * @return the charging station identifier.
+     */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
     }
 
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
     public IdentityContext getIdentityContext() {
         return identityContext;
     }
