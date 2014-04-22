@@ -18,6 +18,7 @@ package io.motown.operatorapi.json.commands;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,46 +34,47 @@ public class SetChargingStationOpeningTimesJsonCommandHandlerTest {
         handler.setGson(gson);
         handler.setCommandGateway(new TestDomainCommandGateway());
         handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
+        handler.setCommandAuthorizationService(OperatorApiJsonTestUtils.getCommandAuthorizationService());
     }
 
     @Test
-    public void testSetOpeningTimes() {
+    public void testSetOpeningTimes() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{openingTimes:[{day:'monday',timeStart:'12:00',timeStop:'12:30'}]}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, IDENTITY_CONTEXT);
     }
 
     @Test
-    public void testSetOpeningTimesOtherHour() {
+    public void testSetOpeningTimesOtherHour() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{openingTimes:[{day:'monday',timeStart:'12:00',timeStop:'13:00'}]}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testSetOpeningTimesInvalidDay() {
+    public void testSetOpeningTimesInvalidDay() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{openingTimes:[{day:'maandag',timeStart:'12:00',timeStop:'15:00'}]}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, IDENTITY_CONTEXT);
     }
 
     @Test(expected = JsonParseException.class)
-    public void testSetOpeningTimesInvalidTime() {
+    public void testSetOpeningTimesInvalidTime() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{openingTimes:[{day:'tuesday',timeStart:'12:60',timeStop:'15:00'}]}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, IDENTITY_CONTEXT);
     }
 
     @Test(expected = JsonParseException.class)
-    public void testSetOpeningTimesInvalidTime2() {
+    public void testSetOpeningTimesInvalidTime2() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{openingTimes:[{day:'tuesday',timeStart:'24:00',timeStop:'15:00'}]}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testOpeningTimesTimeStartEqualToTimeStop() {
+    public void testOpeningTimesTimeStartEqualToTimeStop() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{openingTimes:[{day:'tuesday',timeStart:'12:00',timeStop:'12:00'}]}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testOpeningTimesTimeStartNotBeforeTimeStop() {
+    public void testOpeningTimesTimeStartNotBeforeTimeStop() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{openingTimes:[{day:'tuesday',timeStart:'12:00',timeStop:'11:00'}]}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, IDENTITY_CONTEXT);
     }
