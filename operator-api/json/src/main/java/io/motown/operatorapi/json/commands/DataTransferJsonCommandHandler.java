@@ -19,10 +19,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.RequestChangeConfigurationItemCommand;
 import io.motown.domain.api.chargingstation.RequestDataTransferCommand;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.commandauthorization.CommandAuthorizationService;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.model.DataTransferApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -54,16 +56,20 @@ class DataTransferJsonCommandHandler implements JsonCommandHandler {
      * {@inheritDoc}
      */
     @Override
-    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) {
+    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) throws UserIdentityUnauthorizedException {
+        ChargingStationId csId = new ChargingStationId(chargingStationId);
+
+        if (!commandAuthorizationService.isAuthorized(csId, identityContext.getUserIdentity(), RequestDataTransferCommand.class)) {
+            throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), RequestChangeConfigurationItemCommand.class);
+        }
+
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
-            ChargingStationId chargingStationIdObject = new ChargingStationId(chargingStationId);
 
-            if (chargingStation != null && chargingStation.isAccepted() &&
-                    commandAuthorizationService.isAuthorized(chargingStationIdObject, identityContext.getUserIdentity(), RequestDataTransferCommand.class)) {
+            if (chargingStation != null && chargingStation.isAccepted()) {
                 DataTransferApiCommand command = gson.fromJson(commandObject, DataTransferApiCommand.class);
 
-                commandGateway.send(new RequestDataTransferCommand(chargingStationIdObject, command.getVendorId(), command.getMessageId(), command.getData(), identityContext), new CorrelationToken());
+                commandGateway.send(new RequestDataTransferCommand(csId, command.getVendorId(), command.getMessageId(), command.getData(), identityContext), new CorrelationToken());
             }
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Data transfer command not able to parse the payload, is your json correctly formatted?", ex);
