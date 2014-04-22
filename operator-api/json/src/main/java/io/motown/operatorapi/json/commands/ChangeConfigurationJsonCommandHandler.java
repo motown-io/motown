@@ -18,11 +18,9 @@ package io.motown.operatorapi.json.commands;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.ConfigurationItem;
-import io.motown.domain.api.chargingstation.CorrelationToken;
-import io.motown.domain.api.chargingstation.RequestChangeConfigurationItemCommand;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.IdentityContext;
+import io.motown.domain.commandauthorization.CommandAuthorizationService;
 import io.motown.operatorapi.viewmodel.model.ChangeConfigurationApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -40,6 +38,8 @@ class ChangeConfigurationJsonCommandHandler implements JsonCommandHandler {
 
     private Gson gson;
 
+    private CommandAuthorizationService commandAuthorizationService;
+
     /**
      * {@inheritDoc}
      */
@@ -55,15 +55,17 @@ class ChangeConfigurationJsonCommandHandler implements JsonCommandHandler {
     public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) {
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
-            if (chargingStation != null && chargingStation.isAccepted()) {
+            ChargingStationId chargingStationIdObject = new ChargingStationId(chargingStationId);
+
+            if (chargingStation != null && chargingStation.isAccepted() &&
+                    commandAuthorizationService.isAuthorized(chargingStationIdObject, identityContext.getUserIdentity(), ChangeConfigurationApiCommand.class)) {
                 ChangeConfigurationApiCommand command = gson.fromJson(commandObject, ChangeConfigurationApiCommand.class);
 
-                commandGateway.send(new RequestChangeConfigurationItemCommand(new ChargingStationId(chargingStationId), new ConfigurationItem(command.getKey(), command.getValue()), identityContext), new CorrelationToken());
+                commandGateway.send(new RequestChangeConfigurationItemCommand(chargingStationIdObject, new ConfigurationItem(command.getKey(), command.getValue()), identityContext), new CorrelationToken());
             }
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Change configuration command not able to parse the payload, is your json correctly formatted?", ex);
         }
-
     }
 
     /**
@@ -93,4 +95,13 @@ class ChangeConfigurationJsonCommandHandler implements JsonCommandHandler {
         this.gson = gson;
     }
 
+    /**
+     * Sets the command authorization service to use. The command authorization service checks if a certain user is
+     * allowed to execute a certain command.
+     *
+     * @param commandAuthorizationService    command authorization.
+     */
+    public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
+        this.commandAuthorizationService = commandAuthorizationService;
+    }
 }

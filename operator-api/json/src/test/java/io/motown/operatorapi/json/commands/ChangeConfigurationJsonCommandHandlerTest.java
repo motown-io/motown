@@ -46,6 +46,7 @@ public class ChangeConfigurationJsonCommandHandlerTest {
         this.gateway = mock(DomainCommandGateway.class);
         handler.setCommandGateway(this.gateway);
         handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
+        handler.setCommandAuthorizationService(OperatorApiJsonTestUtils.getCommandAuthorizationService());
     }
 
     @Test
