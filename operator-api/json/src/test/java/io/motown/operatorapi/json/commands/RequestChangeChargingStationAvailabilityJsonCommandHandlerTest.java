@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,16 +33,17 @@ public class RequestChangeChargingStationAvailabilityJsonCommandHandlerTest {
         handler.setGson(gson);
         handler.setCommandGateway(new TestDomainCommandGateway());
         handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
+        handler.setCommandAuthorizationService(OperatorApiJsonTestUtils.getCommandAuthorizationService());
     }
 
     @Test
-    public void testInoperativeCommand() {
+    public void testInoperativeCommand() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{evseId:'1',availability:'inoperative'}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test
-    public void testOperativeCommand() {
+    public void testOperativeCommand() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{evseId:'1',availability:'operative'}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
