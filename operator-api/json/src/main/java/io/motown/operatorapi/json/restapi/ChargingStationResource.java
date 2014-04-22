@@ -46,7 +46,7 @@ public final class ChargingStationResource {
             commandService.handleCommand(chargingStationId, jsonCommand, new SimpleUserIdentity(securityContext.getUserPrincipal().getName()));
         } catch (UserIdentityUnauthorizedException e) {
             LOG.info("UserIdentityUnauthorizedException while handling command.", e);
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
 
         return Response.status(Response.Status.ACCEPTED).build();

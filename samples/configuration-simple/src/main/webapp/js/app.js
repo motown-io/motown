@@ -49,6 +49,8 @@ angular.module('demoApp', ['ngRoute', 'ngCookies', 'demoApp.controllers', 'demoA
 
                         if (status == 401) {
                             $location.path("/login");
+                        } else if (status == 403) {
+                            alert("You are not authorized to perform this action.");
                         } else {
                             $rootScope.error = method + " on " + url + " failed with status " + status;
                         }
