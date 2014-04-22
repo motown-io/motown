@@ -296,7 +296,6 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         // Translate the authorization information to the OCPP specific info
         request.getLocalAuthorisationList().addAll(identifyingTokenConverterService.convertIdentifyingTokenList(identifyingTokens));
 
-        //TODO: Make ALL calls towards the chargingstation more robust (now can result in message processing loop of death), decide on how to achieve this; either by try catching here to force ACK, or not letting Rabbit reschedule upon exception - Ingo Pak, 03 Jan 2014
         SendLocalListResponse response = chargePointService.sendLocalList(request, id.getId());
 
         if (UpdateStatus.ACCEPTED.equals(response.getStatus())) {

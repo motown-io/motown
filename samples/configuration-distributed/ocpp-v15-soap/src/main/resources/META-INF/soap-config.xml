@@ -51,6 +51,11 @@
                   name="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.ocpp.queue.name}"
                   exclusive="false"/>
 
+    <!--
+    TODO: Determine how to cope with requests for chargingstations that are (temporarily) offline/not available. This
+    now results in a continuous retry loop, since the request handling fails with an exception that will reschedules
+    the event (max number of retries, dead letter exchange, etc) - Ingo Pak, 03 Jan 2014
+    -->
 
     <rabbit:fanout-exchange id="eventsExchange"
                             name="${io.motown.ocpp.v15.soap.eventbus.amqp.rabbit.exchange.events.name}"
