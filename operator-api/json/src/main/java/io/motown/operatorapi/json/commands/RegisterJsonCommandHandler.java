@@ -53,7 +53,7 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
         } else if (!chargingStation.isAccepted()) {
             commandGateway.send(new AcceptChargingStationCommand(new ChargingStationId(chargingStationId), identityContext));
         } else {
-            throw new IllegalStateException("Charging station { %s } is already in accepted state, you can't register this station".format(chargingStationId));
+            throw new IllegalStateException(String.format("Charging station { %s } is already in accepted state, you can't register this station", chargingStationId));
         }
     }
 
