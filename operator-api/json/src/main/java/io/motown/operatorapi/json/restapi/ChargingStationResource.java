@@ -17,7 +17,10 @@ package io.motown.operatorapi.json.restapi;
 
 import io.motown.domain.api.security.SimpleUserIdentity;
 import io.motown.operatorapi.json.commands.JsonCommandService;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.json.queries.OperatorApiService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -28,6 +31,8 @@ import javax.ws.rs.core.SecurityContext;
 @Produces(ApiVersion.V1_JSON)
 public final class ChargingStationResource {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ChargingStationResource.class);
+
     private OperatorApiService service;
 
     private JsonCommandService commandService;
@@ -36,7 +41,14 @@ public final class ChargingStationResource {
     @Path("/{chargingStationId}/commands")
     @Consumes(ApiVersion.V1_JSON)
     public Response executeCommand(@PathParam("chargingStationId") String chargingStationId, String jsonCommand, @Context SecurityContext securityContext) {
-        commandService.handleCommand(chargingStationId, jsonCommand, new SimpleUserIdentity(securityContext.getUserPrincipal().getName()));
+
+        try {
+            commandService.handleCommand(chargingStationId, jsonCommand, new SimpleUserIdentity(securityContext.getUserPrincipal().getName()));
+        } catch (UserIdentityUnauthorizedException e) {
+            LOG.info("UserIdentityUnauthorizedException while handling command.", e);
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
         return Response.status(Response.Status.ACCEPTED).build();
     }
 

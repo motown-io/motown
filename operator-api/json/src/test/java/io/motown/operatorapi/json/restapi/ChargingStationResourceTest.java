@@ -18,6 +18,7 @@ package io.motown.operatorapi.json.restapi;
 import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
 import io.motown.domain.api.security.UserIdentity;
 import io.motown.operatorapi.json.commands.JsonCommandService;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.json.queries.OperatorApiService;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,7 +62,7 @@ public class ChargingStationResourceTest {
     }
 
     @Test
-    public void testExecuteCommand() {
+    public void testExecuteCommand() throws UserIdentityUnauthorizedException {
         Response response = resource.executeCommand(ChargingStationTestUtils.CHARGING_STATION_ID.getId(), "jsonCommand", mockedSecurityContext);
         verify(commandService).handleCommand(anyString(), anyString(), any(UserIdentity.class));
 
@@ -69,7 +70,7 @@ public class ChargingStationResourceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testExecuteCommandThrowsIllegalArgumentException() {
+    public void testExecuteCommandThrowsIllegalArgumentException() throws UserIdentityUnauthorizedException {
         doThrow(mock(IllegalArgumentException.class)).when(commandService).handleCommand(anyString(), anyString(), any(UserIdentity.class));
         resource.executeCommand(ChargingStationTestUtils.CHARGING_STATION_ID.getId(), "jsonCommand", mockedSecurityContext);
     }

@@ -21,6 +21,7 @@ import com.google.gson.JsonObject;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.api.security.TypeBasedAddOnIdentity;
 import io.motown.domain.api.security.UserIdentity;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class JsonCommandService {
 
     private String addOnId;
 
-    public void handleCommand(String chargingStationId, String jsonCommand, UserIdentity userIdentity) {
+    public void handleCommand(String chargingStationId, String jsonCommand, UserIdentity userIdentity) throws UserIdentityUnauthorizedException {
         JsonArray commandAsArray = gson.fromJson(jsonCommand, JsonArray.class);
 
         checkArgument(commandAsArray.size() == COMMAND_ARRAY_SIZE, "API command must be a JSON array with two elements");

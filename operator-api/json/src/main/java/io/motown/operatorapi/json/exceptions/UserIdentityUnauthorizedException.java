@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.operatorapi.json.commands;
+package io.motown.operatorapi.json.exceptions;
 
-import com.google.gson.JsonObject;
-import io.motown.domain.api.security.IdentityContext;
-import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
+import io.motown.domain.api.security.UserIdentity;
 
-public interface JsonCommandHandler {
+public class UserIdentityUnauthorizedException extends Exception {
 
-    String getCommandName();
-
-    void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext)
-            throws UserIdentityUnauthorizedException;
+    public UserIdentityUnauthorizedException(String chargingStationId, UserIdentity userIdentity, Class commandClass) {
+        //To change body of created methods use File | Settings | File Templates.
+    }
 
 }
