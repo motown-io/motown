@@ -39,6 +39,8 @@ class RequestChangeChargingStationAvailabilityJsonCommandHandler implements Json
 
     private CommandAuthorizationService commandAuthorizationService;
 
+    private static final String AVAILABILITY_INOPERATIVE = "inoperative";
+
     /**
      * {@inheritDoc}
      */
@@ -52,34 +54,38 @@ class RequestChangeChargingStationAvailabilityJsonCommandHandler implements Json
      */
     @Override
     public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) throws UserIdentityUnauthorizedException {
+        ChargingStation chargingStation = repository.findOne(chargingStationId);
+
+        if (chargingStation == null || !chargingStation.isAccepted()) {
+            return;
+        }
+
+        RequestChangeChargingStationAvailabilityApiCommand command;
         try {
-            ChargingStation chargingStation = repository.findOne(chargingStationId);
-            if (chargingStation != null && chargingStation.isAccepted()) {
-                RequestChangeChargingStationAvailabilityApiCommand command = gson.fromJson(commandObject, RequestChangeChargingStationAvailabilityApiCommand.class);
-
-                ChargingStationId csId = new ChargingStationId(chargingStationId);
-                UserIdentity userIdentity = identityContext.getUserIdentity();
-
-                if ("inoperative".equalsIgnoreCase(command.getAvailability())) {
-                    if (command.getEvseId().getNumberedId() == 0) {
-                        checkAuthorization(csId, userIdentity, RequestChangeChargingStationAvailabilityToInoperativeCommand.class);
-                        commandGateway.send(new RequestChangeChargingStationAvailabilityToInoperativeCommand(new ChargingStationId(chargingStationId), identityContext), new CorrelationToken());
-                    } else {
-                        checkAuthorization(csId, userIdentity, RequestChangeComponentAvailabilityToInoperativeCommand.class);
-                        commandGateway.send(new RequestChangeComponentAvailabilityToInoperativeCommand(new ChargingStationId(chargingStationId), command.getEvseId(), ChargingStationComponent.EVSE, identityContext), new CorrelationToken());
-                    }
-                } else {
-                    if (command.getEvseId().getNumberedId() == 0) {
-                        checkAuthorization(csId, userIdentity, RequestChangeChargingStationAvailabilityToOperativeCommand.class);
-                        commandGateway.send(new RequestChangeChargingStationAvailabilityToOperativeCommand(new ChargingStationId(chargingStationId), identityContext), new CorrelationToken());
-                    } else {
-                        checkAuthorization(csId, userIdentity, RequestChangeComponentAvailabilityToOperativeCommand.class);
-                        commandGateway.send(new RequestChangeComponentAvailabilityToOperativeCommand(new ChargingStationId(chargingStationId), command.getEvseId(), ChargingStationComponent.EVSE, identityContext), new CorrelationToken());
-                    }
-                }
-            }
+            command = gson.fromJson(commandObject, RequestChangeChargingStationAvailabilityApiCommand.class);
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted?", ex);
+        }
+
+        ChargingStationId csId = new ChargingStationId(chargingStationId);
+        UserIdentity userIdentity = identityContext.getUserIdentity();
+
+        if (AVAILABILITY_INOPERATIVE.equalsIgnoreCase(command.getAvailability())) {
+            if (command.getEvseId().getNumberedId() == 0) {
+                checkAuthorization(csId, userIdentity, RequestChangeChargingStationAvailabilityToInoperativeCommand.class);
+                commandGateway.send(new RequestChangeChargingStationAvailabilityToInoperativeCommand(new ChargingStationId(chargingStationId), identityContext), new CorrelationToken());
+            } else {
+                checkAuthorization(csId, userIdentity, RequestChangeComponentAvailabilityToInoperativeCommand.class);
+                commandGateway.send(new RequestChangeComponentAvailabilityToInoperativeCommand(new ChargingStationId(chargingStationId), command.getEvseId(), ChargingStationComponent.EVSE, identityContext), new CorrelationToken());
+            }
+        } else {
+            if (command.getEvseId().getNumberedId() == 0) {
+                checkAuthorization(csId, userIdentity, RequestChangeChargingStationAvailabilityToOperativeCommand.class);
+                commandGateway.send(new RequestChangeChargingStationAvailabilityToOperativeCommand(new ChargingStationId(chargingStationId), identityContext), new CorrelationToken());
+            } else {
+                checkAuthorization(csId, userIdentity, RequestChangeComponentAvailabilityToOperativeCommand.class);
+                commandGateway.send(new RequestChangeComponentAvailabilityToOperativeCommand(new ChargingStationId(chargingStationId), command.getEvseId(), ChargingStationComponent.EVSE, identityContext), new CorrelationToken());
+            }
         }
     }
 
