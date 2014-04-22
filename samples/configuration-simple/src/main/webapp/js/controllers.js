@@ -479,6 +479,8 @@ angular.module('demoApp.controllers', []).
                         $cookieStore.put('authToken', authToken);
                     }
                     $location.path("/");
+                }, function() {
+                    alert('Combination username & password not valid.');
                 });
             };
         }
