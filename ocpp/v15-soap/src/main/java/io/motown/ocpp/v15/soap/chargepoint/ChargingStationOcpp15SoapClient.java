@@ -265,7 +265,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
                 request.setUpdateType(UpdateType.FULL);
                 break;
             default:
-                throw new IllegalArgumentException(String.format("Unknown update type [%s].", updateType));
+                throw new AssertionError(String.format("Unknown update type [%s].", updateType));
         }
 
         // Translate the authorization information to the OCPP specific info
@@ -315,7 +315,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
                 result = io.motown.domain.api.chargingstation.ReservationStatus.UNAVAILABLE;
                 break;
             default:
-                throw new IllegalArgumentException(String.format("Unknown response status [%s].", responseStatus));
+                throw new AssertionError(String.format("Unknown response status [%s].", responseStatus));
         }
 
         return result;

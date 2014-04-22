@@ -73,7 +73,7 @@ public class IdentifyingTokenConverterService {
                     info.setStatus(AuthorizationStatus.CONCURRENT_TX);
                     break;
                 default:
-                    throw new IllegalArgumentException(String.format("Unknown authentication status [%s] in given identifying token [%s].", token.getAuthenticationStatus(), token.getToken()));
+                    throw new AssertionError(String.format("Unknown authentication status [%s] in given identifying token [%s].", token.getAuthenticationStatus(), token.getToken()));
             }
             authData.setIdTagInfo(info);
         }

@@ -396,8 +396,7 @@ public class OcppJsonService {
                     requestHandler = new StopTransactionRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER, addOnIdentity);
                     break;
                 default:
-                    LOG.error("Unknown ProcUri: " + wampMessage.getProcUri());
-                    return;
+                    throw new AssertionError("Unknown ProcUri: " + wampMessage.getProcUri());
             }
 
             requestHandlers.put(procUri, requestHandler);

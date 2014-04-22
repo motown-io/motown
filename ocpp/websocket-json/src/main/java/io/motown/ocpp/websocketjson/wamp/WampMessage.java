@@ -64,7 +64,7 @@ public class WampMessage {
                 errorDetails = list.get(CALL_ERROR_ERROR_DETAILS_INDEX).toString();
                 break;
             default:
-                break;
+                throw new AssertionError("Unknown message type: " + messageType);
         }
     }
 
@@ -109,7 +109,7 @@ public class WampMessage {
                 target.add(getErrorDetails());
                 break;
             default:
-                break;
+                throw new AssertionError("Unknown message type: " + messageType);
         }
 
         return gson.toJson(target);

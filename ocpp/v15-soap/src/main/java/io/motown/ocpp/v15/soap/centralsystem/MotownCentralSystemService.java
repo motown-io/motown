@@ -356,6 +356,8 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
                 case INVALID:
                     tagInfo.setStatus(AuthorizationStatus.INVALID);
                     break;
+                default:
+                    throw new AssertionError("AuthorizeResponse has unknown status: " + futureResponse.getStatus());
             }
             response.setIdTagInfo(tagInfo);
             return response;
@@ -373,6 +375,8 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
                 case REJECTED:
                     response.setStatus(DataTransferStatus.REJECTED);
                     break;
+                default:
+                    throw new AssertionError("DataTransferResponse has unknown status: " + futureResponse.getStatus());
             }
             response.setData(futureResponse.getData());
             return response;
