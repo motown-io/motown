@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.configuration.simple.datatransfer.handling;
+package io.motown.datatransfer.handling;
 
 import io.motown.domain.api.chargingstation.IncomingDataTransferReceivedEvent;
 import io.motown.domain.api.chargingstation.IncomingDataTransferResponseCommand;
@@ -31,12 +31,11 @@ public class IncomingDataTransferEventListener {
     private DataTransferHandlingCommandGateway commandGateway;
 
     /**
-     * Listens for {@code AuthorizationRequestedEvent} and requests the {@code IdentificationAuthorizationService} to
-     * execute the authorization. Sends a {@code GrantAuthorizationCommand} if identification is successful,
-     * {@code DenyAuthorizationCommand} if not. The passed correlation id will be added to the outgoing command if
-     * it's not null or empty.
+     * Listens for {@code IncomingDataTransferReceivedEvent} and handles the incoming datatransfer.
+     * Sends a {@code IncomingDataTransferResponseCommand} containing the response status and optional
+     * data to be sent back to the charging station.
      *
-     * @param event the authorization request event.
+     * @param event the incoming data transfer event.
      * @param correlationId correlation id which will be added to outgoing command if it's not null or empty.
      */
     @EventHandler

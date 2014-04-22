@@ -34,6 +34,7 @@
         <module>ocpp-v12-soap</module>
         <module>operator-api</module>
         <module>vas</module>
+        <module>sample-incoming-datatransfer-handling</module>
     </modules>
     <dependencyManagement>
         <dependencies>

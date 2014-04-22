@@ -111,6 +111,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.motown</groupId>
+            <artifactId>sample-incoming-datatransfer-handling</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <scope>runtime</scope>

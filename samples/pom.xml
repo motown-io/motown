@@ -29,6 +29,7 @@
     <modules>
         <module>configuration-distributed</module>
         <module>configuration-simple</module>
+        <module>incoming-datatransfer-handling</module>
     </modules>
     <dependencyManagement>
         <dependencies>

@@ -20,7 +20,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean class="io.motown.configuration.simple.datatransfer.handling.IncomingDataTransferEventListener">
+    <bean class="io.motown.datatransfer.handling.IncomingDataTransferEventListener">
         <property name="commandGateway" ref="incomingDataTransferCommandGateway" />
     </bean>
 
@@ -33,7 +33,7 @@
 
     <bean id="incomingDataTransferCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
         <property name="commandBus" ref="commandBus"/>
-        <property name="gatewayInterface" value="io.motown.configuration.simple.datatransfer.handling.DataTransferHandlingCommandGateway"/>
+        <property name="gatewayInterface" value="io.motown.datatransfer.handling.DataTransferHandlingCommandGateway"/>
     </bean>
 
 </beans>
