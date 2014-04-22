@@ -35,8 +35,11 @@ public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Cli
 
     private ChargingStationProxyFactory chargingStationProxyFactory;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public RequestResult startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, EvseId evseId) {
+    public boolean startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, EvseId evseId) {
         LOG.info("Requesting remote start transaction on {}", id);
 
         ChargePointService chargePointService = this.createChargingStationService(id);
@@ -47,13 +50,22 @@ public class ChargingStationOcpp12SoapClient implements ChargingStationOcpp12Cli
 
         RemoteStartTransactionResponse response = chargePointService.remoteStartTransaction(request, id.getId());
 
-        if (RemoteStartStopStatus.ACCEPTED.equals(response.getStatus())) {
-            LOG.info("Remote start transaction request on {} has been accepted", id);
-            return RequestResult.SUCCESS;
-        } else {
-            LOG.warn("Remote start transaction request on {} has been rejected", id);
-            return RequestResult.FAILURE;
+        boolean willTransactionStart;
+
+        switch (response.getStatus()) {
+            case ACCEPTED:
+                LOG.info("Remote start transaction request on {} has been accepted", id);
+                willTransactionStart = true;
+                break;
+            case REJECTED:
+                LOG.info("Remote start transaction request on {} has been rejected", id);
+                willTransactionStart = false;
+                break;
+            default:
+                throw new AssertionError("Start transaction returned unknown response status " + response.getStatus());
         }
+
+        return willTransactionStart;
     }
 
     @Override
