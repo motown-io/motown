@@ -829,4 +829,11 @@ public class ChargingStationTest {
                 .when(new ReserveNowCommand(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, reservationExpiryDate, IDENTITY_CONTEXT))
                 .expectEvents(new ReservedNowEvent(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, reservationExpiryDate, IDENTITY_CONTEXT));
     }
+
+    @Test
+    public void testUnlockEvseResult() {
+        fixture.given(CHARGING_STATION)
+                .when(new UnlockEvseCommand(CHARGING_STATION_ID, EVSE_ID, IDENTITY_CONTEXT))
+                .expectEvents(new EvseUnlockedEvent(CHARGING_STATION_ID, EVSE_ID, IDENTITY_CONTEXT));
+    }
 }

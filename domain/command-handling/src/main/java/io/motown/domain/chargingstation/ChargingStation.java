@@ -173,6 +173,11 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
+    public void handle(UnlockEvseCommand command, MetaData metaData) {
+        apply(new EvseUnlockedEvent(command.getChargingStationId(), command.getEvseId(), command.getIdentityContext()), metaData);
+    }
+
+    @CommandHandler
     public void handle(RequestConfigurationItemsCommand command) {
         checkCommandAllowed(command.getIdentityContext(), command.getClass());
 

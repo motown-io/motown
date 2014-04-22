@@ -78,5 +78,7 @@ interface DomainCommandGateway {
     void send(ReceiveConfigurationItemsCommand command);
 
     void send(ClearCacheCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(UnlockEvseCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 }
 

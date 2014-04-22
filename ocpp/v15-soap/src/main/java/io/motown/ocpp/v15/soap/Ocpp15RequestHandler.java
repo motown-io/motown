@@ -91,7 +91,11 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         LOG.info("UnlockEvseRequestedEvent");
         RequestResult requestResult = chargingStationOcpp15Client.unlockConnector(event.getChargingStationId(), event.getEvseId());
 
-        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
+        if(RequestResult.SUCCESS.equals(requestResult)) {
+            domainService.informUnlockEvse(event.getChargingStationId(), event.getEvseId(), statusCorrelationToken, addOnIdentity);
+        } else {
+            LOG.error("Failed to unlock evse {} on chargingstation {}", event.getEvseId(), event.getChargingStationId().getId());
+        }
     }
 
     @Override

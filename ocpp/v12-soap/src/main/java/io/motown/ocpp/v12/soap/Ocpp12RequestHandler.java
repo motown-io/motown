@@ -85,7 +85,11 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
         LOG.info("OCPP 1.2 UnlockEvseRequestedEvent");
         RequestResult requestResult = chargingStationOcpp12Client.unlockConnector(event.getChargingStationId(), event.getEvseId());
 
-        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
+        if(RequestResult.SUCCESS.equals(requestResult)) {
+            domainService.informUnlockEvse(event.getChargingStationId(), event.getEvseId(), statusCorrelationToken, addOnIdentity);
+        } else {
+            LOG.error("Failed to unlock evse {} on chargingstation {}", event.getEvseId(), event.getChargingStationId().getId());
+        }
     }
 
     @Override

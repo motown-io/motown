@@ -363,6 +363,12 @@ public class DomainService {
         commandGateway.send(new DataTransferResponseCommand(chargingStationId, data, identityContext), statusCorrelationToken);
     }
 
+    public void informUnlockEvse(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+
+        commandGateway.send(new UnlockEvseCommand(chargingStationId, evseId, identityContext), statusCorrelationToken);
+    }
+
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
