@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,16 +36,17 @@ public class UnlockConnectorJsonCommandHandlerTest {
         handler.setGson(gson);
         handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
         handler.setCommandGateway(new TestDomainCommandGateway());
+        handler.setCommandAuthorizationService(OperatorApiJsonTestUtils.getCommandAuthorizationService());
     }
 
     @Test
-    public void testUnlockCommand() {
+    public void testUnlockCommand() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{evseId:'1'}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
-    public void testInvalidUnlockCommand() {
+    public void testInvalidUnlockCommand() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{evseID:'1'}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
