@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,22 +34,23 @@ public class RequestDiagnosticsJsonCommandHandlerTest {
         handler.setGson(gson);
         handler.setCommandGateway(new TestDomainCommandGateway());
         handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
+        handler.setCommandAuthorizationService(OperatorApiJsonTestUtils.getCommandAuthorizationService());
     }
 
     @Test
-    public void testHandler() {
+    public void testHandler() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{targetLocation:'LOC001'}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
-    public void testInvalidJsonProperty() {
+    public void testInvalidJsonProperty() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{target:'LOC001'}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testInvalidJsonPropertyType() {
+    public void testInvalidJsonPropertyType() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{targetLocation:{location:'LOC001'}}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
