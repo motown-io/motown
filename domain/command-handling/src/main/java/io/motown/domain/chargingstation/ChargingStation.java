@@ -62,7 +62,12 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @CommandHandler
     public ChargingStation(CreateAndAcceptChargingStationCommand command) {
         this();
+
         apply(new ChargingStationCreatedEvent(command.getChargingStationId(), command.getUserIdentitiesWithAllPermissions(), command.getIdentityContext()));
+
+        // created event sets authorization, check if this command is
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         apply(new ChargingStationAcceptedEvent(command.getChargingStationId(), command.getIdentityContext()));
     }
 
@@ -111,11 +116,15 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(MakeChargingStationReservableCommand command) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         apply(new ChargingStationMadeReservableEvent(command.getChargingStationId(), command.getIdentityContext()));
     }
 
     @CommandHandler
     public void handle(MakeChargingStationNotReservableCommand command) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         apply(new ChargingStationMadeNotReservableEvent(command.getChargingStationId(), command.getIdentityContext()));
     }
 
@@ -146,7 +155,10 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestUnlockEvseCommand command, MetaData metaData) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         checkCommunicationAllowed();
+
         if (command.getEvseId().getNumberedId() > numberOfEvses) {
             apply(new EvseNotFoundEvent(id, command.getEvseId(), command.getIdentityContext()), metaData);
         } else {
@@ -162,6 +174,8 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestConfigurationItemsCommand command) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         checkCommunicationAllowed();
 
         apply(new ConfigurationItemsRequestedEvent(this.id, command.getKeys(), this.protocol, command.getIdentityContext()));
@@ -174,49 +188,73 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestStartTransactionCommand command, MetaData metaData) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         checkCommunicationAllowed();
+
         apply(new StartTransactionRequestedEvent(this.id, this.protocol, command.getIdentifyingToken(), command.getEvseId(), command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
     public void handle(RequestStopTransactionCommand command) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         checkCommunicationAllowed();
+
         apply(new StopTransactionRequestedEvent(this.id, this.protocol, command.getTransactionId(), command.getIdentityContext()));
     }
 
     @CommandHandler
     public void handle(RequestSoftResetChargingStationCommand command, MetaData metaData) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         checkCommunicationAllowed();
+
         apply(new SoftResetChargingStationRequestedEvent(this.id, this.protocol, command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
     public void handle(RequestHardResetChargingStationCommand command, MetaData metaData) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         checkCommunicationAllowed();
+
         apply(new HardResetChargingStationRequestedEvent(this.id, this.protocol, command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
     public void handle(RequestChangeComponentAvailabilityToInoperativeCommand command, MetaData metaData) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         checkCommunicationAllowed();
+
         apply(new ChangeComponentAvailabilityToInoperativeRequestedEvent(this.id, this.protocol, command.getComponentId(), command.getComponent(), command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
     public void handle(RequestChangeComponentAvailabilityToOperativeCommand command, MetaData metaData) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         checkCommunicationAllowed();
+
         apply(new ChangeComponentAvailabilityToOperativeRequestedEvent(this.id, this.protocol, command.getComponentId(), command.getComponent(), command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
     public void handle(RequestChangeChargingStationAvailabilityToInoperativeCommand command, MetaData metaData) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         checkCommunicationAllowed();
+
         apply(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(this.id, this.protocol, command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
     public void handle(RequestChangeChargingStationAvailabilityToOperativeCommand command, MetaData metaData) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         checkCommunicationAllowed();
+
         apply(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(this.id, this.protocol, command.getIdentityContext()), metaData);
     }
 
@@ -227,6 +265,8 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestDataTransferCommand command, MetaData metaData) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         apply(new DataTransferRequestedEvent(this.id, this.protocol, command.getVendorId(), command.getMessageId(), command.getData(), command.getIdentityContext()), metaData);
     }
 
@@ -237,13 +277,19 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestChangeConfigurationItemCommand command, MetaData metaData) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         checkCommunicationAllowed();
+
         apply(new ChangeConfigurationItemRequestedEvent(this.id, this.protocol, command.getConfigurationItem(), command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
     public void handle(RequestDiagnosticsCommand command) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         checkCommunicationAllowed();
+
         apply(new DiagnosticsRequestedEvent(this.id, this.protocol, command.getUploadLocation(), command.getNumRetries(), command.getRetryInterval(), command.getPeriodStartTime(), command.getPeriodEndTime(), command.getIdentityContext()));
     }
 
@@ -269,20 +315,29 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestClearCacheCommand command, MetaData metaData) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         checkCommunicationAllowed();
+
         apply(new ClearCacheRequestedEvent(command.getChargingStationId(), this.protocol, command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
     public void handle(RequestFirmwareUpdateCommand command) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         checkCommunicationAllowed();
+
         apply(new FirmwareUpdateRequestedEvent(command.getChargingStationId(), this.protocol, command.getUpdateLocation(),
                 command.getRetrieveDate(), command.getAttributes(), command.getIdentityContext()));
     }
 
     @CommandHandler
     public void handle(RequestAuthorizationListVersionCommand command) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         checkCommunicationAllowed();
+
         apply(new AuthorizationListVersionRequestedEvent(command.getChargingStationId(), this.protocol, command.getIdentityContext()));
     }
 
@@ -293,14 +348,20 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestSendAuthorizationListCommand command, MetaData metaData) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         checkCommunicationAllowed();
+
         apply(new SendAuthorizationListRequestedEvent(command.getChargingStationId(), this.protocol, command.getAuthorizationList(),
                 command.getAuthorizationListVersion(), command.getAuthorizationListHash(), command.getUpdateType(), command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
     public void handle(RequestReserveNowCommand command, MetaData metaData) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         checkCommunicationAllowed();
+
         if (isReservable) {
             apply(new ReserveNowRequestedEvent(command.getChargingStationId(), this.protocol, command.getEvseId(), command.getIdentifyingToken(),
                     command.getExpiryDate(), command.getParentIdentifyingToken(), command.getIdentityContext()), metaData);
@@ -312,7 +373,10 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(RequestCancelReservationCommand command) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         checkCommunicationAllowed();
+
         apply(new CancelReservationRequestedEvent(command.getChargingStationId(), this.protocol, command.getReservationId(), command.getIdentityContext()));
     }
 
@@ -384,26 +448,36 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(PlaceChargingStationCommand command) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         apply(new ChargingStationPlacedEvent(command.getChargingStationId(), command.getCoordinates(), command.getAddress(), command.getAccessibility(), command.getIdentityContext()));
     }
 
     @CommandHandler
     public void handle(ImproveChargingStationLocationCommand command) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         apply(new ChargingStationLocationImprovedEvent(command.getChargingStationId(), command.getCoordinates(), command.getAddress(), command.getAccessibility(), command.getIdentityContext()));
     }
 
     @CommandHandler
     public void handle(MoveChargingStationCommand command) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         apply(new ChargingStationMovedEvent(command.getChargingStationId(), command.getCoordinates(), command.getAddress(), command.getAccessibility(), command.getIdentityContext()));
     }
 
     @CommandHandler
     public void handle(SetChargingStationOpeningTimesCommand command) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         apply(new ChargingStationOpeningTimesSetEvent(command.getChargingStationId(), command.getOpeningTimes(), command.getIdentityContext()));
     }
 
     @CommandHandler
     public void handle(AddChargingStationOpeningTimesCommand command) {
+        checkCommandAllowed(command.getIdentityContext(), command.getClass());
+
         apply(new ChargingStationOpeningTimesAddedEvent(command.getChargingStationId(), command.getOpeningTimes(), command.getIdentityContext()));
     }
 

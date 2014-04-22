@@ -134,9 +134,9 @@ public class ChargingStationTest {
     @Test
     public void testCreatingAndAcceptingChargingStation() {
         fixture.given()
-                .when(new CreateAndAcceptChargingStationCommand(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, IDENTITY_CONTEXT))
-                .expectEvents(new ChargingStationCreatedEvent(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, IDENTITY_CONTEXT),
-                        new ChargingStationAcceptedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
+                .when(new CreateAndAcceptChargingStationCommand(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new ChargingStationCreatedEvent(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, ROOT_IDENTITY_CONTEXT),
+                        new ChargingStationAcceptedEvent(CHARGING_STATION_ID, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
@@ -783,36 +783,36 @@ public class ChargingStationTest {
     @Test
     public void testPlaceChargingStationCommand() {
         fixture.given(CHARGING_STATION)
-                .when(new PlaceChargingStationCommand(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY, IDENTITY_CONTEXT))
-                .expectEvents(new ChargingStationPlacedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY, IDENTITY_CONTEXT));
+                .when(new PlaceChargingStationCommand(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new ChargingStationPlacedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testImproveChargingStationLocationCommand() {
         fixture.given(CHARGING_STATION)
-                .when(new ImproveChargingStationLocationCommand(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY, IDENTITY_CONTEXT))
-                .expectEvents(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY, IDENTITY_CONTEXT));
+                .when(new ImproveChargingStationLocationCommand(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
     public void MoveChargingStationCommand() {
         fixture.given(CHARGING_STATION)
-                .when(new MoveChargingStationCommand(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY, IDENTITY_CONTEXT))
-                .expectEvents(new ChargingStationMovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY, IDENTITY_CONTEXT));
+                .when(new MoveChargingStationCommand(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new ChargingStationMovedEvent(CHARGING_STATION_ID, COORDINATES, ADDRESS, ACCESSIBILITY, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testSettingChargingStationOpeningTimes() {
         fixture.given(CHARGING_STATION)
-                .when(new SetChargingStationOpeningTimesCommand(CHARGING_STATION_ID, OPENING_TIMES, IDENTITY_CONTEXT))
-                .expectEvents(new ChargingStationOpeningTimesSetEvent(CHARGING_STATION_ID, OPENING_TIMES, IDENTITY_CONTEXT));
+                .when(new SetChargingStationOpeningTimesCommand(CHARGING_STATION_ID, OPENING_TIMES, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new ChargingStationOpeningTimesSetEvent(CHARGING_STATION_ID, OPENING_TIMES, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testAddingChargingStationOpeningTimes() {
         fixture.given(CHARGING_STATION)
-                .when(new AddChargingStationOpeningTimesCommand(CHARGING_STATION_ID, OPENING_TIMES, IDENTITY_CONTEXT))
-                .expectEvents(new ChargingStationOpeningTimesAddedEvent(CHARGING_STATION_ID, OPENING_TIMES, IDENTITY_CONTEXT));
+                .when(new AddChargingStationOpeningTimesCommand(CHARGING_STATION_ID, OPENING_TIMES, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new ChargingStationOpeningTimesAddedEvent(CHARGING_STATION_ID, OPENING_TIMES, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
