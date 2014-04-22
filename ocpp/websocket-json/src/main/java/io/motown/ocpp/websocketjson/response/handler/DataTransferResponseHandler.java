@@ -49,6 +49,8 @@ public class DataTransferResponseHandler extends ResponseHandler {
                     domainService.informDataTransferResponse(chargingStationId, response.getData(), getCorrelationToken(), addOnIdentity);
                 }
                 break;
+            default:
+                break;
         }
     }
 }

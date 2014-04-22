@@ -298,6 +298,8 @@ public class MotownCentralSystemService implements CentralSystemService {
                 case INVALID:
                     tagInfo.setStatus(AuthorizationStatus.INVALID);
                     break;
+                default:
+                    throw new AssertionError("AuthorizeResponse has unknown status: " + futureResponse.getStatus());
             }
             response.setIdTagInfo(tagInfo);
             return response;
