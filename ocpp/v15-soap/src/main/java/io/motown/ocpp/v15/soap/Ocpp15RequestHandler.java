@@ -78,12 +78,13 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         chargingStationOcpp15Client.hardReset(event.getChargingStationId());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(StartTransactionRequestedEvent event, CorrelationToken statusCorrelationToken) {
         LOG.info("StartTransactionRequestedEvent");
-        RequestResult requestResult = chargingStationOcpp15Client.startTransaction(event.getChargingStationId(), event.getIdentifyingToken(), event.getEvseId());
-
-        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
+        chargingStationOcpp15Client.startTransaction(event.getChargingStationId(), event.getIdentifyingToken(), event.getEvseId());
     }
 
     @Override

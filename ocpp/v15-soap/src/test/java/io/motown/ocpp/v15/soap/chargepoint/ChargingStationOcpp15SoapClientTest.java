@@ -86,18 +86,18 @@ public class ChargingStationOcpp15SoapClientTest {
     public void startTransactionAcceptedVerifyReturnValue() {
         when(chargePointService.remoteStartTransaction(any(RemoteStartTransactionRequest.class), anyString())).thenReturn(getRemoteStartTransactionResponse(RemoteStartStopStatus.ACCEPTED));
 
-        RequestResult requestResult = client.startTransaction(CHARGING_STATION_ID, IDENTIFYING_TOKEN, EVSE_ID);
+        boolean willTransactionStart = client.startTransaction(CHARGING_STATION_ID, IDENTIFYING_TOKEN, EVSE_ID);
 
-        assertEquals(RequestResult.SUCCESS, requestResult);
+        assertTrue(willTransactionStart);
     }
 
     @Test
     public void startTransactionRejectedVerifyReturnValue() {
         when(chargePointService.remoteStartTransaction(any(RemoteStartTransactionRequest.class), anyString())).thenReturn(getRemoteStartTransactionResponse(RemoteStartStopStatus.REJECTED));
 
-        RequestResult requestResult = client.startTransaction(CHARGING_STATION_ID, IDENTIFYING_TOKEN, EVSE_ID);
+        boolean willTransactionStart = client.startTransaction(CHARGING_STATION_ID, IDENTIFYING_TOKEN, EVSE_ID);
 
-        assertEquals(RequestResult.FAILURE, requestResult);
+        assertFalse(willTransactionStart);
     }
 
     @Test

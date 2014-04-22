@@ -29,7 +29,15 @@ public interface ChargingStationOcpp15Client {
 
     Map<String, String> getConfiguration(ChargingStationId id);
 
-    RequestResult startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, EvseId evseId);
+    /**
+     * Requests the charging station to start a transaction.
+     *
+     * @param id               the charging station's id.
+     * @param identifyingToken the token with which to start the transaction.
+     * @param evseId           the EVSE's id.
+     * @return true if the transaction will be started, false if it won't.
+     */
+    boolean startTransaction(ChargingStationId id, IdentifyingToken identifyingToken, EvseId evseId);
 
     RequestResult stopTransaction(ChargingStationId id, int transactionId);
 
