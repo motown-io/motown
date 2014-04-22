@@ -174,12 +174,7 @@ public class ChargingStationEventListener {
             ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
 
             if (chargingStation != null) {
-                for (Evse evse : chargingStation.getEvses()) {
-                    if (evse.getEvseId().equals(event.getComponentId().getId())) {
-                        evse.setStatus(event.getStatus());
-                    }
-                }
-
+                updateEvseStatus(chargingStation, event.getComponentId().getId(), event.getStatus());
                 repository.save(chargingStation);
             }
         }
@@ -291,6 +286,21 @@ public class ChargingStationEventListener {
     }
 
     /**
+     * Updates the status of a Evse in the charging station object if the evse id matches the component id.
+     *
+     * @param chargingStation    charging stationidentifier.
+     * @param componentId        component identifier.
+     * @param status             new status.
+     */
+    private void updateEvseStatus(ChargingStation chargingStation, String componentId, ComponentStatus status) {
+        for (Evse evse : chargingStation.getEvses()) {
+            if (evse.getEvseId().equals(componentId)) {
+                evse.setStatus(status);
+            }
+        }
+    }
+
+    /**
      * Updates the charging station's availability.
      *
      * @param chargingStationId the charging station's id.
@@ -314,18 +324,20 @@ public class ChargingStationEventListener {
      * @param availability      the the charging station's new availability.
      */
     private void updateComponentAvailability(ChargingStationId chargingStationId, ComponentId componentId, ChargingStationComponent component, Availability availability) {
-        if (component.equals(ChargingStationComponent.EVSE) && componentId instanceof EvseId) {
-            ChargingStation chargingStation = repository.findOne(chargingStationId.getId());
+        if (!component.equals(ChargingStationComponent.EVSE) || !(componentId instanceof EvseId)) {
+            return;
+        }
 
-            if (chargingStation != null) {
-                for (Evse evse : chargingStation.getEvses()) {
-                    if (evse.getEvseId().equals(componentId.getId())) {
-                        evse.setAvailability(availability);
-                        break;
-                    }
+        ChargingStation chargingStation = repository.findOne(chargingStationId.getId());
+
+        if (chargingStation != null) {
+            for (Evse evse : chargingStation.getEvses()) {
+                if (evse.getEvseId().equals(componentId.getId())) {
+                    evse.setAvailability(availability);
+                    break;
                 }
-                repository.save(chargingStation);
             }
+            repository.save(chargingStation);
         }
     }
 
