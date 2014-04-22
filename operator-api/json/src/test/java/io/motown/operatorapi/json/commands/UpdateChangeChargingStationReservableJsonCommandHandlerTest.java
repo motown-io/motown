@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.MakeChargingStationNotReservableCommand;
 import io.motown.domain.api.chargingstation.MakeChargingStationReservableCommand;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,24 +45,25 @@ public class UpdateChangeChargingStationReservableJsonCommandHandlerTest {
         handler.setGson(gson);
         handler.setCommandGateway(gateway);
         handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
+        handler.setCommandAuthorizationService(OperatorApiJsonTestUtils.getCommandAuthorizationService());
     }
 
     @Test
-    public void updateReservableToTrueNoExceptions() {
+    public void updateReservableToTrueNoExceptions() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{'reservable': true}", JsonObject.class);
 
         handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test
-    public void updateReservableToFalseNoExceptions() {
+    public void updateReservableToFalseNoExceptions() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{'reservable': false}", JsonObject.class);
 
         handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test
-    public void updateReservableToTrueValidateGatewayCall() {
+    public void updateReservableToTrueValidateGatewayCall() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{'reservable': true}", JsonObject.class);
 
         handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
@@ -70,7 +72,7 @@ public class UpdateChangeChargingStationReservableJsonCommandHandlerTest {
     }
 
     @Test
-    public void updateReservableToFalseValidateGatewayCall() {
+    public void updateReservableToFalseValidateGatewayCall() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{'reservable': false}", JsonObject.class);
 
         handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
