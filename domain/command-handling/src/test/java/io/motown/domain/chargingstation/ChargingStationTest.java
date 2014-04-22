@@ -120,7 +120,7 @@ public class ChargingStationTest {
     @Test
     public void testChargePointCreation() {
         fixture.given()
-                .when(new CreateChargingStationCommand(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT))
+                .when(new CreateChargingStationCommand(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, NULL_USER_IDENTITY_CONTEXT))
                 .expectEvents(new ChargingStationCreatedEvent(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT));
     }
 

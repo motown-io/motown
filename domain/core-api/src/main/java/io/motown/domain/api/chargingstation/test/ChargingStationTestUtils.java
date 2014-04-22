@@ -290,6 +290,7 @@ public final class ChargingStationTestUtils {
      * The default add-on identity.
      */
     public static final AddOnIdentity ADD_ON_IDENTITY = new TypeBasedAddOnIdentity("ADD-ON", ADD_ON_ID);
+
     /**
      * The default identity context with NullUserIdentity.
      * <p/>
@@ -306,22 +307,34 @@ public final class ChargingStationTestUtils {
      * The default configuration keys to retrieve from the charging station
      */
     public static final Set<String> CONFIGURATION_KEYS = new HashSet<>();
+
     /**
      * The default user identity.
      */
     public static final UserIdentity USER_IDENTITY = new SimpleUserIdentity("USER-ID");
+
     /**
      * The default identity context.
      */
     public static final IdentityContext IDENTITY_CONTEXT = new IdentityContext(ADD_ON_IDENTITY, USER_IDENTITY);
+
     /**
      * The default root user identity.
      */
     public static final UserIdentity ROOT_USER_IDENTITY = new SimpleUserIdentity("root");
+
     /**
      * The default root identity context.
      */
     public static final IdentityContext ROOT_IDENTITY_CONTEXT = new IdentityContext(ADD_ON_IDENTITY, ROOT_USER_IDENTITY);
+
+    /**
+     * The default user identities which should have all permissions on created charging stations.
+     */
+    public static final Set<UserIdentity> USER_IDENTITIES_WITH_ALL_PERMISSIONS = ImmutableSet.<UserIdentity>builder()
+            .add(ROOT_USER_IDENTITY)
+            .build();
+
     /**
      * The default list of identifying tokens.
      */

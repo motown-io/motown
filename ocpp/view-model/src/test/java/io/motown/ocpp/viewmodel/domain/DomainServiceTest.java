@@ -90,6 +90,7 @@ public class DomainServiceTest {
         domainService.setReservationIdentifierRepository(reservationIdentifierRepository);
         domainService.setEntityManagerFactory(entityManagerFactory);
         domainService.setAuthorizationTimeoutInMillis(AUTHORIZATION_TIMEOUT_IN_MILLIS);
+        domainService.setUserIdentitiesWithAllPermissions(USER_IDENTITIES_WITH_ALL_PERMISSIONS);
 
         gateway = mock(DomainCommandGateway.class);
         domainService.setCommandGateway(gateway);
@@ -104,7 +105,7 @@ public class DomainServiceTest {
                 CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER, getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber(), ADD_ON_IDENTITY);
         assertFalse(bootChargingStationResult.isAccepted());
 
-        verify(gateway).send(eq(new CreateChargingStationCommand(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT)), any(CommandCallback.class));
+        verify(gateway).send(eq(new CreateChargingStationCommand(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, NULL_USER_IDENTITY_CONTEXT)), any(CommandCallback.class));
     }
 
     @Test

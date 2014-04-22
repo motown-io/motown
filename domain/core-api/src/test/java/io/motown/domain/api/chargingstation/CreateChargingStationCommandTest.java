@@ -15,22 +15,36 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.UserIdentity;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
+import java.util.HashSet;
+
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.NULL_USER_IDENTITY_CONTEXT;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.USER_IDENTITIES_WITH_ALL_PERMISSIONS;
 
 public class CreateChargingStationCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new CreateChargingStationCommand(null, NULL_USER_IDENTITY_CONTEXT);
+        new CreateChargingStationCommand(null, USER_IDENTITIES_WITH_ALL_PERMISSIONS, NULL_USER_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingCommandWithUsersWithAllPermissionsNull() {
+        new CreateChargingStationCommand(CHARGING_STATION_ID, null, NULL_USER_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalArgumentExceptionThrownWhenCreatingCommandWithUsersWithAllPermissionsEmpty() {
+        new CreateChargingStationCommand(CHARGING_STATION_ID, new HashSet<UserIdentity>(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
-        new CreateChargingStationCommand(CHARGING_STATION_ID, null);
+        new CreateChargingStationCommand(CHARGING_STATION_ID, USER_IDENTITIES_WITH_ALL_PERMISSIONS, null);
     }
 
     @Test

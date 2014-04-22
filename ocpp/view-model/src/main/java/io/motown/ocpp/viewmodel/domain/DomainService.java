@@ -20,6 +20,7 @@ import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.api.security.NullUserIdentity;
+import io.motown.domain.api.security.UserIdentity;
 import io.motown.domain.utils.axon.EventWaitingGateway;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.entities.ReservationIdentifier;
@@ -92,9 +93,15 @@ public class DomainService {
     private long authorizationTimeoutInMillis = 10000;
 
     /**
-     * The timeout in milliseconds to wait for the datatransfer response events
+     * The timeout in milliseconds to wait for the dataTransfer response events
      */
     private long dataTransferTimeoutInMillis = 10000;
+
+    /**
+     * Set of user identities which shall be used in the {@code CreateChargingStationCommand} to indicate those users
+     * are authorized to execute all commands on the created aggregate.
+     */
+    private Set<UserIdentity> userIdentitiesWithAllPermissions;
 
     /**
      * Adds the attribute to the map using the key and value if the value is not null.
@@ -120,7 +127,7 @@ public class DomainService {
         if (chargingStation == null) {
             LOG.debug("Not a known charging station on boot notification, we send a CreateChargingStationCommand.");
 
-            commandGateway.send(new CreateChargingStationCommand(chargingStationId, identityContext), new CreateChargingStationCommandCallback(
+            commandGateway.send(new CreateChargingStationCommand(chargingStationId, userIdentitiesWithAllPermissions, identityContext), new CreateChargingStationCommandCallback(
                     chargingStationId, chargingStationAddress, vendor, model, protocol, chargingStationSerialNumber, chargeBoxSerialNumber, firmwareVersion, iccid,
                     imsi, meterType, meterSerialNumber, addOnIdentity, chargingStationRepository, this));
 
@@ -365,6 +372,10 @@ public class DomainService {
 
     public void setAuthorizationTimeoutInMillis(long authorizationTimeoutInMillis) {
         this.authorizationTimeoutInMillis = authorizationTimeoutInMillis;
+    }
+
+    public void setUserIdentitiesWithAllPermissions(Set<UserIdentity> userIdentitiesWithAllPermissions) {
+        this.userIdentitiesWithAllPermissions = userIdentitiesWithAllPermissions;
     }
 
     public String retrieveChargingStationAddress(ChargingStationId id) {
