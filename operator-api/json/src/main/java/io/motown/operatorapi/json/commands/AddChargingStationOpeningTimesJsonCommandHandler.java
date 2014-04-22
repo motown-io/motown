@@ -21,6 +21,7 @@ import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.AddChargingStationOpeningTimesCommand;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.security.IdentityContext;
+import io.motown.domain.commandauthorization.CommandAuthorizationService;
 import io.motown.operatorapi.viewmodel.model.AddChargingStationOpeningTimesApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -35,6 +36,8 @@ class AddChargingStationOpeningTimesJsonCommandHandler implements JsonCommandHan
 
     private Gson gson;
 
+    private CommandAuthorizationService commandAuthorizationService;
+
     @Override
     public String getCommandName() {
         return COMMAND_NAME;
@@ -44,9 +47,12 @@ class AddChargingStationOpeningTimesJsonCommandHandler implements JsonCommandHan
     public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) {
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
-            if (chargingStation != null && chargingStation.isAccepted()) {
+            ChargingStationId chargingStationIdObject = new ChargingStationId(chargingStationId);
+
+            if (chargingStation != null && chargingStation.isAccepted() &&
+                    commandAuthorizationService.isAuthorized(chargingStationIdObject, identityContext.getUserIdentity(), AddChargingStationOpeningTimesCommand.class)) {
                 AddChargingStationOpeningTimesApiCommand command = gson.fromJson(commandObject, AddChargingStationOpeningTimesApiCommand.class);
-                commandGateway.send(new AddChargingStationOpeningTimesCommand(new ChargingStationId(chargingStationId), command.getOpeningTimes(), identityContext));
+                commandGateway.send(new AddChargingStationOpeningTimesCommand(chargingStationIdObject, command.getOpeningTimes(), identityContext));
             }
         } catch (JsonSyntaxException e) {
             throw new IllegalArgumentException("Set charging station opening times command not able to parse the payload, is your JSON correctly formatted?", e);
@@ -63,5 +69,9 @@ class AddChargingStationOpeningTimesJsonCommandHandler implements JsonCommandHan
 
     public void setGson(Gson gson) {
         this.gson = gson;
+    }
+
+    public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
+        this.commandAuthorizationService = commandAuthorizationService;
     }
 }

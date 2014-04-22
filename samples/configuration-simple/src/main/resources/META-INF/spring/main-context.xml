@@ -27,6 +27,8 @@
 
     <import resource="contexts/axon-context.xml" />
 
+    <import resource="contexts/command-authorization-context.xml" />
+
     <import resource="contexts/domain-context.xml" />
 
     <import resource="contexts/web-services-context.xml" />

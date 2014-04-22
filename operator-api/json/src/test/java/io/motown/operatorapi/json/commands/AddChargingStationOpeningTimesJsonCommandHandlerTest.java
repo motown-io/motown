@@ -18,10 +18,16 @@ package io.motown.operatorapi.json.commands;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.security.UserIdentity;
+import io.motown.domain.commandauthorization.CommandAuthorizationService;
 import org.junit.Before;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.IDENTITY_CONTEXT;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class AddChargingStationOpeningTimesJsonCommandHandlerTest {
     private Gson gson;
@@ -33,6 +39,10 @@ public class AddChargingStationOpeningTimesJsonCommandHandlerTest {
         handler.setGson(gson);
         handler.setCommandGateway(new TestDomainCommandGateway());
         handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
+
+        CommandAuthorizationService commandAuthorizationService = mock(CommandAuthorizationService.class);
+        when(commandAuthorizationService.isAuthorized(any(ChargingStationId.class), any(UserIdentity.class), any(Class.class))).thenReturn(true);
+        handler.setCommandAuthorizationService(commandAuthorizationService);
     }
 
     @Test
