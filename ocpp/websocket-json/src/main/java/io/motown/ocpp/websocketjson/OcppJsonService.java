@@ -236,20 +236,28 @@ public class OcppJsonService {
      * @return
      */
     private IdTagInfo_.Status convertAuthenticationStatus(IdentifyingToken.AuthenticationStatus status) {
+        IdTagInfo_.Status result;
         switch (status) {
             case ACCEPTED:
-                return IdTagInfo_.Status.ACCEPTED;
+                result = IdTagInfo_.Status.ACCEPTED;
+                break;
             case EXPIRED:
-                return IdTagInfo_.Status.EXPIRED;
+                result = IdTagInfo_.Status.EXPIRED;
+                break;
             case DELETED:
-                return IdTagInfo_.Status.EXPIRED;
+                result = IdTagInfo_.Status.EXPIRED;
+                break;
             case CONCURRENT_TX:
-                return IdTagInfo_.Status.CONCURRENT_TX;
+                result = IdTagInfo_.Status.CONCURRENT_TX;
+                break;
             case BLOCKED:
-                return IdTagInfo_.Status.BLOCKED;
+                result = IdTagInfo_.Status.BLOCKED;
+                break;
             default:
-                return IdTagInfo_.Status.INVALID;
+                result = IdTagInfo_.Status.INVALID;
+                break;
         }
+        return result;
     }
 
     public void softReset(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken) {
