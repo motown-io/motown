@@ -21,6 +21,8 @@ import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestConfigurationItemsCommand;
 import io.motown.domain.api.security.IdentityContext;
+import io.motown.domain.commandauthorization.CommandAuthorizationService;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.model.RequestGetConfigurationApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -37,20 +39,33 @@ class RequestGetConfigurationJsonCommandHandler implements JsonCommandHandler {
 
     private Gson gson;
 
-    @Override
+    private CommandAuthorizationService commandAuthorizationService;
+
+    /**
+     * {@inheritDoc}
+     */    @Override
     public String getCommandName() {
         return COMMAND_NAME;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) {
+    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) throws UserIdentityUnauthorizedException {
+        ChargingStationId csId = new ChargingStationId(chargingStationId);
+
+        if (!commandAuthorizationService.isAuthorized(csId, identityContext.getUserIdentity(), RequestConfigurationItemsCommand.class)) {
+            throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), RequestConfigurationItemsCommand.class);
+        }
+
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
 
                 RequestGetConfigurationApiCommand command = gson.fromJson(commandObject, RequestGetConfigurationApiCommand.class);
 
-                commandGateway.send(new RequestConfigurationItemsCommand(new ChargingStationId(chargingStationId), new HashSet<>(command.getKeys()), identityContext));
+                commandGateway.send(new RequestConfigurationItemsCommand(csId, new HashSet<>(command.getKeys()), identityContext));
             } else {
                 throw new IllegalStateException("It is not possible to get configuration for a charging station that is not registered");
             }
@@ -59,15 +74,40 @@ class RequestGetConfigurationJsonCommandHandler implements JsonCommandHandler {
         }
     }
 
+    /**
+     * Sets the command gateway.
+     *
+     * @param commandGateway the command gateway.
+     */
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
 
+    /**
+     * Sets the charging station repository.
+     *
+     * @param repository the charging station repository.
+     */
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
     }
 
+    /**
+     * Sets the GSON instance.
+     *
+     * @param gson the GSON instance.
+     */
     public void setGson(Gson gson) {
         this.gson = gson;
+    }
+
+    /**
+     * Sets the command authorization service to use. The command authorization service checks if a certain user is
+     * allowed to execute a certain command.
+     *
+     * @param commandAuthorizationService    command authorization.
+     */
+    public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
+        this.commandAuthorizationService = commandAuthorizationService;
     }
 }
