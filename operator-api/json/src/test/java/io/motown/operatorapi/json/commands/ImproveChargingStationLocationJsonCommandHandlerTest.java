@@ -17,6 +17,7 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,37 +37,37 @@ public class ImproveChargingStationLocationJsonCommandHandlerTest {
     }
 
     @Test
-    public void testAddress() {
+    public void testAddress() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{address:{addressLine1:'Teststraat 1',city:'Deurne',country:'NL'},accessibility:'PUBLIC'}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testAddressWrongAccessibility() {
+    public void testAddressWrongAccessibility() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{address:{addressLine1:'Teststraat 1',city:'Deurne',country:'NL'},accessibility:'NON-PUBLIC'}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
-    public void testInvalidAddress() {
+    public void testInvalidAddress() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{address:{addressLine:'Teststraat 1',city:'Deurne',country:'NL'},accessibility:'PUBLIC'}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, IDENTITY_CONTEXT);
     }
 
     @Test
-    public void testCoordinates() {
+    public void testCoordinates() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{coordinates:{latitude:'0.0',longitude:'0.0'},accessibility:'PUBLIC'}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, IDENTITY_CONTEXT);
     }
 
     @Test(expected = NumberFormatException.class)
-    public void testInvalidCoordinatesNumber() {
+    public void testInvalidCoordinatesNumber() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{coordinates:{latitude:'center',longitude:'0.0'},accessibility:'PUBLIC'}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
-    public void testInvalidCoordinates() {
+    public void testInvalidCoordinates() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{coordinates:{lattitude:'0.0',longitude:'0.0'},accessibility:'PUBLIC'}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, IDENTITY_CONTEXT);
     }
