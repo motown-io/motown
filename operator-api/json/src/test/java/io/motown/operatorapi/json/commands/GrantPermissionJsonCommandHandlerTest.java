@@ -46,6 +46,7 @@ public class GrantPermissionJsonCommandHandlerTest {
         handler.setGson(gson);
         handler.setCommandGateway(gateway);
         handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
+        handler.setCommandAuthorizationService(OperatorApiJsonTestUtils.getCommandAuthorizationService());
     }
 
     @Test
