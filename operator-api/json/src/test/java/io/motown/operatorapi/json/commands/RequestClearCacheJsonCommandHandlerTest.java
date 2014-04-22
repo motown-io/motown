@@ -16,6 +16,7 @@
 package io.motown.operatorapi.json.commands;
 
 import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,10 +27,11 @@ public class RequestClearCacheJsonCommandHandlerTest {
     public void setUp() {
         handler.setCommandGateway(new TestDomainCommandGateway());
         handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
+        handler.setCommandAuthorizationService(OperatorApiJsonTestUtils.getCommandAuthorizationService());
     }
 
     @Test
-    public void testClearCacheCommand() {
+    public void testClearCacheCommand() throws UserIdentityUnauthorizedException {
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, null, ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT);
     }
 }
