@@ -16,12 +16,11 @@
 package io.motown.configuration.simple.authorization.userdetails;
 
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         //TODO load user from DB
         // hardcoded hash of password: passw
         return new io.motown.configuration.simple.authorization.userdetails.UserDetails(username, "653ba57ecd25f175010ac9a7e0ad0973a033dc61a59ee5c8b10b8e73e5407022");

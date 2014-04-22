@@ -20,7 +20,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
@@ -50,7 +49,7 @@ public final class GsonJsonProvider implements MessageBodyReader<Object>, Messag
     }
 
     @Override
-    public Object readFrom(Class<Object> objectClass, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> stringStringMultivaluedMap, InputStream inputStream) throws IOException, WebApplicationException {
+    public Object readFrom(Class<Object> objectClass, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> stringStringMultivaluedMap, InputStream inputStream) throws IOException {
         JsonReader reader = new JsonReader(new InputStreamReader(inputStream, Charset.forName(UTF_8)));
         Object obj = gson.fromJson(reader, type);
         reader.close();
@@ -68,7 +67,7 @@ public final class GsonJsonProvider implements MessageBodyReader<Object>, Messag
     }
 
     @Override
-    public void writeTo(Object src, Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> stringObjectMultivaluedMap, OutputStream outputStream) throws IOException, WebApplicationException {
+    public void writeTo(Object src, Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> stringObjectMultivaluedMap, OutputStream outputStream) throws IOException {
         JsonWriter writer = new JsonWriter(new OutputStreamWriter(outputStream, Charset.forName(UTF_8)));
         gson.toJson(src, type, writer);
         writer.close();
