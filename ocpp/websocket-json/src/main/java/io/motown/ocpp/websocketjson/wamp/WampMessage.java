@@ -46,6 +46,8 @@ public class WampMessage {
     private static final int CALL_ERROR_ERROR_DESCRIPTION_INDEX = 3;
     private static final int CALL_ERROR_ERROR_DETAILS_INDEX = 4;
 
+    private static final String UNKNOWN_MESSAGE_TYPE_MESSAGE = "Unknown message type: %s";
+
     public WampMessage(List<Object> list) {
         messageType = ((Double) list.get(0)).intValue();
         callId = list.get(1).toString();
@@ -64,7 +66,7 @@ public class WampMessage {
                 errorDetails = list.get(CALL_ERROR_ERROR_DETAILS_INDEX).toString();
                 break;
             default:
-                throw new AssertionError("Unknown message type: " + messageType);
+                throw new AssertionError(String.format(UNKNOWN_MESSAGE_TYPE_MESSAGE, messageType));
         }
     }
 
@@ -109,7 +111,7 @@ public class WampMessage {
                 target.add(getErrorDetails());
                 break;
             default:
-                throw new AssertionError("Unknown message type: " + messageType);
+                throw new AssertionError(String.format(UNKNOWN_MESSAGE_TYPE_MESSAGE, messageType));
         }
 
         return gson.toJson(target);
