@@ -24,7 +24,6 @@
         <version>0.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <groupId>io.motown</groupId>
     <artifactId>sample-incoming-datatransfer-handling</artifactId>
     <dependencies>
         <dependency>

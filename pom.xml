@@ -46,6 +46,7 @@
         <module>vas/view-model</module>
         <module>samples/configuration-distributed</module>
         <module>samples/configuration-simple</module>
+        <module>samples/incoming-datatransfer-handling</module>
     </modules>
     <properties>
         <atmosphere.version>2.1.0</atmosphere.version>
