@@ -74,7 +74,6 @@ public class MotownVasPublisherService implements VasPublisherService {
     public GetChargePointInfoResponse getChargePointInfo(@WebParam(partName = "parameters", name = "getChargePointInfoRequest", targetNamespace = VAS_NAMESPACE) GetChargePointInfoRequest parameters, @WebParam(partName = "SubscriberIdentity", name = "subscriberIdentity", targetNamespace = VAS_NAMESPACE, header = true) String subscriberIdentity) {
         LOG.info("GetChargePointInfo {}", subscriberIdentity);
 
-        //TODO: Right now we return info on all chargingstations known in the system (might have to exclude certain chargingstation 'pools') - Ingo Pak, 24 Jan 2014
         GetChargePointInfoResponse response = new GetChargePointInfoResponse();
         if (!subscriptionRepository.findBySubscriberIdentity(subscriberIdentity).isEmpty()) {
             List<ChargePoint> chargePoints = response.getChargePoints();
