@@ -18,13 +18,16 @@ package io.motown.ocpp.websocketjson.response.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
-import io.motown.domain.api.chargingstation.RequestResult;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.ResetResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ResetResponseHandler extends ResponseHandler {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ResetResponseHandler.class);
 
     public ResetResponseHandler(CorrelationToken correlationToken) {
         this.setCorrelationToken(correlationToken);
@@ -33,8 +36,16 @@ public class ResetResponseHandler extends ResponseHandler {
     @Override
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         ResetResponse response = gson.fromJson(wampMessage.getPayloadAsString(), ResetResponse.class);
-        RequestResult requestResult = response.getStatus().equals(ResetResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), "", addOnIdentity);
+        switch (response.getStatus()) {
+            case ACCEPTED:
+                LOG.info("Reset was accepted");
+                break;
+            case REJECTED:
+                LOG.info("Reset was rejected");
+                break;
+            default:
+                throw new AssertionError("Unknown ResetStatus: " + response.getStatus());
+        }
     }
 }
