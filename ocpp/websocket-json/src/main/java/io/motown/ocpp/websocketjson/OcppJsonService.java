@@ -297,7 +297,7 @@ public class OcppJsonService {
         Unlockconnector unlockConnectorRequest = new Unlockconnector();
         unlockConnectorRequest.setConnectorId(evseId.getNumberedId());
 
-        responseHandlers.put(statusCorrelationToken.getToken(), new UnlockConnectorResponseHandler(statusCorrelationToken));
+        responseHandlers.put(statusCorrelationToken.getToken(), new UnlockConnectorResponseHandler(evseId, statusCorrelationToken));
 
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.UNLOCK_CONNECTOR, unlockConnectorRequest);
 
