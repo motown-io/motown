@@ -56,8 +56,8 @@ class RequestDiagnosticsJsonCommandHandler implements JsonCommandHandler {
     public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) throws UserIdentityUnauthorizedException {
         ChargingStationId csId = new ChargingStationId(chargingStationId);
 
-        if (!commandAuthorizationService.isAuthorized(csId, identityContext.getUserIdentity(), RequestClearCacheCommand.class)) {
-            throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), RequestClearCacheCommand.class);
+        if (!commandAuthorizationService.isAuthorized(csId, identityContext.getUserIdentity(), RequestDiagnosticsCommand.class)) {
+            throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), RequestDiagnosticsCommand.class);
         }
 
         try {

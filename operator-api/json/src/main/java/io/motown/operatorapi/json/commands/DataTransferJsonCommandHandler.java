@@ -60,7 +60,7 @@ class DataTransferJsonCommandHandler implements JsonCommandHandler {
         ChargingStationId csId = new ChargingStationId(chargingStationId);
 
         if (!commandAuthorizationService.isAuthorized(csId, identityContext.getUserIdentity(), RequestDataTransferCommand.class)) {
-            throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), RequestChangeConfigurationItemCommand.class);
+            throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), RequestDataTransferCommand.class);
         }
 
         try {
