@@ -74,15 +74,14 @@ public class MotownCentralSystemServiceTest {
         motownCentralSystemService.setContext(mock(WebServiceContext.class));
     }
 
-    @Test
-    public void authorizeAcceptedVerifyResponse() throws InterruptedException, ExecutionException {
+    private void prepareAuthorization(AuthorizationResultStatus expectedStatus) throws InterruptedException, ExecutionException {
         WebServiceContext webServiceContext = mock(WebServiceContext.class);
         MessageContext messageContext = mock(MessageContext.class);
         ContinuationProvider continuationProvider = mock(ContinuationProvider.class);
         Continuation continuation = mock(Continuation.class);
         Future future = mock(Future.class);
         AuthorizationResult authorizationResult = mock(AuthorizationResult.class);
-        when(authorizationResult.getStatus()).thenReturn(AuthorizationResultStatus.ACCEPTED);
+        when(authorizationResult.getStatus()).thenReturn(expectedStatus);
         when(future.isDone()).thenReturn(true);
         when(future.get()).thenReturn(authorizationResult);
         when(continuation.getObject()).thenReturn(future);
@@ -90,6 +89,11 @@ public class MotownCentralSystemServiceTest {
         when(messageContext.get(any())).thenReturn(continuationProvider);
         when(webServiceContext.getMessageContext()).thenReturn(messageContext);
         motownCentralSystemService.setContext(webServiceContext);
+    }
+
+    @Test
+    public void authorizeAcceptedVerifyResponse() throws InterruptedException, ExecutionException {
+        prepareAuthorization(AuthorizationResultStatus.ACCEPTED);
 
         AuthorizeRequest request = new AuthorizeRequest();
         request.setIdTag(IDENTIFYING_TOKEN.getToken());
@@ -100,14 +104,49 @@ public class MotownCentralSystemServiceTest {
     }
 
     @Test
-    public void dataTransferAcceptedVerifyResponse() throws InterruptedException, ExecutionException {
+    public void authorizeInvalidVerifyResponse() throws InterruptedException, ExecutionException {
+        prepareAuthorization(AuthorizationResultStatus.INVALID);
+
+        AuthorizeRequest request = new AuthorizeRequest();
+        request.setIdTag(IDENTIFYING_TOKEN.getToken());
+
+        AuthorizeResponse response = motownCentralSystemService.authorize(request, CHARGING_STATION_ID.getId());
+
+        assertEquals(AuthorizationStatus.INVALID, response.getIdTagInfo().getStatus());
+    }
+
+    @Test
+    public void authorizeBlockedVerifyResponse() throws InterruptedException, ExecutionException {
+        prepareAuthorization(AuthorizationResultStatus.BLOCKED);
+
+        AuthorizeRequest request = new AuthorizeRequest();
+        request.setIdTag(IDENTIFYING_TOKEN.getToken());
+
+        AuthorizeResponse response = motownCentralSystemService.authorize(request, CHARGING_STATION_ID.getId());
+
+        assertEquals(AuthorizationStatus.BLOCKED, response.getIdTagInfo().getStatus());
+    }
+
+    @Test
+    public void authorizeExpiredVerifyResponse() throws InterruptedException, ExecutionException {
+        prepareAuthorization(AuthorizationResultStatus.EXPIRED);
+
+        AuthorizeRequest request = new AuthorizeRequest();
+        request.setIdTag(IDENTIFYING_TOKEN.getToken());
+
+        AuthorizeResponse response = motownCentralSystemService.authorize(request, CHARGING_STATION_ID.getId());
+
+        assertEquals(AuthorizationStatus.EXPIRED, response.getIdTagInfo().getStatus());
+    }
+
+    private void prepareDataTransfer(IncomingDataTransferResultStatus expectedStatus) throws InterruptedException, ExecutionException {
         WebServiceContext webServiceContext = mock(WebServiceContext.class);
         MessageContext messageContext = mock(MessageContext.class);
         ContinuationProvider continuationProvider = mock(ContinuationProvider.class);
         Continuation continuation = mock(Continuation.class);
         Future future = mock(Future.class);
         IncomingDataTransferResult incomingDataTransferResult = mock(IncomingDataTransferResult.class);
-        when(incomingDataTransferResult.getStatus()).thenReturn(IncomingDataTransferResultStatus.ACCEPTED);
+        when(incomingDataTransferResult.getStatus()).thenReturn(expectedStatus);
         when(future.isDone()).thenReturn(true);
         when(future.get()).thenReturn(incomingDataTransferResult);
         when(continuation.getObject()).thenReturn(future);
@@ -115,6 +154,11 @@ public class MotownCentralSystemServiceTest {
         when(messageContext.get(any())).thenReturn(continuationProvider);
         when(webServiceContext.getMessageContext()).thenReturn(messageContext);
         motownCentralSystemService.setContext(webServiceContext);
+    }
+
+    @Test
+    public void dataTransferAcceptedVerifyResponse() throws InterruptedException, ExecutionException {
+        prepareDataTransfer(IncomingDataTransferResultStatus.ACCEPTED);
 
         DataTransferRequest request = new DataTransferRequest();
 
@@ -125,20 +169,7 @@ public class MotownCentralSystemServiceTest {
 
     @Test
     public void dataTransferRejectedVerifyResponse() throws InterruptedException, ExecutionException {
-        WebServiceContext webServiceContext = mock(WebServiceContext.class);
-        MessageContext messageContext = mock(MessageContext.class);
-        ContinuationProvider continuationProvider = mock(ContinuationProvider.class);
-        Continuation continuation = mock(Continuation.class);
-        Future future = mock(Future.class);
-        IncomingDataTransferResult incomingDataTransferResult = mock(IncomingDataTransferResult.class);
-        when(incomingDataTransferResult.getStatus()).thenReturn(IncomingDataTransferResultStatus.REJECTED);
-        when(future.isDone()).thenReturn(true);
-        when(future.get()).thenReturn(incomingDataTransferResult);
-        when(continuation.getObject()).thenReturn(future);
-        when(continuationProvider.getContinuation()).thenReturn(continuation);
-        when(messageContext.get(any())).thenReturn(continuationProvider);
-        when(webServiceContext.getMessageContext()).thenReturn(messageContext);
-        motownCentralSystemService.setContext(webServiceContext);
+        prepareDataTransfer(IncomingDataTransferResultStatus.REJECTED);
 
         DataTransferRequest request = new DataTransferRequest();
 
