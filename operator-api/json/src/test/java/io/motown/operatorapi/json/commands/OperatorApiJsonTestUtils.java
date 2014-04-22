@@ -18,10 +18,13 @@ package io.motown.operatorapi.json.commands;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.security.UserIdentity;
+import io.motown.domain.commandauthorization.CommandAuthorizationService;
 import io.motown.operatorapi.json.gson.*;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -61,5 +64,11 @@ public final class OperatorApiJsonTestUtils {
         when(repo.findOne(CHARGING_STATION_ID_STRING)).thenReturn(registeredStation);
         when(repo.findOne(UNREGISTERED_CHARGING_STATION_ID_STRING)).thenReturn(unregisteredStation);
         return repo;
+    }
+
+    public static CommandAuthorizationService getCommandAuthorizationService() {
+        CommandAuthorizationService commandAuthorizationService = mock(CommandAuthorizationService.class);
+        when(commandAuthorizationService.isAuthorized(any(ChargingStationId.class), any(UserIdentity.class), any(Class.class))).thenReturn(true);
+        return commandAuthorizationService;
     }
 }
