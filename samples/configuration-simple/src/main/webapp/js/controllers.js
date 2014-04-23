@@ -17,6 +17,7 @@ angular.module('demoApp.controllers', []).
     controller('ChargingStationController',
         ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
             $scope.init = function () {
+                $scope.getChargingStations();
                 if(!$scope.chargingStationTimer) {
                     $scope.chargingStationTimer = $scope.startGetChargingStationsTimer();
                 }
@@ -30,7 +31,7 @@ angular.module('demoApp.controllers', []).
             $scope.startGetChargingStationsTimer = function () {
                 return $interval(function () {
                     $scope.getChargingStations();
-                }, 2000);
+                }, 5000);
             };
 
             $scope.getChargingStations = function () {
@@ -416,6 +417,7 @@ angular.module('demoApp.controllers', []).
     controller('TransactionController',
         ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
             $scope.init = function () {
+                $scope.getTransactions();
                 if(!$scope.transactionTimer) {
                     $scope.transactionTimer = $scope.startGetTransactionsTimer();
                 }
@@ -430,7 +432,7 @@ angular.module('demoApp.controllers', []).
             $scope.startGetTransactionsTimer = function () {
                 return $interval(function () {
                     $scope.getTransactions();
-                }, 2000);
+                }, 5000);
             };
 
             $scope.getTransactions = function () {
