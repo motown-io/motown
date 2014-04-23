@@ -18,6 +18,7 @@
     <bean class="io.motown.identificationauthorization.app.AuthorizationEventListener">
         <property name="commandGateway" ref="authorizationCommandGateway" />
         <property name="identificationAuthorizationService" ref="identificationAuthorizationService" />
+        <property name="addOnIdentity" value="1" />
     </bean>
 
     <bean id="identificationAuthorizationService" class="io.motown.identificationauthorization.app.IdentificationAuthorizationService">
