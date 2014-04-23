@@ -17,7 +17,6 @@ package io.motown.operatorapi.viewmodel.persistence.entities;
 
 import io.motown.domain.api.chargingstation.Accessibility;
 import io.motown.domain.api.chargingstation.ComponentStatus;
-import io.motown.domain.api.security.UserIdentity;
 
 import javax.persistence.*;
 import java.util.HashMap;
