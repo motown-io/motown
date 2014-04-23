@@ -113,6 +113,7 @@ public class Ocpp12RequestHandlerTest {
 
     @Test
     public void testChangeChargingStationAvailabilityToInoperativeRequested() {
+        when(client.changeAvailabilityToInoperative(any(ChargingStationId.class), any(EvseId.class))).thenReturn(RequestResult.SUCCESS);
         requestHandler.handle(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).changeAvailabilityToInoperative(CHARGING_STATION_ID, new EvseId(0));
@@ -120,6 +121,7 @@ public class Ocpp12RequestHandlerTest {
 
     @Test
     public void testChangeChargingStationAvailabilityToOperativeRequested() {
+        when(client.changeAvailabilityToOperative(any(ChargingStationId.class), any(EvseId.class))).thenReturn(RequestResult.SUCCESS);
         requestHandler.handle(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).changeAvailabilityToOperative(CHARGING_STATION_ID, new EvseId(0));
@@ -127,6 +129,7 @@ public class Ocpp12RequestHandlerTest {
 
     @Test
     public void testChangeComponentAvailabilityToOperativeRequested() {
+        when(client.changeAvailabilityToOperative(CHARGING_STATION_ID, EVSE_ID)).thenReturn(RequestResult.SUCCESS);
         requestHandler.handle(new ChangeComponentAvailabilityToOperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, ChargingStationComponent.EVSE, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).changeAvailabilityToOperative(CHARGING_STATION_ID, EVSE_ID);
@@ -134,6 +137,7 @@ public class Ocpp12RequestHandlerTest {
 
     @Test
     public void testChangeComponentAvailabilityToInoperativeRequested() {
+        when(client.changeAvailabilityToInoperative(CHARGING_STATION_ID, EVSE_ID)).thenReturn(RequestResult.SUCCESS);
         requestHandler.handle(new ChangeComponentAvailabilityToInoperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, ChargingStationComponent.EVSE, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).changeAvailabilityToInoperative(CHARGING_STATION_ID, EVSE_ID);
