@@ -30,7 +30,6 @@ angular.module('demoApp.controllers', []).
             $scope.startGetChargingStationsTimer = function () {
                 return $interval(function () {
                     $scope.getChargingStations();
-                    $scope.chargingStationTimer = $scope.startGetChargingStationsTimer();
                 }, 2000);
             };
 
@@ -415,7 +414,7 @@ angular.module('demoApp.controllers', []).
             }
         }]).
     controller('TransactionController',
-        ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
+        ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
             $scope.init = function () {
                 if(!$scope.transactionTimer) {
                     $scope.transactionTimer = $scope.startGetTransactionsTimer();
@@ -431,7 +430,6 @@ angular.module('demoApp.controllers', []).
             $scope.startGetTransactionsTimer = function () {
                 return $interval(function () {
                     $scope.getTransactions();
-                    $scope.transactionTimer = $scope.startGetTransactionsTimer();
                 }, 2000);
             };
 
@@ -445,7 +443,7 @@ angular.module('demoApp.controllers', []).
                     $scope.transactions = response;
                 }).error(function() {
                     console.log('Error getting transactions, cancel polling.');
-                    $timeout.cancel($scope.transactionTimer);
+                    $interval.cancel($scope.transactionTimer);
                     delete $scope.transactionTimer;
                 });
             };
