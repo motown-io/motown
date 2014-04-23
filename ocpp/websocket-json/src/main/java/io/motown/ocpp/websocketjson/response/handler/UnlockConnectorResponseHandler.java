@@ -42,10 +42,12 @@ public class UnlockConnectorResponseHandler extends ResponseHandler {
         UnlockconnectorResponse response = gson.fromJson(wampMessage.getPayloadAsString(), UnlockconnectorResponse.class);
         RequestResult requestResult = response.getStatus().equals(UnlockconnectorResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        if(RequestResult.SUCCESS.equals(requestResult)) {
-            domainService.informUnlockEvse(chargingStationId, evseId, getCorrelationToken(), addOnIdentity);
-        } else {
-            LOG.error("Failed to unlock evse {} on chargingstation {}", evseId, chargingStationId.getId());
+        switch (requestResult) {
+            case SUCCESS: domainService.informUnlockEvse(chargingStationId, evseId, getCorrelationToken(), addOnIdentity);
+                break;
+            case FAILURE: LOG.info("Failed to unlock evse {} on chargingstation {}", evseId, chargingStationId.getId());
+                break;
+            default: throw new AssertionError(String.format("Unexpected status {}", requestResult));
         }
     }
 }
