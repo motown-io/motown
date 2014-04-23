@@ -43,11 +43,14 @@ public class UnlockConnectorResponseHandler extends ResponseHandler {
         RequestResult requestResult = response.getStatus().equals(UnlockconnectorResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
         switch (requestResult) {
-            case SUCCESS: domainService.informUnlockEvse(chargingStationId, evseId, getCorrelationToken(), addOnIdentity);
+            case SUCCESS:
+                domainService.informUnlockEvse(chargingStationId, evseId, getCorrelationToken(), addOnIdentity);
                 break;
-            case FAILURE: LOG.info("Failed to unlock evse {} on chargingstation {}", evseId, chargingStationId.getId());
+            case FAILURE:
+                LOG.info("Failed to unlock evse {} on chargingstation {}", evseId, chargingStationId.getId());
                 break;
-            default: throw new AssertionError(String.format("Unexpected status {}", requestResult));
+            default:
+                throw new AssertionError(String.format("Unexpected status {}", requestResult));
         }
     }
 }

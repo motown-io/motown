@@ -64,9 +64,11 @@ public class ChangeAvailabilityResponseHandler extends ResponseHandler {
                     }
                 }
                 break;
-            case REJECTED: LOG.info("Failed to set availability of evse {} on chargingstation {} to {}", evseId, chargingStationId, availabilityType.toString());
+            case REJECTED:
+                LOG.info("Failed to set availability of evse {} on chargingstation {} to {}", evseId, chargingStationId, availabilityType.toString());
                 break;
-            default: throw new AssertionError(String.format("Unexpected status: {}", response.getStatus()));
+            default:
+                throw new AssertionError(String.format("Unexpected status: {}", response.getStatus()));
         }
     }
 }

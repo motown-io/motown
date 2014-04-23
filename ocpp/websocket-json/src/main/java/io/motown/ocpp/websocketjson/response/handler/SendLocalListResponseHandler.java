@@ -48,12 +48,15 @@ public class SendLocalListResponseHandler extends ResponseHandler {
         SendlocallistResponse response = gson.fromJson(wampMessage.getPayloadAsString(), SendlocallistResponse.class);
         RequestResult requestResult = response.getStatus().equals(SendlocallistResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        switch(requestResult) {
-            case SUCCESS: domainService.authorizationListChange(chargingStationId, version, updateType, identifyingTokens, getCorrelationToken(), addOnIdentity);
+        switch (requestResult) {
+            case SUCCESS:
+                domainService.authorizationListChange(chargingStationId, version, updateType, identifyingTokens, getCorrelationToken(), addOnIdentity);
                 break;
-            case FAILURE: LOG.info("Failed to send authorization list to charging station {}", chargingStationId.getId());
+            case FAILURE:
+                LOG.info("Failed to send authorization list to charging station {}", chargingStationId.getId());
                 break;
-            default: throw new AssertionError(String.format("Unexpected status: {}", requestResult));
+            default:
+                throw new AssertionError(String.format("Unexpected status: {}", requestResult));
         }
     }
 }

@@ -36,12 +36,15 @@ public class ClearCacheResponseHandler extends ResponseHandler {
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         ClearcacheResponse response = gson.fromJson(wampMessage.getPayloadAsString(), ClearcacheResponse.class);
 
-        switch(response.getStatus()) {
-            case ACCEPTED: domainService.informCacheCleared(chargingStationId, getCorrelationToken(), addOnIdentity);
+        switch (response.getStatus()) {
+            case ACCEPTED:
+                domainService.informCacheCleared(chargingStationId, getCorrelationToken(), addOnIdentity);
                 break;
-            case REJECTED: LOG.info("Failed to clear cache at charging station {}", chargingStationId.getId());
+            case REJECTED:
+                LOG.info("Failed to clear cache at charging station {}", chargingStationId.getId());
                 break;
-            default: throw new AssertionError(String.format("Unexpected status: {}", response.getStatus()));
+            default:
+                throw new AssertionError(String.format("Unexpected status: {}", response.getStatus()));
         }
     }
 }

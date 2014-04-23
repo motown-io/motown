@@ -37,19 +37,23 @@ public class DataTransferResponseHandler extends ResponseHandler {
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         DatatransferResponse response = gson.fromJson(wampMessage.getPayloadAsString(), DatatransferResponse.class);
 
-        switch(response.getStatus()){
-            case UNKNOWN_VENDOR_ID: LOG.info(String.format("Unknown vendor id for datatransfer request with correlation token %s", getCorrelationToken().getToken()));
+        switch (response.getStatus()) {
+            case UNKNOWN_VENDOR_ID:
+                LOG.info(String.format("Unknown vendor id for datatransfer request with correlation token %s", getCorrelationToken().getToken()));
                 break;
-            case UNKNOWN_MESSAGE_ID: LOG.info(String.format("Unknown message id for datatransfer request with correlation token %s", getCorrelationToken().getToken()));
+            case UNKNOWN_MESSAGE_ID:
+                LOG.info(String.format("Unknown message id for datatransfer request with correlation token %s", getCorrelationToken().getToken()));
                 break;
-            case REJECTED: LOG.info(String.format("Datatransfer request with correlation token %s has been rejected", getCorrelationToken().getToken()));
+            case REJECTED:
+                LOG.info(String.format("Datatransfer request with correlation token %s has been rejected", getCorrelationToken().getToken()));
                 break;
             case ACCEPTED:
                 if (response.getData() != null) {
                     domainService.informDataTransferResponse(chargingStationId, response.getData(), getCorrelationToken(), addOnIdentity);
                 }
                 break;
-            default: throw new AssertionError(String.format("Unexpected status: {}", response.getStatus()));
+            default:
+                throw new AssertionError(String.format("Unexpected status: {}", response.getStatus()));
         }
     }
 }

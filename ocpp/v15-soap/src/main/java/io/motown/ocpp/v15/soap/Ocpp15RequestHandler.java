@@ -94,11 +94,14 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         RequestResult requestResult = chargingStationOcpp15Client.unlockConnector(event.getChargingStationId(), event.getEvseId());
 
         switch (requestResult) {
-            case SUCCESS: domainService.informUnlockEvse(event.getChargingStationId(), event.getEvseId(), statusCorrelationToken, addOnIdentity);
+            case SUCCESS:
+                domainService.informUnlockEvse(event.getChargingStationId(), event.getEvseId(), statusCorrelationToken, addOnIdentity);
                 break;
-            case FAILURE: LOG.info("Failed to unlock evse {} on chargingstation {}", event.getEvseId(), event.getChargingStationId().getId());
+            case FAILURE:
+                LOG.info("Failed to unlock evse {} on chargingstation {}", event.getEvseId(), event.getChargingStationId().getId());
                 break;
-            default: throw new AssertionError(String.format("Unexpected status {}", requestResult));
+            default:
+                throw new AssertionError(String.format("Unexpected status {}", requestResult));
         }
     }
 
@@ -109,11 +112,14 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         RequestResult requestResult = chargingStationOcpp15Client.changeAvailabilityToInoperative(event.getChargingStationId(), chargingStationEvseId);
 
         switch (requestResult) {
-            case SUCCESS: domainService.changeChargingStationAvailabilityToInoperative(event.getChargingStationId(), statusCorrelationToken, addOnIdentity);
+            case SUCCESS:
+                domainService.changeChargingStationAvailabilityToInoperative(event.getChargingStationId(), statusCorrelationToken, addOnIdentity);
                 break;
-            case FAILURE: LOG.info("Failed to set availability of chargingstation {} to inoperative", event.getChargingStationId().getId());
+            case FAILURE:
+                LOG.info("Failed to set availability of chargingstation {} to inoperative", event.getChargingStationId().getId());
                 break;
-            default: throw new AssertionError(String.format("Unexpected status {}", requestResult));
+            default:
+                throw new AssertionError(String.format("Unexpected status {}", requestResult));
         }
     }
 
@@ -124,11 +130,14 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         RequestResult requestResult = chargingStationOcpp15Client.changeAvailabilityToOperative(event.getChargingStationId(), chargingStationEvseId);
 
         switch (requestResult) {
-            case SUCCESS: domainService.changeChargingStationAvailabilityToOperative(event.getChargingStationId(), statusCorrelationToken, addOnIdentity);
+            case SUCCESS:
+                domainService.changeChargingStationAvailabilityToOperative(event.getChargingStationId(), statusCorrelationToken, addOnIdentity);
                 break;
-            case FAILURE: LOG.info("Failed to set availability of chargingstation {} to operative", event.getChargingStationId().getId());
+            case FAILURE:
+                LOG.info("Failed to set availability of chargingstation {} to operative", event.getChargingStationId().getId());
                 break;
-            default: throw new AssertionError(String.format("Unexpected status {}", requestResult));
+            default:
+                throw new AssertionError(String.format("Unexpected status {}", requestResult));
         }
     }
 
@@ -138,11 +147,14 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         RequestResult requestResult = chargingStationOcpp15Client.changeAvailabilityToInoperative(event.getChargingStationId(), (EvseId) event.getComponentId());
 
         switch (requestResult) {
-            case SUCCESS: domainService.changeComponentAvailabilityToInoperative(event.getChargingStationId(), event.getComponentId(), ChargingStationComponent.EVSE, statusCorrelationToken, addOnIdentity);
+            case SUCCESS:
+                domainService.changeComponentAvailabilityToInoperative(event.getChargingStationId(), event.getComponentId(), ChargingStationComponent.EVSE, statusCorrelationToken, addOnIdentity);
                 break;
-            case FAILURE: LOG.info("Failed to set availability of evse {} on chargingstation {} to inoperative", event.getComponentId().getId(), event.getChargingStationId().getId());
+            case FAILURE:
+                LOG.info("Failed to set availability of evse {} on chargingstation {} to inoperative", event.getComponentId().getId(), event.getChargingStationId().getId());
                 break;
-            default: throw new AssertionError(String.format("Unexpected status {}", requestResult));
+            default:
+                throw new AssertionError(String.format("Unexpected status {}", requestResult));
         }
     }
 
@@ -152,11 +164,14 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         RequestResult requestResult = chargingStationOcpp15Client.changeAvailabilityToOperative(event.getChargingStationId(), (EvseId) event.getComponentId());
 
         switch (requestResult) {
-            case SUCCESS: domainService.changeComponentAvailabilityToOperative(event.getChargingStationId(), event.getComponentId(), ChargingStationComponent.EVSE, statusCorrelationToken, addOnIdentity);
+            case SUCCESS:
+                domainService.changeComponentAvailabilityToOperative(event.getChargingStationId(), event.getComponentId(), ChargingStationComponent.EVSE, statusCorrelationToken, addOnIdentity);
                 break;
-            case FAILURE: LOG.info("Failed to set availability of evse {} on chargingstation {} to operative", event.getComponentId().getId(), event.getChargingStationId().getId());
+            case FAILURE:
+                LOG.info("Failed to set availability of evse {} on chargingstation {} to operative", event.getComponentId().getId(), event.getChargingStationId().getId());
                 break;
-            default: throw new AssertionError(String.format("Unexpected status {}", requestResult));
+            default:
+                throw new AssertionError(String.format("Unexpected status {}", requestResult));
         }
     }
 
@@ -239,12 +254,15 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
 
         RequestResult requestResult = chargingStationOcpp15Client.sendAuthorizationList(event.getChargingStationId(), event.getAuthorizationListHash(), event.getAuthorizationListVersion(), event.getAuthorizationList(), event.getUpdateType());
 
-        switch(requestResult) {
-            case SUCCESS: domainService.authorizationListChange(event.getChargingStationId(), event.getAuthorizationListVersion(), event.getUpdateType(), event.getAuthorizationList(), statusCorrelationToken, addOnIdentity);
+        switch (requestResult) {
+            case SUCCESS:
+                domainService.authorizationListChange(event.getChargingStationId(), event.getAuthorizationListVersion(), event.getUpdateType(), event.getAuthorizationList(), statusCorrelationToken, addOnIdentity);
                 break;
-            case FAILURE: LOG.info("Failed to send authorization list to charging station {}", event.getChargingStationId().getId());
+            case FAILURE:
+                LOG.info("Failed to send authorization list to charging station {}", event.getChargingStationId().getId());
                 break;
-            default: throw new AssertionError(String.format("Unexpected status: {}", requestResult));
+            default:
+                throw new AssertionError(String.format("Unexpected status: {}", requestResult));
         }
     }
 
@@ -256,8 +274,9 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
 
         ReservationStatus reservationStatus = chargingStationOcpp15Client.reserveNow(event.getChargingStationId(), event.getEvseId(), event.getIdentifyingToken(), event.getExpiryDate(), event.getParentIdentifyingToken(), reservationIdentifier.getNumber());
 
-        switch(reservationStatus) {
-            case ACCEPTED: domainService.informReserved(event.getChargingStationId(), reservationIdentifier, event.getEvseId(), event.getExpiryDate(), statusCorrelationToken, addOnIdentity);
+        switch (reservationStatus) {
+            case ACCEPTED:
+                domainService.informReserved(event.getChargingStationId(), reservationIdentifier, event.getEvseId(), event.getExpiryDate(), statusCorrelationToken, addOnIdentity);
                 break;
             case FAULTED:
             case OCCUPIED:
@@ -266,7 +285,8 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
                 String reservationStatusMessage = (reservationStatus != null) ? reservationStatus.name() : "";
                 LOG.info("Failed to reserve evse {} on charging station {}: {}", event.getEvseId().getId(), event.getChargingStationId().getId(), reservationStatusMessage);
                 break;
-            default: throw new AssertionError(String.format("Unexpected status: {}", reservationStatus));
+            default:
+                throw new AssertionError(String.format("Unexpected status: {}", reservationStatus));
         }
     }
 
@@ -276,12 +296,15 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
 
         RequestResult requestResult = chargingStationOcpp15Client.cancelReservation(event.getChargingStationId(), ((NumberedReservationId) event.getReservationId()).getNumber());
 
-        switch(requestResult) {
-            case SUCCESS: domainService.informReservationCancelled(event.getChargingStationId(), event.getReservationId(), statusCorrelationToken, addOnIdentity);
+        switch (requestResult) {
+            case SUCCESS:
+                domainService.informReservationCancelled(event.getChargingStationId(), event.getReservationId(), statusCorrelationToken, addOnIdentity);
                 break;
-            case FAILURE: LOG.info("Failed to cancel reservation with reservationId {}", event.getReservationId().getId());
+            case FAILURE:
+                LOG.info("Failed to cancel reservation with reservationId {}", event.getReservationId().getId());
                 break;
-            default: throw new AssertionError(String.format("Unexpected status: {}", requestResult));
+            default:
+                throw new AssertionError(String.format("Unexpected status: {}", requestResult));
         }
     }
 
