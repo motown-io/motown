@@ -17,5 +17,27 @@
 -->
 <h2>Configuration values</h2>
 <div ng-controller="ConfigurationController" ng-init="init()">
-    <a ng-click="testConfigApi()">Test config API</a>
+    <!--<a ng-click="getChargingStationTypes()">Get types</a>-->
+    <table class="table">
+        <thead>
+        <th>Manufacturer</th>
+        <th>Type</th>
+        <th>Evses</th>
+        </thead>
+        <tr ng-repeat="chargingStationType in chargingStationTypes">
+            <td>{{chargingStationType.manufacturer.code}}</td>
+            <td>{{chargingStationType.code}}</td>
+            <td>
+                <div ng-repeat="evse in chargingStationType.evses" style="float: left; width: 340px;">
+                    Evse identifier: {{evse.identifier}}<br/>
+                    <div style="margin-top: 8px; margin-bottom: 8px">
+                        {{evse.connectors.length}} <span ng-if="evse.connectors.length != 1">connectors</span><span ng-if="evse.connectors.length == 1">connector</span>:
+                        <div ng-repeat="connector in evse.connectors">
+                            {{connector.maxAmp}}A, {{connector.phase}}-Phase, {{connector.voltage}}V, {{connector.chargingProtocol}}, {{connector.current}}, {{connector.connectorType}}
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
 </div>

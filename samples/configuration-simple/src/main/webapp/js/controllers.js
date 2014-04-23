@@ -453,16 +453,17 @@ angular.module('demoApp.controllers', []).
     controller('ConfigurationController',
         ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
             $scope.init = function () {
+                $scope.getChargingStationTypes();
             };
 
-            $scope.testConfigApi = function () {
+            $scope.getChargingStationTypes = function () {
                 $http({
-                    url: 'rest/config/connectors',
+                    url: 'rest/config/chargingstationtypes',
                     method: 'GET',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
+                    headers: {'Content-Type': 'application/vnd.io.motown.charging-station-configuration-api-v1+json'},
                     data: ''
                 }).success(function (response) {
-                    console.log('configuration api called');
+                    $scope.chargingStationTypes = response;
                 });
             };
         }]
