@@ -123,7 +123,7 @@ angular.module('demoApp.controllers', []).
                     method: 'POST',
                     headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['RequestStartTransaction', {
-                        'evseId': 1,
+                        'evseId': 2,
                         'identifyingToken': {'token': 'TOKEN'}
                     }]
                 }).success(function (response) {
