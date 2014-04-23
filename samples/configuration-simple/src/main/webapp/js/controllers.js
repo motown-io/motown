@@ -38,7 +38,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations',
                     method: 'GET',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ''
                 }).success(function (response) {
                     $scope.chargingStations = response;
@@ -55,7 +54,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['Register', {
                         'configuration': {
                             'evses': [
@@ -108,7 +106,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['ResetChargingStation', {
                         'type': resetType
                     }]
@@ -121,7 +118,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['RequestStartTransaction', {
                         'evseId': 2,
                         'identifyingToken': {'token': 'TOKEN'}
@@ -135,7 +131,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['UnlockEvse', {
                         'evseId': evseId,
                         'identifyingToken': {'token': 'TOKEN'}
@@ -149,7 +144,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['DataTransfer', {
                         'vendorId': vendorId,
                         'messageId': messageId,
@@ -164,7 +158,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['ChangeConfiguration', {
                         'key': key,
                         'value': value
@@ -178,7 +171,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['RequestDiagnostics', {
                         'targetLocation': targetLocation
                     }]
@@ -191,7 +183,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['RequestGetConfiguration', {
                     }]
                 }).success(function (response) {
@@ -203,7 +194,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['RequestClearCache', {
                     }]
                 }).success(function (response) {
@@ -215,7 +205,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['UpdateFirmware', {
                         'location': location,
                         'retrieveDate': retrieveDate
@@ -229,7 +218,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['RequestAuthorizationListVersion', {
                     }]
                 }).success(function (response) {
@@ -241,7 +229,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['SendAuthorizationList', {
                         'listVersion': listVersion,
                         'updateType': updateType,
@@ -262,7 +249,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['ChangeAvailability', {
                         'evseId': 1,
                         'availability': availabilityType
@@ -276,7 +262,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['RequestReserveNow', {
                         'evseId': evseId,
                         'identifyingToken': identifyingToken,
@@ -291,7 +276,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['RequestCancelReservation', {
                         'reservationId': reservationId
                     }]
@@ -304,7 +288,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['UpdateChargingStationReservable', {
                         'reservable': reservable
                     }]
@@ -317,7 +300,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['PlaceChargingStation', {
                         'coordinates': coordinates,
                         'address': address,
@@ -332,7 +314,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['ImproveChargingStationLocation', {
                         'coordinates': coordinates,
                         'address': address,
@@ -347,7 +328,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['MoveChargingStation', {
                         'coordinates': coordinates,
                         'address': address,
@@ -362,7 +342,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['SetChargingStationOpeningTimes', {
                         'openingTimes': openingTimes
                     }]
@@ -375,7 +354,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['AddChargingStationOpeningTimes', {
                         'openingTimes': openingTimes
                     }]
@@ -388,7 +366,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['GrantPermission', {
                         'commandClass': commandClass,
                         'userIdentity': userIdentity
@@ -403,7 +380,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['RevokePermission', {
                         'commandClass': commandClass,
                         'userIdentity': userIdentity
@@ -439,7 +415,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/transactions',
                     method: 'GET',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ''
                 }).success(function (response) {
                     $scope.transactions = response;
@@ -454,7 +429,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStationId + '/commands',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/vnd.io.motown.operator-api-v1+json'},
                     data: ['RequestStopTransaction', {
                         'id': id
                     }]
@@ -473,7 +447,6 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/config/chargingstationtypes',
                     method: 'GET',
-                    headers: {'Content-Type': 'application/vnd.io.motown.charging-station-configuration-api-v1+json'},
                     data: ''
                 }).success(function (response) {
                     $scope.chargingStationTypes = response;

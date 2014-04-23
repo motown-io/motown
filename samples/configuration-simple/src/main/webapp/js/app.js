@@ -16,6 +16,7 @@
 angular.module('demoApp', ['ngRoute', 'ngCookies', 'demoApp.controllers', 'demoApp.services']).
     config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
         $httpProvider.defaults.headers.common['Accept'] = '*/*';
+        $httpProvider.defaults.headers.post['Content-Type'] = 'application/vnd.io.motown.operator-api-v1+json';
 
         $routeProvider.when('/login', {
             templateUrl: 'pages/login.html',
