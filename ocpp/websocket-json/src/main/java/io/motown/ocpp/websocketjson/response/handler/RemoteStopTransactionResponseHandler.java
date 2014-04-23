@@ -56,7 +56,7 @@ public class RemoteStopTransactionResponseHandler extends ResponseHandler {
                 LOG.info("Remote stop transaction request on {} has been rejected", chargingStationId);
                 break;
             default:
-                throw new AssertionError("Stop transaction returned unknown response status " + response.getStatus());
+                throw new AssertionError(String.format("Unknown stop transaction response status: {}", response.getStatus()));
         }
     }
 }

@@ -58,7 +58,7 @@ public class ReserveNowResponseHandler extends ResponseHandler {
                 LOG.info("Failed to reserve evse {} on charging station {}: {}", evseId.getId(), chargingStationId.getId(), response.getStatus().toString());
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status: {}", response.getStatus()));
+                throw new AssertionError(String.format("Unknown reserve now response status: {}", response.getStatus()));
         }
     }
 }

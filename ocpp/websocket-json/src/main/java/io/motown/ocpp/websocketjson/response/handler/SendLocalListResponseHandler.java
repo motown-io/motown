@@ -56,7 +56,7 @@ public class SendLocalListResponseHandler extends ResponseHandler {
                 LOG.info("Failed to send authorization list to charging station {}", chargingStationId.getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status: {}", requestResult));
+                throw new AssertionError(String.format("Unknown send local list response status: {}", requestResult));
         }
     }
 }

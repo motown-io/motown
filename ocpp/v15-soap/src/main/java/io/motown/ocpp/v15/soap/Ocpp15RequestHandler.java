@@ -101,7 +101,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
                 LOG.info("Failed to unlock evse {} on chargingstation {}", event.getEvseId(), event.getChargingStationId().getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status {}", requestResult));
+                throw new AssertionError(String.format("Unkown unlock evse response status: '{}'", requestResult));
         }
     }
 
@@ -119,7 +119,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
                 LOG.info("Failed to set availability of chargingstation {} to inoperative", event.getChargingStationId().getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status {}", requestResult));
+                throw new AssertionError(String.format("Unkown status for change availability to inoperative: '{}'", requestResult));
         }
     }
 
@@ -137,7 +137,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
                 LOG.info("Failed to set availability of chargingstation {} to operative", event.getChargingStationId().getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status {}", requestResult));
+                throw new AssertionError(String.format("Unkown status for change availability to operative: '{}'", requestResult));
         }
     }
 
@@ -154,7 +154,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
                 LOG.info("Failed to set availability of evse {} on chargingstation {} to inoperative", event.getComponentId().getId(), event.getChargingStationId().getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status {}", requestResult));
+                throw new AssertionError(String.format("Unkown status for change component availability to inoperative: '{}'", requestResult));
         }
     }
 
@@ -171,7 +171,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
                 LOG.info("Failed to set availability of evse {} on chargingstation {} to operative", event.getComponentId().getId(), event.getChargingStationId().getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status {}", requestResult));
+                throw new AssertionError(String.format("Unkown status for change component availability to operative: '{}'", requestResult));
         }
     }
 
@@ -262,7 +262,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
                 LOG.info("Failed to send authorization list to charging station {}", event.getChargingStationId().getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status: {}", requestResult));
+                throw new AssertionError(String.format("Unkown send authorization list response status: '{}'", requestResult));
         }
     }
 
@@ -286,7 +286,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
                 LOG.info("Failed to reserve evse {} on charging station {}: {}", event.getEvseId().getId(), event.getChargingStationId().getId(), reservationStatusMessage);
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status: {}", reservationStatus));
+                throw new AssertionError(String.format("Unkown reserve now response response status: '{}'", reservationStatus));
         }
     }
 
@@ -304,7 +304,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
                 LOG.info("Failed to cancel reservation with reservationId {}", event.getReservationId().getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status: {}", requestResult));
+                throw new AssertionError(String.format("Unkown cancel reservation response status: '{}'", requestResult));
         }
     }
 

@@ -49,7 +49,7 @@ public class CancelReservationResponseHandler extends ResponseHandler {
                 LOG.info("Failed to cancel reservation with reservationId {}", this.reservationId.getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status: {}", response.getStatus()));
+                throw new AssertionError(String.format("Unknown cancel reservation response status: {}", response.getStatus()));
         }
     }
 }
