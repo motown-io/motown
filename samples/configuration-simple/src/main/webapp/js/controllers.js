@@ -22,11 +22,16 @@ angular.module('demoApp.controllers', []).
                 }
             };
 
+            $scope.$on('$destroy', function destroy() {
+                $timeout.cancel($scope.chargingStationTimer);
+                delete $scope.chargingStationTimer;
+            });
+
             $scope.startGetChargingStationsTimer = function () {
                 return $timeout(function () {
                     $scope.getChargingStations();
                     $scope.chargingStationTimer = $scope.startGetChargingStationsTimer();
-                }, 1000);
+                }, 2000);
             };
 
             $scope.getChargingStations = function () {
@@ -40,6 +45,7 @@ angular.module('demoApp.controllers', []).
                 }).error(function () {
                     console.log('Error getting charging stations, cancel polling.');
                     $timeout.cancel($scope.chargingStationTimer);
+                    delete $scope.chargingStationTimer;
                 });
             };
 
@@ -416,11 +422,17 @@ angular.module('demoApp.controllers', []).
                 }
             };
 
+            $scope.$on('$destroy', function destroy() {
+                console.log('Cancelling timer');
+                $timeout.cancel($scope.transactionTimer);
+                delete $scope.transactionTimer;
+            });
+
             $scope.startGetTransactionsTimer = function () {
                 return $timeout(function () {
                     $scope.getTransactions();
                     $scope.transactionTimer = $scope.startGetTransactionsTimer();
-                }, 1000);
+                }, 2000);
             };
 
             $scope.getTransactions = function () {
@@ -434,6 +446,7 @@ angular.module('demoApp.controllers', []).
                 }).error(function() {
                     console.log('Error getting transactions, cancel polling.');
                     $timeout.cancel($scope.transactionTimer);
+                    delete $scope.transactionTimer;
                 });
             };
 
