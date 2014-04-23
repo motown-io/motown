@@ -236,14 +236,15 @@ public class Ocpp15RequestHandlerTest {
     public void testAuthorizationListVersionRequestedEvent() {
         CorrelationToken correlationToken = new CorrelationToken();
 
-        when(client.getAuthorizationListVersion(CHARGING_STATION_ID)).thenReturn(V15SOAPTestUtils.LIST_VERSION);
+        when(client.getAuthorizationListVersion(CHARGING_STATION_ID)).thenReturn(LIST_VERSION);
         requestHandler.handle(new AuthorizationListVersionRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT), correlationToken);
 
-        verify(this.service).authorizationListVersionReceived(CHARGING_STATION_ID, V15SOAPTestUtils.LIST_VERSION, correlationToken, addOnIdentity);
+        verify(this.service).authorizationListVersionReceived(CHARGING_STATION_ID, LIST_VERSION, correlationToken, addOnIdentity);
     }
 
     @Test
     public void testSendAuthorizationListRequestedEvent() {
+        when(client.sendAuthorizationList(any(ChargingStationId.class), anyString(), anyInt(), anyList(), any(AuthorizationListUpdateType.class))).thenReturn(RequestResult.SUCCESS);
         requestHandler.handle(new SendAuthorizationListRequestedEvent(CHARGING_STATION_ID, PROTOCOL, V15SOAPTestUtils.getAuthorizationList(),
                 V15SOAPTestUtils.getAuthorizationListVersion(), V15SOAPTestUtils.getAuthorizationListHash(), V15SOAPTestUtils.getAuthorizationListUpdateType(), ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 

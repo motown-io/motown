@@ -35,7 +35,7 @@ public final class CancelReservationCommand {
     private final IdentityContext identityContext;
 
     /**
-     * Creates a {@code InformRequestResultCommand} with an identifier and new status.
+     * Creates a {@code CancelReservationCommand}.
      *
      * @param chargingStationId   the identifier of the charging station.
      * @param reservationId       the unique reservation identifier.

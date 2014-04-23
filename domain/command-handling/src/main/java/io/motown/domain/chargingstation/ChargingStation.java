@@ -362,6 +362,11 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
+    public void handle(ChangeAuthorizationListCommand command, MetaData metaData) {
+        apply(new AuthorizationListChangedEvent(command.getChargingStationId(), command.getVersion(), command.getUpdateType(), command.getIdentifyingTokens(), command.getIdentityContext()), metaData);
+    }
+
+    @CommandHandler
     public void handle(RequestReserveNowCommand command, MetaData metaData) {
         checkCommandAllowed(command.getIdentityContext(), command.getClass());
 
@@ -408,12 +413,6 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     @CommandHandler
     public void handle(ChargingStationStatusNotificationCommand command) {
         apply(new ChargingStationStatusNotificationReceivedEvent(command.getChargingStationId(), command.getStatus(), command.getTimestamp(), command.getAttributes(), command.getIdentityContext()));
-    }
-
-    @CommandHandler
-    public void handle(InformRequestResultCommand command, MetaData metaData) {
-        apply(new RequestResultEvent(command.getChargingStationId(), command.getStatus(), command.getStatusMessage(), command.getIdentityContext()), metaData);
-
     }
 
     @CommandHandler

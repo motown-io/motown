@@ -192,7 +192,7 @@ public class OcppJsonService {
         sendLocalListRequest.setListVersion(authorizationListVersion);
         sendLocalListRequest.setHash(authorizationListHash);
 
-        responseHandlers.put(statusCorrelationToken.getToken(), new SendLocalListResponseHandler(statusCorrelationToken));
+        responseHandlers.put(statusCorrelationToken.getToken(), new SendLocalListResponseHandler(authorizationListVersion, updateType, authorizationList, statusCorrelationToken));
 
         WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.SEND_LOCALLIST, sendLocalListRequest);
 

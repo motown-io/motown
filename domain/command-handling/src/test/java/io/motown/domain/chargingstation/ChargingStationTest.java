@@ -555,32 +555,36 @@ public class ChargingStationTest {
 
     @Test
     public void testSendAuthorizationList() {
-        final int version = 1;
         final String hash = "4894007260";
 
         fixture.given(CHARGING_STATION)
-                .when(new RequestSendAuthorizationListCommand(CHARGING_STATION_ID, IDENTIFYING_TOKENS, version, hash, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new SendAuthorizationListRequestedEvent(CHARGING_STATION_ID, PROTOCOL, IDENTIFYING_TOKENS, version, hash, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT));
+                .when(new RequestSendAuthorizationListCommand(CHARGING_STATION_ID, IDENTIFYING_TOKENS, LIST_VERSION, hash, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new SendAuthorizationListRequestedEvent(CHARGING_STATION_ID, PROTOCOL, IDENTIFYING_TOKENS, LIST_VERSION, hash, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testSendAuthorizationListToNotAcceptedChargingStation() {
-        final int version = 1;
         final String hash = "4894007260";
 
         fixture.given(UNCONFIGURED_CHARGING_STATION)
-                .when(new RequestSendAuthorizationListCommand(CHARGING_STATION_ID, IDENTIFYING_TOKENS, version, hash, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT))
+                .when(new RequestSendAuthorizationListCommand(CHARGING_STATION_ID, IDENTIFYING_TOKENS, LIST_VERSION, hash, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testSendAuthorizationListToUnconfiguredChargingStation() {
-        final int version = 1;
         final String hash = "4894007260";
 
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
-                .when(new RequestSendAuthorizationListCommand(CHARGING_STATION_ID, IDENTIFYING_TOKENS, version, hash, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT))
+                .when(new RequestSendAuthorizationListCommand(CHARGING_STATION_ID, IDENTIFYING_TOKENS, LIST_VERSION, hash, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void testChangeAuthorizationList() {
+        fixture.given(CHARGING_STATION)
+                .when(new ChangeAuthorizationListCommand(CHARGING_STATION_ID, LIST_VERSION, AuthorizationListUpdateType.FULL, IDENTIFYING_TOKENS, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new AuthorizationListChangedEvent(CHARGING_STATION_ID, LIST_VERSION, AuthorizationListUpdateType.FULL, IDENTIFYING_TOKENS, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
@@ -606,10 +610,9 @@ public class ChargingStationTest {
 
     @Test
     public void testGetAuthorizationListVersionReceived() {
-        int version = 1;
         fixture.given(CHARGING_STATION)
-                .when(new AuthorizationListVersionReceivedCommand(CHARGING_STATION_ID, version, NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new AuthorizationListVersionReceivedEvent(CHARGING_STATION_ID, version, NULL_USER_IDENTITY_CONTEXT));
+                .when(new AuthorizationListVersionReceivedCommand(CHARGING_STATION_ID, LIST_VERSION, NULL_USER_IDENTITY_CONTEXT))
+                .expectEvents(new AuthorizationListVersionReceivedEvent(CHARGING_STATION_ID, LIST_VERSION, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
@@ -670,14 +673,6 @@ public class ChargingStationTest {
         fixture.given(CHARGING_STATION)
                 .when(new CancelReservationCommand(CHARGING_STATION_ID, RESERVATION_ID, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new ReservationCancelledEvent(CHARGING_STATION_ID, RESERVATION_ID, ROOT_IDENTITY_CONTEXT));
-    }
-
-    @Test
-    public void testInformRequestResult() {
-        String statusMessage = "Test message";
-        fixture.given(CHARGING_STATION)
-                .when(new InformRequestResultCommand(CHARGING_STATION_ID, RequestResult.SUCCESS, statusMessage, NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new RequestResultEvent(CHARGING_STATION_ID, RequestResult.SUCCESS, statusMessage, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test

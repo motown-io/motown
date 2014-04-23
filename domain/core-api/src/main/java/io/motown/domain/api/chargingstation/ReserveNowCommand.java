@@ -24,8 +24,7 @@ import java.util.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code InformRequestResultCommand} serves as a base class for commands which will inform about the resulting status of a request
- * that has been sent to the charging station.
+ * {@code ReserveNowCommand} will mark an EVSE as reserved.
  */
 public final class ReserveNowCommand {
 
@@ -41,7 +40,7 @@ public final class ReserveNowCommand {
     private final Date expiryDate;
 
     /**
-     * Creates a {@code InformRequestResultCommand} with an identifier and new status.
+     * Creates a {@code ReserveNowCommand}.
      *
      * @param chargingStationId   the identifier of the charging station.
      * @param reservationId       the unique reservation identifier.

@@ -16,17 +16,30 @@
 package io.motown.ocpp.websocketjson.response.handler;
 
 import com.google.gson.Gson;
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.CorrelationToken;
-import io.motown.domain.api.chargingstation.RequestResult;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.SendlocallistResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class SendLocalListResponseHandler extends ResponseHandler {
 
-    public SendLocalListResponseHandler(CorrelationToken correlationToken) {
+    private static final Logger LOG = LoggerFactory.getLogger(SendLocalListResponseHandler.class);
+
+    private final int version;
+
+    private final AuthorizationListUpdateType updateType;
+
+    private final List<IdentifyingToken> identifyingTokens;
+
+    public SendLocalListResponseHandler(int version, AuthorizationListUpdateType updateType, List<IdentifyingToken> identifyingTokens, CorrelationToken correlationToken) {
+        this.version = version;
+        this.updateType = updateType;
+        this.identifyingTokens = identifyingTokens;
         this.setCorrelationToken(correlationToken);
     }
 
@@ -35,6 +48,12 @@ public class SendLocalListResponseHandler extends ResponseHandler {
         SendlocallistResponse response = gson.fromJson(wampMessage.getPayloadAsString(), SendlocallistResponse.class);
         RequestResult requestResult = response.getStatus().equals(SendlocallistResponse.Status.ACCEPTED) ? RequestResult.SUCCESS : RequestResult.FAILURE;
 
-        domainService.informRequestResult(chargingStationId, requestResult, getCorrelationToken(), response.getStatus().toString(), addOnIdentity);
+        switch(requestResult) {
+            case SUCCESS: domainService.authorizationListChange(chargingStationId, version, updateType, identifyingTokens, getCorrelationToken(), addOnIdentity);
+                break;
+            case FAILURE: LOG.info("Failed to send authorization list to charging station {}", chargingStationId.getId());
+                break;
+            default: throw new AssertionError(String.format("Unexpected status: {}", requestResult));
+        }
     }
 }

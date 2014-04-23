@@ -16,8 +16,8 @@
 package io.motown.ocpp.websocketjson.response.handler;
 
 import com.google.gson.Gson;
+import io.motown.domain.api.chargingstation.AuthorizationListUpdateType;
 import io.motown.domain.api.chargingstation.CorrelationToken;
-import io.motown.domain.api.chargingstation.RequestResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.SendlocallistResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
@@ -26,11 +26,9 @@ import org.junit.Test;
 
 import java.util.UUID;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class SendLocalListResponseHandlerTest {
 
@@ -49,7 +47,7 @@ public class SendLocalListResponseHandlerTest {
 
         token = UUID.randomUUID().toString();
         correlationToken = new CorrelationToken(token);
-        handler = new SendLocalListResponseHandler(correlationToken);
+        handler = new SendLocalListResponseHandler(LIST_VERSION, AuthorizationListUpdateType.FULL, IDENTIFYING_TOKENS, correlationToken);
     }
 
     @Test
@@ -60,7 +58,7 @@ public class SendLocalListResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.SUCCESS, correlationToken, SendlocallistResponse.Status.ACCEPTED.toString(), ADD_ON_IDENTITY);
+        verify(domainService).authorizationListChange(CHARGING_STATION_ID, LIST_VERSION, AuthorizationListUpdateType.FULL, IDENTIFYING_TOKENS, correlationToken, ADD_ON_IDENTITY);
     }
 
     @Test
@@ -71,7 +69,7 @@ public class SendLocalListResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, SendlocallistResponse.Status.FAILED.toString(), ADD_ON_IDENTITY);
+        verifyNoMoreInteractions(domainService);
     }
 
     @Test
@@ -82,7 +80,7 @@ public class SendLocalListResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, SendlocallistResponse.Status.NOT_SUPPORTED.toString(), ADD_ON_IDENTITY);
+        verifyNoMoreInteractions(domainService);
     }
 
     @Test
@@ -93,7 +91,7 @@ public class SendLocalListResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, SendlocallistResponse.Status.HASH_ERROR.toString(), ADD_ON_IDENTITY);
+        verifyNoMoreInteractions(domainService);
     }
 
     @Test
@@ -104,7 +102,7 @@ public class SendLocalListResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verify(domainService).informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, correlationToken, SendlocallistResponse.Status.VERSION_MISMATCH.toString(), ADD_ON_IDENTITY);
+        verifyNoMoreInteractions(domainService);
     }
 
 }

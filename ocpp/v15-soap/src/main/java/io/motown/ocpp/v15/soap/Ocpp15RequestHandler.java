@@ -230,7 +230,13 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
 
         RequestResult requestResult = chargingStationOcpp15Client.sendAuthorizationList(event.getChargingStationId(), event.getAuthorizationListHash(), event.getAuthorizationListVersion(), event.getAuthorizationList(), event.getUpdateType());
 
-        domainService.informRequestResult(event.getChargingStationId(), requestResult, statusCorrelationToken, "", addOnIdentity);
+        switch(requestResult) {
+            case SUCCESS: domainService.authorizationListChange(event.getChargingStationId(), event.getAuthorizationListVersion(), event.getUpdateType(), event.getAuthorizationList(), statusCorrelationToken, addOnIdentity);
+                break;
+            case FAILURE: LOG.info("Failed to send authorization list to charging station {}", event.getChargingStationId().getId());
+                break;
+            default: throw new AssertionError(String.format("Unexpected status: {}", requestResult));
+        }
     }
 
     @Override

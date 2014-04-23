@@ -258,17 +258,6 @@ public class DomainServiceTest {
     }
 
     @Test
-    public void testInformRequestResult() {
-        String statusMessage = "Test message";
-
-        domainService.informRequestResult(CHARGING_STATION_ID, RequestResult.SUCCESS, CORRELATION_TOKEN, statusMessage, ADD_ON_IDENTITY);
-        verify(gateway).send(new InformRequestResultCommand(CHARGING_STATION_ID, RequestResult.SUCCESS, statusMessage, NULL_USER_IDENTITY_CONTEXT), CORRELATION_TOKEN);
-
-        domainService.informRequestResult(CHARGING_STATION_ID, RequestResult.FAILURE, CORRELATION_TOKEN, statusMessage, ADD_ON_IDENTITY);
-        verify(gateway).send(new InformRequestResultCommand(CHARGING_STATION_ID, RequestResult.FAILURE, statusMessage, NULL_USER_IDENTITY_CONTEXT), CORRELATION_TOKEN);
-    }
-
-    @Test
     public void testReceiveConfigurationItems() {
         domainService.receiveConfigurationItems(CHARGING_STATION_ID, CONFIGURATION_ITEMS, ADD_ON_IDENTITY);
         verify(gateway).send(new ReceiveConfigurationItemsCommand(CHARGING_STATION_ID, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT));

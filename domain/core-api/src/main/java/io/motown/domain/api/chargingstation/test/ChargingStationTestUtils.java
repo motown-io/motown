@@ -349,6 +349,11 @@ public final class ChargingStationTestUtils {
             .build();
 
     /**
+     * The default authorization list version.
+     */
+    public static final int LIST_VERSION = 1;
+
+    /**
      * The default list of meter value attributes.
      */
     public static final ImmutableMap<String, String> METER_VALUE_ATTRIBUTES = ImmutableMap.<String, String>builder()

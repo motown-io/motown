@@ -293,52 +293,46 @@ public class DomainService {
         }
     }
 
-    public void informReserved(ChargingStationId chargingStationId, ReservationId reservationId, EvseId evseId, Date expiryDate, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
+    public void informReserved(ChargingStationId chargingStationId, ReservationId reservationId, EvseId evseId, Date expiryDate, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        commandGateway.send(new ReserveNowCommand(chargingStationId, reservationId, evseId, expiryDate, identityContext), statusCorrelationToken);
+        commandGateway.send(new ReserveNowCommand(chargingStationId, reservationId, evseId, expiryDate, identityContext), correlationToken);
     }
 
-    public void informReservationCancelled(ChargingStationId chargingStationId, ReservationId reservationId, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
+    public void informReservationCancelled(ChargingStationId chargingStationId, ReservationId reservationId, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        commandGateway.send(new CancelReservationCommand(chargingStationId, reservationId, identityContext), statusCorrelationToken);
+        commandGateway.send(new CancelReservationCommand(chargingStationId, reservationId, identityContext), correlationToken);
     }
 
-    public void informRequestResult(ChargingStationId chargingStationId, RequestResult requestResult, CorrelationToken statusCorrelationToken, String statusMessage, AddOnIdentity addOnIdentity) {
+    public void informCacheCleared(ChargingStationId chargingStationId, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        commandGateway.send(new InformRequestResultCommand(chargingStationId, requestResult, statusMessage, identityContext), statusCorrelationToken);
+        commandGateway.send(new ClearCacheCommand(chargingStationId, identityContext), correlationToken);
     }
 
-    public void informCacheCleared(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
+    public void changeComponentAvailabilityToOperative(ChargingStationId chargingStationId, ComponentId componentId, ChargingStationComponent component, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        commandGateway.send(new ClearCacheCommand(chargingStationId, identityContext), statusCorrelationToken);
+        commandGateway.send(new ChangeComponentAvailabilityToOperativeCommand(chargingStationId, componentId, component, identityContext), correlationToken);
     }
 
-    public void changeComponentAvailabilityToOperative(ChargingStationId chargingStationId, ComponentId componentId, ChargingStationComponent component, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
+    public void changeComponentAvailabilityToInoperative(ChargingStationId chargingStationId, ComponentId componentId, ChargingStationComponent component, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        commandGateway.send(new ChangeComponentAvailabilityToOperativeCommand(chargingStationId, componentId, component, identityContext), statusCorrelationToken);
+        commandGateway.send(new ChangeComponentAvailabilityToInoperativeCommand(chargingStationId, componentId, component, identityContext), correlationToken);
     }
 
-    public void changeComponentAvailabilityToInoperative(ChargingStationId chargingStationId, ComponentId componentId, ChargingStationComponent component, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
+    public void changeChargingStationAvailabilityToOperative(ChargingStationId chargingStationId, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        commandGateway.send(new ChangeComponentAvailabilityToInoperativeCommand(chargingStationId, componentId, component, identityContext), statusCorrelationToken);
+        commandGateway.send(new ChangeChargingStationAvailabilityToOperativeCommand(chargingStationId, identityContext), correlationToken);
     }
 
-    public void changeChargingStationAvailabilityToOperative(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
+    public void changeChargingStationAvailabilityToInoperative(ChargingStationId chargingStationId, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        commandGateway.send(new ChangeChargingStationAvailabilityToOperativeCommand(chargingStationId, identityContext), statusCorrelationToken);
-    }
-
-    public void changeChargingStationAvailabilityToInoperative(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
-        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
-
-        commandGateway.send(new ChangeChargingStationAvailabilityToInoperativeCommand(chargingStationId, identityContext), statusCorrelationToken);
+        commandGateway.send(new ChangeChargingStationAvailabilityToInoperativeCommand(chargingStationId, identityContext), correlationToken);
     }
 
     /**
@@ -356,16 +350,21 @@ public class DomainService {
         commandGateway.send(new ChangeConfigurationItemCommand(chargingStationId, configurationItem, identityContext), correlationToken);
     }
 
-    public void informDataTransferResponse(ChargingStationId chargingStationId, String data, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
+    public void informDataTransferResponse(ChargingStationId chargingStationId, String data, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        commandGateway.send(new DataTransferResponseCommand(chargingStationId, data, identityContext), statusCorrelationToken);
+        commandGateway.send(new DataTransferResponseCommand(chargingStationId, data, identityContext), correlationToken);
     }
 
-    public void informUnlockEvse(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken statusCorrelationToken, AddOnIdentity addOnIdentity) {
+    public void informUnlockEvse(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        commandGateway.send(new UnlockEvseCommand(chargingStationId, evseId, identityContext), statusCorrelationToken);
+        commandGateway.send(new UnlockEvseCommand(chargingStationId, evseId, identityContext), correlationToken);
+    }
+
+    public void authorizationListChange(ChargingStationId chargingStationId, int version, AuthorizationListUpdateType updateType, List<IdentifyingToken> identifyingTokens, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+        commandGateway.send(new ChangeAuthorizationListCommand(chargingStationId, version, updateType, identifyingTokens, identityContext), correlationToken);
     }
 
     public void setCommandGateway(DomainCommandGateway commandGateway) {

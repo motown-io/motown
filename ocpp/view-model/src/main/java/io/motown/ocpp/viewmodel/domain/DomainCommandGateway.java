@@ -55,13 +55,13 @@ interface DomainCommandGateway {
 
     void send(AuthorizationListVersionReceivedCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
+    void send(ChangeAuthorizationListCommand changeChargingStationAvailabilityToOperativeCommand, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
     void send(IncomingDataTransferCommand command);
 
     void send(DataTransferResponseCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
     void send(StatusNotificationCommand command);
-
-    void send(InformRequestResultCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
     void send(ReserveNowCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 
