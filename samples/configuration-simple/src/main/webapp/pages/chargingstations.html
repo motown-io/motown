@@ -36,7 +36,9 @@
                     <button class="btn btn-default" href="#" ng-click="startTransaction(chargingStation)">start transaction</button>
                     <button class="btn btn-default" href="#" ng-click="changeAvailability(chargingStation)">change availability: operative</button>
                     <button class="btn btn-default" href="#" ng-click="changeAvailability(chargingStation, 'inoperative')">change availability: inoperative</button>
-                    <button class="btn btn-default" href="#" ng-click="unlockEvse(chargingStation, 1)">unlock connector 1</button>
+                    <button class="btn btn-default" href="#" ng-click="unlockEvse(chargingStation, 2)">unlock connector
+                        1
+                    </button>
                     <button class="btn btn-default" href="#" ng-click="dataTransfer(chargingStation, 'Alfen', 'msgXid', 'ABC123')">data transfer test</button>
                     <button class="btn btn-default" href="#" ng-click="changeConfiguration(chargingStation, 'HeartbeatInterval', '10000')">change configuration: heartbeat</button>
                     <button class="btn btn-default" href="#" ng-click="getDiagnostics(chargingStation, 'ftp://nowhere.xyz')">get diagnostics</button>
@@ -45,8 +47,13 @@
                     <button class="btn btn-default" href="#" ng-click="updateFirmware(chargingStation, 'http://somewhere.xyz', '2014-06-01T09:30:00Z')">firmware-update</button>
                     <button class="btn btn-default" href="#" ng-click="getAuthorizationListVersion(chargingStation)">authorization list version</button>
                     <button class="btn btn-default" href="#" ng-click="sendAuthorizationList(chargingStation, 1, 'FULL', [{'token': 'token1', 'status': 'ACCEPTED'}, {'token': 'token2', 'status': 'BLOCKED'}, {'token': 'token3', 'status': 'EXPIRED'}])">send authorization list</button>
-                    <button class="btn btn-default" href="#" ng-click="reserveNow(chargingStation, 1, {'token': 'TOKEN'}, '2014-03-21T09:30:00Z')">reserve now</button>
-                    <button class="btn btn-default" href="#" ng-click="cancelReservation(chargingStation, 1, {'token': 'TOKEN'})">cancel reservation</button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="reserveNow(chargingStation, 2, {'token': 'TOKEN'}, '2014-03-21T09:30:00Z')">
+                        reserve now
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="cancelReservation(chargingStation, 2, {'token': 'TOKEN'})">cancel reservation
+                    </button>
                     <button class="btn btn-default" href="#" ng-click="updateReservable(chargingStation, true)">Set reservable</button>
                     <button class="btn btn-default" href="#" ng-click="updateReservable(chargingStation, false)">Set not reservable</button>
                     <button class="btn btn-default" href="#" ng-click="placeChargingStation(chargingStation, {'latitude': 51.464055, 'longitude': 5.794529}, undefined, 'public')">Place charging station</button>
