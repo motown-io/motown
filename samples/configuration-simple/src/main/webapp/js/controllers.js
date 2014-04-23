@@ -15,7 +15,7 @@
  */
 angular.module('demoApp.controllers', []).
     controller('ChargingStationController',
-        ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
+        ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
             $scope.init = function () {
                 if(!$scope.chargingStationTimer) {
                     $scope.chargingStationTimer = $scope.startGetChargingStationsTimer();
@@ -23,12 +23,12 @@ angular.module('demoApp.controllers', []).
             };
 
             $scope.$on('$destroy', function destroy() {
-                $timeout.cancel($scope.chargingStationTimer);
+                $interval.cancel($scope.chargingStationTimer);
                 delete $scope.chargingStationTimer;
             });
 
             $scope.startGetChargingStationsTimer = function () {
-                return $timeout(function () {
+                return $interval(function () {
                     $scope.getChargingStations();
                     $scope.chargingStationTimer = $scope.startGetChargingStationsTimer();
                 }, 2000);
@@ -44,7 +44,7 @@ angular.module('demoApp.controllers', []).
                     $scope.chargingStations = response;
                 }).error(function () {
                     console.log('Error getting charging stations, cancel polling.');
-                    $timeout.cancel($scope.chargingStationTimer);
+                    $interval.cancel($scope.chargingStationTimer);
                     delete $scope.chargingStationTimer;
                 });
             };
@@ -424,12 +424,12 @@ angular.module('demoApp.controllers', []).
 
             $scope.$on('$destroy', function destroy() {
                 console.log('Cancelling timer');
-                $timeout.cancel($scope.transactionTimer);
+                $interval.cancel($scope.transactionTimer);
                 delete $scope.transactionTimer;
             });
 
             $scope.startGetTransactionsTimer = function () {
-                return $timeout(function () {
+                return $interval(function () {
                     $scope.getTransactions();
                     $scope.transactionTimer = $scope.startGetTransactionsTimer();
                 }, 2000);
@@ -464,7 +464,7 @@ angular.module('demoApp.controllers', []).
             };
         }]).
     controller('ConfigurationController',
-        ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
+        ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
             $scope.init = function () {
                 $scope.getChargingStationTypes();
             };
