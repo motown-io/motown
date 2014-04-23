@@ -203,7 +203,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         if (result) {
             domainService.informCacheCleared(event.getChargingStationId(), statusCorrelationToken, addOnIdentity);
         } else {
-            LOG.error("Unable to clear cache for [{}]", event.getChargingStationId());
+            LOG.info("Unable to clear cache for [{}]", event.getChargingStationId());
         }
     }
 
