@@ -32,7 +32,7 @@
     <dependencies>
         <dependency>
             <groupId>io.motown</groupId>
-            <artifactId>sample-incoming-datatransfer-handling</artifactId>
+            <artifactId>samples-incoming-datatransfer-handling</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

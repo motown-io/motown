@@ -44,10 +44,7 @@
         <module>chargingstation-configuration/view-model</module>
         <module>vas/v10-soap</module>
         <module>vas/view-model</module>
-        <module>samples/configuration-distributed</module>
-        <module>samples/configuration-simple</module>
-        <module>samples/incoming-datatransfer-handling</module>
-        <module>samples/authentication</module>
+        <module>samples</module>
     </modules>
     <properties>
         <atmosphere.version>2.1.0</atmosphere.version>

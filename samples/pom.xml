@@ -27,6 +27,7 @@
     <artifactId>samples</artifactId>
     <packaging>pom</packaging>
     <modules>
+        <module>authentication</module>
         <module>configuration-distributed</module>
         <module>configuration-simple</module>
         <module>incoming-datatransfer-handling</module>

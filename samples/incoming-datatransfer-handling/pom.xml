@@ -24,7 +24,7 @@
         <version>0.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>sample-incoming-datatransfer-handling</artifactId>
+    <artifactId>samples-incoming-datatransfer-handling</artifactId>
     <dependencies>
         <dependency>
             <groupId>com.google.guava</groupId>
