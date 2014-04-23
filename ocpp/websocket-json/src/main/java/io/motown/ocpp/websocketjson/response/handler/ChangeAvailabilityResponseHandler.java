@@ -28,8 +28,6 @@ import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static io.motown.ocpp.websocketjson.schema.generated.v15.ChangeavailabilityResponse.Status;
-
 public class ChangeAvailabilityResponseHandler extends ResponseHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(ChangeAvailabilityResponseHandler.class);
@@ -48,24 +46,27 @@ public class ChangeAvailabilityResponseHandler extends ResponseHandler {
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         ChangeavailabilityResponse response = gson.fromJson(wampMessage.getPayloadAsString(), ChangeavailabilityResponse.class);
 
-        if (Status.ACCEPTED.equals(response.getStatus()) || Status.SCHEDULED.equals(response.getStatus())) {
-            //Upon a successfull change in availability we inform about the new state the evse is in
-            if (Changeavailability.Type.INOPERATIVE.equals(availabilityType)) {
-                if (evseId.getNumberedId() == 0) {
-                    domainService.changeChargingStationAvailabilityToInoperative(chargingStationId, getCorrelationToken(), addOnIdentity);
+        switch (response.getStatus()) {
+            case ACCEPTED:
+            case SCHEDULED:
+                //Upon a successfull change in availability we inform about the new state the evse is in
+                if (Changeavailability.Type.INOPERATIVE.equals(availabilityType)) {
+                    if (evseId.getNumberedId() == 0) {
+                        domainService.changeChargingStationAvailabilityToInoperative(chargingStationId, getCorrelationToken(), addOnIdentity);
+                    } else {
+                        domainService.changeComponentAvailabilityToInoperative(chargingStationId, evseId, ChargingStationComponent.EVSE, getCorrelationToken(), addOnIdentity);
+                    }
                 } else {
-                    domainService.changeComponentAvailabilityToInoperative(chargingStationId, evseId, ChargingStationComponent.EVSE, getCorrelationToken(), addOnIdentity);
+                    if (evseId.getNumberedId() == 0) {
+                        domainService.changeChargingStationAvailabilityToOperative(chargingStationId, getCorrelationToken(), addOnIdentity);
+                    } else {
+                        domainService.changeComponentAvailabilityToOperative(chargingStationId, evseId, ChargingStationComponent.EVSE, getCorrelationToken(), addOnIdentity);
+                    }
                 }
-            } else {
-                if (evseId.getNumberedId() == 0) {
-                    domainService.changeChargingStationAvailabilityToOperative(chargingStationId, getCorrelationToken(), addOnIdentity);
-                } else {
-                    domainService.changeComponentAvailabilityToOperative(chargingStationId, evseId, ChargingStationComponent.EVSE, getCorrelationToken(), addOnIdentity);
-                }
-            }
-        } else {
-            LOG.error("Failed to set availability of evse {} on chargingstation {} to {}", evseId, chargingStationId, availabilityType.toString());
+                break;
+            case REJECTED: LOG.info("Failed to set availability of evse {} on chargingstation {} to {}", evseId, chargingStationId, availabilityType.toString());
+                break;
+            default: throw new AssertionError(String.format("Unexpected status: {}", response.getStatus()));
         }
-
     }
 }

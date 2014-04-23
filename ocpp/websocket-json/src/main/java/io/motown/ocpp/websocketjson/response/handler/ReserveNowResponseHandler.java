@@ -47,10 +47,16 @@ public class ReserveNowResponseHandler extends ResponseHandler {
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         ReservenowResponse response = gson.fromJson(wampMessage.getPayloadAsString(), ReservenowResponse.class);
 
-        if(ReservenowResponse.Status.ACCEPTED.equals(response.getStatus())) {
-            domainService.informReserved(chargingStationId, reservationId, evseId, expiryDate, getCorrelationToken(), addOnIdentity);
-        } else {
-            LOG.error("Failed to reserve evse {} on charging station {}: {}", evseId.getId(), chargingStationId.getId(), response.getStatus().toString());
+        switch(response.getStatus()) {
+            case ACCEPTED: domainService.informReserved(chargingStationId, reservationId, evseId, expiryDate, getCorrelationToken(), addOnIdentity);
+                break;
+            case REJECTED:
+            case FAULTED:
+            case OCCUPIED:
+            case UNAVAILABLE:
+                LOG.info("Failed to reserve evse {} on charging station {}: {}", evseId.getId(), chargingStationId.getId(), response.getStatus().toString());
+                break;
+            default: throw new AssertionError(String.format("Unexpected status: {}", response.getStatus()));
         }
     }
 }

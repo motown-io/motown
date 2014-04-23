@@ -22,8 +22,11 @@ import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.ClearcacheResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ClearCacheResponseHandler extends ResponseHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(ClearCacheResponseHandler.class);
 
     public ClearCacheResponseHandler(CorrelationToken correlationToken) {
         this.setCorrelationToken(correlationToken);
@@ -33,8 +36,12 @@ public class ClearCacheResponseHandler extends ResponseHandler {
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         ClearcacheResponse response = gson.fromJson(wampMessage.getPayloadAsString(), ClearcacheResponse.class);
 
-        if (response.getStatus() == ClearcacheResponse.Status.ACCEPTED) {
-            domainService.informCacheCleared(chargingStationId, getCorrelationToken(), addOnIdentity);
+        switch(response.getStatus()) {
+            case ACCEPTED: domainService.informCacheCleared(chargingStationId, getCorrelationToken(), addOnIdentity);
+                break;
+            case REJECTED: LOG.info("Failed to clear cache at charging station {}", chargingStationId.getId());
+                break;
+            default: throw new AssertionError(String.format("Unexpected status: {}", response.getStatus()));
         }
     }
 }

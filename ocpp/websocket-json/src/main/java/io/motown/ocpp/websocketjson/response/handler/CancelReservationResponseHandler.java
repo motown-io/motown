@@ -41,10 +41,12 @@ public class CancelReservationResponseHandler extends ResponseHandler {
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         CancelreservationResponse response = gson.fromJson(wampMessage.getPayloadAsString(), CancelreservationResponse.class);
 
-        if(CancelreservationResponse.Status.ACCEPTED.equals(response.getStatus())) {
-            domainService.informReservationCancelled(chargingStationId, this.reservationId, getCorrelationToken(), addOnIdentity);
-        } else {
-            LOG.error("Failed to cancel reservation with reservationId {}", this.reservationId.getId());
+        switch(response.getStatus()) {
+            case ACCEPTED: domainService.informReservationCancelled(chargingStationId, this.reservationId, getCorrelationToken(), addOnIdentity);
+                break;
+            case REJECTED: LOG.info("Failed to cancel reservation with reservationId {}", this.reservationId.getId());
+                break;
+            default: throw new AssertionError(String.format("Unexpected status: {}", response.getStatus()));
         }
     }
 }
