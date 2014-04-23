@@ -54,12 +54,6 @@ public class ChargingStation {
     @MapKeyColumn
     private Map<String, String> configurationItems = new HashMap<>();
 
-    /**
-     * Map of identities with command classes the identity is authorized to execute.
-     */
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = CommandClasses.class)
-    private Map<String, CommandClasses> authorizations = new HashMap<>();
-
     private ChargingStation() {
         // Private no-arg constructor for Hibernate.
     }
@@ -219,17 +213,4 @@ public class ChargingStation {
         return configurationItems;
     }
 
-    public Map<String, CommandClasses> getAuthorizations() {
-        return authorizations;
-    }
-
-    public void setAuthorizations(Map<String, CommandClasses> authorizations) {
-        this.authorizations = authorizations;
-    }
-
-    public boolean hasAuthorization(UserIdentity userIdentity, Class commandClass) {
-        CommandClasses userCommandClasses = this.authorizations.get(userIdentity.getId());
-
-        return userCommandClasses != null && userCommandClasses.getCommandClasses().contains(commandClass);
-    }
 }
