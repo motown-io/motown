@@ -37,9 +37,9 @@ public class TokenUtils {
     private static final String TOKEN_SEPARATOR = ":";
 
     /**
-     * Valid for one hour.
+     * Valid for 24 hours.
      */
-    private static final long TOKEN_VALIDITY_DURATION = 1000L * 60 * 60;
+    private static final long TOKEN_VALIDITY_DURATION = 24000L * 60 * 60;
 
     private TokenUtils() {
         // Hidden constructor to prevent instantiation of a utility class.
