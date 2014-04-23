@@ -22,10 +22,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.UNKNOWN_CHARGING_STATION_ID;
 
 public class SendAuthorizationListJsonCommandHandlerTest {
 
-    public static final String CHARGING_STATION_ID = "TEST_CP";
     private Gson gson;
 
     private SendAuthorizationListJsonCommandHandler handler = new SendAuthorizationListJsonCommandHandler();
@@ -36,31 +36,38 @@ public class SendAuthorizationListJsonCommandHandlerTest {
 
         handler.setGson(gson);
         handler.setCommandGateway(new TestDomainCommandGateway());
+        handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
         handler.setCommandAuthorizationService(OperatorApiJsonTestUtils.getCommandAuthorizationService());
     }
 
     @Test
     public void testSendAuthorizationListCommand() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'FULL',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID, commandObject, ROOT_IDENTITY_CONTEXT);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test
     public void testDifferentialUpdateType() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'DIFFERENTIAL',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID, commandObject, ROOT_IDENTITY_CONTEXT);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidUpdateType() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'NEW',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID, commandObject, ROOT_IDENTITY_CONTEXT);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidAuthenticationStatus() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'FULL',items:[{token:'1',status:'NEW'}]}", JsonObject.class);
-        handler.handle(CHARGING_STATION_ID, commandObject, ROOT_IDENTITY_CONTEXT);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void handleWithNullChargingStation() throws UserIdentityUnauthorizedException {
+        JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'DIFFERENTIAL',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
+        handler.handle(UNKNOWN_CHARGING_STATION_ID.getId(), commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
 }

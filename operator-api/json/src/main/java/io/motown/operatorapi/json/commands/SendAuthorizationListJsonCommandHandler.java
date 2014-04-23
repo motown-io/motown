@@ -24,6 +24,8 @@ import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.commandauthorization.CommandAuthorizationService;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.model.SendAuthorizationListApiCommand;
+import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
+import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
 import java.util.List;
 
@@ -32,6 +34,8 @@ class SendAuthorizationListJsonCommandHandler implements JsonCommandHandler {
     private static final String COMMAND_NAME = "SendAuthorizationList";
 
     private DomainCommandGateway commandGateway;
+
+    private ChargingStationRepository repository;
 
     private Gson gson;
 
@@ -65,9 +69,13 @@ class SendAuthorizationListJsonCommandHandler implements JsonCommandHandler {
 
             AuthorizationListUpdateType updateType = AuthorizationListUpdateType.valueOf(command.getUpdateType());
 
-            // TODO other command handlers check if a charging station exists in the repository, why is that not done here? - Mark van den Bergh, Februari 26th 2014
-            // TODO enable usage of hash in API - Dennis Laumen, January 13th 2014
-            commandGateway.send(new RequestSendAuthorizationListCommand(csId, authorizationList, command.getListVersion(), "", updateType, identityContext), new CorrelationToken());
+            ChargingStation chargingStation = repository.findOne(chargingStationId);
+            if (chargingStation != null && chargingStation.isAccepted()) {
+                // TODO enable usage of hash in API - Dennis Laumen, January 13th 2014
+                commandGateway.send(new RequestSendAuthorizationListCommand(csId, authorizationList, command.getListVersion(), "", updateType, identityContext), new CorrelationToken());
+            } else {
+                throw new IllegalStateException("It is not possible to send a authorization list to a charging station that is not registered");
+            }
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("SendAuthorizationList command not able to parse the payload, is your json correctly formatted ?", ex);
         }
@@ -80,6 +88,15 @@ class SendAuthorizationListJsonCommandHandler implements JsonCommandHandler {
      */
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
+    }
+
+    /**
+     * Sets the charging station repository.
+     *
+     * @param repository the charging station repository.
+     */
+    public void setRepository(ChargingStationRepository repository) {
+        this.repository = repository;
     }
 
     /**

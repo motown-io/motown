@@ -142,7 +142,7 @@
         <bean class="io.motown.operatorapi.json.commands.SendAuthorizationListJsonCommandHandler">
             <property name="commandGateway" ref="domainCommandGateway"/>
             <property name="gson" ref="gson"/>
-            <!--<property name="repository" ref="chargingStationRepository" />-->
+            <property name="repository" ref="chargingStationRepository"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.SetChargingStationOpeningTimesJsonCommandHandler">
             <property name="commandGateway" ref="domainCommandGateway"/>
