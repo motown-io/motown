@@ -105,6 +105,7 @@ public class Ocpp12RequestHandlerTest {
 
     @Test
     public void testUnlockEvseRequestedEvent() {
+        when(client.unlockConnector(CHARGING_STATION_ID, EVSE_ID)).thenReturn(RequestResult.SUCCESS);
         requestHandler.handle(new UnlockEvseRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).unlockConnector(CHARGING_STATION_ID, EVSE_ID);
