@@ -61,7 +61,8 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
         ChargingStationId csId = new ChargingStationId(chargingStationId);
 
         if (chargingStation == null) {
-            if (!commandAuthorizationService.isAuthorized(csId, identityContext.getUserIdentity(), CreateAndAcceptChargingStationCommand.class)) {
+            // charging station doesn't exist yet, check if the user identity is allowed to create/maintain charging stations
+            if (!userIdentitiesWithAllPermissions.contains(identityContext.getUserIdentity())) {
                 throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), CreateAndAcceptChargingStationCommand.class);
             }
 
