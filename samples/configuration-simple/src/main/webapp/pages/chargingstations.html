@@ -19,14 +19,18 @@
 <div ng-controller="ChargingStationController" ng-init="init()">
     <table class="table">
         <thead>
-        <th>Charging Station</th>
-        <th>Last contact</th>
-        <th>Actions</th>
+        <tr>
+            <th>Charging Station</th>
+            <th>Last contact</th>
+            <th>Actions</th>
+            <th style="text-align:right;"><a href="" ng-click="showEvses = !showEvses"><span ng-show="!showEvses">+</span><span ng-show="showEvses">-</span> Evses</a></th>
+        </tr>
         </thead>
+        <tbody>
         <tr ng-repeat="chargingStation in chargingStations">
             <td>{{chargingStation.id}}</td>
             <td>{{chargingStation.lastContact | date:'dd/MM/yyyy hh:mm'}}</td>
-            <td>
+            <td colspan="2">
                 <div ng-if="!chargingStation.accepted" >
                     <button class="btn btn-default" href="#" ng-click="registerChargingStation(chargingStation)">register</button>
                 </div>
@@ -36,9 +40,6 @@
                     <button class="btn btn-default" href="#" ng-click="startTransaction(chargingStation)">start transaction</button>
                     <button class="btn btn-default" href="#" ng-click="changeAvailability(chargingStation)">change availability: operative</button>
                     <button class="btn btn-default" href="#" ng-click="changeAvailability(chargingStation, 'inoperative')">change availability: inoperative</button>
-                    <button class="btn btn-default" href="#" ng-click="unlockEvse(chargingStation, 2)">unlock connector
-                        1
-                    </button>
                     <button class="btn btn-default" href="#" ng-click="dataTransfer(chargingStation, 'Alfen', 'msgXid', 'ABC123')">data transfer test</button>
                     <button class="btn btn-default" href="#" ng-click="changeConfiguration(chargingStation, 'HeartbeatInterval', '10000')">change configuration: heartbeat</button>
                     <button class="btn btn-default" href="#" ng-click="getDiagnostics(chargingStation, 'ftp://nowhere.xyz')">get diagnostics</button>
@@ -69,8 +70,28 @@
                     <button class="btn btn-default" href="#" ng-click="addOpeningTimes(chargingStation, [{'day': 'tuesday', 'timeStart': '8:30', timeStop: '17:00'}])">Add opening times</button>
                     <button class="btn btn-default" href="#" ng-click="grantPermission(chargingStation, 'io.motown.domain.api.chargingstation.AddChargingStationOpeningTimesCommand', 'testUser')">Grant permission</button>
                     <button class="btn btn-default" href="#" ng-click="revokePermission(chargingStation, 'io.motown.domain.api.chargingstation.AddChargingStationOpeningTimesCommand', 'testUser')">Revoke permission</button>
+
+                    <table ng-show="showEvses">
+                        <thead>
+                        <tr>
+                            <th>EvseId</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="evse in chargingStation.evses | orderBy:evseId">
+                            <td>{{evse.evseId}}</td>
+                            <td>
+                                <div>
+                                    <button class="btn btn-default" href="#" ng-click="unlockEvse(chargingStation, evse.evseId)">Unlock Evse</button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </td>
         </tr>
+        </tbody>
     </table>
 </div>
