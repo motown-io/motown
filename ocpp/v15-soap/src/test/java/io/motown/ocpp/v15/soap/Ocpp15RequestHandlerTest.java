@@ -120,6 +120,7 @@ public class Ocpp15RequestHandlerTest {
 
     @Test
     public void testChangeChargingStationAvailabilityToInoperativeRequested() {
+        when(client.changeAvailabilityToInoperative(any(ChargingStationId.class), any(EvseId.class))).thenReturn(RequestResult.SUCCESS);
         requestHandler.handle(new ChangeChargingStationAvailabilityToInoperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).changeAvailabilityToInoperative(CHARGING_STATION_ID, new EvseId(0));
@@ -127,6 +128,7 @@ public class Ocpp15RequestHandlerTest {
 
     @Test
     public void testChangeChargingStationAvailabilityToOperativeRequested() {
+        when(client.changeAvailabilityToOperative(any(ChargingStationId.class), any(EvseId.class))).thenReturn(RequestResult.SUCCESS);
         requestHandler.handle(new ChangeChargingStationAvailabilityToOperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).changeAvailabilityToOperative(CHARGING_STATION_ID, new EvseId(0));
@@ -134,6 +136,7 @@ public class Ocpp15RequestHandlerTest {
 
     @Test
     public void testChangeComponentAvailabilityToOperativeRequested() {
+        when(client.changeAvailabilityToOperative(CHARGING_STATION_ID, EVSE_ID)).thenReturn(RequestResult.SUCCESS);
         requestHandler.handle(new ChangeComponentAvailabilityToOperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, ChargingStationComponent.EVSE, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).changeAvailabilityToOperative(CHARGING_STATION_ID, EVSE_ID);
@@ -141,6 +144,7 @@ public class Ocpp15RequestHandlerTest {
 
     @Test
     public void testChangeComponentAvailabilityToInoperativeRequested() {
+        when(client.changeAvailabilityToInoperative(CHARGING_STATION_ID, EVSE_ID)).thenReturn(RequestResult.SUCCESS);
         requestHandler.handle(new ChangeComponentAvailabilityToInoperativeRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, ChargingStationComponent.EVSE, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).changeAvailabilityToInoperative(CHARGING_STATION_ID, EVSE_ID);
@@ -158,6 +162,7 @@ public class Ocpp15RequestHandlerTest {
     @Test
     public void testReserveNowRequestedEvent() {
         Date expiryDate = new Date();
+        when(client.reserveNow(any(ChargingStationId.class), any(EvseId.class), any(IdentifyingToken.class), any(Date.class), any(IdentifyingToken.class), anyInt())).thenReturn(ReservationStatus.ACCEPTED);
         requestHandler.handle(new ReserveNowRequestedEvent(CHARGING_STATION_ID, PROTOCOL, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, null, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).reserveNow(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, expiryDate, null, RESERVATION_ID.getNumber());
@@ -165,6 +170,7 @@ public class Ocpp15RequestHandlerTest {
 
     @Test
     public void testCancelReservationRequestedEvent() {
+        when(client.cancelReservation(CHARGING_STATION_ID, RESERVATION_ID.getNumber())).thenReturn(RequestResult.SUCCESS);
         requestHandler.handle(new CancelReservationRequestedEvent(CHARGING_STATION_ID, PROTOCOL, RESERVATION_ID, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).cancelReservation(CHARGING_STATION_ID, RESERVATION_ID.getNumber());
