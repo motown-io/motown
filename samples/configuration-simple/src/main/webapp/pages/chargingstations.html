@@ -21,7 +21,7 @@
         <thead>
         <tr>
             <th>Charging Station</th>
-            <th>Last contact</th>
+            <th>Status</th>
             <th>Actions</th>
             <th style="text-align:right;"><a href="" ng-click="showEvses = !showEvses"><span ng-show="!showEvses">+</span><span ng-show="showEvses">-</span> Evses</a></th>
         </tr>
@@ -29,7 +29,7 @@
         <tbody>
         <tr ng-repeat="chargingStation in chargingStations">
             <td>{{chargingStation.id}}</td>
-            <td>{{chargingStation.lastContact | date:'dd/MM/yyyy hh:mm'}}</td>
+            <td>{{chargingStation.status}}</td>
             <td colspan="2">
                 <div ng-if="!chargingStation.accepted" >
                     <button class="btn btn-default" href="#" ng-click="registerChargingStation(chargingStation)">register</button>
@@ -75,12 +75,14 @@
                         <thead>
                         <tr>
                             <th>EvseId</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="evse in chargingStation.evses | orderBy:evseId">
+                        <tr ng-repeat="evse in chargingStation.evses | orderBy:+evseId">
                             <td>{{evse.evseId}}</td>
+                            <td>{{evse.status}}</td>
                             <td>
                                 <div>
                                     <button class="btn btn-default" href="#" ng-click="unlockEvse(chargingStation, evse.evseId)">Unlock Evse</button>
