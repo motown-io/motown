@@ -128,15 +128,6 @@ public class DomainService {
     }
 
     /**
-     * Create a connector.
-     *
-     * @param connector the entity to be persisted.
-     */
-    public Connector createConnector(Connector connector) {
-        return connectorRepository.createOrUpdate(connector);
-    }
-
-    /**
      * Update a connector.
      *
      * @param id the id of the entity to find.

@@ -50,21 +50,6 @@ public class ConnectorResourceTest {
     }
 
     @Test
-    public void testCreateConnector() {
-        Response response = resource.createConnector(any(Connector.class));
-        verify(repository).createOrUpdate(any(Connector.class));
-
-        assertNotNull(response);
-        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testCreateConnectorThrowsException() {
-        doThrow(mock(PersistenceException.class)).when(repository).createOrUpdate(any(Connector.class));
-        resource.createConnector(any(Connector.class));
-    }
-
-    @Test
     public void testUpdateConnector() {
         Connector connector = mock(Connector.class);
         when(connector.getId()).thenReturn(1L);

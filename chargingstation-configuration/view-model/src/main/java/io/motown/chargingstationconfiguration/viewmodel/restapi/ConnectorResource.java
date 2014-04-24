@@ -27,12 +27,6 @@ public final class ConnectorResource {
 
     private DomainService domainService;
 
-    @POST
-    @Consumes(ApiVersion.V1_JSON)
-    public Response createConnector(Connector connector) {
-        return Response.status(Response.Status.CREATED).entity(domainService.createConnector(connector)).build();
-    }
-
     @PUT
     @Path("/{id: [0-9]+}")
     @Consumes(ApiVersion.V1_JSON)
