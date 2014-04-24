@@ -44,7 +44,7 @@ public class ClearCacheResponseHandler extends ResponseHandler {
                 LOG.info("Failed to clear cache at charging station {}", chargingStationId.getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unknown clear cache response status: {}", response.getStatus()));
+                throw new AssertionError(String.format("Unknown clear cache response status: %s", response.getStatus()));
         }
     }
 }
