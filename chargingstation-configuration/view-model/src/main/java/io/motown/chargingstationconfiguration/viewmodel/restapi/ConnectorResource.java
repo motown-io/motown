@@ -35,11 +35,6 @@ public final class ConnectorResource {
     }
 
     @GET
-    public Response getConnectors() {
-        return Response.ok(domainService.getConnectors()).build();
-    }
-
-    @GET
     @Path("/{id: [0-9]+}")
     public Response getConnector(@PathParam("id") Long id) {
         return Response.ok(domainService.getConnector(id)).build();

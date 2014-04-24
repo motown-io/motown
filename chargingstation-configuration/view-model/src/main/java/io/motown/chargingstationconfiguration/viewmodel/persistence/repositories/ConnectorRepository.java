@@ -43,10 +43,6 @@ public class ConnectorRepository {
         }
     }
 
-    public List<Connector> findAll() {
-        return entityManager.createQuery("SELECT c FROM Connector c", Connector.class).getResultList();
-    }
-
     public Connector findOne(Long id) {
         Connector connector = entityManager.find(Connector.class, id);
         if (connector != null) {

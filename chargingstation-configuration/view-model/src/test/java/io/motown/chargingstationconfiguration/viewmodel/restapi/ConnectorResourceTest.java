@@ -69,21 +69,6 @@ public class ConnectorResourceTest {
     }
 
     @Test
-    public void testGetConnectors() {
-        Response response = resource.getConnectors();
-        verify(repository).findAll();
-
-        assertNotNull(response);
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testGetConnectorsThrowsException() {
-        when(repository.findAll()).thenThrow(mock(PersistenceException.class));
-        resource.getConnectors();
-    }
-
-    @Test
     public void testGetConnector() {
         Response response = resource.getConnector(anyLong());
         verify(repository).findOne(anyLong());

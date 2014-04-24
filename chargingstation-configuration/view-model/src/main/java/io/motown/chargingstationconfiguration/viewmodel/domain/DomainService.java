@@ -139,15 +139,6 @@ public class DomainService {
     }
 
     /**
-     * Find all connectors.
-     *
-     * @return a list of connectors.
-     */
-    public List<Connector> getConnectors() {
-        return connectorRepository.findAll();
-    }
-
-    /**
      * Find a connector based on its id.
      *
      * @param id the id of the entity to find.
