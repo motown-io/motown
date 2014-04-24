@@ -45,6 +45,12 @@ public class UpdateFirmwareJsonCommandHandlerTest {
         handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
+    @Test
+    public void testUpdateFirmwareCommandWithOptionalParams() throws UserIdentityUnauthorizedException {
+        JsonObject commandObject = gson.fromJson("{location:'DEURNE',retrieveDate:'2014-02-03T12:00:00Z',numRetries:3,retryInterval:60}", JsonObject.class);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidUpdateCommandInvalidDate() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{location:'DEURNE',retrieveDate:'2014-02-03'}", JsonObject.class);

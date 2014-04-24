@@ -15,11 +15,13 @@
  */
 package io.motown.operatorapi.json.commands;
 
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
+import io.motown.domain.api.chargingstation.FirmwareUpdateAttributeKey;
 import io.motown.domain.api.chargingstation.RequestFirmwareUpdateCommand;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.commandauthorization.CommandAuthorizationService;
@@ -28,7 +30,7 @@ import io.motown.operatorapi.viewmodel.model.UpdateFirmwareApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
-import java.util.HashMap;
+import java.util.Map;
 
 class UpdateFirmwareJsonCommandHandler implements JsonCommandHandler {
 
@@ -66,8 +68,16 @@ class UpdateFirmwareJsonCommandHandler implements JsonCommandHandler {
             if (chargingStation != null && chargingStation.isAccepted()) {
                 UpdateFirmwareApiCommand command = gson.fromJson(commandObject, UpdateFirmwareApiCommand.class);
 
+                Map optionalAttributes = Maps.<String,String>newHashMap();
+                if (command.getNumRetries() != null) {
+                    optionalAttributes.put(FirmwareUpdateAttributeKey.NUM_RETRIES, command.getNumRetries());
+                }
+                if (command.getRetryInterval() != null) {
+                    optionalAttributes.put(FirmwareUpdateAttributeKey.RETRY_INTERVAL, command.getRetryInterval());
+                }
+
                 commandGateway.send(new RequestFirmwareUpdateCommand(csId, command.getLocation(), command.getRetrieveDate(),
-                        new HashMap<String, String>(), identityContext), new CorrelationToken());
+                        optionalAttributes, identityContext), new CorrelationToken());
             }
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Update firmware command not able to parse the payload, is your json correctly formatted?", ex);
