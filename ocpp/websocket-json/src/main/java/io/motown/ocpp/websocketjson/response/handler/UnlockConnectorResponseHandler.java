@@ -50,7 +50,7 @@ public class UnlockConnectorResponseHandler extends ResponseHandler {
                 LOG.info("Failed to unlock evse {} on chargingstation {}", evseId, chargingStationId.getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unknown unlock connector response status: {}", requestResult));
+                throw new AssertionError(String.format("Unknown unlock connector response status: %s", requestResult));
         }
     }
 }
