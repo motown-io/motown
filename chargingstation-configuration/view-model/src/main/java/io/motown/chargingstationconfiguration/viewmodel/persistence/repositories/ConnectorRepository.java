@@ -37,7 +37,9 @@ public class ConnectorRepository {
             transaction.commit();
             return persistentConnector;
         } catch (Exception e) {
-            transaction.rollback();
+            if(transaction.isActive()) {
+                transaction.rollback();
+            }
             throw e;
         }
     }
@@ -62,7 +64,9 @@ public class ConnectorRepository {
             entityManager.remove(connector);
             transaction.commit();
         } catch (Exception e) {
-            transaction.rollback();
+            if(transaction.isActive()) {
+                transaction.rollback();
+            }
             throw e;
         }
     }

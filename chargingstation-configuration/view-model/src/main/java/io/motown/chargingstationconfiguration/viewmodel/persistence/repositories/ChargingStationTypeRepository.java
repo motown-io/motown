@@ -45,7 +45,9 @@ public class ChargingStationTypeRepository {
             transaction.commit();
             return persistentChargingStationType;
         } catch (Exception e) {
-            transaction.rollback();
+            if(transaction.isActive()) {
+                transaction.rollback();
+            }
             throw e;
         }
     }
@@ -74,7 +76,9 @@ public class ChargingStationTypeRepository {
             entityManager.remove(chargingStationType);
             transaction.commit();
         } catch (Exception e) {
-            transaction.rollback();
+            if(transaction.isActive()) {
+                transaction.rollback();
+            }
             throw e;
         }
     }

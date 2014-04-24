@@ -37,7 +37,9 @@ public class EvseRepository {
             transaction.commit();
             return persistentEvse;
         } catch (Exception e) {
-            transaction.rollback();
+            if(transaction.isActive()) {
+                transaction.rollback();
+            }
             throw e;
         }
     }
@@ -62,7 +64,9 @@ public class EvseRepository {
             entityManager.remove(evse);
             transaction.commit();
         } catch (Exception e) {
-            transaction.rollback();
+            if(transaction.isActive()) {
+                transaction.rollback();
+            }
             throw e;
         }
     }

@@ -38,7 +38,9 @@ public class ManufacturerRepository {
             transaction.commit();
             return persistentManufacturer;
         } catch (Exception e) {
-            transaction.rollback();
+            if(transaction.isActive()) {
+                transaction.rollback();
+            }
             throw e;
         }
     }
@@ -67,7 +69,9 @@ public class ManufacturerRepository {
             entityManager.remove(manufacturer);
             transaction.commit();
         } catch (Exception e) {
-            transaction.rollback();
+            if(transaction.isActive()) {
+                transaction.rollback();
+            }
             throw e;
         }
     }
