@@ -16,7 +16,10 @@
 package io.motown.ocpp.websocketjson.response.handler;
 
 import com.google.gson.Gson;
-import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.CorrelationToken;
+import io.motown.domain.api.chargingstation.EvseId;
+import io.motown.domain.api.chargingstation.ReservationId;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.ReservenowResponse;
@@ -58,7 +61,7 @@ public class ReserveNowResponseHandler extends ResponseHandler {
                 LOG.info("Failed to reserve evse {} on charging station {}: {}", evseId.getId(), chargingStationId.getId(), response.getStatus().toString());
                 break;
             default:
-                throw new AssertionError(String.format("Unknown reserve now response status: {}", response.getStatus()));
+                throw new AssertionError(String.format("Unknown reserve now response status: %s", response.getStatus()));
         }
     }
 }
