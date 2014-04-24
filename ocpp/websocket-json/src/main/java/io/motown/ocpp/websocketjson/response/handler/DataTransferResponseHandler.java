@@ -53,7 +53,7 @@ public class DataTransferResponseHandler extends ResponseHandler {
                 }
                 break;
             default:
-                throw new AssertionError(String.format("Unknown data transfer response status: {}", response.getStatus()));
+                throw new AssertionError(String.format("Unknown data transfer response status: %s", response.getStatus()));
         }
     }
 }
