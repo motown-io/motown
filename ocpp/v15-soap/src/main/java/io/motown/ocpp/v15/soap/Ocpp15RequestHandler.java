@@ -282,7 +282,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
             case OCCUPIED:
             case UNAVAILABLE:
             case REJECTED:
-                String reservationStatusMessage = (reservationStatus != null) ? reservationStatus.name() : "";
+                String reservationStatusMessage = reservationStatus.name();
                 LOG.info("Failed to reserve evse {} on charging station {}: {}", event.getEvseId().getId(), event.getChargingStationId().getId(), reservationStatusMessage);
                 break;
             default:
