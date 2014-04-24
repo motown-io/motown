@@ -158,15 +158,6 @@ public class DomainService {
     }
 
     /**
-     * Create an Evse.
-     *
-     * @param evse the entity to be persisted.
-     */
-    public Evse createEvse(Evse evse) {
-        return evseRepository.createOrUpdate(evse);
-    }
-
-    /**
      * Update an evse.
      *
      * @param id the id of the entity to find.

@@ -50,21 +50,6 @@ public class EvseResourceTest {
     }
 
     @Test
-    public void testCreateEvse() {
-        Response response = resource.createEvse(any(Evse.class));
-        verify(repository).createOrUpdate(any(Evse.class));
-
-        assertNotNull(response);
-        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testCreateEvseThrowsException() {
-        doThrow(mock(PersistenceException.class)).when(repository).createOrUpdate(any(Evse.class));
-        resource.createEvse(any(Evse.class));
-    }
-
-    @Test
     public void testUpdateEvse() {
         Evse evse = mock(Evse.class);
         when(evse.getId()).thenReturn(1L);

@@ -27,12 +27,6 @@ public final class EvseResource {
 
     private DomainService domainService;
 
-    @POST
-    @Consumes(ApiVersion.V1_JSON)
-    public Response createEvse(Evse evse) {
-        return Response.status(Response.Status.CREATED).entity(domainService.createEvse(evse)).build();
-    }
-
     @PUT
     @Path("/{id: [0-9]+}")
     @Consumes(ApiVersion.V1_JSON)
