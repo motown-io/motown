@@ -201,13 +201,15 @@ angular.module('demoApp.controllers', []).
                 });
             };
 
-            $scope.updateFirmware = function (chargingStation, location, retrieveDate) {
+            $scope.updateFirmware = function (chargingStation, location, retrieveDate, numRetries, retryInterval) {
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['UpdateFirmware', {
                         'location': location,
-                        'retrieveDate': retrieveDate
+                        'retrieveDate': retrieveDate,
+                        'numRetries': numRetries,
+                        'retryInterval': retryInterval
                     }]
                 }).success(function (response) {
                     console.log('clear cache requested');

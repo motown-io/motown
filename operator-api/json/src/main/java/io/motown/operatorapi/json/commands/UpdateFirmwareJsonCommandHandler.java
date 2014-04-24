@@ -70,10 +70,10 @@ class UpdateFirmwareJsonCommandHandler implements JsonCommandHandler {
 
                 Map optionalAttributes = Maps.<String,String>newHashMap();
                 if (command.getNumRetries() != null) {
-                    optionalAttributes.put(FirmwareUpdateAttributeKey.NUM_RETRIES, command.getNumRetries());
+                    optionalAttributes.put(FirmwareUpdateAttributeKey.NUM_RETRIES, command.getNumRetries().toString());
                 }
                 if (command.getRetryInterval() != null) {
-                    optionalAttributes.put(FirmwareUpdateAttributeKey.RETRY_INTERVAL, command.getRetryInterval());
+                    optionalAttributes.put(FirmwareUpdateAttributeKey.RETRY_INTERVAL, command.getRetryInterval().toString());
                 }
 
                 commandGateway.send(new RequestFirmwareUpdateCommand(csId, command.getLocation(), command.getRetrieveDate(),
