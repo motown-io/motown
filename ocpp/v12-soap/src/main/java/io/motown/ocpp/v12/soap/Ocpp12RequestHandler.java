@@ -95,7 +95,7 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
                 LOG.info("Failed to unlock evse {} on chargingstation {}", event.getEvseId(), event.getChargingStationId().getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unknown unlock evse response status: '{}'", requestResult));
+                throw new AssertionError(String.format("Unknown unlock evse response status: '%s'", requestResult));
         }
     }
 
@@ -113,7 +113,7 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
                 LOG.info("Failed to set availability of chargingstation {} to inoperative", event.getChargingStationId().getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unknown status for change availability to inoperative: '{}'", requestResult));
+                throw new AssertionError(String.format("Unknown status for change availability to inoperative: '%s'", requestResult));
         }
     }
 
@@ -131,7 +131,7 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
                 LOG.info("Failed to set availability of chargingstation {} to operative", event.getChargingStationId().getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unknown status for change availability to operative: '{}'", requestResult));
+                throw new AssertionError(String.format("Unknown status for change availability to operative: '%s'", requestResult));
         }
     }
 
@@ -148,7 +148,7 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
                 LOG.info("Failed to set availability of evse {} on chargingstation {} to inoperative", event.getComponentId().getId(), event.getChargingStationId().getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unknown status for change component availability to inoperative: '{}'", requestResult));
+                throw new AssertionError(String.format("Unknown status for change component availability to inoperative: '%s'", requestResult));
         }
     }
 
@@ -165,7 +165,7 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
                 LOG.info("Failed to set availability of evse {} on chargingstation {} to operative", event.getComponentId().getId(), event.getChargingStationId().getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unknown status for change component availability to operative: '{}'", requestResult));
+                throw new AssertionError(String.format("Unknown status for change component availability to operative: '%s'", requestResult));
         }
     }
 
