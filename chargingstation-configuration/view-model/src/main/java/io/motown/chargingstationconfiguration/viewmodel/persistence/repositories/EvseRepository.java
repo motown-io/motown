@@ -20,7 +20,6 @@ import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evs
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityTransaction;
-import java.util.List;
 
 public class EvseRepository {
 
