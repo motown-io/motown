@@ -68,7 +68,7 @@ public class ChangeAvailabilityResponseHandler extends ResponseHandler {
                 LOG.info("Failed to set availability of evse {} on chargingstation {} to {}", evseId, chargingStationId, availabilityType.toString());
                 break;
             default:
-                throw new AssertionError(String.format("Unknown change availability response status: {}", response.getStatus()));
+                throw new AssertionError(String.format("Unknown change availability response status: %s", response.getStatus()));
         }
     }
 }
