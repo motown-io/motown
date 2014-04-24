@@ -41,11 +41,6 @@ public final class EvseResource {
     }
 
     @GET
-    public Response getEvses() {
-        return Response.ok(domainService.getEvses()).build();
-    }
-
-    @GET
     @Path("/{id: [0-9]+}")
     public Response getEvse(@PathParam("id") Long id) {
         return Response.ok(domainService.getEvse(id)).build();

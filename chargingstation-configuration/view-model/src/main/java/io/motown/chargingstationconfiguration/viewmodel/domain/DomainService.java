@@ -178,15 +178,6 @@ public class DomainService {
     }
 
     /**
-     * Find all evses.
-     *
-     * @return a list of evses.
-     */
-    public List<Evse> getEvses() {
-        return evseRepository.findAll();
-    }
-
-    /**
      * Find an evse based on its id.
      *
      * @param id the id of the entity to find.

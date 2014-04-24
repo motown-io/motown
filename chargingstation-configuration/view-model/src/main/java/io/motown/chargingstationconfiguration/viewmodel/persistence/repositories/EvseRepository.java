@@ -43,10 +43,6 @@ public class EvseRepository {
         }
     }
 
-    public List<Evse> findAll() {
-        return entityManager.createQuery("SELECT e FROM Evse e", Evse.class).getResultList();
-    }
-
     public Evse findOne(Long id) {
         Evse evse = entityManager.find(Evse.class, id);
         if (evse != null) {

@@ -84,21 +84,6 @@ public class EvseResourceTest {
     }
 
     @Test
-    public void testGetEvses() {
-        Response response = resource.getEvses();
-        verify(repository).findAll();
-
-        assertNotNull(response);
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testGetEvsesThrowsException() {
-        when(repository.findAll()).thenThrow(mock(PersistenceException.class));
-        resource.getEvses();
-    }
-
-    @Test
     public void testGetEvse() {
         Response response = resource.getEvse(anyLong());
         verify(repository).findOne(anyLong());
