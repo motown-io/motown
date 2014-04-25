@@ -153,7 +153,7 @@ public class DomainService {
 
         commandGateway.send(new BootChargingStationCommand(chargingStationId, protocol, attributes, identityContext));
 
-        return new BootChargingStationResult(chargingStation.isRegistered(), heartbeatInterval, new Date());
+        return new BootChargingStationResult(chargingStation.isRegisteredAndConfigured(), heartbeatInterval, new Date());
     }
 
     public void incomingDataTransfer(ChargingStationId chargingStationId, String data, String vendorId, String messageId, FutureEventCallback future, AddOnIdentity addOnIdentity) {
