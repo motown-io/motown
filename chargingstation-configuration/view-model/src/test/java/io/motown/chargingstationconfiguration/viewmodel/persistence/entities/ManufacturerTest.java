@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceException;
 
 import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.deleteFromDatabase;
@@ -33,13 +33,12 @@ import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.
 public class ManufacturerTest {
 
     @Autowired
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
 
     @Before
     public void setUp() {
-        entityManager.clear();
-        deleteFromDatabase(entityManager, ChargingStationType.class);
-        deleteFromDatabase(entityManager, Manufacturer.class);
+        deleteFromDatabase(entityManagerFactory, ChargingStationType.class);
+        deleteFromDatabase(entityManagerFactory, Manufacturer.class);
     }
 
     @Test(expected = PersistenceException.class)
@@ -47,11 +46,11 @@ public class ManufacturerTest {
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setCode("MOTOWN");
 
-        insertIntoDatabase(entityManager, manufacturer);
+        insertIntoDatabase(entityManagerFactory, manufacturer);
 
         manufacturer = new Manufacturer();
         manufacturer.setCode("MOTOWN");
-        insertIntoDatabase(entityManager, manufacturer);
+        insertIntoDatabase(entityManagerFactory, manufacturer);
     }
 
 }

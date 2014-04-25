@@ -25,6 +25,7 @@ import io.motown.domain.api.chargingstation.Current;
 import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import java.util.HashSet;
 import java.util.List;
@@ -41,39 +42,48 @@ public final class TestUtils {
         // Private no-arg constructor to prevent instantiation of utility class.
     }
 
-    public static void deleteFromDatabase(EntityManager entityManager, Class jpaEntityClass) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
+    public static void deleteFromDatabase(EntityManagerFactory entityManagerFactory, Class jpaEntityClass) {
+        EntityManager em = entityManagerFactory.createEntityManager();
 
+        EntityTransaction tx = null;
         try {
-            List resultList = entityManager.createQuery("SELECT entity FROM " + jpaEntityClass.getName() + " as entity").getResultList();
+            tx = em.getTransaction();
+            tx.begin();
+
+            List resultList = em.createQuery("SELECT entity FROM " + jpaEntityClass.getName() + " as entity").getResultList();
             for (Object obj : resultList) {
-                entityManager.remove(obj);
+                em.remove(obj);
             }
-            transaction.commit();
+            tx.commit();
+        } catch (Exception e) {
+            if(tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
         } finally {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
+            em.close();
         }
     }
 
-    public static Object insertIntoDatabase(EntityManager entityManager, Object entity) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
+    public static Object insertIntoDatabase(EntityManagerFactory entityManagerFactory, Object entity) {
+        EntityManager em = entityManagerFactory.createEntityManager();
 
+        EntityTransaction tx = null;
         try {
-            Object merged = entityManager.merge(entity);
-            transaction.commit();
+            tx = em.getTransaction();
+            tx.begin();
+
+            Object merged = em.merge(entity);
+            tx.commit();
+
             return merged;
-        } finally {
-            if (transaction.isActive()) {
-                transaction.rollback();
+        } catch (Exception e) {
+            if(tx != null && tx.isActive()) {
+                tx.rollback();
             }
+            throw e;
+        } finally {
+            em.close();
         }
     }
 
@@ -83,11 +93,11 @@ public final class TestUtils {
      *
      * @return charging station type with all identifiers filled.
      */
-    public static ChargingStationType getChargingStationTypeNonTransient(EntityManager entityManager) {
+    public static ChargingStationType getChargingStationTypeNonTransient(EntityManagerFactory entityManagerFactory) {
         Manufacturer manufacturer = getManufacturer(ChargingStationTestUtils.CHARGING_STATION_VENDOR);
-        manufacturer = (Manufacturer) insertIntoDatabase(entityManager, manufacturer);
+        manufacturer = (Manufacturer) insertIntoDatabase(entityManagerFactory, manufacturer);
         ChargingStationType chargingStationType = getChargingStationTypes(manufacturer, ChargingStationTestUtils.CHARGING_STATION_MODEL).iterator().next();
-        return (ChargingStationType) insertIntoDatabase(entityManager, chargingStationType);
+        return (ChargingStationType) insertIntoDatabase(entityManagerFactory, chargingStationType);
     }
 
     public static Manufacturer getManufacturerWithConfiguration(String vendor, String model) {

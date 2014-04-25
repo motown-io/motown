@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import java.util.Set;
 
 import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.*;
@@ -50,23 +50,22 @@ public class DomainServiceTest {
     private ChargingStationTypeRepository chargingStationTypeRepository;
 
     @Autowired
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
 
     @Before
     public void setUp() {
-        entityManager.clear();
-        deleteFromDatabase(entityManager, ChargingStationType.class);
-        deleteFromDatabase(entityManager, Manufacturer.class);
+        deleteFromDatabase(entityManagerFactory, ChargingStationType.class);
+        deleteFromDatabase(entityManagerFactory, Manufacturer.class);
 
         domainService = new DomainService();
-        chargingStationTypeRepository.setEntityManager(entityManager);
+        chargingStationTypeRepository.setEntityManagerFactory(entityManagerFactory);
         domainService.setChargingStationTypeRepository(chargingStationTypeRepository);
     }
 
     @Test
     public void testGetEvsesForNonExistingManufacturerAndModel() {
         Manufacturer manufacturer = getManufacturerWithConfiguration(VENDOR, MODEL);
-        insertIntoDatabase(entityManager, manufacturer);
+        insertIntoDatabase(entityManagerFactory, manufacturer);
 
         Set<Evse> evses = domainService.getEvses(UNKNOWN_VENDOR, UNKNOWN_MODEL);
 
@@ -76,7 +75,7 @@ public class DomainServiceTest {
     @Test
     public void testGetEvsesForNonExistingManufacturerAndExistingModel() {
         Manufacturer manufacturer = getManufacturerWithConfiguration(VENDOR, MODEL);
-        insertIntoDatabase(entityManager, manufacturer);
+        insertIntoDatabase(entityManagerFactory, manufacturer);
 
         Set<Evse> evses = domainService.getEvses(UNKNOWN_VENDOR, MODEL);
 
@@ -85,7 +84,7 @@ public class DomainServiceTest {
 
     @Test
     public void deleteConnector() {
-        ChargingStationType chargingStationType = getChargingStationTypeNonTransient(entityManager);
+        ChargingStationType chargingStationType = getChargingStationTypeNonTransient(entityManagerFactory);
         Connector connector = chargingStationType.getEvses().iterator().next().getConnectors().iterator().next();
         // mock the repository so we can verify the argument later
         ChargingStationTypeRepository chargingStationTypeRepository = mock(ChargingStationTypeRepository.class);

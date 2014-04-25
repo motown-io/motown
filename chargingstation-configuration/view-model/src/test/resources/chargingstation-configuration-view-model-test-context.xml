@@ -19,7 +19,7 @@
     <bean id="entityManagerChargingStationConfiguration" factory-bean="entityManagerFactoryChargingStationConfiguration" factory-method="createEntityManager" />
 
     <bean id="chargingStationTypeRepository" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository">
-        <property name="entityManager" ref="entityManagerChargingStationConfiguration" />
+        <property name="entityManagerFactory" ref="entityManagerFactoryChargingStationConfiguration" />
     </bean>
 
     <bean id="connectorRepository" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ConnectorRepository">

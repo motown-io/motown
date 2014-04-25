@@ -22,7 +22,7 @@
 
     <bean id="chargingStationTypeRepository"
           class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository">
-        <property name="entityManager" ref="entityManagerJersey"/>
+        <property name="entityManagerFactory" ref="entityManagerFactoryJersey"/>
     </bean>
 
     <bean id="connectorRepository"
