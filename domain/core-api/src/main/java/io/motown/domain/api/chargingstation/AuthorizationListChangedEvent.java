@@ -20,6 +20,7 @@ import io.motown.domain.api.security.IdentityContext;
 import java.util.List;
 import java.util.Objects;
 
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -115,5 +116,19 @@ public final class AuthorizationListChangedEvent {
         }
         final AuthorizationListChangedEvent other = (AuthorizationListChangedEvent) obj;
         return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.updateType, other.updateType) && Objects.equals(this.identifyingTokens, other.identifyingTokens) && Objects.equals(this.identityContext, other.identityContext);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return toStringHelper(this)
+                .add("chargingStationId", chargingStationId)
+                .add("version", version)
+                .add("updateType", updateType)
+                .add("identifyingTokens", identifyingTokens)
+                .add("identityContext", identityContext)
+                .toString();
     }
 }
