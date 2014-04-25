@@ -61,8 +61,8 @@ class RequestStopTransactionJsonCommandHandler implements JsonCommandHandler {
             RequestStopTransactionApiCommand command = gson.fromJson(commandObject, RequestStopTransactionApiCommand.class);
 
             ChargingStation chargingStation = repository.findOne(chargingStationId);
-            // TODO assuming a NumberedTransactionId, needs to be fixed - Dennis Laumen, December 20th 2013
-            TransactionId transactionId = new NumberedTransactionId(csId, chargingStation.getProtocol(), Integer.parseInt(command.getId()));
+            TransactionId transactionId = TransactionIdFactory.createTransactionId(command.getId(), csId, chargingStation.getProtocol());
+
             commandGateway.send(new RequestStopTransactionCommand(csId, transactionId, identityContext), new CorrelationToken());
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted ?", ex);
