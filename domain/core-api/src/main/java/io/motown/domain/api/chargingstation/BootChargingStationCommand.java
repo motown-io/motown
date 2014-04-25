@@ -121,4 +121,17 @@ public final class BootChargingStationCommand {
         final BootChargingStationCommand other = (BootChargingStationCommand) obj;
         return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.protocol, other.protocol) && Objects.equals(this.attributes, other.attributes) && Objects.equals(this.identityContext, other.identityContext);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return com.google.common.base.Objects.toStringHelper(this)
+                .add("chargingStationId", chargingStationId)
+                .add("protocol", protocol)
+                .add("attributes", attributes)
+                .add("identityContext", identityContext)
+                .toString();
+    }
 }
