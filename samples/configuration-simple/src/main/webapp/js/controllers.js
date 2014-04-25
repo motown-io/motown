@@ -55,40 +55,6 @@ angular.module('demoApp.controllers', []).
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['Register', {
-                        'configuration': {
-                            'evses': [
-                                {
-                                    'evseId': 1,
-                                    'connectors': [
-                                        {
-                                            'maxAmp': 32,
-                                            'phase': 3,
-                                            'voltage': 240,
-                                            'chargingProtocol': 'MODE3',
-                                            'current': 'AC',
-                                            'connectorType': 'TESLA'
-                                        }
-                                    ]
-                                },
-                                {
-                                    'evseId': 2,
-                                    'connectors': [
-                                        {
-                                            'maxAmp': 32,
-                                            'phase': 3,
-                                            'voltage': 240,
-                                            'chargingProtocol': 'MODE3',
-                                            'current': 'AC',
-                                            'connectorType': 'TESLA'
-                                        }
-                                    ]
-                                }
-                            ],
-                            'settings': {
-                                'key': 'value',
-                                'key2': 'value2'
-                            }
-                        }
                     }]
                 }).success(function (response) {
                     console.log('registered');
