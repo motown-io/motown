@@ -68,6 +68,11 @@
                         configuration
                     </button>
                     <button class="btn btn-default" href="#" ng-click="clearCache(chargingStation)">clear cache</button>
+<<<<<<< HEAD
+                    <button class="btn btn-default" href="#" ng-click="updateFirmware(chargingStation, 'http://somewhere.xyz', '2014-06-01T09:30:00Z', 3, 60)">firmware-update</button>
+                    <button class="btn btn-default" href="#" ng-click="getAuthorizationListVersion(chargingStation)">authorization list version</button>
+                    <button class="btn btn-default" href="#" ng-click="sendAuthorizationList(chargingStation, 1, 'FULL', [{'token': 'token1', 'status': 'ACCEPTED'}, {'token': 'token2', 'status': 'BLOCKED'}, {'token': 'token3', 'status': 'EXPIRED'}])">send authorization list</button>
+=======
                     <button class="btn btn-default" href="#"
                             ng-click="updateFirmware(chargingStation, 'http://somewhere.xyz', '2014-06-01T09:30:00Z')">
                         firmware-update
@@ -79,6 +84,7 @@
                             ng-click="sendAuthorizationList(chargingStation, 1, 'FULL', [{'token': 'token1', 'status': 'ACCEPTED'}, {'token': 'token2', 'status': 'BLOCKED'}, {'token': 'token3', 'status': 'EXPIRED'}])">
                         send authorization list
                     </button>
+>>>>>>> release/0.2.0
                     <button class="btn btn-default" href="#"
                             ng-click="reserveNow(chargingStation, 2, {'token': 'TOKEN'}, '2014-03-21T09:30:00Z')">
                         reserve now
@@ -104,6 +110,12 @@
                             ng-click="moveChargingStation(chargingStation, {'latitude': 51.463976, 'longitude': 5.793803}, {'addressLine1': 'Helmondseweg 2', 'addressLine2': '', 'postalCode': '', 'city': 'Deurne', 'region': '', 'country': 'The Netherlands'}, 'Private')">
                         Move charging station
                     </button>
+<<<<<<< HEAD
+                    <button class="btn btn-default" href="#" ng-click="setOpeningTimes(chargingStation, [{'day': 'monday', 'timeStart': '12:00', 'timeStop': '15:00'}, {'day': 'monday', 'timeStart': '20:00', timeStop: '22:00'}])">Set opening times</button>
+                    <button class="btn btn-default" href="#" ng-click="addOpeningTimes(chargingStation, [{'day': 'tuesday', 'timeStart': '8:30', 'timeStop': '17:00'}])">Add opening times</button>
+                    <button class="btn btn-default" href="#" ng-click="grantPermission(chargingStation, 'io.motown.domain.api.chargingstation.AddChargingStationOpeningTimesCommand', 'testUser')">Grant permission</button>
+                    <button class="btn btn-default" href="#" ng-click="revokePermission(chargingStation, 'io.motown.domain.api.chargingstation.AddChargingStationOpeningTimesCommand', 'testUser')">Revoke permission</button>
+=======
                     <button class="btn btn-default" href="#"
                             ng-click="setOpeningTimes(chargingStation, [{'day': 'monday', 'timeStart': '12:00', timeStop: '15:00'}, {'day': 'monday', 'timeStart': '20:00', timeStop: '22:00'}])">
                         Set opening times
@@ -120,6 +132,7 @@
                             ng-click="revokePermission(chargingStation, 'io.motown.domain.api.chargingstation.RequestUnlockEvseCommand', 'user')">
                         Revoke permission
                     </button>
+>>>>>>> release/0.2.0
 
                     <table ng-show="showEvses">
                         <thead>
