@@ -38,6 +38,7 @@ public class ManufacturerTest {
     @Before
     public void setUp() {
         entityManager.clear();
+        deleteFromDatabase(entityManager, ChargingStationType.class);
         deleteFromDatabase(entityManager, Manufacturer.class);
     }
 
