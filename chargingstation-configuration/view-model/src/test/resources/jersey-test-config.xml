@@ -27,12 +27,12 @@
 
     <bean id="connectorRepository"
           class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ConnectorRepository">
-        <property name="entityManager" ref="entityManagerJersey"/>
+        <property name="entityManagerFactory" ref="entityManagerFactoryJersey"/>
     </bean>
 
     <bean id="evseRepository"
           class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.EvseRepository">
-        <property name="entityManager" ref="entityManagerJersey"/>
+        <property name="entityManagerFactory" ref="entityManagerFactoryJersey"/>
     </bean>
 
     <bean id="manufacturerRepository"

@@ -18,60 +18,50 @@ package io.motown.chargingstationconfiguration.viewmodel.persistence.repositorie
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityTransaction;
 
 public class EvseRepository {
 
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
 
     public Evse createOrUpdate(Evse evse) {
-        EntityTransaction transaction = entityManager.getTransaction();
+        EntityManager em = getEntityManager();
 
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
+        EntityTransaction tx = null;
         try {
-            Evse persistentEvse = entityManager.merge(evse);
-            transaction.commit();
-            return persistentEvse;
+            tx = em.getTransaction();
+            tx.begin();
+
+            Evse persistedEvse = em.merge(evse);
+
+            tx.commit();
+
+            return persistedEvse;
         } catch (Exception e) {
-            if(transaction.isActive()) {
-                transaction.rollback();
+            if(tx != null && tx.isActive()) {
+                tx.rollback();
             }
             throw e;
+        } finally {
+            em.close();
         }
     }
 
     public Evse findOne(Long id) {
-        Evse evse = entityManager.find(Evse.class, id);
+        Evse evse = getEntityManager().find(Evse.class, id);
         if (evse != null) {
             return evse;
         }
         throw new EntityNotFoundException(String.format("Unable to find evse with id '%s'", id));
     }
 
-    public void delete(Long id) {
-        Evse evse = findOne(id);
-        EntityTransaction transaction = entityManager.getTransaction();
-
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
-        try {
-            entityManager.remove(evse);
-            transaction.commit();
-        } catch (Exception e) {
-            if(transaction.isActive()) {
-                transaction.rollback();
-            }
-            throw e;
-        }
+    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
     }
 
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    private EntityManager getEntityManager() {
+        return entityManagerFactory.createEntityManager();
     }
 }

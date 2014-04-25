@@ -34,11 +34,11 @@
     </bean>
 
     <bean id="connectorRepositoryChargingStationConfiguration" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ConnectorRepository">
-        <property name="entityManager" ref="jpaEntityManagerChargingStationConfiguration" />
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
 
     <bean id="evseRepositoryChargingStationConfiguration" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.EvseRepository">
-        <property name="entityManager" ref="jpaEntityManagerChargingStationConfiguration" />
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
 
     <bean id="manufacturerRepositoryChargingStationConfiguration" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ManufacturerRepository">
