@@ -31,7 +31,7 @@
     </bean>
 
     <bean id="manufacturerRepository" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ManufacturerRepository">
-        <property name="entityManager" ref="entityManagerChargingStationConfiguration" />
+        <property name="entityManagerFactory" ref="entityManagerFactoryChargingStationConfiguration" />
     </bean>
 
     <bean id="domainService" class="io.motown.chargingstationconfiguration.viewmodel.domain.DomainService">

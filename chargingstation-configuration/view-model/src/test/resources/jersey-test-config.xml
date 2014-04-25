@@ -37,7 +37,7 @@
 
     <bean id="manufacturerRepository"
           class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ManufacturerRepository">
-        <property name="entityManager" ref="entityManagerJersey"/>
+        <property name="entityManagerFactory" ref="entityManagerFactoryJersey"/>
     </bean>
 
     <bean id="domainService" class="io.motown.chargingstationconfiguration.viewmodel.domain.DomainService">

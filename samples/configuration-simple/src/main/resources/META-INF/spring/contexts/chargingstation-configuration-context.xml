@@ -48,7 +48,7 @@
     </bean>
 
     <bean id="manufacturerRepositoryChargingStationConfiguration" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ManufacturerRepository">
-        <property name="entityManager" ref="jpaEntityManagerChargingStationConfiguration" />
+        <property name="entityManagerFactory" ref="entityManagerFactoryChargingStationConfiguration" />
     </bean>
 
     <bean id="beanValidationInterceptor" class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor"/>
