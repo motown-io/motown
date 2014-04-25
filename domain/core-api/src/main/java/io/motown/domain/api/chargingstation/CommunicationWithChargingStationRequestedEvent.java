@@ -15,6 +15,23 @@
  */
 package io.motown.domain.api.chargingstation;
 
+/**
+ * Protocol add-ons should respond to this event or one of its subclasses (if applicable) and request a charging station
+ * to do the specified action.
+ */
 public interface CommunicationWithChargingStationRequestedEvent {
+
+    /**
+     * Gets the charging station's identifier.
+     *
+     * @return the charging station's identifier.
+     */
     ChargingStationId getChargingStationId();
+
+    /**
+     * Gets the protocol identifier.
+     *
+     * @return the protocol identifier.
+     */
+    String getProtocol();
 }

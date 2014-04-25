@@ -15,20 +15,28 @@
  */
 package io.motown.operatorapi.json.commands;
 
-import com.google.gson.GsonBuilder;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.junit.Before;
 import org.junit.Test;
-import static org.mockito.Mockito.*;
+
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class RegisterJsonCommandHandlerTest {
+
+    private Gson gson;
 
     private RegisterJsonCommandHandler handler = new RegisterJsonCommandHandler();
 
     @Before
     public void setUp() {
-        handler.setGson(new GsonBuilder().create());
+        gson = OperatorApiJsonTestUtils.getGson();
+
         handler.setCommandGateway(new TestDomainCommandGateway());
 
         // setup mocking for JPA / spring repo.
@@ -37,34 +45,29 @@ public class RegisterJsonCommandHandlerTest {
         when(registeredStation.isAccepted()).thenReturn(true);
         ChargingStation unregisteredStation = mock(ChargingStation.class);
         when(unregisteredStation.isAccepted()).thenReturn(false);
-        when(repo.findOne("TEST_REGISTERED")).thenReturn(registeredStation);
-        when(repo.findOne("TEST_UNREGISTERED")).thenReturn(unregisteredStation);
+        when(repo.findOne(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING)).thenReturn(registeredStation);
+        when(repo.findOne(OperatorApiJsonTestUtils.UNREGISTERED_CHARGING_STATION_ID_STRING)).thenReturn(unregisteredStation);
 
         handler.setRepository(repo);
+        handler.setCommandAuthorizationService(OperatorApiJsonTestUtils.getCommandAuthorizationService());
     }
 
     @Test
-    public void testHandleComplete() {
-        String json = "['Register',{'configuration' : {'connectors' : [{'connectorId' : 1, 'connectorType' : 'Type2', 'maxAmp' : 16 },{'connectorId' : 2, 'connectorType' : 'Combo', 'maxAmp' : 32}], 'settings' : {'key':'value', 'key2':'value2'}}}]";
-        handler.handle("TEST_UNREGISTERED", json);
+    public void testHandleComplete() throws UserIdentityUnauthorizedException {
+
+        JsonObject commandObject = gson.fromJson("{'configuration' : {'evses' : [{'evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}]}], 'settings' : {'key':'value', 'key2':'value2'}}}", JsonObject.class);
+        handler.handle(OperatorApiJsonTestUtils.UNREGISTERED_CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected=IllegalStateException.class)
-    public void testHandleCompleteUnRegistered() {
-        String json = "['Register',{'configuration' : {'connectors' : [{'connectorId' : 1, 'connectorType' : 'Type2', 'maxAmp' : 16 },{'connectorId' : 2, 'connectorType' : 'Combo', 'maxAmp' : 32}], 'settings' : {'key':'value', 'key2':'value2'}}}]";
-        handler.handle("TEST_REGISTERED", json);
+    public void testHandleCompleteUnRegistered() throws UserIdentityUnauthorizedException {
+        JsonObject commandObject = gson.fromJson("{'configuration' : {'evses' : [{'evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}]}], 'settings' : {'key':'value', 'key2':'value2'}}}", JsonObject.class);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test
-    public void testHandleConfigNull() {
-        String json = "['Register',{'configuration' : null }]";
-        handler.handle("TEST_UNREGISTERED", json);
+    public void testHandleConfigNull() throws UserIdentityUnauthorizedException {
+        JsonObject commandObject = gson.fromJson("{'configuration' : null }", JsonObject.class);
+        handler.handle(OperatorApiJsonTestUtils.UNREGISTERED_CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testHandleWithoutConfig() {
-        String json = "['Register']";
-        handler.handle("TEST_UNREGISTERED", json);
-    }
-
 }

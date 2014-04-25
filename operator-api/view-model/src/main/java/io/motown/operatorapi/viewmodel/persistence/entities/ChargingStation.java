@@ -15,36 +15,43 @@
  */
 package io.motown.operatorapi.viewmodel.persistence.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import java.util.Date;
+import io.motown.domain.api.chargingstation.Accessibility;
+import io.motown.domain.api.chargingstation.ComponentStatus;
+
+import javax.persistence.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @Entity
 public class ChargingStation {
     @Id
     private String id;
-    private Date updated;
-    private Date created;
-    private Date lastTimeBooted;
-    private Boolean accepted;
-
-    public Boolean isAccepted() {
-        return accepted;
-    }
-
-    public void setAccepted(Boolean accepted) {
-        this.accepted = accepted;
-    }
-
-    public Date getLastTimeBooted() {
-        return lastTimeBooted;
-    }
-
-    public void setLastTimeBooted(Date lastTimeBooted) {
-        this.lastTimeBooted = lastTimeBooted;
-    }
+    private String protocol;
+    private boolean accepted;
+    private boolean reservable;
+    private Double latitude;
+    private Double longitude;
+    private String addressLine1;
+    private String addressLine2;
+    private String postalCode;
+    private String city;
+    private String region;
+    private String country;
+    private Accessibility accessibility;
+    private Availability availability;
+    private ComponentStatus status;
+    @ElementCollection
+    private Set<OpeningTime> openingTimes = new HashSet<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Evse.class)
+    private Set<Evse> evses = new HashSet<>();
+    @ElementCollection
+    @MapKeyColumn
+    private Map<String, String> attributes = new HashMap<>();
+    @ElementCollection
+    @MapKeyColumn
+    private Map<String, String> configurationItems = new HashMap<>();
 
     private ChargingStation() {
         // Private no-arg constructor for Hibernate.
@@ -53,29 +60,156 @@ public class ChargingStation {
     public ChargingStation(String id) {
         this.id = id;
         this.accepted = false;
+        this.reservable = false;
+        this.availability = Availability.OPERATIVE;
+    }
+
+    public Availability getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(Availability availability) {
+        this.availability = availability;
+    }
+
+    public boolean isReservable() {
+        return reservable;
+    }
+
+    public void setReservable(boolean reservable) {
+        this.reservable = reservable;
+    }
+
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
     }
 
     public String getId() {
         return id;
     }
 
-    public Date getUpdated() {
-        return updated;
+    public Double getLatitude() {
+        return latitude;
     }
 
-    public Date getCreated() {
-        return created;
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 
-    @PrePersist
-    protected void onCreate() {
-        Date now = new Date();
-        created = now;
-        updated = now;
+    public Double getLongitude() {
+        return longitude;
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        updated = new Date();
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
+
+    public String getAddressLine1() {
+        return addressLine1;
+    }
+
+    public void setAddressLine1(String addressLine1) {
+        this.addressLine1 = addressLine1;
+    }
+
+    public String getAddressLine2() {
+        return addressLine2;
+    }
+
+    public void setAddressLine2(String addressLine2) {
+        this.addressLine2 = addressLine2;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public Accessibility getAccessibility() {
+        return accessibility;
+    }
+
+    public void setAccessibility(Accessibility accessibility) {
+        this.accessibility = accessibility;
+    }
+
+    public Set<OpeningTime> getOpeningTimes() {
+        return openingTimes;
+    }
+
+    public void setOpeningTimes(Set<OpeningTime> openingTimes) {
+        this.openingTimes = openingTimes;
+    }
+
+    public Set<Evse> getEvses() {
+        return evses;
+    }
+
+    public void setEvses(Set<Evse> evses) {
+        this.evses = evses;
+    }
+
+    public ComponentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ComponentStatus status) {
+        this.status = status;
+    }
+
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(Map<String, String> attributes) {
+        this.attributes = attributes;
+    }
+
+    public void setConfigurationItems(Map<String, String> configurationItems) {
+        this.configurationItems = configurationItems;
+    }
+
+    public Map<String, String> getConfigurationItems() {
+        return configurationItems;
+    }
+
 }

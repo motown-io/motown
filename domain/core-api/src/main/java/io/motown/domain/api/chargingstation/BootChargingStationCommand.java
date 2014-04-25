@@ -16,31 +16,38 @@
 package io.motown.domain.api.chargingstation;
 
 import com.google.common.collect.ImmutableMap;
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Map;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * {@code BootChargingStationCommand} is the command which is published when a charging station has booted.
  */
-public class BootChargingStationCommand {
+public final class BootChargingStationCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
+    private final String protocol;
+
     private final Map<String, String> attributes;
+
+    private final IdentityContext identityContext;
 
     /**
      * Creates a {@code BootChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @param protocol          protocol identifier.
+     * @param identityContext   the identity context.
+     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} is {@code null}.
      */
-    public BootChargingStationCommand(ChargingStationId chargingStationId) {
-        this.chargingStationId = checkNotNull(chargingStationId);
-        this.attributes = ImmutableMap.of();
+    public BootChargingStationCommand(ChargingStationId chargingStationId, String protocol, IdentityContext identityContext) {
+        this(chargingStationId, protocol, ImmutableMap.<String, String>of(), identityContext);
     }
 
     /**
@@ -50,11 +57,13 @@ public class BootChargingStationCommand {
      * @param attributes        a {@link java.util.Map} of attributes. These attributes are additional information provided by
      *                          the charging station when it booted but which are not required by Motown. Because
      *                          {@link java.util.Map} implementations are potentially mutable a defensive copy is made.
-     * @throws NullPointerException if {@code chargingStationId} or {@code attributes} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} or {@code attributes} or any of the attributes keys or values is {@code null}.
      */
-    public BootChargingStationCommand(ChargingStationId chargingStationId, Map<String, String> attributes) {
+    public BootChargingStationCommand(ChargingStationId chargingStationId, String protocol, Map<String, String> attributes, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.protocol = checkNotNull(protocol);
         this.attributes = ImmutableMap.copyOf(checkNotNull(attributes));
+        this.identityContext = identityContext;
     }
 
     /**
@@ -67,8 +76,17 @@ public class BootChargingStationCommand {
     }
 
     /**
-     * Gets the attributes associated with the boot.
+     * Gets the protocol identifier.
      *
+     * @return the protocol identifier.
+     */
+    public String getProtocol() {
+        return protocol;
+    }
+
+    /**
+     * Gets the attributes associated with the boot.
+     * <p/>
      * These attributes are additional information provided by the charging station when it booted but which are not
      * required by Motown.
      *
@@ -78,23 +96,29 @@ public class BootChargingStationCommand {
         return attributes;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        BootChargingStationCommand that = (BootChargingStationCommand) o;
-
-        if (attributes != null ? !attributes.equals(that.attributes) : that.attributes != null) return false;
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-
-        return true;
+    /**
+     * Gets the identity context.
+     *
+     * @return identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 
     @Override
     public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + (attributes != null ? attributes.hashCode() : 0);
-        return result;
+        return Objects.hash(chargingStationId, protocol, attributes, identityContext);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final BootChargingStationCommand other = (BootChargingStationCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.protocol, other.protocol) && Objects.equals(this.attributes, other.attributes) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

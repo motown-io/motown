@@ -15,74 +15,104 @@
  */
 package io.motown.operatorapi.json.commands;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.AcceptChargingStationCommand;
+import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.CreateAndAcceptChargingStationCommand;
+import io.motown.domain.api.security.IdentityContext;
+import io.motown.domain.api.security.UserIdentity;
+import io.motown.domain.commandauthorization.CommandAuthorizationService;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import java.util.Set;
 
-@Component
 class RegisterJsonCommandHandler implements JsonCommandHandler {
 
     private static final String COMMAND_NAME = "Register";
 
     private DomainCommandGateway commandGateway;
 
-    private Gson gson;
     private ChargingStationRepository repository;
 
+    /**
+     * Set of user identities which shall be used in the {@code CreateChargingStationCommand} to indicate those users
+     * are authorized to execute all commands on the created aggregate.
+     */
+    private Set<UserIdentity> userIdentitiesWithAllPermissions;
+
+    private CommandAuthorizationService commandAuthorizationService;
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getCommandName() {
         return COMMAND_NAME;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void handle(String chargingStationId, String jsonCommand) {
-        JsonArray command = gson.fromJson(jsonCommand, JsonArray.class);
-        if (command != null && command.size() != 2) {
-            throw new IllegalArgumentException("The given JSON command is not well formed");
-        }
-        if (!COMMAND_NAME.equals(command.get(0).getAsString())) {
-            throw new IllegalArgumentException("The given JSON command is not supported by this command handler.");
-        }
-
+    public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) throws UserIdentityUnauthorizedException {
         ChargingStation chargingStation = repository.findOne(chargingStationId);
-        if (chargingStation == null) {
-            commandGateway.sendAndWait(new CreateChargingStationCommand(new ChargingStationId(chargingStationId), true));
-        } else if (!chargingStation.isAccepted()) {
-            commandGateway.send(new AcceptChargingStationCommand(new ChargingStationId(chargingStationId)));
-        } else {
-            throw new IllegalStateException("Charging station { %s } is already in accepted state, you can't register this station".format(chargingStationId));
-        }
+        ChargingStationId csId = new ChargingStationId(chargingStationId);
 
-        JsonObject payload = gson.fromJson(command.get(1), JsonObject.class);
-        if (payload != null) {
-            JsonElement jsConfiguration = payload.get("configuration");
-            if (jsConfiguration != null && jsConfiguration.isJsonObject()) {
-                ConfigureChargingStationCommand newCommand = JsonCommandParser.parseConfigureChargingStation(new ChargingStationId(chargingStationId), jsConfiguration.getAsJsonObject(), gson);
-                commandGateway.send(newCommand);
+        if (chargingStation == null) {
+            // charging station doesn't exist yet, check if the user identity is allowed to create/maintain charging stations
+            if (!userIdentitiesWithAllPermissions.contains(identityContext.getUserIdentity())) {
+                throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), CreateAndAcceptChargingStationCommand.class);
             }
+
+            commandGateway.send(new CreateAndAcceptChargingStationCommand(csId, userIdentitiesWithAllPermissions, identityContext));
+        } else if (!chargingStation.isAccepted()) {
+            if (!commandAuthorizationService.isAuthorized(csId, identityContext.getUserIdentity(), AcceptChargingStationCommand.class)) {
+                throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), AcceptChargingStationCommand.class);
+            }
+
+            commandGateway.send(new AcceptChargingStationCommand(csId, identityContext));
+        } else {
+            throw new IllegalStateException(String.format("Charging station { %s } is already in accepted state, you can't register this station", chargingStationId));
         }
     }
 
-    @Resource(name = "domainCommandGateway")
+    /**
+     * Sets the command gateway.
+     *
+     * @param commandGateway the command gateway.
+     */
     public void setCommandGateway(DomainCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
 
-    @Autowired
-    public void setGson(Gson gson) {
-        this.gson = gson;
-    }
-
-    @Autowired
+    /**
+     * Sets the charging station repository.
+     *
+     * @param repository the charging station repository.
+     */
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
+    }
+
+    /**
+     * Sets the command authorization service to use. The command authorization service checks if a certain user is
+     * allowed to execute a certain command.
+     *
+     * @param commandAuthorizationService    command authorization.
+     */
+    public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
+        this.commandAuthorizationService = commandAuthorizationService;
+    }
+
+    /**
+     * Set of user identities which shall be used in the {@code CreateChargingStationCommand} to indicate those users
+     * are authorized to execute all commands on the created aggregate.
+     *
+     * @param userIdentitiesWithAllPermissions    set of user identities.
+     */
+    public void setUserIdentitiesWithAllPermissions(Set<UserIdentity> userIdentitiesWithAllPermissions) {
+        this.userIdentitiesWithAllPermissions = userIdentitiesWithAllPermissions;
     }
 }

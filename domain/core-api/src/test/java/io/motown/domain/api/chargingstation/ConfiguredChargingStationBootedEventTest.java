@@ -15,31 +15,44 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import java.util.HashMap;
-import java.util.Map;
+
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static junit.framework.Assert.assertEquals;
 
 public class ConfiguredChargingStationBootedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNullAndAttributes() {
-        new ConfiguredChargingStationBootedEvent(null, new HashMap<String, String>());
+        new ConfiguredChargingStationBootedEvent(null, PROTOCOL, new HashMap<String, String>(), IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdAndAttributesNull() {
-        new ConfiguredChargingStationBootedEvent(new ChargingStationId("CS-001"), null);
+        new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, null, IDENTITY_CONTEXT);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedOperationExceptionThrownWhenModifyingAttributes() {
-        Map<String, String> attributes = new HashMap<>();
-        attributes.put("vendor", "VENDOR");
-        attributes.put("model", "MODEL");
+        ConfiguredChargingStationBootedEvent event = new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT);
 
-        ConfiguredChargingStationBootedEvent command = new ConfiguredChargingStationBootedEvent(new ChargingStationId("CS-001"), attributes);
+        event.getAttributes().put("foo", "bar");
+    }
 
-        command.getAttributes().put("vendor", "ANOTHER_VENDOR");
+    @Test
+    public void constructorSetsFields() {
+        ConfiguredChargingStationBootedEvent event = new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT);
+
+        assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
+        assertEquals(PROTOCOL, event.getProtocol());
+        assertEquals(BOOT_NOTIFICATION_ATTRIBUTES, event.getAttributes());
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(ConfiguredChargingStationBootedEvent.class).usingGetClass().verify();
     }
 }

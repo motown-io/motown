@@ -16,11 +16,68 @@
 package io.motown.operatorapi.json.commands;
 
 import io.motown.domain.api.chargingstation.*;
+import org.axonframework.common.annotation.MetaData;
 
 interface DomainCommandGateway {
-    void send(RequestUnlockConnectorCommand command);
+    void send(RequestUnlockEvseCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
     void send(ConfigureChargingStationCommand command);
-    void sendAndWait(CreateChargingStationCommand command);
+
+    void send(CreateAndAcceptChargingStationCommand command);
+
     void send(AcceptChargingStationCommand command);
-    void send(RequestStopTransactionCommand command);
+
+    void send(RequestStartTransactionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(RequestStopTransactionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(RequestSoftResetChargingStationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(RequestHardResetChargingStationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(RequestChangeComponentAvailabilityToInoperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(RequestChangeComponentAvailabilityToOperativeCommand requestChangeComponentAvailabilityToOperativeCommand, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
+
+    void send(RequestChangeChargingStationAvailabilityToInoperativeCommand requestChangeChargingStationAvailabilityToInoperativeCommand, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
+
+    void send(RequestChangeChargingStationAvailabilityToOperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(RequestDataTransferCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(RequestChangeConfigurationItemCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(RequestDiagnosticsCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(RequestClearCacheCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(RequestFirmwareUpdateCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(RequestAuthorizationListVersionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(RequestSendAuthorizationListCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(RequestReserveNowCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(RequestCancelReservationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(RequestConfigurationItemsCommand command);
+
+    void send(PlaceChargingStationCommand command);
+
+    void send(ImproveChargingStationLocationCommand command);
+
+    void send(MoveChargingStationCommand command);
+
+    void send(MakeChargingStationReservableCommand command);
+
+    void send(MakeChargingStationNotReservableCommand command);
+
+    void send(SetChargingStationOpeningTimesCommand command);
+
+    void send(AddChargingStationOpeningTimesCommand command);
+
+    void send(GrantPermissionCommand command);
+
+    void send(RevokePermissionCommand command);
 }

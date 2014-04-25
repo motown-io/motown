@@ -19,25 +19,14 @@ import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.entities.Transaction;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository;
-import org.axonframework.commandhandling.CommandBus;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Random;
 
-@Service
 public class OperatorApiService {
-
-    private Random random;
-
-    private CommandBus commandBus;
 
     private ChargingStationRepository repository;
 
     private TransactionRepository transactionRepository;
-
-    public void sendUnlockConnectorCommand(String chargingStationId, int connectorId) { }
 
     public List<ChargingStation> findAllChargingStations() {
         return repository.findAll();
@@ -47,22 +36,10 @@ public class OperatorApiService {
         return transactionRepository.findAll();
     }
 
-    @Autowired
-    public void setRandom(Random random) {
-        this.random = random;
-    }
-
-    @Autowired
-    public void setCommandBus(CommandBus commandBus) {
-        this.commandBus = commandBus;
-    }
-
-    @Autowired
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
     }
 
-    @Autowired
     public void setTransactionRepository(TransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
     }

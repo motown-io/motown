@@ -15,25 +15,34 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
+
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code AcceptChargingStationCommand} is the command which is published when a charging station should be registered.
+ * {@code AcceptChargingStationCommand} is the command which is published when a charging station is accepted as part of
+ * the charging infrastructure by an operator.
  */
-public class AcceptChargingStationCommand {
+public final class AcceptChargingStationCommand {
+
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
+
+    private final IdentityContext identityContext;
 
     /**
      * Creates a {@code AcceptChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
+     * @param identityContext the identity context.
      * @throws NullPointerException if {@code chargingStationId} is {@code null}.
      */
-    public AcceptChargingStationCommand(ChargingStationId chargingStationId) {
+    public AcceptChargingStationCommand(ChargingStationId chargingStationId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -43,5 +52,31 @@ public class AcceptChargingStationCommand {
      */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, identityContext);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final AcceptChargingStationCommand other = (AcceptChargingStationCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

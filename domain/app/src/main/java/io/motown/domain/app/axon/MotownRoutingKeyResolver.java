@@ -34,9 +34,10 @@ public class MotownRoutingKeyResolver implements RoutingKeyResolver {
     public String resolveRoutingKey(EventMessage eventMessage) {
         if (eventMessage.getPayload() instanceof CommunicationWithChargingStationRequestedEvent) {
             CommunicationWithChargingStationRequestedEvent event = (CommunicationWithChargingStationRequestedEvent) eventMessage.getPayload();
-            return ROUTING_KEY_PREFIX + event.getChargingStationId().getId().toLowerCase();
+            return ROUTING_KEY_PREFIX + event.getProtocol();
         } else {
             return this.routingKeyResolver.resolveRoutingKey(eventMessage);
         }
     }
+
 }

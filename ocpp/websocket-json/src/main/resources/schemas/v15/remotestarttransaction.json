@@ -1,0 +1,17 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "RemoteStartTransactionRequest",
+    "type": "object",
+    "properties": {
+        "idTag": {
+            "type": "string",
+            "maxLength": 20
+        },
+        "connectorId": {
+            "type": "integer"
+        }
+    },
+    "required": [
+        "idTag"
+    ]
+}

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:axon="http://www.axonframework.org/schema/core"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xmlns:axon-amqp="http://www.axonframework.org/schema/amqp"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.axonframework.org/schema/amqp http://www.axonframework.org/schema/axon-amqp.xsd
+                           http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
+                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+
+    <context:property-placeholder location="classpath:config.properties, file:${io.motown.chargingstationconfiguration.app.config}"
+                                  ignore-resource-not-found="true"/>
+
+    <bean class="io.motown.chargingstationconfiguration.app.ConfigurationEventListener">
+        <property name="commandGateway" ref="configurationCommandGateway" />
+        <property name="domainService" ref="domainService" />
+        <property name="addOnId" value="1" />
+    </bean>
+
+    <bean id="domainService" class="io.motown.chargingstationconfiguration.viewmodel.domain.DomainService">
+        <property name="chargingStationTypeRepository" ref="chargingStationRepositoryChargingStationConfiguration" />
+        <property name="connectorRepository" ref="connectorRepositoryChargingStationConfiguration" />
+        <property name="evseRepository" ref="evseRepositoryChargingStationConfiguration" />
+        <property name="manufacturerRepository" ref="manufacturerRepositoryChargingStationConfiguration" />
+    </bean>
+
+    <bean id="chargingStationRepositoryChargingStationConfiguration" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository">
+        <property name="entityManager" ref="jpaEntityManagerChargingStationConfiguration" />
+    </bean>
+
+    <bean id="connectorRepositoryChargingStationConfiguration" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ConnectorRepository">
+        <property name="entityManager" ref="jpaEntityManagerChargingStationConfiguration" />
+    </bean>
+
+    <bean id="evseRepositoryChargingStationConfiguration" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.EvseRepository">
+        <property name="entityManager" ref="jpaEntityManagerChargingStationConfiguration" />
+    </bean>
+
+    <bean id="manufacturerRepositoryChargingStationConfiguration" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ManufacturerRepository">
+        <property name="entityManager" ref="jpaEntityManagerChargingStationConfiguration" />
+    </bean>
+
+    <bean id="beanValidationInterceptor" class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor"/>
+
+    <bean id="asyncExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean">
+        <property name="corePoolSize" value="1"/>
+        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+    </bean>
+
+    <bean id="configurationCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
+        <property name="commandBus" ref="commandBus"/>
+        <property name="gatewayInterface" value="io.motown.chargingstationconfiguration.app.ConfigurationCommandGateway"/>
+    </bean>
+
+    <bean id="commandBus"
+          class="org.axonframework.commandhandling.distributed.DistributedCommandBus">
+        <constructor-arg ref="jgroupsConnector"/>
+        <property name="CommandDispatchInterceptors" ref="beanValidationInterceptor"/>
+    </bean>
+
+    <bean id="jgroupsConnector"
+          class="org.axonframework.commandhandling.distributed.jgroups.JGroupsConnectorFactoryBean">
+        <property name="configuration"
+                  value="flush-udp.xml"/>
+        <property name="clusterName"
+                  value="io.motown.commands"/>
+        <property name="localSegment">
+            <axon:command-bus/>
+        </property>
+        <property name="serializer">
+            <bean class="org.axonframework.serializer.xml.XStreamSerializer"/>
+        </property>
+    </bean>
+
+    <!-- Axon -->
+
+    <axon:annotation-config/>
+
+    <axon:event-bus id="eventBus" terminal="terminal"/>
+
+    <axon-amqp:terminal id="terminal"
+                        connection-factory="amqpConnection"
+                        serializer="serializer"
+                        exchange-name="${io.motown.chargingstationconfiguration.app.eventbus.amqp.rabbit.exchange.name}">
+        <axon-amqp:default-configuration />
+    </axon-amqp:terminal>
+
+    <axon:cluster id="cluster" default="true">
+        <bean class="org.axonframework.eventhandling.async.AsynchronousCluster">
+            <constructor-arg value="${io.motown.chargingstationconfiguration.app.eventbus.amqp.rabbit.queue.name}"/>
+            <constructor-arg ref="asyncExecutor"/>
+            <constructor-arg>
+                <bean class="org.axonframework.eventhandling.async.FullConcurrencyPolicy"/>
+            </constructor-arg>
+        </bean>
+    </axon:cluster>
+
+    <bean id="serializer" class="org.axonframework.serializer.xml.XStreamSerializer"/>
+
+    <!-- AMQP -->
+
+    <rabbit:connection-factory id="amqpConnection"
+                               username="${io.motown.chargingstationconfiguration.app.eventbus.amqp.rabbit.username}"
+                               password="${io.motown.chargingstationconfiguration.app.eventbus.amqp.rabbit.password}"
+                               virtual-host="${io.motown.chargingstationconfiguration.app.eventbus.amqp.rabbit.virtualhost}"
+                               host="${io.motown.chargingstationconfiguration.app.eventbus.amqp.rabbit.host}"/>
+
+    <rabbit:admin id="amqpAdmin"
+                  connection-factory="amqpConnection"/>
+
+    <rabbit:queue id="queue"
+                  name="${io.motown.chargingstationconfiguration.app.eventbus.amqp.rabbit.queue.name}"
+                  durable="true"/>
+
+    <rabbit:fanout-exchange id="exchange"
+                            name="${io.motown.chargingstationconfiguration.app.eventbus.amqp.rabbit.exchange.name}"
+                            durable="true">
+        <rabbit:bindings>
+            <rabbit:binding queue="queue"/>
+        </rabbit:bindings>
+    </rabbit:fanout-exchange>
+
+    <!-- Spring Data JPA -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="io.motown.chargingstationconfiguration.viewmodel.persistence"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="database" value="HSQL"/>
+                <property name="generateDdl" value="true"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="jpaEntityManagerChargingStationConfiguration" factory-bean="entityManagerFactory" factory-method="createEntityManager" />
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+
+    <jdbc:embedded-database id="dataSource" type="HSQL">
+        <jdbc:script location="classpath*:META-INF/hsqldb/schema.sql" />
+        <!-- initialData.sql contains some dummy values to be able to use the charging station configuration add-on -->
+        <jdbc:script location="classpath*:META-INF/hsqldb/initialData.sql" />
+    </jdbc:embedded-database>
+
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.ChargingStationTypeResource">
+        <property name="domainService" ref="domainService" />
+    </bean>
+
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.ConnectorResource">
+        <property name="domainService" ref="domainService" />
+    </bean>
+
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.EvseResource">
+        <property name="domainService" ref="domainService" />
+    </bean>
+
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.ManufacturerResource">
+        <property name="domainService" ref="domainService" />
+    </bean>
+
+</beans>

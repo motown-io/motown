@@ -15,36 +15,39 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import java.util.HashMap;
-import java.util.Map;
+
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class BootChargingStationCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingChargingStationWithChargingStationIdNull() {
-        new BootChargingStationCommand(null);
+        new BootChargingStationCommand(null, PROTOCOL, IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingChargingStationWithChargingStationIdNullAndAttributes() {
-        new BootChargingStationCommand(null, new HashMap<String, String>());
+        new BootChargingStationCommand(null, PROTOCOL, new HashMap<String, String>(), IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingChargingStationWithChargingStationIdAndAttributesNull() {
-        new BootChargingStationCommand(new ChargingStationId("CS-001"), null);
+        new BootChargingStationCommand(CHARGING_STATION_ID, null, IDENTITY_CONTEXT);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedOperationExceptionThrownWhenModifyingAttributes() {
-        Map<String, String> attributes = new HashMap<>();
-        attributes.put("vendor", "VENDOR");
-        attributes.put("model", "MODEL");
+        BootChargingStationCommand command = new BootChargingStationCommand(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT);
 
-        BootChargingStationCommand command = new BootChargingStationCommand(new ChargingStationId("CS-001"), attributes);
+        command.getAttributes().put("foo", "bar");
+    }
 
-        command.getAttributes().put("vendor", "ANOTHER_VENDOR");
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(BootChargingStationCommand.class).usingGetClass().verify();
     }
 }

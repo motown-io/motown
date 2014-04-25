@@ -15,30 +15,43 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import com.google.common.collect.ImmutableSet;
+import io.motown.domain.api.security.IdentityContext;
+import io.motown.domain.api.security.UserIdentity;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
+import java.util.Objects;
+import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * {@code CreateChargingStationCommand} is the command which is published when a charging station should be created.
  */
-public class CreateChargingStationCommand {
+public final class CreateChargingStationCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final boolean accept;
+    private final Set<UserIdentity> userIdentitiesWithAllPermissions;
+
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code CreateChargingStationCommand} with an identifier.
      *
-     *
-     * @param chargingStationId the identifier of the charging station.
-     * @param accept
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @param chargingStationId                the identifier of the charging station.
+     * @param userIdentitiesWithAllPermissions set of user identities which have all permissions on the created charging station.
+     * @param identityContext                  the identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code userIdentitiesWithAllPermissions} or {@code identityContext} is {@code null}.
+     * @throws IllegalArgumentException if {@code usersWithAllPermissions} is empty.
      */
-    public CreateChargingStationCommand(ChargingStationId chargingStationId, boolean accept) {
+    public CreateChargingStationCommand(ChargingStationId chargingStationId, Set<UserIdentity> userIdentitiesWithAllPermissions, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.accept = accept;
+        this.userIdentitiesWithAllPermissions = ImmutableSet.copyOf(checkNotNull(userIdentitiesWithAllPermissions));
+        checkArgument(!this.userIdentitiesWithAllPermissions.isEmpty());
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -51,31 +64,37 @@ public class CreateChargingStationCommand {
     }
 
     /**
-     * Gets the acceptance state for this station.
+     * Gets the set of user identities which have all permissions on the created charging station.
      *
-     * @return the acceptance state.
+     * @return set of user identities.
      */
-    public Boolean isAccepted() {
-        return accept;
+    public Set<UserIdentity> getUserIdentitiesWithAllPermissions() {
+        return userIdentitiesWithAllPermissions;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CreateChargingStationCommand that = (CreateChargingStationCommand) o;
-
-        if (accept != that.accept) return false;
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-
-        return true;
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 
     @Override
     public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + (accept ? 1 : 0);
-        return result;
+        return Objects.hash(chargingStationId, userIdentitiesWithAllPermissions, identityContext);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final CreateChargingStationCommand other = (CreateChargingStationCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.userIdentitiesWithAllPermissions, other.userIdentitiesWithAllPermissions) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

@@ -15,31 +15,35 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code RequestStopTransactionCommand} is the command which is published when a transaction has to be
- * stopped remotely.
+ * {@code RequestStopTransactionCommand} is the command which is published when a transaction should be stopped.
  */
-public class RequestStopTransactionCommand {
+public final class RequestStopTransactionCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final String transactionId;
+    private final TransactionId transactionId;
+
+    private final IdentityContext identityContext;
 
     /**
-     * Creates a {@code RequestStopTransactionCommand} with an identifier.
+     * Creates a {@code RequestStopTransactionCommand} with an identifier, transaction identifier and identity context.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param transactionId the unique transaction identifier.
-     * @throws NullPointerException if {@code chargingStationId} or {@code transactionId} is {@code null}.
+     * @param transactionId     the unique transaction identifier.
+     * @param identityContext   the identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code transactionId} or {@code identityContext} is {@code null}.
      */
-    public RequestStopTransactionCommand(ChargingStationId chargingStationId, String transactionId) {
+    public RequestStopTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = checkNotNull(transactionId);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -56,7 +60,16 @@ public class RequestStopTransactionCommand {
      *
      * @return the transaction id.
      */
-    public String getTransactionId() {
+    public TransactionId getTransactionId() {
         return transactionId;
+    }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 }

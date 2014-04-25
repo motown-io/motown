@@ -15,6 +15,8 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
+
 import java.util.Map;
 
 /**
@@ -27,13 +29,15 @@ public final class ConfiguredChargingStationBootedEvent extends ChargingStationB
      * attributes.
      *
      * @param chargingStationId the identifier of the charging station.
+     * @param protocol          protocol identifier.
      * @param attributes        a {@link java.util.Map} of attributes. These attributes are additional information
      *                          provided by the charging station when it booted but which are not required by Motown.
      *                          Because {@link java.util.Map} implementations are potentially mutable a defensive copy
      *                          is made.
-     * @throws NullPointerException if {@code chargingStationId} or {@code attributes} is {@code null}.
+     * @param identityContext the identity context.
+     * @throws NullPointerException if {@code chargingStationId} or {@code protocol} or {@code attributes} is {@code null}.
      */
-    public ConfiguredChargingStationBootedEvent(ChargingStationId chargingStationId, Map<String, String> attributes) {
-        super(chargingStationId, attributes);
+    public ConfiguredChargingStationBootedEvent(ChargingStationId chargingStationId, String protocol, Map<String, String> attributes, IdentityContext identityContext) {
+        super(chargingStationId, protocol, attributes, identityContext);
     }
 }

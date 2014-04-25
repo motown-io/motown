@@ -15,13 +15,11 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import java.util.Collections;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -30,50 +28,27 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * {@code ConfigureChargingStationCommand} is the command which is published when a charging station should be
  * configured.
  */
-public class ConfigureChargingStationCommand {
+public final class ConfigureChargingStationCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final Set<Connector> connectors;
+    private final Set<Evse> evses;
 
-    private final Map<String, String> settings;
-
-    /**
-     * Creates a {@code ConfigureChargingStationCommand} with an identifier.
-     *
-     * @param chargingStationId the identifier of the charging station.
-     * @param connectors        the connectors with which the charging station should be configured.
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
-     */
-    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Connector> connectors) {
-        this(chargingStationId, connectors, Collections.<String, String>emptyMap());
-    }
+    private final IdentityContext identityContext;
 
     /**
      * Creates a {@code ConfigureChargingStationCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param settings the settings with which the charging station should be configured.
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @param evses             the evses with which the charging station should be configured.
+     * @param identityContext   the identity context.
+     * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
      */
-    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Map<String, String> settings) {
-        this(chargingStationId, Collections.<Connector>emptySet(), settings);
-    }
-
-    /**
-     * Creates a {@code ConfigureChargingStationCommand} with an identifier.
-     *
-     * @param chargingStationId the identifier of the charging station.
-     * @param connectors the connectors with which the charging station should be configured.
-     * @param settings the settings with which the charging station should be configured.
-     * @throws NullPointerException if {@code chargingStationId}, {@code connectors}, or {@code settings} is
-     * {@code null}.
-     */
-    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Connector> connectors, Map<String, String> settings) {
+    public ConfigureChargingStationCommand(ChargingStationId chargingStationId, Set<Evse> evses, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.connectors = ImmutableSet.copyOf(checkNotNull(connectors));
-        this.settings = ImmutableMap.copyOf(checkNotNull(settings));
+        this.evses = ImmutableSet.copyOf(checkNotNull(evses));
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -86,54 +61,55 @@ public class ConfigureChargingStationCommand {
     }
 
     /**
-     * Gets the connectors with which the charging station should be configured.
+     * Gets the evses with which the charging station should be configured.
      *
-     * @return an immutable {@link java.util.Set} of connectors.
+     * @return an immutable {@link java.util.Set} of evses.
      */
-    public Set<Connector> getConnectors() {
-        return connectors;
+    public Set<Evse> getEvses() {
+        return evses;
     }
 
     /**
-     * Gets the configuration items with which the charging station should be configured.
+     * Gets the identity context.
      *
-     * These configuration items are additional information provided with which the charging station should be
-     * configured but which are not required by Motown.
-     *
-     * @return an immutable {@link java.util.Map} of configuration items.
+     * @return the identity context.
      */
-    public Map<String, String> getSettings() {
-        return settings;
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ConfigureChargingStationCommand that = (ConfigureChargingStationCommand) o;
-
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (!connectors.equals(that.connectors)) return false;
-        if (!settings.equals(that.settings)) return false;
-
-        return true;
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + connectors.hashCode();
-        result = 31 * result + settings.hashCode();
-        return result;
+        return Objects.hash(chargingStationId, evses, identityContext);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final ConfigureChargingStationCommand other = (ConfigureChargingStationCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.evses, other.evses) && Objects.equals(this.identityContext, other.identityContext);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
-        return Objects.toStringHelper(this.getClass())
+        return com.google.common.base.Objects.toStringHelper(this.getClass())
                 .add("chargingStationId", chargingStationId)
-                .add("connectors", connectors)
-                .add("settings", settings)
+                .add("evses", evses)
+                .add("identityContext", identityContext)
                 .toString();
     }
 }

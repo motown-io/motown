@@ -17,6 +17,7 @@ package io.motown.ocpp.viewmodel.persistence.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 public class ChargingStation {
@@ -28,7 +29,9 @@ public class ChargingStation {
     private boolean isRegistered = false;
     private boolean isConfigured = false;
 
-    private int numberOfConnectors;
+    private int numberOfEvses;
+
+    private String protocol;
 
     private ChargingStation() {
         // Private no-arg constructor for Hibernate.
@@ -59,8 +62,8 @@ public class ChargingStation {
         return isConfigured;
     }
 
-    public boolean isRegisteredAndConfigured(){
-        return (this.isRegistered() && this.isConfigured());
+    public boolean isRegisteredAndConfigured() {
+        return this.isRegistered() && this.isConfigured();
     }
 
     public void setRegistered(boolean registered) {
@@ -75,12 +78,36 @@ public class ChargingStation {
         this.ipAddress = ipAddress;
     }
 
-    public int getNumberOfConnectors() {
-        return numberOfConnectors;
+    public int getNumberOfEvses() {
+        return numberOfEvses;
     }
 
-    public void setNumberOfConnectors(int numberOfConnectors) {
-        this.numberOfConnectors = numberOfConnectors;
+    public void setNumberOfEvses(int numberOfEvses) {
+        this.numberOfEvses = numberOfEvses;
     }
 
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, ipAddress, isRegistered, isConfigured, numberOfEvses, protocol);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final ChargingStation other = (ChargingStation) obj;
+        return Objects.equals(this.id, other.id) && Objects.equals(this.ipAddress, other.ipAddress) && Objects.equals(this.isRegistered, other.isRegistered) && Objects.equals(this.isConfigured, other.isConfigured) && Objects.equals(this.numberOfEvses, other.numberOfEvses) && Objects.equals(this.protocol, other.protocol);
+    }
 }

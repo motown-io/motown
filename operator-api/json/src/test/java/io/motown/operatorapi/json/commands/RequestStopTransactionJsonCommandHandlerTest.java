@@ -15,40 +15,35 @@
  */
 package io.motown.operatorapi.json.commands;
 
-import com.google.gson.GsonBuilder;
-import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
-import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static io.motown.operatorapi.json.commands.OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING;
 
 public class RequestStopTransactionJsonCommandHandlerTest {
+
+    private Gson gson;
 
     private RequestStopTransactionJsonCommandHandler handler = new RequestStopTransactionJsonCommandHandler();
 
     @Before
     public void setUp() {
-        handler.setGson(new GsonBuilder().create());
+        gson = OperatorApiJsonTestUtils.getGson();
+
+        handler.setGson(gson);
         handler.setCommandGateway(new TestDomainCommandGateway());
-
-        // setup mocking for JPA / spring repo.
-        ChargingStationRepository repo = mock(ChargingStationRepository.class);
-        ChargingStation registeredStation = mock(ChargingStation.class);
-        when(registeredStation.isAccepted()).thenReturn(true);
-        ChargingStation unregisteredStation = mock(ChargingStation.class);
-        when(unregisteredStation.isAccepted()).thenReturn(false);
-        when(repo.findOne("TEST_REGISTERED")).thenReturn(registeredStation);
-        when(repo.findOne("TEST_UNREGISTERED")).thenReturn(unregisteredStation);
-
-        handler.setRepository(repo);
+        handler.setRepository(OperatorApiJsonTestUtils.getMockChargingStationRepository());
+        handler.setCommandAuthorizationService(OperatorApiJsonTestUtils.getCommandAuthorizationService());
     }
 
     @Test
-    public void testHandleStopTransactionOnRegisteredStation() {
-        String json = "['RequestStopTransaction',{'transactionId' : 123}]";
-        handler.handle("TEST_REGISTERED", json);
+    public void testHandleStopTransactionOnRegisteredStation() throws UserIdentityUnauthorizedException {
+        JsonObject commandObject = gson.fromJson("{'id' : 123}", JsonObject.class);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT);
     }
 
     //TODO: Add more tests scenarios when the RequestStopTransactionJsonCommandHandler is more final - Ingo Pak, 04 dec 2013

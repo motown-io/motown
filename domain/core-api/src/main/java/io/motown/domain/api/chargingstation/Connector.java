@@ -15,50 +15,71 @@
  */
 package io.motown.domain.api.chargingstation;
 
-public class Connector {
+import java.util.Objects;
 
-    public final static int ALL = 0;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-    private int connectorId;
-    private String connectorType;  // should be enum ?
+public final class Connector {
+
     private int maxAmp;
 
-    public Connector(int connectorId, String connectorType, int maxAmp) {
-        this.connectorId = connectorId;
-        this.connectorType = connectorType;
+    private int phase;
+
+    private int voltage;
+
+    private ChargingProtocol chargingProtocol;
+
+    private Current current;
+
+    private ConnectorType connectorType;
+
+    public Connector(int maxAmp, int phase, int voltage, ChargingProtocol chargingProtocol, Current current, ConnectorType connectorType) {
         this.maxAmp = maxAmp;
+        this.phase = phase;
+        this.voltage = voltage;
+        this.chargingProtocol = checkNotNull(chargingProtocol);
+        this.current = checkNotNull(current);
+        this.connectorType = checkNotNull(connectorType);
     }
 
-    public int getConnectorId() {
-        return this.connectorId;
+    public int getMaxAmp() {
+        return maxAmp;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public int getPhase() {
+        return phase;
+    }
 
-        Connector connector = (Connector) o;
+    public int getVoltage() {
+        return voltage;
+    }
 
-        if (connectorId != connector.connectorId) return false;
-        if (maxAmp != connector.maxAmp) return false;
-        if (connectorType != null ? !connectorType.equals(connector.connectorType) : connector.connectorType != null)
-            return false;
+    public ChargingProtocol getChargingProtocol() {
+        return chargingProtocol;
+    }
 
-        return true;
+    public Current getCurrent() {
+        return current;
+    }
+
+    public ConnectorType getConnectorType() {
+        return connectorType;
     }
 
     @Override
     public int hashCode() {
-        int result = connectorId;
-        result = 31 * result + (connectorType != null ? connectorType.hashCode() : 0);
-        result = 31 * result + maxAmp;
-        return result;
+        return Objects.hash(maxAmp, phase, voltage, chargingProtocol, current, connectorType);
     }
 
     @Override
-    public String toString() {
-        return String.format("Connector(id = %d, type = %s, maxAmp = %d)", connectorId, connectorType, maxAmp);
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final Connector other = (Connector) obj;
+        return Objects.equals(this.maxAmp, other.maxAmp) && Objects.equals(this.phase, other.phase) && Objects.equals(this.voltage, other.voltage) && Objects.equals(this.chargingProtocol, other.chargingProtocol) && Objects.equals(this.current, other.current) && Objects.equals(this.connectorType, other.connectorType);
     }
-
 }

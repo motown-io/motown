@@ -17,29 +17,45 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.google.gson.JsonObject;
+import io.motown.domain.api.security.IdentityContext;
+import io.motown.domain.api.security.TypeBasedAddOnIdentity;
+import io.motown.domain.api.security.UserIdentity;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 
-import javax.annotation.Resource;
 import java.util.List;
 
-@Service
+import static com.google.common.base.Preconditions.checkArgument;
+
 public class JsonCommandService {
+
+    private static final int COMMAND_ARRAY_SIZE = 2;
+
+    private static final int COMMAND_NAME_INDEX = 0;
+
+    private static final int COMMAND_PAYLOAD_INDEX = 1;
 
     private Gson gson;
 
     private List<JsonCommandHandler> jsonCommandHandlers;
 
-    public void handleCommand(String chargingStationId, String jsonCommand) {
-        String commandName = parseCommandName(jsonCommand);
+    private static final String ADD_ON_TYPE = "OPERATOR-API";
+
+    private String addOnId;
+
+    public void handleCommand(String chargingStationId, String jsonCommand, UserIdentity userIdentity) throws UserIdentityUnauthorizedException {
+        JsonArray commandAsArray = gson.fromJson(jsonCommand, JsonArray.class);
+
+        checkArgument(commandAsArray.size() == COMMAND_ARRAY_SIZE, "API command must be a JSON array with two elements");
+
+        String commandName = commandAsArray.get(COMMAND_NAME_INDEX).getAsString();
+        JsonObject commandPayloadAsObject = commandAsArray.get(COMMAND_PAYLOAD_INDEX).getAsJsonObject();
+
         JsonCommandHandler commandHandler = getCommandHandler(commandName);
 
-        commandHandler.handle(chargingStationId, jsonCommand);
-    }
+        IdentityContext identityContext = new IdentityContext(new TypeBasedAddOnIdentity(ADD_ON_TYPE, addOnId), userIdentity);
 
-    private String parseCommandName(String jsonCommand) {
-        JsonArray command = gson.fromJson(jsonCommand, JsonArray.class);
-        return command.get(0).getAsString();
+        commandHandler.handle(chargingStationId, commandPayloadAsObject, identityContext);
     }
 
     private JsonCommandHandler getCommandHandler(String commandName) {
@@ -52,13 +68,15 @@ public class JsonCommandService {
         throw new IllegalArgumentException("No command handler is configured for handling [" + commandName + "].");
     }
 
-    @Autowired
     public void setGson(Gson gson) {
         this.gson = gson;
     }
 
-    @Resource(name = "jsonCommandHandlers")
     public void setJsonCommandHandlers(List<JsonCommandHandler> jsonCommandHandlers) {
         this.jsonCommandHandlers = jsonCommandHandlers;
+    }
+
+    public void setAddOnId(String addOnId) {
+        this.addOnId = addOnId;
     }
 }

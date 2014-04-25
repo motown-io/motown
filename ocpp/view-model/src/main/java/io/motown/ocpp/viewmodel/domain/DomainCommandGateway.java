@@ -16,12 +16,24 @@
 package io.motown.ocpp.viewmodel.domain;
 
 import io.motown.domain.api.chargingstation.*;
+import org.axonframework.commandhandling.CommandCallback;
+import org.axonframework.common.annotation.MetaData;
 
 import java.util.concurrent.TimeUnit;
 
 interface DomainCommandGateway {
 
     void send(BootChargingStationCommand command);
+
+    void send(HeartbeatCommand command);
+
+    /**
+     * Send a {@code ChangeConfigurationItemCommand}.
+     *
+     * @param command          the command to send.
+     * @param correlationToken the correlation token.
+     */
+    void send(ChangeConfigurationItemCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
     void send(ConfigureChargingStationCommand command);
 
@@ -31,6 +43,42 @@ interface DomainCommandGateway {
 
     AuthorizationResultStatus sendAndWait(AuthorizeCommand command, long timeout, TimeUnit unit);
 
-    void send(CreateChargingStationCommand command);
+    void send(CreateChargingStationCommand command, CommandCallback<Object> callback);
 
+    void send(ProcessMeterValueCommand command);
+
+    void send(DiagnosticsFileNameReceivedCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(UpdateDiagnosticsUploadStatusCommand command);
+
+    void send(UpdateFirmwareStatusCommand command);
+
+    void send(AuthorizationListVersionReceivedCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(ChangeAuthorizationListCommand changeChargingStationAvailabilityToOperativeCommand, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(IncomingDataTransferCommand command);
+
+    void send(DataTransferResponseCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(StatusNotificationCommand command);
+
+    void send(ReserveNowCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(CancelReservationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(ChangeComponentAvailabilityToInoperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(ChangeChargingStationAvailabilityToInoperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(ChangeComponentAvailabilityToOperativeCommand changeComponentAvailabilityToOperativeCommand, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(ChangeChargingStationAvailabilityToOperativeCommand changeChargingStationAvailabilityToOperativeCommand, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(ReceiveConfigurationItemsCommand command);
+
+    void send(ClearCacheCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+
+    void send(UnlockEvseCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
 }
+

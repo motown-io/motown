@@ -30,17 +30,33 @@ POST http://host.name/charging-stations/**stationid**/commands
 payload :
 
 	['Register',{
-	   'configuration' : {
-	       'connectors' : [{
-	          'connectorId' : 1, 
-	          'connectorType' : 'Type2', 
-	          'maxAmp' : 16 
-	       }], 
-	       'settings' : {
-	          'key':'value', 
-	          'key2':'value2'
-	       }
-	   }
+        'configuration' : {
+            'evses' : [{
+                'evseId' : 1,
+                'connectors' : [{
+                    'maxAmp': 32,
+                    'phase': 3,
+                    'voltage': 230,
+                    'chargingProtocol': 'MODE3',
+                    'current': 'AC',
+                    'connectorType': 'TESLA'
+                }]
+            },{
+                'evseId' : 2,
+                'connectors' : [{
+                    'maxAmp': 32,
+                    'phase': 3,
+                    'voltage': 230,
+                    'chargingProtocol': 'MODE3',
+                    'current': 'AC',
+                    'connectorType': 'TESLA'
+                }]
+            }],
+            'settings' : {
+                'key':'value',
+                'key2':'value2'
+            }
+        }
 	}]
 
 The given configuration in the Register command is fully described at the Configure command. 

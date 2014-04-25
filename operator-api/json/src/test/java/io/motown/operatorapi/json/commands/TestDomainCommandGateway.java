@@ -16,37 +16,167 @@
 package io.motown.operatorapi.json.commands;
 
 import io.motown.domain.api.chargingstation.*;
+import org.axonframework.common.annotation.MetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TestDomainCommandGateway implements DomainCommandGateway {
 
-    private static final Logger log = LoggerFactory.getLogger(TestDomainCommandGateway.class);
-
+    private static final Logger LOG = LoggerFactory.getLogger(TestDomainCommandGateway.class);
 
     @Override
-    public void send(RequestUnlockConnectorCommand command) {
-        log.debug("RequestUnlockConnectorCommand:" + command.toString());
+    public void send(RequestUnlockEvseCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestUnlockEvseCommand:" + command.toString());
     }
 
     @Override
     public void send(ConfigureChargingStationCommand command) {
-        log.debug("ConfigureChargingStationCommand:" + command.toString());
+        LOG.debug("ConfigureChargingStationCommand:" + command.toString());
     }
 
     @Override
-    public void sendAndWait(CreateChargingStationCommand command) {
-        log.debug("CreateChargingStationCommand:" + command.toString());
+    public void send(CreateAndAcceptChargingStationCommand command) {
+        LOG.debug("CreateChargingStationCommand:" + command.toString());
     }
 
     @Override
     public void send(AcceptChargingStationCommand command) {
-        log.debug("AcceptChargingStationCommand:" + command.toString());
+        LOG.debug("AcceptChargingStationCommand:" + command.toString());
     }
 
     @Override
-    public void send(RequestStopTransactionCommand command){
-        log.debug("RequestStopTransactionCommand:" + command.toString());
+    public void send(RequestStartTransactionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestStartTransactionCommand:" + command.toString());
+    }
+
+    @Override
+    public void send(RequestStopTransactionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestStopTransactionCommand:" + command.toString());
+    }
+
+    @Override
+    public void send(RequestSoftResetChargingStationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestSoftResetChargingStationCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestHardResetChargingStationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestHardResetChargingStationCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestChangeComponentAvailabilityToInoperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestChangeComponentAvailabilityToInoperativeCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestChangeComponentAvailabilityToOperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
+        LOG.debug("RequestChangeComponentAvailabilityToOperativeCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestChangeChargingStationAvailabilityToInoperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
+        LOG.debug("RequestChangeChargingStationAvailabilityToInoperativeCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestChangeChargingStationAvailabilityToOperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestChangeChargingStationAvailabilityToOperativeCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestDataTransferCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestDataTransferCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestChangeConfigurationItemCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestChangeConfigurationItemCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestDiagnosticsCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestDiagnosticsCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestClearCacheCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("ClearCacheCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestFirmwareUpdateCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestFirmwareUpdateCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestAuthorizationListVersionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestAuthorizationListVersionCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestSendAuthorizationListCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestSendAuthorizationListCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestReserveNowCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestReserveNowCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestCancelReservationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+        LOG.debug("RequestCancelReservationCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RequestConfigurationItemsCommand command) {
+        LOG.debug("RequestConfigurationItemsCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(PlaceChargingStationCommand command) {
+        LOG.debug("PlaceChargingStationCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(ImproveChargingStationLocationCommand command) {
+        LOG.debug("ImproveChargingStationLocationCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(MoveChargingStationCommand command) {
+        LOG.debug("MoveChargingStationCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(MakeChargingStationReservableCommand command) {
+        LOG.debug("MakeChargingStationReservableCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(MakeChargingStationNotReservableCommand command) {
+        LOG.debug("MakeChargingStationNotReservableCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(SetChargingStationOpeningTimesCommand command) {
+        LOG.debug("SetChargingStationOpeningTimesCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(AddChargingStationOpeningTimesCommand command) {
+        LOG.debug("AddChargingStationOpeningTimesCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(GrantPermissionCommand command) {
+        LOG.debug("GrantPermissionCommand: " + command.toString());
+    }
+
+    @Override
+    public void send(RevokePermissionCommand command) {
+        LOG.debug("RevokePermissionCommand: " + command.toString());
     }
 
 }

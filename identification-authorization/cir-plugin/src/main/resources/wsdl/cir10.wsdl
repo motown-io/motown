@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:types>
+        <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+            <s:element name="AuthenticateUser">
+                <s:complexType />
+            </s:element>
+            <s:element name="AuthenticateUserResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="AuthenticateUserResult" type="tns:AuthenticateUserResult" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="AuthenticateUserResult">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="Error" type="tns:Error" />
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="Error">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="ErrorCode" type="s:string" />
+                    <s:element minOccurs="0" maxOccurs="1" name="ErrorText" type="s:string" />
+                </s:sequence>
+            </s:complexType>
+            <s:element name="WebServiceHeader" type="tns:WebServiceHeader" />
+            <s:complexType name="WebServiceHeader">
+                <s:sequence>
+                    <s:element minOccurs="1" maxOccurs="1" name="Version" type="s:int" />
+                    <s:element minOccurs="1" maxOccurs="1" name="DateTime" type="s:dateTime" />
+                    <s:element minOccurs="0" maxOccurs="1" name="RefID" type="s:string" />
+                    <s:element minOccurs="0" maxOccurs="1" name="Username" type="s:string" />
+                    <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+                    <s:element minOccurs="0" maxOccurs="1" name="AuthenticatedToken" type="s:string" />
+                </s:sequence>
+                <s:anyAttribute />
+            </s:complexType>
+            <s:element name="Inquire">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="Cards" type="tns:ArrayOfCard" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="ArrayOfCard">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="Card" nillable="true" type="tns:Card" />
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="Card">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="CardID" type="s:string" />
+                    <s:element minOccurs="0" maxOccurs="1" name="ExternalID" type="s:string" />
+                    <s:element minOccurs="0" maxOccurs="1" name="Provider" type="s:string" />
+                    <s:element minOccurs="1" maxOccurs="1" name="Valid" type="s:boolean" />
+                </s:sequence>
+            </s:complexType>
+            <s:element name="InquireResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="InquireResult" type="tns:InquireResult" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="InquireResult">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="Error" type="tns:Error" />
+                    <s:element minOccurs="0" maxOccurs="1" name="Cards" type="tns:ArrayOfCard" />
+                </s:sequence>
+            </s:complexType>
+            <s:element name="Providers">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="ProviderList" type="tns:ArrayOfProvider" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="ArrayOfProvider">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="Provider" nillable="true" type="tns:Provider" />
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="Provider">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+                    <s:element minOccurs="0" maxOccurs="1" name="EMail" type="s:string" />
+                </s:sequence>
+            </s:complexType>
+            <s:element name="ProvidersResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="ProvidersResult" type="tns:ProvidersResult" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="ProvidersResult">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="Error" type="tns:Error" />
+                    <s:element minOccurs="0" maxOccurs="1" name="ProviderList" type="tns:ArrayOfProvider" />
+                </s:sequence>
+            </s:complexType>
+            <s:element name="Add">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="Cards" type="tns:ArrayOfCard" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="AddResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="AddResult" type="tns:AddResult" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="AddResult">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="Error" type="tns:Error" />
+                    <s:element minOccurs="0" maxOccurs="1" name="Cards" type="tns:ArrayOfCard" />
+                </s:sequence>
+            </s:complexType>
+            <s:element name="Modify">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="Cards" type="tns:ArrayOfCard" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="ModifyResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="ModifyResult" type="tns:ModifyResult" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="ModifyResult">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="Error" type="tns:Error" />
+                    <s:element minOccurs="0" maxOccurs="1" name="Cards" type="tns:ArrayOfCard" />
+                </s:sequence>
+            </s:complexType>
+            <s:element name="Delete">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="Cards" type="tns:ArrayOfCard" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="DeleteResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="DeleteResult" type="tns:DeleteResult" />
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="DeleteResult">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="Error" type="tns:Error" />
+                    <s:element minOccurs="0" maxOccurs="1" name="Cards" type="tns:ArrayOfCard" />
+                </s:sequence>
+            </s:complexType>
+        </s:schema>
+    </wsdl:types>
+    <wsdl:message name="AuthenticateUserSoapIn">
+        <wsdl:part name="parameters" element="tns:AuthenticateUser" />
+    </wsdl:message>
+    <wsdl:message name="AuthenticateUserSoapOut">
+        <wsdl:part name="parameters" element="tns:AuthenticateUserResponse" />
+    </wsdl:message>
+    <wsdl:message name="AuthenticateUserWebServiceHeader">
+        <wsdl:part name="WebServiceHeader" element="tns:WebServiceHeader" />
+    </wsdl:message>
+    <wsdl:message name="InquireSoapIn">
+        <wsdl:part name="parameters" element="tns:Inquire" />
+    </wsdl:message>
+    <wsdl:message name="InquireSoapOut">
+        <wsdl:part name="parameters" element="tns:InquireResponse" />
+    </wsdl:message>
+    <wsdl:message name="InquireWebServiceHeader">
+        <wsdl:part name="WebServiceHeader" element="tns:WebServiceHeader" />
+    </wsdl:message>
+    <wsdl:message name="ProvidersSoapIn">
+        <wsdl:part name="parameters" element="tns:Providers" />
+    </wsdl:message>
+    <wsdl:message name="ProvidersSoapOut">
+        <wsdl:part name="parameters" element="tns:ProvidersResponse" />
+    </wsdl:message>
+    <wsdl:message name="ProvidersWebServiceHeader">
+        <wsdl:part name="WebServiceHeader" element="tns:WebServiceHeader" />
+    </wsdl:message>
+    <wsdl:message name="AddSoapIn">
+        <wsdl:part name="parameters" element="tns:Add" />
+    </wsdl:message>
+    <wsdl:message name="AddSoapOut">
+        <wsdl:part name="parameters" element="tns:AddResponse" />
+    </wsdl:message>
+    <wsdl:message name="AddWebServiceHeader">
+        <wsdl:part name="WebServiceHeader" element="tns:WebServiceHeader" />
+    </wsdl:message>
+    <wsdl:message name="ModifySoapIn">
+        <wsdl:part name="parameters" element="tns:Modify" />
+    </wsdl:message>
+    <wsdl:message name="ModifySoapOut">
+        <wsdl:part name="parameters" element="tns:ModifyResponse" />
+    </wsdl:message>
+    <wsdl:message name="ModifyWebServiceHeader">
+        <wsdl:part name="WebServiceHeader" element="tns:WebServiceHeader" />
+    </wsdl:message>
+    <wsdl:message name="DeleteSoapIn">
+        <wsdl:part name="parameters" element="tns:Delete" />
+    </wsdl:message>
+    <wsdl:message name="DeleteSoapOut">
+        <wsdl:part name="parameters" element="tns:DeleteResponse" />
+    </wsdl:message>
+    <wsdl:message name="DeleteWebServiceHeader">
+        <wsdl:part name="WebServiceHeader" element="tns:WebServiceHeader" />
+    </wsdl:message>
+    <wsdl:portType name="ServiceSoap">
+        <wsdl:operation name="AuthenticateUser">
+            <wsdl:input message="tns:AuthenticateUserSoapIn" />
+            <wsdl:output message="tns:AuthenticateUserSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="Inquire">
+            <wsdl:input message="tns:InquireSoapIn" />
+            <wsdl:output message="tns:InquireSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="Providers">
+            <wsdl:input message="tns:ProvidersSoapIn" />
+            <wsdl:output message="tns:ProvidersSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="Add">
+            <wsdl:input message="tns:AddSoapIn" />
+            <wsdl:output message="tns:AddSoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="Modify">
+            <wsdl:input message="tns:ModifySoapIn" />
+            <wsdl:output message="tns:ModifySoapOut" />
+        </wsdl:operation>
+        <wsdl:operation name="Delete">
+            <wsdl:input message="tns:DeleteSoapIn" />
+            <wsdl:output message="tns:DeleteSoapOut" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="ServiceSoap" type="tns:ServiceSoap">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="AuthenticateUser">
+            <soap:operation soapAction="http://tempuri.org/AuthenticateUser" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+                <soap:header message="tns:AuthenticateUserWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+                <soap:header message="tns:AuthenticateUserWebServiceHeader" part="WebServiceHeader" use="literal" />
+                <soap:header message="tns:AuthenticateUserWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="Inquire">
+            <soap:operation soapAction="http://tempuri.org/Inquire" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+                <soap:header message="tns:InquireWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+                <soap:header message="tns:InquireWebServiceHeader" part="WebServiceHeader" use="literal" />
+                <soap:header message="tns:InquireWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="Providers">
+            <soap:operation soapAction="http://tempuri.org/Providers" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+                <soap:header message="tns:ProvidersWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+                <soap:header message="tns:ProvidersWebServiceHeader" part="WebServiceHeader" use="literal" />
+                <soap:header message="tns:ProvidersWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="Add">
+            <soap:operation soapAction="http://tempuri.org/Add" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+                <soap:header message="tns:AddWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+                <soap:header message="tns:AddWebServiceHeader" part="WebServiceHeader" use="literal" />
+                <soap:header message="tns:AddWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="Modify">
+            <soap:operation soapAction="http://tempuri.org/Modify" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+                <soap:header message="tns:ModifyWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+                <soap:header message="tns:ModifyWebServiceHeader" part="WebServiceHeader" use="literal" />
+                <soap:header message="tns:ModifyWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="Delete">
+            <soap:operation soapAction="http://tempuri.org/Delete" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+                <soap:header message="tns:DeleteWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+                <soap:header message="tns:DeleteWebServiceHeader" part="WebServiceHeader" use="literal" />
+                <soap:header message="tns:DeleteWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ServiceSoap12" type="tns:ServiceSoap">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="AuthenticateUser">
+            <soap12:operation soapAction="http://tempuri.org/AuthenticateUser" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+                <soap12:header message="tns:AuthenticateUserWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+                <soap12:header message="tns:AuthenticateUserWebServiceHeader" part="WebServiceHeader" use="literal" />
+                <soap12:header message="tns:AuthenticateUserWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="Inquire">
+            <soap12:operation soapAction="http://tempuri.org/Inquire" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+                <soap12:header message="tns:InquireWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+                <soap12:header message="tns:InquireWebServiceHeader" part="WebServiceHeader" use="literal" />
+                <soap12:header message="tns:InquireWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="Providers">
+            <soap12:operation soapAction="http://tempuri.org/Providers" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+                <soap12:header message="tns:ProvidersWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+                <soap12:header message="tns:ProvidersWebServiceHeader" part="WebServiceHeader" use="literal" />
+                <soap12:header message="tns:ProvidersWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="Add">
+            <soap12:operation soapAction="http://tempuri.org/Add" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+                <soap12:header message="tns:AddWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+                <soap12:header message="tns:AddWebServiceHeader" part="WebServiceHeader" use="literal" />
+                <soap12:header message="tns:AddWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="Modify">
+            <soap12:operation soapAction="http://tempuri.org/Modify" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+                <soap12:header message="tns:ModifyWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+                <soap12:header message="tns:ModifyWebServiceHeader" part="WebServiceHeader" use="literal" />
+                <soap12:header message="tns:ModifyWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="Delete">
+            <soap12:operation soapAction="http://tempuri.org/Delete" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+                <soap12:header message="tns:DeleteWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+                <soap12:header message="tns:DeleteWebServiceHeader" part="WebServiceHeader" use="literal" />
+                <soap12:header message="tns:DeleteWebServiceHeader" part="WebServiceHeader" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="Service">
+        <wsdl:port name="ServiceSoap" binding="tns:ServiceSoap">
+            <soap:address location="https://eviolin.ev-services.net/cir/service.asmx" />
+        </wsdl:port>
+        <wsdl:port name="ServiceSoap12" binding="tns:ServiceSoap12">
+            <soap12:address location="https://eviolin.ev-services.net/cir/service.asmx" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

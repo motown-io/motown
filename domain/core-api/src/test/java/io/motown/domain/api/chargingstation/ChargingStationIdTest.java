@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 public class ChargingStationIdTest {
@@ -27,5 +28,10 @@ public class ChargingStationIdTest {
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingCommandWithIdEmpty() {
         new ChargingStationId("");
+    }
+
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(ChargingStationId.class).usingGetClass().verify();
     }
 }

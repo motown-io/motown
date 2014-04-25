@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2013 Motown.IO (info@motown.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+
+    <jdbc:embedded-database id="commandAuthorizationDataSource" type="HSQL" />
+
+    <bean id="transactionManagerCommandAuthorization" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactoryCommandAuthorization" />
+    </bean>
+
+    <!-- Spring Data JPA -->
+    <bean id="entityManagerFactoryCommandAuthorization" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="commandAuthorizationDataSource"/>
+        <property name="packagesToScan" value="io.motown.domain.commandauthorization"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="database" value="HSQL"/>
+                <property name="generateDdl" value="true"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="jpaEntityManagerCommandAuthorization" factory-bean="entityManagerFactoryCommandAuthorization" factory-method="createEntityManager" />
+
+    <bean id="commandAuthorizationRepository" class="io.motown.domain.commandauthorization.repositories.CommandAuthorizationRepository">
+        <property name="entityManager" ref="jpaEntityManagerCommandAuthorization" />
+    </bean>
+
+    <bean class="io.motown.domain.commandauthorization.CommandAuthorizationEventHandler">
+        <property name="commandAuthorizationRepository" ref="commandAuthorizationRepository" />
+    </bean>
+
+    <bean id="commandAuthorizationService" class="io.motown.domain.commandauthorization.CommandAuthorizationService">
+        <property name="commandAuthorizationRepository" ref="commandAuthorizationRepository" />
+    </bean>
+
+    <bean id="userIdentitiesWithAllPermissions" class="java.util.HashSet">
+        <constructor-arg>
+            <set>
+                <bean class="io.motown.domain.api.security.SimpleUserIdentity">
+                    <constructor-arg name="identity" value="root" />
+                </bean>
+            </set>
+        </constructor-arg>
+    </bean>
+
+</beans>

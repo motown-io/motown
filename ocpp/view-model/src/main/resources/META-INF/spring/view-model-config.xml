@@ -3,16 +3,34 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:axon="http://www.axonframework.org/schema/core"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xsi:schemaLocation="http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
                            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
-                           http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
-                           http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
+                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd">
 
-    <context:component-scan base-package="io.motown.ocpp.viewmodel"/>
+    <context:property-placeholder location="classpath:configViewModel.properties"
+                                  ignore-resource-not-found="true"
+                                  ignore-unresolvable="true"/>
+
+    <bean class="io.motown.ocpp.viewmodel.OcppEventHandler">
+        <property name="chargingStationRepository">
+            <bean class="io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository">
+                <property name="entityManager" ref="jpaEntityManager" />
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="domainService" class="io.motown.ocpp.viewmodel.domain.DomainService">
+        <property name="chargingStationRepository" ref="chargingStationRepositoryOcppWebServices" />
+        <property name="commandGateway" ref="domainCommandGateway" />
+        <!-- "Event waiting gateway" should be defined by the Spring context that incorporates this one -->
+        <property name="eventWaitingGateway" ref="eventWaitingGateway" />
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+        <property name="heartbeatInterval" value="${io.motown.ocpp.viewmodel.heartbeat.interval}" />
+        <property name="reservationIdentifierRepository" ref="reservationIdentifierRepositoryOcppWebServices" />
+        <property name="transactionRepository" ref="transactionRepositoryOcppWebServices" />
+    </bean>
 
     <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
         <property name="commandBus" ref="commandBus"/>
@@ -53,27 +71,17 @@
 
     <bean id="serializer" class="org.axonframework.serializer.xml.XStreamSerializer"/>
 
-    <bean id="chargingStationQueueNameProvider"
-          class="io.motown.ocpp.viewmodel.amqp.PrefixChargingStationQueueNameProvider">
-        <constructor-arg value="io.motown.queues.ocpp.soap.chargingstations."/>
-    </bean>
-
-    <bean id="chargingStationRoutingKeyProvider"
-          class="io.motown.ocpp.viewmodel.amqp.PrefixChargingStationRoutingKeyProvider">
-        <constructor-arg value="io.motown.routingkeys.ocpp.soap.chargingstations."/>
-    </bean>
-
-    <bean id="eventListener"
-          class="org.axonframework.eventhandling.annotation.AnnotationEventListenerAdapter">
-        <constructor-arg name="annotatedEventListener" value="ocppRequestHandler"/>
-        <constructor-arg name="eventBus" ref="eventBus"/>
-    </bean>
+    <!--<bean id="eventListener"-->
+          <!--class="org.axonframework.eventhandling.annotation.AnnotationEventListenerAdapter">-->
+        <!--<constructor-arg name="annotatedEventListener" value="ocppRequestHandler"/>-->
+        <!--<constructor-arg name="eventBus" ref="eventBus"/>-->
+    <!--</bean>-->
 
     <!-- Spring Data JPA -->
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="packagesToScan" value="io.motown.ocpp.viewmodel.persistence"/>
+        <property name="packagesToScan" value="io.motown.ocpp.viewmodel.persistence.entities"/>
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
                 <property name="database" value="HSQL"/>
@@ -82,11 +90,24 @@
         </property>
     </bean>
 
-    <jpa:repositories base-package="io.motown.ocpp.viewmodel.persistence"/>
+    <bean id="jpaEntityManager" factory-bean="entityManagerFactory" factory-method="createEntityManager" />
+
+    <bean id="chargingStationRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository">
+        <property name="entityManager" ref="jpaEntityManager" />
+    </bean>
+
+    <bean id="reservationIdentifierRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repositories.ReservationIdentifierRepository">
+        <property name="entityManager" ref="jpaEntityManager" />
+    </bean>
+
+    <bean id="transactionRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repositories.TransactionRepository">
+        <property name="entityManager" ref="jpaEntityManager" />
+    </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
     <jdbc:embedded-database id="dataSource" type="HSQL"/>
+
 </beans>

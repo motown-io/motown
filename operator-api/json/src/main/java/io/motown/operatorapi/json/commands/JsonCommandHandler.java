@@ -15,9 +15,15 @@
  */
 package io.motown.operatorapi.json.commands;
 
+import com.google.gson.JsonObject;
+import io.motown.domain.api.security.IdentityContext;
+import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
+
 public interface JsonCommandHandler {
 
     String getCommandName();
 
-    void handle(String chargingStationId, String command);
+    void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext)
+            throws UserIdentityUnauthorizedException;
+
 }

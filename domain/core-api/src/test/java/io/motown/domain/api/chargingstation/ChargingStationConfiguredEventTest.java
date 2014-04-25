@@ -15,42 +15,45 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Collections;
+
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 
 public class ChargingStationConfiguredEventTest {
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNullAndConnectors() {
-        new ChargingStationConfiguredEvent(null, Collections.<Connector>emptySet(), Collections.<String, String>emptyMap());
+    public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNullAndEvses() {
+        new ChargingStationConfiguredEvent(null, Collections.<Evse>emptySet(), NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingEventWithConnectorsNull() {
-        new ChargingStationConfiguredEvent(new ChargingStationId("CS-001"), null, Collections.<String, String>emptyMap());
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingEventWithConfigurationItemsNull() {
-        new ChargingStationConfiguredEvent(new ChargingStationId("CS-001"), Collections.<Connector>emptySet(), null);
+    public void nullPointerExceptionThrownWhenCreatingEventWithEvsesNull() {
+        new ChargingStationConfiguredEvent(CHARGING_STATION_ID, null, NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void unsupportedOperationExceptionThrownWhenModifyingConnectors() {
-        Set<Connector> connectors = new HashSet<>();
+    public void unsupportedOperationExceptionThrownWhenModifyingEvses() {
+        ChargingStationConfiguredEvent command = new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, NULL_USER_IDENTITY_CONTEXT);
 
-        ChargingStationConfiguredEvent command = new ChargingStationConfiguredEvent(new ChargingStationId("CS-001"), connectors, Collections.<String, String>emptyMap());
-
-        command.getConnectors().add(new Connector(1, "Type1", 32));
+        command.getEvses().add(new Evse(EVSE_ID, CONNECTORS));
     }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void unsupportedOperationExceptionThrownWhenModifyingConfigurationItems() {
-        Map<String, String> configurationItems = new HashMap<>();
+    @Test
+    public void constructorSetsFields() {
+        ChargingStationConfiguredEvent event = new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, NULL_USER_IDENTITY_CONTEXT);
 
-        ChargingStationConfiguredEvent command = new ChargingStationConfiguredEvent(new ChargingStationId("CS-001"), Collections.<Connector>emptySet(), configurationItems);
+        assertEquals(CHARGING_STATION_ID, event.getChargingStationId());
+        assertEquals(EVSES, event.getEvses());
+        assertNotNull(event.toString());
+    }
 
-        command.getConfigurationItems().put("configItem", "configValue");
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(ChargingStationConfiguredEvent.class).usingGetClass().verify();
     }
 }

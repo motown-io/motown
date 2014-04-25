@@ -15,129 +15,182 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import com.google.common.collect.ImmutableMap;
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Date;
+import java.util.Map;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * {@code StartTransactionCommand} is the command which is published when a charging station has started a transaction.
  */
-public class StartTransactionCommand {
+public final class StartTransactionCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final String transactionId;
+    private final TransactionId transactionId;
 
-    private final int connectorId;
+    private final EvseId evseId;
 
-    private final String idTag;
+    private final IdentifyingToken identifyingToken;
 
     private final int meterStart;
 
     private final Date timestamp;
 
+    private final Map<String, String> attributes;
+
+    private final IdentityContext identityContext;
+
     /**
      * Creates a {@code StartTransactionCommand}.
+     * <p/>
+     * In contrast to most of the other classes and methods in the Core API the {@code transactionId} and
+     * {@code identifyingToken} are possibly mutable. Some default, immutable implementations of these interfaces are
+     * provided but the mutability of these parameters can't be guaranteed.
      *
-     * @param chargingStationId identifier of the charging station.
-     * @param transactionId     identifier of the transaction.
-     * @param connectorId       identifier of the connector on which the transaction is started.
-     * @param idTag             identifier of the person that started the transaction.
-     * @param meterStart        meter value in Wh for the connector at the start of the transaction.
-     * @param timestamp         date and time the transaction has been started.
-     * @throws NullPointerException if {@code chargingStationId} and/or {@code transactionId} is {@code null}.
+     * @param chargingStationId the charging station's identifier.
+     * @param transactionId     the transaction's identifier.
+     * @param evseId            the evse's identifier or position.
+     * @param identifyingToken  the token which started the transaction.
+     * @param meterStart        meter value in Wh for the evse when the transaction started.
+     * @param timestamp         the time at which the transaction started.
+     * @param identityContext   the identity context.
+     * @throws NullPointerException     if {@code chargingStationId}, {@code transactionId}, {@code evseId}, {@code identifyingToken},
+     *                                  {@code timestamp} or {@code identityContext} is {@code null}.
+     * @throws IllegalArgumentException if {@code evseId} is negative.
      */
-    public StartTransactionCommand(ChargingStationId chargingStationId, String transactionId, int connectorId, String idTag, int meterStart, Date timestamp) {
+    public StartTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId, EvseId evseId, IdentifyingToken identifyingToken, int meterStart, Date timestamp, IdentityContext identityContext) {
+        this(chargingStationId, transactionId, evseId, identifyingToken, meterStart, timestamp, ImmutableMap.<String, String>of(), identityContext);
+    }
+
+
+    /**
+     * Creates a {@code StartTransactionCommand}.
+     * <p/>
+     * In contrast to most of the other classes and methods in the Core API the {@code transactionId} and
+     * {@code identifyingToken} are possibly mutable. Some default, immutable implementations of these interfaces are
+     * provided but the mutability of these parameters can't be guaranteed.
+     *
+     * @param chargingStationId the charging station's identifier.
+     * @param transactionId     the transaction's identifier.
+     * @param evseId            the evse's identifier or position.
+     * @param identifyingToken  the token which started the transaction.
+     * @param meterStart        meter value in Wh for the evse when the transaction started.
+     * @param timestamp         the time at which the transaction started.
+     * @param attributes        a {@link java.util.Map} of attributes. These attributes are additional information provided by
+     *                          the charging station when it booted but which are not required by Motown. Because
+     *                          {@link java.util.Map} implementations are potentially mutable a defensive copy is made.
+     * @param identityContext   the identity context.
+     * @throws NullPointerException     if {@code chargingStationId}, {@code transactionId}, {@code evseId}, {@code identifyingToken},
+     *                                  {@code timestamp}, {@code attributes} or {@code identityContext} is {@code null}.
+     * @throws IllegalArgumentException if {@code evseId} is negative.
+     */
+    public StartTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId, EvseId evseId, IdentifyingToken identifyingToken, int meterStart, Date timestamp, Map<String, String> attributes, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = checkNotNull(transactionId);
-        this.connectorId = connectorId;
-        this.idTag = idTag;
+        this.evseId = checkNotNull(evseId);
+        this.identifyingToken = checkNotNull(identifyingToken);
         this.meterStart = meterStart;
-        this.timestamp = timestamp;
+        this.timestamp = new Date(checkNotNull(timestamp).getTime());
+        this.attributes = ImmutableMap.copyOf(checkNotNull(attributes));
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
-     * Gets the charging station identifier.
+     * Gets the charging station's identifier.
      *
-     * @return the charging station identifier.
+     * @return the charging station's identifier.
      */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
     }
 
     /**
-     * Gets the transaction identifier.
+     * Gets the transaction's identifier.
      *
-     * @return the transaction identifier
+     * @return the transaction's identifier
      */
-    public String getTransactionId() {
+    public TransactionId getTransactionId() {
         return transactionId;
     }
 
     /**
-     * Gets the connector identifier.
+     * Gets the evse's identifier or position.
      *
-     * @return the connector identifier.
+     * @return the evse's identifier or position.
      */
-    public int getConnectorId() {
-        return connectorId;
+    public EvseId getEvseId() {
+        return evseId;
     }
 
     /**
-     * Gets the id tag.
+     * Gets the token which started the transaction.
      *
-     * @return the id tag.
+     * @return the token.
      */
-    public String getIdTag() {
-        return idTag;
+    public IdentifyingToken getIdentifyingToken() {
+        return identifyingToken;
     }
 
     /**
-     * Gets the meter start value.
+     * Gets the meter value when the transaction started.
      *
-     * @return the meter start value.
+     * @return the meter value when the transaction started.
      */
     public int getMeterStart() {
         return meterStart;
     }
 
     /**
-     * Gets the timestamp.
+     * Gets the time at which the transaction started.
      *
-     * @return the timestamp.
+     * @return the time at which the transaction started.
      */
     public Date getTimestamp() {
-        return timestamp;
+        return new Date(timestamp.getTime());
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    /**
+     * Gets the attributes associated with the start of the transaction.
+     * <p/>
+     * These attributes are additional information provided by the charging station when it started the transaction
+     * but which are not required by Motown.
+     *
+     * @return an immutable {@link java.util.Map} of attributes.
+     */
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
 
-        StartTransactionCommand that = (StartTransactionCommand) o;
-
-        if (connectorId != that.connectorId) return false;
-        if (meterStart != that.meterStart) return false;
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (idTag != null ? !idTag.equals(that.idTag) : that.idTag != null) return false;
-        if (timestamp != null ? !timestamp.equals(that.timestamp) : that.timestamp != null) return false;
-        if (!transactionId.equals(that.transactionId)) return false;
-
-        return true;
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 
     @Override
     public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + transactionId.hashCode();
-        result = 31 * result + connectorId;
-        result = 31 * result + (idTag != null ? idTag.hashCode() : 0);
-        result = 31 * result + meterStart;
-        result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
-        return result;
+        return Objects.hash(chargingStationId, transactionId, evseId, identifyingToken, meterStart, timestamp, attributes, identityContext);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final StartTransactionCommand other = (StartTransactionCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.transactionId, other.transactionId) && Objects.equals(this.evseId, other.evseId) && Objects.equals(this.identifyingToken, other.identifyingToken) && Objects.equals(this.meterStart, other.meterStart) && Objects.equals(this.timestamp, other.timestamp) && Objects.equals(this.attributes, other.attributes) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

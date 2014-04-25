@@ -15,101 +15,80 @@
  */
 package io.motown.ocpp.viewmodel;
 
-import io.motown.domain.api.chargingstation.*;
-import io.motown.ocpp.viewmodel.domain.TransactionIdentifierTranslator;
-import io.motown.ocpp.viewmodel.ocpp.ChargingStationOcpp15Client;
-import io.motown.ocpp.viewmodel.persistence.repostories.ChargingStationRepository;
+import io.motown.domain.api.chargingstation.ChargingStationAcceptedEvent;
+import io.motown.domain.api.chargingstation.ChargingStationBootedEvent;
+import io.motown.domain.api.chargingstation.ChargingStationConfiguredEvent;
+import io.motown.domain.api.chargingstation.ChargingStationCreatedEvent;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
+import io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class OcppEventHandler {
-    private static final Logger log = LoggerFactory.getLogger(io.motown.ocpp.viewmodel.OcppEventHandler.class);
+    
+    private static final Logger LOG = LoggerFactory.getLogger(io.motown.ocpp.viewmodel.OcppEventHandler.class);
 
-    @Autowired
-    private ChargingStationOcpp15Client chargingStationOcpp15Client;
-
-    @Autowired
     private ChargingStationRepository chargingStationRepository;
 
     @EventHandler
-    public void handle(ChargingStationBootedEvent event) {
-        log.info("ChargingStationBootedEvent");
-    }
-
-    @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
-        log.info("Handling ChargingStationCreatedEvent");
+        LOG.info("Handling ChargingStationCreatedEvent");
         String chargingStationId = event.getChargingStationId().getId();
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
 
-        if(chargingStation == null){
+        if (chargingStation == null) {
             chargingStation = new ChargingStation(chargingStationId);
         }
-        chargingStationRepository.save(chargingStation);
+        chargingStationRepository.createOrUpdate(chargingStation);
+    }
+
+    @EventHandler
+    public void handle(ChargingStationBootedEvent event) {
+        LOG.info("Handling ChargingStationBootedEvent");
+
+        ChargingStation chargingStation = chargingStationRepository.findOne(event.getChargingStationId().getId());
+
+        if (chargingStation != null) {
+            chargingStation.setProtocol(event.getProtocol());
+        } else {
+            LOG.error("OCPP module repo could not find charging station {} and set the protocol", event.getChargingStationId());
+        }
     }
 
     @EventHandler
     public void handle(ChargingStationAcceptedEvent event) {
-        log.debug("ChargingStationAcceptedEvent for [{}] received!", event.getChargingStationId());
+        LOG.debug("ChargingStationAcceptedEvent for [{}] received!", event.getChargingStationId());
 
         ChargingStation chargingStation = chargingStationRepository.findOne(event.getChargingStationId().getId());
 
         if (chargingStation != null) {
             chargingStation.setRegistered(true);
-            chargingStationRepository.save(chargingStation);
         } else {
-            log.error("OCPP module repo COULD NOT FIND CHARGEPOINT {} and mark it as registered", event.getChargingStationId());
+            LOG.error("OCPP module repo COULD NOT FIND CHARGEPOINT {} and mark it as registered", event.getChargingStationId());
         }
-    }
-
-    @EventHandler
-    public void handle(ConnectorNotFoundEvent event) {
-        log.info("ConnectorNotFoundEvent");
-    }
-
-    @EventHandler
-    public void handle(UnlockConnectorRequestedEvent event) {
-        log.info("UnlockConnectorRequestedEvent");
-    }
-
-    @EventHandler
-    public void handle(TransactionStartedEvent event) {
-        log.info("TransactionStartedEvent");
-    }
-
-    @EventHandler
-    public void handle(ConfigurationRequestedEvent event) {
-        log.info("Handling ConfigurationRequestedEvent");
-        chargingStationOcpp15Client.getConfiguration(event.getChargingStationId());
-    }
-
-    @EventHandler
-    public void handle(StopTransactionRequestedEvent event) {
-        log.info("StopTransactionRequestedEvent");
-        chargingStationOcpp15Client.stopTransaction(event.getChargingStationId(), TransactionIdentifierTranslator.toInt(event.getTransactionId()));
     }
 
     @EventHandler
     public void handle(ChargingStationConfiguredEvent event) {
-        log.info("ChargingStationConfiguredEvent");
+        LOG.info("ChargingStationConfiguredEvent");
 
         String chargingStationId = event.getChargingStationId().getId();
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
 
-        if(chargingStation == null) {
-            log.warn("Received a ChargingStationConfiguredEvent for unknown charging station. Creating the chargingStation.");
+        if (chargingStation == null) {
+            LOG.warn("Received a ChargingStationConfiguredEvent for unknown charging station. Creating the chargingStation.");
             chargingStation = new ChargingStation(chargingStationId);
+            chargingStation = chargingStationRepository.createOrUpdate(chargingStation);
         }
 
-        chargingStation.setNumberOfConnectors(event.getConnectors().size());
-        chargingStation.setConfigured(true);
-
-        chargingStationRepository.save(chargingStation);
+        if (chargingStation != null) {
+            chargingStation.setNumberOfEvses(event.getEvses().size());
+            chargingStation.setConfigured(true);
+        }
     }
 
+    public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {
+        this.chargingStationRepository = chargingStationRepository;
+    }
 }

@@ -15,8 +15,14 @@
  */
 package io.motown.operatorapi.viewmodel.persistence.entities;
 
+import io.motown.domain.api.chargingstation.EvseId;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @Entity
 public class Transaction {
@@ -29,6 +35,7 @@ public class Transaction {
 
     private String chargingStationId;
 
+    @Column(unique = true)
     private String transactionId;
 
     private String idTag;
@@ -37,11 +44,16 @@ public class Transaction {
 
     private int meterStop;
 
-    private int connectorId;
+    @Embedded
+    @AttributeOverride( name="id", column=@Column(name = "evseId") )
+    private EvseId evseId;
 
     private Date startedTimestamp;
 
     private Date stoppedTimestamp;
+
+    @ElementCollection
+    private Set<MeterValue> meterValues = new HashSet<>();
 
     private Transaction() {
         // Private no-arg constructor for Hibernate.
@@ -52,12 +64,16 @@ public class Transaction {
         this.transactionId = transactionId;
     }
 
-    public Transaction(String chargingStationId, String transactionId, int connectorId, String idTag, int meterStart, Date startedTimestamp) {
+    public Transaction(String chargingStationId, String transactionId, EvseId evseId, String idTag, int meterStart, Date startedTimestamp) {
         this(chargingStationId, transactionId);
-        this.connectorId = connectorId;
+        this.evseId = checkNotNull(evseId);
         this.idTag = idTag;
         this.meterStart = meterStart;
-        this.startedTimestamp = startedTimestamp;
+        this.startedTimestamp = startedTimestamp != null ? new Date(startedTimestamp.getTime()) : null;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getChargingStationId() {
@@ -100,36 +116,44 @@ public class Transaction {
         this.meterStop = meterStop;
     }
 
-    public int getConnectorId() {
-        return connectorId;
+    public EvseId getEvseId() {
+        return evseId;
     }
 
-    public void setConnectorId(int connectorId) {
-        this.connectorId = connectorId;
+    public void setEvseId(EvseId evseId) {
+        this.evseId = evseId;
     }
 
     public Date getStartedTimestamp() {
-        return startedTimestamp;
+        return startedTimestamp != null ? new Date(startedTimestamp.getTime()) : null;
     }
 
     public void setStartedTimestamp(Date startedTimestamp) {
-        this.startedTimestamp = startedTimestamp;
+        this.startedTimestamp = startedTimestamp != null ? new Date(startedTimestamp.getTime()) : null;
     }
 
     public Date getStoppedTimestamp() {
-        return stoppedTimestamp;
+        return stoppedTimestamp != null ? new Date(stoppedTimestamp.getTime()) : null;
     }
 
     public void setStoppedTimestamp(Date stoppedTimestamp) {
-        this.stoppedTimestamp = stoppedTimestamp;
+        this.stoppedTimestamp = stoppedTimestamp != null ? new Date(stoppedTimestamp.getTime()) : null;
     }
 
     public Date getUpdated() {
-        return updated;
+        return updated != null ? new Date(updated.getTime()) : null;
     }
 
     public Date getCreated() {
-        return created;
+        return created != null ? new Date(created.getTime()) : null;
+    }
+
+    public Set<MeterValue> getMeterValues() {
+        return meterValues;
+    }
+
+    public void setMeterValues(Set<MeterValue> meterValues) {
+        this.meterValues = meterValues;
     }
 
     @PrePersist

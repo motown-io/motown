@@ -15,26 +15,32 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code ChargingStationAcceptedEvent} is the event which is published when a charging station has been registered.
+ * {@code ChargingStationAcceptedEvent} is the event which is published when a charging station has been accepted as
+ * part of the charging infrastructure by an operator.
  */
-public class ChargingStationAcceptedEvent {
+public final class ChargingStationAcceptedEvent {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
+
+    private final IdentityContext identityContext;
 
     /**
      * Creates a {@code ChargingStationAcceptedEvent} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @throws NullPointerException if {@code chargingStationId} is {@code null}.
+     * @param identityContext the identity context.
+     * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
      */
-    public ChargingStationAcceptedEvent(ChargingStationId chargingStationId) {
+    public ChargingStationAcceptedEvent(ChargingStationId chargingStationId, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -45,4 +51,14 @@ public class ChargingStationAcceptedEvent {
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
     }
+
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
+    }
+
 }

@@ -16,11 +16,10 @@
 package io.motown.domain.api.chargingstation;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import java.util.Map;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -28,28 +27,28 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * {@code ChargingStationConfiguredEvent} is the event which is published when a charging station has been configured.
  */
-public class ChargingStationConfiguredEvent {
+public final class ChargingStationConfiguredEvent {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final Set<Connector> connectors;
+    private final Set<Evse> evses;
 
-    private final Map<String, String> configurationItems;
+    private final IdentityContext identityContext;
 
     /**
      * Creates a {@code ChargingStationConfiguredEvent} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param connectors the connectors with which the charging station has been configured.
-     * @param configurationItems the configuration items with which the charging station has been configured.
-     * @throws NullPointerException if {@code chargingStationId}, {@code connectors}, or {@code configurationItems} is
-     * {@code null}.
+     * @param evses             the Evses with which the charging station has been configured.
+     * @param identityContext   identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code evses}, or {@code identityContext} is
+     *                              {@code null}.
      */
-    public ChargingStationConfiguredEvent(ChargingStationId chargingStationId, Set<Connector> connectors, Map<String, String> configurationItems) {
+    public ChargingStationConfiguredEvent(ChargingStationId chargingStationId, Set<Evse> evses, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.connectors = ImmutableSet.copyOf(checkNotNull(connectors));
-        this.configurationItems = ImmutableMap.copyOf(checkNotNull(configurationItems));
+        this.evses = ImmutableSet.copyOf(checkNotNull(evses));
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -62,32 +61,29 @@ public class ChargingStationConfiguredEvent {
     }
 
     /**
-     * Gets the connectors with which the charging station has been configured.
+     * Gets the Evses with which the charging station has been configured.
      *
-     * @return an immutable {@link java.util.Set} of connectors.
+     * @return an immutable {@link java.util.Set} of Evses.
      */
-    public Set<Connector> getConnectors() {
-        return connectors;
+    public Set<Evse> getEvses() {
+        return evses;
     }
 
     /**
-     * Gets the configuration items with which the charging station has been configured.
+     * Gets the identity context.
      *
-     * These configuration items are additional information provided with which the charging station has been configured
-     * but which are not required by Motown.
-     *
-     * @return an immutable {@link java.util.Map} of configuration items.
+     * @return the identity context.
      */
-    public Map<String, String> getConfigurationItems() {
-        return configurationItems;
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 
     @Override
     public String toString() {
         return Objects.toStringHelper(this.getClass())
                 .add("chargingStationId", chargingStationId)
-                .add("connectors", connectors)
-                .add("configurationItems", configurationItems)
+                .add("evses", evses)
+                .add("identityContext", identityContext)
                 .toString();
     }
 }

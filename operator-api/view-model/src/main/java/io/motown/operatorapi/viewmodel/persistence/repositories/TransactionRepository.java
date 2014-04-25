@@ -16,15 +16,57 @@
 package io.motown.operatorapi.viewmodel.persistence.repositories;
 
 import io.motown.operatorapi.viewmodel.persistence.entities.Transaction;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import java.util.List;
 
-public interface TransactionRepository extends JpaRepository<Transaction, String> {
+public class TransactionRepository {
+
+    private static final Logger LOG = LoggerFactory.getLogger(TransactionRepository.class);
+
+    private EntityManager entityManager;
 
     /**
      * Find transactions by transaction id (not the auto-increment transaction.id)
      */
-    public List<Transaction> findByTransactionId(String transactionId);
+    public Transaction findByTransactionId(String transactionId) {
+        try {
+            return entityManager.createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t WHERE t.transactionId = :transactionId", Transaction.class)
+                    .setParameter("transactionId", transactionId)
+                    .getSingleResult();
+        } catch (NoResultException | NonUniqueResultException e) {
+            LOG.error(String.format("No transaction found with transactionId [%s]", transactionId) ,e);
+            return null;
+        }
+    }
 
+    public List<Transaction> findAll() {
+        return entityManager.createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t", Transaction.class).getResultList();
+    }
+
+    public void save(Transaction transaction) {
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+
+        if (!entityTransaction.isActive()) {
+            entityTransaction.begin();
+        }
+
+        try {
+            entityManager.persist(transaction);
+            entityTransaction.commit();
+        } catch (Exception e) {
+            LOG.error("Exception while trying to persist transaction.", e);
+            entityTransaction.rollback();
+            throw e;
+        }
+    }
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 }

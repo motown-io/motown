@@ -16,52 +16,51 @@
 package io.motown.operatorapi.viewmodel;
 
 import io.motown.domain.api.chargingstation.*;
+import io.motown.operatorapi.viewmodel.persistence.entities.Availability;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
-import io.motown.operatorapi.viewmodel.persistence.entities.Transaction;
+import io.motown.operatorapi.viewmodel.persistence.entities.Evse;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
-import io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-@Component
 public class ChargingStationEventListener {
 
-    private static final Logger log = LoggerFactory.getLogger(ChargingStationEventListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChargingStationEventListener.class);
+
+    private static final String TIME_FORMAT = "%02d:%02d";
 
     private ChargingStationRepository repository;
 
-    private TransactionRepository transactionRepository;
-
     @EventHandler
     public void handle(ChargingStationCreatedEvent event) {
-        log.debug("ChargingStationCreatedEvent creates [{}] in operator api repo", event.getChargingStationId());
+        LOG.debug("ChargingStationCreatedEvent creates [{}] in operator api repo", event.getChargingStationId());
         ChargingStation station = new ChargingStation(event.getChargingStationId().getId());
         repository.save(station);
     }
 
     @EventHandler
     public void handle(ChargingStationBootedEvent event) {
-        log.debug("ChargingStationBootedEvent for [{}] received!", event.getChargingStationId());
+        LOG.debug("ChargingStationBootedEvent for [{}] received!", event.getChargingStationId());
 
         ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
 
         if (chargingStation != null) {
-            chargingStation.setLastTimeBooted(new Date());
+            chargingStation.setProtocol(event.getProtocol());
+            chargingStation.setAttributes(event.getAttributes());
             repository.save(chargingStation);
         } else {
-            log.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as booted", event.getChargingStationId());
+            LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as booted", event.getChargingStationId());
         }
     }
 
     @EventHandler
     public void handle(ChargingStationAcceptedEvent event) {
-        log.debug("ChargingStationAcceptedEvent for [{}] received!", event.getChargingStationId());
+        LOG.debug("ChargingStationAcceptedEvent for [{}] received!", event.getChargingStationId());
 
         ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
 
@@ -69,46 +68,337 @@ public class ChargingStationEventListener {
             chargingStation.setAccepted(true);
             repository.save(chargingStation);
         } else {
-            log.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as accepted", event.getChargingStationId());
+            LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as accepted", event.getChargingStationId());
         }
     }
 
     @EventHandler
-    public void handle(TransactionStartedEvent event) {
-        log.debug("TransactionStartedEvent for [{}] received!", event.getChargingStationId());
+    public void handle(ChargingStationPlacedEvent event) {
+        LOG.debug("ChargingStationPlacedEvent for [{}] received!", event.getChargingStationId());
+        updateChargingStationLocation(event);
+    }
 
-        Transaction transaction = new Transaction(event.getChargingStationId().getId(), event.getTransactionId(), event.getConnectorId(), event.getIdTag(), event.getMeterStart(), event.getTimestamp());
-        transactionRepository.save(transaction);
+    @EventHandler
+    public void handle(ChargingStationMovedEvent event) {
+        LOG.debug("ChargingStationMovedEvent for [{}] received!", event.getChargingStationId());
+        updateChargingStationLocation(event);
+    }
+
+    @EventHandler
+    public void handle(ChargingStationLocationImprovedEvent event) {
+        LOG.debug("ChargingStationLocationImprovedEvent for [{}] received!", event.getChargingStationId());
+        updateChargingStationLocation(event);
+    }
+
+    @EventHandler
+    public void handle(ChargingStationOpeningTimesSetEvent event) {
+        LOG.debug("ChargingStationOpeningTimesSetEvent for [{}] received!", event.getChargingStationId());
+        updateChargingStationOpeningTimes(event, true);
+    }
+
+    @EventHandler
+    public void handle(ChargingStationOpeningTimesAddedEvent event) {
+        LOG.debug("ChargingStationOpeningTimesAddedEvent for [{}] received!", event.getChargingStationId());
+        updateChargingStationOpeningTimes(event, false);
+    }
+
+    @EventHandler
+    public void handle(ChargingStationConfiguredEvent event) {
+        LOG.debug("ChargingStationConfiguredEvent for [{}] received!", event.getChargingStationId());
 
         ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
         if (chargingStation != null) {
-            log.warn("registered transaction (start) in operator api repo for unknown chargepoint {}", event.getChargingStationId());
-        }
-    }
+            for (io.motown.domain.api.chargingstation.Evse coreEvse : event.getEvses()) {
+                Evse evse = new Evse(coreEvse.getEvseId().getId());
 
-    @EventHandler
-    public void handle(TransactionStoppedEvent event) {
-        log.debug("TransactionStoppedEvent for [{}] received!", event.getChargingStationId());
+                for (Connector coreConnector : coreEvse.getConnectors()) {
+                    io.motown.operatorapi.viewmodel.persistence.entities.Connector connector = new io.motown.operatorapi.viewmodel.persistence.entities.Connector(
+                            coreConnector.getMaxAmp(), coreConnector.getPhase(), coreConnector.getVoltage(), coreConnector.getChargingProtocol(), coreConnector.getCurrent(), coreConnector.getConnectorType()
+                    );
+                    evse.getConnectors().add(connector);
+                }
+                chargingStation.getEvses().add(evse);
+            }
 
-        List<Transaction> transactions = transactionRepository.findByTransactionId(event.getTransactionId());
-
-        if(transactions.isEmpty() || transactions.size() > 1) {
-            log.error("cannot find unique transaction with transaction id {}", event.getTransactionId());
+            repository.save(chargingStation);
         } else {
-            Transaction transaction = transactions.get(0);
-            transaction.setMeterStop(event.getMeterValueStop());
-            transaction.setStoppedTimestamp(event.getTimestamp());
-            transactionRepository.save(transaction);
+            LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and configure it", event.getChargingStationId());
         }
     }
 
-    @Autowired
+    /**
+     * Handles the {@link ChargingStationMadeReservableEvent}.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(ChargingStationMadeReservableEvent event) {
+        setReservable(event.getChargingStationId(), true);
+    }
+
+    /**
+     * Handles the {@link ChargingStationMadeNotReservableEvent}.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(ChargingStationMadeNotReservableEvent event) {
+        setReservable(event.getChargingStationId(), false);
+    }
+
+    /**
+     * Handles the {@link ChargingStationStatusNotificationReceivedEvent}.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(ChargingStationStatusNotificationReceivedEvent event) {
+        ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
+
+        if (chargingStation != null) {
+            chargingStation.setStatus(event.getStatus());
+            repository.save(chargingStation);
+        }
+    }
+
+
+    /**
+     * Handles the {@link ComponentStatusNotificationReceivedEvent}.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(ComponentStatusNotificationReceivedEvent event) {
+        if (event.getComponent() == ChargingStationComponent.EVSE) {
+            ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
+
+            if (chargingStation != null) {
+                updateEvseStatus(chargingStation, event.getComponentId().getId(), event.getStatus());
+                repository.save(chargingStation);
+            }
+        }
+    }
+
+    /**
+     * Handles the {@link ConfigurationItemsReceivedEvent}.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(ConfigurationItemsReceivedEvent event) {
+        ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
+
+        if (chargingStation != null) {
+            chargingStation.setConfigurationItems(toConfigurationItemMap(event.getConfigurationItems()));
+            repository.save(chargingStation);
+        }
+    }
+
+    /**
+     * Handles the {@code ChargingStationAvailabilityChangedToInoperativeEvent}.
+     * <p/>
+     * Sets the charging station to inoperative.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(ChargingStationAvailabilityChangedToInoperativeEvent event) {
+        updateChargingStationAvailability(event.getChargingStationId(), Availability.INOPERATIVE);
+    }
+
+    /**
+     * Handles the {@code ChargingStationAvailabilityChangedToOperativeEvent}.
+     * <p/>
+     * Sets the charging station to operative.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(ChargingStationAvailabilityChangedToOperativeEvent event) {
+        updateChargingStationAvailability(event.getChargingStationId(), Availability.OPERATIVE);
+    }
+
+    /**
+     * Handles the {@code ComponentAvailabilityChangedToInoperativeEvent}.
+     * <p/>
+     * Sets the charging station's component to inoperative.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(ComponentAvailabilityChangedToInoperativeEvent event) {
+        updateComponentAvailability(event.getChargingStationId(), event.getComponentId(), event.getComponent(), Availability.INOPERATIVE);
+    }
+
+    /**
+     * Handles the {@code ComponentAvailabilityChangedToOperativeEvent}.
+     * <p/>
+     * Sets the charging station's component to operative.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(ComponentAvailabilityChangedToOperativeEvent event) {
+        updateComponentAvailability(event.getChargingStationId(), event.getComponentId(), event.getComponent(), Availability.OPERATIVE);
+    }
+
+    /**
+     * Updates the status of a Evse in the charging station object if the evse id matches the component id.
+     *
+     * @param chargingStation    charging stationidentifier.
+     * @param componentId        component identifier.
+     * @param status             new status.
+     */
+    private void updateEvseStatus(ChargingStation chargingStation, String componentId, ComponentStatus status) {
+        for (Evse evse : chargingStation.getEvses()) {
+            if (evse.getEvseId().equals(componentId)) {
+                evse.setStatus(status);
+            }
+        }
+    }
+
+    /**
+     * Updates the charging station's availability.
+     *
+     * @param chargingStationId the charging station's id.
+     * @param availability      the charging station's new availability.
+     */
+    private void updateChargingStationAvailability(ChargingStationId chargingStationId, Availability availability) {
+        ChargingStation chargingStation = repository.findOne(chargingStationId.getId());
+
+        if (chargingStation != null) {
+            chargingStation.setAvailability(availability);
+            repository.save(chargingStation);
+        }
+    }
+
+    /**
+     * Updates a charging station's component availability.
+     *
+     * @param chargingStationId the charging station's id.
+     * @param componentId       the component's id.
+     * @param component         the component type.
+     * @param availability      the the charging station's new availability.
+     */
+    private void updateComponentAvailability(ChargingStationId chargingStationId, ComponentId componentId, ChargingStationComponent component, Availability availability) {
+        if (!component.equals(ChargingStationComponent.EVSE) || !(componentId instanceof EvseId)) {
+            return;
+        }
+
+        ChargingStation chargingStation = repository.findOne(chargingStationId.getId());
+
+        if (chargingStation != null) {
+            for (Evse evse : chargingStation.getEvses()) {
+                if (evse.getEvseId().equals(componentId.getId())) {
+                    evse.setAvailability(availability);
+                    break;
+                }
+            }
+            repository.save(chargingStation);
+        }
+    }
+
+    /**
+     * Updates the opening times of the charging station.
+     *
+     * @param event The event which contains the opening times.
+     * @param clear Whether to clear the opening times or not.
+     * @return {@code true} if the update has been performed, {@code false} if the charging station can't be found.
+     */
+    private boolean updateChargingStationOpeningTimes(ChargingStationOpeningTimesChangedEvent event, boolean clear) {
+        ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
+
+        if (chargingStation != null) {
+            if (!event.getOpeningTimes().isEmpty()) {
+                if (clear) {
+                    chargingStation.getOpeningTimes().clear();
+                }
+
+                for (OpeningTime coreOpeningTime : event.getOpeningTimes()) {
+                    Day dayOfWeek = coreOpeningTime.getDay();
+                    String timeStart = String.format(TIME_FORMAT, coreOpeningTime.getTimeStart().getHourOfDay(), coreOpeningTime.getTimeStart().getMinutesInHour());
+                    String timeStop = String.format(TIME_FORMAT, coreOpeningTime.getTimeStop().getHourOfDay(), coreOpeningTime.getTimeStop().getMinutesInHour());
+
+                    io.motown.operatorapi.viewmodel.persistence.entities.OpeningTime openingTime = new io.motown.operatorapi.viewmodel.persistence.entities.OpeningTime(dayOfWeek, timeStart, timeStop);
+                    chargingStation.getOpeningTimes().add(openingTime);
+                }
+
+                repository.save(chargingStation);
+            }
+
+        } else {
+            LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and update its opening times", event.getChargingStationId());
+        }
+
+        return chargingStation != null;
+    }
+
+    /**
+     * Updates the location of the charging station.
+     *
+     * @param event The event which contains the data of the location.
+     * @return {@code true} if the update has been performed, {@code false} if the charging station can't be found.
+     */
+    private boolean updateChargingStationLocation(ChargingStationLocationChangedEvent event) {
+        ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
+
+        if (chargingStation != null) {
+            if (event.getCoordinates() != null) {
+                chargingStation.setLatitude(event.getCoordinates().getLatitude());
+                chargingStation.setLongitude(event.getCoordinates().getLongitude());
+            }
+
+            if (event.getAddress() != null) {
+                chargingStation.setAddressLine1(event.getAddress().getAddressLine1());
+                chargingStation.setAddressLine2(event.getAddress().getAddressLine2());
+                chargingStation.setPostalCode(event.getAddress().getPostalCode());
+                chargingStation.setCity(event.getAddress().getCity());
+                chargingStation.setRegion(event.getAddress().getRegion());
+                chargingStation.setCountry(event.getAddress().getCountry());
+            }
+
+            chargingStation.setAccessibility(event.getAccessibility());
+
+            repository.save(chargingStation);
+        } else {
+            LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and update its location", event.getChargingStationId());
+        }
+
+        return chargingStation != null;
+    }
+
+    /**
+     * Makes a charging station reservable or not reservable.
+     *
+     * @param chargingStationId the charging station to make reservable or not reservable.
+     * @param reservable        true if reservable, false if not.
+     */
+    private void setReservable(ChargingStationId chargingStationId, boolean reservable) {
+        ChargingStation chargingStation = repository.findOne(chargingStationId.getId());
+
+        if (chargingStation != null) {
+            chargingStation.setReservable(reservable);
+            repository.save(chargingStation);
+        }
+    }
+
     public void setRepository(ChargingStationRepository repository) {
         this.repository = repository;
     }
 
-    @Autowired
-    public void setTransactionRepository(TransactionRepository transactionRepository) {
-        this.transactionRepository = transactionRepository;
+    /**
+     * Converts a {@code Set} of {@code ConfigurationItem}s to a {@code Map} of {@code String} and {@code String}.
+     *
+     * @param configurationItems a {@code Set} of {@code ConfigurationItem}s.
+     * @return a {@code Map} of {@code String} and {@code String}.
+     */
+    private Map<String, String> toConfigurationItemMap(Set<ConfigurationItem> configurationItems) {
+        Map<String, String> map = new HashMap<>(configurationItems.size());
+
+        for (ConfigurationItem configurationItem : configurationItems) {
+            map.put(configurationItem.getKey(), configurationItem.getValue());
+        }
+
+        return map;
     }
 }

@@ -15,30 +15,38 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
+
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code BootChargingStationCommand} is the command which is published when a charging station has booted.
+ * {@code AuthorizeCommand} is the command which is published when a charging station wants to authorize the
+ * identification that wants to start a transaction.
  */
-public class AuthorizeCommand {
+public final class AuthorizeCommand {
 
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final String idTag;
+    private final IdentifyingToken identifyingToken;
+
+    private final IdentityContext identityContext;
 
     /**
      * Creates a {@code AuthorizeCommand}.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param idTag the identifier that needs to be authorized.
-     * @throws NullPointerException if {@code chargingStationId} or {@code idTag} is {@code null}.
+     * @param identifyingToken  the identifier that needs to be authorized.
+     * @param identityContext the identity context.
+     * @throws NullPointerException if {@code chargingStationId}, {@code identifyingToken} or {@code identityContext} is {@code null}.
      */
-    public AuthorizeCommand(ChargingStationId chargingStationId, String idTag) {
+    public AuthorizeCommand(ChargingStationId chargingStationId, IdentifyingToken identifyingToken, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.idTag = checkNotNull(idTag);
+        this.identifyingToken = checkNotNull(identifyingToken);
+        this.identityContext = checkNotNull(identityContext);
     }
 
     /**
@@ -55,29 +63,33 @@ public class AuthorizeCommand {
      *
      * @return the identifier that needs to be authorized.
      */
-    public String getIdTag() {
-        return idTag;
+    public IdentifyingToken getIdentifyingToken() {
+        return identifyingToken;
     }
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        AuthorizeCommand that = (AuthorizeCommand) o;
-
-        if (!chargingStationId.equals(that.chargingStationId)) return false;
-        if (!idTag.equals(that.idTag)) return false;
-
-        return true;
+    /**
+     * Gets the identity context.
+     *
+     * @return the identity context.
+     */
+    public IdentityContext getIdentityContext() {
+        return identityContext;
     }
 
     @Override
     public int hashCode() {
-        int result = chargingStationId.hashCode();
-        result = 31 * result + idTag.hashCode();
-        return result;
+        return Objects.hash(chargingStationId, identifyingToken, identityContext);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final AuthorizeCommand other = (AuthorizeCommand) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.identifyingToken, other.identifyingToken) && Objects.equals(this.identityContext, other.identityContext);
+    }
 }

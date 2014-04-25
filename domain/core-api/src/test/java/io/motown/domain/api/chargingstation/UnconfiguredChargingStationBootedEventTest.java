@@ -15,31 +15,32 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class UnconfiguredChargingStationBootedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNullAndAttributes() {
-        new UnconfiguredChargingStationBootedEvent(null, new HashMap<String, String>());
+        new UnconfiguredChargingStationBootedEvent(null, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdAndAttributesNull() {
-        new UnconfiguredChargingStationBootedEvent(new ChargingStationId("CS-001"), null);
+        new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, null, IDENTITY_CONTEXT);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedOperationExceptionThrownWhenModifyingAttributes() {
-        Map<String, String> attributes = new HashMap<>();
-        attributes.put("vendor", "VENDOR");
-        attributes.put("model", "MODEL");
+        UnconfiguredChargingStationBootedEvent command = new UnconfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT);
 
-        UnconfiguredChargingStationBootedEvent command = new UnconfiguredChargingStationBootedEvent(new ChargingStationId("CS-001"), attributes);
+        command.getAttributes().put("foo", "bar");
+    }
 
-        command.getAttributes().put("vendor", "ANOTHER_VENDOR");
+    @Test
+    public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
+        EqualsVerifier.forClass(UnconfiguredChargingStationBootedEvent.class).usingGetClass().verify();
     }
 }
