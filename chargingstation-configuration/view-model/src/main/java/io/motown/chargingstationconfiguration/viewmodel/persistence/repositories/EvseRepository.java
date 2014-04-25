@@ -49,14 +49,6 @@ public class EvseRepository {
         }
     }
 
-    public Evse findOne(Long id) {
-        Evse evse = getEntityManager().find(Evse.class, id);
-        if (evse != null) {
-            return evse;
-        }
-        throw new EntityNotFoundException(String.format("Unable to find evse with id '%s'", id));
-    }
-
     public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }

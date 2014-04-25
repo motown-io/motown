@@ -39,7 +39,9 @@ public class EvseResourceTest {
     @Mock
     private DomainService domainService;
 
-    private static final Long EVSE_ID = 1l;
+    private static final Long CHARGING_STATION_TYPE_ID = 1l;
+
+    private static final Long EVSE_ID = 2l;
 
     @Before
     public void setUp() {
@@ -51,8 +53,8 @@ public class EvseResourceTest {
     @Test
     public void testUpdateEvse() {
         Evse evse = mock(Evse.class);
-        Response response = resource.updateEvse(EVSE_ID, evse);
-        verify(domainService).updateEvse(EVSE_ID, evse);
+        Response response = resource.updateEvse(CHARGING_STATION_TYPE_ID, EVSE_ID, evse);
+        verify(domainService).updateEvse(CHARGING_STATION_TYPE_ID, EVSE_ID, evse);
 
         assertNotNull(response);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
@@ -61,25 +63,25 @@ public class EvseResourceTest {
     @Test(expected = RuntimeException.class)
     public void testUpdateEvseThrowsException() {
         Evse evse = mock(Evse.class);
-        doThrow(mock(PersistenceException.class)).when(domainService).updateEvse(EVSE_ID, evse);
+        doThrow(mock(PersistenceException.class)).when(domainService).updateEvse(CHARGING_STATION_TYPE_ID, EVSE_ID, evse);
 
-        resource.updateEvse(EVSE_ID, evse);
+        resource.updateEvse(CHARGING_STATION_TYPE_ID, EVSE_ID, evse);
     }
 
     @Test
     public void testGetEvse() {
-        Response response = resource.getEvse(EVSE_ID);
+        Response response = resource.getEvse(CHARGING_STATION_TYPE_ID, EVSE_ID);
 
-        verify(domainService).getEvse(EVSE_ID);
+        verify(domainService).getEvse(CHARGING_STATION_TYPE_ID, EVSE_ID);
         assertNotNull(response);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
     @Test(expected = RuntimeException.class)
     public void testGetEvseThrowsException() {
-        when(domainService.getEvse(EVSE_ID)).thenThrow(mock(EntityNotFoundException.class));
+        when(domainService.getEvse(CHARGING_STATION_TYPE_ID, EVSE_ID)).thenThrow(mock(EntityNotFoundException.class));
 
-        resource.getEvse(EVSE_ID);
+        resource.getEvse(CHARGING_STATION_TYPE_ID, EVSE_ID);
     }
 
     @Test

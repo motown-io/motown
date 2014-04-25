@@ -175,9 +175,20 @@ public class DomainService {
      * @param id the id of the entity to find.
      * @param evse the payload from the request.
      */
-    public Evse updateEvse(Long id, Evse evse) {
-        evse.setId(id);
-        return evseRepository.createOrUpdate(evse);
+    public Evse updateEvse(Long chargingStationTypeid, Long id, Evse evse) {
+        ChargingStationType chargingStationType = chargingStationTypeRepository.findByEvseId(chargingStationTypeid);
+
+        Evse existingEvse = getEvseById(chargingStationType, id);
+        if (existingEvse == null) {
+            chargingStationType.getEvses().add(evse);
+        } else {
+            chargingStationType.getEvses().remove(existingEvse);
+            chargingStationType.getEvses().add(evse);
+        }
+
+        ChargingStationType updatedChargingStationType = chargingStationTypeRepository.createOrUpdate(chargingStationType);
+
+        return getEvseById(updatedChargingStationType, id);
     }
 
     /**
@@ -186,8 +197,10 @@ public class DomainService {
      * @param id the id of the entity to find.
      * @return the evse.
      */
-    public Evse getEvse(Long id) {
-        return evseRepository.findOne(id);
+    public Evse getEvse(Long chargingStationTypeid, Long id) {
+        ChargingStationType chargingStationType = chargingStationTypeRepository.findByEvseId(chargingStationTypeid);
+
+        return getEvseById(chargingStationType, id);
     }
 
     /**
@@ -200,12 +213,8 @@ public class DomainService {
         // There has to be a better way to achieve this...
         ChargingStationType chargingStationType = chargingStationTypeRepository.findByEvseId(id);
 
-        for (Evse evse:chargingStationType.getEvses()) {
-            if(id.equals(evse.getId())) {
-                chargingStationType.getEvses().remove(evse);
-                break;
-            }
-        }
+        chargingStationType.getEvses().remove(getEvseById(chargingStationType, id));
+
         updateChargingStationType(chargingStationType.getId(), chargingStationType);
     }
 
@@ -291,5 +300,14 @@ public class DomainService {
      */
     public void setManufacturerRepository(ManufacturerRepository manufacturerRepository) {
         this.manufacturerRepository = manufacturerRepository;
+    }
+
+    private Evse getEvseById(ChargingStationType chargingStationType, Long evseId) {
+        for (Evse evse:chargingStationType.getEvses()) {
+            if(evseId.equals(evse.getId())) {
+                return evse;
+            }
+        }
+        return null;
     }
 }

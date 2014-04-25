@@ -21,7 +21,7 @@ import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evs
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
-@Path("/evses")
+@Path("/chargingstationtypes/{chargingStationTypeId: [0-9]+}/evses")
 @Produces(ApiVersion.V1_JSON)
 public final class EvseResource {
 
@@ -30,14 +30,14 @@ public final class EvseResource {
     @PUT
     @Path("/{id: [0-9]+}")
     @Consumes(ApiVersion.V1_JSON)
-    public Response updateEvse(@PathParam("id") Long id, Evse evse) {
-        return Response.ok(domainService.updateEvse(id, evse)).build();
+    public Response updateEvse(@PathParam("chargingStationTypeId") Long chargingStationTypeId, @PathParam("id") Long id, Evse evse) {
+        return Response.ok(domainService.updateEvse(chargingStationTypeId, id, evse)).build();
     }
 
     @GET
     @Path("/{id: [0-9]+}")
-    public Response getEvse(@PathParam("id") Long id) {
-        return Response.ok(domainService.getEvse(id)).build();
+    public Response getEvse(@PathParam("chargingStationTypeId") Long chargingStationTypeId, @PathParam("id") Long id) {
+        return Response.ok(domainService.getEvse(chargingStationTypeId, id)).build();
     }
 
     @DELETE
