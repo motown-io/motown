@@ -71,7 +71,6 @@ class SendAuthorizationListJsonCommandHandler implements JsonCommandHandler {
 
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.isAccepted()) {
-                // TODO enable usage of hash in API - Dennis Laumen, January 13th 2014
                 commandGateway.send(new RequestSendAuthorizationListCommand(csId, authorizationList, command.getListVersion(), "", updateType, identityContext), new CorrelationToken());
             } else {
                 throw new IllegalStateException("It is not possible to send a authorization list to a charging station that is not registered");
