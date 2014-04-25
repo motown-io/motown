@@ -23,7 +23,7 @@
     </bean>
 
     <bean id="connectorRepository" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ConnectorRepository">
-        <property name="entityManager" ref="entityManagerChargingStationConfiguration" />
+        <property name="entityManagerFactory" ref="entityManagerFactoryChargingStationConfiguration" />
     </bean>
 
     <bean id="evseRepository" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.EvseRepository">

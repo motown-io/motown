@@ -18,60 +18,51 @@ package io.motown.chargingstationconfiguration.viewmodel.persistence.repositorie
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityTransaction;
 
 public class ConnectorRepository {
 
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
 
     public Connector createOrUpdate(Connector connector) {
-        EntityTransaction transaction = entityManager.getTransaction();
+        EntityManager em = getEntityManager();
 
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
+        EntityTransaction tx = null;
         try {
-            Connector persistentConnector = entityManager.merge(connector);
-            transaction.commit();
-            return persistentConnector;
+            tx = em.getTransaction();
+            tx.begin();
+
+            Connector persistedConnector = em.merge(connector);
+
+            tx.commit();
+
+            return persistedConnector;
         } catch (Exception e) {
-            if(transaction.isActive()) {
-                transaction.rollback();
+            if(tx != null && tx.isActive()) {
+                tx.rollback();
             }
             throw e;
+        } finally {
+            em.close();
         }
     }
 
     public Connector findOne(Long id) {
-        Connector connector = entityManager.find(Connector.class, id);
+        Connector connector = getEntityManager().find(Connector.class, id);
         if (connector != null) {
             return connector;
         }
         throw new EntityNotFoundException(String.format("Unable to find connector with id '%s'", id));
     }
 
-    public void delete(Long id) {
-        Connector connector = findOne(id);
-        EntityTransaction transaction = entityManager.getTransaction();
-
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
-        try {
-            entityManager.remove(connector);
-            transaction.commit();
-        } catch (Exception e) {
-            if(transaction.isActive()) {
-                transaction.rollback();
-            }
-            throw e;
-        }
+    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
     }
 
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    private EntityManager getEntityManager() {
+        return entityManagerFactory.createEntityManager();
     }
+
 }

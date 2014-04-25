@@ -52,11 +52,11 @@ public class ChargingStationTypeRepository {
             tx = em.getTransaction();
             tx.begin();
 
-            ChargingStationType persistentChargingStationType = em.merge(chargingStationType);
+            ChargingStationType persistedChargingStationType = em.merge(chargingStationType);
 
             tx.commit();
 
-            return persistentChargingStationType;
+            return persistedChargingStationType;
         } catch (Exception e) {
             if(tx != null && tx.isActive()) {
                 tx.rollback();
