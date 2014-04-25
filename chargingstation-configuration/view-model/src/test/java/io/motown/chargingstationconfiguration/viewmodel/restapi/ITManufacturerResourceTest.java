@@ -38,8 +38,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
 
-import javax.ws.rs.core.MediaType;
-
 import static org.junit.Assert.assertEquals;
 
 @ContextConfiguration("classpath:jersey-test-config.xml")
@@ -90,8 +88,8 @@ public class ITManufacturerResourceTest extends JerseyTest {
     public void testCreateManufacturer() {
         Manufacturer manufacturer = getManufacturer();
         ClientResponse response = client.resource(BASE_URI)
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .type(ApiVersion.V1_JSON)
+                .accept(ApiVersion.V1_JSON)
                 .post(ClientResponse.class, manufacturer);
 
         assertEquals(CREATED, response.getStatus());
@@ -106,8 +104,8 @@ public class ITManufacturerResourceTest extends JerseyTest {
         m2.setCode(m1.getCode());
 
         ClientResponse response = client.resource(BASE_URI)
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.TEXT_PLAIN)
+                .type(ApiVersion.V1_JSON)
+                .accept(ApiVersion.V1_JSON)
                 .post(ClientResponse.class, m2);
 
         assertEquals(INTERNAL_SERVER_ERROR, response.getStatus());
@@ -122,8 +120,8 @@ public class ITManufacturerResourceTest extends JerseyTest {
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/" + manufacturer.getId())
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .type(ApiVersion.V1_JSON)
+                .accept(ApiVersion.V1_JSON)
                 .put(ClientResponse.class, manufacturer);
 
         assertEquals(OK, response.getStatus());
@@ -133,7 +131,7 @@ public class ITManufacturerResourceTest extends JerseyTest {
     @Test
     public void testGetManufacturers() {
         ClientResponse response = client.resource(BASE_URI)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(ApiVersion.V1_JSON)
                 .get(ClientResponse.class);
 
         assertEquals(OK, response.getStatus());
@@ -146,7 +144,7 @@ public class ITManufacturerResourceTest extends JerseyTest {
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/" + manufacturer.getId())
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(ApiVersion.V1_JSON)
                 .get(ClientResponse.class);
 
         assertEquals(OK, response.getStatus());
@@ -156,7 +154,7 @@ public class ITManufacturerResourceTest extends JerseyTest {
     public void testGetManufacturerNotFound() {
         ClientResponse response = client.resource(BASE_URI)
                 .path("/1")
-                .accept(MediaType.TEXT_PLAIN)
+                .accept(ApiVersion.V1_JSON)
                 .get(ClientResponse.class);
 
         assertEquals(NOT_FOUND, response.getStatus());
@@ -169,7 +167,7 @@ public class ITManufacturerResourceTest extends JerseyTest {
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/" + manufacturer.getId())
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(ApiVersion.V1_JSON)
                 .delete(ClientResponse.class);
 
         assertEquals(OK, response.getStatus());
@@ -179,7 +177,7 @@ public class ITManufacturerResourceTest extends JerseyTest {
     public void testDeleteManufacturerNotFound() {
         ClientResponse response = client.resource(BASE_URI)
                 .path("/1")
-                .accept(MediaType.TEXT_PLAIN)
+                .accept(ApiVersion.V1_JSON)
                 .delete(ClientResponse.class);
 
         assertEquals(NOT_FOUND, response.getStatus());

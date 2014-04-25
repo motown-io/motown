@@ -34,8 +34,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
 
-import javax.ws.rs.core.MediaType;
-
 import static org.junit.Assert.assertEquals;
 
 @ContextConfiguration("classpath:jersey-test-config.xml")
@@ -72,7 +70,7 @@ public class ITTransactionTest extends JerseyTest {
     @Test
     public void testGetTransactions() {
         ClientResponse response = client().resource(BASE_URI)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(ApiVersion.V1_JSON)
                 .get(ClientResponse.class);
 
         assertEquals(OK, response.getStatus());

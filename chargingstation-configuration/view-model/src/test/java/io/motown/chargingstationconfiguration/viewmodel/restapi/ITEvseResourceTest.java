@@ -38,8 +38,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
 
-import javax.ws.rs.core.MediaType;
-
 import static org.junit.Assert.assertEquals;
 
 @ContextConfiguration("classpath:jersey-test-config.xml")
@@ -47,8 +45,8 @@ import static org.junit.Assert.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ITEvseResourceTest extends JerseyTest {
     private static final int OK = 200;
-    private static final int CREATED = 201;
     private static final int NOT_FOUND = 404;
+    private static final int INTERNAL_SERVER_ERROR = 500;
     private static final String BASE_URI = "http://localhost:9998/config/api/evses";
 
     private Client client;
@@ -86,17 +84,6 @@ public class ITEvseResourceTest extends JerseyTest {
     }
 
     @Test
-    public void testCreateEvse() {
-        Evse evse = getEvse();
-        ClientResponse response = client.resource(BASE_URI)
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .post(ClientResponse.class, evse);
-
-        assertEquals(CREATED, response.getStatus());
-    }
-
-    @Test
     public void testUpdateEvse() {
         Evse evse = getEvse();
         evse = repository.createOrUpdate(evse);
@@ -105,21 +92,12 @@ public class ITEvseResourceTest extends JerseyTest {
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/" + evse.getId())
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .type(ApiVersion.V1_JSON)
+                .accept(ApiVersion.V1_JSON)
                 .put(ClientResponse.class, evse);
 
         assertEquals(OK, response.getStatus());
         assertEquals(evse.getIdentifier(), response.getEntity(Evse.class).getIdentifier());
-    }
-
-    @Test
-    public void testGetEvses() {
-        ClientResponse response = client.resource(BASE_URI)
-                .accept(MediaType.APPLICATION_JSON)
-                .get(ClientResponse.class);
-
-        assertEquals(OK, response.getStatus());
     }
 
     @Test
@@ -129,7 +107,7 @@ public class ITEvseResourceTest extends JerseyTest {
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/" + evse.getId())
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(ApiVersion.V1_JSON)
                 .get(ClientResponse.class);
 
         assertEquals(OK, response.getStatus());
@@ -139,33 +117,20 @@ public class ITEvseResourceTest extends JerseyTest {
     public void testGetEvseNotFound() {
         ClientResponse response = client.resource(BASE_URI)
                 .path("/1")
-                .accept(MediaType.TEXT_PLAIN)
+                .accept(ApiVersion.V1_JSON)
                 .get(ClientResponse.class);
 
         assertEquals(NOT_FOUND, response.getStatus());
     }
 
     @Test
-    public void testDeleteEvse() {
-        Evse evse = getEvse();
-        evse = repository.createOrUpdate(evse);
-
-        ClientResponse response = client.resource(BASE_URI)
-                .path("/" + evse.getId())
-                .accept(MediaType.APPLICATION_JSON)
-                .delete(ClientResponse.class);
-
-        assertEquals(OK, response.getStatus());
-    }
-
-    @Test
     public void testDeleteEvseNotFound() {
         ClientResponse response = client.resource(BASE_URI)
                 .path("/1")
-                .accept(MediaType.TEXT_PLAIN)
+                .accept(ApiVersion.V1_JSON)
                 .delete(ClientResponse.class);
 
-        assertEquals(NOT_FOUND, response.getStatus());
+        assertEquals(INTERNAL_SERVER_ERROR, response.getStatus());
     }
 
     private Evse getEvse() {
