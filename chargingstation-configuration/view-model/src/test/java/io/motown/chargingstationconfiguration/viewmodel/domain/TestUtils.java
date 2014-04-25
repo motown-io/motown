@@ -22,6 +22,7 @@ import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Man
 import io.motown.domain.api.chargingstation.ChargingProtocol;
 import io.motown.domain.api.chargingstation.ConnectorType;
 import io.motown.domain.api.chargingstation.Current;
+import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -59,20 +60,34 @@ public final class TestUtils {
         }
     }
 
-    public static void insertIntoDatabase(EntityManager entityManager, Object entity) {
+    public static Object insertIntoDatabase(EntityManager entityManager, Object entity) {
         EntityTransaction transaction = entityManager.getTransaction();
         if (!transaction.isActive()) {
             transaction.begin();
         }
 
         try {
-            entityManager.persist(entity);
+            Object merged = entityManager.merge(entity);
             transaction.commit();
+            return merged;
         } finally {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
         }
+    }
+
+    /**
+     * Have an entity manager store a charging station and return that. This makes sure the id's of all entities are
+     * filled.
+     *
+     * @return charging station type with all identifiers filled.
+     */
+    public static ChargingStationType getChargingStationTypeNonTransient(EntityManager entityManager) {
+        Manufacturer manufacturer = getManufacturer(ChargingStationTestUtils.CHARGING_STATION_VENDOR);
+        manufacturer = (Manufacturer) insertIntoDatabase(entityManager, manufacturer);
+        ChargingStationType chargingStationType = getChargingStationTypes(manufacturer, ChargingStationTestUtils.CHARGING_STATION_MODEL).iterator().next();
+        return (ChargingStationType) insertIntoDatabase(entityManager, chargingStationType);
     }
 
     public static Manufacturer getManufacturerWithConfiguration(String vendor, String model) {

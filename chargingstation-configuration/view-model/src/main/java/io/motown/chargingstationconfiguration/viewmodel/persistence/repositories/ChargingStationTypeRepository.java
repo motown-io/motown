@@ -16,6 +16,7 @@
 package io.motown.chargingstationconfiguration.viewmodel.persistence.repositories;
 
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
@@ -31,6 +32,15 @@ public class ChargingStationTypeRepository {
                 .setParameter("code", code)
                 .setParameter("manufacturerCode", manufacturerCode)
                 .getResultList();
+    }
+
+    public ChargingStationType findByEvseId(Long evseId) {
+        return entityManager.createQuery("SELECT cst FROM ChargingStationType AS cst WHERE :evse MEMBER OF cst.evses", ChargingStationType.class).setParameter("evse", evseId).getSingleResult();
+    }
+
+    public ChargingStationType findByConnectorId(Long connectorId) {
+        Evse evse = entityManager.createQuery("SELECT evse FROM Evse AS evse WHERE :connector MEMBER OF evse.connectors", Evse.class).setParameter("connector", connectorId).getSingleResult();
+        return findByEvseId(evse.getId());
     }
 
     public ChargingStationType createOrUpdate(ChargingStationType chargingStationType) {

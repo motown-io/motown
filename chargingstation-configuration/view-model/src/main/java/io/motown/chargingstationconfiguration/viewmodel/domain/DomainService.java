@@ -154,7 +154,19 @@ public class DomainService {
      * @param id the id of the entity to delete.
      */
     public void deleteConnector(Long id) {
-        connectorRepository.delete(id);
+        // It seems not possible to delete a child object in JPA without going through the parent if the relationship is unidirectional.
+        // There has to be a better way to achieve this...
+        ChargingStationType chargingStationType = chargingStationTypeRepository.findByConnectorId(id);
+
+        for (Evse evse:chargingStationType.getEvses()) {
+            for (Connector connector:evse.getConnectors()) {
+                if (id.equals(connector.getId())) {
+                    evse.getConnectors().remove(connector);
+                    break;
+                }
+            }
+        }
+        updateChargingStationType(chargingStationType.getId(), chargingStationType);
     }
 
     /**
@@ -184,7 +196,17 @@ public class DomainService {
      * @param id the id of the entity to delete.
      */
     public void deleteEvse(Long id) {
-        evseRepository.delete(id);
+        // It seems not possible to delete a child object in JPA without going through the parent if the relationship is unidirectional.
+        // There has to be a better way to achieve this...
+        ChargingStationType chargingStationType = chargingStationTypeRepository.findByEvseId(id);
+
+        for (Evse evse:chargingStationType.getEvses()) {
+            if(id.equals(evse.getId())) {
+                chargingStationType.getEvses().remove(evse);
+                break;
+            }
+        }
+        updateChargingStationType(chargingStationType.getId(), chargingStationType);
     }
 
     /**
