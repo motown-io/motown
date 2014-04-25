@@ -17,7 +17,6 @@ package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
 import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
-import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.EvseRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,31 +29,30 @@ import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EvseResourceTest {
+
     private EvseResource resource;
 
     @Mock
-    private EvseRepository repository;
+    private DomainService domainService;
+
+    private static final Long EVSE_ID = 1l;
 
     @Before
     public void setUp() {
         resource = new EvseResource();
-        DomainService service = new DomainService();
 
-        service.setEvseRepository(repository);
-        resource.setDomainService(service);
+        resource.setDomainService(domainService);
     }
 
     @Test
     public void testUpdateEvse() {
         Evse evse = mock(Evse.class);
-        when(evse.getId()).thenReturn(1L);
-        Response response = resource.updateEvse(1L, evse);
-        verify(repository).createOrUpdate(evse);
+        Response response = resource.updateEvse(EVSE_ID, evse);
+        verify(domainService).updateEvse(EVSE_ID, evse);
 
         assertNotNull(response);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
@@ -63,30 +61,31 @@ public class EvseResourceTest {
     @Test(expected = RuntimeException.class)
     public void testUpdateEvseThrowsException() {
         Evse evse = mock(Evse.class);
-        when(evse.getId()).thenReturn(1L);
-        doThrow(mock(PersistenceException.class)).when(repository).createOrUpdate(evse);
-        resource.updateEvse(1L, evse);
+        doThrow(mock(PersistenceException.class)).when(domainService).updateEvse(EVSE_ID, evse);
+
+        resource.updateEvse(EVSE_ID, evse);
     }
 
     @Test
     public void testGetEvse() {
-        Response response = resource.getEvse(anyLong());
-        verify(repository).findOne(anyLong());
+        Response response = resource.getEvse(EVSE_ID);
 
+        verify(domainService).getEvse(EVSE_ID);
         assertNotNull(response);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
     @Test(expected = RuntimeException.class)
     public void testGetEvseThrowsException() {
-        when(repository.findOne(anyLong())).thenThrow(mock(EntityNotFoundException.class));
-        resource.getEvse(anyLong());
+        when(domainService.getEvse(EVSE_ID)).thenThrow(mock(EntityNotFoundException.class));
+
+        resource.getEvse(EVSE_ID);
     }
 
     @Test
     public void testDeleteEvse() {
-        Response response = resource.deleteEvse(anyLong());
-        verify(repository).delete(anyLong());
+        Response response = resource.deleteEvse(EVSE_ID);
+        verify(domainService).deleteEvse(EVSE_ID);
 
         assertNotNull(response);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
@@ -94,8 +93,9 @@ public class EvseResourceTest {
 
     @Test(expected = RuntimeException.class)
     public void testDeleteEvseThrowsException() {
-        doThrow(mock(PersistenceException.class)).when(repository).delete(anyLong());
-        resource.deleteEvse(anyLong());
+        doThrow(mock(PersistenceException.class)).when(domainService).deleteEvse(EVSE_ID);
+
+        resource.deleteEvse(EVSE_ID);
     }
 
 }
