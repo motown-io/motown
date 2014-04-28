@@ -34,13 +34,23 @@ angular.module('demoApp.controllers', []).
                 }, 5000);
             };
 
-            $scope.getChargingStations = function () {
+            $scope.getChargingStations = function (_page, _recordsPerPage) {
+                var q = [],
+                    page = _page || 1,
+                    recordsPerPage = _recordsPerPage || 10;
+
+                q.push('page=' + page);
+                q.push('recordsPerPage=' + recordsPerPage);
+
                 $http({
-                    url: 'rest/operator-api/charging-stations',
+                    url: 'rest/operator-api/charging-stations?' + q.join('&'),
                     method: 'GET',
                     data: ''
                 }).success(function (response) {
-                    $scope.chargingStations = response;
+                    $scope.chargingStations = response.records;
+                    $scope.page = response.metadata.page;
+                    $scope.recordsPerPage = response.metadata.recordsPerPage;
+                    $scope.totalNumberOfRecords = response.metadata.totalNumberOfRecords;
                 }).error(function () {
                     console.log('Error getting charging stations, cancel polling.');
                     $interval.cancel($scope.chargingStationTimer);
@@ -411,13 +421,23 @@ angular.module('demoApp.controllers', []).
                 $scope.getChargingStationTypes();
             };
 
-            $scope.getChargingStationTypes = function () {
+            $scope.getChargingStationTypes = function (_page, _recordsPerPage) {
+                var q = [],
+                    page = _page || 1,
+                    recordsPerPage = _recordsPerPage || 10;
+
+                q.push('page=' + page);
+                q.push('recordsPerPage=' + recordsPerPage);
+
                 $http({
-                    url: 'rest/config/chargingstationtypes',
+                    url: 'rest/config/chargingstationtypes?' + q.join('&'),
                     method: 'GET',
                     data: ''
                 }).success(function (response) {
-                    $scope.chargingStationTypes = response;
+                    $scope.chargingStationTypes = response.records;
+                    $scope.page = response.metadata.page;
+                    $scope.recordsPerPage = response.metadata.recordsPerPage;
+                    $scope.totalNumberOfRecords = response.metadata.totalNumberOfRecords;
                 });
             };
         }]
