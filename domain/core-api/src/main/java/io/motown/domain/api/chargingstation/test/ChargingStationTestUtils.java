@@ -522,4 +522,14 @@ public final class ChargingStationTestUtils {
 
         return evses;
     }
+
+    /**
+     * Default page number for REST api
+     */
+    public static final int PAGE = 1;
+
+    /**
+     * Default results per page for REST api
+     */
+    public static final int RESULTS_PER_PAGE = 10;
 }

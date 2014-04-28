@@ -15,6 +15,7 @@
  */
 package io.motown.operatorapi.json.restapi;
 
+import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
 import io.motown.operatorapi.json.queries.OperatorApiService;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,15 +45,15 @@ public class TransactionResourceTest {
 
     @Test
     public void testGetTransactions() {
-        Response response = resource.getTransactions();
-        verify(service).findAllTransactions();
+        Response response = resource.getTransactions(ChargingStationTestUtils.PAGE, ChargingStationTestUtils.RESULTS_PER_PAGE);
+        verify(service).findAllTransactions(ChargingStationTestUtils.PAGE, ChargingStationTestUtils.RESULTS_PER_PAGE);
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
     @Test(expected = RuntimeException.class)
     public void testGetTransactionsThrowsException() {
-        doThrow(mock(PersistenceException.class)).when(service).findAllTransactions();
-        resource.getTransactions();
+        doThrow(mock(PersistenceException.class)).when(service).findAllTransactions(ChargingStationTestUtils.PAGE, ChargingStationTestUtils.RESULTS_PER_PAGE);
+        resource.getTransactions(ChargingStationTestUtils.PAGE, ChargingStationTestUtils.RESULTS_PER_PAGE);
     }
 }

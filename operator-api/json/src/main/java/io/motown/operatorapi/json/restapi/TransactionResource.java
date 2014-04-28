@@ -15,22 +15,30 @@
  */
 package io.motown.operatorapi.json.restapi;
 
+import com.google.common.collect.Maps;
 import io.motown.operatorapi.json.queries.OperatorApiService;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.Map;
 
 @Path("/transactions")
 @Produces(ApiVersion.V1_JSON)
 public final class TransactionResource {
 
+    private static final String PAGE_PARAMETER = "page";
+
+    private static final String RESULTS_PER_PAGE_PARAMETER = "resultsPerPage";
+
     private OperatorApiService service;
 
     @GET
-    public Response getTransactions() {
-        return Response.ok().entity(service.findAllTransactions()).build();
+    public Response getTransactions(@QueryParam(PAGE_PARAMETER) @DefaultValue("1") int page, @QueryParam(RESULTS_PER_PAGE_PARAMETER) @DefaultValue("10") int resultsPerPage) {
+        Map<String, Object> metadata = Maps.newHashMap();
+        metadata.put(PAGE_PARAMETER, page);
+        metadata.put(RESULTS_PER_PAGE_PARAMETER, resultsPerPage);
+        metadata.put("totalNumberOfResults", service.getTotalNumberOfTransactions());
+        return Response.ok().entity(new OperatorApiResponse<>(metadata, service.findAllTransactions(page, resultsPerPage))).build();
     }
 
     public void setService(OperatorApiService service) {

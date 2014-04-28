@@ -45,8 +45,11 @@ public class TransactionRepository {
         }
     }
 
-    public List<Transaction> findAll() {
-        return entityManager.createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t", Transaction.class).getResultList();
+    public List<Transaction> findAll(int page, int resultsPerPage) {
+        return entityManager.createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t", Transaction.class)
+                .setFirstResult((page - 1) * resultsPerPage)
+                .setMaxResults(resultsPerPage)
+                .getResultList();
     }
 
     public void save(Transaction transaction) {
@@ -64,6 +67,10 @@ public class TransactionRepository {
             entityTransaction.rollback();
             throw e;
         }
+    }
+
+    public Long getTotalNumberOfTransactions() {
+        return entityManager.createQuery("SELECT COUNT(t) FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction t", Long.class).getSingleResult();
     }
 
     public void setEntityManager(EntityManager entityManager) {

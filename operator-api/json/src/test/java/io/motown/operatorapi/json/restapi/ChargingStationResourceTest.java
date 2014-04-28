@@ -29,7 +29,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-
 import java.security.Principal;
 
 import static org.junit.Assert.assertEquals;
@@ -77,15 +76,15 @@ public class ChargingStationResourceTest {
 
     @Test
     public void testGetChargingStations() {
-        Response response = resource.getChargingStations();
-        verify(service).findAllChargingStations();
+        Response response = resource.getChargingStations(ChargingStationTestUtils.PAGE, ChargingStationTestUtils.RESULTS_PER_PAGE);
+        verify(service).findAllChargingStations(ChargingStationTestUtils.PAGE, ChargingStationTestUtils.RESULTS_PER_PAGE);
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
     @Test(expected = RuntimeException.class)
     public void testGetChargingStationsThrowsException() {
-        doThrow(mock(PersistenceException.class)).when(service).findAllChargingStations();
-        resource.getChargingStations();
+        doThrow(mock(PersistenceException.class)).when(service).findAllChargingStations(ChargingStationTestUtils.PAGE, ChargingStationTestUtils.RESULTS_PER_PAGE);
+        resource.getChargingStations(ChargingStationTestUtils.PAGE, ChargingStationTestUtils.RESULTS_PER_PAGE);
     }
 }

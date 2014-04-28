@@ -50,8 +50,15 @@ public class ChargingStationRepository {
         return entityManager.find(ChargingStation.class, id);
     }
 
-    public List<ChargingStation> findAll() {
-        return entityManager.createQuery("SELECT cs FROM io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation AS cs", ChargingStation.class).getResultList();
+    public List<ChargingStation> findAll(int page, int resultsPerPage) {
+        return entityManager.createQuery("SELECT cs FROM io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation AS cs", ChargingStation.class)
+                .setFirstResult((page - 1) * resultsPerPage)
+                .setMaxResults(resultsPerPage)
+                .getResultList();
+    }
+
+    public Long getTotalNumberOfChargingStations() {
+        return entityManager.createQuery("SELECT COUNT(cs) FROM io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation cs", Long.class).getSingleResult();
     }
 
     public void setEntityManager(EntityManager entityManager) {

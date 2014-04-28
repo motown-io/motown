@@ -15,6 +15,7 @@
  */
 package io.motown.operatorapi.json.restapi;
 
+import com.google.common.collect.Maps;
 import io.motown.domain.api.security.SimpleUserIdentity;
 import io.motown.operatorapi.json.commands.JsonCommandService;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
@@ -26,12 +27,17 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.util.Map;
 
 @Path("/charging-stations")
 @Produces(ApiVersion.V1_JSON)
 public final class ChargingStationResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(ChargingStationResource.class);
+
+    private static final String PAGE_PARAMETER = "page";
+
+    private static final String RESULTS_PER_PAGE_PARAMETER = "resultsPerPage";
 
     private OperatorApiService service;
 
@@ -53,8 +59,12 @@ public final class ChargingStationResource {
     }
 
     @GET
-    public Response getChargingStations() {
-        return Response.ok().entity(service.findAllChargingStations()).build();
+    public Response getChargingStations(@QueryParam(PAGE_PARAMETER) @DefaultValue("1") int page, @QueryParam(RESULTS_PER_PAGE_PARAMETER) @DefaultValue("10") int resultsPerPage) {
+        Map<String, Object> metadata = Maps.newHashMap();
+        metadata.put(PAGE_PARAMETER, page);
+        metadata.put(RESULTS_PER_PAGE_PARAMETER, resultsPerPage);
+        metadata.put("totalNumberOfResults", service.getTotalNumberOfChargingStations());
+        return Response.ok().entity(new OperatorApiResponse<>(metadata, service.findAllChargingStations(page, resultsPerPage))).build();
     }
 
     public void setService(OperatorApiService service) {
