@@ -19,24 +19,45 @@ import io.motown.operatorapi.viewmodel.persistence.entities.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
+import javax.persistence.*;
 import java.util.List;
 
 public class TransactionRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(TransactionRepository.class);
 
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
+
+    public Transaction createOrUpdate(Transaction transaction) {
+        EntityManager entityManager = getEntityManager();
+
+        EntityTransaction tx = null;
+        try {
+            tx = entityManager.getTransaction();
+            tx.begin();
+
+            Transaction persistedTransaction = entityManager.merge(transaction);
+
+            tx.commit();
+
+            return persistedTransaction;
+        } catch (Exception e) {
+            LOG.error("Exception while trying to persist transaction.", e);
+            if(tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
+        } finally {
+            entityManager.close();
+        }
+    }
 
     /**
      * Find transactions by transaction id (not the auto-increment transaction.id)
      */
     public Transaction findByTransactionId(String transactionId) {
         try {
-            return entityManager.createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t WHERE t.transactionId = :transactionId", Transaction.class)
+            return getEntityManager().createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t WHERE t.transactionId = :transactionId", Transaction.class)
                     .setParameter("transactionId", transactionId)
                     .getSingleResult();
         } catch (NoResultException | NonUniqueResultException e) {
@@ -46,34 +67,21 @@ public class TransactionRepository {
     }
 
     public List<Transaction> findAll(int page, int recordsPerPage) {
-        return entityManager.createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t", Transaction.class)
+        return getEntityManager().createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t", Transaction.class)
                 .setFirstResult((page - 1) * recordsPerPage)
                 .setMaxResults(recordsPerPage)
                 .getResultList();
     }
 
-    public void save(Transaction transaction) {
-        EntityTransaction entityTransaction = entityManager.getTransaction();
-
-        if (!entityTransaction.isActive()) {
-            entityTransaction.begin();
-        }
-
-        try {
-            entityManager.persist(transaction);
-            entityTransaction.commit();
-        } catch (Exception e) {
-            LOG.error("Exception while trying to persist transaction.", e);
-            entityTransaction.rollback();
-            throw e;
-        }
-    }
-
     public Long getTotalNumberOfTransactions() {
-        return entityManager.createQuery("SELECT COUNT(t) FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction t", Long.class).getSingleResult();
+        return getEntityManager().createQuery("SELECT COUNT(t) FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction t", Long.class).getSingleResult();
     }
 
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+    }
+
+    private EntityManager getEntityManager() {
+        return entityManagerFactory.createEntityManager();
     }
 }

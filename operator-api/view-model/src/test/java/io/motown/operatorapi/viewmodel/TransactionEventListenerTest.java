@@ -61,7 +61,7 @@ public class TransactionEventListenerTest {
     public void testHandleTransactionStartedEvent() {
         ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
         cs.setEvses(ImmutableSet.<Evse>builder().add(new Evse("1", ComponentStatus.AVAILABLE)).build());
-        chargingStationRepository.save(cs);
+        chargingStationRepository.createOrUpdate(cs);
 
         listener.handle(new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN_ACCEPTED, METER_START, new Date(), BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT));
         Transaction transaction = repository.findByTransactionId(TRANSACTION_ID.getId());
@@ -74,7 +74,7 @@ public class TransactionEventListenerTest {
     public void testHandleTransactionStoppedEvent() {
         ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId());
         cs.setEvses(ImmutableSet.<Evse>builder().add(new Evse("1", ComponentStatus.AVAILABLE)).build());
-        chargingStationRepository.save(cs);
+        chargingStationRepository.createOrUpdate(cs);
 
         listener.handle(new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN_ACCEPTED, METER_START, new Date(), BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT));
         Transaction transaction = repository.findByTransactionId(TRANSACTION_ID.getId());
@@ -83,6 +83,7 @@ public class TransactionEventListenerTest {
         assertNull(transaction.getStoppedTimestamp());
 
         listener.handle(new TransactionStoppedEvent(CHARGING_STATION_ID, TRANSACTION_ID, IDENTIFYING_TOKEN_ACCEPTED, METER_STOP, new Date(), IDENTITY_CONTEXT));
+        transaction = repository.findByTransactionId(TRANSACTION_ID.getId());
         assertTrue(transaction.getMeterStop() > 0 && transaction.getMeterStop() > transaction.getMeterStart());
         assertNotNull(transaction.getStoppedTimestamp());
         assertTrue(transaction.getStoppedTimestamp().after(transaction.getStartedTimestamp()));
@@ -92,10 +93,11 @@ public class TransactionEventListenerTest {
     public void testHandleChargingStationSentMeterValuesEvent() {
         Transaction transaction = new Transaction(CHARGING_STATION_ID.getId(), TRANSACTION_ID.getId());
         transaction.setEvseId(EVSE_ID);
-        repository.save(transaction);
+        repository.createOrUpdate(transaction);
         assertTrue(transaction.getMeterValues().isEmpty());
 
         listener.handle(new ChargingStationSentMeterValuesEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, METER_VALUES, IDENTITY_CONTEXT));
+        transaction = repository.findByTransactionId(TRANSACTION_ID.getId());
         assertFalse(transaction.getMeterValues().isEmpty());
         assertEquals(2, transaction.getMeterValues().size());
     }

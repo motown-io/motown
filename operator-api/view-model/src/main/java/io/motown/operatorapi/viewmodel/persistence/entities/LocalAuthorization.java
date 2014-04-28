@@ -16,6 +16,7 @@
 package io.motown.operatorapi.viewmodel.persistence.entities;
 
 import javax.persistence.Embeddable;
+import java.util.Objects;
 
 @Embeddable
 public class LocalAuthorization {
@@ -46,5 +47,22 @@ public class LocalAuthorization {
 
     public void setAuthenticationStatus(io.motown.domain.api.chargingstation.IdentifyingToken.AuthenticationStatus authenticationStatus) {
         this.authenticationStatus = authenticationStatus;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(token);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final LocalAuthorization other = (LocalAuthorization) obj;
+        return Objects.equals(this.token, other.token);
     }
 }

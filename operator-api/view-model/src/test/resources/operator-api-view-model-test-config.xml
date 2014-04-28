@@ -22,14 +22,12 @@
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
-    <bean id="entityManager" factory-bean="entityManagerFactory" factory-method="createEntityManager"/>
-
     <bean class="io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository">
-        <property name="entityManager" ref="entityManager"/>
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
     <bean class="io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository">
-        <property name="entityManager" ref="entityManager"/>
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
 </beans>

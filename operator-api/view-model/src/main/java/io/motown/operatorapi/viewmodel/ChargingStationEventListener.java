@@ -45,7 +45,7 @@ public class ChargingStationEventListener {
     public void handle(ChargingStationCreatedEvent event) {
         LOG.debug("ChargingStationCreatedEvent creates [{}] in operator api repo", event.getChargingStationId());
         ChargingStation station = new ChargingStation(event.getChargingStationId().getId());
-        repository.creatOrUpdate(station);
+        repository.createOrUpdate(station);
     }
 
     @EventHandler
@@ -57,7 +57,7 @@ public class ChargingStationEventListener {
         if (chargingStation != null) {
             chargingStation.setProtocol(event.getProtocol());
             chargingStation.setAttributes(event.getAttributes());
-            repository.creatOrUpdate(chargingStation);
+            repository.createOrUpdate(chargingStation);
         } else {
             LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as booted", event.getChargingStationId());
         }
@@ -71,7 +71,7 @@ public class ChargingStationEventListener {
 
         if (chargingStation != null) {
             chargingStation.setAccepted(true);
-            repository.creatOrUpdate(chargingStation);
+            repository.createOrUpdate(chargingStation);
         } else {
             LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as accepted", event.getChargingStationId());
         }
@@ -125,7 +125,7 @@ public class ChargingStationEventListener {
                 chargingStation.getEvses().add(evse);
             }
 
-            repository.creatOrUpdate(chargingStation);
+            repository.createOrUpdate(chargingStation);
         } else {
             LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and configure it", event.getChargingStationId());
         }
@@ -162,7 +162,7 @@ public class ChargingStationEventListener {
 
         if (chargingStation != null) {
             chargingStation.setStatus(event.getStatus());
-            repository.creatOrUpdate(chargingStation);
+            repository.createOrUpdate(chargingStation);
         }
     }
 
@@ -179,7 +179,7 @@ public class ChargingStationEventListener {
 
             if (chargingStation != null) {
                 updateEvseStatus(chargingStation, event.getComponentId().getId(), event.getStatus());
-                repository.creatOrUpdate(chargingStation);
+                repository.createOrUpdate(chargingStation);
             }
         }
     }
@@ -195,7 +195,7 @@ public class ChargingStationEventListener {
 
         if (chargingStation != null) {
             chargingStation.setConfigurationItems(toConfigurationItemMap(event.getConfigurationItems()));
-            repository.creatOrUpdate(chargingStation);
+            repository.createOrUpdate(chargingStation);
         }
     }
 
@@ -210,7 +210,7 @@ public class ChargingStationEventListener {
 
         if (chargingStation != null) {
             chargingStation.setLocalAuthorizationListVersion(event.getVersion());
-            repository.creatOrUpdate(chargingStation);
+            repository.createOrUpdate(chargingStation);
         }
     }
 
@@ -232,7 +232,7 @@ public class ChargingStationEventListener {
                 updateAuthorizationList(chargingStation, updatedLocalAuthorizations);
             }
             chargingStation.setLocalAuthorizationListVersion(event.getVersion());
-            repository.creatOrUpdate(chargingStation);
+            repository.createOrUpdate(chargingStation);
         }
     }
 
@@ -341,7 +341,7 @@ public class ChargingStationEventListener {
 
         if (chargingStation != null) {
             chargingStation.setAvailability(availability);
-            repository.creatOrUpdate(chargingStation);
+            repository.createOrUpdate(chargingStation);
         }
     }
 
@@ -367,7 +367,7 @@ public class ChargingStationEventListener {
                     break;
                 }
             }
-            repository.creatOrUpdate(chargingStation);
+            repository.createOrUpdate(chargingStation);
         }
     }
 
@@ -396,7 +396,7 @@ public class ChargingStationEventListener {
                     chargingStation.getOpeningTimes().add(openingTime);
                 }
 
-                repository.creatOrUpdate(chargingStation);
+                repository.createOrUpdate(chargingStation);
             }
 
         } else {
@@ -432,7 +432,7 @@ public class ChargingStationEventListener {
 
             chargingStation.setAccessibility(event.getAccessibility());
 
-            repository.creatOrUpdate(chargingStation);
+            repository.createOrUpdate(chargingStation);
         } else {
             LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and update its location", event.getChargingStationId());
         }
@@ -451,7 +451,7 @@ public class ChargingStationEventListener {
 
         if (chargingStation != null) {
             chargingStation.setReservable(reservable);
-            repository.creatOrUpdate(chargingStation);
+            repository.createOrUpdate(chargingStation);
         }
     }
 

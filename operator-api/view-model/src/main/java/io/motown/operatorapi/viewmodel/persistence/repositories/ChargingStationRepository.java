@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import java.util.List;
 
@@ -27,41 +28,52 @@ public class ChargingStationRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(ChargingStationRepository.class);
 
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
 
-    public void save(ChargingStation chargingStation) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    public ChargingStation createOrUpdate(ChargingStation chargingStation) {
+        EntityManager entityManager = getEntityManager();
 
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
+        EntityTransaction tx = null;
         try {
-            entityManager.persist(chargingStation);
-            transaction.commit();
+            tx = entityManager.getTransaction();
+            tx.begin();
+
+            ChargingStation persistedChargingStation = entityManager.merge(chargingStation);
+
+            tx.commit();
+
+            return persistedChargingStation;
         } catch (Exception e) {
             LOG.error("Exception while trying to persist chargingStation.", e);
-            transaction.rollback();
+            if(tx != null && tx.isActive()) {
+                tx.rollback();
+            }
             throw e;
+        } finally {
+            entityManager.close();
         }
     }
 
     public ChargingStation findOne(String id) {
-        return entityManager.find(ChargingStation.class, id);
+        return getEntityManager().find(ChargingStation.class, id);
     }
 
     public List<ChargingStation> findAll(int page, int recordsPerPage) {
-        return entityManager.createQuery("SELECT cs FROM io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation AS cs", ChargingStation.class)
+        return getEntityManager().createQuery("SELECT cs FROM io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation AS cs", ChargingStation.class)
                 .setFirstResult((page - 1) * recordsPerPage)
                 .setMaxResults(recordsPerPage)
                 .getResultList();
     }
 
     public Long getTotalNumberOfChargingStations() {
-        return entityManager.createQuery("SELECT COUNT(cs) FROM io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation cs", Long.class).getSingleResult();
+        return getEntityManager().createQuery("SELECT COUNT(cs) FROM io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation cs", Long.class).getSingleResult();
     }
 
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+    }
+
+    private EntityManager getEntityManager() {
+        return entityManagerFactory.createEntityManager();
     }
 }

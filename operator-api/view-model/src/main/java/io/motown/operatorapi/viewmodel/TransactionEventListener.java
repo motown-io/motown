@@ -36,7 +36,7 @@ public class TransactionEventListener {
         LOG.debug("TransactionStartedEvent for [{}] received!", event.getChargingStationId());
 
         Transaction transaction = new Transaction(event.getChargingStationId().getId(), event.getTransactionId().getId(), event.getEvseId(), event.getIdentifyingToken().getToken(), event.getMeterStart(), event.getTimestamp());
-        repository.save(transaction);
+        repository.createOrUpdate(transaction);
     }
 
     @EventHandler
@@ -48,7 +48,7 @@ public class TransactionEventListener {
         if (transaction != null) {
             transaction.setMeterStop(event.getMeterStop());
             transaction.setStoppedTimestamp(event.getTimestamp());
-            repository.save(transaction);
+            repository.createOrUpdate(transaction);
         }
     }
 
@@ -63,7 +63,7 @@ public class TransactionEventListener {
                 for (MeterValue coreMeterValue : event.getMeterValueList()) {
                     transaction.getMeterValues().add(new io.motown.operatorapi.viewmodel.persistence.entities.MeterValue(coreMeterValue.getTimestamp(), coreMeterValue.getValue()));
                 }
-                repository.save(transaction);
+                repository.createOrUpdate(transaction);
             }
         }
     }

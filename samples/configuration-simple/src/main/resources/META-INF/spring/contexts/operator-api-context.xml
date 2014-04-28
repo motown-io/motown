@@ -52,12 +52,12 @@
 
     <bean id="chargingStationRepositoryOperatorApi"
           class="io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository">
-        <property name="entityManager" ref="jpaEntityManagerOperatorApi"/>
+        <property name="entityManagerFactory" ref="operatorApiEntityManagerFactory"/>
     </bean>
 
     <bean id="transactionRepositoryOperatorApi"
           class="io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository">
-        <property name="entityManager" ref="jpaEntityManagerOperatorApi"/>
+        <property name="entityManagerFactory" ref="operatorApiEntityManagerFactory"/>
     </bean>
 
     <bean id="jsonCommandService" class="io.motown.operatorapi.json.commands.JsonCommandService">
@@ -235,22 +235,19 @@
         </property>
     </bean>
 
-    <bean id="operatorApiTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="operatorApiEntityManagerFactory"/>
-    </bean>
+    <!--<bean id="operatorApiTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">-->
+        <!--<property name="entityManagerFactory" ref="operatorApiEntityManagerFactory"/>-->
+    <!--</bean>-->
 
-    <bean id="jpaEntityManagerOperatorApi" factory-bean="operatorApiEntityManagerFactory"
-          factory-method="createEntityManager"/>
+    <!--<bean id="operatorApiChargingStationRepository"-->
+          <!--class="io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository">-->
+        <!--<property name="entityManagerFactory" ref="operatorApiEntityManagerFactory"/>-->
+    <!--</bean>-->
 
-    <bean id="operatorApiChargingStationRepository"
-          class="io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository">
-        <property name="entityManager" ref="jpaEntityManagerOperatorApi"/>
-    </bean>
-
-    <bean id="operatorApiTransactionRepository"
-          class="io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository">
-        <property name="entityManager" ref="jpaEntityManagerOperatorApi"/>
-    </bean>
+    <!--<bean id="operatorApiTransactionRepository"-->
+          <!--class="io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository">-->
+        <!--<property name="entityManagerFactory" ref="operatorApiEntityManagerFactory"/>-->
+    <!--</bean>-->
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="operatorApiEntityManagerFactory"/>
