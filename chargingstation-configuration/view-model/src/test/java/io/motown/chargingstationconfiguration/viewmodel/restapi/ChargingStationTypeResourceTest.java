@@ -52,7 +52,7 @@ public class ChargingStationTypeResourceTest {
 
     @Test
     public void testCreateChargingStationType() {
-        ChargingStationType chargingStationType = getChargingStationType("CODE");
+        ChargingStationType chargingStationType = mock(ChargingStationType.class);
         Response response = resource.createChargingStationType(chargingStationType);
         verify(repository).createOrUpdate(chargingStationType);
 
@@ -62,7 +62,7 @@ public class ChargingStationTypeResourceTest {
 
     @Test(expected = RuntimeException.class)
     public void testCreateChargingStationTypeThrowsException() {
-        ChargingStationType chargingStationType = getChargingStationType("CODE");
+        ChargingStationType chargingStationType = mock(ChargingStationType.class);
 
         doThrow(mock(PersistenceException.class)).when(repository).createOrUpdate(chargingStationType);
         resource.createChargingStationType(chargingStationType);
