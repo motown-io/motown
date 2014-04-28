@@ -24,6 +24,7 @@
         <script src="js/libs/angular-resource-1.2.3.js"></script>
         <script src="js/libs/angular-cookies-1.2.3.js"></script>
         <script src="js/libs/jquery-2.0.2.js"></script>
+        <script src="js/libs/navbar.min.js"></script>
 
         <script src="js/app.js"></script>
         <script src="js/controllers.js"></script>
@@ -31,15 +32,13 @@
         <link rel="stylesheet" href="css/libs/bootstrap.min.css">
     </head>
     <body>
-        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-controller="HeaderController">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" bs-navbar>
             <div class="container">
                 <div>
                     <ul class="nav navbar-nav">
-                        <li ng-class="{ active: isActive('/chargingstations')}">
-                            <a href="#chargingstations">Charging Stations</a>
-                        </li>
-                        <li ng-class="{ active: isActive('/transactions')}"><a href="#transactions">Transactions</a></li>
-                        <li ng-class="{ active: isActive('/configuration')}"><a href="#configuration">Configuration</a></li>
+                        <li data-match-route="/chargingstations"><a href="#/chargingstations">Charging Stations</a></li>
+                        <li data-match-route="/transactions"><a href="#/transactions">Transactions</a></li>
+                        <li data-match-route="/configuration"><a href="#/configuration">Configuration</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="" ng-click="logout()">Log out</a></li>

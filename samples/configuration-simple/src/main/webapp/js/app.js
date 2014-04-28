@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-angular.module('demoApp', ['ngRoute', 'ngCookies', 'demoApp.controllers', 'demoApp.services']).
+angular.module('demoApp', ['ngRoute', 'ngCookies', 'mgcrea.ngStrap.navbar', 'demoApp.controllers', 'demoApp.services']).
     config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
         $httpProvider.defaults.headers.common['Accept'] = '*/*';
         $httpProvider.defaults.headers.post['Content-Type'] = 'application/vnd.io.motown.operator-api-v1+json';

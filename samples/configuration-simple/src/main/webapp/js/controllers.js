@@ -475,11 +475,4 @@ angular.module('demoApp.controllers', []).
                 });
             };
         }
-    ]).
-    controller('HeaderController',
-        ['$scope', '$location', function($scope, $location) {
-            $scope.isActive = function (viewLocation) {
-                return viewLocation === $location.path();
-            };
-        }]
-    );
+    ]);
