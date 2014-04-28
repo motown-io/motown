@@ -35,6 +35,7 @@ public final class EvseResource {
     @POST
     @Consumes(ApiVersion.V1_JSON)
     public Response createEvse(@PathParam("chargingStationTypeId") Long chargingStationTypeId, Evse evse) {
+        evse.setId(null);
         return Response.status(Response.Status.CREATED).entity(domainService.createEvse(chargingStationTypeId, evse)).build();
     }
 

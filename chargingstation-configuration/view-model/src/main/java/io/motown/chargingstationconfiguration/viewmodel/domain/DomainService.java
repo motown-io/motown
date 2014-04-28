@@ -20,7 +20,6 @@ import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Con
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Manufacturer;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository;
-import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ConnectorRepository;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ManufacturerRepository;
 import io.motown.domain.api.chargingstation.EvseId;
 
@@ -33,8 +32,6 @@ import java.util.Set;
 public class DomainService {
 
     private ChargingStationTypeRepository chargingStationTypeRepository;
-
-    private ConnectorRepository connectorRepository;
 
     private ManufacturerRepository manufacturerRepository;
 
@@ -366,15 +363,6 @@ public class DomainService {
      */
     public void setChargingStationTypeRepository(ChargingStationTypeRepository chargingStationTypeRepository) {
         this.chargingStationTypeRepository = chargingStationTypeRepository;
-    }
-
-    /**
-     * Sets the connector repository.
-     *
-     * @param connectorRepository repository to use.
-     */
-    public void setConnectorRepository(ConnectorRepository connectorRepository) {
-        this.connectorRepository = connectorRepository;
     }
 
     /**

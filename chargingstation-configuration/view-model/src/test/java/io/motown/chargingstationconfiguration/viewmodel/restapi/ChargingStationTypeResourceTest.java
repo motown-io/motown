@@ -28,13 +28,14 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.core.Response;
 
+import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ChargingStationTypeResourceTest {
+
     private ChargingStationTypeResource resource;
 
     @Mock
@@ -51,8 +52,9 @@ public class ChargingStationTypeResourceTest {
 
     @Test
     public void testCreateChargingStationType() {
-        Response response = resource.createChargingStationType(any(ChargingStationType.class));
-        verify(repository).createOrUpdate(any(ChargingStationType.class));
+        ChargingStationType chargingStationType = getChargingStationType("CODE");
+        Response response = resource.createChargingStationType(chargingStationType);
+        verify(repository).createOrUpdate(chargingStationType);
 
         assertNotNull(response);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
@@ -60,8 +62,10 @@ public class ChargingStationTypeResourceTest {
 
     @Test(expected = RuntimeException.class)
     public void testCreateChargingStationTypeThrowsException() {
-        doThrow(mock(PersistenceException.class)).when(repository).createOrUpdate(any(ChargingStationType.class));
-        resource.createChargingStationType(any(ChargingStationType.class));
+        ChargingStationType chargingStationType = getChargingStationType("CODE");
+
+        doThrow(mock(PersistenceException.class)).when(repository).createOrUpdate(chargingStationType);
+        resource.createChargingStationType(chargingStationType);
     }
 
     @Test
@@ -85,8 +89,8 @@ public class ChargingStationTypeResourceTest {
 
     @Test
     public void testGetChargingStationTypes() {
-        Response response = resource.getChargingStationTypes();
-        verify(repository).findAll();
+        Response response = resource.getChargingStationTypes(DEFAULT_PAGING_PAGE, DEFAULT_PAGING_RECORDS_PER_PAGE);
+        verify(repository).findAll(DEFAULT_PAGING_PAGE, DEFAULT_PAGING_RECORDS_PER_PAGE);
 
         assertNotNull(response);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
@@ -94,8 +98,8 @@ public class ChargingStationTypeResourceTest {
 
     @Test(expected = RuntimeException.class)
     public void testGetChargingStationTypesThrowsException() {
-        when(repository.findAll()).thenThrow(mock(PersistenceException.class));
-        resource.getChargingStationTypes();
+        when(repository.findAll(DEFAULT_PAGING_PAGE, DEFAULT_PAGING_RECORDS_PER_PAGE)).thenThrow(mock(PersistenceException.class));
+        resource.getChargingStationTypes(DEFAULT_PAGING_PAGE, DEFAULT_PAGING_RECORDS_PER_PAGE);
     }
 
     @Test

@@ -35,6 +35,7 @@ public final class ConnectorResource {
     @POST
     @Consumes(ApiVersion.V1_JSON)
     public Response createConnector(@PathParam("chargingStationTypeId") Long chargingStationTypeId, @PathParam("evseId") Long evseId, Connector connector) {
+        connector.setId(null);
         return Response.status(Response.Status.CREATED).entity(domainService.createConnector(chargingStationTypeId, evseId, connector)).build();
     }
 

@@ -36,6 +36,7 @@ public final class ChargingStationTypeResource {
     @POST
     @Consumes(ApiVersion.V1_JSON)
     public Response createChargingStationType(ChargingStationType chargingStationType) {
+        chargingStationType.setId(null);
         return Response.status(Response.Status.CREATED).entity(domainService.createChargingStationType(chargingStationType)).build();
     }
 

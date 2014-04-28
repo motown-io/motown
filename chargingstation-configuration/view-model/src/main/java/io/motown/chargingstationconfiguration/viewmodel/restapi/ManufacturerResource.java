@@ -36,6 +36,7 @@ public final class ManufacturerResource {
     @POST
     @Consumes(ApiVersion.V1_JSON)
     public Response createManufacturer(Manufacturer manufacturer) {
+        manufacturer.setId(null);
         return Response.status(Response.Status.CREATED).entity(domainService.createManufacturer(manufacturer)).build();
     }
 

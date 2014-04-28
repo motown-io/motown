@@ -34,9 +34,16 @@ import java.util.Set;
 public final class TestUtils {
 
     public static final int MAX_AMP_32 = 32;
+
     public static final int NUMBER_OF_CONNECTORS = 3;
+
     public static final int PHASE_3 = 3;
+
     public static final int VOLTAGE_230 = 230;
+
+    public static final int DEFAULT_PAGING_PAGE = 1;
+
+    public static final int DEFAULT_PAGING_RECORDS_PER_PAGE = 50;
 
     private TestUtils() {
         // Private no-arg constructor to prevent instantiation of utility class.
