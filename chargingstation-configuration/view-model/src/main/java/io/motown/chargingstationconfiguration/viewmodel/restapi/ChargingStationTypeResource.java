@@ -18,6 +18,8 @@ package io.motown.chargingstationconfiguration.viewmodel.restapi;
 import com.google.common.collect.Maps;
 import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -37,6 +39,13 @@ public final class ChargingStationTypeResource {
     @Consumes(ApiVersion.V1_JSON)
     public Response createChargingStationType(ChargingStationType chargingStationType) {
         chargingStationType.setId(null);
+        for(Evse evse:chargingStationType.getEvses()) {
+            evse.setId(null);
+            for(Connector connector:evse.getConnectors()) {
+                connector.setId(null);
+            }
+        }
+
         return Response.status(Response.Status.CREATED).entity(domainService.createChargingStationType(chargingStationType)).build();
     }
 

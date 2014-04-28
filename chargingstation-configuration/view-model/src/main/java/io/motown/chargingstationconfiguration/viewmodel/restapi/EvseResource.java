@@ -16,6 +16,7 @@
 package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
 import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
 
 import javax.ws.rs.*;
@@ -36,6 +37,10 @@ public final class EvseResource {
     @Consumes(ApiVersion.V1_JSON)
     public Response createEvse(@PathParam("chargingStationTypeId") Long chargingStationTypeId, Evse evse) {
         evse.setId(null);
+        for(Connector connector:evse.getConnectors()) {
+            connector.setId(null);
+        }
+
         return Response.status(Response.Status.CREATED).entity(domainService.createEvse(chargingStationTypeId, evse)).build();
     }
 
