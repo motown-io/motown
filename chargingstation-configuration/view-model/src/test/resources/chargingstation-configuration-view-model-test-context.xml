@@ -22,10 +22,6 @@
         <property name="entityManagerFactory" ref="entityManagerFactoryChargingStationConfiguration" />
     </bean>
 
-    <bean id="evseRepository" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.EvseRepository">
-        <property name="entityManagerFactory" ref="entityManagerFactoryChargingStationConfiguration" />
-    </bean>
-
     <bean id="manufacturerRepository" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ManufacturerRepository">
         <property name="entityManagerFactory" ref="entityManagerFactoryChargingStationConfiguration" />
     </bean>
