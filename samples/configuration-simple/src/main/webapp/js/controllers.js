@@ -34,13 +34,11 @@ angular.module('demoApp.controllers', []).
                 }, 5000);
             };
 
-            $scope.getChargingStations = function (_page, _recordsPerPage) {
-                var q = [],
-                    page = _page || 1,
-                    recordsPerPage = _recordsPerPage || 10;
+            $scope.getChargingStations = function () {
+                var q = [];
 
-                q.push('page=' + page);
-                q.push('recordsPerPage=' + recordsPerPage);
+                q.push('page=' + ($scope.page || 1));
+                q.push('recordsPerPage=' + ($scope.recordsPerPage || 10));
 
                 $http({
                     url: 'rest/operator-api/charging-stations?' + q.join('&'),
@@ -421,13 +419,11 @@ angular.module('demoApp.controllers', []).
                 $scope.getChargingStationTypes();
             };
 
-            $scope.getChargingStationTypes = function (_page, _recordsPerPage) {
-                var q = [],
-                    page = _page || 1,
-                    recordsPerPage = _recordsPerPage || 10;
+            $scope.getChargingStationTypes = function () {
+                var q = [];
 
-                q.push('page=' + page);
-                q.push('recordsPerPage=' + recordsPerPage);
+                q.push('page=' + ($scope.page || 1));
+                q.push('recordsPerPage=' + ($scope.recordsPerPage || 10));
 
                 $http({
                     url: 'rest/config/chargingstationtypes?' + q.join('&'),
