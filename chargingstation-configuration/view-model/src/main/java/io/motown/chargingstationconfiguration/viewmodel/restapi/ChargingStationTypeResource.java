@@ -15,15 +15,21 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
+import com.google.common.collect.Maps;
 import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.Map;
 
 @Path("/chargingstationtypes")
 @Produces(ApiVersion.V1_JSON)
 public final class ChargingStationTypeResource {
+
+    private static final String PAGE_PARAMETER = "page";
+
+    private static final String RECORDS_PER_PAGE_PARAMETER = "recordsPerPage";
 
     private DomainService domainService;
 
@@ -41,8 +47,12 @@ public final class ChargingStationTypeResource {
     }
 
     @GET
-    public Response getChargingStationTypes() {
-        return Response.ok(domainService.getChargingStationTypes()).build();
+    public Response getChargingStationTypes(@QueryParam(PAGE_PARAMETER) @DefaultValue("1") int page, @QueryParam(RECORDS_PER_PAGE_PARAMETER) @DefaultValue("10") int recordsPerPage) {
+        Map<String, Object> metadata = Maps.newHashMap();
+        metadata.put(PAGE_PARAMETER, page);
+        metadata.put(RECORDS_PER_PAGE_PARAMETER, recordsPerPage);
+        metadata.put("totalNumberOfRecords", domainService.getTotalNumberOfChargingStationTypes());
+        return Response.ok(new ConfigurationApiResponse<>(metadata, domainService.getChargingStationTypes(page, recordsPerPage))).build();
     }
 
     @GET

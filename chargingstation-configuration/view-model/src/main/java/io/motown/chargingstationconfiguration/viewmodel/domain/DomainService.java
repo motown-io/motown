@@ -138,8 +138,17 @@ public class DomainService {
      *
      * @return a list of charging station types.
      */
-    public List<ChargingStationType> getChargingStationTypes() {
-        return chargingStationTypeRepository.findAll();
+    public List<ChargingStationType> getChargingStationTypes(int page, int recordsPerPage) {
+        return chargingStationTypeRepository.findAll(page, recordsPerPage);
+    }
+
+    /**
+     * Gets the total number of charging station types.
+     *
+     * @return the total number of charging station types.
+     */
+    public Long getTotalNumberOfChargingStationTypes() {
+        return chargingStationTypeRepository.getTotalNumberOfChargingStationTypes();
     }
 
     /**
@@ -318,8 +327,17 @@ public class DomainService {
      *
      * @return a list of manufacturers.
      */
-    public List<Manufacturer> getManufacturers() {
-        return manufacturerRepository.findAll();
+    public List<Manufacturer> getManufacturers(int page, int recordsPerPage) {
+        return manufacturerRepository.findAll(page, recordsPerPage);
+    }
+
+    /**
+     * Gets the total number of manufacturers.
+     *
+     * @return the total number of manufacturers.
+     */
+    public Long getTotalNumberOfManufacturers() {
+        return manufacturerRepository.getTotalNumberOfManufacturers();
     }
 
     /**

@@ -50,8 +50,15 @@ public class ManufacturerRepository {
         }
     }
 
-    public List<Manufacturer> findAll() {
-        return getEntityManager().createQuery("SELECT m FROM Manufacturer m", Manufacturer.class).getResultList();
+    public List<Manufacturer> findAll(int page, int recordsPerPage) {
+        return getEntityManager().createQuery("SELECT m FROM Manufacturer m", Manufacturer.class)
+                .setFirstResult((page - 1) * recordsPerPage)
+                .setMaxResults(recordsPerPage)
+                .getResultList();
+    }
+
+    public Long getTotalNumberOfManufacturers() {
+        return getEntityManager().createQuery("SELECT COUNT(m) FROM Manufacturer m", Long.class).getSingleResult();
     }
 
     public Manufacturer findOne(Long id) {

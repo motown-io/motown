@@ -17,7 +17,10 @@ package io.motown.chargingstationconfiguration.viewmodel.persistence.repositorie
 
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.EntityTransaction;
 import java.util.List;
 
 public class ChargingStationTypeRepository {
@@ -54,8 +57,15 @@ public class ChargingStationTypeRepository {
         }
     }
 
-    public List<ChargingStationType> findAll() {
-        return getEntityManager().createQuery("SELECT cst FROM ChargingStationType cst", ChargingStationType.class).getResultList();
+    public List<ChargingStationType> findAll(int page, int recordsPerPage) {
+        return getEntityManager().createQuery("SELECT cst FROM ChargingStationType cst", ChargingStationType.class)
+                .setFirstResult((page - 1) * recordsPerPage)
+                .setMaxResults(recordsPerPage)
+                .getResultList();
+    }
+
+    public Long getTotalNumberOfChargingStationTypes() {
+        return getEntityManager().createQuery("SELECT COUNT(cst) FROM ChargingStationType cst", Long.class).getSingleResult();
     }
 
     public ChargingStationType findOne(Long id) {
