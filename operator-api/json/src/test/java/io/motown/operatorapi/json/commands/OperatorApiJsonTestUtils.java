@@ -15,14 +15,12 @@
  */
 package io.motown.operatorapi.json.commands;
 
-import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.UserIdentity;
 import io.motown.domain.commandauthorization.CommandAuthorizationService;
 import io.motown.operatorapi.json.gson.deserializer.*;
-import io.motown.operatorapi.json.gson.serializer.MultimapTypeAdapterSerializer;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
@@ -53,7 +51,6 @@ public final class OperatorApiJsonTestUtils {
                 registerTypeAdapter(Address.class, new AddressTypeAdapterDeserializer()).
                 registerTypeAdapter(OpeningTime.class, new OpeningTimeTypeAdapterDeserializer()).
                 registerTypeAdapter(Accessibility.class, new AccessibilityTypeAdapterDeserializer()).
-                registerTypeAdapter(Multimap.class, new MultimapTypeAdapterSerializer()).
                 create();
     }
 
