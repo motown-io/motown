@@ -17,6 +17,8 @@ angular.module('demoApp.controllers', []).
     controller('ChargingStationController',
         ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
             $scope.init = function () {
+                $scope.page = 1;
+                $scope.numberOfPages = 1;
                 $scope.getChargingStations();
                 if(!$scope.chargingStationTimer) {
                     $scope.chargingStationTimer = $scope.startGetChargingStationsTimer();
@@ -49,11 +51,22 @@ angular.module('demoApp.controllers', []).
                     $scope.page = response.metadata.page;
                     $scope.recordsPerPage = response.metadata.recordsPerPage;
                     $scope.totalNumberOfRecords = response.metadata.totalNumberOfRecords;
+                    $scope.numberOfPages = response.metadata.totalNumberOfRecords != 0 ? Math.ceil(response.metadata.totalNumberOfRecords / response.metadata.recordsPerPage) : 1;
                 }).error(function () {
                     console.log('Error getting charging stations, cancel polling.');
                     $interval.cancel($scope.chargingStationTimer);
                     delete $scope.chargingStationTimer;
                 });
+            };
+
+            $scope.nextPage = function() {
+                $scope.page++;
+                $scope.getChargingStations();
+            };
+
+            $scope.previousPage = function() {
+                $scope.page--;
+                $scope.getChargingStations();
             };
 
             $scope.registerChargingStation = function (chargingStation) {
@@ -416,6 +429,8 @@ angular.module('demoApp.controllers', []).
     controller('ConfigurationController',
         ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
             $scope.init = function () {
+                $scope.page = 1;
+                $scope.numberOfPages = 1;
                 $scope.getChargingStationTypes();
             };
 
@@ -434,7 +449,18 @@ angular.module('demoApp.controllers', []).
                     $scope.page = response.metadata.page;
                     $scope.recordsPerPage = response.metadata.recordsPerPage;
                     $scope.totalNumberOfRecords = response.metadata.totalNumberOfRecords;
+                    $scope.numberOfPages = response.metadata.totalNumberOfRecords != 0 ? Math.ceil(response.metadata.totalNumberOfRecords / response.metadata.recordsPerPage) : 1;
                 });
+            };
+
+            $scope.nextPage = function() {
+                $scope.page++;
+                $scope.getChargingStationTypes();
+            };
+
+            $scope.previousPage = function() {
+                $scope.page--;
+                $scope.getChargingStationTypes();
             };
         }]
     ).

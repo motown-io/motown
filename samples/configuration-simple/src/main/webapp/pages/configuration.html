@@ -24,6 +24,16 @@
         <th>Type</th>
         <th>Evses</th>
         </thead>
+        <tfoot>
+        <tr>
+            <td colspan="4">
+                <button class="btn btn-default" ng-disabled="page == 1" ng-click="previousPage()">&lt;</button>
+                <span>Page {{page}} of {{numberOfPages}}</span>
+                <button class="btn btn-default" ng-disabled="page == numberOfPages" ng-click="nextPage()">&gt;</button>
+            </td>
+        </tr>
+        </tfoot>
+        <tbody>
         <tr ng-repeat="chargingStationType in chargingStationTypes">
             <td>{{chargingStationType.manufacturer.code}}</td>
             <td>{{chargingStationType.code}}</td>
@@ -39,5 +49,6 @@
                 </div>
             </td>
         </tr>
+        </tbody>
     </table>
 </div>
