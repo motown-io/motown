@@ -362,7 +362,7 @@ public class DomainService {
         commandGateway.send(new UnlockEvseCommand(chargingStationId, evseId, identityContext), correlationToken);
     }
 
-    public void authorizationListChange(ChargingStationId chargingStationId, int version, AuthorizationListUpdateType updateType, List<IdentifyingToken> identifyingTokens, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
+    public void authorizationListChange(ChargingStationId chargingStationId, int version, AuthorizationListUpdateType updateType, Set<IdentifyingToken> identifyingTokens, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
         commandGateway.send(new ChangeAuthorizationListCommand(chargingStationId, version, updateType, identifyingTokens, identityContext), correlationToken);
     }

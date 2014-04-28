@@ -17,6 +17,7 @@ package io.motown.ocpp.websocketjson;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.ocpp.viewmodel.domain.DomainService;
@@ -36,10 +37,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.*;
@@ -255,7 +253,7 @@ public class OcppJsonServiceTest {
 
     @Test
     public void sendLocalListRequest() throws IOException {
-        List<IdentifyingToken> list = Lists.newArrayList();
+        Set<IdentifyingToken> list = Sets.newHashSet();
         String idTag = "044943121F1D80";
         TextualToken id = new TextualToken(idTag, IdentifyingToken.AuthenticationStatus.ACCEPTED);
         list.add(id);

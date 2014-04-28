@@ -19,10 +19,7 @@ import io.motown.domain.api.chargingstation.Accessibility;
 import io.motown.domain.api.chargingstation.ComponentStatus;
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class ChargingStation {
@@ -42,6 +39,9 @@ public class ChargingStation {
     private Accessibility accessibility;
     private Availability availability;
     private ComponentStatus status;
+    private int localAuthorizationListVersion;
+    @ElementCollection
+    private Set<LocalAuthorization> localAuthorizations = new HashSet<>();
     @ElementCollection
     private Set<OpeningTime> openingTimes = new HashSet<>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Evse.class)
@@ -212,4 +212,19 @@ public class ChargingStation {
         return configurationItems;
     }
 
+    public int getLocalAuthorizationListVersion() {
+        return localAuthorizationListVersion;
+    }
+
+    public void setLocalAuthorizationListVersion(int localAuthorizationListVersion) {
+        this.localAuthorizationListVersion = localAuthorizationListVersion;
+    }
+
+    public void setLocalAuthorizations(Set<LocalAuthorization> localAuthorizations) {
+        this.localAuthorizations = localAuthorizations;
+    }
+
+    public Set<LocalAuthorization> getLocalAuthorizations() {
+        return localAuthorizations;
+    }
 }

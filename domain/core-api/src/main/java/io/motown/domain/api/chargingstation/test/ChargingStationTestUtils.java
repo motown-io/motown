@@ -343,7 +343,7 @@ public final class ChargingStationTestUtils {
     /**
      * The default list of identifying tokens.
      */
-    public static final ImmutableList<IdentifyingToken> IDENTIFYING_TOKENS = ImmutableList.<IdentifyingToken>builder()
+    public static final ImmutableSet<IdentifyingToken> IDENTIFYING_TOKENS = ImmutableSet.<IdentifyingToken>builder()
             .add(IDENTIFYING_TOKEN)
             .add(ANOTHER_IDENTIFYING_TOKEN)
             .build();

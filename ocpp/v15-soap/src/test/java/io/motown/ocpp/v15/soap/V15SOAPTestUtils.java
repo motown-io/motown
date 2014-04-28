@@ -106,8 +106,8 @@ public final class V15SOAPTestUtils {
         return AuthorizationListUpdateType.DIFFERENTIAL;
     }
 
-    public static List<IdentifyingToken> getAuthorizationList() {
-        List<IdentifyingToken> list = new ArrayList<>();
+    public static Set<IdentifyingToken> getAuthorizationList() {
+        Set<IdentifyingToken> list = new HashSet<>();
         list.add(new TextualToken("1"));
         list.add(new TextualToken("2"));
         return list;

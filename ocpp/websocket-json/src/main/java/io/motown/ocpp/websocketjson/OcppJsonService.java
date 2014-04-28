@@ -36,10 +36,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OcppJsonService {
 
@@ -172,7 +169,7 @@ public class OcppJsonService {
         }
     }
 
-    public void sendLocalList(ChargingStationId chargingStationId, AuthorizationListUpdateType updateType, List<IdentifyingToken> authorizationList, int authorizationListVersion, String authorizationListHash, CorrelationToken statusCorrelationToken) {
+    public void sendLocalList(ChargingStationId chargingStationId, AuthorizationListUpdateType updateType, Set<IdentifyingToken> authorizationList, int authorizationListVersion, String authorizationListHash, CorrelationToken statusCorrelationToken) {
 
         List<LocalAuthorisationList> localList = Lists.newArrayList();
         for (IdentifyingToken token : authorizationList) {

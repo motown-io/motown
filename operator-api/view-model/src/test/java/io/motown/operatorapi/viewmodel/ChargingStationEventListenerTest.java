@@ -17,7 +17,6 @@ package io.motown.operatorapi.viewmodel;
 
 import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.chargingstation.*;
-import io.motown.domain.api.security.UserIdentity;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.entities.Evse;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -248,6 +247,32 @@ public class ChargingStationEventListenerTest {
 
         listener.handle(new ConfigurationItemsReceivedEvent(CHARGING_STATION_ID, CONFIGURATION_ITEMS, IDENTITY_CONTEXT));
         assertFalse(cs.getConfigurationItems().isEmpty());
+    }
+
+    @Test
+    public void testAuthorizationListVersionReceivedEvent() {
+        ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
+
+        listener.handle(new AuthorizationListVersionReceivedEvent(CHARGING_STATION_ID, LIST_VERSION, IDENTITY_CONTEXT));
+        assertTrue(cs.getLocalAuthorizationListVersion() == LIST_VERSION);
+    }
+
+    @Test
+    public void testFullAuthorizationListChangedReceivedEvent() {
+        ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
+
+        listener.handle(new AuthorizationListChangedEvent(CHARGING_STATION_ID, LIST_VERSION, AuthorizationListUpdateType.FULL, IDENTIFYING_TOKENS, IDENTITY_CONTEXT));
+        assertTrue(cs.getLocalAuthorizationListVersion() == LIST_VERSION);
+        assertTrue(cs.getLocalAuthorizations().size() == IDENTIFYING_TOKENS.size());
+    }
+
+    @Test
+    public void testDifferentialAuthorizationListChangedReceivedEvent() {
+        ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
+
+        listener.handle(new AuthorizationListChangedEvent(CHARGING_STATION_ID, LIST_VERSION, AuthorizationListUpdateType.DIFFERENTIAL, IDENTIFYING_TOKENS, IDENTITY_CONTEXT));
+        assertTrue(cs.getLocalAuthorizationListVersion() == LIST_VERSION);
+        assertTrue(cs.getLocalAuthorizations().size() == IDENTIFYING_TOKENS.size());
     }
 
 }

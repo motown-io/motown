@@ -72,7 +72,7 @@ public final class TextualToken implements IdentifyingToken {
 
     @Override
     public int hashCode() {
-        return Objects.hash(token, authenticationStatus);
+        return Objects.hash(token);
     }
 
     @Override
@@ -84,6 +84,6 @@ public final class TextualToken implements IdentifyingToken {
             return false;
         }
         final TextualToken other = (TextualToken) obj;
-        return Objects.equals(this.token, other.token) && Objects.equals(this.authenticationStatus, other.authenticationStatus);
+        return Objects.equals(this.token, other.token);
     }
 }

@@ -18,8 +18,8 @@ package io.motown.domain.api.chargingstation;
 import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -36,7 +36,7 @@ public final class ChangeAuthorizationListCommand {
 
     private final AuthorizationListUpdateType updateType;
 
-    private final List<IdentifyingToken> identifyingTokens;
+    private final Set<IdentifyingToken> identifyingTokens;
 
     private final IdentityContext identityContext;
 
@@ -50,7 +50,7 @@ public final class ChangeAuthorizationListCommand {
      * @param identityContext   the identity context.
      * @throws NullPointerException     if {@code chargingStationId}, {@code evseId} or {@code identityContext} is {@code null}.
      */
-    public ChangeAuthorizationListCommand(ChargingStationId chargingStationId, int version, AuthorizationListUpdateType updateType, List<IdentifyingToken> identifyingTokens, IdentityContext identityContext) {
+    public ChangeAuthorizationListCommand(ChargingStationId chargingStationId, int version, AuthorizationListUpdateType updateType, Set<IdentifyingToken> identifyingTokens, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.version = version;
         this.updateType = checkNotNull(updateType);
@@ -84,10 +84,10 @@ public final class ChangeAuthorizationListCommand {
     }
 
     /**
-     * Gets the list of identifying tokens that have been changed.
-     * @return list of identifying tokens
+     * Gets the set of identifying tokens that have been changed.
+     * @return set of identifying tokens
      */
-    public List<IdentifyingToken> getIdentifyingTokens() {
+    public Set<IdentifyingToken> getIdentifyingTokens() {
         return identifyingTokens;
     }
 

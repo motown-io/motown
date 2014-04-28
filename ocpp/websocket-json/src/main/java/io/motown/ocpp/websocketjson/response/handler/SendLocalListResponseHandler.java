@@ -24,7 +24,7 @@ import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import java.util.Set;
 
 public class SendLocalListResponseHandler extends ResponseHandler {
 
@@ -34,9 +34,9 @@ public class SendLocalListResponseHandler extends ResponseHandler {
 
     private final AuthorizationListUpdateType updateType;
 
-    private final List<IdentifyingToken> identifyingTokens;
+    private final Set<IdentifyingToken> identifyingTokens;
 
-    public SendLocalListResponseHandler(int version, AuthorizationListUpdateType updateType, List<IdentifyingToken> identifyingTokens, CorrelationToken correlationToken) {
+    public SendLocalListResponseHandler(int version, AuthorizationListUpdateType updateType, Set<IdentifyingToken> identifyingTokens, CorrelationToken correlationToken) {
         this.version = version;
         this.updateType = updateType;
         this.identifyingTokens = identifyingTokens;

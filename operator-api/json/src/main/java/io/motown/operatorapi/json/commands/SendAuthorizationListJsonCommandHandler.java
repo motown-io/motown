@@ -15,7 +15,7 @@
  */
 package io.motown.operatorapi.json.commands;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -27,7 +27,7 @@ import io.motown.operatorapi.viewmodel.model.SendAuthorizationListApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
-import java.util.List;
+import java.util.Set;
 
 class SendAuthorizationListJsonCommandHandler implements JsonCommandHandler {
 
@@ -61,7 +61,7 @@ class SendAuthorizationListJsonCommandHandler implements JsonCommandHandler {
         }
 
         try {
-            List<IdentifyingToken> authorizationList = Lists.newArrayList();
+            Set<IdentifyingToken> authorizationList = Sets.newHashSet();
 
             SendAuthorizationListApiCommand command = gson.fromJson(commandObject, SendAuthorizationListApiCommand.class);
 
