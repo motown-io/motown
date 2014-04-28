@@ -38,9 +38,7 @@
             </set>
         </property>
         <property name="typeAdapterSerializers">
-            <set>
-                <bean class="io.motown.operatorapi.json.gson.serializer.MultimapTypeAdapterSerializer"/>
-            </set>
+            <set/>
         </property>
     </bean>
 

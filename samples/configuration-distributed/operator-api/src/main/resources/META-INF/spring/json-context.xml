@@ -29,6 +29,9 @@
                 <bean class="io.motown.operatorapi.json.gson.deserializer.AccessibilityTypeAdapterDeserializer"/>
             </set>
         </property>
+        <property name="typeAdapterSerializers">
+            <set/>
+        </property>
     </bean>
 
     <bean id="chargingStationRepository"
