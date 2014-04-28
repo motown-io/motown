@@ -37,10 +37,7 @@ angular.module('demoApp.controllers', []).
             };
 
             $scope.getChargingStations = function () {
-                var q = [];
-
-                q.push('page=' + ($scope.page || 1));
-                q.push('recordsPerPage=' + ($scope.recordsPerPage || 10));
+                var q = ['page=' + ($scope.page || 1), 'recordsPerPage=' + ($scope.recordsPerPage || 10)];
 
                 $http({
                     url: 'rest/operator-api/charging-stations?' + q.join('&'),
@@ -435,10 +432,7 @@ angular.module('demoApp.controllers', []).
             };
 
             $scope.getChargingStationTypes = function () {
-                var q = [];
-
-                q.push('page=' + ($scope.page || 1));
-                q.push('recordsPerPage=' + ($scope.recordsPerPage || 10));
+                var q = ['page=' + ($scope.page || 1), 'recordsPerPage=' + ($scope.recordsPerPage || 10)];
 
                 $http({
                     url: 'rest/config/chargingstationtypes?' + q.join('&'),
