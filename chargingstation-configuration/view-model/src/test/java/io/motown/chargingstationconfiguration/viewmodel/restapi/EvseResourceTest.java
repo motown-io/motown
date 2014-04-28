@@ -54,7 +54,7 @@ public class EvseResourceTest {
     public void testUpdateEvse() {
         Evse evse = mock(Evse.class);
         Response response = resource.updateEvse(CHARGING_STATION_TYPE_ID, EVSE_ID, evse);
-        verify(domainService).updateEvse(CHARGING_STATION_TYPE_ID, EVSE_ID, evse);
+        verify(domainService).updateEvse(CHARGING_STATION_TYPE_ID, evse);
 
         assertNotNull(response);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
@@ -63,7 +63,7 @@ public class EvseResourceTest {
     @Test(expected = RuntimeException.class)
     public void testUpdateEvseThrowsException() {
         Evse evse = mock(Evse.class);
-        doThrow(mock(PersistenceException.class)).when(domainService).updateEvse(CHARGING_STATION_TYPE_ID, EVSE_ID, evse);
+        doThrow(mock(PersistenceException.class)).when(domainService).updateEvse(CHARGING_STATION_TYPE_ID, evse);
 
         resource.updateEvse(CHARGING_STATION_TYPE_ID, EVSE_ID, evse);
     }
@@ -86,8 +86,8 @@ public class EvseResourceTest {
 
     @Test
     public void testDeleteEvse() {
-        Response response = resource.deleteEvse(EVSE_ID);
-        verify(domainService).deleteEvse(EVSE_ID);
+        Response response = resource.deleteEvse(CHARGING_STATION_TYPE_ID, EVSE_ID);
+        verify(domainService).deleteEvse(CHARGING_STATION_TYPE_ID, EVSE_ID);
 
         assertNotNull(response);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
@@ -95,9 +95,9 @@ public class EvseResourceTest {
 
     @Test(expected = RuntimeException.class)
     public void testDeleteEvseThrowsException() {
-        doThrow(mock(PersistenceException.class)).when(domainService).deleteEvse(EVSE_ID);
+        doThrow(mock(PersistenceException.class)).when(domainService).deleteEvse(CHARGING_STATION_TYPE_ID, EVSE_ID);
 
-        resource.deleteEvse(EVSE_ID);
+        resource.deleteEvse(CHARGING_STATION_TYPE_ID, EVSE_ID);
     }
 
 }

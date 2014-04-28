@@ -16,16 +16,11 @@
 package io.motown.chargingstationconfiguration.viewmodel.persistence.repositories;
 
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
-import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.util.List;
 
 public class ChargingStationTypeRepository {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ChargingStationTypeRepository.class);
 
     private EntityManagerFactory entityManagerFactory;
 
@@ -34,20 +29,6 @@ public class ChargingStationTypeRepository {
                 .setParameter("code", code)
                 .setParameter("manufacturerCode", manufacturerCode)
                 .getResultList();
-    }
-
-    public ChargingStationType findByEvseId(Long evseId) {
-        try {
-            return getEntityManager().createQuery("SELECT cst FROM ChargingStationType AS cst WHERE :evse MEMBER OF cst.evses", ChargingStationType.class).setParameter("evse", evseId).getSingleResult();
-        } catch (NoResultException e) {
-            LOG.debug("NoResultException while searching for ChargingStationType by Evse id: " + evseId, e);
-            throw new EntityNotFoundException(String.format("Unable to find charging station type with evse id '%s'", evseId));
-        }
-    }
-
-    public ChargingStationType findByConnectorId(Long connectorId) {
-        Evse evse = getEntityManager().createQuery("SELECT evse FROM Evse AS evse WHERE :connector MEMBER OF evse.connectors", Evse.class).setParameter("connector", connectorId).getSingleResult();
-        return findByEvseId(evse.getId());
     }
 
     public ChargingStationType createOrUpdate(final ChargingStationType chargingStationType) {

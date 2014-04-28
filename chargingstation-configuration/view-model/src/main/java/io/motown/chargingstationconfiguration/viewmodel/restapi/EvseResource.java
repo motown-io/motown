@@ -42,7 +42,8 @@ public final class EvseResource {
     @Path("/{id: [0-9]+}")
     @Consumes(ApiVersion.V1_JSON)
     public Response updateEvse(@PathParam("chargingStationTypeId") Long chargingStationTypeId, @PathParam("id") Long id, Evse evse) {
-        return Response.ok(domainService.updateEvse(chargingStationTypeId, id, evse)).build();
+        evse.setId(id);
+        return Response.ok(domainService.updateEvse(chargingStationTypeId, evse)).build();
     }
 
     @GET
@@ -53,8 +54,8 @@ public final class EvseResource {
 
     @DELETE
     @Path("/{id: [0-9]+}")
-    public Response deleteEvse(@PathParam("id") Long id) {
-        domainService.deleteEvse(id);
+    public Response deleteEvse(@PathParam("chargingStationTypeId") Long chargingStationTypeId, @PathParam("id") Long id) {
+        domainService.deleteEvse(chargingStationTypeId, id);
         return Response.ok(id).build();
     }
 

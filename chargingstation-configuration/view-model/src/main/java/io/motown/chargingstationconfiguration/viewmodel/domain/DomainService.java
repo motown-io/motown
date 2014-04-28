@@ -162,14 +162,61 @@ public class DomainService {
     }
 
     /**
+     * Gets the connectors for a charging station type evse.
+     *
+     * @param chargingStationTypeId    charging station identifier.
+     * @param evseId                   evse id.
+     * @return set of connectors.
+     */
+    public Set<Connector> getConnectors(Long chargingStationTypeId, Long evseId) {
+        ChargingStationType chargingStationType = chargingStationTypeRepository.findOne(chargingStationTypeId);
+        Evse evse = getEvseById(chargingStationType, evseId);
+
+        return evse.getConnectors();
+    }
+
+    /**
+     * Creates a connector in a charging station type evse.
+     *
+     * @param chargingStationTypeId    charging station identifier.
+     * @param evseId                   evse id.
+     * @param connector                connector to be created.
+     * @return created connector.
+     */
+    public Connector createConnector(Long chargingStationTypeId, Long evseId, Connector connector) {
+        ChargingStationType chargingStationType = chargingStationTypeRepository.findOne(chargingStationTypeId);
+        Evse evse = getEvseById(chargingStationType, evseId);
+
+        evse.getConnectors().add(connector);
+
+        chargingStationType = chargingStationTypeRepository.createOrUpdate(chargingStationType);
+
+        // TODO get created connector
+        return null;
+    }
+
+    /**
      * Update a connector.
      *
-     * @param id the id of the entity to find.
-     * @param connector the payload from the request.
+     * @param chargingStationTypeId charging station type identifier.
+     * @param evseId                the id of the evse that contains the connector.
+     * @param connector             the payload from the request.
+     * @return updated connector.
      */
-    public Connector updateConnector(Long id, Connector connector) {
-        connector.setId(id);
-        return connectorRepository.createOrUpdate(connector);
+    public Connector updateConnector(Long chargingStationTypeId, Long evseId, Connector connector) {
+        ChargingStationType chargingStationType = chargingStationTypeRepository.findOne(chargingStationTypeId);
+        Evse evse = getEvseById(chargingStationType, evseId);
+
+        Connector existingConnector = getConnectorById(evse, connector.getId(), false);
+        if (existingConnector != null) {
+            evse.getConnectors().remove(existingConnector);
+        }
+
+        evse.getConnectors().add(connector);
+        chargingStationType = chargingStationTypeRepository.createOrUpdate(chargingStationType);
+        evse = getEvseById(chargingStationType, evseId);
+
+        return getConnectorById(evse, connector.getId());
     }
 
     /**
@@ -178,8 +225,11 @@ public class DomainService {
      * @param id the id of the entity to find.
      * @return the connector.
      */
-    public Connector getConnector(Long id) {
-        return connectorRepository.findOne(id);
+    public Connector getConnector(Long chargingStationTypeId, Long evseId, Long id) {
+        ChargingStationType chargingStationType = chargingStationTypeRepository.findOne(chargingStationTypeId);
+        Evse evse = getEvseById(chargingStationType, evseId);
+
+        return getConnectorById(evse, id);
     }
 
     /**
@@ -187,52 +237,44 @@ public class DomainService {
      *
      * @param id the id of the entity to delete.
      */
-    public void deleteConnector(Long id) {
-        // It seems not possible to delete a child object in JPA without going through the parent if the relationship is unidirectional.
-        // There has to be a better way to achieve this...
-        ChargingStationType chargingStationType = chargingStationTypeRepository.findByConnectorId(id);
+    public void deleteConnector(Long chargingStationTypeId, Long evseId, Long id) {
+        ChargingStationType chargingStationType = chargingStationTypeRepository.findOne(chargingStationTypeId);
+        Evse evse = getEvseById(chargingStationType, evseId);
 
-        for (Evse evse:chargingStationType.getEvses()) {
-            for (Connector connector:evse.getConnectors()) {
-                if (id.equals(connector.getId())) {
-                    evse.getConnectors().remove(connector);
-                    break;
-                }
-            }
-        }
-        updateChargingStationType(chargingStationType.getId(), chargingStationType);
+        Connector connector = getConnectorById(evse, id);
+        evse.getConnectors().remove(connector);
+
+        chargingStationTypeRepository.createOrUpdate(chargingStationType);
     }
 
     /**
      * Update an evse.
      *
-     * @param id the id of the entity to find.
-     * @param evse the payload from the request.
+     * @param evse evse object to update.
+     * @return updated evse.
      */
-    public Evse updateEvse(Long chargingStationTypeId, Long id, Evse evse) {
-        ChargingStationType chargingStationType = chargingStationTypeRepository.findByEvseId(chargingStationTypeId);
+    public Evse updateEvse(Long chargingStationTypeId, Evse evse) {
+        ChargingStationType chargingStationType = chargingStationTypeRepository.findOne(chargingStationTypeId);
 
-        Evse existingEvse = getEvseById(chargingStationType, id);
-        if (existingEvse == null) {
-            chargingStationType.getEvses().add(evse);
-        } else {
-            chargingStationType.getEvses().remove(existingEvse);
-            chargingStationType.getEvses().add(evse);
-        }
+        Evse existingEvse = getEvseById(chargingStationType, evse.getId());
+
+        chargingStationType.getEvses().remove(existingEvse);
+        chargingStationType.getEvses().add(evse);
 
         ChargingStationType updatedChargingStationType = chargingStationTypeRepository.createOrUpdate(chargingStationType);
 
-        return getEvseById(updatedChargingStationType, id);
+        return getEvseById(updatedChargingStationType, evse.getId());
     }
 
     /**
      * Find an evse based on its id.
      *
-     * @param id the id of the entity to find.
+     * @param chargingStationTypeId charging station identifier.
+     * @param id                    the id of the evse to find.
      * @return the evse.
      */
     public Evse getEvse(Long chargingStationTypeId, Long id) {
-        ChargingStationType chargingStationType = chargingStationTypeRepository.findByEvseId(chargingStationTypeId);
+        ChargingStationType chargingStationType = chargingStationTypeRepository.findOne(chargingStationTypeId);
 
         return getEvseById(chargingStationType, id);
     }
@@ -240,12 +282,11 @@ public class DomainService {
     /**
      * Delete an evse.
      *
-     * @param id the id of the entity to delete.
+     * @param chargingStationTypeId charging station identifier.
+     * @param id                    the id of the evse to delete.
      */
-    public void deleteEvse(Long id) {
-        // It seems not possible to delete a child object in JPA without going through the parent if the relationship is unidirectional.
-        // There has to be a better way to achieve this...
-        ChargingStationType chargingStationType = chargingStationTypeRepository.findByEvseId(id);
+    public void deleteEvse(Long chargingStationTypeId, Long id) {
+        ChargingStationType chargingStationType = chargingStationTypeRepository.findOne(chargingStationTypeId);
 
         chargingStationType.getEvses().remove(getEvseById(chargingStationType, id));
 
@@ -331,17 +372,51 @@ public class DomainService {
      * Gets a Evse by id.
      *
      * @param chargingStationType    charging station type.
-     * @param evseId                 evse id.
+     * @param id                     evse id.
      * @return evse
      * @throws EntityNotFoundException if the Evse cannot be found.
      */
-    private Evse getEvseById(ChargingStationType chargingStationType, Long evseId) {
+    private Evse getEvseById(ChargingStationType chargingStationType, Long id) {
         for (Evse evse:chargingStationType.getEvses()) {
-            if(evseId.equals(evse.getId())) {
+            if(id.equals(evse.getId())) {
                 return evse;
             }
         }
-        throw new EntityNotFoundException(String.format("Unable to find evse with id '%s'", evseId));
+        throw new EntityNotFoundException(String.format("Unable to find evse with id '%s'", id));
+    }
+
+    /**
+     * Gets a Connector by id.
+     *
+     * @param evse                  evse which should contain the connector.
+     * @param id                    connector id.
+     * @return connector.
+     * @throws EntityNotFoundException if the Connector cannot be found.
+     */
+    private Connector getConnectorById(Evse evse, Long id) {
+        return getConnectorById(evse, id, true);
+    }
+
+    /**
+     * Gets a Connector by id.
+     *
+     * @param evse                  evse which should contain the connector.
+     * @param id                    connector id.
+     * @param exceptionIfNotFound   throw EntityNotFoundException if connector cannot be found.
+     * @return connector or null if it cannot be found and exceptionIfNotFound is false.
+     * @throws EntityNotFoundException if exceptionIfNotFound is true and the Connector cannot be found.
+     */
+    private Connector getConnectorById(Evse evse, Long id, boolean exceptionIfNotFound) {
+        for (Connector connector:evse.getConnectors()) {
+            if (id.equals(connector.getId())) {
+                return connector;
+            }
+        }
+        if (exceptionIfNotFound) {
+            throw new EntityNotFoundException(String.format("Unable to find connector with id '%s'", id));
+        } else {
+            return null;
+        }
     }
 
     /**
