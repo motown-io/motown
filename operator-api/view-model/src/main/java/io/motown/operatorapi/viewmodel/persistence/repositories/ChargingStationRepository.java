@@ -50,10 +50,10 @@ public class ChargingStationRepository {
         return entityManager.find(ChargingStation.class, id);
     }
 
-    public List<ChargingStation> findAll(int page, int resultsPerPage) {
+    public List<ChargingStation> findAll(int page, int recordsPerPage) {
         return entityManager.createQuery("SELECT cs FROM io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation AS cs", ChargingStation.class)
-                .setFirstResult((page - 1) * resultsPerPage)
-                .setMaxResults(resultsPerPage)
+                .setFirstResult((page - 1) * recordsPerPage)
+                .setMaxResults(recordsPerPage)
                 .getResultList();
     }
 

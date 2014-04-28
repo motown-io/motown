@@ -28,17 +28,17 @@ public final class TransactionResource {
 
     private static final String PAGE_PARAMETER = "page";
 
-    private static final String RESULTS_PER_PAGE_PARAMETER = "resultsPerPage";
+    private static final String RECORDS_PER_PAGE_PARAMETER = "recordsPerPage";
 
     private OperatorApiService service;
 
     @GET
-    public Response getTransactions(@QueryParam(PAGE_PARAMETER) @DefaultValue("1") int page, @QueryParam(RESULTS_PER_PAGE_PARAMETER) @DefaultValue("10") int resultsPerPage) {
+    public Response getTransactions(@QueryParam(PAGE_PARAMETER) @DefaultValue("1") int page, @QueryParam(RECORDS_PER_PAGE_PARAMETER) @DefaultValue("10") int recordsPerPage) {
         Map<String, Object> metadata = Maps.newHashMap();
         metadata.put(PAGE_PARAMETER, page);
-        metadata.put(RESULTS_PER_PAGE_PARAMETER, resultsPerPage);
-        metadata.put("totalNumberOfResults", service.getTotalNumberOfTransactions());
-        return Response.ok().entity(new OperatorApiResponse<>(metadata, service.findAllTransactions(page, resultsPerPage))).build();
+        metadata.put(RECORDS_PER_PAGE_PARAMETER, recordsPerPage);
+        metadata.put("totalNumberOfRecords", service.getTotalNumberOfTransactions());
+        return Response.ok().entity(new OperatorApiResponse<>(metadata, service.findAllTransactions(page, recordsPerPage))).build();
     }
 
     public void setService(OperatorApiService service) {

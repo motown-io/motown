@@ -28,16 +28,16 @@ public class OperatorApiService {
 
     private TransactionRepository transactionRepository;
 
-    public List<ChargingStation> findAllChargingStations(int page, int resultsPerPage) {
-        return repository.findAll(page, resultsPerPage);
+    public List<ChargingStation> findAllChargingStations(int page, int recordsPerPage) {
+        return repository.findAll(page, recordsPerPage);
     }
 
     public Long getTotalNumberOfChargingStations() {
         return repository.getTotalNumberOfChargingStations();
     }
 
-    public List<Transaction> findAllTransactions(int page, int resultsPerPage) {
-        return transactionRepository.findAll(page, resultsPerPage);
+    public List<Transaction> findAllTransactions(int page, int recordsPerPage) {
+        return transactionRepository.findAll(page, recordsPerPage);
     }
 
     public Long getTotalNumberOfTransactions() {

@@ -45,10 +45,10 @@ public class TransactionRepository {
         }
     }
 
-    public List<Transaction> findAll(int page, int resultsPerPage) {
+    public List<Transaction> findAll(int page, int recordsPerPage) {
         return entityManager.createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t", Transaction.class)
-                .setFirstResult((page - 1) * resultsPerPage)
-                .setMaxResults(resultsPerPage)
+                .setFirstResult((page - 1) * recordsPerPage)
+                .setMaxResults(recordsPerPage)
                 .getResultList();
     }
 
