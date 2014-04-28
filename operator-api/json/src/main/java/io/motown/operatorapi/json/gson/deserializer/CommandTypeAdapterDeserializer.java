@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.operatorapi.json.gson;
+package io.motown.operatorapi.json.gson.deserializer;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
@@ -23,7 +23,7 @@ import java.lang.reflect.Type;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-public abstract class CommandTypeAdapter<C> implements TypeAdapter<C> {
+public abstract class CommandTypeAdapterDeserializer<C> implements TypeAdapterDeserializer<C> {
 
     @Override
     public C deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {

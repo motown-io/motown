@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.operatorapi.json.gson;
+package io.motown.operatorapi.json.gson.deserializer;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
@@ -34,7 +34,7 @@ import java.lang.reflect.Type;
  * }
  * </pre>
  */
-public class CoordinatesTypeAdapter implements TypeAdapter<Coordinates> {
+public class CoordinatesTypeAdapterDeserializer implements TypeAdapterDeserializer<Coordinates> {
     @Override
     public Class<?> getAdaptedType() {
         return Coordinates.class;

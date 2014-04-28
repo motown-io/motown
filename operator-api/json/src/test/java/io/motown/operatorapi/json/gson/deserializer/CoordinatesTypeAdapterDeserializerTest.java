@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.operatorapi.json.gson;
+package io.motown.operatorapi.json.gson.deserializer;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -23,8 +23,8 @@ import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 
-public class CoordinatesTypeAdapterTest {
-    private final CoordinatesTypeAdapter adapter = new CoordinatesTypeAdapter();
+public class CoordinatesTypeAdapterDeserializerTest {
+    private final CoordinatesTypeAdapterDeserializer adapter = new CoordinatesTypeAdapterDeserializer();
 
     @Test
     public void testCoordinatesTypeAdapter() {

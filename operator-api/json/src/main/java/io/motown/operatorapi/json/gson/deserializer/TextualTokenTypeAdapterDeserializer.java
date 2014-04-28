@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.operatorapi.json.gson;
+package io.motown.operatorapi.json.gson.deserializer;
 
 import com.google.gson.*;
 import io.motown.domain.api.chargingstation.IdentifyingToken;
@@ -32,7 +32,7 @@ import java.lang.reflect.Type;
  * }
  * </pre>
  */
-public class TextualTokenTypeAdapter implements TypeAdapter<TextualToken> {
+public class TextualTokenTypeAdapterDeserializer implements TypeAdapterDeserializer<TextualToken> {
 
     private static final String TOKEN_MEMBER = "token";
 

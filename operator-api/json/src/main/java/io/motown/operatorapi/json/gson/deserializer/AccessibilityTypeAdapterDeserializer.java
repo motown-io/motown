@@ -13,36 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.operatorapi.json.gson;
+package io.motown.operatorapi.json.gson.deserializer;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import io.motown.domain.api.chargingstation.EvseId;
+import io.motown.domain.api.chargingstation.Accessibility;
 
 import java.lang.reflect.Type;
 
-public class EvseIdTypeAdapter implements TypeAdapter<EvseId> {
-
-    @Override
-    public EvseId deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
-        if (!json.isJsonPrimitive()) {
-            throw new JsonParseException("EvseId must be a JSON primitive");
-        }
-
-        int evseId;
-
-        try {
-            evseId = json.getAsInt();
-        } catch (ClassCastException | IllegalStateException | NumberFormatException e) {
-            throw new JsonParseException("EvseId must be a JSON integer", e);
-        }
-
-        return new EvseId(evseId);
-    }
+public class AccessibilityTypeAdapterDeserializer implements TypeAdapterDeserializer<Accessibility> {
 
     @Override
     public Class<?> getAdaptedType() {
-        return EvseId.class;
+        return Accessibility.class;
+    }
+
+    @Override
+    public Accessibility deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+        if (!json.isJsonPrimitive()) {
+            throw new JsonParseException("Accessibility must be a JSON string");
+        }
+        return Accessibility.fromValue(json.getAsString());
     }
 }

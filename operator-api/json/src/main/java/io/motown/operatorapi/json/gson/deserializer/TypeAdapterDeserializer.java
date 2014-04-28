@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.operatorapi.json.gson;
+package io.motown.operatorapi.json.gson.deserializer;
 
 import com.google.gson.JsonDeserializer;
 
-public interface TypeAdapter<T> extends JsonDeserializer<T> {
+public interface TypeAdapterDeserializer<T> extends JsonDeserializer<T> {
 
     Class<?> getAdaptedType();
 

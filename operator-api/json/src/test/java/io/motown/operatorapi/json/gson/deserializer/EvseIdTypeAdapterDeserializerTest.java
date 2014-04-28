@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.operatorapi.json.gson;
+package io.motown.operatorapi.json.gson.deserializer;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -23,8 +23,8 @@ import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 
-public class EvseIdTypeAdapterTest {
-    private final EvseIdTypeAdapter adapter = new EvseIdTypeAdapter();
+public class EvseIdTypeAdapterDeserializerTest {
+    private final EvseIdTypeAdapterDeserializer adapter = new EvseIdTypeAdapterDeserializer();
 
     @Test
     public void testEvseIdTypeAdapter() {

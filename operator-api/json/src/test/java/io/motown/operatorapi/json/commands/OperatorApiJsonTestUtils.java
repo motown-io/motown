@@ -15,12 +15,14 @@
  */
 package io.motown.operatorapi.json.commands;
 
+import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.UserIdentity;
 import io.motown.domain.commandauthorization.CommandAuthorizationService;
-import io.motown.operatorapi.json.gson.*;
+import io.motown.operatorapi.json.gson.deserializer.*;
+import io.motown.operatorapi.json.gson.serializer.MultimapTypeAdapterSerializer;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
@@ -45,12 +47,13 @@ public final class OperatorApiJsonTestUtils {
     public static Gson getGson() {
         return new GsonBuilder().
                 setDateFormat(ISO8601_DATE_FORMAT).
-                registerTypeAdapter(EvseId.class, new EvseIdTypeAdapter()).
-                registerTypeAdapter(TextualToken.class, new TextualTokenTypeAdapter()).
-                registerTypeAdapter(Coordinates.class, new CoordinatesTypeAdapter()).
-                registerTypeAdapter(Address.class, new AddressTypeAdapter()).
-                registerTypeAdapter(OpeningTime.class, new OpeningTimeTypeAdapter()).
-                registerTypeAdapter(Accessibility.class, new AccessibilityTypeAdapter()).
+                registerTypeAdapter(EvseId.class, new EvseIdTypeAdapterDeserializer()).
+                registerTypeAdapter(TextualToken.class, new TextualTokenTypeAdapterDeserializer()).
+                registerTypeAdapter(Coordinates.class, new CoordinatesTypeAdapterDeserializer()).
+                registerTypeAdapter(Address.class, new AddressTypeAdapterDeserializer()).
+                registerTypeAdapter(OpeningTime.class, new OpeningTimeTypeAdapterDeserializer()).
+                registerTypeAdapter(Accessibility.class, new AccessibilityTypeAdapterDeserializer()).
+                registerTypeAdapter(Multimap.class, new MultimapTypeAdapterSerializer()).
                 create();
     }
 

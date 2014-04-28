@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.operatorapi.json.gson;
+package io.motown.operatorapi.json.gson.deserializer;
 
 import com.google.gson.*;
 import io.motown.domain.api.chargingstation.Address;
@@ -35,7 +35,7 @@ import java.lang.reflect.Type;
  * }
  * </pre>
  */
-public class AddressTypeAdapter implements TypeAdapter<Address> {
+public class AddressTypeAdapterDeserializer implements TypeAdapterDeserializer<Address> {
     @Override
     public Class<?> getAdaptedType() {
         return Address.class;

@@ -17,6 +17,8 @@ package io.motown.operatorapi.json.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.motown.operatorapi.json.gson.deserializer.TypeAdapterDeserializer;
+import io.motown.operatorapi.json.gson.serializer.TypeAdapterSerializer;
 import org.springframework.beans.factory.FactoryBean;
 
 import java.util.Set;
@@ -26,7 +28,8 @@ public class GsonFactoryBean implements FactoryBean<Gson> {
 
     private String dateFormat;
 
-    private Set<TypeAdapter<?>> typeAdapters;
+    private Set<TypeAdapterDeserializer<?>> typeAdapterDeserializers;
+    private Set<TypeAdapterSerializer<?>> typeAdapterSerializers;
 
     @Override
     public Gson getObject() {
@@ -36,8 +39,12 @@ public class GsonFactoryBean implements FactoryBean<Gson> {
             builder.setDateFormat(dateFormat);
         }
 
-        for (TypeAdapter<?> typeAdapter : typeAdapters) {
-            builder.registerTypeAdapter(typeAdapter.getAdaptedType(), typeAdapter);
+        for (TypeAdapterDeserializer<?> typeAdapterDeserializer : typeAdapterDeserializers) {
+            builder.registerTypeAdapter(typeAdapterDeserializer.getAdaptedType(), typeAdapterDeserializer);
+        }
+
+        for (TypeAdapterSerializer<?> typeAdapterSerializer : typeAdapterSerializers) {
+            builder.registerTypeAdapter(typeAdapterSerializer.getAdaptedType(), typeAdapterSerializer);
         }
 
         return builder.create();
@@ -57,7 +64,11 @@ public class GsonFactoryBean implements FactoryBean<Gson> {
         this.dateFormat = dateFormat;
     }
 
-    public void setTypeAdapters(Set<TypeAdapter<?>> typeAdapters) {
-        this.typeAdapters = typeAdapters;
+    public void setTypeAdapterDeserializers(Set<TypeAdapterDeserializer<?>> typeAdapterDeserializers) {
+        this.typeAdapterDeserializers = typeAdapterDeserializers;
+    }
+
+    public void setTypeAdapterSerializers(Set<TypeAdapterSerializer<?>> typeAdapterSerializers) {
+        this.typeAdapterSerializers = typeAdapterSerializers;
     }
 }

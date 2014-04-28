@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.operatorapi.json.gson;
+package io.motown.operatorapi.json.gson.deserializer;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -23,9 +23,9 @@ import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 
-public class TextualTokenTypeAdapterTest {
+public class TextualTokenTypeAdapterDeserializerTest {
 
-    private final TextualTokenTypeAdapter adapter = new TextualTokenTypeAdapter();
+    private final TextualTokenTypeAdapterDeserializer adapter = new TextualTokenTypeAdapterDeserializer();
 
     @Test
     public void testAdaptedType() {

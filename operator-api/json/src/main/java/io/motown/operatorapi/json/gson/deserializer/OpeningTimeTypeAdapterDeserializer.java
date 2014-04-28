@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.operatorapi.json.gson;
+package io.motown.operatorapi.json.gson.deserializer;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
  * }
  * </pre>
  */
-public class OpeningTimeTypeAdapter implements TypeAdapter<OpeningTime> {
+public class OpeningTimeTypeAdapterDeserializer implements TypeAdapterDeserializer<OpeningTime> {
     private static final Pattern TIME_OF_DAY = Pattern.compile("^([01]?[0-9]|2[0-3]):([0-5][0-9])$");
     private static final int HOUR_GROUP = 1;
     private static final int MINUTES_GROUP = 2;
