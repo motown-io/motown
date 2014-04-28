@@ -27,6 +27,17 @@ public final class EvseResource {
 
     private DomainService domainService;
 
+    @GET
+    public Response getEvses(@PathParam("chargingStationTypeId") Long chargingStationTypeId) {
+        return Response.ok(domainService.getEvses(chargingStationTypeId)).build();
+    }
+
+    @POST
+    @Consumes(ApiVersion.V1_JSON)
+    public Response createEvse(@PathParam("chargingStationTypeId") Long chargingStationTypeId, Evse evse) {
+        return Response.status(Response.Status.CREATED).entity(domainService.createEvse(chargingStationTypeId, evse)).build();
+    }
+
     @PUT
     @Path("/{id: [0-9]+}")
     @Consumes(ApiVersion.V1_JSON)

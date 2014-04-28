@@ -25,7 +25,6 @@
     <bean id="domainService" class="io.motown.chargingstationconfiguration.viewmodel.domain.DomainService">
         <property name="chargingStationTypeRepository" ref="chargingStationRepositoryChargingStationConfiguration" />
         <property name="connectorRepository" ref="connectorRepositoryChargingStationConfiguration" />
-        <property name="evseRepository" ref="evseRepositoryChargingStationConfiguration" />
         <property name="manufacturerRepository" ref="manufacturerRepositoryChargingStationConfiguration" />
     </bean>
 

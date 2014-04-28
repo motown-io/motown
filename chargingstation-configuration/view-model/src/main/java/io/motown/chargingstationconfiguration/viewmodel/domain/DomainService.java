@@ -21,10 +21,10 @@ import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evs
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Manufacturer;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ConnectorRepository;
-import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.EvseRepository;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ManufacturerRepository;
 import io.motown.domain.api.chargingstation.EvseId;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -33,8 +33,9 @@ import java.util.Set;
 public class DomainService {
 
     private ChargingStationTypeRepository chargingStationTypeRepository;
+
     private ConnectorRepository connectorRepository;
-    private EvseRepository evseRepository;
+
     private ManufacturerRepository manufacturerRepository;
 
     /**
@@ -59,6 +60,39 @@ public class DomainService {
         }
 
         return result;
+    }
+
+    /**
+     * Creates a Evse in a charging station type.
+     *
+     * @param chargingStationTypeId    charging station type identifier.
+     * @param evse                     evse object
+     * @return created Evse
+     */
+    public Evse createEvse(Long chargingStationTypeId, Evse evse) {
+        ChargingStationType chargingStationType = chargingStationTypeRepository.findOne(chargingStationTypeId);
+
+        if (getEvseByIdentifier(chargingStationType, evse.getIdentifier()) != null) {
+            //TODO error
+            return null;
+        }
+
+        chargingStationType.getEvses().add(evse);
+        chargingStationType = chargingStationTypeRepository.createOrUpdate(chargingStationType);
+
+        return getEvseByIdentifier(chargingStationType, evse.getIdentifier());
+    }
+
+    /**
+     * Gets the Evses of a charging station type.
+     *
+     * @param chargingStationTypeId    charging station type identifier.
+     * @return set of Evses
+     */
+    public Set<Evse> getEvses(Long chargingStationTypeId) {
+        ChargingStationType chargingStationType = chargingStationTypeRepository.findOne(chargingStationTypeId);
+
+        return chargingStationType.getEvses();
     }
 
     /**
@@ -175,8 +209,8 @@ public class DomainService {
      * @param id the id of the entity to find.
      * @param evse the payload from the request.
      */
-    public Evse updateEvse(Long chargingStationTypeid, Long id, Evse evse) {
-        ChargingStationType chargingStationType = chargingStationTypeRepository.findByEvseId(chargingStationTypeid);
+    public Evse updateEvse(Long chargingStationTypeId, Long id, Evse evse) {
+        ChargingStationType chargingStationType = chargingStationTypeRepository.findByEvseId(chargingStationTypeId);
 
         Evse existingEvse = getEvseById(chargingStationType, id);
         if (existingEvse == null) {
@@ -197,8 +231,8 @@ public class DomainService {
      * @param id the id of the entity to find.
      * @return the evse.
      */
-    public Evse getEvse(Long chargingStationTypeid, Long id) {
-        ChargingStationType chargingStationType = chargingStationTypeRepository.findByEvseId(chargingStationTypeid);
+    public Evse getEvse(Long chargingStationTypeId, Long id) {
+        ChargingStationType chargingStationType = chargingStationTypeRepository.findByEvseId(chargingStationTypeId);
 
         return getEvseById(chargingStationType, id);
     }
@@ -285,15 +319,6 @@ public class DomainService {
     }
 
     /**
-     * Sets the evse repository.
-     *
-     * @param evseRepository repository to use.
-     */
-    public void setEvseRepository(EvseRepository evseRepository) {
-        this.evseRepository = evseRepository;
-    }
-
-    /**
      * Sets the manufacturer repository.
      *
      * @param manufacturerRepository repository to use.
@@ -302,12 +327,37 @@ public class DomainService {
         this.manufacturerRepository = manufacturerRepository;
     }
 
+    /**
+     * Gets a Evse by id.
+     *
+     * @param chargingStationType    charging station type.
+     * @param evseId                 evse id.
+     * @return evse
+     * @throws EntityNotFoundException if the Evse cannot be found.
+     */
     private Evse getEvseById(ChargingStationType chargingStationType, Long evseId) {
         for (Evse evse:chargingStationType.getEvses()) {
             if(evseId.equals(evse.getId())) {
                 return evse;
             }
         }
+        throw new EntityNotFoundException(String.format("Unable to find evse with id '%s'", evseId));
+    }
+
+    /**
+     * Gets a Evse by identifier.
+     *
+     * @param chargingStationType    charging station type.
+     * @param identifier             evse identifier.
+     * @return evse or null if not found.
+     */
+    private Evse getEvseByIdentifier(ChargingStationType chargingStationType, int identifier) {
+        for (Evse evse:chargingStationType.getEvses()) {
+            if(identifier == evse.getIdentifier()) {
+                return evse;
+            }
+        }
         return null;
     }
+
 }
