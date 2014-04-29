@@ -211,6 +211,7 @@ public class ChargingStationEventListenerTest {
         listener.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, IDENTITY_CONTEXT));
         cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertFalse(cs.getEvses().isEmpty());
+        assertTrue(cs.isConfigured());
     }
 
     @Test

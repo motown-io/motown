@@ -17,15 +17,41 @@ package io.motown.operatorapi.viewmodel.persistence.entities;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 public class ChargingStationTest {
 
     @Test
-    public void testIsAcceptedOnNewChargingStation() {
+    public void isAcceptedOnNewChargingStation() {
         ChargingStation cs = new ChargingStation("");
 
-        if (!cs.isAccepted()) {
-            // this should not throw a NullPointerException
-        }
+        assertFalse(cs.isAccepted());
+    }
+
+    @Test
+    public void communicationAllowed() {
+        ChargingStation cs = new ChargingStation("");
+        cs.setAccepted(true);
+        cs.setConfigured(true);
+
+        assertTrue(cs.communicationAllowed());
+    }
+
+    @Test
+    public void communicationNotAllowedUnconfiguredChargingStation() {
+        ChargingStation cs = new ChargingStation("");
+        cs.setAccepted(true);
+
+        assertFalse(cs.communicationAllowed());
+    }
+
+    @Test
+    public void communicationNotAllowedNotAcceptedChargingStation() {
+        ChargingStation cs = new ChargingStation("");
+        cs.setConfigured(true);
+
+        assertFalse(cs.communicationAllowed());
     }
 
 }

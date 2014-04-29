@@ -125,6 +125,8 @@ public class ChargingStationEventListener {
                 chargingStation.getEvses().add(evse);
             }
 
+            chargingStation.setConfigured(true);
+
             repository.createOrUpdate(chargingStation);
         } else {
             LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and configure it", event.getChargingStationId());

@@ -28,6 +28,7 @@ public class ChargingStation {
     private String protocol;
     private boolean accepted;
     private boolean reservable;
+    private boolean configured;
     private Double latitude;
     private Double longitude;
     private String addressLine1;
@@ -78,6 +79,14 @@ public class ChargingStation {
 
     public void setReservable(boolean reservable) {
         this.reservable = reservable;
+    }
+
+    public boolean isConfigured() {
+        return configured;
+    }
+
+    public void setConfigured(boolean configured) {
+        this.configured = configured;
     }
 
     public String getProtocol() {
@@ -226,5 +235,9 @@ public class ChargingStation {
 
     public Set<LocalAuthorization> getLocalAuthorizations() {
         return localAuthorizations;
+    }
+
+    public boolean communicationAllowed() {
+        return isAccepted() && isConfigured();
     }
 }
