@@ -47,7 +47,7 @@
         <module>samples</module>
     </modules>
     <properties>
-        <atmosphere.version>2.1.0</atmosphere.version>
+        <atmosphere.version>2.1.3</atmosphere.version>
         <axon.version>2.1.2</axon.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
         <!-- using 2.7.0 instead of newer versions of CXF, as newer versions have a problem with continuations resulting
