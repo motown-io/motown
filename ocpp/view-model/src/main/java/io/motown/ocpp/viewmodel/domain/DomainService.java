@@ -439,7 +439,6 @@ public class DomainService {
         Transaction transaction = new Transaction();
         transaction.setEvseId(evseId);
 
-        // flush to make sure the generated id is populated
         transactionRepository.insert(transaction);
 
         return transaction;
