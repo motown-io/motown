@@ -25,6 +25,15 @@
         <th>Stopped</th>
         <th>Actions</th>
         </thead>
+        <tfoot>
+        <tr>
+            <td colspan="5">
+                <pagination page="page" total-items="totalNumberOfRecords" items-per-page="recordsPerPage" boundary-links="true" on-select-page="changePage(page)"
+                            rotate="false" max-size="5" first-text="&laquo;" previous-text="&lsaquo;" next-text="&rsaquo;" last-text="&raquo;"></pagination>
+            </td>
+        </tr>
+        </tfoot>
+        <tbody>
         <tr ng-repeat="transaction in transactions">
             <td>{{transaction.transactionId}}</td>
             <td>{{transaction.chargingStationId}}</td>
@@ -32,5 +41,6 @@
             <td><span ng-if="transaction.stoppedTimestamp">{{transaction.startedTimestamp | date:'dd/MM/yyyy hh:mm'}}</span></td>
             <td><button ng-if="!transaction.stoppedTimestamp" class="btn btn-default" href="#" ng-click="stopTransaction(transaction.chargingStationId, transaction.id)">stop</button></td>
         </tr>
+        </tbody>
     </table>
 </div>
