@@ -59,17 +59,17 @@ public class ConfigurationConversionService {
     }
 
     /**
-     * Returns a set of {@code io.motown.vas.viewmodel.model.Evse}s based on
+     * Returns a set of {@code io.motown.vas.viewmodel.persistence.entities.Evse}s based on
      * {@code io.motown.domain.api.chargingstation.Evse}s. The state of all EVSEs will be UNKNOWN. State will be updated
      * in the ComponentStatusNotificationReceivedEvent handler.
      *
      * @param eventEvses list of EVSEs.
      * @return set of VAS EVSEs.
      */
-    public Set<io.motown.vas.viewmodel.model.Evse> getEvsesFromEventEvses(Set<Evse> eventEvses) {
-        Set<io.motown.vas.viewmodel.model.Evse> evses = new HashSet<>();
+    public Set<io.motown.vas.viewmodel.persistence.entities.Evse> getEvsesFromEventEvses(Set<Evse> eventEvses) {
+        Set<io.motown.vas.viewmodel.persistence.entities.Evse> evses = new HashSet<>();
         for (Evse evse : eventEvses) {
-            evses.add(new io.motown.vas.viewmodel.model.Evse(evse.getEvseId().getNumberedId(), ComponentStatus.UNKNOWN));
+            evses.add(new io.motown.vas.viewmodel.persistence.entities.Evse(evse.getEvseId().getNumberedId(), ComponentStatus.UNKNOWN));
         }
         return evses;
     }

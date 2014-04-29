@@ -18,6 +18,8 @@ package io.motown.vas.v10.soap;
 import com.google.common.collect.ImmutableSet;
 import io.motown.vas.v10.soap.schema.ChargePoint;
 import io.motown.vas.viewmodel.model.*;
+import io.motown.vas.viewmodel.persistence.entities.ChargingStation;
+import io.motown.vas.viewmodel.persistence.entities.Evse;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -59,7 +61,6 @@ public class VasSoapTestUtils {
                 .build();
         cs.setChargingCapabilities(chargingCapabilities);
 
-        cs.setChargingStationId(CHARGING_STATION_ID.getId());
         cs.setCity(ADDRESS.getCity());
         cs.setConfigured(true);
 
@@ -110,7 +111,7 @@ public class VasSoapTestUtils {
         assertEquals(cs.getPostalCode(), cp.getPostalCode());
         assertEquals(cs.getRegion(), cp.getRegion());
         assertEquals(service.getStatus(cs), cp.getStatus());
-        assertEquals(cs.getChargingStationId(), cp.getUid());
+        assertEquals(cs.getId(), cp.getUid());
 
         assertEquals(cs.getLatitude(), cp.getCoordinates().getLatitude());
         assertEquals(cs.getLongitude(), cp.getCoordinates().getLongitude());

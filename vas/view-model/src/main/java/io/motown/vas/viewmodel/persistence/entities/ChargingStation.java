@@ -13,7 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.vas.viewmodel.model;
+package io.motown.vas.viewmodel.persistence.entities;
+
+import io.motown.vas.viewmodel.model.ChargeMode;
+import io.motown.vas.viewmodel.model.ChargingCapability;
+import io.motown.vas.viewmodel.model.ComponentStatus;
+import io.motown.vas.viewmodel.model.ConnectorType;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -26,10 +31,7 @@ public class ChargingStation {
     public static final String UNKNOWN_OPERATOR = "Unknown";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String chargingStationId;
+    private String id;
 
     @OneToMany(cascade = CascadeType.ALL, targetEntity = Evse.class, fetch = FetchType.EAGER)
     private Set<Evse> evses = new HashSet<>();
@@ -85,23 +87,15 @@ public class ChargingStation {
     }
 
     public ChargingStation(String chargingStationId) {
-        this.chargingStationId = chargingStationId;
+        this.id = chargingStationId;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
     public int getNumberOfEvses() {
         return evses.size();
-    }
-
-    public void setChargingStationId(String chargingStationId) {
-        this.chargingStationId = chargingStationId;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public void setAddress(String address) {
@@ -142,10 +136,6 @@ public class ChargingStation {
 
     public void setOperator(String operator) {
         this.operator = operator == null ? UNKNOWN_OPERATOR : operator;
-    }
-
-    public String getChargingStationId() {
-        return chargingStationId;
     }
 
     public String getAddress() {
@@ -281,7 +271,7 @@ public class ChargingStation {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, chargingStationId, evses, openingTimes, isRegistered, isConfigured, chargingCapabilities, address, city, postalCode, country, region, accessibility, chargeMode, connectorTypes, latitude, longitude, hasFixedCable, isReservable, operator, state);
+        return Objects.hash(id, address, city, postalCode, country, latitude, longitude);
     }
 
     @Override
@@ -293,6 +283,6 @@ public class ChargingStation {
             return false;
         }
         final ChargingStation other = (ChargingStation) obj;
-        return Objects.equals(this.id, other.id) && Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.evses, other.evses) && Objects.equals(this.openingTimes, other.openingTimes) && Objects.equals(this.isRegistered, other.isRegistered) && Objects.equals(this.isConfigured, other.isConfigured) && Objects.equals(this.chargingCapabilities, other.chargingCapabilities) && Objects.equals(this.address, other.address) && Objects.equals(this.city, other.city) && Objects.equals(this.postalCode, other.postalCode) && Objects.equals(this.country, other.country) && Objects.equals(this.region, other.region) && Objects.equals(this.accessibility, other.accessibility) && Objects.equals(this.chargeMode, other.chargeMode) && Objects.equals(this.connectorTypes, other.connectorTypes) && Objects.equals(this.latitude, other.latitude) && Objects.equals(this.longitude, other.longitude) && Objects.equals(this.hasFixedCable, other.hasFixedCable) && Objects.equals(this.isReservable, other.isReservable) && Objects.equals(this.operator, other.operator) && Objects.equals(this.state, other.state);
+        return Objects.equals(this.id, other.id) && Objects.equals(this.address, other.address) && Objects.equals(this.city, other.city) && Objects.equals(this.postalCode, other.postalCode) && Objects.equals(this.country, other.country) && Objects.equals(this.latitude, other.latitude) && Objects.equals(this.longitude, other.longitude);
     }
 }

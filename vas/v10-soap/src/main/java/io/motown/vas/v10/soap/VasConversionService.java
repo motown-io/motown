@@ -19,6 +19,8 @@ import io.motown.vas.v10.soap.schema.*;
 import io.motown.vas.viewmodel.model.*;
 import io.motown.vas.viewmodel.model.ChargingCapability;
 import io.motown.vas.viewmodel.model.ConnectorType;
+import io.motown.vas.viewmodel.persistence.entities.ChargingStation;
+import io.motown.vas.viewmodel.persistence.entities.OpeningTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +56,7 @@ public class VasConversionService {
         chargePoint.setPublic(getPublic(chargingStation));
         chargePoint.setRegion(chargingStation.getRegion());
         chargePoint.setStatus(getStatus(chargingStation));
-        chargePoint.setUid(chargingStation.getChargingStationId());
+        chargePoint.setUid(chargingStation.getId());
 
         return chargePoint;
     }

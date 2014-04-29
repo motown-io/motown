@@ -15,48 +15,52 @@
  */
 package io.motown.vas.viewmodel.persistence.repostories;
 
-import io.motown.vas.viewmodel.model.Subscription;
+import io.motown.vas.viewmodel.persistence.entities.Subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class SubscriptionRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(SubscriptionRepository.class);
-    private static final String SUBSCRIBER_IDENTITY_PARAMETER = "subscriberIdentity";
 
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
 
     public void insert(final Subscription subscription) {
+        final EntityManager entityManager = getEntityManager();
         executeWithinTransaction(new TransactionalTask() {
             @Override
             public void execute() {
                 entityManager.persist(subscription);
             }
-        });
+        }, entityManager);
     }
 
     public void delete(final Subscription subscription) {
+        final EntityManager entityManager = getEntityManager();
+
+        //Making sure the subscription is in the scope of this entitymanager
+        final Subscription subscriptionToRemove = entityManager.contains(subscription) ? subscription : entityManager.merge(subscription);
+
         executeWithinTransaction(new TransactionalTask() {
             @Override
             public void execute() {
-                entityManager.remove(subscription);
+                entityManager.remove(subscriptionToRemove);
             }
-        });
+        }, entityManager);
     }
 
-    private void executeWithinTransaction(TransactionalTask task) {
+    private void executeWithinTransaction(TransactionalTask task, EntityManager entityManager) {
         EntityTransaction transaction = entityManager.getTransaction();
 
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
         try {
+            if (!transaction.isActive()) {
+                transaction.begin();
+            }
             task.execute();
             transaction.commit();
         } finally {
@@ -68,41 +72,47 @@ public class SubscriptionRepository {
     }
 
     public Subscription findById(Long id) {
-        return entityManager.find(Subscription.class, id);
+        return getEntityManager().find(Subscription.class, id);
     }
 
     public Subscription findBySubscriptionId(String subscriptionId) {
-        TypedQuery<Subscription> query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriptionId = :subscriptionId", Subscription.class).setParameter("subscriptionId", subscriptionId);
-        List<Subscription> resultList = query.getResultList();
-        if (!resultList.isEmpty()) {
-            return resultList.get(0);
-        } else {
-            return null;
-        }
+        List<Subscription> subscriptions = getEntityManager().createQuery("SELECT s FROM io.motown.vas.viewmodel.persistence.entities.Subscription AS s " +
+                "WHERE s.subscriptionId = :subscriptionId", Subscription.class)
+                .setParameter("subscriptionId", subscriptionId)
+                .getResultList();
+
+        return !subscriptions.isEmpty() ? subscriptions.get(0) : null;
     }
 
     public Subscription findBySubscriberIdentityAndDeliveryAddress(String subscriberIdentity, String deliveryAddress) {
-        TypedQuery<Subscription> query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriberIdentity = :subscriberIdentity AND s.deliveryAddress = :deliveryAddress", Subscription.class).setParameter(SUBSCRIBER_IDENTITY_PARAMETER, subscriberIdentity).setParameter("deliveryAddress", deliveryAddress);
-        List<Subscription> resultList = query.getResultList();
-        if (!resultList.isEmpty()) {
-            return resultList.get(0);
-        } else {
-            return null;
-        }
+        List<Subscription> subscriptions = getEntityManager().createQuery("SELECT s FROM io.motown.vas.viewmodel.persistence.entities.Subscription AS s " +
+                "WHERE s.subscriberIdentity = :subscriberIdentity " +
+                "AND s.deliveryAddress = :deliveryAddress", Subscription.class)
+                .setParameter("subscriberIdentity", subscriberIdentity)
+                .setParameter("deliveryAddress", deliveryAddress)
+                .getResultList();
+
+        return !subscriptions.isEmpty() ? subscriptions.get(0) : null;
     }
 
     public List<Subscription> findBySubscriberIdentity(String subscriberIdentity) {
-        TypedQuery<Subscription> query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s WHERE s.subscriberIdentity = :subscriberIdentity", Subscription.class).setParameter(SUBSCRIBER_IDENTITY_PARAMETER, subscriberIdentity);
-        return query.getResultList();
+        return getEntityManager().createQuery("SELECT s FROM io.motown.vas.viewmodel.persistence.entities.Subscription AS s " +
+                "WHERE s.subscriberIdentity = :subscriberIdentity", Subscription.class)
+                .setParameter("subscriberIdentity", subscriberIdentity)
+                .getResultList();
     }
 
     public List<Subscription> findAll() {
-        TypedQuery<Subscription> query = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.model.Subscription AS s", Subscription.class);
-        return query.getResultList();
+        return getEntityManager().createQuery("SELECT s FROM io.motown.vas.viewmodel.persistence.entities.Subscription AS s", Subscription.class)
+                .getResultList();
     }
 
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+    }
+
+    private EntityManager getEntityManager() {
+        return this.entityManagerFactory.createEntityManager();
     }
 
     private static interface TransactionalTask {

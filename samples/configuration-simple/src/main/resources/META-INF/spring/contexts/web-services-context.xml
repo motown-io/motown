@@ -190,12 +190,12 @@
     <!-- START OF VAS 1.0 SOAP CONFIG -->
     <bean id="vasWebServicesChargingStationRepository"
           class="io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository">
-        <property name="entityManager" ref="vasWebServicesEntityManager"/>
+        <property name="entityManagerFactory" ref="vasWebServicesEntityManagerFactory"/>
     </bean>
 
     <bean id="vasWebServicesSubscriptionRepository"
           class="io.motown.vas.viewmodel.persistence.repostories.SubscriptionRepository">
-        <property name="entityManager" ref="vasWebServicesEntityManager"/>
+        <property name="entityManagerFactory" ref="vasWebServicesEntityManagerFactory"/>
     </bean>
 
     <bean class="io.motown.vas.viewmodel.VasEventHandler">
@@ -245,9 +245,6 @@
             </bean>
         </property>
     </bean>
-
-    <bean id="vasWebServicesEntityManager" factory-bean="vasWebServicesEntityManagerFactory"
-          factory-method="createEntityManager"/>
 
     <jdbc:embedded-database id="vasWebServicesDataSource" type="HSQL"/>
 

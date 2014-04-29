@@ -16,10 +16,10 @@
 package io.motown.vas.viewmodel;
 
 import com.google.common.collect.ImmutableList;
-import io.motown.vas.viewmodel.model.ChargingStation;
+import io.motown.vas.viewmodel.persistence.entities.ChargingStation;
 import io.motown.vas.viewmodel.model.ComponentStatus;
-import io.motown.vas.viewmodel.model.Evse;
-import io.motown.vas.viewmodel.model.Subscription;
+import io.motown.vas.viewmodel.persistence.entities.Evse;
+import io.motown.vas.viewmodel.persistence.entities.Subscription;
 
 import javax.persistence.EntityManager;
 import java.util.HashSet;

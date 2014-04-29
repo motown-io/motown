@@ -16,7 +16,9 @@
 package io.motown.vas.viewmodel;
 
 import io.motown.domain.api.chargingstation.*;
-import io.motown.vas.viewmodel.model.ChargingStation;
+import io.motown.domain.api.chargingstation.Evse;
+import io.motown.domain.api.chargingstation.OpeningTime;
+import io.motown.vas.viewmodel.persistence.entities.ChargingStation;
 import io.motown.vas.viewmodel.model.ComponentStatus;
 import io.motown.vas.viewmodel.model.Day;
 import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository;
@@ -43,13 +45,13 @@ public class VasEventHandler {
         LOG.info("Handling ChargingStationCreatedEvent");
 
         String chargingStationId = event.getChargingStationId().getId();
-        ChargingStation chargingStation = chargingStationRepository.findByChargingStationId(chargingStationId);
+        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
 
         if (chargingStation == null) {
             chargingStation = new ChargingStation(chargingStationId);
         }
 
-        chargingStationRepository.insert(chargingStation);
+        chargingStationRepository.createOrUpdate(chargingStation);
     }
 
     @EventHandler
@@ -60,7 +62,7 @@ public class VasEventHandler {
 
         if (chargingStation != null) {
             chargingStation.setRegistered(true);
-            chargingStationRepository.insert(chargingStation);
+            chargingStationRepository.createOrUpdate(chargingStation);
         }
     }
 
@@ -92,7 +94,7 @@ public class VasEventHandler {
         chargingStation.setChargingCapabilities(configurationConversionService.getChargingCapabilitiesFromEvses(eventEvses));
         chargingStation.setConfigured(true);
 
-        chargingStationRepository.insert(chargingStation);
+        chargingStationRepository.createOrUpdate(chargingStation);
     }
 
     /**
@@ -143,7 +145,7 @@ public class VasEventHandler {
         ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
         if (chargingStation != null) {
             chargingStation.setOpeningTimes(convertFromApiOpeningTimes(event.getOpeningTimes()));
-            chargingStationRepository.insert(chargingStation);
+            chargingStationRepository.createOrUpdate(chargingStation);
         }
     }
 
@@ -159,10 +161,10 @@ public class VasEventHandler {
         ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
         if (chargingStation != null) {
             if (chargingStation.getOpeningTimes() == null) {
-                chargingStation.setOpeningTimes(new HashSet<io.motown.vas.viewmodel.model.OpeningTime>());
+                chargingStation.setOpeningTimes(new HashSet<io.motown.vas.viewmodel.persistence.entities.OpeningTime>());
             }
             chargingStation.getOpeningTimes().addAll(convertFromApiOpeningTimes(event.getOpeningTimes()));
-            chargingStationRepository.insert(chargingStation);
+            chargingStationRepository.createOrUpdate(chargingStation);
         }
     }
 
@@ -187,7 +189,7 @@ public class VasEventHandler {
         ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
         if (chargingStation != null) {
             chargingStation.setState(ComponentStatus.fromApiComponentStatus(event.getStatus()));
-            chargingStationRepository.insert(chargingStation);
+            chargingStationRepository.createOrUpdate(chargingStation);
 
             subscriberService.updateSubscribers(chargingStation, event.getTimestamp());
         }
@@ -200,9 +202,9 @@ public class VasEventHandler {
         ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
 
         if (chargingStation != null && event.getComponentId() instanceof EvseId) {
-            io.motown.vas.viewmodel.model.Evse evse = chargingStation.getEvse(((EvseId) event.getComponentId()).getNumberedId());
+            io.motown.vas.viewmodel.persistence.entities.Evse evse = chargingStation.getEvse(((EvseId) event.getComponentId()).getNumberedId());
             evse.setState(ComponentStatus.fromApiComponentStatus(event.getStatus()));
-            chargingStationRepository.insert(chargingStation);
+            chargingStationRepository.createOrUpdate(chargingStation);
 
             subscriberService.updateSubscribers(chargingStation, event.getTimestamp());
         }
@@ -229,7 +231,7 @@ public class VasEventHandler {
      * @return charging station if found, null otherwise.
      */
     private ChargingStation getChargingStation(ChargingStationId chargingStationId) {
-        ChargingStation chargingStation = chargingStationRepository.findByChargingStationId(chargingStationId.getId());
+        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
 
         if (chargingStation == null) {
             LOG.error("Could not find charging station {}", chargingStationId);
@@ -250,7 +252,7 @@ public class VasEventHandler {
 
         if (chargingStation != null) {
             chargingStation.setReservable(reservable);
-            chargingStationRepository.insert(chargingStation);
+            chargingStationRepository.createOrUpdate(chargingStation);
         }
     }
 
@@ -283,20 +285,20 @@ public class VasEventHandler {
 
             chargingStation.setAccessibility(accessibility.name());
 
-            chargingStationRepository.insert(chargingStation);
+            chargingStationRepository.createOrUpdate(chargingStation);
         }
     }
 
     /**
-     * Converts the opening times from the {@link io.motown.domain.api.chargingstation.OpeningTime} to the {@link io.motown.vas.viewmodel.model.OpeningTime} format.
+     * Converts the opening times from the {@link io.motown.domain.api.chargingstation.OpeningTime} to the {@link io.motown.vas.viewmodel.persistence.entities.OpeningTime} format.
      *
      * @param input the opening times from the core.
      * @return the new set of opening times.
      */
-    private Set<io.motown.vas.viewmodel.model.OpeningTime> convertFromApiOpeningTimes(Set<OpeningTime> input) {
-        Set<io.motown.vas.viewmodel.model.OpeningTime> output = new HashSet<>();
+    private Set<io.motown.vas.viewmodel.persistence.entities.OpeningTime> convertFromApiOpeningTimes(Set<OpeningTime> input) {
+        Set<io.motown.vas.viewmodel.persistence.entities.OpeningTime> output = new HashSet<>();
         for (OpeningTime source : input) {
-            io.motown.vas.viewmodel.model.OpeningTime openingTime = new io.motown.vas.viewmodel.model.OpeningTime();
+            io.motown.vas.viewmodel.persistence.entities.OpeningTime openingTime = new io.motown.vas.viewmodel.persistence.entities.OpeningTime();
             openingTime.setDay(Day.fromValue(source.getDay().value()));
             openingTime.setTimeStart(source.getTimeStart().getHourOfDay() * MINUTES_IN_HOUR + source.getTimeStart().getMinutesInHour());
             openingTime.setTimeStop(source.getTimeStop().getHourOfDay() * MINUTES_IN_HOUR + source.getTimeStop().getMinutesInHour());

@@ -17,8 +17,8 @@ package io.motown.vas.v10.soap.publisher;
 
 import io.motown.vas.v10.soap.VasConversionService;
 import io.motown.vas.v10.soap.schema.*;
-import io.motown.vas.viewmodel.model.ChargingStation;
-import io.motown.vas.viewmodel.model.Subscription;
+import io.motown.vas.viewmodel.persistence.entities.ChargingStation;
+import io.motown.vas.viewmodel.persistence.entities.Subscription;
 import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository;
 import io.motown.vas.viewmodel.persistence.repostories.SubscriptionRepository;
 import org.junit.Before;
@@ -29,6 +29,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.vas.v10.soap.VasSoapTestUtils.*;
@@ -52,10 +53,11 @@ public class MotownVasPublisherServiceTest {
     private VasConversionService vasConversionService;
 
     @Autowired
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
 
     @Before
     public void setup() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.clear();
         deleteFromDatabase(entityManager, ChargingStation.class);
         deleteFromDatabase(entityManager, Subscription.class);
@@ -148,8 +150,8 @@ public class MotownVasPublisherServiceTest {
     @Test
     public void getChargePointInfoSubscriptionValidateResponse() {
         subscribeTestSubscriber();
-        chargingStationRepository.insert(new ChargingStation(CHARGING_STATION_ID.getId()));
-        chargingStationRepository.insert(new ChargingStation("SECOND_CS"));
+        chargingStationRepository.createOrUpdate(new ChargingStation(CHARGING_STATION_ID.getId()));
+        chargingStationRepository.createOrUpdate(new ChargingStation("SECOND_CS"));
         GetChargePointInfoRequest request = new GetChargePointInfoRequest();
 
         GetChargePointInfoResponse response = service.getChargePointInfo(request, SUBSCRIBER_IDENTITY);

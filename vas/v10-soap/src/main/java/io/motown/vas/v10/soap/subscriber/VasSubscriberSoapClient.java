@@ -19,7 +19,7 @@ import io.motown.vas.v10.soap.schema.ChargePointStatus;
 import io.motown.vas.v10.soap.schema.StatusChange;
 import io.motown.vas.v10.soap.schema.StatusChangeNotification;
 import io.motown.vas.v10.soap.schema.VasSubscriberService;
-import io.motown.vas.viewmodel.model.Subscription;
+import io.motown.vas.viewmodel.persistence.entities.Subscription;
 import io.motown.vas.viewmodel.vas.SubscriberClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

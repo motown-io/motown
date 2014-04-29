@@ -15,9 +15,9 @@
  */
 package io.motown.vas.viewmodel;
 
-import io.motown.vas.viewmodel.model.ChargingStation;
+import io.motown.vas.viewmodel.persistence.entities.ChargingStation;
 import io.motown.vas.viewmodel.model.StatusChange;
-import io.motown.vas.viewmodel.model.Subscription;
+import io.motown.vas.viewmodel.persistence.entities.Subscription;
 import io.motown.vas.viewmodel.persistence.repostories.SubscriptionRepository;
 import io.motown.vas.viewmodel.vas.SubscriberClient;
 import io.motown.vas.viewmodel.vas.SubscriptionUpdater;
@@ -43,7 +43,7 @@ public class VasSubscriberService {
      * @param timestampStatusChange timestamp of the change
      */
     public void updateSubscribers(ChargingStation chargingStation, Date timestampStatusChange) {
-        StatusChange change = new StatusChange(chargingStation.getChargingStationId(), timestampStatusChange, chargingStation.getState(), chargingStation.getNumberOfFreeEvses());
+        StatusChange change = new StatusChange(chargingStation.getId(), timestampStatusChange, chargingStation.getState(), chargingStation.getNumberOfFreeEvses());
 
         List<Subscription> subscriptions = subscriptionRepository.findAll();
         for (Subscription subscription : subscriptions) {
