@@ -23,19 +23,41 @@ import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * The response that the REST api returns for the {@code GET} requests for the transactions and charging stations.
+ * The returned JSON consists of a metadata map and a list of records.
+ *
+ * @param <T> The type of record which is wrapped in the response. This can be either {@link io.motown.operatorapi.viewmodel.persistence.entities.Transaction} or {@link io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation}.
+ */
 public final class OperatorApiResponse<T> {
     private final Map<String, Object> metadata;
     private final List<T> records;
 
+    /**
+     * Construct a response to send to the client.
+     *
+     * @param metadata  The metadata of the response.
+     * @param records   A list of records in the response.
+     */
     public OperatorApiResponse(Map<String, Object> metadata, List<T> records) {
         this.metadata = ImmutableMap.copyOf(checkNotNull(metadata));
         this.records = ImmutableList.copyOf(checkNotNull(records));
     }
 
+    /**
+     * Gets the metadata of the response.
+     *
+     * @return a {@code Map} of metadata.
+     */
     public Map<String, Object> getMetadata() {
         return metadata;
     }
 
+    /**
+     * Gets the records from the response.
+     *
+     * @return a {@code List} of records.
+     */
     public List<T> getRecords() {
         return records;
     }
