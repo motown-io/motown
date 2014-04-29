@@ -116,7 +116,7 @@
         <load-on-startup>1</load-on-startup>
         <init-param>
             <param-name>com.sun.jersey.config.property.packages</param-name>
-            <param-value>io.motown.chargingstationconfiguration.viewmodel.restapi,sample</param-value>
+            <param-value>io.motown.sample.authentication</param-value>
         </init-param>
         <init-param>
             <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
