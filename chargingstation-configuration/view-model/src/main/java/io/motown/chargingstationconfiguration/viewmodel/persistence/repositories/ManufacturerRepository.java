@@ -15,6 +15,7 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.persistence.repositories;
 
+import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Manufacturer;
 
 import javax.persistence.EntityManager;
@@ -70,10 +71,18 @@ public class ManufacturerRepository {
 
         Manufacturer manufacturer = findOne(id, em);
 
+        List<ChargingStationType> chargingStationTypes = em.createQuery("SELECT cst FROM ChargingStationType AS cst where UPPER(cst.manufacturer.code) = UPPER(:manufacturerCode)", ChargingStationType.class)
+                .setParameter("manufacturerCode", manufacturer.getCode())
+                .getResultList();
+
         EntityTransaction tx = null;
         try {
             tx = em.getTransaction();
             tx.begin();
+
+            for (ChargingStationType chargingStationType:chargingStationTypes) {
+                em.remove(chargingStationType);
+            }
 
             em.remove(manufacturer);
 
