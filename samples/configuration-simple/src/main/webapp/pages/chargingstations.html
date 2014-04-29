@@ -32,6 +32,10 @@
             <td colspan="4">
                 <pagination page="page" total-items="totalNumberOfRecords" items-per-page="recordsPerPage" boundary-links="true" on-select-page="changePage(page)"
                             rotate="false" max-size="5" first-text="&laquo;" previous-text="&lsaquo;" next-text="&rsaquo;" last-text="&raquo;"></pagination>
+                <div>
+                    <span>Records per page: </span>
+                    <select ng-model="recordsPerPage" ng-options="recordsPerPageChoice for recordsPerPageChoice in recordsPerPageChoices" ng-change="getChargingstations()"></select>
+                </div>
             </td>
         </tr>
         </tfoot>

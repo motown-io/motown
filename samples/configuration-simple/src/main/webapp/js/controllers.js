@@ -19,6 +19,7 @@ angular.module('demoApp.controllers', []).
             $scope.init = function () {
                 $scope.page = 1;
                 $scope.numberOfPages = 1;
+                $scope.recordsPerPageChoices = [10, 25, 50];
                 $scope.getChargingStations();
                 if(!$scope.chargingStationTimer) {
                     $scope.chargingStationTimer = $scope.startGetChargingStationsTimer();
@@ -37,7 +38,7 @@ angular.module('demoApp.controllers', []).
             };
 
             $scope.getChargingStations = function () {
-                var q = ['page=' + ($scope.page || 1), 'recordsPerPage=' + ($scope.recordsPerPage || 10)];
+                var q = ['page=' + ($scope.page || 1), 'recordsPerPage=' + ($scope.recordsPerPage || $scope.recordsPerPageChoices[0])];
 
                 $http({
                     url: 'rest/operator-api/charging-stations?' + q.join('&'),
@@ -376,6 +377,7 @@ angular.module('demoApp.controllers', []).
             $scope.init = function () {
                 $scope.page = 1;
                 $scope.numberOfPages = 1;
+                $scope.recordsPerPageChoices = [10, 25, 50];
                 $scope.getTransactions();
                 if(!$scope.transactionTimer) {
                     $scope.transactionTimer = $scope.startGetTransactionsTimer();
@@ -395,7 +397,7 @@ angular.module('demoApp.controllers', []).
             };
 
             $scope.getTransactions = function () {
-                var q = ['page=' + ($scope.page || 1), 'recordsPerPage=' + ($scope.recordsPerPage || 10)];
+                var q = ['page=' + ($scope.page || 1), 'recordsPerPage=' + ($scope.recordsPerPage || $scope.recordsPerPageChoices[0])];
 
                 $http({
                     url: 'rest/operator-api/transactions?' + q.join('&'),
@@ -436,11 +438,12 @@ angular.module('demoApp.controllers', []).
             $scope.init = function () {
                 $scope.page = 1;
                 $scope.numberOfPages = 1;
+                $scope.recordsPerPageChoices = [10, 25, 50];
                 $scope.getChargingStationTypes();
             };
 
             $scope.getChargingStationTypes = function () {
-                var q = ['page=' + ($scope.page || 1), 'recordsPerPage=' + ($scope.recordsPerPage || 10)];
+                var q = ['page=' + ($scope.page || 1), 'recordsPerPage=' + ($scope.recordsPerPage || $scope.recordsPerPageChoices[0])];
 
                 $http({
                     url: 'rest/config/chargingstationtypes?' + q.join('&'),
