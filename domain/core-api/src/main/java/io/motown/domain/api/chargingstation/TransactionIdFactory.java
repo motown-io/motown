@@ -15,7 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import org.apache.commons.lang3.math.NumberUtils;
+import com.google.common.primitives.Ints;
 
 import java.util.UUID;
 
@@ -25,6 +25,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Factory for the creation of {@code TransactionId} derivatives
  */
 public class TransactionIdFactory {
+
+    private TransactionIdFactory() {
+    }
 
     /**
      * Creates {@code NumberedTransactionId} or {@code UUIDTransactionId} by inspecting the provided transactionId String.
@@ -36,14 +39,8 @@ public class TransactionIdFactory {
      * @throws IllegalArgumentException in case no {@code TransactionId} could be created.
      */
     public static TransactionId createTransactionId(String transactionIdString, ChargingStationId chargingStationId, String protocol) {
-        checkNotNull(transactionIdString);
-
-        TransactionId transactionId;
-        if (NumberUtils.isNumber(transactionIdString)) {
-            transactionId = new NumberedTransactionId(chargingStationId, protocol, NumberUtils.toInt(transactionIdString));
-        } else {
-            transactionId = new UuidTransactionId(UUID.fromString(transactionIdString));
-        }
-        return transactionId;
+        return Ints.tryParse(checkNotNull(transactionIdString)) != null
+                ? new NumberedTransactionId(chargingStationId, protocol, Ints.tryParse(transactionIdString))
+                : new UuidTransactionId(UUID.fromString(transactionIdString));
     }
 }
