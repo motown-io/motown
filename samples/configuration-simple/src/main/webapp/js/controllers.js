@@ -56,13 +56,8 @@ angular.module('demoApp.controllers', []).
                 });
             };
 
-            $scope.nextPage = function() {
-                $scope.page++;
-                $scope.getChargingStations();
-            };
-
-            $scope.previousPage = function() {
-                $scope.page--;
+            $scope.changePage = function(page) {
+                $scope.page = page;
                 $scope.getChargingStations();
             };
 
@@ -447,13 +442,8 @@ angular.module('demoApp.controllers', []).
                 });
             };
 
-            $scope.nextPage = function() {
-                $scope.page++;
-                $scope.getChargingStationTypes();
-            };
-
-            $scope.previousPage = function() {
-                $scope.page--;
+            $scope.changePage = function(page) {
+                $scope.page = page;
                 $scope.getChargingStationTypes();
             };
         }]
