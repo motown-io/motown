@@ -15,7 +15,6 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import com.google.common.base.Objects;
 import io.motown.domain.api.security.IdentityContext;
 
 import static com.google.common.base.Objects.toStringHelper;
