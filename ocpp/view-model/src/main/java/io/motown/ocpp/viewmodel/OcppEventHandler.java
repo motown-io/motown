@@ -39,8 +39,8 @@ public class OcppEventHandler {
 
         if (chargingStation == null) {
             chargingStation = new ChargingStation(chargingStationId);
+            chargingStationRepository.createOrUpdate(chargingStation);
         }
-        chargingStationRepository.createOrUpdate(chargingStation);
     }
 
     @EventHandler
@@ -51,8 +51,9 @@ public class OcppEventHandler {
 
         if (chargingStation != null) {
             chargingStation.setProtocol(event.getProtocol());
+            chargingStationRepository.createOrUpdate(chargingStation);
         } else {
-            LOG.error("OCPP module repo could not find charging station {} and set the protocol", event.getChargingStationId());
+            LOG.info("OCPP module repo could not find charging station {} and set the protocol", event.getChargingStationId());
         }
     }
 
@@ -64,8 +65,9 @@ public class OcppEventHandler {
 
         if (chargingStation != null) {
             chargingStation.setRegistered(true);
+            chargingStationRepository.createOrUpdate(chargingStation);
         } else {
-            LOG.error("OCPP module repo COULD NOT FIND CHARGEPOINT {} and mark it as registered", event.getChargingStationId());
+            LOG.info("OCPP module repo COULD NOT FIND CHARGEPOINT {} and mark it as registered", event.getChargingStationId());
         }
     }
 
@@ -77,15 +79,13 @@ public class OcppEventHandler {
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId);
 
         if (chargingStation == null) {
-            LOG.warn("Received a ChargingStationConfiguredEvent for unknown charging station. Creating the chargingStation.");
+            LOG.info("Received a ChargingStationConfiguredEvent for unknown charging station. Creating the chargingStation.");
             chargingStation = new ChargingStation(chargingStationId);
-            chargingStation = chargingStationRepository.createOrUpdate(chargingStation);
         }
 
-        if (chargingStation != null) {
-            chargingStation.setNumberOfEvses(event.getEvses().size());
-            chargingStation.setConfigured(true);
-        }
+        chargingStation.setNumberOfEvses(event.getEvses().size());
+        chargingStation.setConfigured(true);
+        chargingStationRepository.createOrUpdate(chargingStation);
     }
 
     public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {

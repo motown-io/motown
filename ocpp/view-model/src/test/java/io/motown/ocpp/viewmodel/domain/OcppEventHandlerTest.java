@@ -31,6 +31,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.viewmodel.domain.OccpViewModelTestUtils.deleteFromDatabase;
@@ -48,10 +49,11 @@ public class OcppEventHandlerTest {
     private ChargingStationRepository chargingStationRepository;
 
     @Autowired
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
 
     @Before
     public void setUp() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.clear();
         deleteFromDatabase(entityManager, ChargingStation.class);
 

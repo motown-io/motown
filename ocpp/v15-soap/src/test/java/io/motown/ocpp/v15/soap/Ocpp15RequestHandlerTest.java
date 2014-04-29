@@ -29,6 +29,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,10 +50,11 @@ public class Ocpp15RequestHandlerTest {
     private AddOnIdentity addOnIdentity = new TypeBasedAddOnIdentity(Ocpp15RequestHandler.ADD_ON_TYPE, ADD_ON_ID);
 
     @Autowired
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
 
     @Before
     public void setUp() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.clear();
         V15SOAPTestUtils.deleteFromDatabase(entityManager, ChargingStation.class);
 

@@ -20,19 +20,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
 public class ChargingStationRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(ChargingStationRepository.class);
 
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
 
     public ChargingStation findOne(String id) {
-        return entityManager.find(ChargingStation.class, id);
+        return getEntityManager().find(ChargingStation.class, id);
     }
 
     public ChargingStation createOrUpdate(ChargingStation chargingStation) {
+        EntityManager entityManager = getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
 
         if (!transaction.isActive()) {
@@ -53,7 +55,11 @@ public class ChargingStationRepository {
         return storedChargingStation;
     }
 
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+    }
+
+    private EntityManager getEntityManager() {
+        return entityManagerFactory.createEntityManager();
     }
 }

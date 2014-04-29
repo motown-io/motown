@@ -73,12 +73,9 @@ public class DomainServiceTest {
     @Qualifier("entityManagerFactoryOcppViewModel")
     private EntityManagerFactory entityManagerFactory;
 
-    @Autowired
-    @Qualifier("entityManagerOcppViewModel")
-    private EntityManager entityManager;
-
     @Before
     public void setUp() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.clear();
         deleteFromDatabase(entityManager, ChargingStation.class);
         deleteFromDatabase(entityManager, Transaction.class);

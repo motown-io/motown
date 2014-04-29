@@ -21,18 +21,16 @@
         </property>
     </bean>
 
-    <bean id="entityManagerOcppViewModel" factory-bean="entityManagerFactoryOcppViewModel" factory-method="createEntityManager" />
-
     <bean id="chargingStationRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository">
-        <property name="entityManager" ref="entityManagerOcppViewModel" />
+        <property name="entityManagerFactory" ref="entityManagerFactoryOcppViewModel" />
     </bean>
 
     <bean id="reservationIdentifierRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repositories.ReservationIdentifierRepository">
-        <property name="entityManager" ref="entityManagerOcppViewModel" />
+        <property name="entityManagerFactory" ref="entityManagerFactoryOcppViewModel" />
     </bean>
 
     <bean id="transactionRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repositories.TransactionRepository">
-        <property name="entityManager" ref="entityManagerOcppViewModel" />
+        <property name="entityManagerFactory" ref="entityManagerFactoryOcppViewModel" />
     </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">

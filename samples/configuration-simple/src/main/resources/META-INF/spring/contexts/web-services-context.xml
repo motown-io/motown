@@ -119,17 +119,17 @@
 
     <bean id="chargingStationRepositoryOcppWebServices"
           class="io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository">
-        <property name="entityManager" ref="jpaEntityManagerOcppWebServices"/>
+        <property name="entityManagerFactory" ref="entityManagerFactoryOcppWebServices"/>
     </bean>
 
     <bean id="reservationIdentifierRepositoryOcppWebServices"
           class="io.motown.ocpp.viewmodel.persistence.repositories.ReservationIdentifierRepository">
-        <property name="entityManager" ref="jpaEntityManagerOcppWebServices"/>
+        <property name="entityManagerFactory" ref="entityManagerFactoryOcppWebServices"/>
     </bean>
 
     <bean id="transactionRepositoryOcppWebServices"
           class="io.motown.ocpp.viewmodel.persistence.repositories.TransactionRepository">
-        <property name="entityManager" ref="jpaEntityManagerOcppWebServices"/>
+        <property name="entityManagerFactory" ref="entityManagerFactoryOcppWebServices"/>
     </bean>
 
     <bean id="ocppWebServicesTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
@@ -154,10 +154,6 @@
             </bean>
         </property>
     </bean>
-
-    <bean id="jpaEntityManagerOcppWebServices" factory-bean="entityManagerFactoryOcppWebServices"
-          factory-method="createEntityManager"/>
-
 
     <!-- END OF OCPP 1.5 CONFIG -->
 
