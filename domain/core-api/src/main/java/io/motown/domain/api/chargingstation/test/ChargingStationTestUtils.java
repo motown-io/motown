@@ -459,6 +459,16 @@ public final class ChargingStationTestUtils {
     public static final OpeningTime OPENING_TIME = new OpeningTime(Day.MONDAY, new TimeOfDay(OPENING_TIME_START_HOUR, OPENING_TIME_START_MINUTES), new TimeOfDay(OPENING_TIME_STOP_HOUR, OPENING_TIME_STOP_MINUTES));
 
     /**
+     * Default page number for REST api
+     */
+    public static final int PAGE = 1;
+
+    /**
+     * Default results per page for REST api
+     */
+    public static final int RESULTS_PER_PAGE = 10;
+
+    /**
      * Private no-arg constructor to prevent instantiation of this utility class.
      */
     private ChargingStationTestUtils() {
@@ -522,14 +532,4 @@ public final class ChargingStationTestUtils {
 
         return evses;
     }
-
-    /**
-     * Default page number for REST api
-     */
-    public static final int PAGE = 1;
-
-    /**
-     * Default results per page for REST api
-     */
-    public static final int RESULTS_PER_PAGE = 10;
 }
