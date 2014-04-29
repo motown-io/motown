@@ -54,7 +54,7 @@ class RequestResetChargingStationJsonCommandHandler implements JsonCommandHandle
     public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) throws UserIdentityUnauthorizedException {
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
-            if (chargingStation != null && chargingStation.isAccepted()) {
+            if (chargingStation != null && chargingStation.communicationAllowed()) {
                 ChargingStationId csId = new ChargingStationId(chargingStationId);
                 UserIdentity userIdentity = identityContext.getUserIdentity();
 
@@ -69,7 +69,7 @@ class RequestResetChargingStationJsonCommandHandler implements JsonCommandHandle
                 }
             }
         } catch (JsonSyntaxException ex) {
-            throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted ?", ex);
+            throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted?", ex);
         }
     }
 

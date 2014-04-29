@@ -65,7 +65,7 @@ class DataTransferJsonCommandHandler implements JsonCommandHandler {
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
 
-            if (chargingStation != null && chargingStation.isAccepted()) {
+            if (chargingStation != null && chargingStation.communicationAllowed()) {
                 DataTransferApiCommand command = gson.fromJson(commandObject, DataTransferApiCommand.class);
 
                 commandGateway.send(new RequestDataTransferCommand(csId, command.getVendorId(), command.getMessageId(), command.getData(), identityContext), new CorrelationToken());

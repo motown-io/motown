@@ -55,7 +55,7 @@ class RequestClearCacheJsonCommandHandler implements JsonCommandHandler {
         }
 
         ChargingStation chargingStation = repository.findOne(chargingStationId);
-        if (chargingStation != null && chargingStation.isAccepted()) {
+        if (chargingStation != null && chargingStation.communicationAllowed()) {
             commandGateway.send(new RequestClearCacheCommand(csId, identityContext), new CorrelationToken());
         }
     }

@@ -61,11 +61,13 @@ class RequestStopTransactionJsonCommandHandler implements JsonCommandHandler {
             RequestStopTransactionApiCommand command = gson.fromJson(commandObject, RequestStopTransactionApiCommand.class);
 
             ChargingStation chargingStation = repository.findOne(chargingStationId);
-            TransactionId transactionId = TransactionIdFactory.createTransactionId(command.getId(), csId, chargingStation.getProtocol());
+            if (chargingStation != null && chargingStation.communicationAllowed()) {
+                TransactionId transactionId = TransactionIdFactory.createTransactionId(command.getId(), csId, chargingStation.getProtocol());
 
-            commandGateway.send(new RequestStopTransactionCommand(csId, transactionId, identityContext), new CorrelationToken());
+                commandGateway.send(new RequestStopTransactionCommand(csId, transactionId, identityContext), new CorrelationToken());
+            }
         } catch (JsonSyntaxException ex) {
-            throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted ?", ex);
+            throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted?", ex);
         }
     }
 

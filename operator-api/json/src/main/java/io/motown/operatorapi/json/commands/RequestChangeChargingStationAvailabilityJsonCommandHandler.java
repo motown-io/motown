@@ -56,7 +56,7 @@ class RequestChangeChargingStationAvailabilityJsonCommandHandler implements Json
     public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) throws UserIdentityUnauthorizedException {
         ChargingStation chargingStation = repository.findOne(chargingStationId);
 
-        if (chargingStation == null || !chargingStation.isAccepted()) {
+        if (chargingStation == null || !chargingStation.communicationAllowed()) {
             return;
         }
 

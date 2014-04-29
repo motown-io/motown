@@ -61,7 +61,7 @@ class RequestReserveNowJsonCommandHandler implements JsonCommandHandler {
 
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
-            if (chargingStation != null && chargingStation.isAccepted()) {
+            if (chargingStation != null && chargingStation.communicationAllowed()) {
                 RequestReserveNowApiCommand command = gson.fromJson(commandObject, RequestReserveNowApiCommand.class);
 
                 commandGateway.send(new RequestReserveNowCommand(csId, command.getEvseId(), command.getIdentifyingToken(), command.getExpiryDate(), null, identityContext), new CorrelationToken());

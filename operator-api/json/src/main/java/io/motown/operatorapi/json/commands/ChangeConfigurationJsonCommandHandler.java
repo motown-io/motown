@@ -63,7 +63,7 @@ class ChangeConfigurationJsonCommandHandler implements JsonCommandHandler {
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
 
-            if (chargingStation != null && chargingStation.isAccepted()) {
+            if (chargingStation != null && chargingStation.communicationAllowed()) {
                 ChangeConfigurationApiCommand command = gson.fromJson(commandObject, ChangeConfigurationApiCommand.class);
 
                 commandGateway.send(new RequestChangeConfigurationItemCommand(csId, new ConfigurationItem(command.getKey(), command.getValue()), identityContext), new CorrelationToken());

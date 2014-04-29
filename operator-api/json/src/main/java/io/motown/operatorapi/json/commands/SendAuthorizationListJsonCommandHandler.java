@@ -70,13 +70,13 @@ class SendAuthorizationListJsonCommandHandler implements JsonCommandHandler {
             AuthorizationListUpdateType updateType = AuthorizationListUpdateType.valueOf(command.getUpdateType());
 
             ChargingStation chargingStation = repository.findOne(chargingStationId);
-            if (chargingStation != null && chargingStation.isAccepted()) {
+            if (chargingStation != null && chargingStation.communicationAllowed()) {
                 commandGateway.send(new RequestSendAuthorizationListCommand(csId, authorizationList, command.getListVersion(), "", updateType, identityContext), new CorrelationToken());
             } else {
                 throw new IllegalStateException("It is not possible to send a authorization list to a charging station that is not registered");
             }
         } catch (JsonSyntaxException ex) {
-            throw new IllegalArgumentException("SendAuthorizationList command not able to parse the payload, is your json correctly formatted ?", ex);
+            throw new IllegalArgumentException("SendAuthorizationList command not able to parse the payload, is your json correctly formatted?", ex);
         }
     }
 

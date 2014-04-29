@@ -65,10 +65,10 @@ class UpdateFirmwareJsonCommandHandler implements JsonCommandHandler {
 
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
-            if (chargingStation != null && chargingStation.isAccepted()) {
+            if (chargingStation != null && chargingStation.communicationAllowed()) {
                 UpdateFirmwareApiCommand command = gson.fromJson(commandObject, UpdateFirmwareApiCommand.class);
 
-                Map optionalAttributes = Maps.<String,String>newHashMap();
+                Map<String, String> optionalAttributes = Maps.newHashMap();
                 if (command.getNumRetries() != null) {
                     optionalAttributes.put(FirmwareUpdateAttributeKey.NUM_RETRIES, command.getNumRetries().toString());
                 }

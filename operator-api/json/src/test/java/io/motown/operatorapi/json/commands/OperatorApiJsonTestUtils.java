@@ -59,8 +59,12 @@ public final class OperatorApiJsonTestUtils {
         ChargingStation registeredStation = mock(ChargingStation.class);
         when(registeredStation.getProtocol()).thenReturn("OCPPS15");
         when(registeredStation.isAccepted()).thenReturn(true);
+        when(registeredStation.isConfigured()).thenReturn(true);
+        when(registeredStation.communicationAllowed()).thenReturn(true);
         ChargingStation unregisteredStation = mock(ChargingStation.class);
         when(unregisteredStation.isAccepted()).thenReturn(false);
+        when(unregisteredStation.isConfigured()).thenReturn(false);
+        when(unregisteredStation.communicationAllowed()).thenReturn(false);
         when(repo.findOne(CHARGING_STATION_ID_STRING)).thenReturn(registeredStation);
         when(repo.findOne(UNREGISTERED_CHARGING_STATION_ID_STRING)).thenReturn(unregisteredStation);
         return repo;

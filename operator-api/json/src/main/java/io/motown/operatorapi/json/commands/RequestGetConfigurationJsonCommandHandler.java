@@ -61,7 +61,7 @@ class RequestGetConfigurationJsonCommandHandler implements JsonCommandHandler {
 
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
-            if (chargingStation != null && chargingStation.isAccepted()) {
+            if (chargingStation != null && chargingStation.communicationAllowed()) {
 
                 RequestGetConfigurationApiCommand command = gson.fromJson(commandObject, RequestGetConfigurationApiCommand.class);
 
