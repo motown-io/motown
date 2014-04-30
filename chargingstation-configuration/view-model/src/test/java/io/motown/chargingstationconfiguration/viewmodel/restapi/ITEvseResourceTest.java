@@ -15,6 +15,7 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
+import com.google.common.collect.Iterables;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.config.ClientConfig;
@@ -91,7 +92,7 @@ public class ITEvseResourceTest extends JerseyTest {
     @Test
     public void testUpdateEvse() {
         ChargingStationType chargingStationType = TestUtils.getChargingStationTypeNonTransient(entityManagerFactory);
-        Evse evse = chargingStationType.getEvses().iterator().next();
+        Evse evse = Iterables.get(chargingStationType.getEvses(), 0);
 
         evse.setIdentifier(2);
 
@@ -108,7 +109,7 @@ public class ITEvseResourceTest extends JerseyTest {
     @Test
     public void testGetEvse() {
         ChargingStationType chargingStationType = TestUtils.getChargingStationTypeNonTransient(entityManagerFactory);
-        Long evseId = chargingStationType.getEvses().iterator().next().getId();
+        Long evseId = Iterables.get(chargingStationType.getEvses(), 0).getId();
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/" + evseId)

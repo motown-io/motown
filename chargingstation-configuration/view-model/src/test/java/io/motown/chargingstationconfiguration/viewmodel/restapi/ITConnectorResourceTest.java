@@ -15,6 +15,7 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
+import com.google.common.collect.Iterables;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.config.ClientConfig;
@@ -92,8 +93,8 @@ public class ITConnectorResourceTest extends JerseyTest {
     @Test
     public void testUpdateConnector() {
         ChargingStationType chargingStationType = TestUtils.getChargingStationTypeNonTransient(entityManagerFactory);
-        Evse evse = chargingStationType.getEvses().iterator().next();
-        Connector connector = evse.getConnectors().iterator().next();
+        Evse evse = Iterables.get(chargingStationType.getEvses(), 0);
+        Connector connector = Iterables.get(evse.getConnectors(), 0);
 
         connector.setVoltage(110);
 
@@ -110,8 +111,8 @@ public class ITConnectorResourceTest extends JerseyTest {
     @Test
     public void testGetConnector() {
         ChargingStationType chargingStationType = TestUtils.getChargingStationTypeNonTransient(entityManagerFactory);
-        Evse evse = chargingStationType.getEvses().iterator().next();
-        Connector connector = evse.getConnectors().iterator().next();
+        Evse evse = Iterables.get(chargingStationType.getEvses(), 0);
+        Connector connector = Iterables.get(evse.getConnectors(), 0);
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/chargingstationtypes/" + chargingStationType.getId() + "/evses/" + evse.getId() + "/connectors/" + connector.getId())
@@ -124,7 +125,7 @@ public class ITConnectorResourceTest extends JerseyTest {
     @Test
     public void testGetConnectorNotFound() {
         ChargingStationType chargingStationType = TestUtils.getChargingStationTypeNonTransient(entityManagerFactory);
-        Evse evse = chargingStationType.getEvses().iterator().next();
+        Evse evse = Iterables.get(chargingStationType.getEvses(), 0);
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/chargingstationtypes/" + chargingStationType.getId() + "/evses/" + evse.getId() + "/connectors/999")
@@ -137,8 +138,8 @@ public class ITConnectorResourceTest extends JerseyTest {
     @Test
     public void testDeleteConnector() {
         ChargingStationType chargingStationType = TestUtils.getChargingStationTypeNonTransient(entityManagerFactory);
-        Evse evse = chargingStationType.getEvses().iterator().next();
-        Connector connector = evse.getConnectors().iterator().next();
+        Evse evse = Iterables.get(chargingStationType.getEvses(), 0);
+        Connector connector = Iterables.get(evse.getConnectors(), 0);
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/chargingstationtypes/" + chargingStationType.getId() + "/evses/" + evse.getId() + "/connectors/" + connector.getId())
@@ -151,7 +152,7 @@ public class ITConnectorResourceTest extends JerseyTest {
     @Test
     public void testDeleteConnectorNotFound() {
         ChargingStationType chargingStationType = TestUtils.getChargingStationTypeNonTransient(entityManagerFactory);
-        Evse evse = chargingStationType.getEvses().iterator().next();
+        Evse evse = Iterables.get(chargingStationType.getEvses(), 0);
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/chargingstationtypes/" + chargingStationType.getId() + "/evses/" + evse.getId() + "/connectors/999")

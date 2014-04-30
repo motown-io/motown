@@ -15,6 +15,7 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.domain;
 
+import com.google.common.collect.Iterables;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
@@ -103,7 +104,7 @@ public final class TestUtils {
     public static ChargingStationType getChargingStationTypeNonTransient(EntityManagerFactory entityManagerFactory) {
         Manufacturer manufacturer = getManufacturer(ChargingStationTestUtils.CHARGING_STATION_VENDOR);
         manufacturer = (Manufacturer) insertIntoDatabase(entityManagerFactory, manufacturer);
-        ChargingStationType chargingStationType = getChargingStationTypes(manufacturer, ChargingStationTestUtils.CHARGING_STATION_MODEL).iterator().next();
+        ChargingStationType chargingStationType = Iterables.get(getChargingStationTypes(manufacturer, ChargingStationTestUtils.CHARGING_STATION_MODEL), 0);
         return (ChargingStationType) insertIntoDatabase(entityManagerFactory, chargingStationType);
     }
 

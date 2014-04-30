@@ -15,6 +15,7 @@
  */
 package io.motown.vas.viewmodel;
 
+import com.google.common.collect.Iterables;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.chargingstation.ComponentStatus;
 import io.motown.domain.api.chargingstation.OpeningTime;
@@ -314,7 +315,7 @@ public class VasEventHandlerTest {
     @Test
     public void chargingStationConfiguredEventVerifyChargeMode() {
         chargingStationRepository.createOrUpdate(getRegisteredAndConfiguredChargingStation());
-        ChargeMode expectedChargeMode = ChargeMode.fromChargingProtocol(EVSES.iterator().next().getConnectors().get(0).getChargingProtocol());
+        ChargeMode expectedChargeMode = ChargeMode.fromChargingProtocol(Iterables.get(EVSES, 0).getConnectors().get(0).getChargingProtocol());
 
         eventHandler.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, NULL_USER_IDENTITY_CONTEXT));
 
