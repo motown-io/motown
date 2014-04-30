@@ -237,7 +237,7 @@
     <bean id="vasWebServicesEntityManagerFactory"
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="vasWebServicesDataSource"/>
-        <property name="packagesToScan" value="io.motown.vas.viewmodel.model"/>
+        <property name="packagesToScan" value="io.motown.vas.viewmodel.persistence.entities"/>
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
                 <property name="database" value="HSQL"/>
