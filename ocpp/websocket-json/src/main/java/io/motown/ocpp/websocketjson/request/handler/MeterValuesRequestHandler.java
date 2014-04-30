@@ -26,9 +26,7 @@ import io.motown.ocpp.websocketjson.schema.generated.v15.Value_;
 import org.atmosphere.websocket.WebSocket;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MeterValuesRequestHandler extends RequestHandler {
 
@@ -52,21 +50,21 @@ public class MeterValuesRequestHandler extends RequestHandler {
         Metervalues request = gson.fromJson(payload, Metervalues.class);
 
         List<MeterValue> meterValues = new ArrayList<>();
-        for(Value meterValue : request.getValues()) {
-            for(Value_ value : meterValue.getValues()) {
-                Map<String, String> attributes = new HashMap<>();
-                DomainService.addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getContext());
-                DomainService.addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getFormat());
-                DomainService.addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getLocation());
-                DomainService.addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getMeasurand());
-                DomainService.addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getUnit());
-                meterValues.add(new MeterValue(meterValue.getTimestamp(), value.getValue(), attributes));
+        for (Value meterValue : request.getValues()) {
+            for (Value_ value : meterValue.getValues()) {
+                ReadingContext readingContext = new ReadingContextTranslator(value.getContext()).translate();
+                ValueFormat valueFormat = new ValueFormatTranslator(value.getFormat()).translate();
+                Location location = new LocationTranslator(value.getLocation()).translate();
+                Measurand measurand = new MeasurandTranslator(value.getMeasurand()).translate();
+                UnitOfMeasure unitOfMeasure = new UnitOfMeasureTranslator(value.getUnit()).translate();
+
+                meterValues.add(new MeterValue(meterValue.getTimestamp(), value.getValue(), readingContext, valueFormat, measurand, location, unitOfMeasure));
             }
         }
 
         TransactionId transactionId = null;
         Integer requestTransactionId = request.getTransactionId();
-        if(requestTransactionId != null && requestTransactionId > 0) {
+        if (requestTransactionId != null && requestTransactionId > 0) {
             transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, requestTransactionId);
         }
 

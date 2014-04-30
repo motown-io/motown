@@ -36,8 +36,28 @@ public class MeterValueTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void createMeterValueWithNullAttributesThrowsNullPointerException() {
-        new MeterValue(new Date(), "123", null);
+    public void createMeterValueWithNullContextThrowsNullPointerException() {
+        new MeterValue(new Date(), "123", null, ValueFormat.RAW, Measurand.IMPORTED_ACTIVE_ENERGY_REGISTER, Location.OUTLET, UnitOfMeasure.WATT_HOUR);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void createMeterValueWithNullFormatThrowsNullPointerException() {
+        new MeterValue(new Date(), "123", ReadingContext.PERIODIC_SAMPLE, null, Measurand.IMPORTED_ACTIVE_ENERGY_REGISTER, Location.OUTLET, UnitOfMeasure.WATT_HOUR);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void createMeterValueWithNullMeasurandThrowsNullPointerException() {
+        new MeterValue(new Date(), "123", ReadingContext.PERIODIC_SAMPLE, ValueFormat.RAW, null, Location.OUTLET, UnitOfMeasure.WATT_HOUR);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void createMeterValueWithNullLocationThrowsNullPointerException() {
+        new MeterValue(new Date(), "123", ReadingContext.PERIODIC_SAMPLE, ValueFormat.RAW, Measurand.IMPORTED_ACTIVE_ENERGY_REGISTER, null, UnitOfMeasure.WATT_HOUR);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void createMeterValueWithNullUnitThrowsNullPointerException() {
+        new MeterValue(new Date(), "123", ReadingContext.PERIODIC_SAMPLE, ValueFormat.RAW, Measurand.IMPORTED_ACTIVE_ENERGY_REGISTER, Location.OUTLET, null);
     }
 
     @Test
@@ -54,10 +74,5 @@ public class MeterValueTest {
     @Test
     public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
         EqualsVerifier.forClass(MeterValue.class).verify();
-    }
-
-    @Test(expected = UnsupportedOperationException.class)
-    public void addValueToAttributesShouldThrowUnsupportedOperationException() {
-        new MeterValue(new Date(), "123").getAttributes().put("key", "value");
     }
 }

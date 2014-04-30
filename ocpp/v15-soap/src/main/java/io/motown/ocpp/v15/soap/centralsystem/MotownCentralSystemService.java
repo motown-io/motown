@@ -15,9 +15,13 @@
  */
 package io.motown.ocpp.v15.soap.centralsystem;
 
-import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.Location;
+import io.motown.domain.api.chargingstation.Measurand;
 import io.motown.domain.api.chargingstation.MeterValue;
+import io.motown.domain.api.chargingstation.ReadingContext;
+import io.motown.domain.api.chargingstation.UnitOfMeasure;
+import io.motown.domain.api.chargingstation.ValueFormat;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.api.security.TypeBasedAddOnIdentity;
 import io.motown.ocpp.soaputils.async.*;
@@ -34,7 +38,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 @javax.jws.WebService(
         serviceName = "CentralSystemService",
@@ -44,12 +51,9 @@ import java.util.*;
         endpointInterface = "io.motown.ocpp.v15.soap.centralsystem.schema.CentralSystemService")
 public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centralsystem.schema.CentralSystemService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MotownCentralSystemService.class);
-
-    private static final String PROTOCOL_IDENTIFIER = Ocpp15RequestHandler.PROTOCOL_IDENTIFIER;
-
     public static final String ADD_ON_TYPE = Ocpp15RequestHandler.ADD_ON_TYPE;
-
+    private static final Logger LOG = LoggerFactory.getLogger(MotownCentralSystemService.class);
+    private static final String PROTOCOL_IDENTIFIER = Ocpp15RequestHandler.PROTOCOL_IDENTIFIER;
     private int heartbeatIntervalFallback;
 
     /**
@@ -74,20 +78,20 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         FutureRequestHandler<DataTransferResponse, IncomingDataTransferResult> handler = new FutureRequestHandler<>(context.getMessageContext(), continuationTimeout);
 
         return handler.handle(future, new CallInitiator() {
-                    @Override
-                    public void initiateCall() {
-                        domainService.incomingDataTransfer(chargingStationId, request.getData(), request.getVendorId(), request.getMessageId(), future, addOnIdentity);
-                    }
-                }, new IncomingDataTransferResponseFactory(), new ResponseFactory<DataTransferResponse>() {
-                    @Override
-                    public DataTransferResponse createResponse() {
-                        LOG.error("Error while io.motown.configuration.simple.handling incoming 'data transfer' request, returning rejected");
+            @Override
+            public void initiateCall() {
+                domainService.incomingDataTransfer(chargingStationId, request.getData(), request.getVendorId(), request.getMessageId(), future, addOnIdentity);
+            }
+        }, new IncomingDataTransferResponseFactory(), new ResponseFactory<DataTransferResponse>() {
+            @Override
+            public DataTransferResponse createResponse() {
+                LOG.error("Error while io.motown.configuration.simple.handling incoming 'data transfer' request, returning rejected");
 
-                        DataTransferResponse response = new DataTransferResponse();
-                        response.setStatus(DataTransferStatus.REJECTED);
-                        return response;
-                    }
-                });
+                DataTransferResponse response = new DataTransferResponse();
+                response.setStatus(DataTransferStatus.REJECTED);
+                return response;
+            }
+        });
     }
 
     @Override
@@ -117,17 +121,17 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
 
         List<MeterValue> meterValues = new ArrayList<>();
         List<TransactionData> transactionData = request.getTransactionData();
-        Map<String, String> attributes = Maps.newHashMap();
+
         for (TransactionData data : transactionData) {
             for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue mv : data.getValues()) {
                 for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value value : mv.getValue()) {
-                    addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getContext() != null ? value.getContext().value() : null);
-                    addAttributeIfNotNull(attributes, DomainService.FORMAT_KEY, value.getFormat() != null ? value.getFormat().value() : null);
-                    addAttributeIfNotNull(attributes, DomainService.MEASURAND_KEY, value.getMeasurand() != null ? value.getMeasurand().value() : null);
-                    addAttributeIfNotNull(attributes, DomainService.LOCATION_KEY, value.getLocation() != null ? value.getLocation().value() : null);
-                    addAttributeIfNotNull(attributes, DomainService.UNIT_KEY, value.getUnit() != null ? value.getUnit().value() : null);
+                    ReadingContext readingContext = new ReadingContextTranslator(value.getContext()).translate();
+                    ValueFormat valueFormat = new ValueFormatTranslator(value.getFormat()).translate();
+                    Measurand measurand = new MeasurandTranslator(value.getMeasurand()).translate();
+                    Location location = new LocationTranslator(value.getLocation()).translate();
+                    UnitOfMeasure unitOfMeasure = new UnitOfMeasureTranslator(value.getUnit()).translate();
 
-                    meterValues.add(new MeterValue(mv.getTimestamp(), value.getValue(), attributes));
+                    meterValues.add(new MeterValue(mv.getTimestamp(), value.getValue(), readingContext, valueFormat, measurand, location, unitOfMeasure));
                 }
             }
         }
@@ -176,16 +180,16 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         TransactionId transactionId = request.getTransactionId() != null ? new NumberedTransactionId(chargingStationId, PROTOCOL_IDENTIFIER, request.getTransactionId()) : null;
 
         List<MeterValue> meterValues = new ArrayList<>();
-        Map<String, String> attributes = Maps.newHashMap();
+
         for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue mv : request.getValues()) {
             for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value value : mv.getValue()) {
-                addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getContext() != null ? value.getContext().value() : null);
-                addAttributeIfNotNull(attributes, DomainService.FORMAT_KEY, value.getFormat() != null ? value.getFormat().value() : null);
-                addAttributeIfNotNull(attributes, DomainService.MEASURAND_KEY, value.getMeasurand() != null ? value.getMeasurand().value() : null);
-                addAttributeIfNotNull(attributes, DomainService.LOCATION_KEY, value.getLocation() != null ? value.getLocation().value() : null);
-                addAttributeIfNotNull(attributes, DomainService.UNIT_KEY, value.getUnit() != null ? value.getUnit().value() : null);
+                ReadingContext readingContext = new ReadingContextTranslator(value.getContext()).translate();
+                ValueFormat valueFormat = new ValueFormatTranslator(value.getFormat()).translate();
+                Measurand measurand = new MeasurandTranslator(value.getMeasurand()).translate();
+                Location location = new LocationTranslator(value.getLocation()).translate();
+                UnitOfMeasure unitOfMeasure = new UnitOfMeasureTranslator(value.getUnit()).translate();
 
-                meterValues.add(new MeterValue(mv.getTimestamp(), value.getValue(), attributes));
+                meterValues.add(new MeterValue(mv.getTimestamp(), value.getValue(), readingContext, valueFormat, measurand, location, unitOfMeasure));
             }
         }
 
@@ -278,19 +282,6 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         response.setIdTagInfo(idTagInfo);
         response.setTransactionId(transactionId);
         return response;
-    }
-
-    /**
-     * Adds the attribute to the map using the key and value if the value is not null.
-     *
-     * @param attributes map of keys and values.
-     * @param key        key of the attribute.
-     * @param value      value of the attribute.
-     */
-    private void addAttributeIfNotNull(Map<String, String> attributes, String key, String value) {
-        if (value != null) {
-            attributes.put(key, value);
-        }
     }
 
     public void setDomainService(DomainService domainService) {

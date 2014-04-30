@@ -368,8 +368,8 @@ public final class ChargingStationTestUtils {
      * The default list of meter values.
      */
     public static final ImmutableList<MeterValue> METER_VALUES = ImmutableList.<MeterValue>builder()
-            .add(new MeterValue(FIVE_MINUTES_AGO, Integer.toString(METER_START), METER_VALUE_ATTRIBUTES))
-            .add(new MeterValue(TWO_MINUTES_AGO, Integer.toString(METER_STOP), METER_VALUE_ATTRIBUTES))
+            .add(new MeterValue(FIVE_MINUTES_AGO, Integer.toString(METER_START)))
+            .add(new MeterValue(TWO_MINUTES_AGO, Integer.toString(METER_STOP)))
             .build();
 
     /**
