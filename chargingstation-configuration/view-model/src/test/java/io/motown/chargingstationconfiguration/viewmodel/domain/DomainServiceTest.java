@@ -100,8 +100,17 @@ public class DomainServiceTest {
         io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse evse =
                 Iterables.get(chargingStationType.getEvses(), 0);
 
-        io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse createdEvse =
-                domainService.createEvse(chargingStationType.getId(), evse);
+        domainService.createEvse(chargingStationType.getId(), evse);
+    }
+
+    @Test
+    public void getEvses() {
+        ChargingStationType chargingStationType = getChargingStationTypeNonTransient(entityManagerFactory);
+        Set<io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse> evses = chargingStationType.getEvses();
+
+        Set<io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse> evsesFromService = domainService.getEvses(chargingStationType.getId());
+
+        assertEquals(evses.size(), evsesFromService.size());
     }
 
     //TODO rewrite test
