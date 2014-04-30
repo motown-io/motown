@@ -45,7 +45,7 @@ angular.module('demoApp.controllers', []).
                     method: 'GET',
                     data: ''
                 }).success(function (response) {
-                    $scope.chargingStationTypes = response.elements;
+                    $scope.chargingStations = response.elements;
                     $scope.numberOfPages = Math.floor(parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) / parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10)) + 1;
                     $scope.totalNumberOfElements = parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) + parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10);
                 }).error(function () {
@@ -402,7 +402,7 @@ angular.module('demoApp.controllers', []).
                     method: 'GET',
                     data: ''
                 }).success(function (response) {
-                    $scope.chargingStationTypes = response.elements;
+                    $scope.transactions = response.elements;
                     $scope.numberOfPages = Math.floor(parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) / parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10)) + 1;
                     $scope.totalNumberOfElements = parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) + parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10);
                 }).error(function() {
