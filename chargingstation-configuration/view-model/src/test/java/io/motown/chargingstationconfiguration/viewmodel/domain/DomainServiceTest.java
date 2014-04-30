@@ -124,6 +124,17 @@ public class DomainServiceTest {
     }
 
     @Test
+    public void createConnector() {
+        ChargingStationType chargingStationType = getChargingStationTypeNonTransient(entityManagerFactory);
+        Connector connector = TestUtils.getConnector();
+
+        Connector createdConnector = domainService.createConnector(chargingStationType.getId(), Iterables.get(chargingStationType.getEvses(), 0).getId(), connector);
+
+        connector.setId(createdConnector.getId());
+        assertEquals(connector, createdConnector);
+    }
+
+    @Test
     public void getConnectors() {
         ChargingStationType chargingStationType = getChargingStationTypeNonTransient(entityManagerFactory);
         io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse evse =
