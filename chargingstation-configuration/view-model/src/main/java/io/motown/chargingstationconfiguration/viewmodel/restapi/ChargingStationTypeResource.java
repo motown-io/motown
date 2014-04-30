@@ -32,7 +32,11 @@ public final class ChargingStationTypeResource {
 
     private static final String OFFSET_PARAMETER = "offset";
 
+    private static final String OFFSET_DEFAULT = "0";
+
     private static final String LIMIT_PARAMETER = "limit";
+
+    private static final String LIMIT_DEFAULT = "10";
 
     private DomainService domainService;
 
@@ -58,7 +62,7 @@ public final class ChargingStationTypeResource {
     }
 
     @GET
-    public Response getChargingStationTypes(@Context HttpServletRequest request, @QueryParam(OFFSET_PARAMETER) @DefaultValue("0") int offset, @QueryParam(LIMIT_PARAMETER) @DefaultValue("10") int limit) {
+    public Response getChargingStationTypes(@Context HttpServletRequest request, @QueryParam(OFFSET_PARAMETER) @DefaultValue(OFFSET_DEFAULT) int offset, @QueryParam(LIMIT_PARAMETER) @DefaultValue(LIMIT_DEFAULT) int limit) {
         return Response.ok(ConfigurationApiResponseBuilder.buildResponse(request, offset, limit, domainService.getTotalNumberOfChargingStationTypes(), domainService.getChargingStationTypes(offset, limit))).build();
     }
 

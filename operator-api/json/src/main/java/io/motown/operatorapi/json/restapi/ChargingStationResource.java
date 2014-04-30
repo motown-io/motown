@@ -37,7 +37,11 @@ public final class ChargingStationResource {
 
     private static final String OFFSET_PARAMETER = "offset";
 
+    private static final String OFFSET_DEFAULT = "0";
+
     private static final String LIMIT_PARAMETER = "limit";
+
+    private static final String LIMIT_DEFAULT = "10";
 
     private OperatorApiService service;
 
@@ -59,7 +63,7 @@ public final class ChargingStationResource {
     }
 
     @GET
-    public Response getChargingStations(@Context HttpServletRequest request, @QueryParam(OFFSET_PARAMETER) @DefaultValue("0") int offset, @QueryParam(LIMIT_PARAMETER) @DefaultValue("10") int limit) {
+    public Response getChargingStations(@Context HttpServletRequest request, @QueryParam(OFFSET_PARAMETER) @DefaultValue(OFFSET_DEFAULT) int offset, @QueryParam(LIMIT_PARAMETER) @DefaultValue(LIMIT_DEFAULT) int limit) {
         return Response.ok(OperatorApiResponseBuilder.buildResponse(request, offset, limit, service.getTotalNumberOfChargingStations(), service.findAllChargingStations(offset, limit))).build();
     }
 

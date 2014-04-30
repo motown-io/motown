@@ -29,12 +29,16 @@ public final class TransactionResource {
 
     private static final String OFFSET_PARAMETER = "offset";
 
+    private static final String OFFSET_DEFAULT = "0";
+
     private static final String LIMIT_PARAMETER = "limit";
+
+    private static final String LIMIT_DEFAULT = "10";
 
     private OperatorApiService service;
 
     @GET
-    public Response getTransactions(@Context HttpServletRequest request, @QueryParam(OFFSET_PARAMETER) @DefaultValue("0") int offset, @QueryParam(LIMIT_PARAMETER) @DefaultValue("10") int limit) {
+    public Response getTransactions(@Context HttpServletRequest request, @QueryParam(OFFSET_PARAMETER) @DefaultValue(OFFSET_DEFAULT) int offset, @QueryParam(LIMIT_PARAMETER) @DefaultValue(LIMIT_DEFAULT) int limit) {
         return Response.ok(OperatorApiResponseBuilder.buildResponse(request, offset, limit, service.getTotalNumberOfTransactions(), service.findAllTransactions(offset, limit))).build();
     }
 
