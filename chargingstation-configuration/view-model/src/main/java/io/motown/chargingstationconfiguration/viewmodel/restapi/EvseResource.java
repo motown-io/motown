@@ -16,6 +16,7 @@
 package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
 import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
+import io.motown.chargingstationconfiguration.viewmodel.exceptions.ResourceAlreadyExistsException;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
 
@@ -41,7 +42,11 @@ public final class EvseResource {
             connector.setId(null);
         }
 
-        return Response.status(Response.Status.CREATED).entity(domainService.createEvse(chargingStationTypeId, evse)).build();
+        try {
+            return Response.status(Response.Status.CREATED).entity(domainService.createEvse(chargingStationTypeId, evse)).build();
+        } catch (ResourceAlreadyExistsException e) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
     }
 
     @PUT

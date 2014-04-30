@@ -15,6 +15,8 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.domain;
 
+import com.google.common.collect.Iterables;
+import io.motown.chargingstationconfiguration.viewmodel.exceptions.ResourceAlreadyExistsException;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Manufacturer;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository;
@@ -76,6 +78,30 @@ public class DomainServiceTest {
         Set<Evse> evses = domainService.getEvses(UNKNOWN_VENDOR, MODEL);
 
         assertEquals(0, evses.size());
+    }
+
+    @Test
+    public void createEvse() throws ResourceAlreadyExistsException {
+        ChargingStationType chargingStationType = getChargingStationTypeNonTransient(entityManagerFactory);
+        io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse evse = getEvse(9);
+        evse.setConnectors(getConnectors(3));
+
+        io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse createdEvse =
+                domainService.createEvse(chargingStationType.getId(), evse);
+
+        ChargingStationType chargingStationTypeUpdated = chargingStationTypeRepository.findOne(chargingStationType.getId());
+        assertEquals(evse.getIdentifier(), createdEvse.getIdentifier());
+        assertEquals(chargingStationTypeUpdated.getEvses().size(), chargingStationType.getEvses().size() + 1);
+    }
+
+    @Test(expected = ResourceAlreadyExistsException.class)
+    public void createExistingEvse() throws ResourceAlreadyExistsException {
+        ChargingStationType chargingStationType = getChargingStationTypeNonTransient(entityManagerFactory);
+        io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse evse =
+                Iterables.get(chargingStationType.getEvses(), 0);
+
+        io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse createdEvse =
+                domainService.createEvse(chargingStationType.getId(), evse);
     }
 
     //TODO rewrite test

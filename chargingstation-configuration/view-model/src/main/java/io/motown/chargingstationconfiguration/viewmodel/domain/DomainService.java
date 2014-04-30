@@ -18,6 +18,7 @@ package io.motown.chargingstationconfiguration.viewmodel.domain;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
+import io.motown.chargingstationconfiguration.viewmodel.exceptions.ResourceAlreadyExistsException;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
@@ -69,12 +70,11 @@ public class DomainService {
      * @param evse                     evse object
      * @return created Evse
      */
-    public Evse createEvse(Long chargingStationTypeId, Evse evse) {
+    public Evse createEvse(Long chargingStationTypeId, Evse evse) throws ResourceAlreadyExistsException {
         ChargingStationType chargingStationType = chargingStationTypeRepository.findOne(chargingStationTypeId);
 
         if (getEvseByIdentifier(chargingStationType, evse.getIdentifier()) != null) {
-            //TODO error
-            return null;
+            throw new ResourceAlreadyExistsException(String.format("Evse with identifier '%s' already exists.", evse.getIdentifier()));
         }
 
         chargingStationType.getEvses().add(evse);
