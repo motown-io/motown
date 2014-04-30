@@ -18,6 +18,7 @@ package io.motown.chargingstationconfiguration.viewmodel.domain;
 import com.google.common.collect.Iterables;
 import io.motown.chargingstationconfiguration.viewmodel.exceptions.ResourceAlreadyExistsException;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Manufacturer;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository;
 import io.motown.domain.api.chargingstation.Evse;
@@ -29,6 +30,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
 import java.util.Set;
 
 import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.*;
@@ -39,9 +41,17 @@ import static org.junit.Assert.assertEquals;
 public class DomainServiceTest {
 
     public static final String VENDOR = "MOTOWN";
+
     public static final String MODEL = "MODEL1";
+
     public static final String UNKNOWN_VENDOR = "ACMECORP";
+
     public static final String UNKNOWN_MODEL = "TYPE1";
+
+    public static final Long UNKNOWN_CHARGING_STATION_TYPE = 999l;
+
+    public static final Long UNKNOWN_EVSE_ID = 999l;
+
     private DomainService domainService;
 
     @Autowired
@@ -84,7 +94,7 @@ public class DomainServiceTest {
     public void createEvse() throws ResourceAlreadyExistsException {
         ChargingStationType chargingStationType = getChargingStationTypeNonTransient(entityManagerFactory);
         io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse evse = getEvse(9);
-        evse.setConnectors(getConnectors(3));
+        evse.setConnectors(TestUtils.getConnectors(3));
 
         io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse createdEvse =
                 domainService.createEvse(chargingStationType.getId(), evse);
@@ -111,6 +121,29 @@ public class DomainServiceTest {
         Set<io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse> evsesFromService = domainService.getEvses(chargingStationType.getId());
 
         assertEquals(evses.size(), evsesFromService.size());
+    }
+
+    @Test
+    public void getConnectors() {
+        ChargingStationType chargingStationType = getChargingStationTypeNonTransient(entityManagerFactory);
+        io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse evse =
+                Iterables.get(chargingStationType.getEvses(), 0);
+
+        Set<Connector> connectorsFromService = domainService.getConnectors(chargingStationType.getId(), evse.getId());
+
+        assertEquals(connectorsFromService, evse.getConnectors());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void getConnectorsUnknownChargingStationType() {
+        domainService.getConnectors(UNKNOWN_CHARGING_STATION_TYPE, UNKNOWN_EVSE_ID);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void getConnectorsUnknownEvse() {
+        ChargingStationType chargingStationType = getChargingStationTypeNonTransient(entityManagerFactory);
+
+        domainService.getConnectors(chargingStationType.getId(), UNKNOWN_EVSE_ID);
     }
 
     //TODO rewrite test
