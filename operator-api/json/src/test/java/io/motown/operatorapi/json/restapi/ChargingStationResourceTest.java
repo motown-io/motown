@@ -27,6 +27,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
@@ -45,6 +46,9 @@ public class ChargingStationResourceTest {
     @Mock
     private JsonCommandService commandService;
 
+    @Mock
+    private HttpServletRequest request;
+
     private SecurityContext mockedSecurityContext;
 
     @Before
@@ -58,6 +62,9 @@ public class ChargingStationResourceTest {
         Principal mockedPrincipal = mock(Principal.class);
         when(mockedPrincipal.getName()).thenReturn("root");
         when(mockedSecurityContext.getUserPrincipal()).thenReturn(mockedPrincipal);
+
+        when(request.getRequestURI()).thenReturn("/operator-api/charging-stations");
+        when(request.getQueryString()).thenReturn("?offset=0&limit=10");
     }
 
     @Test
@@ -76,15 +83,15 @@ public class ChargingStationResourceTest {
 
     @Test
     public void testGetChargingStations() {
-        Response response = resource.getChargingStations(ChargingStationTestUtils.PAGE, ChargingStationTestUtils.RESULTS_PER_PAGE);
-        verify(service).findAllChargingStations(ChargingStationTestUtils.PAGE, ChargingStationTestUtils.RESULTS_PER_PAGE);
+        Response response = resource.getChargingStations(request, ChargingStationTestUtils.OFFSET, ChargingStationTestUtils.LIMIT);
+        verify(service).findAllChargingStations(ChargingStationTestUtils.OFFSET, ChargingStationTestUtils.LIMIT);
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
     @Test(expected = RuntimeException.class)
     public void testGetChargingStationsThrowsException() {
-        doThrow(mock(PersistenceException.class)).when(service).findAllChargingStations(ChargingStationTestUtils.PAGE, ChargingStationTestUtils.RESULTS_PER_PAGE);
-        resource.getChargingStations(ChargingStationTestUtils.PAGE, ChargingStationTestUtils.RESULTS_PER_PAGE);
+        doThrow(mock(PersistenceException.class)).when(service).findAllChargingStations(ChargingStationTestUtils.OFFSET, ChargingStationTestUtils.LIMIT);
+        resource.getChargingStations(request, ChargingStationTestUtils.OFFSET, ChargingStationTestUtils.LIMIT);
     }
 }

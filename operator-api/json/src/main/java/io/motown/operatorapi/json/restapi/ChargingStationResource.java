@@ -15,19 +15,19 @@
  */
 package io.motown.operatorapi.json.restapi;
 
-import com.google.common.collect.Maps;
 import io.motown.domain.api.security.SimpleUserIdentity;
 import io.motown.operatorapi.json.commands.JsonCommandService;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.json.queries.OperatorApiService;
+import io.motown.operatorapi.json.restapi.util.OperatorApiResponseBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import java.util.Map;
 
 @Path("/charging-stations")
 @Produces(ApiVersion.V1_JSON)
@@ -35,9 +35,9 @@ public final class ChargingStationResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(ChargingStationResource.class);
 
-    private static final String PAGE_PARAMETER = "page";
+    private static final String OFFSET_PARAMETER = "offset";
 
-    private static final String RECORDS_PER_PAGE_PARAMETER = "recordsPerPage";
+    private static final String LIMIT_PARAMETER = "limit";
 
     private OperatorApiService service;
 
@@ -59,12 +59,8 @@ public final class ChargingStationResource {
     }
 
     @GET
-    public Response getChargingStations(@QueryParam(PAGE_PARAMETER) @DefaultValue("1") int page, @QueryParam(RECORDS_PER_PAGE_PARAMETER) @DefaultValue("10") int recordsPerPage) {
-        Map<String, Object> metadata = Maps.newHashMap();
-        metadata.put(PAGE_PARAMETER, page);
-        metadata.put(RECORDS_PER_PAGE_PARAMETER, recordsPerPage);
-        metadata.put("totalNumberOfRecords", service.getTotalNumberOfChargingStations());
-        return Response.ok().entity(new OperatorApiResponse<>(metadata, service.findAllChargingStations(page, recordsPerPage))).build();
+    public Response getChargingStations(@Context HttpServletRequest request, @QueryParam(OFFSET_PARAMETER) @DefaultValue("0") int offset, @QueryParam(LIMIT_PARAMETER) @DefaultValue("10") int limit) {
+        return Response.ok(OperatorApiResponseBuilder.buildResponse(request, offset, limit, service.getTotalNumberOfChargingStations(), service.findAllChargingStations(offset, limit))).build();
     }
 
     public void setService(OperatorApiService service) {

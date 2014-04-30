@@ -461,12 +461,12 @@ public final class ChargingStationTestUtils {
     /**
      * Default page number for REST api
      */
-    public static final int PAGE = 1;
+    public static final int OFFSET = 0;
 
     /**
      * Default results per page for REST api
      */
-    public static final int RESULTS_PER_PAGE = 10;
+    public static final int LIMIT = 10;
 
     /**
      * Private no-arg constructor to prevent instantiation of this utility class.

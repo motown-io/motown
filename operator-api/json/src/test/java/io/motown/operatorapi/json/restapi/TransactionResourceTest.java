@@ -24,6 +24,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertEquals;
@@ -36,24 +37,30 @@ public class TransactionResourceTest {
     @Mock
     private OperatorApiService service;
 
+    @Mock
+    private HttpServletRequest request;
+
     @Before
     public void setUp() {
         resource = new TransactionResource();
 
         resource.setService(service);
+
+        when(request.getRequestURI()).thenReturn("/operator-api/transactions");
+        when(request.getQueryString()).thenReturn("?offset=0&limit=10");
     }
 
     @Test
     public void testGetTransactions() {
-        Response response = resource.getTransactions(ChargingStationTestUtils.PAGE, ChargingStationTestUtils.RESULTS_PER_PAGE);
-        verify(service).findAllTransactions(ChargingStationTestUtils.PAGE, ChargingStationTestUtils.RESULTS_PER_PAGE);
+        Response response = resource.getTransactions(request, ChargingStationTestUtils.OFFSET, ChargingStationTestUtils.LIMIT);
+        verify(service).findAllTransactions(ChargingStationTestUtils.OFFSET, ChargingStationTestUtils.LIMIT);
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
     @Test(expected = RuntimeException.class)
     public void testGetTransactionsThrowsException() {
-        doThrow(mock(PersistenceException.class)).when(service).findAllTransactions(ChargingStationTestUtils.PAGE, ChargingStationTestUtils.RESULTS_PER_PAGE);
-        resource.getTransactions(ChargingStationTestUtils.PAGE, ChargingStationTestUtils.RESULTS_PER_PAGE);
+        doThrow(mock(PersistenceException.class)).when(service).findAllTransactions(ChargingStationTestUtils.OFFSET, ChargingStationTestUtils.LIMIT);
+        resource.getTransactions(request, ChargingStationTestUtils.OFFSET, ChargingStationTestUtils.LIMIT);
     }
 }
