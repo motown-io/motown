@@ -66,9 +66,7 @@
             <bean class="io.motown.ocpp.websocketjson.schema.SchemaValidator" />
         </property>
         <property name="wampMessageParser">
-            <bean class="io.motown.ocpp.websocketjson.wamp.WampMessageParser">
-                <constructor-arg name="gson" ref="gson"/>
-            </bean>
+            <bean class="io.motown.ocpp.websocketjson.wamp.WampMessageParser"/>
         </property>
         <property name="gson" ref="gson" />
         <property name="addOnId" value="1" />

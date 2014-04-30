@@ -73,7 +73,7 @@ public class OcppJsonServiceTest {
         service.setDomainService(domainService);
         service.setGson(gson);
         service.setSchemaValidator(new SchemaValidator());
-        service.setWampMessageParser(new WampMessageParser(gson));
+        service.setWampMessageParser(new WampMessageParser());
         service.addWebSocket(CHARGING_STATION_ID.getId(), mockWebSocket);
     }
 

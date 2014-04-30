@@ -92,7 +92,10 @@ public class OcppJsonService {
         } catch (IllegalArgumentException iae) {
             //Unable to send back a WAMP error at this level, as we are not able to access the callId
             LOG.error("Unable to handle message", iae);
+        } catch (IOException ioe) {
+            LOG.error("Unable to parse message", ioe);
         }
+
     }
 
     /**
