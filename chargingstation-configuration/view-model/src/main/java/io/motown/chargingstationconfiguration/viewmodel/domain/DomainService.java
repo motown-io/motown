@@ -15,6 +15,9 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.domain;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
@@ -192,13 +195,20 @@ public class DomainService {
     public Connector createConnector(Long chargingStationTypeId, Long evseId, Connector connector) {
         ChargingStationType chargingStationType = chargingStationTypeRepository.findOne(chargingStationTypeId);
         Evse evse = getEvseById(chargingStationType, evseId);
+        Set<Connector> originalConnectors = ImmutableSet.copyOf(evse.getConnectors());
 
         evse.getConnectors().add(connector);
 
         chargingStationType = chargingStationTypeRepository.createOrUpdate(chargingStationType);
 
-        // TODO get created connector
-        return null;
+        Set<Connector> newConnectors = getEvseById(chargingStationType, evseId).getConnectors();
+        Set<Connector> diffConnectors = Sets.difference(newConnectors, originalConnectors);
+
+        if (diffConnectors.size() == 1) {
+            return Iterables.get(diffConnectors, 0);
+        } else {
+            return null;
+        }
     }
 
     /**
