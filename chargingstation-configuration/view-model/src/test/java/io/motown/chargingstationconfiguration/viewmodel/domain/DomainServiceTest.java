@@ -34,6 +34,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.Set;
 
 import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.*;
+import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
 @ContextConfiguration("classpath:chargingstation-configuration-view-model-test-context.xml")
@@ -126,12 +127,14 @@ public class DomainServiceTest {
     @Test
     public void createConnector() {
         ChargingStationType chargingStationType = getChargingStationTypeNonTransient(entityManagerFactory);
+        Long evseId = Iterables.get(chargingStationType.getEvses(), 0).getId();
         Connector connector = TestUtils.getConnector();
 
-        Connector createdConnector = domainService.createConnector(chargingStationType.getId(), Iterables.get(chargingStationType.getEvses(), 0).getId(), connector);
+        Connector createdConnector = domainService.createConnector(chargingStationType.getId(), evseId, connector);
 
         connector.setId(createdConnector.getId());
         assertEquals(connector, createdConnector);
+        assertNotNull(domainService.getConnector(chargingStationType.getId(), evseId, connector.getId()));
     }
 
     @Test
@@ -157,22 +160,17 @@ public class DomainServiceTest {
         domainService.getConnectors(chargingStationType.getId(), UNKNOWN_EVSE_ID);
     }
 
-    //TODO rewrite test
-//
-//    @Test
-//    public void deleteConnector() {
-//        ChargingStationType chargingStationType = getChargingStationTypeNonTransient(entityManagerFactory);
-//        Connector connector = chargingStationType.getEvses().iterator().next().getConnectors().iterator().next();
-//        // mock the repository so we can verify the argument later
-//        ChargingStationTypeRepository chargingStationTypeRepository = mock(ChargingStationTypeRepository.class);
-//        when(chargingStationTypeRepository.findByConnectorId(connector.getId())).thenReturn(chargingStationType);
-//        domainService.setChargingStationTypeRepository(chargingStationTypeRepository);
-//
-//        domainService.deleteConnector(connector.getId());
-//
-//        // remove connector from our local object so we can compare it to the argument on the repository call
-//        chargingStationType.getEvses().iterator().next().getConnectors().remove(connector);
-//        verify(chargingStationTypeRepository).createOrUpdate(chargingStationType);
-//    }
+    @Test(expected = EntityNotFoundException.class)
+    public void deleteConnector() {
+        ChargingStationType chargingStationType = getChargingStationTypeNonTransient(entityManagerFactory);
+        io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse evse =
+                Iterables.get(chargingStationType.getEvses(), 0);
+        Connector connector = Iterables.get(evse.getConnectors(), 0);
+
+        domainService.deleteConnector(chargingStationType.getId(), evse.getId(), connector.getId());
+
+        // should throw exception
+        domainService.getConnector(chargingStationType.getId(), evse.getId(), connector.getId());
+    }
 
 }
