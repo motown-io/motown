@@ -137,6 +137,7 @@ public class DomainService {
 
         // Keep track of the address on which we can reach the charging station
         chargingStation.setIpAddress(chargingStationAddress);
+        chargingStation = chargingStationRepository.createOrUpdate(chargingStation);
 
         Map<String, String> attributes = Maps.newHashMap();
 
