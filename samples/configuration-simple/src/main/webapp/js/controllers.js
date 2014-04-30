@@ -17,9 +17,9 @@ angular.module('demoApp.controllers', []).
     controller('ChargingStationController',
         ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
             $scope.init = function () {
-                $scope.page = 1;
+                $scope.offset = 0;
+                $scope.limit = 10;
                 $scope.numberOfPages = 1;
-                $scope.recordsPerPageChoices = [10, 25, 50];
                 $scope.getChargingStations();
                 if(!$scope.chargingStationTimer) {
                     $scope.chargingStationTimer = $scope.startGetChargingStationsTimer();
@@ -38,18 +38,16 @@ angular.module('demoApp.controllers', []).
             };
 
             $scope.getChargingStations = function () {
-                var q = ['page=' + ($scope.page || 1), 'recordsPerPage=' + ($scope.recordsPerPage || $scope.recordsPerPageChoices[0])];
+                var q = ['offset=' + ($scope.offset || 0), 'limit=' + ($scope.limit || 10)];
 
                 $http({
                     url: 'rest/operator-api/charging-stations?' + q.join('&'),
                     method: 'GET',
                     data: ''
                 }).success(function (response) {
-                    $scope.chargingStations = response.records;
-                    $scope.page = response.metadata.page;
-                    $scope.recordsPerPage = response.metadata.recordsPerPage;
-                    $scope.totalNumberOfRecords = response.metadata.totalNumberOfRecords;
-                    $scope.numberOfPages = response.metadata.totalNumberOfRecords != 0 ? Math.ceil(response.metadata.totalNumberOfRecords / response.metadata.recordsPerPage) : 1;
+                    $scope.chargingStationTypes = response.elements;
+                    $scope.numberOfPages = Math.floor(parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) / parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10)) + 1;
+                    $scope.totalNumberOfElements = parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) + parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10);
                 }).error(function () {
                     console.log('Error getting charging stations, cancel polling.');
                     $interval.cancel($scope.chargingStationTimer);
@@ -58,7 +56,7 @@ angular.module('demoApp.controllers', []).
             };
 
             $scope.changePage = function(page) {
-                $scope.page = page;
+                $scope.offset = (page - 1) * $scope.limit;
                 $scope.getChargingStations();
             };
 
@@ -375,9 +373,9 @@ angular.module('demoApp.controllers', []).
     controller('TransactionController',
         ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
             $scope.init = function () {
-                $scope.page = 1;
+                $scope.offset = 0;
+                $scope.limit = 10;
                 $scope.numberOfPages = 1;
-                $scope.recordsPerPageChoices = [10, 25, 50];
                 $scope.getTransactions();
                 if(!$scope.transactionTimer) {
                     $scope.transactionTimer = $scope.startGetTransactionsTimer();
@@ -397,18 +395,16 @@ angular.module('demoApp.controllers', []).
             };
 
             $scope.getTransactions = function () {
-                var q = ['page=' + ($scope.page || 1), 'recordsPerPage=' + ($scope.recordsPerPage || $scope.recordsPerPageChoices[0])];
+                var q = ['offset=' + ($scope.offset || 0), 'limit=' + ($scope.limit || 10)];
 
                 $http({
                     url: 'rest/operator-api/transactions?' + q.join('&'),
                     method: 'GET',
                     data: ''
                 }).success(function (response) {
-                    $scope.transactions = response.records;
-                    $scope.page = response.metadata.page;
-                    $scope.recordsPerPage = response.metadata.recordsPerPage;
-                    $scope.totalNumberOfRecords = response.metadata.totalNumberOfRecords;
-                    $scope.numberOfPages = response.metadata.totalNumberOfRecords != 0 ? Math.ceil(response.metadata.totalNumberOfRecords / response.metadata.recordsPerPage) : 1;
+                    $scope.chargingStationTypes = response.elements;
+                    $scope.numberOfPages = Math.floor(parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) / parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10)) + 1;
+                    $scope.totalNumberOfElements = parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) + parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10);
                 }).error(function() {
                     console.log('Error getting transactions, cancel polling.');
                     $interval.cancel($scope.transactionTimer);
@@ -417,7 +413,7 @@ angular.module('demoApp.controllers', []).
             };
 
             $scope.changePage = function(page) {
-                $scope.page = page;
+                $scope.offset = (page - 1) * $scope.limit;
                 $scope.getTransactions();
             };
 
@@ -436,30 +432,28 @@ angular.module('demoApp.controllers', []).
     controller('ConfigurationController',
         ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
             $scope.init = function () {
-                $scope.page = 1;
+                $scope.offset = 0;
+                $scope.limit = 10;
                 $scope.numberOfPages = 1;
-                $scope.recordsPerPageChoices = [10, 25, 50];
                 $scope.getChargingStationTypes();
             };
 
             $scope.getChargingStationTypes = function () {
-                var q = ['page=' + ($scope.page || 1), 'recordsPerPage=' + ($scope.recordsPerPage || $scope.recordsPerPageChoices[0])];
+                var q = ['offset=' + ($scope.offset || 0), 'limit=' + ($scope.limit || 10)];
 
                 $http({
                     url: 'rest/config/chargingstationtypes?' + q.join('&'),
                     method: 'GET',
                     data: ''
                 }).success(function (response) {
-                    $scope.chargingStationTypes = response.records;
-                    $scope.page = response.metadata.page;
-                    $scope.recordsPerPage = response.metadata.recordsPerPage;
-                    $scope.totalNumberOfRecords = response.metadata.totalNumberOfRecords;
-                    $scope.numberOfPages = response.metadata.totalNumberOfRecords != 0 ? Math.ceil(response.metadata.totalNumberOfRecords / response.metadata.recordsPerPage) : 1;
+                    $scope.chargingStationTypes = response.elements;
+                    $scope.numberOfPages = Math.floor(parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) / parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10)) + 1;
+                    $scope.totalNumberOfElements = parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) + parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10);
                 });
             };
 
             $scope.changePage = function(page) {
-                $scope.page = page;
+                $scope.offset = (page - 1) * $scope.limit;
                 $scope.getChargingStationTypes();
             };
         }]
