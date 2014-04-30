@@ -57,10 +57,10 @@ public class ChargingStationTypeRepository {
         }
     }
 
-    public List<ChargingStationType> findAll(int page, int recordsPerPage) {
+    public List<ChargingStationType> findAll(int offset, int limit) {
         return getEntityManager().createQuery("SELECT cst FROM ChargingStationType cst", ChargingStationType.class)
-                .setFirstResult((page - 1) * recordsPerPage)
-                .setMaxResults(recordsPerPage)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
                 .getResultList();
     }
 

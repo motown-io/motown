@@ -51,10 +51,10 @@ public class ManufacturerRepository {
         }
     }
 
-    public List<Manufacturer> findAll(int page, int recordsPerPage) {
+    public List<Manufacturer> findAll(int offset, int limit) {
         return getEntityManager().createQuery("SELECT m FROM Manufacturer m", Manufacturer.class)
-                .setFirstResult((page - 1) * recordsPerPage)
-                .setMaxResults(recordsPerPage)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
                 .getResultList();
     }
 

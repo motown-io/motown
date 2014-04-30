@@ -138,8 +138,8 @@ public class DomainService {
      *
      * @return a list of charging station types.
      */
-    public List<ChargingStationType> getChargingStationTypes(int page, int recordsPerPage) {
-        return chargingStationTypeRepository.findAll(page, recordsPerPage);
+    public List<ChargingStationType> getChargingStationTypes(int offset, int limit) {
+        return chargingStationTypeRepository.findAll(offset, limit);
     }
 
     /**
@@ -334,8 +334,8 @@ public class DomainService {
      *
      * @return a list of manufacturers.
      */
-    public List<Manufacturer> getManufacturers(int page, int recordsPerPage) {
-        return manufacturerRepository.findAll(page, recordsPerPage);
+    public List<Manufacturer> getManufacturers(int offset, int limit) {
+        return manufacturerRepository.findAll(offset, limit);
     }
 
     /**

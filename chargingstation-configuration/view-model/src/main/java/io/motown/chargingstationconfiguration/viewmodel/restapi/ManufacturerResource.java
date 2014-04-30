@@ -15,21 +15,22 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
-import com.google.common.collect.Maps;
 import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Manufacturer;
+import io.motown.chargingstationconfiguration.viewmodel.restapi.util.ConfigurationApiResponseBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import java.util.Map;
 
 @Path("/manufacturers")
 @Produces(ApiVersion.V1_JSON)
 public final class ManufacturerResource {
 
-    private static final String PAGE_PARAMETER = "page";
+    private static final String OFFSET_PARAMETER = "offset";
 
-    private static final String RECORDS_PER_PAGE_PARAMETER = "recordsPerPage";
+    private static final String LIMIT_PARAMETER = "limit";
 
     private DomainService domainService;
 
@@ -48,12 +49,8 @@ public final class ManufacturerResource {
     }
 
     @GET
-    public Response getManufacturers(@QueryParam(PAGE_PARAMETER) @DefaultValue("1") int page, @QueryParam(RECORDS_PER_PAGE_PARAMETER) @DefaultValue("10") int recordsPerPage) {
-        Map<String, Object> metadata = Maps.newHashMap();
-        metadata.put(PAGE_PARAMETER, page);
-        metadata.put(RECORDS_PER_PAGE_PARAMETER, recordsPerPage);
-        metadata.put("totalNumberOfRecords", domainService.getTotalNumberOfManufacturers());
-        return Response.ok(new ConfigurationApiResponse<>(metadata, domainService.getManufacturers(page, recordsPerPage))).build();
+    public Response getManufacturers(@Context HttpServletRequest request, @QueryParam(OFFSET_PARAMETER) @DefaultValue("0") int offset, @QueryParam(LIMIT_PARAMETER) @DefaultValue("10") int limit) {
+        return Response.ok(ConfigurationApiResponseBuilder.buildResponse(request, offset, limit, domainService.getTotalNumberOfManufacturers(), domainService.getManufacturers(offset, limit))).build();
     }
 
     @GET

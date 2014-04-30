@@ -26,9 +26,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 
-import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.*;
+import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.DEFAULT_PAGING_PAGE;
+import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.DEFAULT_PAGING_RECORDS_PER_PAGE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
@@ -41,6 +43,9 @@ public class ChargingStationTypeResourceTest {
     @Mock
     private ChargingStationTypeRepository repository;
 
+    @Mock
+    private HttpServletRequest request;
+
     @Before
     public void setUp() {
         resource = new ChargingStationTypeResource();
@@ -48,6 +53,9 @@ public class ChargingStationTypeResourceTest {
 
         service.setChargingStationTypeRepository(repository);
         resource.setDomainService(service);
+
+        when(request.getRequestURI()).thenReturn("/config");
+        when(request.getQueryString()).thenReturn("offset=0&limit=10");
     }
 
     @Test
@@ -89,7 +97,7 @@ public class ChargingStationTypeResourceTest {
 
     @Test
     public void testGetChargingStationTypes() {
-        Response response = resource.getChargingStationTypes(DEFAULT_PAGING_PAGE, DEFAULT_PAGING_RECORDS_PER_PAGE);
+        Response response = resource.getChargingStationTypes(request, DEFAULT_PAGING_PAGE, DEFAULT_PAGING_RECORDS_PER_PAGE);
         verify(repository).findAll(DEFAULT_PAGING_PAGE, DEFAULT_PAGING_RECORDS_PER_PAGE);
 
         assertNotNull(response);
@@ -99,7 +107,7 @@ public class ChargingStationTypeResourceTest {
     @Test(expected = RuntimeException.class)
     public void testGetChargingStationTypesThrowsException() {
         when(repository.findAll(DEFAULT_PAGING_PAGE, DEFAULT_PAGING_RECORDS_PER_PAGE)).thenThrow(mock(PersistenceException.class));
-        resource.getChargingStationTypes(DEFAULT_PAGING_PAGE, DEFAULT_PAGING_RECORDS_PER_PAGE);
+        resource.getChargingStationTypes(request, DEFAULT_PAGING_PAGE, DEFAULT_PAGING_RECORDS_PER_PAGE);
     }
 
     @Test
