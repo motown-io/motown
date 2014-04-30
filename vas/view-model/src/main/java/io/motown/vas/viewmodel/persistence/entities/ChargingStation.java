@@ -271,7 +271,7 @@ public class ChargingStation {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, address, city, postalCode, country, latitude, longitude);
+        return Objects.hash(id);
     }
 
     @Override
@@ -283,6 +283,6 @@ public class ChargingStation {
             return false;
         }
         final ChargingStation other = (ChargingStation) obj;
-        return Objects.equals(this.id, other.id) && Objects.equals(this.address, other.address) && Objects.equals(this.city, other.city) && Objects.equals(this.postalCode, other.postalCode) && Objects.equals(this.country, other.country) && Objects.equals(this.latitude, other.latitude) && Objects.equals(this.longitude, other.longitude);
+        return Objects.equals(this.id, other.id);
     }
 }
