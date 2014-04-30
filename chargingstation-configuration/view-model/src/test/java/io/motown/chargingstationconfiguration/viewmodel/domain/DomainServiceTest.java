@@ -36,6 +36,7 @@ import java.util.Set;
 import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.*;
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 @ContextConfiguration("classpath:chargingstation-configuration-view-model-test-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -125,6 +126,24 @@ public class DomainServiceTest {
     }
 
     @Test
+    public void deleteEvse() {
+        ChargingStationType chargingStationType = getChargingStationTypeNonTransient(entityManagerFactory);
+        Long evseId = Iterables.get(chargingStationType.getEvses(), 0).getId();
+
+        domainService.deleteEvse(chargingStationType.getId(), evseId);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void deleteEvseValidateGetEvse() {
+        ChargingStationType chargingStationType = getChargingStationTypeNonTransient(entityManagerFactory);
+        Long evseId = Iterables.get(chargingStationType.getEvses(), 0).getId();
+
+        domainService.deleteEvse(chargingStationType.getId(), evseId);
+
+        domainService.getEvse(chargingStationType.getId(), evseId);
+    }
+
+    @Test
     public void createConnector() {
         ChargingStationType chargingStationType = getChargingStationTypeNonTransient(entityManagerFactory);
         Long evseId = Iterables.get(chargingStationType.getEvses(), 0).getId();
@@ -160,8 +179,18 @@ public class DomainServiceTest {
         domainService.getConnectors(chargingStationType.getId(), UNKNOWN_EVSE_ID);
     }
 
-    @Test(expected = EntityNotFoundException.class)
+    @Test
     public void deleteConnector() {
+        ChargingStationType chargingStationType = getChargingStationTypeNonTransient(entityManagerFactory);
+        io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse evse =
+                Iterables.get(chargingStationType.getEvses(), 0);
+        Connector connector = Iterables.get(evse.getConnectors(), 0);
+
+        domainService.deleteConnector(chargingStationType.getId(), evse.getId(), connector.getId());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void deleteConnectorVerifyGetConnector() {
         ChargingStationType chargingStationType = getChargingStationTypeNonTransient(entityManagerFactory);
         io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse evse =
                 Iterables.get(chargingStationType.getEvses(), 0);
