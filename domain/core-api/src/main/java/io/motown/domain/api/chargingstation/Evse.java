@@ -20,6 +20,10 @@ import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * The logical unit in a charging station that supplies electric energy via a connector for recharging. An evse can have
+ * one or multiple connectors.
+ */
 public final class Evse {
 
     public static final EvseId ALL = new EvseId(0);
