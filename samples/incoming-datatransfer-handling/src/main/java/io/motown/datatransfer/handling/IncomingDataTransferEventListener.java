@@ -15,6 +15,7 @@
  */
 package io.motown.datatransfer.handling;
 
+import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.IncomingDataTransferReceivedEvent;
 import io.motown.domain.api.chargingstation.IncomingDataTransferResponseCommand;
 import io.motown.domain.api.chargingstation.IncomingDataTransferResultStatus;
@@ -35,12 +36,12 @@ public class IncomingDataTransferEventListener {
      * Sends a {@code IncomingDataTransferResponseCommand} containing the response status and optional
      * data to be sent back to the charging station.
      *
-     * @param event the incoming data transfer event.
-     * @param correlationId correlation id which will be added to outgoing command if it's not null or empty.
+     * @param event            the incoming data transfer event.
+     * @param correlationToken correlation token which will be added to outgoing command if it's not null or empty.
      */
     @EventHandler
     protected void onEvent(IncomingDataTransferReceivedEvent event,
-                           @MetaData(value = "correlationId", required = false) String correlationId) {
+                           @MetaData(value = CorrelationToken.KEY, required = false) CorrelationToken correlationToken) {
         /*
          * Handle the incoming datatransfer message here, to complete the loop we now
          * just return ACCEPTED and no response data.
@@ -50,8 +51,8 @@ public class IncomingDataTransferEventListener {
         String responseData = "";
         CommandMessage commandMessage = asCommandMessage(new IncomingDataTransferResponseCommand(event.getChargingStationId(), responseData, processingStatus, event.getIdentityContext()));
 
-        if (correlationId != null && !correlationId.isEmpty()) {
-            commandMessage = commandMessage.andMetaData(Collections.singletonMap("correlationId", correlationId));
+        if (correlationToken != null) {
+            commandMessage = commandMessage.andMetaData(Collections.singletonMap(CorrelationToken.KEY, correlationToken));
         }
 
         commandGateway.send(commandMessage);

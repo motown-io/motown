@@ -29,7 +29,12 @@
     <artifactId>domain-utils</artifactId>
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
+            <groupId>io.motown.domain</groupId>
+            <artifactId>domain-core-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+        <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
         <dependency>

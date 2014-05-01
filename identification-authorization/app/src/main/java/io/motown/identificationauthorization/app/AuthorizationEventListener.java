@@ -16,6 +16,7 @@
 package io.motown.identificationauthorization.app;
 
 import io.motown.domain.api.chargingstation.AuthorizationRequestedEvent;
+import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.DenyAuthorizationCommand;
 import io.motown.domain.api.chargingstation.GrantAuthorizationCommand;
 import io.motown.domain.api.security.AddOnIdentity;
@@ -46,12 +47,12 @@ public class AuthorizationEventListener {
      * {@code DenyAuthorizationCommand} if not. The passed correlation id will be added to the outgoing command if
      * it's not null or empty.
      *
-     * @param event the authorization request event.
-     * @param correlationId correlation id which will be added to outgoing command if it's not null or empty.
+     * @param event            the authorization request event.
+     * @param correlationToken correlation token which will be added to outgoing command if it's not null or empty.
      */
     @EventHandler
     protected void onEvent(AuthorizationRequestedEvent event,
-                           @MetaData(value = "correlationId", required = false) String correlationId) {
+                           @MetaData(value = CorrelationToken.KEY, required = false) CorrelationToken correlationToken) {
         boolean valid = identificationAuthorizationService.isValid(event.getIdentifyingToken());
 
         CommandMessage commandMessage;
@@ -62,8 +63,8 @@ public class AuthorizationEventListener {
             commandMessage = asCommandMessage(new DenyAuthorizationCommand(event.getChargingStationId(), event.getIdentifyingToken(), identityContext));
         }
 
-        if (correlationId != null && !correlationId.isEmpty()) {
-            commandMessage = commandMessage.andMetaData(Collections.singletonMap("correlationId", correlationId));
+        if (correlationToken != null) {
+            commandMessage = commandMessage.andMetaData(Collections.singletonMap(CorrelationToken.KEY, correlationToken));
         }
 
         commandGateway.send(commandMessage);
