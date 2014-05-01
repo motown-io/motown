@@ -32,7 +32,7 @@ public final class CorrelationToken {
     private final String token;
 
     /**
-     * Create a {@code CorrelationToken} with a {@UUID} based token.
+     * Create a {@code CorrelationToken} with a {@code UUID} based token.
      */
     public CorrelationToken(){
         this(UUID.randomUUID().toString());
