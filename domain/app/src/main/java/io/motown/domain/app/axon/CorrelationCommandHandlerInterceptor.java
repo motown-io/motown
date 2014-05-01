@@ -37,8 +37,8 @@ public class CorrelationCommandHandlerInterceptor implements CommandHandlerInter
     @Override
     public Object handle(CommandMessage<?> command, UnitOfWork unitOfWork, InterceptorChain chain) throws Throwable {
         if (command.getMetaData().containsKey(CorrelationUnitOfWorkListener.CORRELATION_ID_KEY)) {
-            UnitOfWorkListener auditListener = new CorrelationUnitOfWorkListener(command);
-            unitOfWork.registerListener(auditListener);
+            UnitOfWorkListener listener = new CorrelationUnitOfWorkListener(command);
+            unitOfWork.registerListener(listener);
         }
         return chain.proceed();
     }
