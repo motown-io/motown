@@ -24,11 +24,10 @@ import org.junit.Test;
 
 import java.util.Collections;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.IDENTIFYING_TOKEN;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.NULL_USER_IDENTITY_CONTEXT;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class CorrelationCommandHandlerInterceptorTest {
 
@@ -52,7 +51,7 @@ public class CorrelationCommandHandlerInterceptorTest {
 
         new CorrelationCommandHandlerInterceptor().handle(command, unitOfWork, chain);
 
-        verifyZeroInteractions(unitOfWork);
+        verify(unitOfWork).registerListener(any(CorrelationUnitOfWorkListener.class));
     }
 
     @Test

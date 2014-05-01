@@ -15,11 +15,14 @@
  */
 package io.motown.domain.app.axon;
 
+import io.motown.domain.api.chargingstation.CorrelationToken;
 import org.axonframework.commandhandling.CommandHandlerInterceptor;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.InterceptorChain;
 import org.axonframework.unitofwork.UnitOfWork;
 import org.axonframework.unitofwork.UnitOfWorkListener;
+
+import java.util.Collections;
 
 /**
  * {@code CommandHandlerInterceptor} which ensures resulting events will contain the same {@code correlationId} as the
@@ -36,10 +39,11 @@ public class CorrelationCommandHandlerInterceptor implements CommandHandlerInter
      */
     @Override
     public Object handle(CommandMessage<?> command, UnitOfWork unitOfWork, InterceptorChain chain) throws Throwable {
-        if (command.getMetaData().containsKey(CorrelationUnitOfWorkListener.CORRELATION_ID_KEY)) {
-            UnitOfWorkListener listener = new CorrelationUnitOfWorkListener(command);
-            unitOfWork.registerListener(listener);
+        if (!command.getMetaData().containsKey(CorrelationUnitOfWorkListener.CORRELATION_ID_KEY)) {
+            command = command.andMetaData(Collections.singletonMap(CorrelationUnitOfWorkListener.CORRELATION_ID_KEY, new CorrelationToken()));
         }
+        UnitOfWorkListener listener = new CorrelationUnitOfWorkListener(command);
+        unitOfWork.registerListener(listener);
         return chain.proceed();
     }
 }
