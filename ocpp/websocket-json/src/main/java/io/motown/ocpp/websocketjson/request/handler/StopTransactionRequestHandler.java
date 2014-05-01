@@ -62,11 +62,7 @@ public class StopTransactionRequestHandler extends RequestHandler {
             }
         }
 
-        NumberedTransactionId transactionId = null;
-        Integer requestTransactionId = request.getTransactionId();
-        if (requestTransactionId > 0) {
-            transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, requestTransactionId);
-        }
+        NumberedTransactionId transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, request.getTransactionId());
 
         domainService.stopTransaction(chargingStationId, transactionId, new TextualToken(request.getIdTag()), request.getMeterStop(), request.getTimestamp(), meterValues, addOnIdentity);
 
