@@ -44,6 +44,12 @@ public class CorrelationUnitOfWorkListenerTest {
         new CorrelationUnitOfWorkListener(command);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalArgumentExceptionThrownWhenCreatingWithCommandWithoutCorrectMetaDataType() {
+        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT)).withMetaData(Collections.singletonMap(CorrelationToken.KEY, "This should be of type CorrelationToken!"));
+        new CorrelationUnitOfWorkListener(command);
+    }
+
     @Test
     public void onEventRegisteredReturnsEventWithMetaData() {
         CorrelationToken token = new CorrelationToken();

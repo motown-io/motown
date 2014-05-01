@@ -39,11 +39,13 @@ public class CorrelationUnitOfWorkListener extends UnitOfWorkListenerAdapter {
      *
      * @param command the command for which
      * @throws NullPointerException     if {@code command} is {@code null}.
-     * @throws IllegalArgumentException if {@code command} does not contain the {@code correlationId}.
+     * @throws IllegalArgumentException if {@code command} does not contain the {@code correlationId} or if the
+     * {@code correlationId} is not a {@code CorrelationToken}.
      */
     public CorrelationUnitOfWorkListener(CommandMessage<?> command) {
         checkNotNull(command);
         checkArgument(command.getMetaData().containsKey(CorrelationToken.KEY));
+        checkArgument(command.getMetaData().get(CorrelationToken.KEY) instanceof CorrelationToken);
 
         correlationId = command.getMetaData().get(CorrelationToken.KEY);
     }
