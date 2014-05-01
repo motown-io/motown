@@ -30,22 +30,22 @@ public final class TextualToken implements IdentifyingToken {
     private final AuthenticationStatus authenticationStatus;
 
     /**
-     * Create a {@code TextualToken} with a {@String} based token.
+     * Create a {@code TextualToken} with a {@code String} based token.
      *
      * @param token the token.
-     * @throws NullPointerException     if {@token} is null.
-     * @throws IllegalArgumentException if {@token} is empty.
+     * @throws NullPointerException     if {@code token} is null.
+     * @throws IllegalArgumentException if {@code token} is empty.
      */
     public TextualToken(String token) {
         this(token, null);
     }
 
     /**
-     * Create a {@code TextualToken} with a {@String} based token.
+     * Create a {@code TextualToken} with a {@code String} based token.
      *
      * @param token  the token.
      * @param status the authentication status
-     * @throws NullPointerException     if {@token} is null.
+     * @throws NullPointerException     if {@code token} is null.
      */
     public TextualToken(String token, @Nullable AuthenticationStatus status) {
         checkNotNull(token);

@@ -27,7 +27,7 @@ class LocationTranslator implements Translator<Location> {
     /**
      * Creates a {@code LocationTranslator}.
      *
-     * @param valueFormat the location to translate.
+     * @param location the location to translate.
      */
     public LocationTranslator(String location) {
         this.location = location;

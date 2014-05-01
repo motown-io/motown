@@ -105,7 +105,7 @@ public class WampMessageParser {
 
     /**
      * Removes leading and trailing spaces next to the removal of quotes {@link #removeQuotes(String)}
-     * @param message
+     * @param message the message to trim.
      * @return String free of quotes and leading/trailing spaces
      */
     private String removeQuotesAndTrim(String message) {

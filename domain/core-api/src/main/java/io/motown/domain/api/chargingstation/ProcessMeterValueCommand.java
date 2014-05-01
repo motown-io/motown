@@ -80,7 +80,7 @@ public final class ProcessMeterValueCommand {
     /**
      * Gets the listing of meter values
      *
-     * @return
+     * @return the list of meter values.
      */
     public List<MeterValue> getMeterValueList() {
         return meterValueList;

@@ -232,8 +232,8 @@ public class OcppJsonService {
     /**
      * Converts the AuthenticationStatus into an OCPPJ specific status
      *
-     * @param status
-     * @return
+     * @param status the authentication status.
+     * @return the OCPP/J status.
      */
     private IdTagInfo_.Status convertAuthenticationStatus(IdentifyingToken.AuthenticationStatus status) {
         IdTagInfo_.Status result;
