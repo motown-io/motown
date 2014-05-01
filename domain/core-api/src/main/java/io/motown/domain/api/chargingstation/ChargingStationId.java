@@ -18,6 +18,7 @@ package io.motown.domain.api.chargingstation;
 import java.io.Serializable;
 import java.util.Objects;
 
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -39,14 +40,6 @@ public final class ChargingStationId implements Serializable {
     }
 
     @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("ChargingStationId{");
-        sb.append("id='").append(id).append('\'');
-        sb.append('}');
-        return sb.toString();
-    }
-
-    @Override
     public int hashCode() {
         return Objects.hash(id);
     }
@@ -61,5 +54,15 @@ public final class ChargingStationId implements Serializable {
         }
         final ChargingStationId other = (ChargingStationId) obj;
         return Objects.equals(this.id, other.id);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return toStringHelper(this)
+                .add("id", id)
+                .toString();
     }
 }
