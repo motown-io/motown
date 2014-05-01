@@ -28,7 +28,7 @@ import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationR
 
 import java.util.Set;
 
-class RegisterJsonCommandHandler implements JsonCommandHandler {
+class AcceptChargingStationJsonCommandHandler implements JsonCommandHandler {
 
     private static final String COMMAND_NAME = "AcceptChargingStation";
 
@@ -100,7 +100,7 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
      * Sets the command authorization service to use. The command authorization service checks if a certain user is
      * allowed to execute a certain command.
      *
-     * @param commandAuthorizationService    command authorization.
+     * @param commandAuthorizationService command authorization.
      */
     public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
         this.commandAuthorizationService = commandAuthorizationService;
@@ -110,7 +110,7 @@ class RegisterJsonCommandHandler implements JsonCommandHandler {
      * Set of user identities which shall be used in the {@code CreateChargingStationCommand} to indicate those users
      * are authorized to execute all commands on the created aggregate.
      *
-     * @param userIdentitiesWithAllPermissions    set of user identities.
+     * @param userIdentitiesWithAllPermissions set of user identities.
      */
     public void setUserIdentitiesWithAllPermissions(Set<UserIdentity> userIdentitiesWithAllPermissions) {
         this.userIdentitiesWithAllPermissions = userIdentitiesWithAllPermissions;

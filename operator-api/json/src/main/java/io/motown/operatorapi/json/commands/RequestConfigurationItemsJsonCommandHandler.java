@@ -29,7 +29,7 @@ import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationR
 
 import java.util.HashSet;
 
-class RequestGetConfigurationJsonCommandHandler implements JsonCommandHandler {
+class RequestConfigurationItemsJsonCommandHandler implements JsonCommandHandler {
 
     private static final String COMMAND_NAME = "RequestConfigurationItems";
 
@@ -43,7 +43,8 @@ class RequestGetConfigurationJsonCommandHandler implements JsonCommandHandler {
 
     /**
      * {@inheritDoc}
-     */    @Override
+     */
+    @Override
     public String getCommandName() {
         return COMMAND_NAME;
     }
@@ -105,7 +106,7 @@ class RequestGetConfigurationJsonCommandHandler implements JsonCommandHandler {
      * Sets the command authorization service to use. The command authorization service checks if a certain user is
      * allowed to execute a certain command.
      *
-     * @param commandAuthorizationService    command authorization.
+     * @param commandAuthorizationService command authorization.
      */
     public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
         this.commandAuthorizationService = commandAuthorizationService;

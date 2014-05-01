@@ -19,21 +19,22 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.ConfigurationItem;
 import io.motown.domain.api.chargingstation.CorrelationToken;
-import io.motown.domain.api.chargingstation.RequestDataTransferCommand;
+import io.motown.domain.api.chargingstation.RequestChangeConfigurationItemCommand;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.commandauthorization.CommandAuthorizationService;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
-import io.motown.operatorapi.viewmodel.model.DataTransferApiCommand;
+import io.motown.operatorapi.viewmodel.model.ChangeConfigurationApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
 /**
- * Handles the DataTransfer JSON Command.
+ * Handles the Change Configuration JSON Command.
  */
-class DataTransferJsonCommandHandler implements JsonCommandHandler {
+class RequestChangeConfigurationItemJsonCommandHandler implements JsonCommandHandler {
 
-    private static final String COMMAND_NAME = "RequestDataTransfer";
+    private static final String COMMAND_NAME = "RequestChangeConfigurationItem";
 
     private DomainCommandGateway commandGateway;
 
@@ -58,22 +59,21 @@ class DataTransferJsonCommandHandler implements JsonCommandHandler {
     public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) throws UserIdentityUnauthorizedException {
         ChargingStationId csId = new ChargingStationId(chargingStationId);
 
-        if (!commandAuthorizationService.isAuthorized(csId, identityContext.getUserIdentity(), RequestDataTransferCommand.class)) {
-            throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), RequestDataTransferCommand.class);
+        if (!commandAuthorizationService.isAuthorized(csId, identityContext.getUserIdentity(), RequestChangeConfigurationItemCommand.class)) {
+            throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), RequestChangeConfigurationItemCommand.class);
         }
 
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
 
             if (chargingStation != null && chargingStation.communicationAllowed()) {
-                DataTransferApiCommand command = gson.fromJson(commandObject, DataTransferApiCommand.class);
+                ChangeConfigurationApiCommand command = gson.fromJson(commandObject, ChangeConfigurationApiCommand.class);
 
-                commandGateway.send(new RequestDataTransferCommand(csId, command.getVendorId(), command.getMessageId(), command.getData(), identityContext), new CorrelationToken());
+                commandGateway.send(new RequestChangeConfigurationItemCommand(csId, new ConfigurationItem(command.getKey(), command.getValue()), identityContext), new CorrelationToken());
             }
         } catch (JsonSyntaxException ex) {
-            throw new IllegalArgumentException("Data transfer command not able to parse the payload, is your json correctly formatted?", ex);
+            throw new IllegalArgumentException("Change configuration command not able to parse the payload, is your json correctly formatted?", ex);
         }
-
     }
 
     /**

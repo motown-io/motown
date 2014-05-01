@@ -24,11 +24,11 @@ import org.junit.Test;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
 import static io.motown.operatorapi.json.commands.OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING;
 
-public class UpdateFirmwareJsonCommandHandlerTest {
+public class RequestFirmwareUpdateJsonCommandHandlerTest {
 
     private Gson gson;
 
-    private UpdateFirmwareJsonCommandHandler handler = new UpdateFirmwareJsonCommandHandler();
+    private RequestFirmwareUpdateJsonCommandHandler handler = new RequestFirmwareUpdateJsonCommandHandler();
 
     @Before
     public void setUp() {

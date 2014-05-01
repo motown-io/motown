@@ -30,11 +30,11 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class ChangeConfigurationJsonCommandHandlerTest {
+public class RequestChangeConfigurationItemJsonCommandHandlerTest {
 
     private Gson gson;
 
-    private ChangeConfigurationJsonCommandHandler handler = new ChangeConfigurationJsonCommandHandler();
+    private RequestChangeConfigurationItemJsonCommandHandler handler = new RequestChangeConfigurationItemJsonCommandHandler();
 
     private DomainCommandGateway gateway;
 

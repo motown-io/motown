@@ -24,11 +24,11 @@ import org.junit.Test;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.UNKNOWN_CHARGING_STATION_ID;
 
-public class SendAuthorizationListJsonCommandHandlerTest {
+public class RequestSendAuthorizationListJsonCommandHandlerTest {
 
     private Gson gson;
 
-    private SendAuthorizationListJsonCommandHandler handler = new SendAuthorizationListJsonCommandHandler();
+    private RequestSendAuthorizationListJsonCommandHandler handler = new RequestSendAuthorizationListJsonCommandHandler();
 
     @Before
     public void setUp() {

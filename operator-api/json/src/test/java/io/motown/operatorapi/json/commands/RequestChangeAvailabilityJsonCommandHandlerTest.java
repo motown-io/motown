@@ -23,9 +23,9 @@ import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT;
 
-public class RequestChangeChargingStationAvailabilityJsonCommandHandlerTest {
+public class RequestChangeAvailabilityJsonCommandHandlerTest {
     private Gson gson;
-    private RequestChangeChargingStationAvailabilityJsonCommandHandler handler = new RequestChangeChargingStationAvailabilityJsonCommandHandler();
+    private RequestChangeAvailabilityJsonCommandHandler handler = new RequestChangeAvailabilityJsonCommandHandler();
 
     @Before
     public void setUp() {

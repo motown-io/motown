@@ -53,13 +53,13 @@
             <property name="gson" ref="operatorApiGson"/>
             <property name="repository" ref="chargingStationRepositoryOperatorApi"/>
         </bean>
-        <bean class="io.motown.operatorapi.json.commands.ChangeConfigurationJsonCommandHandler">
-            <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
+        <bean class="io.motown.operatorapi.json.commands.RequestChangeConfigurationItemJsonCommandHandler">
+        <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
             <property name="gson" ref="operatorApiGson"/>
             <property name="repository" ref="chargingStationRepositoryOperatorApi"/>
         </bean>
-        <bean class="io.motown.operatorapi.json.commands.DataTransferJsonCommandHandler">
-            <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
+        <bean class="io.motown.operatorapi.json.commands.RequestDataTransferJsonCommandHandler">
+        <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
             <property name="gson" ref="operatorApiGson"/>
             <property name="repository" ref="chargingStationRepositoryOperatorApi"/>
         </bean>
@@ -83,16 +83,16 @@
             <property name="gson" ref="operatorApiGson"/>
             <property name="repository" ref="chargingStationRepositoryOperatorApi"/>
         </bean>
-        <bean class="io.motown.operatorapi.json.commands.RegisterJsonCommandHandler">
-            <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
+        <bean class="io.motown.operatorapi.json.commands.AcceptChargingStationJsonCommandHandler">
+        <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
             <property name="repository" ref="chargingStationRepositoryOperatorApi"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.RequestAuthorizationListVersionJsonCommandHandler">
             <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
             <property name="repository" ref="chargingStationRepositoryOperatorApi"/>
         </bean>
-        <bean class="io.motown.operatorapi.json.commands.RequestChangeChargingStationAvailabilityJsonCommandHandler">
-            <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
+        <bean class="io.motown.operatorapi.json.commands.RequestChangeAvailabilityJsonCommandHandler">
+        <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
             <property name="gson" ref="operatorApiGson"/>
             <property name="repository" ref="chargingStationRepositoryOperatorApi"/>
         </bean>
@@ -130,8 +130,8 @@
             <property name="gson" ref="operatorApiGson"/>
             <property name="repository" ref="chargingStationRepositoryOperatorApi"/>
         </bean>
-        <bean class="io.motown.operatorapi.json.commands.SendAuthorizationListJsonCommandHandler">
-            <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
+        <bean class="io.motown.operatorapi.json.commands.RequestSendAuthorizationListJsonCommandHandler">
+        <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
             <property name="gson" ref="operatorApiGson"/>
             <property name="repository" ref="chargingStationRepositoryOperatorApi"/>
         </bean>
@@ -140,8 +140,8 @@
             <property name="gson" ref="operatorApiGson"/>
             <property name="repository" ref="chargingStationRepositoryOperatorApi"/>
         </bean>
-        <bean class="io.motown.operatorapi.json.commands.UnlockEvseJsonCommandHandler">
-            <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
+        <bean class="io.motown.operatorapi.json.commands.RequestUnlockEvseJsonCommandHandler">
+        <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
             <property name="gson" ref="operatorApiGson"/>
             <property name="repository" ref="chargingStationRepositoryOperatorApi"/>
         </bean>
@@ -150,8 +150,8 @@
             <property name="gson" ref="operatorApiGson"/>
             <property name="repository" ref="chargingStationRepositoryOperatorApi"/>
         </bean>
-        <bean class="io.motown.operatorapi.json.commands.UpdateFirmwareJsonCommandHandler">
-            <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
+        <bean class="io.motown.operatorapi.json.commands.RequestFirmwareUpdateJsonCommandHandler">
+        <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
             <property name="gson" ref="operatorApiGson"/>
             <property name="repository" ref="chargingStationRepositoryOperatorApi"/>
         </bean>

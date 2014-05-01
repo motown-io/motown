@@ -27,11 +27,11 @@ import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class RegisterJsonCommandHandlerTest {
+public class AcceptChargingStationJsonCommandHandlerTest {
 
     private Gson gson;
 
-    private RegisterJsonCommandHandler handler = new RegisterJsonCommandHandler();
+    private AcceptChargingStationJsonCommandHandler handler = new AcceptChargingStationJsonCommandHandler();
 
     @Before
     public void setUp() {
@@ -59,7 +59,7 @@ public class RegisterJsonCommandHandlerTest {
         handler.handle(OperatorApiJsonTestUtils.UNREGISTERED_CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void testHandleCompleteUnRegistered() throws UserIdentityUnauthorizedException {
         JsonObject commandObject = gson.fromJson("{'configuration' : {'evses' : [{'evseId' : 1, 'connectors' : [{'maxAmp': 32, 'phase': 3, 'voltage': 230, 'chargingProtocol': 'MODE3', 'current': 'AC', 'connectorType': 'TESLA'}]}], 'settings' : {'key':'value', 'key2':'value2'}}}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);

@@ -15,22 +15,26 @@
  */
 package io.motown.operatorapi.json.commands;
 
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
-import io.motown.domain.api.chargingstation.RequestUnlockEvseCommand;
+import io.motown.domain.api.chargingstation.FirmwareUpdateAttributeKey;
+import io.motown.domain.api.chargingstation.RequestFirmwareUpdateCommand;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.commandauthorization.CommandAuthorizationService;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
-import io.motown.operatorapi.viewmodel.model.UnlockEvseApiCommand;
+import io.motown.operatorapi.viewmodel.model.UpdateFirmwareApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
-class UnlockEvseJsonCommandHandler implements JsonCommandHandler {
+import java.util.Map;
 
-    private static final String COMMAND_NAME = "RequestUnlockEvse";
+class RequestFirmwareUpdateJsonCommandHandler implements JsonCommandHandler {
+
+    private static final String COMMAND_NAME = "RequestFirmwareUpdate";
 
     private DomainCommandGateway commandGateway;
 
@@ -55,18 +59,28 @@ class UnlockEvseJsonCommandHandler implements JsonCommandHandler {
     public void handle(String chargingStationId, JsonObject commandObject, IdentityContext identityContext) throws UserIdentityUnauthorizedException {
         ChargingStationId csId = new ChargingStationId(chargingStationId);
 
-        if (!commandAuthorizationService.isAuthorized(csId, identityContext.getUserIdentity(), RequestUnlockEvseCommand.class)) {
-            throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), RequestUnlockEvseCommand.class);
+        if (!commandAuthorizationService.isAuthorized(csId, identityContext.getUserIdentity(), RequestFirmwareUpdateCommand.class)) {
+            throw new UserIdentityUnauthorizedException(chargingStationId, identityContext.getUserIdentity(), RequestFirmwareUpdateCommand.class);
         }
 
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.communicationAllowed()) {
-                UnlockEvseApiCommand command = gson.fromJson(commandObject, UnlockEvseApiCommand.class);
-                commandGateway.send(new RequestUnlockEvseCommand(csId, command.getEvseId(), identityContext), new CorrelationToken());
+                UpdateFirmwareApiCommand command = gson.fromJson(commandObject, UpdateFirmwareApiCommand.class);
+
+                Map<String, String> optionalAttributes = Maps.newHashMap();
+                if (command.getNumRetries() != null) {
+                    optionalAttributes.put(FirmwareUpdateAttributeKey.NUM_RETRIES, command.getNumRetries().toString());
+                }
+                if (command.getRetryInterval() != null) {
+                    optionalAttributes.put(FirmwareUpdateAttributeKey.RETRY_INTERVAL, command.getRetryInterval().toString());
+                }
+
+                commandGateway.send(new RequestFirmwareUpdateCommand(csId, command.getLocation(), command.getRetrieveDate(),
+                        optionalAttributes, identityContext), new CorrelationToken());
             }
-        } catch (JsonSyntaxException e) {
-            throw new IllegalArgumentException("Unlock evse command not able to parse the payload, is your JSON correctly formatted?", e);
+        } catch (JsonSyntaxException ex) {
+            throw new IllegalArgumentException("Update firmware command not able to parse the payload, is your json correctly formatted?", ex);
         }
     }
 
@@ -101,7 +115,7 @@ class UnlockEvseJsonCommandHandler implements JsonCommandHandler {
      * Sets the command authorization service to use. The command authorization service checks if a certain user is
      * allowed to execute a certain command.
      *
-     * @param commandAuthorizationService    command authorization.
+     * @param commandAuthorizationService command authorization.
      */
     public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
         this.commandAuthorizationService = commandAuthorizationService;
