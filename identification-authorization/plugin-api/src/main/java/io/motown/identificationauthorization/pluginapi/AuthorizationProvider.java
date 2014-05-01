@@ -25,7 +25,7 @@ public interface AuthorizationProvider {
     /**
      * Validates the identification.
      *
-     * @param identification
+     * @param identification the identification to validate.
      * @return true if the identification is valid, false if not or if the identification is unknown.
      */
     boolean isValid(IdentifyingToken identification);
