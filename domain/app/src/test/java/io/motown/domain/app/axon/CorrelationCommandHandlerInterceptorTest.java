@@ -16,6 +16,7 @@
 package io.motown.domain.app.axon;
 
 import io.motown.domain.api.chargingstation.AuthorizeCommand;
+import io.motown.domain.api.chargingstation.CorrelationToken;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.commandhandling.InterceptorChain;
@@ -34,7 +35,7 @@ public class CorrelationCommandHandlerInterceptorTest {
     @Test
     public void verifyCorrelationUnitOfWorkListenerIsRegistered() throws Throwable {
         CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT))
-                .withMetaData(Collections.singletonMap("correlationId", "12345"));
+                .withMetaData(Collections.singletonMap("correlationId", new CorrelationToken()));
         UnitOfWork unitOfWork = mock(UnitOfWork.class);
         InterceptorChain chain = mock(InterceptorChain.class);
 
@@ -57,7 +58,7 @@ public class CorrelationCommandHandlerInterceptorTest {
     @Test
     public void verifyInterceptorChainIsProceeded() throws Throwable {
         CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT))
-                .withMetaData(Collections.singletonMap("correlationId", "12345"));
+                .withMetaData(Collections.singletonMap("correlationId", new CorrelationToken()));
         UnitOfWork unitOfWork = mock(UnitOfWork.class);
         InterceptorChain chain = mock(InterceptorChain.class);
 
