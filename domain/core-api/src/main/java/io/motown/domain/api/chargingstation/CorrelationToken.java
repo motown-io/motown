@@ -53,7 +53,9 @@ public final class CorrelationToken {
     }
 
     /**
-     * {@inheritDoc}
+     * Gets the token.
+     *
+     * @return the token.
      */
     public String getToken() {
         return token;
