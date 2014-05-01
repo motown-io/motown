@@ -433,13 +433,13 @@ angular.module('demoApp.controllers', []).
         ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
             $scope.init = function () {
                 $scope.offset = 0;
-                $scope.limit = 1;
+                $scope.limit = 10;
                 $scope.numberOfPages = 1;
                 $scope.getChargingStationTypes();
             };
 
             $scope.getChargingStationTypes = function () {
-                var q = ['offset=' + ($scope.offset || 0), 'limit=' + ($scope.limit || 1)];
+                var q = ['offset=' + ($scope.offset || 0), 'limit=' + ($scope.limit || 10)];
 
                 $http({
                     url: 'rest/config/chargingstationtypes?' + q.join('&'),
