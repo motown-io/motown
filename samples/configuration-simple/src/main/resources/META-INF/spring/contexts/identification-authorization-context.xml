@@ -39,7 +39,7 @@
 
                 <!-- To enable CIR authentication, enable the lines below and enter a username/password and endpoint in the properties file. -->
                 <!--
-                <bean id="cirAuthentication" class="io.motown.identificationauthorization.cirplugin.CirAuthorization>
+                <bean class="io.motown.identificationauthorization.cirplugin.CirAuthorization>
                     <property name="username" value="${io.motown.identificationauthorization.cirplugin.cirservice.username}" />
                     <property name="password" value="${io.motown.identificationauthorization.cirplugin.cirservice.password}" />
                     <property name="endpoint" value="${io.motown.identificationauthorization.cirplugin.cirservice.endpoint}" />
