@@ -25,7 +25,7 @@ import org.axonframework.unitofwork.UnitOfWorkListener;
 import java.util.Collections;
 
 /**
- * {@code CommandHandlerInterceptor} which ensures resulting events will contain the same {@code correlationId} as the
+ * {@code CommandHandlerInterceptor} which ensures resulting events will contain the same {@code CorrelationToken} as
  * the command being handled. This is used to enable the tracking of results (i.e. events) of certain actions (i.e.
  * commands).
  */
