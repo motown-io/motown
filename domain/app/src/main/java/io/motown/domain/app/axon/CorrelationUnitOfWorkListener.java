@@ -15,6 +15,7 @@
  */
 package io.motown.domain.app.axon;
 
+import io.motown.domain.api.chargingstation.CorrelationToken;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.domain.EventMessage;
 import org.axonframework.unitofwork.UnitOfWork;
@@ -31,8 +32,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class CorrelationUnitOfWorkListener extends UnitOfWorkListenerAdapter {
 
-    public static final String CORRELATION_ID_KEY = "correlationId";
-
     private final Object correlationId;
 
     /**
@@ -44,9 +43,9 @@ public class CorrelationUnitOfWorkListener extends UnitOfWorkListenerAdapter {
      */
     public CorrelationUnitOfWorkListener(CommandMessage<?> command) {
         checkNotNull(command);
-        checkArgument(command.getMetaData().containsKey(CORRELATION_ID_KEY));
+        checkArgument(command.getMetaData().containsKey(CorrelationToken.KEY));
 
-        correlationId = command.getMetaData().get(CORRELATION_ID_KEY);
+        correlationId = command.getMetaData().get(CorrelationToken.KEY);
     }
 
     /**
@@ -54,6 +53,6 @@ public class CorrelationUnitOfWorkListener extends UnitOfWorkListenerAdapter {
      */
     @Override
     public <T> EventMessage<T> onEventRegistered(UnitOfWork unitOfWork, EventMessage<T> event) {
-        return event.withMetaData(Collections.singletonMap(CORRELATION_ID_KEY, correlationId));
+        return event.withMetaData(Collections.singletonMap(CorrelationToken.KEY, correlationId));
     }
 }

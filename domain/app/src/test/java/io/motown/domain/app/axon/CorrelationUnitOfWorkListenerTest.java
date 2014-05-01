@@ -17,6 +17,7 @@ package io.motown.domain.app.axon;
 
 import io.motown.domain.api.chargingstation.AuthorizationRequestedEvent;
 import io.motown.domain.api.chargingstation.AuthorizeCommand;
+import io.motown.domain.api.chargingstation.CorrelationToken;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.domain.EventMessage;
@@ -26,9 +27,7 @@ import org.junit.Test;
 
 import java.util.Collections;
 
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.IDENTIFYING_TOKEN;
-import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.NULL_USER_IDENTITY_CONTEXT;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static org.axonframework.domain.GenericEventMessage.asEventMessage;
 import static org.junit.Assert.assertTrue;
 
@@ -47,11 +46,11 @@ public class CorrelationUnitOfWorkListenerTest {
 
     @Test
     public void onEventRegisteredReturnsEventWithMetaData() {
-        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT)).withMetaData(Collections.singletonMap("correlationId", "12345"));
+        CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT)).withMetaData(Collections.singletonMap(CorrelationToken.KEY, "12345"));
         UnitOfWorkListener listener = new CorrelationUnitOfWorkListener(command);
 
         EventMessage event = listener.onEventRegistered(new DefaultUnitOfWork(), asEventMessage(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT)));
 
-        assertTrue(event.getMetaData().get("correlationId").equals("12345"));
+        assertTrue(event.getMetaData().get(CorrelationToken.KEY).equals("12345"));
     }
 }

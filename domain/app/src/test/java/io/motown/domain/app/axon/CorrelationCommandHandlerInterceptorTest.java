@@ -35,7 +35,7 @@ public class CorrelationCommandHandlerInterceptorTest {
     @Test
     public void verifyCorrelationUnitOfWorkListenerIsRegistered() throws Throwable {
         CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT))
-                .withMetaData(Collections.singletonMap("correlationId", new CorrelationToken()));
+                .withMetaData(Collections.singletonMap(CorrelationToken.KEY, new CorrelationToken()));
         UnitOfWork unitOfWork = mock(UnitOfWork.class);
         InterceptorChain chain = mock(InterceptorChain.class);
 
@@ -58,7 +58,7 @@ public class CorrelationCommandHandlerInterceptorTest {
     @Test
     public void verifyInterceptorChainIsProceeded() throws Throwable {
         CommandMessage<AuthorizeCommand> command = new GenericCommandMessage<>(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT))
-                .withMetaData(Collections.singletonMap("correlationId", new CorrelationToken()));
+                .withMetaData(Collections.singletonMap(CorrelationToken.KEY, new CorrelationToken()));
         UnitOfWork unitOfWork = mock(UnitOfWork.class);
         InterceptorChain chain = mock(InterceptorChain.class);
 
