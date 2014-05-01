@@ -16,21 +16,21 @@
 package io.motown.sample.simple.authentication;
 
 import io.motown.domain.api.chargingstation.IdentifyingToken;
-import io.motown.identificationauthorization.pluginapi.AuthenticationProvider;
+import io.motown.identificationauthorization.pluginapi.AuthorizationProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Dummy implementation of {@code AuthenticationProvider}, this service will always return 'true'
+ * Dummy implementation of {@code AuthorizationProvider}, this service will always return 'true'
  * when asked if a identification is valid.
  */
-public class DummyIdentificationAuthentication implements AuthenticationProvider {
+public class DummyIdentificationAuthorization implements AuthorizationProvider {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DummyIdentificationAuthentication.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DummyIdentificationAuthorization.class);
 
     @Override
     public boolean isValid(IdentifyingToken identification) {
-        LOG.warn("Using DummyIdentificationAuthentication for identification authentication. This will always return 'valid'.");
+        LOG.warn("Using DummyIdentificationAuthorization for identification authentication. This will always return 'valid'.");
         return true;
     }
 

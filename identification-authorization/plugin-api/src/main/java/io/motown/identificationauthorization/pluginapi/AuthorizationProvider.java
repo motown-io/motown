@@ -17,7 +17,7 @@ package io.motown.identificationauthorization.pluginapi;
 
 import io.motown.domain.api.chargingstation.IdentifyingToken;
 
-public interface AuthenticationProvider {
+public interface AuthorizationProvider {
 
     boolean isValid(IdentifyingToken identification);
 

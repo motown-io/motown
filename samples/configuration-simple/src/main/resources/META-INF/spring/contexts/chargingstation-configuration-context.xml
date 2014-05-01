@@ -43,11 +43,6 @@
 
     <bean id="beanValidationInterceptor" class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor"/>
 
-    <bean id="asyncExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean">
-        <property name="corePoolSize" value="1"/>
-        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
-    </bean>
-
     <bean id="chargingStationConfigurationCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
         <property name="commandBus" ref="commandBus"/>
         <property name="gatewayInterface" value="io.motown.chargingstationconfiguration.app.ConfigurationCommandGateway"/>

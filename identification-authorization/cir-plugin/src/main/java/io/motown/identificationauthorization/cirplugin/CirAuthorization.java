@@ -18,16 +18,16 @@ package io.motown.identificationauthorization.cirplugin;
 import io.motown.domain.api.chargingstation.IdentifyingToken;
 import io.motown.identificationauthorization.cirplugin.cir.schema.*;
 import io.motown.identificationauthorization.cirplugin.cir.schema.Error;
-import io.motown.identificationauthorization.pluginapi.AuthenticationProvider;
+import io.motown.identificationauthorization.pluginapi.AuthorizationProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Holder;
 
-public class CirAuthentication implements AuthenticationProvider {
+public class CirAuthorization implements AuthorizationProvider {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CirAuthentication.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CirAuthorization.class);
 
     private String username;
 
