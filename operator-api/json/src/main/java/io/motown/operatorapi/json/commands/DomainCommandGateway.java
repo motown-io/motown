@@ -19,7 +19,7 @@ import io.motown.domain.api.chargingstation.*;
 import org.axonframework.common.annotation.MetaData;
 
 interface DomainCommandGateway {
-    void send(RequestUnlockEvseCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(RequestUnlockEvseCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
     void send(ConfigureChargingStationCommand command);
 
@@ -27,39 +27,39 @@ interface DomainCommandGateway {
 
     void send(AcceptChargingStationCommand command);
 
-    void send(RequestStartTransactionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(RequestStartTransactionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void send(RequestStopTransactionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(RequestStopTransactionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void send(RequestSoftResetChargingStationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(RequestSoftResetChargingStationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void send(RequestHardResetChargingStationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(RequestHardResetChargingStationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void send(RequestChangeComponentAvailabilityToInoperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(RequestChangeComponentAvailabilityToInoperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
     void send(RequestChangeComponentAvailabilityToOperativeCommand requestChangeComponentAvailabilityToOperativeCommand, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
     void send(RequestChangeChargingStationAvailabilityToInoperativeCommand requestChangeChargingStationAvailabilityToInoperativeCommand, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void send(RequestChangeChargingStationAvailabilityToOperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(RequestChangeChargingStationAvailabilityToOperativeCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void send(RequestDataTransferCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(RequestDataTransferCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void send(RequestChangeConfigurationItemCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(RequestChangeConfigurationItemCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void send(RequestDiagnosticsCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(RequestDiagnosticsCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void send(RequestClearCacheCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(RequestClearCacheCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void send(RequestFirmwareUpdateCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(RequestFirmwareUpdateCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void send(RequestAuthorizationListVersionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(RequestAuthorizationListVersionCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void send(RequestSendAuthorizationListCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(RequestSendAuthorizationListCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void send(RequestReserveNowCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(RequestReserveNowCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void send(RequestCancelReservationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void send(RequestCancelReservationCommand command, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
     void send(RequestConfigurationItemsCommand command);
 

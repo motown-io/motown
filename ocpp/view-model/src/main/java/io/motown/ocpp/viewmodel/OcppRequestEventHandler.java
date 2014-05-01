@@ -49,137 +49,137 @@ public class OcppRequestEventHandler {
     }
 
     @EventHandler
-    public void handle(StopTransactionRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    public void handle(StopTransactionRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
         LOG.info("StopTransactionRequestedEvent");
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
         if (ocppRequestHandler != null) {
-            ocppRequestHandler.handle(event, statusCorrelationToken);
+            ocppRequestHandler.handle(event, correlationToken);
         }
     }
 
     @EventHandler
-    public void handle(SoftResetChargingStationRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    public void handle(SoftResetChargingStationRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
         LOG.info("SoftResetChargingStationRequestedEvent");
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
         if (ocppRequestHandler != null) {
-            ocppRequestHandler.handle(event, statusCorrelationToken);
+            ocppRequestHandler.handle(event, correlationToken);
         }
     }
 
     @EventHandler
-    public void handle(HardResetChargingStationRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    public void handle(HardResetChargingStationRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
         LOG.info("HardResetChargingStationRequestedEvent");
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
         if (ocppRequestHandler != null) {
-            ocppRequestHandler.handle(event, statusCorrelationToken);
+            ocppRequestHandler.handle(event, correlationToken);
         }
     }
 
     @EventHandler
-    public void handle(StartTransactionRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    public void handle(StartTransactionRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
         LOG.info("StartTransactionRequestedEvent");
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
         if (ocppRequestHandler != null) {
-            ocppRequestHandler.handle(event, statusCorrelationToken);
+            ocppRequestHandler.handle(event, correlationToken);
         }
     }
 
     @EventHandler
-    public void handle(UnlockEvseRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    public void handle(UnlockEvseRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
         LOG.info("UnlockEvseRequestedEvent");
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
         if (ocppRequestHandler != null) {
-            ocppRequestHandler.handle(event, statusCorrelationToken);
+            ocppRequestHandler.handle(event, correlationToken);
         }
     }
 
     @EventHandler
-    public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
         if (ocppRequestHandler != null) {
-            ocppRequestHandler.handle(event, statusCorrelationToken);
+            ocppRequestHandler.handle(event, correlationToken);
         }
     }
 
     @EventHandler
-    public void handle(ChangeComponentAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    public void handle(ChangeComponentAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
         if (ocppRequestHandler != null) {
-            ocppRequestHandler.handle(event, statusCorrelationToken);
+            ocppRequestHandler.handle(event, correlationToken);
         }
     }
 
     @EventHandler
-    public void handle(ChangeComponentAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    public void handle(ChangeComponentAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
         if (ocppRequestHandler != null) {
-            ocppRequestHandler.handle(event, statusCorrelationToken);
+            ocppRequestHandler.handle(event, correlationToken);
         }
     }
 
     @EventHandler
-    public void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    public void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
         if (ocppRequestHandler != null) {
-            ocppRequestHandler.handle(event, statusCorrelationToken);
+            ocppRequestHandler.handle(event, correlationToken);
         }
     }
 
     @EventHandler
-    public void handle(DataTransferRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    public void handle(DataTransferRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
         LOG.info("DataTransferRequestedEvent");
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
         if (ocppRequestHandler != null) {
-            ocppRequestHandler.handle(event, statusCorrelationToken);
+            ocppRequestHandler.handle(event, correlationToken);
         }
     }
 
     @EventHandler
-    public void handle(ChangeConfigurationItemRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    public void handle(ChangeConfigurationItemRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
         LOG.info("ChangeConfigurationItemRequestedEvent");
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
         if (ocppRequestHandler != null) {
-            ocppRequestHandler.handle(event, statusCorrelationToken);
+            ocppRequestHandler.handle(event, correlationToken);
         }
     }
 
     @EventHandler
-    public void handle(DiagnosticsRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    public void handle(DiagnosticsRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
         LOG.info("DiagnosticsRequestedEvent");
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
         if (ocppRequestHandler != null) {
-            ocppRequestHandler.handle(event, statusCorrelationToken);
+            ocppRequestHandler.handle(event, correlationToken);
         }
     }
 
     @EventHandler
-    public void handle(ClearCacheRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    public void handle(ClearCacheRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
         LOG.info("ClearCacheRequestedEvent");
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
         if (ocppRequestHandler != null) {
-            ocppRequestHandler.handle(event, statusCorrelationToken);
+            ocppRequestHandler.handle(event, correlationToken);
         }
     }
 
@@ -195,35 +195,35 @@ public class OcppRequestEventHandler {
     }
 
     @EventHandler
-    public void handle(AuthorizationListVersionRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    public void handle(AuthorizationListVersionRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
         LOG.info("AuthorizationListVersionRequestedEvent");
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
         if (ocppRequestHandler != null) {
-            ocppRequestHandler.handle(event, statusCorrelationToken);
+            ocppRequestHandler.handle(event, correlationToken);
         }
     }
 
     @EventHandler
-    public void handle(SendAuthorizationListRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    public void handle(SendAuthorizationListRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
         LOG.info("SendAuthorizationListRequestedEvent");
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
         if (ocppRequestHandler != null) {
-            ocppRequestHandler.handle(event, statusCorrelationToken);
+            ocppRequestHandler.handle(event, correlationToken);
         }
     }
 
     @EventHandler
-    public void handle(ReserveNowRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    public void handle(ReserveNowRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
         LOG.info("ReserveNowRequestedEvent");
 
         OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
 
         if (ocppRequestHandler != null) {
-            ocppRequestHandler.handle(event, statusCorrelationToken);
+            ocppRequestHandler.handle(event, correlationToken);
         }
     }
 

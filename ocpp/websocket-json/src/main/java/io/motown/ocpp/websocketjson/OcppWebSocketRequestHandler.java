@@ -35,77 +35,77 @@ public class OcppWebSocketRequestHandler implements OcppRequestHandler {
     }
 
     @Override
-    public void handle(StopTransactionRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(StopTransactionRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("StopTransactionRequestedEvent");
-        ocppJsonService.remoteStopTransaction(event.getChargingStationId(), event.getTransactionId(), statusCorrelationToken);
+        ocppJsonService.remoteStopTransaction(event.getChargingStationId(), event.getTransactionId(), correlationToken);
     }
 
     @Override
-    public void handle(SoftResetChargingStationRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(SoftResetChargingStationRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("SoftResetChargingStationRequestedEvent");
-        ocppJsonService.softReset(event.getChargingStationId(), statusCorrelationToken);
+        ocppJsonService.softReset(event.getChargingStationId(), correlationToken);
     }
 
     @Override
-    public void handle(HardResetChargingStationRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(HardResetChargingStationRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("HardResetChargingStationRequestedEvent");
-        ocppJsonService.hardReset(event.getChargingStationId(), statusCorrelationToken);
+        ocppJsonService.hardReset(event.getChargingStationId(), correlationToken);
     }
 
     @Override
-    public void handle(StartTransactionRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(StartTransactionRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("StartTransactionRequestedEvent");
-        ocppJsonService.remoteStartTransaction(event.getChargingStationId(), event.getEvseId(), event.getIdentifyingToken(), statusCorrelationToken);
+        ocppJsonService.remoteStartTransaction(event.getChargingStationId(), event.getEvseId(), event.getIdentifyingToken(), correlationToken);
     }
 
     @Override
-    public void handle(UnlockEvseRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(UnlockEvseRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("UnlockEvseRequestedEvent");
-        ocppJsonService.unlockEvse(event.getChargingStationId(), event.getEvseId(), statusCorrelationToken);
+        ocppJsonService.unlockEvse(event.getChargingStationId(), event.getEvseId(), correlationToken);
     }
 
     @Override
-    public void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event, CorrelationToken statusCorrelationToken) {
-        ocppJsonService.changeAvailability(event.getChargingStationId(), new EvseId(0), Changeavailability.Type.INOPERATIVE, statusCorrelationToken);
+    public void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event, CorrelationToken correlationToken) {
+        ocppJsonService.changeAvailability(event.getChargingStationId(), new EvseId(0), Changeavailability.Type.INOPERATIVE, correlationToken);
     }
 
     @Override
-    public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
-        ocppJsonService.changeAvailability(event.getChargingStationId(), new EvseId(0), Changeavailability.Type.OPERATIVE, statusCorrelationToken);
+    public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
+        ocppJsonService.changeAvailability(event.getChargingStationId(), new EvseId(0), Changeavailability.Type.OPERATIVE, correlationToken);
     }
 
     @Override
-    public void handle(ChangeComponentAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
-        ocppJsonService.changeAvailability(event.getChargingStationId(), (EvseId) event.getComponentId(), Changeavailability.Type.INOPERATIVE, statusCorrelationToken);
+    public void handle(ChangeComponentAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
+        ocppJsonService.changeAvailability(event.getChargingStationId(), (EvseId) event.getComponentId(), Changeavailability.Type.INOPERATIVE, correlationToken);
     }
 
     @Override
-    public void handle(ChangeComponentAvailabilityToOperativeRequestedEvent event, CorrelationToken statusCorrelationToken) {
-        ocppJsonService.changeAvailability(event.getChargingStationId(), (EvseId) event.getComponentId(), Changeavailability.Type.OPERATIVE, statusCorrelationToken);
+    public void handle(ChangeComponentAvailabilityToOperativeRequestedEvent event, CorrelationToken correlationToken) {
+        ocppJsonService.changeAvailability(event.getChargingStationId(), (EvseId) event.getComponentId(), Changeavailability.Type.OPERATIVE, correlationToken);
     }
 
     @Override
-    public void handle(DataTransferRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(DataTransferRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("DataTransferRequestedEvent");
-        ocppJsonService.dataTransfer(event.getChargingStationId(), event.getVendorId(), event.getMessageId(), event.getData(), statusCorrelationToken);
+        ocppJsonService.dataTransfer(event.getChargingStationId(), event.getVendorId(), event.getMessageId(), event.getData(), correlationToken);
     }
 
     @Override
-    public void handle(ChangeConfigurationItemRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(ChangeConfigurationItemRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("ChangeConfigurationItemRequestedEvent");
-        ocppJsonService.changeConfiguration(event.getChargingStationId(), event.getConfigurationItem(), statusCorrelationToken);
+        ocppJsonService.changeConfiguration(event.getChargingStationId(), event.getConfigurationItem(), correlationToken);
     }
 
     @Override
-    public void handle(DiagnosticsRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(DiagnosticsRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("DiagnosticsRequestedEvent");
-        ocppJsonService.getDiagnostics(event.getChargingStationId(), event.getNumRetries(), event.getRetryInterval(), event.getPeriodStartTime(), event.getPeriodStopTime(), event.getUploadLocation(), statusCorrelationToken);
+        ocppJsonService.getDiagnostics(event.getChargingStationId(), event.getNumRetries(), event.getRetryInterval(), event.getPeriodStartTime(), event.getPeriodStopTime(), event.getUploadLocation(), correlationToken);
     }
 
     @Override
-    public void handle(ClearCacheRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(ClearCacheRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("ClearCacheRequestedEvent");
-        ocppJsonService.clearCache(event.getChargingStationId(), statusCorrelationToken);
+        ocppJsonService.clearCache(event.getChargingStationId(), correlationToken);
     }
 
     @Override
@@ -115,27 +115,27 @@ public class OcppWebSocketRequestHandler implements OcppRequestHandler {
     }
 
     @Override
-    public void handle(AuthorizationListVersionRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(AuthorizationListVersionRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("AuthorizationListVersionRequestedEvent");
-        ocppJsonService.getLocalListVersion(event.getChargingStationId(), statusCorrelationToken);
+        ocppJsonService.getLocalListVersion(event.getChargingStationId(), correlationToken);
     }
 
     @Override
-    public void handle(SendAuthorizationListRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(SendAuthorizationListRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("SendAuthorizationListRequestedEvent");
-        ocppJsonService.sendLocalList(event.getChargingStationId(), event.getUpdateType(), event.getAuthorizationList(), event.getAuthorizationListVersion(), event.getAuthorizationListHash(), statusCorrelationToken);
+        ocppJsonService.sendLocalList(event.getChargingStationId(), event.getUpdateType(), event.getAuthorizationList(), event.getAuthorizationListVersion(), event.getAuthorizationListHash(), correlationToken);
     }
 
     @Override
-    public void handle(ReserveNowRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(ReserveNowRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("ReserveNowRequestedEvent");
-        ocppJsonService.reserveNow(event.getChargingStationId(), event.getEvseId(), event.getIdentifyingToken(), event.getParentIdentifyingToken(), event.getExpiryDate(), statusCorrelationToken);
+        ocppJsonService.reserveNow(event.getChargingStationId(), event.getEvseId(), event.getIdentifyingToken(), event.getParentIdentifyingToken(), event.getExpiryDate(), correlationToken);
     }
 
     @Override
-    public void handle(CancelReservationRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(CancelReservationRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("CancelReservationRequestedEvent");
-        ocppJsonService.cancelReservation(event.getChargingStationId(), (NumberedReservationId) event.getReservationId(), statusCorrelationToken);
+        ocppJsonService.cancelReservation(event.getChargingStationId(), (NumberedReservationId) event.getReservationId(), correlationToken);
     }
 
     public void setOcppJsonService(OcppJsonService ocppJsonService) {

@@ -22,39 +22,39 @@ public interface OcppRequestHandler {
 
     void handle(ConfigurationItemsRequestedEvent event);
 
-    void handle(StopTransactionRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void handle(StopTransactionRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void handle(SoftResetChargingStationRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void handle(SoftResetChargingStationRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void handle(HardResetChargingStationRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void handle(HardResetChargingStationRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void handle(StartTransactionRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void handle(StartTransactionRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void handle(UnlockEvseRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void handle(UnlockEvseRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void handle(ChangeComponentAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void handle(ChangeComponentAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void handle(ChangeComponentAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void handle(ChangeComponentAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void handle(DataTransferRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void handle(DataTransferRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void handle(ChangeConfigurationItemRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void handle(ChangeConfigurationItemRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void handle(DiagnosticsRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void handle(DiagnosticsRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void handle(ClearCacheRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void handle(ClearCacheRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
     void handle(FirmwareUpdateRequestedEvent event);
 
-    void handle(AuthorizationListVersionRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void handle(AuthorizationListVersionRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void handle(SendAuthorizationListRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void handle(SendAuthorizationListRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void handle(ReserveNowRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void handle(ReserveNowRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 
-    void handle(CancelReservationRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken);
+    void handle(CancelReservationRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken);
 }
