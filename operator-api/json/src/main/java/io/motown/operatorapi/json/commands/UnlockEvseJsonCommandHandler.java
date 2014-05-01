@@ -30,7 +30,7 @@ import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationR
 
 class UnlockEvseJsonCommandHandler implements JsonCommandHandler {
 
-    private static final String COMMAND_NAME = "UnlockEvse";
+    private static final String COMMAND_NAME = "RequestUnlockEvse";
 
     private DomainCommandGateway commandGateway;
 

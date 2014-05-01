@@ -34,7 +34,7 @@ import java.util.Map;
 
 class UpdateFirmwareJsonCommandHandler implements JsonCommandHandler {
 
-    private static final String COMMAND_NAME = "UpdateFirmware";
+    private static final String COMMAND_NAME = "RequestFirmwareUpdate";
 
     private DomainCommandGateway commandGateway;
 

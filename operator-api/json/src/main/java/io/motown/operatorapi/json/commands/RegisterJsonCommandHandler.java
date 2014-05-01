@@ -30,7 +30,7 @@ import java.util.Set;
 
 class RegisterJsonCommandHandler implements JsonCommandHandler {
 
-    private static final String COMMAND_NAME = "Register";
+    private static final String COMMAND_NAME = "AcceptChargingStation";
 
     private DomainCommandGateway commandGateway;
 

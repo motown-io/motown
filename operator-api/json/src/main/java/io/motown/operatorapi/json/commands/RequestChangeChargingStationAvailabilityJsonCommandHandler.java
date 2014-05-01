@@ -29,7 +29,7 @@ import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationR
 
 class RequestChangeChargingStationAvailabilityJsonCommandHandler implements JsonCommandHandler {
 
-    private static final String COMMAND_NAME = "ChangeAvailability";
+    private static final String COMMAND_NAME = "RequestChangeAvailability";
 
     private DomainCommandGateway commandGateway;
 

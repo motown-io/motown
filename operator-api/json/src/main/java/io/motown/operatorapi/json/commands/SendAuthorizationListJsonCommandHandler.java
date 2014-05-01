@@ -31,7 +31,7 @@ import java.util.Set;
 
 class SendAuthorizationListJsonCommandHandler implements JsonCommandHandler {
 
-    private static final String COMMAND_NAME = "SendAuthorizationList";
+    private static final String COMMAND_NAME = "RequestSendAuthorizationList";
 
     private DomainCommandGateway commandGateway;
 

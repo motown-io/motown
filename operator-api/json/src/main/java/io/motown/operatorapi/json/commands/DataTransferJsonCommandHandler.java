@@ -33,7 +33,7 @@ import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationR
  */
 class DataTransferJsonCommandHandler implements JsonCommandHandler {
 
-    private static final String COMMAND_NAME = "DataTransfer";
+    private static final String COMMAND_NAME = "RequestDataTransfer";
 
     private DomainCommandGateway commandGateway;
 
@@ -107,7 +107,7 @@ class DataTransferJsonCommandHandler implements JsonCommandHandler {
      * Sets the command authorization service to use. The command authorization service checks if a certain user is
      * allowed to execute a certain command.
      *
-     * @param commandAuthorizationService    command authorization.
+     * @param commandAuthorizationService command authorization.
      */
     public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
         this.commandAuthorizationService = commandAuthorizationService;

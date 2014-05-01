@@ -18,7 +18,10 @@ package io.motown.operatorapi.json.commands;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.CorrelationToken;
+import io.motown.domain.api.chargingstation.RequestHardResetChargingStationCommand;
+import io.motown.domain.api.chargingstation.RequestSoftResetChargingStationCommand;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.api.security.UserIdentity;
 import io.motown.domain.commandauthorization.CommandAuthorizationService;
@@ -29,7 +32,7 @@ import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationR
 
 class RequestResetChargingStationJsonCommandHandler implements JsonCommandHandler {
 
-    private static final String COMMAND_NAME = "ResetChargingStation";
+    private static final String COMMAND_NAME = "RequestResetChargingStation";
 
     private DomainCommandGateway commandGateway;
 

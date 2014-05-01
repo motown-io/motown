@@ -44,7 +44,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['Register', {
+                    data: ['AcceptChargingStation', {
                         'configuration': {
                             'evses': [
                                 {
@@ -96,7 +96,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['ResetChargingStation', {
+                    data: ['RequestResetChargingStation', {
                         'type': resetType
                     }]
                 }).success(function (response) {
@@ -121,7 +121,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['UnlockEvse', {
+                    data: ['RequestUnlockEvse', {
                         'evseId': evseId,
                         'identifyingToken': {'token': 'TOKEN'}
                     }]
@@ -134,7 +134,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['DataTransfer', {
+                    data: ['RequestDataTransfer', {
                         'vendorId': vendorId,
                         'messageId': messageId,
                         'data': data
@@ -148,7 +148,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['ChangeConfiguration', {
+                    data: ['RequestChangeConfigurationItem', {
                         'key': key,
                         'value': value
                     }]
@@ -184,7 +184,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['UpdateFirmware', {
+                    data: ['RequestFirmwareUpdate', {
                         'location': location,
                         'retrieveDate': retrieveDate
                     }]
@@ -208,7 +208,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['SendAuthorizationList', {
+                    data: ['RequestSendAuthorizationList', {
                         'listVersion': listVersion,
                         'updateType': updateType,
                         'items': items
@@ -228,7 +228,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['ChangeAvailability', {
+                    data: ['RequestChangeAvailability', {
                         'evseId': 1,
                         'availability': availabilityType
                     }]

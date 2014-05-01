@@ -99,7 +99,7 @@ public class ITChargingStationResourceTest extends JerseyTest {
                 .type(ApiVersion.V1_JSON)
                 .accept(ApiVersion.V1_JSON)
                 .post(ClientResponse.class, "[\n" +
-                        "    \"Register\",\n" +
+                        "    \"AcceptChargingStation\",\n" +
                         "    {\n" +
                         "        \"configuration\": {\n" +
                         "            \"evses\": [\n" +
@@ -148,7 +148,7 @@ public class ITChargingStationResourceTest extends JerseyTest {
                 .path("/commands")
                 .type(ApiVersion.V1_JSON)
                 .accept(MediaType.TEXT_PLAIN)
-                .post(ClientResponse.class, "[\"Register\"]");
+                .post(ClientResponse.class, "[\"AcceptChargingStation\"]");
 
         assertEquals(BAD_REQUEST, response.getStatus());
     }
@@ -161,7 +161,7 @@ public class ITChargingStationResourceTest extends JerseyTest {
                 .type(ApiVersion.V1_JSON)
                 .accept(MediaType.TEXT_PLAIN)
                 .post(ClientResponse.class, "[\n" +
-                        "    \"RegisterChargingStation\",\n" +
+                        "    \"AcceptChargingStation\",\n" +
                         "    {\n" +
                         "        \"configuration\": {\n" +
                         "            \"evses\": [\n" +
@@ -210,7 +210,7 @@ public class ITChargingStationResourceTest extends JerseyTest {
                 .path("/commands")
                 .type(ApiVersion.V1_JSON)
                 .accept(MediaType.TEXT_PLAIN)
-                .post(ClientResponse.class, "[\"Register\"}");
+                .post(ClientResponse.class, "[\"AcceptChargingStation\"}");
 
         assertEquals(BAD_REQUEST, response.getStatus());
     }

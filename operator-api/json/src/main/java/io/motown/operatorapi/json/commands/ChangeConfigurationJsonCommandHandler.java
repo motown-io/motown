@@ -18,7 +18,10 @@ package io.motown.operatorapi.json.commands;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.ConfigurationItem;
+import io.motown.domain.api.chargingstation.CorrelationToken;
+import io.motown.domain.api.chargingstation.RequestChangeConfigurationItemCommand;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.commandauthorization.CommandAuthorizationService;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
@@ -31,7 +34,7 @@ import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationR
  */
 class ChangeConfigurationJsonCommandHandler implements JsonCommandHandler {
 
-    private static final String COMMAND_NAME = "ChangeConfiguration";
+    private static final String COMMAND_NAME = "RequestChangeConfigurationItem";
 
     private DomainCommandGateway commandGateway;
 
@@ -104,7 +107,7 @@ class ChangeConfigurationJsonCommandHandler implements JsonCommandHandler {
      * Sets the command authorization service to use. The command authorization service checks if a certain user is
      * allowed to execute a certain command.
      *
-     * @param commandAuthorizationService    command authorization.
+     * @param commandAuthorizationService command authorization.
      */
     public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
         this.commandAuthorizationService = commandAuthorizationService;

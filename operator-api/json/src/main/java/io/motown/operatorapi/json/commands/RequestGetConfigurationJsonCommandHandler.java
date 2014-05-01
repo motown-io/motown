@@ -31,7 +31,7 @@ import java.util.HashSet;
 
 class RequestGetConfigurationJsonCommandHandler implements JsonCommandHandler {
 
-    private static final String COMMAND_NAME = "RequestGetConfiguration";
+    private static final String COMMAND_NAME = "RequestConfigurationItems";
 
     private DomainCommandGateway commandGateway;
 

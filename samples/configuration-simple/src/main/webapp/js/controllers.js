@@ -66,7 +66,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['Register', {
+                    data: ['AcceptChargingStation', {
                     }]
                 }).success(function (response) {
                     console.log('registered');
@@ -84,7 +84,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['ResetChargingStation', {
+                    data: ['RequestResetChargingStation', {
                         'type': resetType
                     }]
                 }).success(function (response) {
@@ -109,7 +109,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['UnlockEvse', {
+                    data: ['RequestUnlockEvse', {
                         'evseId': evseId,
                         'identifyingToken': {'token': 'TOKEN'}
                     }]
@@ -122,7 +122,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['DataTransfer', {
+                    data: ['RequestDataTransfer', {
                         'vendorId': vendorId,
                         'messageId': messageId,
                         'data': data
@@ -136,7 +136,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['ChangeConfiguration', {
+                    data: ['RequestChangeConfigurationItem', {
                         'key': key,
                         'value': value
                     }]
@@ -161,7 +161,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['RequestGetConfiguration', {
+                    data: ['RequestConfigurationItems', {
                     }]
                 }).success(function (response) {
                         console.log('get-configuration requested');
@@ -183,7 +183,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['UpdateFirmware', {
+                    data: ['RequestFirmwareUpdate', {
                         'location': location,
                         'retrieveDate': retrieveDate,
                         'numRetries': numRetries,
@@ -209,7 +209,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['SendAuthorizationList', {
+                    data: ['RequestSendAuthorizationList', {
                         'listVersion': listVersion,
                         'updateType': updateType,
                         'items': items
@@ -229,7 +229,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['ChangeAvailability', {
+                    data: ['RequestChangeAvailability', {
                         'evseId': 1,
                         'availability': availabilityType
                     }]
