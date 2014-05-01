@@ -54,14 +54,7 @@ public class TokenUtils {
     public static String createToken(UserDetails userDetails) {
         long expires = System.currentTimeMillis() + TOKEN_VALIDITY_DURATION;
 
-        StringBuilder tokenBuilder = new StringBuilder();
-        tokenBuilder.append(userDetails.getUsername());
-        tokenBuilder.append(TOKEN_SEPARATOR);
-        tokenBuilder.append(expires);
-        tokenBuilder.append(TOKEN_SEPARATOR);
-        tokenBuilder.append(TokenUtils.computeSignature(userDetails, expires));
-
-        return tokenBuilder.toString();
+        return userDetails.getUsername() + TOKEN_SEPARATOR + expires + TOKEN_SEPARATOR + TokenUtils.computeSignature(userDetails, expires);
     }
 
     /**
@@ -72,15 +65,6 @@ public class TokenUtils {
      * @return signature.
      */
     public static String computeSignature(UserDetails userDetails, long expires) {
-        StringBuilder signatureBuilder = new StringBuilder();
-        signatureBuilder.append(userDetails.getUsername());
-        signatureBuilder.append(TOKEN_SEPARATOR);
-        signatureBuilder.append(expires);
-        signatureBuilder.append(TOKEN_SEPARATOR);
-        signatureBuilder.append(userDetails.getPassword());
-        signatureBuilder.append(TOKEN_SEPARATOR);
-        signatureBuilder.append(TokenUtils.MAGIC_KEY);
-
         MessageDigest digest;
         try {
             digest = MessageDigest.getInstance(MESSAGE_DIGEST_ALGORITHM);
@@ -88,7 +72,9 @@ public class TokenUtils {
             throw new IllegalStateException("No " + MESSAGE_DIGEST_ALGORITHM + " algorithm available!", e);
         }
 
-        return new String(Hex.encode(digest.digest(signatureBuilder.toString().getBytes(Charsets.UTF_8))));
+        String signature = userDetails.getUsername() + TOKEN_SEPARATOR + expires + TOKEN_SEPARATOR + userDetails.getPassword() + TOKEN_SEPARATOR + TokenUtils.MAGIC_KEY;
+
+        return new String(Hex.encode(digest.digest(signature.getBytes(Charsets.UTF_8))));
     }
 
     /**
