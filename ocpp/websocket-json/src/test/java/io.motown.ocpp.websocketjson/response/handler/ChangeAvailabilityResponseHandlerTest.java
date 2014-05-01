@@ -25,8 +25,6 @@ import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.UUID;
-
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static io.motown.ocpp.websocketjson.schema.generated.v15.ChangeavailabilityResponse.Status;
@@ -47,8 +45,8 @@ public class ChangeAvailabilityResponseHandlerTest {
         gson = getGson();
         domainService = mock(DomainService.class);
 
-        token = UUID.randomUUID().toString();
-        correlationToken = new CorrelationToken(token);
+        correlationToken = new CorrelationToken();
+        token = correlationToken.getToken();
         handler = new ChangeAvailabilityResponseHandler(EVSE_ID, Changeavailability.Type.OPERATIVE, correlationToken);
     }
 

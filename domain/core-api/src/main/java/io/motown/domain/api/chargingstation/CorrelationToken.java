@@ -19,8 +19,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static com.google.common.base.Objects.toStringHelper;
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A {@code String} based identifying token used to correlate commands and events to each other.
@@ -34,22 +32,8 @@ public final class CorrelationToken {
     /**
      * Create a {@code CorrelationToken} with a {@code UUID} based token.
      */
-    public CorrelationToken(){
-        this(UUID.randomUUID().toString());
-    }
-
-    /**
-     * Create a {@code CorrelationToken} with a {@String} based token.
-     *
-     * @param token the token.
-     * @throws NullPointerException     if {@token} is null.
-     * @throws IllegalArgumentException if {@token} is empty.
-     */
-    public CorrelationToken(String token) {
-        checkNotNull(token);
-        checkArgument(!token.isEmpty());
-
-        this.token = token;
+    public CorrelationToken() {
+        this.token = UUID.randomUUID().toString();
     }
 
     /**

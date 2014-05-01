@@ -24,8 +24,6 @@ import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.UUID;
-
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static org.mockito.Mockito.*;
@@ -45,8 +43,8 @@ public class SendLocalListResponseHandlerTest {
         gson = getGson();
         domainService = mock(DomainService.class);
 
-        token = UUID.randomUUID().toString();
-        correlationToken = new CorrelationToken(token);
+        correlationToken = new CorrelationToken();
+        token = correlationToken.getToken();
         handler = new SendLocalListResponseHandler(LIST_VERSION, AuthorizationListUpdateType.FULL, IDENTIFYING_TOKENS, correlationToken);
     }
 

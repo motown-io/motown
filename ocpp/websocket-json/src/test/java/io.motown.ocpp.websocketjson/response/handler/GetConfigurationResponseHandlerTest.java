@@ -29,7 +29,6 @@ import org.mockito.ArgumentCaptor;
 
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
@@ -55,8 +54,8 @@ public class GetConfigurationResponseHandlerTest {
         gson = getGson();
         domainService = mock(DomainService.class);
 
-        token = UUID.randomUUID().toString();
-        correlationToken = new CorrelationToken(token);
+        correlationToken = new CorrelationToken();
+        token = correlationToken.getToken();
         handler = new GetConfigurationResponseHandler(correlationToken);
     }
 

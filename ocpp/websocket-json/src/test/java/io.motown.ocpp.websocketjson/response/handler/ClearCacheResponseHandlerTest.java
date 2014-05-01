@@ -23,8 +23,6 @@ import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.UUID;
-
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
@@ -45,8 +43,8 @@ public class ClearCacheResponseHandlerTest {
         gson = getGson();
         domainService = mock(DomainService.class);
 
-        token = UUID.randomUUID().toString();
-        correlationToken = new CorrelationToken(token);
+        correlationToken = new CorrelationToken();
+        token = correlationToken.getToken();
         handler = new ClearCacheResponseHandler(correlationToken);
     }
 
