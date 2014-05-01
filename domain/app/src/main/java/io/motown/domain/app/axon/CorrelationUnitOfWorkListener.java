@@ -32,22 +32,22 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class CorrelationUnitOfWorkListener extends UnitOfWorkListenerAdapter {
 
-    private final Object correlationId;
+    private final Object correlationToken;
 
     /**
      * Creates a {@code CorrelationUnitOfWorkListener} which adds correlation meta data to registered events.
      *
      * @param command the command for which
      * @throws NullPointerException     if {@code command} is {@code null}.
-     * @throws IllegalArgumentException if {@code command} does not contain the {@code correlationId} or if the
-     * {@code correlationId} is not a {@code CorrelationToken}.
+     * @throws IllegalArgumentException if {@code command} does not contain the {@code correlationToken} or if the
+     * {@code correlationToken} is not a {@code CorrelationToken}.
      */
     public CorrelationUnitOfWorkListener(CommandMessage<?> command) {
         checkNotNull(command);
         checkArgument(command.getMetaData().containsKey(CorrelationToken.KEY));
         checkArgument(command.getMetaData().get(CorrelationToken.KEY) instanceof CorrelationToken);
 
-        correlationId = command.getMetaData().get(CorrelationToken.KEY);
+        correlationToken = command.getMetaData().get(CorrelationToken.KEY);
     }
 
     /**
@@ -55,6 +55,6 @@ public class CorrelationUnitOfWorkListener extends UnitOfWorkListenerAdapter {
      */
     @Override
     public <T> EventMessage<T> onEventRegistered(UnitOfWork unitOfWork, EventMessage<T> event) {
-        return event.withMetaData(Collections.singletonMap(CorrelationToken.KEY, correlationId));
+        return event.withMetaData(Collections.singletonMap(CorrelationToken.KEY, correlationToken));
     }
 }
