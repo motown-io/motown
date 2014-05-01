@@ -16,7 +16,7 @@
     <bean class="io.motown.ocpp.viewmodel.OcppEventHandler">
         <property name="chargingStationRepository">
             <bean class="io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository">
-                <property name="entityManager" ref="jpaEntityManager" />
+                <property name="entityManagerFactory" ref="entityManagerFactory" />
             </bean>
         </property>
     </bean>
@@ -90,18 +90,16 @@
         </property>
     </bean>
 
-    <bean id="jpaEntityManager" factory-bean="entityManagerFactory" factory-method="createEntityManager" />
-
     <bean id="chargingStationRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository">
-        <property name="entityManager" ref="jpaEntityManager" />
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
 
     <bean id="reservationIdentifierRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repositories.ReservationIdentifierRepository">
-        <property name="entityManager" ref="jpaEntityManager" />
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
 
     <bean id="transactionRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repositories.TransactionRepository">
-        <property name="entityManager" ref="jpaEntityManager" />
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
