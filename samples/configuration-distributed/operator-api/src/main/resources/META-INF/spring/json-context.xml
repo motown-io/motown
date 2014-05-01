@@ -36,12 +36,12 @@
 
     <bean id="chargingStationRepository"
           class="io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository">
-        <property name="entityManager" ref="entityManager"/>
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
     <bean id="transactionRepository"
           class="io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository">
-        <property name="entityManager" ref="entityManager"/>
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
 
@@ -261,8 +261,6 @@
             </bean>
         </property>
     </bean>
-
-    <bean id="entityManager" factory-bean="entityManagerFactory" factory-method="createEntityManager"/>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
