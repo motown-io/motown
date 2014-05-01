@@ -17,8 +17,17 @@ package io.motown.identificationauthorization.pluginapi;
 
 import io.motown.domain.api.chargingstation.IdentifyingToken;
 
+/**
+ * Should be implemented by every AuthorizationProvider used in the Identification Authorization add-on.
+ */
 public interface AuthorizationProvider {
 
+    /**
+     * Validates the identification.
+     *
+     * @param identification
+     * @return true if the identification is valid, false if not or if the identification is unknown.
+     */
     boolean isValid(IdentifyingToken identification);
 
 }
