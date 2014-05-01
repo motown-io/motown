@@ -225,14 +225,12 @@
         </property>
     </bean>
 
-    <bean id="entityManager" factory-bean="entityManagerFactory" factory-method="createEntityManager" />
-
     <bean id="chargingStationRepository" class="io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository">
-        <property name="entityManager" ref="entityManager" />
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
 
     <bean id="subscriptionRepository" class="io.motown.vas.viewmodel.persistence.repostories.SubscriptionRepository">
-        <property name="entityManager" ref="entityManager" />
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
