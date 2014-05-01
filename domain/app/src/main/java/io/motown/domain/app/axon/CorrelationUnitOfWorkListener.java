@@ -32,7 +32,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class CorrelationUnitOfWorkListener extends UnitOfWorkListenerAdapter {
 
-    private final Object correlationToken;
+    private final CorrelationToken correlationToken;
 
     /**
      * Creates a {@code CorrelationUnitOfWorkListener} which adds correlation meta data to registered events.
@@ -47,7 +47,7 @@ public class CorrelationUnitOfWorkListener extends UnitOfWorkListenerAdapter {
         checkArgument(command.getMetaData().containsKey(CorrelationToken.KEY));
         checkArgument(command.getMetaData().get(CorrelationToken.KEY) instanceof CorrelationToken);
 
-        correlationToken = command.getMetaData().get(CorrelationToken.KEY);
+        correlationToken = (CorrelationToken) command.getMetaData().get(CorrelationToken.KEY);
     }
 
     /**
