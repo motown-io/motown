@@ -18,6 +18,7 @@ package io.motown.domain.api.chargingstation;
 import java.util.Objects;
 import java.util.UUID;
 
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -73,5 +74,15 @@ public final class CorrelationToken {
         }
         final CorrelationToken other = (CorrelationToken) obj;
         return Objects.equals(this.token, other.token);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return toStringHelper(this)
+                .add("token", token)
+                .toString();
     }
 }
