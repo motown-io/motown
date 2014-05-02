@@ -26,7 +26,7 @@
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
     <import resource="classpath:META-INF/soap-config.xml" />
-    <import resource="classpath:META-INF/spring/view-model-config.xml" />
+    <import resource="classpath:META-INF/view-model-config.xml" />
 
     <context:property-placeholder location="classpath:configViewModel.properties"
                                   ignore-resource-not-found="true"
