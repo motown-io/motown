@@ -19,7 +19,9 @@ import io.motown.operatorapi.viewmodel.persistence.entities.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import java.util.List;
 
 public class TransactionRepository {
@@ -56,14 +58,9 @@ public class TransactionRepository {
      * Find transactions by transaction id (not the auto-increment transaction.id)
      */
     public Transaction findByTransactionId(String transactionId) {
-        try {
-            return getEntityManager().createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t WHERE t.transactionId = :transactionId", Transaction.class)
-                    .setParameter("transactionId", transactionId)
-                    .getSingleResult();
-        } catch (NoResultException | NonUniqueResultException e) {
-            LOG.error(String.format("No transaction found with transactionId [%s]", transactionId) ,e);
-            return null;
-        }
+        return getEntityManager().createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t WHERE t.transactionId = :transactionId", Transaction.class)
+                .setParameter("transactionId", transactionId)
+                .getSingleResult();
     }
 
     public List<Transaction> findAll(int offset, int limit) {

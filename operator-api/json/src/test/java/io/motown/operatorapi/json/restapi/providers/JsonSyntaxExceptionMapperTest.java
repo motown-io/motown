@@ -15,6 +15,7 @@
  */
 package io.motown.operatorapi.json.restapi.providers;
 
+import com.google.gson.JsonSyntaxException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -26,18 +27,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GenericExceptionMapperTest {
+public class JsonSyntaxExceptionMapperTest {
+    private static final int BAD_REQUEST = 400;
 
     @Mock
-    private Exception exception;
+    private Throwable cause;
 
     @Test
-    public void testGenericExceptionMapper() {
-        GenericExceptionMapper mapper = new GenericExceptionMapper();
-        Response response = mapper.toResponse(exception);
+    public void testJsonSyntaxExceptionMapper() {
+        JsonSyntaxExceptionMapper mapper = new JsonSyntaxExceptionMapper();
+        Response response = mapper.toResponse(new JsonSyntaxException(cause));
 
         assertNotNull(response);
-        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
+        assertEquals(BAD_REQUEST, response.getStatus());
     }
-
 }

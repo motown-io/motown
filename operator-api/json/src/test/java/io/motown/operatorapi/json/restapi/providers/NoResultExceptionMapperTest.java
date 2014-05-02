@@ -20,24 +20,25 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.persistence.NoResultException;
 import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GenericExceptionMapperTest {
+public class NoResultExceptionMapperTest {
+    private static final int NOT_FOUND = 404;
 
     @Mock
-    private Exception exception;
+    private NoResultException exception;
 
     @Test
-    public void testGenericExceptionMapper() {
-        GenericExceptionMapper mapper = new GenericExceptionMapper();
+    public void testNoResultExceptionMapper() {
+        NoResultExceptionMapper mapper = new NoResultExceptionMapper();
         Response response = mapper.toResponse(exception);
 
         assertNotNull(response);
-        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
+        assertEquals(NOT_FOUND, response.getStatus());
     }
-
 }

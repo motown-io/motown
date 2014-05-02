@@ -20,24 +20,26 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.persistence.NonUniqueResultException;
 import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GenericExceptionMapperTest {
+public class NonUniqueResultExceptionMapperTest {
+
+    private static final int BAD_REQUEST = 400;
 
     @Mock
-    private Exception exception;
+    private NonUniqueResultException exception;
 
     @Test
-    public void testGenericExceptionMapper() {
-        GenericExceptionMapper mapper = new GenericExceptionMapper();
+    public void testNonUniqueResultExceptionMapper() {
+        NonUniqueResultExceptionMapper mapper = new NonUniqueResultExceptionMapper();
         Response response = mapper.toResponse(exception);
 
         assertNotNull(response);
-        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
+        assertEquals(BAD_REQUEST, response.getStatus());
     }
-
 }

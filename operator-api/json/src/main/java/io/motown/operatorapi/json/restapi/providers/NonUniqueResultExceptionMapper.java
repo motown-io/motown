@@ -15,29 +15,17 @@
  */
 package io.motown.operatorapi.json.restapi.providers;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
+import javax.persistence.NonUniqueResultException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+@Provider
+public final class NonUniqueResultExceptionMapper implements ExceptionMapper<NonUniqueResultException> {
 
-@RunWith(MockitoJUnitRunner.class)
-public class GenericExceptionMapperTest {
-
-    @Mock
-    private Exception exception;
-
-    @Test
-    public void testGenericExceptionMapper() {
-        GenericExceptionMapper mapper = new GenericExceptionMapper();
-        Response response = mapper.toResponse(exception);
-
-        assertNotNull(response);
-        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
+    @Override
+    public Response toResponse(NonUniqueResultException e) {
+        return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
     }
-
 }

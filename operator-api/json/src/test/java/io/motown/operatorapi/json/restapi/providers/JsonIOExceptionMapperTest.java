@@ -15,6 +15,7 @@
  */
 package io.motown.operatorapi.json.restapi.providers;
 
+import com.google.gson.JsonIOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -26,18 +27,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GenericExceptionMapperTest {
+public class JsonIOExceptionMapperTest {
+    private static final int BAD_REQUEST = 400;
 
     @Mock
-    private Exception exception;
+    private Throwable cause;
 
     @Test
-    public void testGenericExceptionMapper() {
-        GenericExceptionMapper mapper = new GenericExceptionMapper();
-        Response response = mapper.toResponse(exception);
+    public void testJsonIOExceptionMapper() {
+        JsonIOExceptionMapper mapper = new JsonIOExceptionMapper();
+        Response response = mapper.toResponse(new JsonIOException(cause));
 
         assertNotNull(response);
-        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
+        assertEquals(BAD_REQUEST, response.getStatus());
     }
-
 }
