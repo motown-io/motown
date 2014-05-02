@@ -17,8 +17,7 @@ package io.motown.vas.v10.soap.publisher;
 
 import io.motown.vas.v10.soap.VasConversionService;
 import io.motown.vas.v10.soap.schema.*;
-import io.motown.vas.viewmodel.persistence.entities.ChargingStation;
-import io.motown.vas.viewmodel.persistence.entities.Subscription;
+import io.motown.vas.viewmodel.persistence.entities.*;
 import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository;
 import io.motown.vas.viewmodel.persistence.repostories.SubscriptionRepository;
 import org.slf4j.Logger;

@@ -15,7 +15,7 @@
  */
 package io.motown.vas.viewmodel.persistence.repostories;
 
-import io.motown.vas.viewmodel.persistence.entities.Subscription;
+import io.motown.vas.viewmodel.persistence.entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

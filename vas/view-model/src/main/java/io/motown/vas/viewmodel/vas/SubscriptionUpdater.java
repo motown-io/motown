@@ -16,7 +16,7 @@
 package io.motown.vas.viewmodel.vas;
 
 import io.motown.vas.viewmodel.model.StatusChange;
-import io.motown.vas.viewmodel.persistence.entities.Subscription;
+import io.motown.vas.viewmodel.persistence.entities.*;
 
 public class SubscriptionUpdater implements Runnable {
 
