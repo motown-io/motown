@@ -15,16 +15,17 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.restapi.providers;
 
+import javax.persistence.NonUniqueResultException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public final class GenericExceptionMapper implements ExceptionMapper<Exception> {
+public final class NonUniqueResultExceptionMapper implements ExceptionMapper<NonUniqueResultException> {
 
     @Override
-    public Response toResponse(Exception e) {
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
+    public Response toResponse(NonUniqueResultException e) {
+        return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
     }
 }

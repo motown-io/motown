@@ -27,7 +27,7 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GenericExceptionMapperTest {
-    private static final int BAD_REQUEST = 400;
+    private static final int INTERNAL_SERVER_ERROR = 500;
 
     @Mock
     private Exception exception;
@@ -38,6 +38,6 @@ public class GenericExceptionMapperTest {
         Response response = mapper.toResponse(exception);
 
         assertNotNull(response);
-        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(INTERNAL_SERVER_ERROR, response.getStatus());
     }
 }

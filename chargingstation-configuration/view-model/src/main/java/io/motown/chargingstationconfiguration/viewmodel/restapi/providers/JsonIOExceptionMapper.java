@@ -15,30 +15,18 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.restapi.providers;
 
-import com.google.gson.JsonParseException;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import com.google.gson.JsonIOException;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+@Provider
+public final class JsonIOExceptionMapper implements ExceptionMapper<JsonIOException> {
 
-@RunWith(MockitoJUnitRunner.class)
-public class JsonParseExceptionMapperTest {
-    private static final int BAD_REQUEST = 400;
-
-    @Mock
-    private JsonParseException exception;
-
-    @Test
-    public void testJsonParseExceptionMapper() {
-        JsonParseExceptionMapper mapper = new JsonParseExceptionMapper();
-        Response response = mapper.toResponse(exception);
-
-        assertNotNull(response);
-        assertEquals(BAD_REQUEST, response.getStatus());
+    @Override
+    public Response toResponse(JsonIOException e) {
+        return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
     }
 }

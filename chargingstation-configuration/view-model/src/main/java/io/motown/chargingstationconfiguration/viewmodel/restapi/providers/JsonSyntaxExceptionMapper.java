@@ -15,7 +15,7 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.restapi.providers;
 
-import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -23,10 +23,10 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public final class JsonParseExceptionMapper implements ExceptionMapper<JsonParseException> {
+public final class JsonSyntaxExceptionMapper implements ExceptionMapper<JsonSyntaxException> {
 
     @Override
-    public Response toResponse(JsonParseException e) {
+    public Response toResponse(JsonSyntaxException e) {
         return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
     }
 }

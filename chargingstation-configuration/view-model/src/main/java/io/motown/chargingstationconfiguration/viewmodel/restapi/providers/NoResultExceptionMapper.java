@@ -15,16 +15,17 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.restapi.providers;
 
+import javax.persistence.NoResultException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public final class GenericExceptionMapper implements ExceptionMapper<Exception> {
+public final class NoResultExceptionMapper implements ExceptionMapper<NoResultException> {
 
     @Override
-    public Response toResponse(Exception e) {
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
+    public Response toResponse(NoResultException e) {
+        return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
     }
 }
