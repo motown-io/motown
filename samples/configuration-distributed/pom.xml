@@ -32,6 +32,7 @@
         <module>chargingstation-configuration</module>
         <module>identification-authorization</module>
         <module>ocpp-v15-soap</module>
+        <module>ocpp-v15-websocket-json</module>
         <module>ocpp-v12-soap</module>
         <module>operator-api</module>
         <module>vas</module>
