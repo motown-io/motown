@@ -80,7 +80,10 @@ public class OcppWebSocketServlet extends WebSocketStreamingHandlerAdapter {
 
     private String determineIdentifierFromRequest(AtmosphereRequest request) {
         // request.getPathInfo() is said to be unreliable in several containers
-        return request.getRequestURI().substring(request.getServletPath().length() + 1);
+        String contextPath = request.getContextPath();
+        String servletPath = request.getServletPath() + "/";
+
+        return request.getRequestURI().substring((contextPath + servletPath).length());
     }
 
 }
