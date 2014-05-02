@@ -18,14 +18,13 @@ package io.motown.operatorapi.json.commands;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.api.security.TypeBasedAddOnIdentity;
 import io.motown.domain.api.security.UserIdentity;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 
 import java.util.List;
-
-import static com.google.common.base.Preconditions.checkArgument;
 
 public class JsonCommandService {
 
@@ -46,7 +45,9 @@ public class JsonCommandService {
     public void handleCommand(String chargingStationId, String jsonCommand, UserIdentity userIdentity) throws UserIdentityUnauthorizedException {
         JsonArray commandAsArray = gson.fromJson(jsonCommand, JsonArray.class);
 
-        checkArgument(commandAsArray.size() == COMMAND_ARRAY_SIZE, "API command must be a JSON array with two elements");
+        if (commandAsArray.size() != COMMAND_ARRAY_SIZE) {
+            throw new JsonParseException("API command must be a JSON array with two elements");
+        }
 
         String commandName = commandAsArray.get(COMMAND_NAME_INDEX).getAsString();
         JsonObject commandPayloadAsObject = commandAsArray.get(COMMAND_PAYLOAD_INDEX).getAsJsonObject();
@@ -65,7 +66,7 @@ public class JsonCommandService {
             }
         }
 
-        throw new IllegalArgumentException("No command handler is configured for handling [" + commandName + "].");
+        throw new JsonParseException(String.format("No command handler is configured for handling [%s].", commandName));
     }
 
     public void setGson(Gson gson) {
