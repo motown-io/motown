@@ -21,6 +21,16 @@
         </property>
     </bean>
 
+    <bean id="userIdentitiesWithAllPermissions" class="java.util.HashSet">
+        <constructor-arg>
+            <set>
+                <bean class="io.motown.domain.api.security.SimpleUserIdentity">
+                    <constructor-arg name="identity" value="root" />
+                </bean>
+            </set>
+        </constructor-arg>
+    </bean>
+
     <bean id="domainService" class="io.motown.ocpp.viewmodel.domain.DomainService">
         <property name="chargingStationRepository" ref="chargingStationRepositoryOcppWebServices" />
         <property name="commandGateway" ref="domainCommandGateway" />
@@ -30,6 +40,7 @@
         <property name="heartbeatInterval" value="${io.motown.ocpp.viewmodel.heartbeat.interval}" />
         <property name="reservationIdentifierRepository" ref="reservationIdentifierRepositoryOcppWebServices" />
         <property name="transactionRepository" ref="transactionRepositoryOcppWebServices" />
+        <property name="userIdentitiesWithAllPermissions" ref="userIdentitiesWithAllPermissions"/>
     </bean>
 
     <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
