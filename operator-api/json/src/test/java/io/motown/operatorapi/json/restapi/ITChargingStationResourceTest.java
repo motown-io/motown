@@ -109,7 +109,7 @@ public class ITChargingStationResourceTest extends JerseyTest {
                         "                        {\n" +
                         "                            \"maxAmp\": 32,\n" +
                         "                            \"phase\": 3,\n" +
-                        "                            \"voltage\": 230,\n" +
+                        "                            \"voltage\": 240,\n" +
                         "                            \"chargingProtocol\": \"MODE3\",\n" +
                         "                            \"current\": \"AC\",\n" +
                         "                            \"connectorType\": \"TESLA\"\n" +
@@ -122,7 +122,7 @@ public class ITChargingStationResourceTest extends JerseyTest {
                         "                        {\n" +
                         "                            \"maxAmp\": 32,\n" +
                         "                            \"phase\": 3,\n" +
-                        "                            \"voltage\": 230,\n" +
+                        "                            \"voltage\": 240,\n" +
                         "                            \"chargingProtocol\": \"MODE3\",\n" +
                         "                            \"current\": \"AC\",\n" +
                         "                            \"connectorType\": \"TESLA\"\n" +
@@ -161,7 +161,7 @@ public class ITChargingStationResourceTest extends JerseyTest {
                 .type(ApiVersion.V1_JSON)
                 .accept(MediaType.TEXT_PLAIN)
                 .post(ClientResponse.class, "[\n" +
-                        "    \"AcceptChargingStation\",\n" +
+                        "    \"Accept\",\n" +
                         "    {\n" +
                         "        \"configuration\": {\n" +
                         "            \"evses\": [\n" +
@@ -171,7 +171,7 @@ public class ITChargingStationResourceTest extends JerseyTest {
                         "                        {\n" +
                         "                            \"maxAmp\": 32,\n" +
                         "                            \"phase\": 3,\n" +
-                        "                            \"voltage\": 230,\n" +
+                        "                            \"voltage\": 240,\n" +
                         "                            \"chargingProtocol\": \"MODE3\",\n" +
                         "                            \"current\": \"AC\",\n" +
                         "                            \"connectorType\": \"TESLA\"\n" +
@@ -184,7 +184,7 @@ public class ITChargingStationResourceTest extends JerseyTest {
                         "                        {\n" +
                         "                            \"maxAmp\": 32,\n" +
                         "                            \"phase\": 3,\n" +
-                        "                            \"voltage\": 230,\n" +
+                        "                            \"voltage\": 240,\n" +
                         "                            \"chargingProtocol\": \"MODE3\",\n" +
                         "                            \"current\": \"AC\",\n" +
                         "                            \"connectorType\": \"TESLA\"\n" +
