@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2013 Motown.IO (info@motown.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			               http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+    <bean id="passwordEncoder" class="io.motown.sample.authentication.security.SaltedPasswordEncoder">
+        <constructor-arg name="algorithm" value="SHA-256" />
+        <constructor-arg name="salt" value="secret" />
+    </bean>
+
+    <bean id="userDetailsService" class="io.motown.sample.authentication.userdetails.UserDetailsServiceImpl" />
+
+    <security:authentication-manager id="authenticationManager">
+        <security:authentication-provider user-service-ref="userDetailsService">
+            <security:password-encoder ref="passwordEncoder" />
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+    <security:http
+            realm="Protected API"
+            use-expressions="true"
+            auto-config="false"
+            create-session="stateless"
+            entry-point-ref="unauthorizedEntryPoint"
+            authentication-manager-ref="authenticationManager">
+        <security:custom-filter ref="authenticationTokenProcessingFilter" position="FORM_LOGIN_FILTER" />
+        <security:intercept-url pattern="/rest/user/authenticate" access="permitAll" />
+        <security:intercept-url pattern="/rest/operator-api/**" access="isAuthenticated()" />
+    </security:http>
+
+    <bean id="unauthorizedEntryPoint" class="io.motown.sample.authentication.rest.UnauthorizedEntryPoint" />
+
+    <bean class="io.motown.sample.authentication.rest.AuthenticationTokenProcessingFilter" id="authenticationTokenProcessingFilter">
+        <constructor-arg ref="userDetailsService" />
+    </bean>
+
+    <bean class="io.motown.sample.authentication.resources.UserResource">
+        <property name="authManager" ref="authenticationManager" />
+    </bean>
+
+</beans>

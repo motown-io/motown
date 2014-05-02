@@ -1,0 +1,159 @@
+<!--
+
+    Copyright (C) 2013 Motown.IO (info@motown.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<h2>Charging Stations</h2>
+<div ng-controller="ChargingStationController" ng-init="init()">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Charging Station</th>
+            <th>Status</th>
+            <th>Actions</th>
+            <th style="text-align:right;"><a href="" ng-click="showEvses = !showEvses"><span
+                    ng-show="!showEvses">+</span><span ng-show="showEvses">-</span> Evses</a></th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <td colspan="4">
+                <pagination page="page" total-items="totalNumberOfElements" items-per-page="limit" boundary-links="true" on-select-page="changePage(page)"
+                            rotate="false" max-size="5" first-text="&laquo;" previous-text="&lsaquo;" next-text="&rsaquo;" last-text="&raquo;"></pagination>
+            </td>
+        </tr>
+        </tfoot>
+        <tbody>
+        <tr ng-repeat="chargingStation in chargingStations">
+            <td>{{chargingStation.id}}</td>
+            <td>{{chargingStation.status}}</td>
+            <td colspan="2">
+                <div ng-if="!chargingStation.accepted">
+                    <button class="btn btn-default" href="#" ng-click="registerChargingStation(chargingStation)">
+                        register
+                    </button>
+                </div>
+                <div ng-if="chargingStation.accepted">
+                    <button class="btn btn-default" href="#" ng-click="resetChargingStation(chargingStation)">soft
+                        reset
+                    </button>
+                    <button class="btn btn-default" href="#" ng-click="resetChargingStation(chargingStation, 'hard')">
+                        hard reset
+                    </button>
+                    <button class="btn btn-default" href="#" ng-click="startTransaction(chargingStation)">start
+                        transaction
+                    </button>
+                    <button class="btn btn-default" href="#" ng-click="changeAvailability(chargingStation)">change
+                        availability: operative
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="changeAvailability(chargingStation, 'inoperative')">change availability:
+                        inoperative
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="dataTransfer(chargingStation, 'Alfen', 'msgXid', 'ABC123')">data transfer test
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="changeConfiguration(chargingStation, 'HeartbeatInterval', '10000')">change
+                        configuration: heartbeat
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="getDiagnostics(chargingStation, 'ftp://nowhere.xyz')">get diagnostics
+                    </button>
+                    <button class="btn btn-default" href="#" ng-click="getConfiguration(chargingStation)">get
+                        configuration
+                    </button>
+                    <button class="btn btn-default" href="#" ng-click="clearCache(chargingStation)">clear cache</button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="updateFirmware(chargingStation, 'http://somewhere.xyz', '2014-06-01T09:30:00Z')">
+                        firmware-update
+                    </button>
+                    <button class="btn btn-default" href="#" ng-click="getAuthorizationListVersion(chargingStation)">
+                        authorization list version
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="sendAuthorizationList(chargingStation, 1, 'FULL', [{'token': 'token1', 'status': 'ACCEPTED'}, {'token': 'token2', 'status': 'BLOCKED'}, {'token': 'token3', 'status': 'EXPIRED'}])">
+                        send authorization list
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="reserveNow(chargingStation, 2, {'token': 'TOKEN'}, '2014-03-21T09:30:00Z')">
+                        reserve now
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="cancelReservation(chargingStation, 2, {'token': 'TOKEN'})">cancel reservation
+                    </button>
+                    <button class="btn btn-default" href="#" ng-click="updateReservable(chargingStation, true)">Set
+                        reservable
+                    </button>
+                    <button class="btn btn-default" href="#" ng-click="updateReservable(chargingStation, false)">Set not
+                        reservable
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="placeChargingStation(chargingStation, {'latitude': 51.464055, 'longitude': 5.794529}, undefined, 'public')">
+                        Place charging station
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="improveChargingStationLocation(chargingStation, undefined, {'addressLine1': 'Markt 8', 'addressLine2': '', 'postalCode': '5751 BE', 'city': 'Deurne', 'region': '', 'country': 'The Netherlands'}, 'PAYING')">
+                        Improve charging station location
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="moveChargingStation(chargingStation, {'latitude': 51.463976, 'longitude': 5.793803}, {'addressLine1': 'Helmondseweg 2', 'addressLine2': '', 'postalCode': '', 'city': 'Deurne', 'region': '', 'country': 'The Netherlands'}, 'Private')">
+                        Move charging station
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="setOpeningTimes(chargingStation, [{'day': 'monday', 'timeStart': '12:00', timeStop: '15:00'}, {'day': 'monday', 'timeStart': '20:00', timeStop: '22:00'}])">
+                        Set opening times
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="addOpeningTimes(chargingStation, [{'day': 'tuesday', 'timeStart': '8:30', timeStop: '17:00'}])">
+                        Add opening times
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="grantPermission(chargingStation, 'io.motown.domain.api.chargingstation.RequestUnlockEvseCommand', 'user')">
+                        Grant permission
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="revokePermission(chargingStation, 'io.motown.domain.api.chargingstation.RequestUnlockEvseCommand', 'user')">
+                        Revoke permission
+                    </button>
+
+                    <table ng-show="showEvses" class="table">
+                        <thead>
+                        <tr>
+                            <th>EvseId</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="evse in chargingStation.evses | orderBy:+evseId">
+                            <td>{{evse.evseId}}</td>
+                            <td>{{evse.status}}</td>
+                            <td>
+                                <div>
+                                    <button class="btn btn-default" href="#"
+                                            ng-click="unlockEvse(chargingStation, evse.evseId)">Unlock Evse
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

@@ -15,70 +15,58 @@
  */
 angular.module('demoApp.controllers', []).
     controller('ChargingStationController',
-        ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
+        ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
             $scope.init = function () {
-                $scope.startGetChargingStationsTimer();
+                $scope.offset = 0;
+                $scope.limit = 10;
+                $scope.numberOfPages = 1;
+                $scope.getChargingStations();
+                if(!$scope.chargingStationTimer) {
+                    $scope.chargingStationTimer = $scope.startGetChargingStationsTimer();
+                }
             };
 
+            $scope.$on('$destroy', function destroy() {
+                $interval.cancel($scope.chargingStationTimer);
+                delete $scope.chargingStationTimer;
+            });
+
             $scope.startGetChargingStationsTimer = function () {
-                $timeout(function () {
+                return $interval(function () {
                     $scope.getChargingStations();
-                    $scope.startGetChargingStationsTimer();
-                }, 1000);
+                }, 5000);
             };
 
             $scope.getChargingStations = function () {
+                var q = ['offset=' + ($scope.offset || 0), 'limit=' + ($scope.limit || 10)];
+
                 $http({
-                    url: 'charging-stations',
+                    url: 'rest/operator-api/charging-stations?' + q.join('&'),
                     method: 'GET',
                     data: ''
                 }).success(function (response) {
-                    $scope.chargingStations = response;
+                    $scope.chargingStations = response.elements;
+                    $scope.numberOfPages = Math.floor(parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) / parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10)) + 1;
+                    $scope.totalNumberOfElements = parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) + parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10);
+                }).error(function () {
+                    console.log('Error getting charging stations, cancel polling.');
+                    $interval.cancel($scope.chargingStationTimer);
+                    delete $scope.chargingStationTimer;
                 });
             };
 
-            $scope.registerChargingStation = function (chargingStation) {
+            $scope.changePage = function(page) {
+                $scope.offset = (page - 1) * $scope.limit;
+                $scope.getChargingStations();
+            };
 
+            $scope.registerChargingStation = function (chargingStation) {
                 var cs = chargingStation;
 
                 $http({
-                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['AcceptChargingStation', {
-                        'configuration': {
-                            'evses': [
-                                {
-                                    'evseId': 1,
-                                    'connectors': [
-                                        {
-                                            'maxAmp': 32,
-                                            'phase': 3,
-                                            'voltage': 240,
-                                            'chargingProtocol': 'MODE3',
-                                            'current': 'AC',
-                                            'connectorType': 'TESLA'
-                                        }
-                                    ]
-                                },
-                                {
-                                    'evseId': 2,
-                                    'connectors': [
-                                        {
-                                            'maxAmp': 32,
-                                            'phase': 3,
-                                            'voltage': 240,
-                                            'chargingProtocol': 'MODE3',
-                                            'current': 'AC',
-                                            'connectorType': 'TESLA'
-                                        }
-                                    ]
-                                }
-                            ],
-                            'settings': {
-                                'key': 'value',
-                                'key2': 'value2'
-                            }
-                        }
                     }]
                 }).success(function (response) {
                     console.log('registered');
@@ -94,7 +82,7 @@ angular.module('demoApp.controllers', []).
                 }
 
                 $http({
-                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['RequestResetChargingStation', {
                         'type': resetType
@@ -106,10 +94,10 @@ angular.module('demoApp.controllers', []).
 
             $scope.startTransaction = function (chargingStation) {
                 $http({
-                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['RequestStartTransaction', {
-                        'evseId': 1,
+                        'evseId': 2,
                         'identifyingToken': {'token': 'TOKEN'}
                     }]
                 }).success(function (response) {
@@ -119,7 +107,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.unlockEvse = function (chargingStation, evseId) {
                 $http({
-                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['RequestUnlockEvse', {
                         'evseId': evseId,
@@ -132,7 +120,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.dataTransfer = function (chargingStation, vendorId, messageId, data) {
                 $http({
-                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['RequestDataTransfer', {
                         'vendorId': vendorId,
@@ -146,7 +134,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.changeConfiguration = function (chargingStation, key, value) {
                 $http({
-                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['RequestChangeConfigurationItem', {
                         'key': key,
@@ -159,7 +147,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.getDiagnostics = function (chargingStation, targetLocation) {
                 $http({
-                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['RequestDiagnostics', {
                         'targetLocation': targetLocation
@@ -169,9 +157,20 @@ angular.module('demoApp.controllers', []).
                 });
             };
 
+            $scope.getConfiguration = function (chargingStation) {
+                $http({
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
+                    method: 'POST',
+                    data: ['RequestConfigurationItems', {
+                    }]
+                }).success(function (response) {
+                        console.log('get-configuration requested');
+                    });
+            };
+
             $scope.clearCache = function (chargingStation) {
                 $http({
-                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['RequestClearCache', {
                     }]
@@ -180,13 +179,15 @@ angular.module('demoApp.controllers', []).
                 });
             };
 
-            $scope.updateFirmware = function (chargingStation, location, retrieveDate) {
+            $scope.updateFirmware = function (chargingStation, location, retrieveDate, numRetries, retryInterval) {
                 $http({
-                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['RequestFirmwareUpdate', {
                         'location': location,
-                        'retrieveDate': retrieveDate
+                        'retrieveDate': retrieveDate,
+                        'numRetries': numRetries,
+                        'retryInterval': retryInterval
                     }]
                 }).success(function (response) {
                     console.log('clear cache requested');
@@ -195,7 +196,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.getAuthorizationListVersion = function (chargingStation) {
                 $http({
-                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['RequestAuthorizationListVersion', {
                     }]
@@ -206,7 +207,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.sendAuthorizationList = function (chargingStation, listVersion, updateType, items) {
                 $http({
-                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['RequestSendAuthorizationList', {
                         'listVersion': listVersion,
@@ -226,7 +227,7 @@ angular.module('demoApp.controllers', []).
                 }
 
                 $http({
-                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['RequestChangeAvailability', {
                         'evseId': 1,
@@ -239,7 +240,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.reserveNow = function (chargingStation, evseId, identifyingToken, expiryDate) {
                 $http({
-                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['RequestReserveNow', {
                         'evseId': evseId,
@@ -247,13 +248,25 @@ angular.module('demoApp.controllers', []).
                         'expiryDate': expiryDate
                     }]
                 }).success(function (response) {
-                    console.log('change availability requested');
+                    console.log('reserve now requested');
                 });
+            };
+
+            $scope.cancelReservation = function (chargingStation, reservationId) {
+                $http({
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
+                    method: 'POST',
+                    data: ['RequestCancelReservation', {
+                        'reservationId': reservationId
+                    }]
+                }).success(function (response) {
+                        console.log('cancel reservation requested');
+                    });
             };
 
             $scope.updateReservable = function (chargingStation, reservable) {
                 $http({
-                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['UpdateChargingStationReservable', {
                         'reservable': reservable
@@ -265,7 +278,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.placeChargingStation = function (chargingStation, coordinates, address, accessibility) {
                 $http({
-                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['PlaceChargingStation', {
                         'coordinates': coordinates,
@@ -279,7 +292,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.improveChargingStationLocation = function (chargingStation, coordinates, address, accessibility) {
                 $http({
-                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['ImproveChargingStationLocation', {
                         'coordinates': coordinates,
@@ -293,7 +306,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.moveChargingStation = function (chargingStation, coordinates, address, accessibility) {
                 $http({
-                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['MoveChargingStation', {
                         'coordinates': coordinates,
@@ -307,7 +320,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.setOpeningTimes = function (chargingStation, openingTimes) {
                 $http({
-                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['SetChargingStationOpeningTimes', {
                         'openingTimes': openingTimes
@@ -319,7 +332,7 @@ angular.module('demoApp.controllers', []).
 
             $scope.addOpeningTimes = function (chargingStation, openingTimes) {
                 $http({
-                    url: 'charging-stations/' + chargingStation.id + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
                     data: ['AddChargingStationOpeningTimes', {
                         'openingTimes': openingTimes
@@ -328,33 +341,85 @@ angular.module('demoApp.controllers', []).
                     console.log('Opening times added');
                 });
             };
-        }]).
-    controller('TransactionController',
-        ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
-            $scope.init = function () {
-                $scope.startGetTransactionsTimer();
+
+            $scope.grantPermission = function (chargingStation, commandClass, userIdentity) {
+                $http({
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
+                    method: 'POST',
+                    data: ['GrantPermission', {
+                        'commandClass': commandClass,
+                        'userIdentity': userIdentity
+
+                    }]
+                }).success(function (response) {
+                    console.log('Permission requested');
+                });
             };
 
+            $scope.revokePermission = function (chargingStation, commandClass, userIdentity) {
+                $http({
+                    url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
+                    method: 'POST',
+                    data: ['RevokePermission', {
+                        'commandClass': commandClass,
+                        'userIdentity': userIdentity
+
+                    }]
+                }).success(function (response) {
+                    console.log('Revoke permission requested');
+                });
+            }
+        }]).
+    controller('TransactionController',
+        ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
+            $scope.init = function () {
+                $scope.offset = 0;
+                $scope.limit = 10;
+                $scope.numberOfPages = 1;
+                $scope.getTransactions();
+                if(!$scope.transactionTimer) {
+                    $scope.transactionTimer = $scope.startGetTransactionsTimer();
+                }
+            };
+
+            $scope.$on('$destroy', function destroy() {
+                console.log('Cancelling timer');
+                $interval.cancel($scope.transactionTimer);
+                delete $scope.transactionTimer;
+            });
+
             $scope.startGetTransactionsTimer = function () {
-                $timeout(function () {
+                return $interval(function () {
                     $scope.getTransactions();
-                    $scope.startGetTransactionsTimer();
-                }, 1000);
+                }, 5000);
             };
 
             $scope.getTransactions = function () {
+                var q = ['offset=' + ($scope.offset || 0), 'limit=' + ($scope.limit || 10)];
+
                 $http({
-                    url: 'transactions',
+                    url: 'rest/operator-api/transactions?' + q.join('&'),
                     method: 'GET',
                     data: ''
                 }).success(function (response) {
-                    $scope.transactions = response;
+                    $scope.transactions = response.elements;
+                    $scope.numberOfPages = Math.floor(parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) / parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10)) + 1;
+                    $scope.totalNumberOfElements = parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) + parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10);
+                }).error(function() {
+                    console.log('Error getting transactions, cancel polling.');
+                    $interval.cancel($scope.transactionTimer);
+                    delete $scope.transactionTimer;
                 });
+            };
+
+            $scope.changePage = function(page) {
+                $scope.offset = (page - 1) * $scope.limit;
+                $scope.getTransactions();
             };
 
             $scope.stopTransaction = function (chargingStationId, id) {
                 $http({
-                    url: 'charging-stations/' + chargingStationId + '/commands',
+                    url: 'rest/operator-api/charging-stations/' + chargingStationId + '/commands',
                     method: 'POST',
                     data: ['RequestStopTransaction', {
                         'id': id
@@ -363,4 +428,51 @@ angular.module('demoApp.controllers', []).
                     console.log('remote stop!');
                 });
             };
-        }]);
+        }]).
+    controller('ConfigurationController',
+        ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
+            $scope.init = function () {
+                $scope.offset = 0;
+                $scope.limit = 10;
+                $scope.numberOfPages = 1;
+                $scope.getChargingStationTypes();
+            };
+
+            $scope.getChargingStationTypes = function () {
+                var q = ['offset=' + ($scope.offset || 0), 'limit=' + ($scope.limit || 10)];
+
+                $http({
+                    url: 'rest/config/chargingstationtypes?' + q.join('&'),
+                    method: 'GET',
+                    data: ''
+                }).success(function (response) {
+                    $scope.chargingStationTypes = response.elements;
+                    $scope.numberOfPages = Math.floor(parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) / parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10)) + 1;
+                    $scope.totalNumberOfElements = parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) + parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10);
+                });
+            };
+
+            $scope.changePage = function(page) {
+                $scope.offset = (page - 1) * $scope.limit;
+                $scope.getChargingStationTypes();
+            };
+        }]
+    ).
+    controller('LoginController',
+        ['$scope', '$rootScope', '$location', '$cookieStore', 'UserService', function ($scope, $rootScope, $location, $cookieStore, UserService) {
+            $scope.rememberMe = false;
+
+            $scope.login = function() {
+                UserService.authenticate($.param({username: $scope.username, password: $scope.password}), function(authenticationResult) {
+                    var authToken = authenticationResult.token;
+                    $rootScope.authToken = authToken;
+                    if ($scope.rememberMe) {
+                        $cookieStore.put('authToken', authToken);
+                    }
+                    $location.path("/");
+                }, function() {
+                    alert('Combination username & password not valid.');
+                });
+            };
+        }
+    ]);
