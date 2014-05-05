@@ -228,11 +228,7 @@
     </bean>
 
     <jaxws:endpoint implementor="#vasPublisherService"
-                    address="/vasPublisherService">
-        <jaxws:inInterceptors>
-            <ref bean="replyToInterceptor"/>
-        </jaxws:inInterceptors>
-    </jaxws:endpoint>
+                    address="/vasPublisherService"/>
 
     <bean id="vasWebServicesEntityManagerFactory"
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">

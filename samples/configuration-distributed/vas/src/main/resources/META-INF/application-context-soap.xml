@@ -38,8 +38,6 @@
     <!-- Interceptor that adds the messageId if not present, as CXF requires the WS-Addressing messageId header to be present, while according to the spec this is only requierd when using the replyTo or faultTo WSA headers -->
     <bean id="headerInterceptor" class="io.motown.vas.v10.soap.interceptor.MessageIdHeaderInterceptor"/>
 
-    <bean id="replyToInterceptor" class="io.motown.vas.v10.soap.interceptor.ReplyToHeaderInInterceptor"/>
-
     <bean class="io.motown.vas.viewmodel.VasEventHandler">
         <property name="chargingStationRepository" ref="chargingStationRepository" />
         <property name="configurationConversionService">
@@ -70,11 +68,7 @@
     </bean>
 
     <jaxws:endpoint implementor="#vasPublisherService"
-                    address="/vasPublisherService">
-        <jaxws:inInterceptors>
-            <ref bean="replyToInterceptor"/>
-        </jaxws:inInterceptors>
-    </jaxws:endpoint>
+                    address="/vasPublisherService"/>
 
     <!-- TODO what is this taskExecutor used for? Is it still in use? - Mark van den Bergh, Februari 21st 2014 -->
     <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
