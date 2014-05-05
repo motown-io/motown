@@ -79,8 +79,6 @@
         </property>
     </bean>
 
-    <bean class="io.motown.ocpp.v12.soap.centralsystem.schema.ObjectFactory"/>
-
     <!--<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">-->
     <!--<property name="corePoolSize" value="5" />-->
     <!--<property name="maxPoolSize" value="10" />-->

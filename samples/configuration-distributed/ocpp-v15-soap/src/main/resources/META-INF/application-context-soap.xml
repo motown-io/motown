@@ -82,6 +82,4 @@
         </property>
     </bean>
 
-    <bean class="io.motown.ocpp.v15.soap.centralsystem.schema.ObjectFactory"/>
-
 </beans>

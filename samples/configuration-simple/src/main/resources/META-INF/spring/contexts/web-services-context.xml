@@ -94,8 +94,6 @@
         </property>
     </bean>
 
-    <bean class="io.motown.ocpp.v15.soap.centralsystem.schema.ObjectFactory"/>
-
     <bean id="ocppDomainService" class="io.motown.ocpp.viewmodel.domain.DomainService">
         <property name="chargingStationRepository" ref="chargingStationRepositoryOcppWebServices"/>
         <property name="commandGateway" ref="domainCommandGateway"/>
@@ -182,10 +180,7 @@
         <property name="domainService" ref="ocppDomainService"/>
         <property name="chargingStationProxyFactory" ref="chargingStationOcpp12ProxyFactory"/>
     </bean>
-
-    <bean class="io.motown.ocpp.v12.soap.centralsystem.schema.ObjectFactory"/>
     <!-- END OF OCPP 1.2 SOAP CONFIG -->
-
 
     <!-- START OF VAS 1.0 SOAP CONFIG -->
     <bean id="vasWebServicesChargingStationRepository"
