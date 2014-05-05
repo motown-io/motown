@@ -1,4 +1,4 @@
-# WIKI
+# Wiki
 
 Detailed information about the add-on can be found in the [wiki](https://github.com/motown-io/motown/wiki/Charging-Station-Configuration-Add-on).
 

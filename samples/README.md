@@ -1,4 +1,4 @@
-# WIKI
+# Wiki
 
 Detailed information about getting the samples up and running can be found in the [wiki](https://github.com/motown-io/motown/wiki/Setup-Guide).
 
