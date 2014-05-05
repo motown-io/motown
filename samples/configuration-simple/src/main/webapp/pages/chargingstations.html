@@ -46,54 +46,6 @@
                     </button>
                 </div>
                 <div ng-if="chargingStation.accepted">
-                    <button class="btn btn-default" href="#" ng-click="resetChargingStation(chargingStation)">soft
-                        reset
-                    </button>
-                    <button class="btn btn-default" href="#" ng-click="resetChargingStation(chargingStation, 'hard')">
-                        hard reset
-                    </button>
-                    <button class="btn btn-default" href="#" ng-click="startTransaction(chargingStation)">start
-                        transaction
-                    </button>
-                    <button class="btn btn-default" href="#" ng-click="changeAvailability(chargingStation)">change
-                        availability: operative
-                    </button>
-                    <button class="btn btn-default" href="#"
-                            ng-click="changeAvailability(chargingStation, 'inoperative')">change availability:
-                        inoperative
-                    </button>
-                    <button class="btn btn-default" href="#"
-                            ng-click="dataTransfer(chargingStation, 'Alfen', 'msgXid', 'ABC123')">data transfer test
-                    </button>
-                    <button class="btn btn-default" href="#"
-                            ng-click="changeConfiguration(chargingStation, 'HeartbeatInterval', '10000')">change
-                        configuration: heartbeat
-                    </button>
-                    <button class="btn btn-default" href="#"
-                            ng-click="getDiagnostics(chargingStation, 'ftp://nowhere.xyz')">get diagnostics
-                    </button>
-                    <button class="btn btn-default" href="#" ng-click="getConfiguration(chargingStation)">get
-                        configuration
-                    </button>
-                    <button class="btn btn-default" href="#" ng-click="clearCache(chargingStation)">clear cache</button>
-                    <button class="btn btn-default" href="#"
-                            ng-click="updateFirmware(chargingStation, 'http://somewhere.xyz', '2014-06-01T09:30:00Z')">
-                        firmware-update
-                    </button>
-                    <button class="btn btn-default" href="#" ng-click="getAuthorizationListVersion(chargingStation)">
-                        authorization list version
-                    </button>
-                    <button class="btn btn-default" href="#"
-                            ng-click="sendAuthorizationList(chargingStation, 1, 'FULL', [{'token': 'token1', 'status': 'ACCEPTED'}, {'token': 'token2', 'status': 'BLOCKED'}, {'token': 'token3', 'status': 'EXPIRED'}])">
-                        send authorization list
-                    </button>
-                    <button class="btn btn-default" href="#"
-                            ng-click="reserveNow(chargingStation, 2, {'token': 'TOKEN'}, '2014-03-21T09:30:00Z')">
-                        reserve now
-                    </button>
-                    <button class="btn btn-default" href="#"
-                            ng-click="cancelReservation(chargingStation, 2, {'token': 'TOKEN'})">cancel reservation
-                    </button>
                     <button class="btn btn-default" href="#" ng-click="updateReservable(chargingStation, true)">Set
                         reservable
                     </button>
@@ -128,7 +80,59 @@
                             ng-click="revokePermission(chargingStation, 'io.motown.domain.api.chargingstation.RequestUnlockEvseCommand', 'user')">
                         Revoke permission
                     </button>
-
+                </div>
+                <div ng-if="chargingStation.accepted && !chargingStation.configured">
+                    Charging station is not yet configured, cannot display actions that will contact charging station. For details regarding configuration check the <a href="https://github.com/motown-io/motown/wiki/Charging-Station-Configuration-Add-on" target="_blank">wiki</a>.
+                </div>
+                <div ng-if="chargingStation.accepted && chargingStation.configured">
+                    <button class="btn btn-default" href="#" ng-click="getAuthorizationListVersion(chargingStation)">
+                        authorization list version
+                    </button>
+                    <button class="btn btn-default" href="#" ng-click="startTransaction(chargingStation)">start
+                        transaction
+                    </button>
+                    <button class="btn btn-default" href="#" ng-click="changeAvailability(chargingStation)">change
+                        availability: operative
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="changeAvailability(chargingStation, 'inoperative')">change availability:
+                        inoperative
+                    </button>
+                    <button class="btn btn-default" href="#" ng-click="clearCache(chargingStation)">clear cache</button>
+                    <button class="btn btn-default" href="#" ng-click="getConfiguration(chargingStation)">get
+                        configuration
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="changeConfiguration(chargingStation, 'HeartbeatInterval', '10000')">change
+                        configuration: heartbeat
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="dataTransfer(chargingStation, 'Alfen', 'msgXid', 'ABC123')">data transfer test
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="getDiagnostics(chargingStation, 'ftp://nowhere.xyz')">get diagnostics
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="updateFirmware(chargingStation, 'http://somewhere.xyz', '2014-06-01T09:30:00Z')">
+                        firmware-update
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="reserveNow(chargingStation, 2, {'token': 'TOKEN'}, '2014-03-21T09:30:00Z')">
+                        reserve now
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="cancelReservation(chargingStation, 2, {'token': 'TOKEN'})">cancel reservation
+                    </button>
+                    <button class="btn btn-default" href="#" ng-click="resetChargingStation(chargingStation)">soft
+                        reset
+                    </button>
+                    <button class="btn btn-default" href="#" ng-click="resetChargingStation(chargingStation, 'hard')">
+                        hard reset
+                    </button>
+                    <button class="btn btn-default" href="#"
+                            ng-click="sendAuthorizationList(chargingStation, 1, 'FULL', [{'token': 'token1', 'status': 'ACCEPTED'}, {'token': 'token2', 'status': 'BLOCKED'}, {'token': 'token3', 'status': 'EXPIRED'}])">
+                        send authorization list
+                    </button>
                     <table ng-show="showEvses" class="table">
                         <thead>
                         <tr>
