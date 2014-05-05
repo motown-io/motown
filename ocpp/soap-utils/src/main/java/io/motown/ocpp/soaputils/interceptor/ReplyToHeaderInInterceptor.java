@@ -23,6 +23,11 @@ import org.apache.cxf.ws.addressing.AttributedURIType;
 import org.apache.cxf.ws.addressing.ContextUtils;
 import org.apache.cxf.ws.addressing.EndpointReferenceType;
 
+/**
+ * Interceptor that adds the anonymous addressing URI to the 'reply to' header preventing asynchronous WS addressing.
+ * Some charging stations do not support asynchronous WS addressing. Activating this interceptor will overwrite the
+ * 'reply to' header making the calls synchronous.
+ */
 public class ReplyToHeaderInInterceptor extends AbstractSoapInterceptor {
 
     public ReplyToHeaderInInterceptor() {
