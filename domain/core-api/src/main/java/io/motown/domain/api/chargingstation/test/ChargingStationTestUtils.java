@@ -49,7 +49,7 @@ public final class ChargingStationTestUtils {
     /**
      * The default voltage.
      */
-    public static final int VOLTAGE = 230;
+    public static final int VOLTAGE = 240;
 
     /**
      * The default connector.
