@@ -44,7 +44,7 @@
         <property name="continuationTimeout" value="${io.motown.ocpp.v15.soap.cxf.continuation.timeout}" />
         <property name="heartbeatIntervalFallback" value="${io.motown.ocpp.viewmodel.heartbeat.interval}" />
         <property name="soapHeaderReader">
-            <bean class="io.motown.ocpp.soaputils.header.SoapHeaderReader" />
+            <bean class="io.motown.ocpp.soaputils.header.CXFSoapHeaderReader" />
         </property>
         <property name="addOnId" value="1"/>
     </bean>
