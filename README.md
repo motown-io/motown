@@ -4,80 +4,11 @@ The heart and soul of electric mobility
 
 [![wercker status](https://app.wercker.com/status/fce3b3ea7c9993d02bba1775057f8549/m "wercker status")](https://app.wercker.com/project/bykey/fce3b3ea7c9993d02bba1775057f8549)
 
-Motown.IO is an Apache2 licensed project to support EV charge infrastructure 
+Motown.IO is an Apache2 licensed project to support EV charge infrastructure.
 
-This system is build based on the CQRS and DDD architecture and consists of a number of modules that have intended use.
+The main source of documentation is the [wiki](https://github.com/motown-io/motown/wiki). It gives an [overview](https://github.com/motown-io/motown/wiki/Overview) of why the project was initiated and what it tries to solve. The [overview of technical architecture](https://github.com/motown-io/motown/wiki/Technical-Architecture) describes the architectural requirements and the resulting approach. Besides the global architecture it links to pages that describes the modules that together form Motown.
 
-## domain module
-
-### app
-
-### core-api
-
-The basic blocks that are to be used in other packages.
-It's the minimal set of dependencies and consists of DDD and CQRS based elements like the Commands, Events, Value Objects
-
-### command-handling
-
-The actual domain logic around the defined Aggregates.
-
-### utils
-
-Classes that add functionality to Axon, but are not part of the Axon framework (yet).
-
-## identifaction-authorization
-
-### app
-
-The service which intermediates between all configured authentication providers. Also contains the listener and gateway for interaction with the core.
-
-### cir-plugin
-
-Provides an implementation of a authentication provider coupled to [CIR](https://eviolin.ev-services.net/cir/service.asmx).
-
-### plugin-api
-
-Definition of the interface of a authentication provider.
-
-## ocpp module
-
-### soap-utils
-
-Utility classes used by OCPP SOAP V1.2 and V1.5 modules.
-
-### v12-soap
-
-Provides a web service endpoint based on OCPP 1.2.
-
-### v15-soap
-
-Provides a web service endpoint based on OCPP 1.5.
-
-### view-model
-
-The common parts of the different OCPP specifications are handled here. The SOAP modules communicate with the core via this module. This module also handles the events sent out by the core.
-
-### websocket-json
-
-Provides a websocket JSON endpoint.
-
-## operator api module
-
-### json
-
-Provides a JSON endpoint to the system.
-
-### view-model
-
-## operator ui module
-### view-model
-This module consists of the event listeners and database model to enable easy querying
-(for our web application)
-
-### web
-This module consists of the generic UI that shows the Projects, Steps and other DDD elements in their intended way.
-The web is build based on a task driven interaction design (capture the intend of the user).
-Also provides entry point to use external API.
+To get up and running quickly the [setup guide](https://github.com/motown-io/motown/wiki/Setup-Guide) can be used. The guide uses the sample configurations which are available in the Git repository samples directory.
 
 # Notes for development setup
 
