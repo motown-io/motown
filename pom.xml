@@ -25,7 +25,6 @@
     <packaging>pom</packaging>
     <inceptionYear>2013</inceptionYear>
     <modules>
-        <module>domain/app</module>
         <module>domain/command-authorization</module>
         <module>domain/command-handling</module>
         <module>domain/core-api</module>

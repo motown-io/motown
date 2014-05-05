@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.domain.app.axon;
+package io.motown.domain.utils.axon;
 
 import io.motown.domain.api.chargingstation.CommunicationWithChargingStationRequestedEvent;
 import org.axonframework.domain.EventMessage;

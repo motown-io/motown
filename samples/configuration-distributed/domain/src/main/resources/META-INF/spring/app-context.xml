@@ -109,7 +109,7 @@
                 <property name="transactionManager" ref="commandTransactionManager"/>
                 <property name="handlerInterceptors">
                     <list>
-                        <bean class="io.motown.domain.app.axon.CorrelationCommandHandlerInterceptor"/>
+                        <bean class="io.motown.domain.utils.axon.CorrelationCommandHandlerInterceptor"/>
                         <bean class="org.axonframework.commandhandling.interceptors.LoggingInterceptor"/>
                     </list>
                 </property>
@@ -118,7 +118,7 @@
     </bean>
 
     <bean id="routingKeyResolver"
-          class="io.motown.domain.app.axon.MotownRoutingKeyResolver"/>
+          class="io.motown.domain.utils.axon.MotownRoutingKeyResolver"/>
 
     <axon-amqp:terminal id="terminal"
                         connection-factory="amqpConnection"
