@@ -1,4 +1,8 @@
-Short description of the samples. Detailed information about getting the samples up and running can be found in the [wiki](https://github.com/motown-io/motown/wiki/Setup-Guide).
+# WIKI
+
+Detailed information about getting the samples up and running can be found in the [wiki](https://github.com/motown-io/motown/wiki/Setup-Guide).
+
+The information below is just to provide a quick overview of the modules.
 
 # authentication
 

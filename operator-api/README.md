@@ -1,4 +1,8 @@
-Short description of the modules. Detailed information can be found in the [wiki](https://github.com/motown-io/motown/wiki/Operator-API-Add-on).
+# WIKI
+
+Detailed information about the add-on can be found in the [wiki](https://github.com/motown-io/motown/wiki/Operator-API-Add-on).
+
+The information below is just to provide a quick overview of the modules.
 
 # json
 
