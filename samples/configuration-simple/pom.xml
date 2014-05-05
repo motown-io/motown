@@ -68,7 +68,7 @@
         </dependency>
         <dependency>
             <groupId>io.motown.domain</groupId>
-            <artifactId>domain-app</artifactId>
+            <artifactId>domain-utils</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
