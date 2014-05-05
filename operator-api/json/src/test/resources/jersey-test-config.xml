@@ -40,6 +40,7 @@
     <bean id="jsonCommandService" class="io.motown.operatorapi.json.commands.JsonCommandService">
         <property name="gson" ref="operatorApiGson"/>
         <property name="jsonCommandHandlers" ref="jsonCommandHandlers"/>
+        <property name="addOnId" value="1"/>
     </bean>
 
     <bean id="operatorApiService" class="io.motown.operatorapi.json.queries.OperatorApiService">
@@ -84,8 +85,9 @@
             <property name="repository" ref="chargingStationRepositoryOperatorApi"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.AcceptChargingStationJsonCommandHandler">
-        <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
+            <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
             <property name="repository" ref="chargingStationRepositoryOperatorApi"/>
+            <property name="userIdentitiesWithAllPermissions" ref="userIdentitiesWithAllPermissions"/>
         </bean>
         <bean class="io.motown.operatorapi.json.commands.RequestAuthorizationListVersionJsonCommandHandler">
             <property name="commandGateway" ref="operatorApiDomainCommandGateway"/>
@@ -190,6 +192,16 @@
 
     <bean class="io.motown.operatorapi.json.restapi.providers.GsonJsonProvider" scope="singleton">
         <property name="gson" ref="operatorApiGson"/>
+    </bean>
+
+    <bean id="userIdentitiesWithAllPermissions" class="java.util.HashSet">
+        <constructor-arg>
+            <set>
+                <bean class="io.motown.domain.api.security.SimpleUserIdentity">
+                    <constructor-arg name="identity" value="root" />
+                </bean>
+            </set>
+        </constructor-arg>
     </bean>
 
 </beans>

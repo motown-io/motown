@@ -27,7 +27,6 @@ import com.sun.jersey.test.framework.WebAppDescriptor;
 import com.sun.jersey.test.framework.spi.container.TestContainerException;
 import com.sun.jersey.test.framework.spi.container.grizzly2.web.GrizzlyWebTestContainerFactory;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -35,8 +34,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
-
-import javax.ws.rs.core.MediaType;
 
 import static org.junit.Assert.assertEquals;
 
@@ -47,6 +44,7 @@ public class ITChargingStationResourceTest extends JerseyTest {
     private static final int OK = 200;
     private static final int ACCEPTED = 202;
     private static final int BAD_REQUEST = 400;
+    private static final int FORBIDDEN = 403;
     private static final String BASE_URI = "http://localhost:9998/operator/api/charging-stations";
 
     private Client client;
@@ -65,6 +63,7 @@ public class ITChargingStationResourceTest extends JerseyTest {
                 .servletClass(SpringServlet.class)
                 .servletPath("/api")
                 .initParam("com.sun.jersey.config.property.packages", "io.motown.operatorapi.json.restapi")
+                .initParam("com.sun.jersey.spi.container.ContainerRequestFilters", "io.motown.operatorapi.json.restapi.util.TestSecurityContextFilter")
                 .build();
     }
 
@@ -89,8 +88,6 @@ public class ITChargingStationResourceTest extends JerseyTest {
         assertEquals(OK, response.getStatus());
     }
 
-    //TODO: test with authentication - Mark Manders 2014-04-25
-    @Ignore
     @Test
     public void testExecuteCommand() {
         ClientResponse response = client.resource(BASE_URI)
@@ -141,29 +138,25 @@ public class ITChargingStationResourceTest extends JerseyTest {
         assertEquals(ACCEPTED, response.getStatus());
     }
 
-    //TODO: test with authentication - Mark Manders 2014-05-02
-    @Ignore
     @Test
     public void testExecuteCommandInvalidCommandArraySize() {
         ClientResponse response = client.resource(BASE_URI)
                 .path("/TEST01")
                 .path("/commands")
                 .type(ApiVersion.V1_JSON)
-                .accept(MediaType.TEXT_PLAIN)
+                .accept(ApiVersion.V1_JSON)
                 .post(ClientResponse.class, "[\"AcceptChargingStation\"]");
 
         assertEquals(BAD_REQUEST, response.getStatus());
     }
 
-    //TODO: test with authentication - Mark Manders 2014-05-02
-    @Ignore
     @Test
     public void testExecuteCommandInvalidCommand() {
         ClientResponse response = client.resource(BASE_URI)
                 .path("/TEST01")
                 .path("/commands")
                 .type(ApiVersion.V1_JSON)
-                .accept(MediaType.TEXT_PLAIN)
+                .accept(ApiVersion.V1_JSON)
                 .post(ClientResponse.class, "[\n" +
                         "    \"Accept\",\n" +
                         "    {\n" +
@@ -207,17 +200,66 @@ public class ITChargingStationResourceTest extends JerseyTest {
         assertEquals(BAD_REQUEST, response.getStatus());
     }
 
-    //TODO: test with authentication - Mark Manders 2014-05-02
-    @Ignore
     @Test
     public void testExecuteCommandInvalidJson() {
         ClientResponse response = client.resource(BASE_URI)
                 .path("/TEST01")
                 .path("/commands")
                 .type(ApiVersion.V1_JSON)
-                .accept(MediaType.TEXT_PLAIN)
+                .accept(ApiVersion.V1_JSON)
                 .post(ClientResponse.class, "[\"AcceptChargingStation\"}");
 
         assertEquals(BAD_REQUEST, response.getStatus());
+    }
+
+    @Test
+    public void testExecuteCommandNotAuthorizedUser() {
+        ClientResponse response = client.resource(BASE_URI)
+                .path("/TEST01")
+                .path("/commands")
+                .header("Non-Authorized-User", Boolean.TRUE)
+                .type(ApiVersion.V1_JSON)
+                .accept(ApiVersion.V1_JSON)
+                .post(ClientResponse.class, "[\n" +
+                        "    \"AcceptChargingStation\",\n" +
+                        "    {\n" +
+                        "        \"configuration\": {\n" +
+                        "            \"evses\": [\n" +
+                        "                {\n" +
+                        "                    \"evseId\": 1,\n" +
+                        "                    \"connectors\": [\n" +
+                        "                        {\n" +
+                        "                            \"maxAmp\": 32,\n" +
+                        "                            \"phase\": 3,\n" +
+                        "                            \"voltage\": 240,\n" +
+                        "                            \"chargingProtocol\": \"MODE3\",\n" +
+                        "                            \"current\": \"AC\",\n" +
+                        "                            \"connectorType\": \"TESLA\"\n" +
+                        "                        }\n" +
+                        "                    ]\n" +
+                        "                },\n" +
+                        "                {\n" +
+                        "                    \"evseId\": 2,\n" +
+                        "                    \"connectors\": [\n" +
+                        "                        {\n" +
+                        "                            \"maxAmp\": 32,\n" +
+                        "                            \"phase\": 3,\n" +
+                        "                            \"voltage\": 240,\n" +
+                        "                            \"chargingProtocol\": \"MODE3\",\n" +
+                        "                            \"current\": \"AC\",\n" +
+                        "                            \"connectorType\": \"TESLA\"\n" +
+                        "                        }\n" +
+                        "                    ]\n" +
+                        "                }\n" +
+                        "            ],\n" +
+                        "            \"settings\": {\n" +
+                        "                \"key\": \"value\",\n" +
+                        "                \"key2\": \"value2\"\n" +
+                        "            }\n" +
+                        "        }\n" +
+                        "    }\n" +
+                        "]");
+
+        assertEquals(FORBIDDEN, response.getStatus());
     }
 }
