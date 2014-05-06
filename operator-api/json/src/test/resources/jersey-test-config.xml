@@ -6,7 +6,7 @@
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
                            http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
-    <bean id="operatorApiGson" class="io.motown.operatorapi.json.gson.GsonFactoryBean">
+    <bean id="operatorApiGsonFactoryBean" class="io.motown.operatorapi.json.gson.GsonFactoryBean">
         <property name="dateFormat" value="yyyy-MM-dd'T'HH:mm:ss'Z'"/>
         <property name="typeAdapterDeserializers">
             <set>
@@ -22,6 +22,8 @@
             <set/>
         </property>
     </bean>
+
+    <bean id="operatorApiGson" factory-bean="operatorApiGsonFactoryBean" factory-method="createGson"/>
 
     <bean class="io.motown.operatorapi.viewmodel.ChargingStationEventListener">
         <property name="repository" ref="chargingStationRepositoryOperatorApi"/>

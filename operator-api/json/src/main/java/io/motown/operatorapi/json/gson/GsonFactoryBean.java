@@ -19,20 +19,17 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.motown.operatorapi.json.gson.deserializer.TypeAdapterDeserializer;
 import io.motown.operatorapi.json.gson.serializer.TypeAdapterSerializer;
-import org.springframework.beans.factory.FactoryBean;
 
 import java.util.Set;
 
-//TODO can this be refactored into something without Spring dependency? - Mark van den Bergh, Februari 26th 2014
-public class GsonFactoryBean implements FactoryBean<Gson> {
+public class GsonFactoryBean {
 
     private String dateFormat;
 
     private Set<TypeAdapterDeserializer<?>> typeAdapterDeserializers;
     private Set<TypeAdapterSerializer<?>> typeAdapterSerializers;
 
-    @Override
-    public Gson getObject() {
+    public Gson createGson() {
         GsonBuilder builder = new GsonBuilder();
 
         if (dateFormat != null && !dateFormat.isEmpty()) {
@@ -48,16 +45,6 @@ public class GsonFactoryBean implements FactoryBean<Gson> {
         }
 
         return builder.create();
-    }
-
-    @Override
-    public Class<?> getObjectType() {
-        return Gson.class;
-    }
-
-    @Override
-    public boolean isSingleton() {
-        return false;
     }
 
     public void setDateFormat(String dateFormat) {
