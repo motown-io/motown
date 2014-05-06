@@ -105,7 +105,7 @@ public class OcppWebSocketJsonTestUtils {
                 .build();
         gsonFactoryBean.setTypeAdapterDeserializers(typeAdapterDeserializers);
 
-        return gsonFactoryBean.getObject();
+        return gsonFactoryBean.createGson();
     }
 
     public static WebSocket getMockWebSocket() {
