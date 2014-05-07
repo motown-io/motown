@@ -30,9 +30,6 @@ import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils
 public final class OccpViewModelTestUtils {
 
     public static final String CHARGING_STATION_ADDRESS = "127.0.0.1";
-    public static final int NUMBER_OF_RETRIES = 3;
-    public static final int RETRY_INTERVAL = 20;
-    public static final int LIST_VERSION = 1;
 
     private OccpViewModelTestUtils() {
         // Private no-arg constructor to prevent instantiation of utility class.
@@ -59,25 +56,6 @@ public final class OccpViewModelTestUtils {
 
     public static EvseId getChargingStationComponentId() {
         return new EvseId(DomainService.CHARGING_STATION_EVSE_ID);
-    }
-
-    public static String getConfigurationKey() {
-        return "configKey";
-    }
-
-    public static String getConfigurationValue() {
-        return "configValue";
-    }
-
-    public static String getFirmwareUpdateLocation() {
-        return "ftp://test";
-    }
-
-    public static Map<String, String> getUpdateFirmwareAttributes(String numberOfRetries, String retryInterval) {
-        return ImmutableMap.<String, String>builder()
-                .put(FirmwareUpdateAttributeKey.NUM_RETRIES, numberOfRetries)
-                .put(FirmwareUpdateAttributeKey.RETRY_INTERVAL, retryInterval)
-                .build();
     }
 
     public static Integer getAuthorizationListVersion() {

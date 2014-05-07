@@ -15,6 +15,7 @@
  */
 package io.motown.vas.viewmodel.model;
 
+import io.motown.vas.viewmodel.persistence.entities.ChargingStation;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;

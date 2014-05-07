@@ -45,7 +45,7 @@ public class ResetResponseHandler extends ResponseHandler {
                 LOG.info("Reset was rejected");
                 break;
             default:
-                throw new AssertionError("Unknown ResetStatus: " + response.getStatus());
+                throw new AssertionError(String.format("Unknown reset response status: %s", response.getStatus()));
         }
     }
 }

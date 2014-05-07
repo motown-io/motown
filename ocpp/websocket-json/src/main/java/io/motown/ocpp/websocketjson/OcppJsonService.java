@@ -36,10 +36,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OcppJsonService {
 
@@ -95,7 +92,10 @@ public class OcppJsonService {
         } catch (IllegalArgumentException iae) {
             //Unable to send back a WAMP error at this level, as we are not able to access the callId
             LOG.error("Unable to handle message", iae);
+        } catch (IOException ioe) {
+            LOG.error("Unable to parse message", ioe);
         }
+
     }
 
     /**
@@ -118,16 +118,16 @@ public class OcppJsonService {
 
     public void getConfiguration(ChargingStationId chargingStationId) {
 
-        CorrelationToken statusCorrelationToken = new CorrelationToken();
+        CorrelationToken correlationToken = new CorrelationToken();
         Getconfiguration getConfigurationRequest = new Getconfiguration();
 
-        responseHandlers.put(statusCorrelationToken.getToken(), new GetConfigurationResponseHandler(statusCorrelationToken));
+        responseHandlers.put(correlationToken.getToken(), new GetConfigurationResponseHandler(correlationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.GET_CONFIGURATION, getConfigurationRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, correlationToken.getToken(), MessageProcUri.GET_CONFIGURATION, getConfigurationRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 
-    public void getDiagnostics(ChargingStationId chargingStationId, int numRetries, int retryInterval, Date start, Date stop, String uploadLocation, CorrelationToken statusCorrelationToken) {
+    public void getDiagnostics(ChargingStationId chargingStationId, int numRetries, int retryInterval, Date start, Date stop, String uploadLocation, CorrelationToken correlationToken) {
         Getdiagnostics getDiagnosticsRequest = new Getdiagnostics();
         try {
             getDiagnosticsRequest.setLocation(new URI(uploadLocation));
@@ -136,9 +136,9 @@ public class OcppJsonService {
             getDiagnosticsRequest.setStartTime(start);
             getDiagnosticsRequest.setStopTime(stop);
 
-            responseHandlers.put(statusCorrelationToken.getToken(), new GetDiagnosticsResponseHandler(statusCorrelationToken));
+            responseHandlers.put(correlationToken.getToken(), new GetDiagnosticsResponseHandler(correlationToken));
 
-            WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.GET_DIAGNOSTICS, getDiagnosticsRequest);
+            WampMessage wampMessage = new WampMessage(WampMessage.CALL, correlationToken.getToken(), MessageProcUri.GET_DIAGNOSTICS, getDiagnosticsRequest);
 
             sendWampMessage(wampMessage, chargingStationId);
         } catch (URISyntaxException e) {
@@ -147,7 +147,7 @@ public class OcppJsonService {
     }
 
     public void updateFirmware(ChargingStationId chargingStationId, Date retrieveDate, Map<String, String> attributes, String updateLocation) {
-        CorrelationToken statusCorrelationToken = new CorrelationToken();
+        CorrelationToken correlationToken = new CorrelationToken();
 
         try {
             Updatefirmware updateFirmwareRequest = new Updatefirmware();
@@ -164,7 +164,7 @@ public class OcppJsonService {
             }
 
             //No response handler is necessary. No data comes back from the firmwareupdaterequest, so there is nothing to communicate to the caller. Besides that the correlationtoken is not known to the caller.
-            WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.UPDATE_FIRMWARE, updateFirmwareRequest);
+            WampMessage wampMessage = new WampMessage(WampMessage.CALL, correlationToken.getToken(), MessageProcUri.UPDATE_FIRMWARE, updateFirmwareRequest);
 
             sendWampMessage(wampMessage, chargingStationId);
         } catch (URISyntaxException e) {
@@ -172,7 +172,7 @@ public class OcppJsonService {
         }
     }
 
-    public void sendLocalList(ChargingStationId chargingStationId, AuthorizationListUpdateType updateType, List<IdentifyingToken> authorizationList, int authorizationListVersion, String authorizationListHash, CorrelationToken statusCorrelationToken) {
+    public void sendLocalList(ChargingStationId chargingStationId, AuthorizationListUpdateType updateType, Set<IdentifyingToken> authorizationList, int authorizationListVersion, String authorizationListHash, CorrelationToken correlationToken) {
 
         List<LocalAuthorisationList> localList = Lists.newArrayList();
         for (IdentifyingToken token : authorizationList) {
@@ -192,14 +192,14 @@ public class OcppJsonService {
         sendLocalListRequest.setListVersion(authorizationListVersion);
         sendLocalListRequest.setHash(authorizationListHash);
 
-        responseHandlers.put(statusCorrelationToken.getToken(), new SendLocalListResponseHandler(authorizationListVersion, updateType, authorizationList, statusCorrelationToken));
+        responseHandlers.put(correlationToken.getToken(), new SendLocalListResponseHandler(authorizationListVersion, updateType, authorizationList, correlationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.SEND_LOCALLIST, sendLocalListRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, correlationToken.getToken(), MessageProcUri.SEND_LOCALLIST, sendLocalListRequest);
 
         sendWampMessage(wampMessage, chargingStationId);
     }
 
-    public void reserveNow(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken identifyingToken, IdentifyingToken parentIdentifyingToken, Date expiryDate, CorrelationToken statusCorrelationToken) {
+    public void reserveNow(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken identifyingToken, IdentifyingToken parentIdentifyingToken, Date expiryDate, CorrelationToken correlationToken) {
         NumberedReservationId reservationId = domainService.generateReservationIdentifier(chargingStationId, PROTOCOL_IDENTIFIER);
 
         Reservenow reserveNowRequest = new Reservenow();
@@ -211,20 +211,20 @@ public class OcppJsonService {
         reserveNowRequest.setExpiryDate(expiryDate);
         reserveNowRequest.setReservationId(reservationId.getNumber());
 
-        responseHandlers.put(statusCorrelationToken.getToken(), new ReserveNowResponseHandler(reservationId, evseId, expiryDate, statusCorrelationToken));
+        responseHandlers.put(correlationToken.getToken(), new ReserveNowResponseHandler(reservationId, evseId, expiryDate, correlationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.RESERVE_NOW, reserveNowRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, correlationToken.getToken(), MessageProcUri.RESERVE_NOW, reserveNowRequest);
 
         sendWampMessage(wampMessage, chargingStationId);
     }
 
-    public void cancelReservation(ChargingStationId chargingStationId, NumberedReservationId reservationId, CorrelationToken statusCorrelationToken) {
+    public void cancelReservation(ChargingStationId chargingStationId, NumberedReservationId reservationId, CorrelationToken correlationToken) {
         Cancelreservation cancelReservationRequest = new Cancelreservation();
         cancelReservationRequest.setReservationId(reservationId.getNumber());
 
-        responseHandlers.put(statusCorrelationToken.getToken(), new CancelReservationResponseHandler(reservationId, statusCorrelationToken));
+        responseHandlers.put(correlationToken.getToken(), new CancelReservationResponseHandler(reservationId, correlationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.CANCEL_RESERVATION, cancelReservationRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, correlationToken.getToken(), MessageProcUri.CANCEL_RESERVATION, cancelReservationRequest);
 
         sendWampMessage(wampMessage, chargingStationId);
     }
@@ -232,8 +232,8 @@ public class OcppJsonService {
     /**
      * Converts the AuthenticationStatus into an OCPPJ specific status
      *
-     * @param status
-     * @return
+     * @param status the authentication status.
+     * @return the OCPP/J status.
      */
     private IdTagInfo_.Status convertAuthenticationStatus(IdentifyingToken.AuthenticationStatus status) {
         IdTagInfo_.Status result;
@@ -260,96 +260,96 @@ public class OcppJsonService {
         return result;
     }
 
-    public void softReset(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken) {
+    public void softReset(ChargingStationId chargingStationId, CorrelationToken correlationToken) {
         Reset softResetRequest = new Reset();
         softResetRequest.setType(Reset.Type.SOFT);
 
-        responseHandlers.put(statusCorrelationToken.getToken(), new ResetResponseHandler(statusCorrelationToken));
+        responseHandlers.put(correlationToken.getToken(), new ResetResponseHandler(correlationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.RESET, softResetRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, correlationToken.getToken(), MessageProcUri.RESET, softResetRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 
-    public void hardReset(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken) {
+    public void hardReset(ChargingStationId chargingStationId, CorrelationToken correlationToken) {
         Reset hardResetRequest = new Reset();
         hardResetRequest.setType(Reset.Type.HARD);
 
-        responseHandlers.put(statusCorrelationToken.getToken(), new ResetResponseHandler(statusCorrelationToken));
+        responseHandlers.put(correlationToken.getToken(), new ResetResponseHandler(correlationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.RESET, hardResetRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, correlationToken.getToken(), MessageProcUri.RESET, hardResetRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 
-    public void remoteStartTransaction(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken identifyingToken, CorrelationToken statusCorrelationToken) {
+    public void remoteStartTransaction(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken identifyingToken, CorrelationToken correlationToken) {
         Remotestarttransaction remoteStartTransactionRequest = new Remotestarttransaction();
         remoteStartTransactionRequest.setConnectorId(evseId.getNumberedId());
         remoteStartTransactionRequest.setIdTag(identifyingToken.getToken());
 
-        responseHandlers.put(statusCorrelationToken.getToken(), new RemoteStartTransactionResponseHandler(statusCorrelationToken));
+        responseHandlers.put(correlationToken.getToken(), new RemoteStartTransactionResponseHandler(correlationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.REMOTE_START_TRANSACTION, remoteStartTransactionRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, correlationToken.getToken(), MessageProcUri.REMOTE_START_TRANSACTION, remoteStartTransactionRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 
-    public void remoteStopTransaction(ChargingStationId chargingStationId, TransactionId transactionId, CorrelationToken statusCorrelationToken) {
+    public void remoteStopTransaction(ChargingStationId chargingStationId, TransactionId transactionId, CorrelationToken correlationToken) {
         NumberedTransactionId transactionIdNumber = (NumberedTransactionId) transactionId;
         Remotestoptransaction remoteStopTransactionRequest = new Remotestoptransaction();
         remoteStopTransactionRequest.setTransactionId(transactionIdNumber.getNumber());
 
-        responseHandlers.put(statusCorrelationToken.getToken(), new RemoteStopTransactionResponseHandler(statusCorrelationToken));
+        responseHandlers.put(correlationToken.getToken(), new RemoteStopTransactionResponseHandler(correlationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.REMOTE_STOP_TRANSACTION, remoteStopTransactionRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, correlationToken.getToken(), MessageProcUri.REMOTE_STOP_TRANSACTION, remoteStopTransactionRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 
-    public void unlockEvse(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken statusCorrelationToken) {
+    public void unlockEvse(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken correlationToken) {
         Unlockconnector unlockConnectorRequest = new Unlockconnector();
         unlockConnectorRequest.setConnectorId(evseId.getNumberedId());
 
-        responseHandlers.put(statusCorrelationToken.getToken(), new UnlockConnectorResponseHandler(evseId, statusCorrelationToken));
+        responseHandlers.put(correlationToken.getToken(), new UnlockConnectorResponseHandler(evseId, correlationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.UNLOCK_CONNECTOR, unlockConnectorRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, correlationToken.getToken(), MessageProcUri.UNLOCK_CONNECTOR, unlockConnectorRequest);
 
         sendWampMessage(wampMessage, chargingStationId);
     }
 
-    public void getLocalListVersion(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken) {
+    public void getLocalListVersion(ChargingStationId chargingStationId, CorrelationToken correlationToken) {
         Getlocallistversion getlocallistversionRequest = new Getlocallistversion();
 
-        responseHandlers.put(statusCorrelationToken.getToken(), new GetLocalListVersionResponseHandler(statusCorrelationToken));
+        responseHandlers.put(correlationToken.getToken(), new GetLocalListVersionResponseHandler(correlationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.GET_LOCALLIST_VERSION, getlocallistversionRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, correlationToken.getToken(), MessageProcUri.GET_LOCALLIST_VERSION, getlocallistversionRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 
-    public void clearCache(ChargingStationId chargingStationId, CorrelationToken statusCorrelationToken) {
+    public void clearCache(ChargingStationId chargingStationId, CorrelationToken correlationToken) {
         Clearcache clearCacheRequest = new Clearcache();
 
-        responseHandlers.put(statusCorrelationToken.getToken(), new ClearCacheResponseHandler(statusCorrelationToken));
+        responseHandlers.put(correlationToken.getToken(), new ClearCacheResponseHandler(correlationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.CLEAR_CACHE, clearCacheRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, correlationToken.getToken(), MessageProcUri.CLEAR_CACHE, clearCacheRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 
-    public void changeAvailability(ChargingStationId chargingStationId, EvseId evseId, Changeavailability.Type availabilityType, CorrelationToken statusCorrelationToken) {
+    public void changeAvailability(ChargingStationId chargingStationId, EvseId evseId, Changeavailability.Type availabilityType, CorrelationToken correlationToken) {
         Changeavailability changeAvailabilityRequest = new Changeavailability();
         changeAvailabilityRequest.setConnectorId(evseId.getNumberedId());
         changeAvailabilityRequest.setType(availabilityType);
-        responseHandlers.put(statusCorrelationToken.getToken(), new ChangeAvailabilityResponseHandler(evseId, availabilityType, statusCorrelationToken));
+        responseHandlers.put(correlationToken.getToken(), new ChangeAvailabilityResponseHandler(evseId, availabilityType, correlationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.CHANGE_AVAILABILITY, changeAvailabilityRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, correlationToken.getToken(), MessageProcUri.CHANGE_AVAILABILITY, changeAvailabilityRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 
-    public void dataTransfer(ChargingStationId chargingStationId, String vendorId, String messageId, String data, CorrelationToken statusCorrelationToken) {
+    public void dataTransfer(ChargingStationId chargingStationId, String vendorId, String messageId, String data, CorrelationToken correlationToken) {
         Datatransfer dataTransferRequest = new Datatransfer();
         dataTransferRequest.setVendorId(vendorId);
         dataTransferRequest.setMessageId(messageId);
         dataTransferRequest.setData(data);
 
-        responseHandlers.put(statusCorrelationToken.getToken(), new DataTransferResponseHandler(statusCorrelationToken));
+        responseHandlers.put(correlationToken.getToken(), new DataTransferResponseHandler(correlationToken));
 
-        WampMessage wampMessage = new WampMessage(WampMessage.CALL, statusCorrelationToken.getToken(), MessageProcUri.DATA_TRANSFER, dataTransferRequest);
+        WampMessage wampMessage = new WampMessage(WampMessage.CALL, correlationToken.getToken(), MessageProcUri.DATA_TRANSFER, dataTransferRequest);
         sendWampMessage(wampMessage, chargingStationId);
     }
 

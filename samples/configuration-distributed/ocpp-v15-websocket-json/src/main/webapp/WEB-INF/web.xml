@@ -1,0 +1,75 @@
+<!--
+
+    Copyright (C) 2013 Motown.IO (info@motown.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+
+    <display-name>Motown.IO - OCPP - Websockets JSON</display-name>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath:META-INF/application-context.xml
+        </param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <filter>
+        <filter-name>SecWebSocketVersionInterceptor</filter-name>
+        <filter-class>io.motown.ocpp.websocketjson.servlet.SecWebSocketVersionInterceptor</filter-class>
+        <init-param>
+            <param-name>compressionThreshold</param-name>
+            <param-value>10</param-value>
+        </init-param>
+        <init-param>
+            <param-name>supportedProtocols</param-name>
+            <param-value>ocpp1.5</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>SecWebSocketVersionInterceptor</filter-name>
+        <servlet-name>AtmosphereServlet</servlet-name>
+    </filter-mapping>
+
+    <servlet>
+        <description>AtmosphereServlet</description>
+        <servlet-name>AtmosphereServlet</servlet-name>
+        <servlet-class>org.atmosphere.cpr.AtmosphereServlet</servlet-class>
+        <init-param>
+            <param-name>org.atmosphere.cpr.packages</param-name>
+            <param-value>io.motown.ocpp.websocketjson</param-value>
+        </init-param>
+        <init-param>
+            <param-name>org.atmosphere.interceptor.HeartbeatInterceptor.heartbeatFrequencyInSeconds</param-name>
+            <param-value>900</param-value>
+        </init-param>
+        <load-on-startup>0</load-on-startup>
+        <async-supported>true</async-supported>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AtmosphereServlet</servlet-name>
+        <url-pattern>/socket/*</url-pattern>
+    </servlet-mapping>
+
+</web-app>

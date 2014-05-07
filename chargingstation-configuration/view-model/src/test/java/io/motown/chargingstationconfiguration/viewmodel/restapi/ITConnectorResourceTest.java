@@ -15,6 +15,7 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
+import com.google.common.collect.Iterables;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.config.ClientConfig;
@@ -26,8 +27,10 @@ import com.sun.jersey.test.framework.JerseyTest;
 import com.sun.jersey.test.framework.WebAppDescriptor;
 import com.sun.jersey.test.framework.spi.container.TestContainerException;
 import com.sun.jersey.test.framework.spi.container.grizzly2.web.GrizzlyWebTestContainerFactory;
+import io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
-import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ConnectorRepository;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +41,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
 
-import javax.ws.rs.core.MediaType;
+import javax.persistence.EntityManagerFactory;
 
 import static org.junit.Assert.assertEquals;
 
@@ -46,15 +49,17 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ITConnectorResourceTest extends JerseyTest {
+
     private static final int OK = 200;
-    private static final int CREATED = 201;
+
     private static final int NOT_FOUND = 404;
-    private static final String BASE_URI = "http://localhost:9998/config/api/connectors";
+
+    private static final String BASE_URI = "http://localhost:9998/config/api";
 
     private Client client;
 
     @Autowired
-    private ConnectorRepository repository;
+    private EntityManagerFactory entityManagerFactory;
 
     public ITConnectorResourceTest() throws TestContainerException {
         super(new GrizzlyWebTestContainerFactory());
@@ -86,50 +91,32 @@ public class ITConnectorResourceTest extends JerseyTest {
     }
 
     @Test
-    public void testCreateConnector() {
-        Connector connector = getConnector();
-        ClientResponse response = client.resource(BASE_URI)
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .post(ClientResponse.class, connector);
-
-        assertEquals(CREATED, response.getStatus());
-    }
-
-    @Test
     public void testUpdateConnector() {
-        Connector connector = getConnector();
-        connector = repository.createOrUpdate(connector);
+        ChargingStationType chargingStationType = TestUtils.getChargingStationTypeNonTransient(entityManagerFactory);
+        Evse evse = Iterables.get(chargingStationType.getEvses(), 0);
+        Connector connector = Iterables.get(evse.getConnectors(), 0);
 
         connector.setVoltage(110);
 
         ClientResponse response = client.resource(BASE_URI)
-                .path("/" + connector.getId())
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .put(ClientResponse.class, connector);
+                        .path("/chargingstationtypes/" + chargingStationType.getId() + "/evses/" + evse.getId() + "/connectors/" + connector.getId())
+                        .type(ApiVersion.V1_JSON)
+                        .accept(ApiVersion.V1_JSON)
+                        .put(ClientResponse.class, connector);
 
         assertEquals(OK, response.getStatus());
         assertEquals(connector.getVoltage(), response.getEntity(Connector.class).getVoltage());
     }
 
     @Test
-    public void testGetConnectors() {
-        ClientResponse response = client.resource(BASE_URI)
-                .accept(MediaType.APPLICATION_JSON)
-                .get(ClientResponse.class);
-
-        assertEquals(OK, response.getStatus());
-    }
-
-    @Test
     public void testGetConnector() {
-        Connector connector = getConnector();
-        connector = repository.createOrUpdate(connector);
+        ChargingStationType chargingStationType = TestUtils.getChargingStationTypeNonTransient(entityManagerFactory);
+        Evse evse = Iterables.get(chargingStationType.getEvses(), 0);
+        Connector connector = Iterables.get(evse.getConnectors(), 0);
 
         ClientResponse response = client.resource(BASE_URI)
-                .path("/" + connector.getId())
-                .accept(MediaType.APPLICATION_JSON)
+                .path("/chargingstationtypes/" + chargingStationType.getId() + "/evses/" + evse.getId() + "/connectors/" + connector.getId())
+                .accept(ApiVersion.V1_JSON)
                 .get(ClientResponse.class);
 
         assertEquals(OK, response.getStatus());
@@ -137,9 +124,12 @@ public class ITConnectorResourceTest extends JerseyTest {
 
     @Test
     public void testGetConnectorNotFound() {
+        ChargingStationType chargingStationType = TestUtils.getChargingStationTypeNonTransient(entityManagerFactory);
+        Evse evse = Iterables.get(chargingStationType.getEvses(), 0);
+
         ClientResponse response = client.resource(BASE_URI)
-                .path("/1")
-                .accept(MediaType.TEXT_PLAIN)
+                .path("/chargingstationtypes/" + chargingStationType.getId() + "/evses/" + evse.getId() + "/connectors/999")
+                .accept(ApiVersion.V1_JSON)
                 .get(ClientResponse.class);
 
         assertEquals(NOT_FOUND, response.getStatus());
@@ -147,12 +137,13 @@ public class ITConnectorResourceTest extends JerseyTest {
 
     @Test
     public void testDeleteConnector() {
-        Connector connector = getConnector();
-        connector = repository.createOrUpdate(connector);
+        ChargingStationType chargingStationType = TestUtils.getChargingStationTypeNonTransient(entityManagerFactory);
+        Evse evse = Iterables.get(chargingStationType.getEvses(), 0);
+        Connector connector = Iterables.get(evse.getConnectors(), 0);
 
         ClientResponse response = client.resource(BASE_URI)
-                .path("/" + connector.getId())
-                .accept(MediaType.APPLICATION_JSON)
+                .path("/chargingstationtypes/" + chargingStationType.getId() + "/evses/" + evse.getId() + "/connectors/" + connector.getId())
+                .accept(ApiVersion.V1_JSON)
                 .delete(ClientResponse.class);
 
         assertEquals(OK, response.getStatus());
@@ -160,17 +151,14 @@ public class ITConnectorResourceTest extends JerseyTest {
 
     @Test
     public void testDeleteConnectorNotFound() {
+        ChargingStationType chargingStationType = TestUtils.getChargingStationTypeNonTransient(entityManagerFactory);
+        Evse evse = Iterables.get(chargingStationType.getEvses(), 0);
+
         ClientResponse response = client.resource(BASE_URI)
-                .path("/1")
-                .accept(MediaType.TEXT_PLAIN)
+                .path("/chargingstationtypes/" + chargingStationType.getId() + "/evses/" + evse.getId() + "/connectors/999")
+                .accept(ApiVersion.V1_JSON)
                 .delete(ClientResponse.class);
 
         assertEquals(NOT_FOUND, response.getStatus());
-    }
-
-    private Connector getConnector() {
-        Connector connector = new Connector();
-        connector.setVoltage(230);
-        return connector;
     }
 }

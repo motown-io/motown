@@ -44,7 +44,7 @@ public class ConfigurationEventListener {
      * Handles {@code UnconfiguredChargingStationBootedEvent}s by requesting the domainService for information about
      * the vendor and model code which should be present in the event attributes.
      *
-     * @param event
+     * @param event the event to handle.
      */
     @EventHandler
     protected void onEvent(UnconfiguredChargingStationBootedEvent event) {

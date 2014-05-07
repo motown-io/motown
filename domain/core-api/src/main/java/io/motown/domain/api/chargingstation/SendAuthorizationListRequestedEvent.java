@@ -15,11 +15,11 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.security.IdentityContext;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -35,7 +35,7 @@ public final class SendAuthorizationListRequestedEvent implements CommunicationW
 
     private final String protocol;
 
-    private final List<IdentifyingToken> authorizationList;
+    private final Set<IdentifyingToken> authorizationList;
 
     private final int authorizationListVersion;
 
@@ -58,13 +58,13 @@ public final class SendAuthorizationListRequestedEvent implements CommunicationW
      * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code updateType} or {@code identityContext} is {@code null}.
      * @throws IllegalArgumentException if {@code protocol} is empty.
      */
-    public SendAuthorizationListRequestedEvent(ChargingStationId chargingStationId, String protocol, List<IdentifyingToken> authorizationList,
+    public SendAuthorizationListRequestedEvent(ChargingStationId chargingStationId, String protocol, Set<IdentifyingToken> authorizationList,
                                                int authorizationListVersion, String authorizationListHash, AuthorizationListUpdateType updateType, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());
         this.protocol = protocol;
-        this.authorizationList = ImmutableList.copyOf(checkNotNull(authorizationList));
+        this.authorizationList = ImmutableSet.copyOf(checkNotNull(authorizationList));
         this.authorizationListVersion = checkNotNull(authorizationListVersion);
         this.authorizationListHash = checkNotNull(authorizationListHash);
         this.updateType = checkNotNull(updateType);
@@ -90,7 +90,7 @@ public final class SendAuthorizationListRequestedEvent implements CommunicationW
     /**
      * @return the authorization list that is to be applied
      */
-    public List<IdentifyingToken> getAuthorizationList() {
+    public Set<IdentifyingToken> getAuthorizationList() {
         return authorizationList;
     }
 

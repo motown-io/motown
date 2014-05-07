@@ -16,21 +16,30 @@
 package io.motown.operatorapi.json.restapi;
 
 import io.motown.operatorapi.json.queries.OperatorApiService;
+import io.motown.operatorapi.json.restapi.util.OperatorApiResponseBuilder;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 @Path("/transactions")
 @Produces(ApiVersion.V1_JSON)
 public final class TransactionResource {
 
+    private static final String OFFSET_PARAMETER = "offset";
+
+    private static final String OFFSET_DEFAULT = "0";
+
+    private static final String LIMIT_PARAMETER = "limit";
+
+    private static final String LIMIT_DEFAULT = "10";
+
     private OperatorApiService service;
 
     @GET
-    public Response getTransactions() {
-        return Response.ok().entity(service.findAllTransactions()).build();
+    public Response getTransactions(@Context HttpServletRequest request, @QueryParam(OFFSET_PARAMETER) @DefaultValue(OFFSET_DEFAULT) int offset, @QueryParam(LIMIT_PARAMETER) @DefaultValue(LIMIT_DEFAULT) int limit) {
+        return Response.ok(OperatorApiResponseBuilder.buildResponse(request, offset, limit, service.getTotalNumberOfTransactions(), service.findAllTransactions(offset, limit))).build();
     }
 
     public void setService(OperatorApiService service) {

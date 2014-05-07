@@ -73,12 +73,9 @@ public class DomainServiceTest {
     @Qualifier("entityManagerFactoryOcppViewModel")
     private EntityManagerFactory entityManagerFactory;
 
-    @Autowired
-    @Qualifier("entityManagerOcppViewModel")
-    private EntityManager entityManager;
-
     @Before
     public void setUp() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.clear();
         deleteFromDatabase(entityManager, ChargingStation.class);
         deleteFromDatabase(entityManager, Transaction.class);
@@ -117,6 +114,34 @@ public class DomainServiceTest {
         result = domainService.bootChargingStation(CHARGING_STATION_ID, "", CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER, getFirmwareVersion(),
                 getIccid(), getImsi(), getMeterType(), getMeterSerialNumber(), ADD_ON_IDENTITY);
         assertFalse(result.isAccepted());
+    }
+
+    @Test
+    public void testBootUnconfiguredChargingStation() {
+        ChargingStation cs = new ChargingStation(CHARGING_STATION_ID.getId(), CHARGING_STATION_ADDRESS);
+        cs.setRegistered(true);
+        cs.setNumberOfEvses(2);
+        cs.setConfigured(false);
+        chargingStationRepository.createOrUpdate(cs);
+
+        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(CHARGING_STATION_ID, CHARGING_STATION_ADDRESS, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL,
+                CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER, getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber(), ADD_ON_IDENTITY);
+        assertFalse(bootChargingStationResult.isAccepted());
+
+        Map<String, String> attributes = new HashMap<>();
+        DomainService.addAttributeIfNotNull(attributes, DomainService.ADDRESS_KEY, CHARGING_STATION_ADDRESS);
+        DomainService.addAttributeIfNotNull(attributes, DomainService.VENDOR_KEY, CHARGING_STATION_VENDOR);
+        DomainService.addAttributeIfNotNull(attributes, DomainService.MODEL_KEY, CHARGING_STATION_MODEL);
+        DomainService.addAttributeIfNotNull(attributes, DomainService.CHARGING_STATION_SERIALNUMBER_KEY, CHARGING_STATION_SERIAL_NUMBER);
+        DomainService.addAttributeIfNotNull(attributes, DomainService.CHARGE_BOX_SERIALNUMBER_KEY, CHARGE_BOX_SERIAL_NUMBER);
+        DomainService.addAttributeIfNotNull(attributes, DomainService.FIRMWARE_VERSION_KEY, getFirmwareVersion());
+        DomainService.addAttributeIfNotNull(attributes, DomainService.ICCID_KEY, getIccid());
+        DomainService.addAttributeIfNotNull(attributes, DomainService.IMSI_KEY, getImsi());
+        DomainService.addAttributeIfNotNull(attributes, DomainService.METER_TYPE_KEY, getMeterType());
+        DomainService.addAttributeIfNotNull(attributes, DomainService.METER_SERIALNUMBER_KEY, getMeterSerialNumber());
+
+
+        verify(gateway).send(eq(new BootChargingStationCommand(CHARGING_STATION_ID, PROTOCOL, attributes, NULL_USER_IDENTITY_CONTEXT)));
     }
 
     @Test

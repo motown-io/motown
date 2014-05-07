@@ -16,8 +16,13 @@
 package io.motown.identificationauthorization.app;
 
 import io.motown.domain.api.chargingstation.AuthorizationRequestedEvent;
+import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.DenyAuthorizationCommand;
 import io.motown.domain.api.chargingstation.GrantAuthorizationCommand;
+import io.motown.domain.api.security.AddOnIdentity;
+import io.motown.domain.api.security.IdentityContext;
+import io.motown.domain.api.security.NullUserIdentity;
+import io.motown.domain.api.security.TypeBasedAddOnIdentity;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.common.annotation.MetaData;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -32,31 +37,34 @@ public class AuthorizationEventListener {
 
     private AuthorizationCommandGateway commandGateway;
 
+    private static final String ADD_ON_TYPE = "IDENTIFICATION-AUTHORIZATION";
+
+    private AddOnIdentity addOnIdentity;
+
     /**
      * Listens for {@code AuthorizationRequestedEvent} and requests the {@code IdentificationAuthorizationService} to
      * execute the authorization. Sends a {@code GrantAuthorizationCommand} if identification is successful,
      * {@code DenyAuthorizationCommand} if not. The passed correlation id will be added to the outgoing command if
      * it's not null or empty.
      *
-     * @param event the authorization request event.
-     * @param correlationId correlation id which will be added to outgoing command if it's not null or empty.
+     * @param event            the authorization request event.
+     * @param correlationToken correlation token which will be added to outgoing command if it's not null or empty.
      */
     @EventHandler
     protected void onEvent(AuthorizationRequestedEvent event,
-                           @MetaData(value = "correlationId", required = false) String correlationId) {
+                           @MetaData(value = CorrelationToken.KEY, required = false) CorrelationToken correlationToken) {
         boolean valid = identificationAuthorizationService.isValid(event.getIdentifyingToken());
 
         CommandMessage commandMessage;
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
         if (valid) {
-            //TODO re-use the identity context of the event? Or create a new one... - Mark van den Bergh, 10th april 2014
-            commandMessage = asCommandMessage(new GrantAuthorizationCommand(event.getChargingStationId(), event.getIdentifyingToken(), event.getIdentityContext()));
+            commandMessage = asCommandMessage(new GrantAuthorizationCommand(event.getChargingStationId(), event.getIdentifyingToken(), identityContext));
         } else {
-            //TODO re-use the identity context of the event? Or create a new one... - Mark van den Bergh, 10th april 2014
-            commandMessage = asCommandMessage(new DenyAuthorizationCommand(event.getChargingStationId(), event.getIdentifyingToken(), event.getIdentityContext()));
+            commandMessage = asCommandMessage(new DenyAuthorizationCommand(event.getChargingStationId(), event.getIdentifyingToken(), identityContext));
         }
 
-        if (correlationId != null && !correlationId.isEmpty()) {
-            commandMessage = commandMessage.andMetaData(Collections.singletonMap("correlationId", correlationId));
+        if (correlationToken != null) {
+            commandMessage = commandMessage.andMetaData(Collections.singletonMap(CorrelationToken.KEY, correlationToken));
         }
 
         commandGateway.send(commandMessage);
@@ -68,5 +76,9 @@ public class AuthorizationEventListener {
 
     public void setCommandGateway(AuthorizationCommandGateway commandGateway) {
         this.commandGateway = commandGateway;
+    }
+
+    public void setAddOnIdentity(String addOnIdentity) {
+        this.addOnIdentity = new TypeBasedAddOnIdentity(ADD_ON_TYPE, addOnIdentity);
     }
 }

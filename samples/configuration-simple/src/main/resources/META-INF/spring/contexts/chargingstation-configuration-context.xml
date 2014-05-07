@@ -30,33 +30,18 @@
 
     <bean id="chargingStationConfigurationDomainService" class="io.motown.chargingstationconfiguration.viewmodel.domain.DomainService">
         <property name="chargingStationTypeRepository" ref="chargingStationRepositoryChargingStationConfiguration" />
-        <property name="connectorRepository" ref="connectorRepositoryChargingStationConfiguration" />
-        <property name="evseRepository" ref="evseRepositoryChargingStationConfiguration" />
         <property name="manufacturerRepository" ref="manufacturerRepositoryChargingStationConfiguration" />
     </bean>
 
     <bean id="chargingStationRepositoryChargingStationConfiguration" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository">
-        <property name="entityManager" ref="jpaEntityManagerChargingStationConfiguration" />
-    </bean>
-
-    <bean id="connectorRepositoryChargingStationConfiguration" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ConnectorRepository">
-        <property name="entityManager" ref="jpaEntityManagerChargingStationConfiguration" />
-    </bean>
-
-    <bean id="evseRepositoryChargingStationConfiguration" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.EvseRepository">
-        <property name="entityManager" ref="jpaEntityManagerChargingStationConfiguration" />
+        <property name="entityManagerFactory" ref="entityManagerFactoryChargingStationConfiguration" />
     </bean>
 
     <bean id="manufacturerRepositoryChargingStationConfiguration" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ManufacturerRepository">
-        <property name="entityManager" ref="jpaEntityManagerChargingStationConfiguration" />
+        <property name="entityManagerFactory" ref="entityManagerFactoryChargingStationConfiguration" />
     </bean>
 
     <bean id="beanValidationInterceptor" class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor"/>
-
-    <bean id="asyncExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean">
-        <property name="corePoolSize" value="1"/>
-        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
-    </bean>
 
     <bean id="chargingStationConfigurationCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
         <property name="commandBus" ref="commandBus"/>
@@ -74,8 +59,6 @@
             </bean>
         </property>
     </bean>
-
-    <bean id="jpaEntityManagerChargingStationConfiguration" factory-bean="entityManagerFactoryChargingStationConfiguration" factory-method="createEntityManager" />
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactoryChargingStationConfiguration" />

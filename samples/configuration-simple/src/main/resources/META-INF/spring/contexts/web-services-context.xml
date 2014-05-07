@@ -71,7 +71,7 @@
         <property name="continuationTimeout" value="${io.motown.ocpp.v15.soap.cxf.continuation.timeout}"/>
         <property name="heartbeatIntervalFallback" value="${io.motown.ocpp.viewmodel.heartbeat.interval}"/>
         <property name="soapHeaderReader">
-            <bean class="io.motown.ocpp.soaputils.header.SoapHeaderReader"/>
+            <bean class="io.motown.ocpp.soaputils.header.CXFSoapHeaderReader"/>
         </property>
         <property name="addOnId" value="1"/>
     </bean>
@@ -93,8 +93,6 @@
             <bean class="io.motown.ocpp.v15.soap.chargepoint.IdentifyingTokenConverterService"/>
         </property>
     </bean>
-
-    <bean class="io.motown.ocpp.v15.soap.centralsystem.schema.ObjectFactory"/>
 
     <bean id="ocppDomainService" class="io.motown.ocpp.viewmodel.domain.DomainService">
         <property name="chargingStationRepository" ref="chargingStationRepositoryOcppWebServices"/>
@@ -119,17 +117,17 @@
 
     <bean id="chargingStationRepositoryOcppWebServices"
           class="io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository">
-        <property name="entityManager" ref="jpaEntityManagerOcppWebServices"/>
+        <property name="entityManagerFactory" ref="entityManagerFactoryOcppWebServices"/>
     </bean>
 
     <bean id="reservationIdentifierRepositoryOcppWebServices"
           class="io.motown.ocpp.viewmodel.persistence.repositories.ReservationIdentifierRepository">
-        <property name="entityManager" ref="jpaEntityManagerOcppWebServices"/>
+        <property name="entityManagerFactory" ref="entityManagerFactoryOcppWebServices"/>
     </bean>
 
     <bean id="transactionRepositoryOcppWebServices"
           class="io.motown.ocpp.viewmodel.persistence.repositories.TransactionRepository">
-        <property name="entityManager" ref="jpaEntityManagerOcppWebServices"/>
+        <property name="entityManagerFactory" ref="entityManagerFactoryOcppWebServices"/>
     </bean>
 
     <bean id="ocppWebServicesTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
@@ -155,10 +153,6 @@
         </property>
     </bean>
 
-    <bean id="jpaEntityManagerOcppWebServices" factory-bean="entityManagerFactoryOcppWebServices"
-          factory-method="createEntityManager"/>
-
-
     <!-- END OF OCPP 1.5 CONFIG -->
 
     <!-- OCPP 1.2 SOAP CONFIG -->
@@ -167,7 +161,7 @@
         <property name="continuationTimeout" value="${io.motown.ocpp.v12.soap.cxf.continuation.timeout}"/>
         <property name="heartbeatIntervalFallback" value="${io.motown.ocpp.viewmodel.heartbeat.interval}"/>
         <property name="soapHeaderReader">
-            <bean class="io.motown.ocpp.soaputils.header.SoapHeaderReader"/>
+            <bean class="io.motown.ocpp.soaputils.header.CXFSoapHeaderReader"/>
         </property>
         <property name="addOnId" value="1"/>
     </bean>
@@ -186,20 +180,17 @@
         <property name="domainService" ref="ocppDomainService"/>
         <property name="chargingStationProxyFactory" ref="chargingStationOcpp12ProxyFactory"/>
     </bean>
-
-    <bean class="io.motown.ocpp.v12.soap.centralsystem.schema.ObjectFactory"/>
     <!-- END OF OCPP 1.2 SOAP CONFIG -->
-
 
     <!-- START OF VAS 1.0 SOAP CONFIG -->
     <bean id="vasWebServicesChargingStationRepository"
           class="io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository">
-        <property name="entityManager" ref="vasWebServicesEntityManager"/>
+        <property name="entityManagerFactory" ref="vasWebServicesEntityManagerFactory"/>
     </bean>
 
     <bean id="vasWebServicesSubscriptionRepository"
           class="io.motown.vas.viewmodel.persistence.repostories.SubscriptionRepository">
-        <property name="entityManager" ref="vasWebServicesEntityManager"/>
+        <property name="entityManagerFactory" ref="vasWebServicesEntityManagerFactory"/>
     </bean>
 
     <bean class="io.motown.vas.viewmodel.VasEventHandler">
@@ -232,16 +223,12 @@
     </bean>
 
     <jaxws:endpoint implementor="#vasPublisherService"
-                    address="/vasPublisherService">
-        <jaxws:inInterceptors>
-            <ref bean="replyToInterceptor"/>
-        </jaxws:inInterceptors>
-    </jaxws:endpoint>
+                    address="/vasPublisherService"/>
 
     <bean id="vasWebServicesEntityManagerFactory"
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="vasWebServicesDataSource"/>
-        <property name="packagesToScan" value="io.motown.vas.viewmodel.model"/>
+        <property name="packagesToScan" value="io.motown.vas.viewmodel.persistence.entities"/>
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
                 <property name="database" value="HSQL"/>
@@ -249,9 +236,6 @@
             </bean>
         </property>
     </bean>
-
-    <bean id="vasWebServicesEntityManager" factory-bean="vasWebServicesEntityManagerFactory"
-          factory-method="createEntityManager"/>
 
     <jdbc:embedded-database id="vasWebServicesDataSource" type="HSQL"/>
 

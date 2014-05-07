@@ -23,6 +23,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 public class Connector {
@@ -97,5 +98,22 @@ public class Connector {
 
     public void setConnectorType(ConnectorType connectorType) {
         this.connectorType = connectorType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, maxAmp, phase, voltage, chargingProtocol, current, connectorType);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final Connector other = (Connector) obj;
+        return Objects.equals(this.id, other.id) && Objects.equals(this.maxAmp, other.maxAmp) && Objects.equals(this.phase, other.phase) && Objects.equals(this.voltage, other.voltage) && Objects.equals(this.chargingProtocol, other.chargingProtocol) && Objects.equals(this.current, other.current) && Objects.equals(this.connectorType, other.connectorType);
     }
 }

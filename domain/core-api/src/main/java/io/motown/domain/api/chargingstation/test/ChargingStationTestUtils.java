@@ -49,7 +49,7 @@ public final class ChargingStationTestUtils {
     /**
      * The default voltage.
      */
-    public static final int VOLTAGE = 230;
+    public static final int VOLTAGE = 240;
 
     /**
      * The default connector.
@@ -343,7 +343,7 @@ public final class ChargingStationTestUtils {
     /**
      * The default list of identifying tokens.
      */
-    public static final ImmutableList<IdentifyingToken> IDENTIFYING_TOKENS = ImmutableList.<IdentifyingToken>builder()
+    public static final ImmutableSet<IdentifyingToken> IDENTIFYING_TOKENS = ImmutableSet.<IdentifyingToken>builder()
             .add(IDENTIFYING_TOKEN)
             .add(ANOTHER_IDENTIFYING_TOKEN)
             .build();
@@ -368,8 +368,8 @@ public final class ChargingStationTestUtils {
      * The default list of meter values.
      */
     public static final ImmutableList<MeterValue> METER_VALUES = ImmutableList.<MeterValue>builder()
-            .add(new MeterValue(FIVE_MINUTES_AGO, Integer.toString(METER_START), METER_VALUE_ATTRIBUTES))
-            .add(new MeterValue(TWO_MINUTES_AGO, Integer.toString(METER_STOP), METER_VALUE_ATTRIBUTES))
+            .add(new MeterValue(FIVE_MINUTES_AGO, Integer.toString(METER_START)))
+            .add(new MeterValue(TWO_MINUTES_AGO, Integer.toString(METER_STOP)))
             .build();
 
     /**
@@ -457,6 +457,16 @@ public final class ChargingStationTestUtils {
      * A default opening times.
      */
     public static final OpeningTime OPENING_TIME = new OpeningTime(Day.MONDAY, new TimeOfDay(OPENING_TIME_START_HOUR, OPENING_TIME_START_MINUTES), new TimeOfDay(OPENING_TIME_STOP_HOUR, OPENING_TIME_STOP_MINUTES));
+
+    /**
+     * Default page number for REST api
+     */
+    public static final int OFFSET = 0;
+
+    /**
+     * Default results per page for REST api
+     */
+    public static final int LIMIT = 10;
 
     /**
      * Private no-arg constructor to prevent instantiation of this utility class.

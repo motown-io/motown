@@ -19,6 +19,7 @@ import io.motown.domain.api.security.IdentityContext;
 
 import java.util.Objects;
 
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -88,5 +89,17 @@ public final class AuthorizationListVersionRequestedEvent implements Communicati
         }
         final AuthorizationListVersionRequestedEvent other = (AuthorizationListVersionRequestedEvent) obj;
         return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.protocol, other.protocol) && Objects.equals(this.identityContext, other.identityContext);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return toStringHelper(this)
+                .add("chargingStationId", chargingStationId)
+                .add("protocol", protocol)
+                .add("identityContext", identityContext)
+                .toString();
     }
 }

@@ -15,6 +15,7 @@
  */
 package io.motown.domain.api.chargingstation;
 
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -107,5 +108,20 @@ public final class Address {
      */
     public String getCountry() {
         return country;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return toStringHelper(this)
+                .add("addressLine1", addressLine1)
+                .add("addressLine2", addressLine2)
+                .add("postalCode", postalCode)
+                .add("city", city)
+                .add("region", region)
+                .add("country", country)
+                .toString();
     }
 }

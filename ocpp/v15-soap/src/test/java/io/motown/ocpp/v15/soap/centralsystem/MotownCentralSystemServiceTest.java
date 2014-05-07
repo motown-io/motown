@@ -16,7 +16,7 @@
 package io.motown.ocpp.v15.soap.centralsystem;
 
 import io.motown.domain.api.chargingstation.*;
-
+import io.motown.domain.api.chargingstation.MeterValue;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.api.security.TypeBasedAddOnIdentity;
 import io.motown.ocpp.soaputils.header.SoapHeaderReader;
@@ -49,15 +49,11 @@ import static org.mockito.Mockito.*;
 
 public class MotownCentralSystemServiceTest {
 
-    private MotownCentralSystemService motownCentralSystemService;
-
-    private DomainService domainService;
-
-    private SoapHeaderReader soapHeaderReader;
-
     private static final String ADD_ON_TYPE = "OCPPS15";
-
     private static final AddOnIdentity OCPPS15_ADD_ON_IDENTITY = new TypeBasedAddOnIdentity(ADD_ON_TYPE, ADD_ON_ID);
+    private MotownCentralSystemService motownCentralSystemService;
+    private DomainService domainService;
+    private SoapHeaderReader soapHeaderReader;
 
     @Before
     public void setup() {
@@ -221,11 +217,11 @@ public class MotownCentralSystemServiceTest {
         request.setMeterStop(METER_STOP);
         request.setTimestamp(FIVE_MINUTES_AGO);
         request.setTransactionId(TRANSACTION_NUMBER);
-        request.getTransactionData().addAll(getTransactionDataForMeterValues(METER_VALUES));
+        request.getTransactionData().addAll(TRANSACTION_DATA);
 
         motownCentralSystemService.stopTransaction(request, CHARGING_STATION_ID.getId());
 
-        verify(domainService).stopTransaction(CHARGING_STATION_ID, new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL_IDENTIFIER, TRANSACTION_NUMBER), IDENTIFYING_TOKEN, METER_STOP, FIVE_MINUTES_AGO, METER_VALUES, OCPPS15_ADD_ON_IDENTITY);
+        verify(domainService).stopTransaction(eq(CHARGING_STATION_ID), eq(new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL_IDENTIFIER, TRANSACTION_NUMBER)), eq(IDENTIFYING_TOKEN), eq(METER_STOP), eq(FIVE_MINUTES_AGO), anyListOf(MeterValue.class), eq(OCPPS15_ADD_ON_IDENTITY));
     }
 
     @Test
@@ -235,11 +231,11 @@ public class MotownCentralSystemServiceTest {
         request.setMeterStop(METER_STOP);
         request.setTimestamp(FIVE_MINUTES_AGO);
         request.setTransactionId(TRANSACTION_NUMBER);
-        request.getTransactionData().addAll(getTransactionDataForMeterValues(METER_VALUES));
+        request.getTransactionData().addAll(TRANSACTION_DATA);
 
         motownCentralSystemService.stopTransaction(request, CHARGING_STATION_ID.getId());
 
-        verify(domainService).stopTransaction(CHARGING_STATION_ID, new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL_IDENTIFIER, TRANSACTION_NUMBER), EMPTY_IDENTIFYING_TOKEN, METER_STOP, FIVE_MINUTES_AGO, METER_VALUES, OCPPS15_ADD_ON_IDENTITY);
+        verify(domainService).stopTransaction(eq(CHARGING_STATION_ID), eq(new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL_IDENTIFIER, TRANSACTION_NUMBER)), eq(EMPTY_IDENTIFYING_TOKEN), eq(METER_STOP), eq(FIVE_MINUTES_AGO), anyListOf(MeterValue.class), eq(OCPPS15_ADD_ON_IDENTITY));
     }
 
     @Test

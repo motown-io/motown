@@ -14,7 +14,7 @@
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="packagesToScan" value="io.motown.vas.viewmodel.model"/>
+        <property name="packagesToScan" value="io.motown.vas.viewmodel.persistence.entities"/>
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
                 <property name="database" value="HSQL"/>
@@ -39,6 +39,8 @@
                   value="sa" />
         <property name="password"
                   value="" />
+        <property name="maxActive"
+                  value="-1"/>
     </bean>
 
     <!-- executorService for pushing status changes to subscribers -->
@@ -49,14 +51,12 @@
     <!-- mock client for autoWiring -->
     <bean class="io.motown.vas.viewmodel.vas.SubscriberClientMock" />
 
-    <bean id="entityManager" factory-bean="entityManagerFactory" factory-method="createEntityManager" />
-
     <bean class="io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository">
-        <property name="entityManager" ref="entityManager" />
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
 
     <bean class="io.motown.vas.viewmodel.persistence.repostories.SubscriptionRepository">
-        <property name="entityManager" ref="entityManager" />
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
 
 </beans>

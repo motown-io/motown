@@ -17,9 +17,10 @@ package io.motown.domain.api.chargingstation;
 
 import io.motown.domain.api.security.IdentityContext;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -34,7 +35,7 @@ public final class AuthorizationListChangedEvent {
 
     private final AuthorizationListUpdateType updateType;
 
-    private final List<IdentifyingToken> identifyingTokens;
+    private final Set<IdentifyingToken> identifyingTokens;
 
     private final IdentityContext identityContext;
 
@@ -48,7 +49,7 @@ public final class AuthorizationListChangedEvent {
      * @param identityContext   the identity context.
      * @throws NullPointerException if {@code chargingStationId}, {@code evseId} or {@code identityContext} is {@code null}.
      */
-    public AuthorizationListChangedEvent(ChargingStationId chargingStationId, int version, AuthorizationListUpdateType updateType, List<IdentifyingToken> identifyingTokens, IdentityContext identityContext) {
+    public AuthorizationListChangedEvent(ChargingStationId chargingStationId, int version, AuthorizationListUpdateType updateType, Set<IdentifyingToken> identifyingTokens, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.version = version;
         this.updateType = checkNotNull(updateType);
@@ -87,7 +88,7 @@ public final class AuthorizationListChangedEvent {
      *
      * @return list of identifying tokens
      */
-    public List<IdentifyingToken> getIdentifyingTokens() {
+    public Set<IdentifyingToken> getIdentifyingTokens() {
         return identifyingTokens;
     }
 
@@ -115,5 +116,19 @@ public final class AuthorizationListChangedEvent {
         }
         final AuthorizationListChangedEvent other = (AuthorizationListChangedEvent) obj;
         return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.updateType, other.updateType) && Objects.equals(this.identifyingTokens, other.identifyingTokens) && Objects.equals(this.identityContext, other.identityContext);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return toStringHelper(this)
+                .add("chargingStationId", chargingStationId)
+                .add("version", version)
+                .add("updateType", updateType)
+                .add("identifyingTokens", identifyingTokens)
+                .add("identityContext", identityContext)
+                .toString();
     }
 }

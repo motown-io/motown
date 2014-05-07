@@ -18,12 +18,13 @@
     <bean class="io.motown.identificationauthorization.app.AuthorizationEventListener">
         <property name="commandGateway" ref="authorizationCommandGateway" />
         <property name="identificationAuthorizationService" ref="identificationAuthorizationService" />
+        <property name="addOnIdentity" value="1" />
     </bean>
 
     <bean id="identificationAuthorizationService" class="io.motown.identificationauthorization.app.IdentificationAuthorizationService">
         <property name="providers">
             <set>
-                <bean id="cirAuthentication" class="io.motown.identificationauthorization.cirplugin.CirAuthentication">
+                <bean id="cirAuthentication" class="io.motown.identificationauthorization.cirplugin.CirAuthorization">
                     <property name="username" value="${io.motown.identificationauthorization.cirplugin.cirservice.username}" />
                     <property name="password" value="${io.motown.identificationauthorization.cirplugin.cirservice.password}" />
                     <property name="endpoint" value="${io.motown.identificationauthorization.cirplugin.cirservice.endpoint}" />

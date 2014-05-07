@@ -15,6 +15,7 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.domain;
 
+import com.google.common.collect.Iterables;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
@@ -22,8 +23,10 @@ import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Man
 import io.motown.domain.api.chargingstation.ChargingProtocol;
 import io.motown.domain.api.chargingstation.ConnectorType;
 import io.motown.domain.api.chargingstation.Current;
+import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import java.util.HashSet;
 import java.util.List;
@@ -32,47 +35,77 @@ import java.util.Set;
 public final class TestUtils {
 
     public static final int MAX_AMP_32 = 32;
+
     public static final int NUMBER_OF_CONNECTORS = 3;
+
     public static final int PHASE_3 = 3;
+
     public static final int VOLTAGE_230 = 230;
+
+    public static final int DEFAULT_PAGING_PAGE = 1;
+
+    public static final int DEFAULT_PAGING_RECORDS_PER_PAGE = 50;
 
     private TestUtils() {
         // Private no-arg constructor to prevent instantiation of utility class.
     }
 
-    public static void deleteFromDatabase(EntityManager entityManager, Class jpaEntityClass) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
+    public static void deleteFromDatabase(EntityManagerFactory entityManagerFactory, Class jpaEntityClass) {
+        EntityManager em = entityManagerFactory.createEntityManager();
 
+        EntityTransaction tx = null;
         try {
-            List resultList = entityManager.createQuery("SELECT entity FROM " + jpaEntityClass.getName() + " as entity").getResultList();
+            tx = em.getTransaction();
+            tx.begin();
+
+            List resultList = em.createQuery("SELECT entity FROM " + jpaEntityClass.getName() + " as entity").getResultList();
             for (Object obj : resultList) {
-                entityManager.remove(obj);
+                em.remove(obj);
             }
-            transaction.commit();
+            tx.commit();
+        } catch (Exception e) {
+            if(tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
         } finally {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
+            em.close();
         }
     }
 
-    public static void insertIntoDatabase(EntityManager entityManager, Object entity) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
+    public static Object insertIntoDatabase(EntityManagerFactory entityManagerFactory, Object entity) {
+        EntityManager em = entityManagerFactory.createEntityManager();
 
+        EntityTransaction tx = null;
         try {
-            entityManager.persist(entity);
-            transaction.commit();
-        } finally {
-            if (transaction.isActive()) {
-                transaction.rollback();
+            tx = em.getTransaction();
+            tx.begin();
+
+            Object merged = em.merge(entity);
+            tx.commit();
+
+            return merged;
+        } catch (Exception e) {
+            if(tx != null && tx.isActive()) {
+                tx.rollback();
             }
+            throw e;
+        } finally {
+            em.close();
         }
+    }
+
+    /**
+     * Have an entity manager store a charging station and return that. This makes sure the id's of all entities are
+     * filled.
+     *
+     * @return charging station type with all identifiers filled.
+     */
+    public static ChargingStationType getChargingStationTypeNonTransient(EntityManagerFactory entityManagerFactory) {
+        Manufacturer manufacturer = getManufacturer(ChargingStationTestUtils.CHARGING_STATION_VENDOR);
+        manufacturer = (Manufacturer) insertIntoDatabase(entityManagerFactory, manufacturer);
+        ChargingStationType chargingStationType = Iterables.get(getChargingStationTypes(manufacturer, ChargingStationTestUtils.CHARGING_STATION_MODEL), 0);
+        return (ChargingStationType) insertIntoDatabase(entityManagerFactory, chargingStationType);
     }
 
     public static Manufacturer getManufacturerWithConfiguration(String vendor, String model) {

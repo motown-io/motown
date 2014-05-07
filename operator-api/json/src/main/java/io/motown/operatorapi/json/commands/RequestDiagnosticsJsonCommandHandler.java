@@ -61,7 +61,7 @@ class RequestDiagnosticsJsonCommandHandler implements JsonCommandHandler {
 
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
-            if (chargingStation != null && chargingStation.isAccepted()) {
+            if (chargingStation != null && chargingStation.communicationAllowed()) {
                 RequestDiagnosticsApiCommand command = gson.fromJson(commandObject, RequestDiagnosticsApiCommand.class);
 
                 commandGateway.send(new RequestDiagnosticsCommand(csId, command.getTargetLocation(), null, null, null, null, identityContext), new CorrelationToken());

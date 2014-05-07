@@ -16,7 +16,7 @@
 package io.motown.vas.v10.soap;
 
 import io.motown.vas.v10.soap.schema.ChargePoint;
-import io.motown.vas.viewmodel.model.ChargingStation;
+import io.motown.vas.viewmodel.persistence.entities.ChargingStation;
 import org.junit.Before;
 import org.junit.Test;
 

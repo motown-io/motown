@@ -105,15 +105,16 @@ public class OcppWebSocketJsonTestUtils {
                 .build();
         gsonFactoryBean.setTypeAdapterDeserializers(typeAdapterDeserializers);
 
-        return gsonFactoryBean.getObject();
+        return gsonFactoryBean.createGson();
     }
 
     public static WebSocket getMockWebSocket() {
         WebSocket webSocket = mock(WebSocket.class);
 
         AtmosphereRequest request = mock(AtmosphereRequest.class);
-        when(request.getRequestURI()).thenReturn("/websockets/" + CHARGING_STATION_ID.getId());
+        when(request.getContextPath()).thenReturn("/motown");
         when(request.getServletPath()).thenReturn("/websockets");
+        when(request.getRequestURI()).thenReturn("/motown/websockets/" + CHARGING_STATION_ID.getId());
 
         AtmosphereResource resource = mock(AtmosphereResource.class);
         when(resource.getRequest()).thenReturn(request);

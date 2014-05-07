@@ -16,7 +16,7 @@
 package io.motown.identificationauthorization.app;
 
 import com.google.common.collect.ImmutableSet;
-import io.motown.identificationauthorization.pluginapi.AuthenticationProvider;
+import io.motown.identificationauthorization.pluginapi.AuthorizationProvider;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,22 +29,22 @@ public class IdentificationAuthorizationServiceTest {
 
     private IdentificationAuthorizationService service;
 
-    private AuthenticationProvider firstProvider;
+    private AuthorizationProvider firstProvider;
 
-    private AuthenticationProvider secondProvider;
+    private AuthorizationProvider secondProvider;
 
     @Before
     public void setup() {
         service = new IdentificationAuthorizationService();
 
-        firstProvider = mock(AuthenticationProvider.class);
+        firstProvider = mock(AuthorizationProvider.class);
         when(firstProvider.isValid(IDENTIFYING_TOKEN)).thenReturn(true);
         when(firstProvider.isValid(INVALID_IDENTIFYING_TOKEN)).thenReturn(false);
 
-        secondProvider = mock(AuthenticationProvider.class);
+        secondProvider = mock(AuthorizationProvider.class);
         when(secondProvider.isValid(ANOTHER_IDENTIFYING_TOKEN)).thenReturn(true);
 
-        service.setProviders(ImmutableSet.<AuthenticationProvider>builder()
+        service.setProviders(ImmutableSet.<AuthorizationProvider>builder()
                 .add(firstProvider)
                 .add(secondProvider)
                 .build());

@@ -17,47 +17,45 @@ package io.motown.operatorapi.json.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.springframework.beans.factory.FactoryBean;
+import io.motown.operatorapi.json.gson.deserializer.TypeAdapterDeserializer;
+import io.motown.operatorapi.json.gson.serializer.TypeAdapterSerializer;
 
 import java.util.Set;
 
-//TODO can this be refactored into something without Spring dependency? - Mark van den Bergh, Februari 26th 2014
-public class GsonFactoryBean implements FactoryBean<Gson> {
+public class GsonFactoryBean {
 
     private String dateFormat;
 
-    private Set<TypeAdapter<?>> typeAdapters;
+    private Set<TypeAdapterDeserializer<?>> typeAdapterDeserializers;
+    private Set<TypeAdapterSerializer<?>> typeAdapterSerializers;
 
-    @Override
-    public Gson getObject() {
+    public Gson createGson() {
         GsonBuilder builder = new GsonBuilder();
 
         if (dateFormat != null && !dateFormat.isEmpty()) {
             builder.setDateFormat(dateFormat);
         }
 
-        for (TypeAdapter<?> typeAdapter : typeAdapters) {
-            builder.registerTypeAdapter(typeAdapter.getAdaptedType(), typeAdapter);
+        for (TypeAdapterDeserializer<?> typeAdapterDeserializer : typeAdapterDeserializers) {
+            builder.registerTypeAdapter(typeAdapterDeserializer.getAdaptedType(), typeAdapterDeserializer);
+        }
+
+        for (TypeAdapterSerializer<?> typeAdapterSerializer : typeAdapterSerializers) {
+            builder.registerTypeAdapter(typeAdapterSerializer.getAdaptedType(), typeAdapterSerializer);
         }
 
         return builder.create();
-    }
-
-    @Override
-    public Class<?> getObjectType() {
-        return Gson.class;
-    }
-
-    @Override
-    public boolean isSingleton() {
-        return false;
     }
 
     public void setDateFormat(String dateFormat) {
         this.dateFormat = dateFormat;
     }
 
-    public void setTypeAdapters(Set<TypeAdapter<?>> typeAdapters) {
-        this.typeAdapters = typeAdapters;
+    public void setTypeAdapterDeserializers(Set<TypeAdapterDeserializer<?>> typeAdapterDeserializers) {
+        this.typeAdapterDeserializers = typeAdapterDeserializers;
+    }
+
+    public void setTypeAdapterSerializers(Set<TypeAdapterSerializer<?>> typeAdapterSerializers) {
+        this.typeAdapterSerializers = typeAdapterSerializers;
     }
 }

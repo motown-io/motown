@@ -27,7 +27,7 @@ public class RequestSendAuthorizationListCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new RequestSendAuthorizationListCommand(null, Collections.<IdentifyingToken>emptyList(), 1, "", AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT);
+        new RequestSendAuthorizationListCommand(null, Collections.<IdentifyingToken>emptySet(), 1, "", AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
@@ -37,17 +37,17 @@ public class RequestSendAuthorizationListCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithHashNull() {
-        new RequestSendAuthorizationListCommand(CHARGING_STATION_ID, Collections.<IdentifyingToken>emptyList(), 1, null, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT);
+        new RequestSendAuthorizationListCommand(CHARGING_STATION_ID, Collections.<IdentifyingToken>emptySet(), 1, null, AuthorizationListUpdateType.FULL, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithUpdateTypeNull() {
-        new RequestSendAuthorizationListCommand(CHARGING_STATION_ID, Collections.<IdentifyingToken>emptyList(), 1, "", null, ROOT_IDENTITY_CONTEXT);
+        new RequestSendAuthorizationListCommand(CHARGING_STATION_ID, Collections.<IdentifyingToken>emptySet(), 1, "", null, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
-        new RequestSendAuthorizationListCommand(CHARGING_STATION_ID, Collections.<IdentifyingToken>emptyList(), 1, "", AuthorizationListUpdateType.FULL, null);
+        new RequestSendAuthorizationListCommand(CHARGING_STATION_ID, Collections.<IdentifyingToken>emptySet(), 1, "", AuthorizationListUpdateType.FULL, null);
     }
 
     @Test

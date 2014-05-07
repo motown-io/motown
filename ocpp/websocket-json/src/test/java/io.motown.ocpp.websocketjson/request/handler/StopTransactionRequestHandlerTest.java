@@ -66,7 +66,6 @@ public class StopTransactionRequestHandlerTest {
 
         List<TransactionDatum> transactionData = Lists.newArrayList();
         TransactionDatum transactionDetails = new TransactionDatum();
-        List<Value__> values = Lists.newArrayList();
         Value__ value = new Value__();
         value.setTimestamp(new Date());
 
@@ -76,8 +75,10 @@ public class StopTransactionRequestHandlerTest {
         meterValue.setUnit(UNIT);
         meterValue.setMeasurand(MEASURAND);
         meterValues.add(meterValue);
-
         value.setValues(meterValues);
+
+        List<Value__> values = Lists.newArrayList();
+        values.add(value);
         transactionDetails.setValues(values);
         transactionData.add(transactionDetails);
         requestPayload.setTransactionData(transactionData);

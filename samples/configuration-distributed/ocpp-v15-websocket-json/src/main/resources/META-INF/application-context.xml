@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2013 Motown.IO (info@motown.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:axon="http://www.axonframework.org/schema/core"
+       xmlns:axon-amqp="http://www.axonframework.org/schema/amqp"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                           http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
+	                       http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
+	                       http://www.axonframework.org/schema/amqp http://www.axonframework.org/schema/axon-amqp.xsd
+	                       http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+
+    <context:property-placeholder location="classpath:config.properties"
+                                  ignore-resource-not-found="true"
+                                  ignore-unresolvable="true"/>
+
+    <axon:annotation-config/>
+
+    <rabbit:connection-factory id="amqpConnection"
+                               username="${io.motown.ocpp.websocketjson.eventbus.amqp.rabbit.username}"
+                               password="${io.motown.ocpp.websocketjson.eventbus.amqp.rabbit.password}"
+                               virtual-host="${io.motown.ocpp.websocketjson.eventbus.amqp.rabbit.virtualhost}"
+                               host="${io.motown.ocpp.websocketjson.eventbus.amqp.rabbit.host}"/>
+
+    <rabbit:admin id="amqpAdmin"
+                  connection-factory="amqpConnection"/>
+
+    <rabbit:queue id="queue"
+                  name="${io.motown.ocpp.websocketjson.eventbus.amqp.rabbit.queue.name}"
+                  durable="true"/>
+
+    <rabbit:queue id="ocppRequestsQueue"
+                  name="${io.motown.ocpp.websocketjson.eventbus.amqp.rabbit.ocppwebsockets.queue.name}"
+                  exclusive="false"/>
+
+    <rabbit:fanout-exchange id="eventsExchange"
+                            name="${io.motown.ocpp.websocketjson.eventbus.amqp.rabbit.exchange.events.name}"
+                            durable="true">
+        <rabbit:bindings>
+            <rabbit:binding queue="queue"/>
+        </rabbit:bindings>
+    </rabbit:fanout-exchange>
+
+    <rabbit:direct-exchange id="ocppExchange"
+                            name="${io.motown.ocpp.websocketjson.eventbus.amqp.rabbit.exchange.events.ocppwebsockets.name}"
+                            durable="true">
+        <rabbit:bindings>
+            <rabbit:binding queue="ocppRequestsQueue"
+                            key="${io.motown.ocpp.v15.websocketjson.eventbus.amqp.rabbit.routing.key.base}.${io.motown.ocpp.v15.websocketjson.protocol.identifier}"/>
+            <rabbit:binding exchange="eventsExchange"/>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+
+    <axon:event-bus id="eventBus" terminal="terminal"/>
+
+    <axon-amqp:terminal id="terminal"
+                        connection-factory="amqpConnection"
+                        serializer="serializer"
+                        exchange-name="${io.motown.ocpp.websocketjson.eventbus.amqp.rabbit.exchange.events.name}">
+        <axon-amqp:default-configuration exclusive="true"/>
+    </axon-amqp:terminal>
+
+    <axon:jpa-event-store id="eventStore" />
+
+    <axon:cluster id="eventCluster" default="true">
+        <axon:selectors>
+            <axon:class-name-matches pattern="io.motown.ocpp.viewmodel.OcppEventHandler"/>
+        </axon:selectors>
+        <axon:replay-config event-store="eventStore"/>
+        <axon:meta-data>
+            <entry key="AMQP.Config">
+                <axon-amqp:configuration queue-name="${io.motown.ocpp.websocketjson.eventbus.amqp.rabbit.queue.name}"/>
+            </entry>
+        </axon:meta-data>
+    </axon:cluster>
+
+    <axon:cluster id="ocppRequestCluster">
+        <axon:selectors>
+            <axon:class-name-matches pattern="io.motown.ocpp.websocketjson.OcppWebSocketRequestHandler"/>
+        </axon:selectors>
+        <axon:meta-data>
+            <entry key="AMQP.Config">
+                <!--
+                TODO: Apply some sort of retry mechanism upon failures. For now acknowledge is set to none, which results in auto-ack behaviour (even upon exceptions) to avoid never ending processing loop on exceptions
+                -->
+                <axon-amqp:configuration queue-name="${io.motown.ocpp.websocketjson.eventbus.amqp.rabbit.ocppwebsockets.queue.name}"
+                                         exclusive="false"
+                                         acknowledge="none"/>
+            </entry>
+        </axon:meta-data>
+    </axon:cluster>
+
+    <bean id="beanValidationInterceptor" class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor"/>
+
+    <bean id="commandBus"
+          class="org.axonframework.commandhandling.distributed.DistributedCommandBus">
+        <constructor-arg ref="jgroupsConnector"/>
+        <property name="CommandDispatchInterceptors" ref="beanValidationInterceptor"/>
+    </bean>
+
+    <bean id="jgroupsConnector"
+          class="org.axonframework.commandhandling.distributed.jgroups.JGroupsConnectorFactoryBean">
+        <property name="configuration"
+                  value="flush-udp.xml"/>
+        <property name="clusterName"
+                  value="io.motown.commands"/>
+        <property name="localSegment">
+            <axon:command-bus/>
+        </property>
+        <property name="serializer">
+            <bean class="org.axonframework.serializer.xml.XStreamSerializer"/>
+        </property>
+    </bean>
+
+    <bean id="asyncExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean">
+        <property name="corePoolSize" value="1"/>
+        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+    </bean>
+
+    <bean id="serializer" class="org.axonframework.serializer.xml.XStreamSerializer"/>
+
+    <!-- Spring Data JPA -->
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="io.motown.ocpp.viewmodel.persistence"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="database" value="HSQL"/>
+                <property name="generateDdl" value="true"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="chargingStationRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+
+    <bean id="reservationIdentifierRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repositories.ReservationIdentifierRepository">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+
+    <bean id="transactionRepositoryOcppWebServices" class="io.motown.ocpp.viewmodel.persistence.repositories.TransactionRepository">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <jdbc:embedded-database id="dataSource" type="HSQL" />
+
+    <bean class="io.motown.ocpp.websocketjson.servlet.ApplicationContextProvider" />
+
+    <bean id="gsonFactoryBean" class="io.motown.ocpp.websocketjson.gson.GsonFactoryBean">
+        <property name="dateFormat" value="yyyy-MM-dd'T'HH:mm:ss'Z'"/>
+        <property name="typeAdapterSerializers">
+            <set>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.AuthorizationListIdTagStatusTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.BootnotificationResponseStatusTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.ChangeAvailabilityTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.DataTransferResponseStatusTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.ResetTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.SendLocalListRequestUpdateTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.StartTransactionIdTagStatusTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.MessageProcUriAdapterSerializer"/>
+            </set>
+        </property>
+        <property name="typeAdapterDeserializers">
+            <set>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.AuthorizationIdTagStatusAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.CancelReservationResponseStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ChangeAvailabilityTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ChangeConfigurationResponseStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ChargePointErrorCodeTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ChargePointStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ClearCacheResponseStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.DataTransferResponseStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.DiagnosticsStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.FirmwareStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.MessageProcUriAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.RemoteStartTransactionResponseTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.RemoteStopTransactionResponseTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ReserveNowResponseStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ResetResponseStatusAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.SendLocalListResponseStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.StopTransactionIdTagStatusAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.UnlockConnectorResponseStatusTypeAdapterDeserializer"/>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="gson" factory-bean="gsonFactoryBean" factory-method="createGson"/>
+
+    <bean id="domainCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
+        <property name="commandBus" ref="commandBus"/>
+        <property name="gatewayInterface" value="io.motown.ocpp.viewmodel.domain.DomainCommandGateway"/>
+    </bean>
+
+    <bean id="eventWaitingGateway" class="io.motown.domain.utils.axon.EventWaitingGateway">
+        <property name="commandBus" ref="commandBus"/>
+        <property name="eventBus" ref="eventBus"/>
+    </bean>
+
+    <bean id="userIdentitiesWithAllPermissions" class="java.util.HashSet">
+        <constructor-arg>
+            <set>
+                <bean class="io.motown.domain.api.security.SimpleUserIdentity">
+                    <constructor-arg name="identity" value="root" />
+                </bean>
+            </set>
+        </constructor-arg>
+    </bean>
+
+    <bean id="domainService" class="io.motown.ocpp.viewmodel.domain.DomainService">
+        <property name="chargingStationRepository" ref="chargingStationRepositoryOcppWebServices" />
+        <property name="commandGateway" ref="domainCommandGateway" />
+        <property name="eventWaitingGateway" ref="eventWaitingGateway" />
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+        <property name="heartbeatInterval" value="${io.motown.ocpp.viewmodel.heartbeat.interval}" />
+        <property name="reservationIdentifierRepository" ref="reservationIdentifierRepositoryOcppWebServices" />
+        <property name="transactionRepository" ref="transactionRepositoryOcppWebServices" />
+        <property name="userIdentitiesWithAllPermissions" ref="userIdentitiesWithAllPermissions"/>
+    </bean>
+
+    <bean id="ocppJsonService" class="io.motown.ocpp.websocketjson.OcppJsonService">
+        <property name="domainService" ref="domainService" />
+        <property name="schemaValidator">
+            <bean class="io.motown.ocpp.websocketjson.schema.SchemaValidator" />
+        </property>
+        <property name="wampMessageParser">
+            <bean class="io.motown.ocpp.websocketjson.wamp.WampMessageParser"/>
+        </property>
+        <property name="gson" ref="gson" />
+        <property name="addOnId" value="1" />
+    </bean>
+
+    <bean class="io.motown.ocpp.viewmodel.OcppEventHandler">
+        <property name="chargingStationRepository">
+            <bean class="io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository">
+                <property name="entityManagerFactory" ref="entityManagerFactory" />
+            </bean>
+        </property>
+    </bean>
+
+    <bean class="io.motown.ocpp.viewmodel.OcppRequestEventHandler">
+        <property name="chargingStationRepository" ref="chargingStationRepositoryOcppWebServices" />
+        <property name="requestHandlers">
+            <map>
+                <entry key="OCPPJ15">
+                    <bean class="io.motown.ocpp.websocketjson.OcppWebSocketRequestHandler">
+                        <property name="ocppJsonService" ref="ocppJsonService" />
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+</beans>

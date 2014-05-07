@@ -19,6 +19,10 @@ import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * A Connector is an independently operated and managed electrical outlet on an EVSE. This corresponds to a single
+ * physical outlet.
+ */
 public final class Connector {
 
     private int maxAmp;

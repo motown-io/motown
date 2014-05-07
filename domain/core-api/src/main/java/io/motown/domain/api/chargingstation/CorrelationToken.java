@@ -18,8 +18,7 @@ package io.motown.domain.api.chargingstation;
 import java.util.Objects;
 import java.util.UUID;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Objects.toStringHelper;
 
 /**
  * A {@code String} based identifying token used to correlate commands and events to each other.
@@ -31,38 +30,32 @@ public final class CorrelationToken {
     private final String token;
 
     /**
-     * Create a {@code CorrelationToken} with a {@UUID} based token.
+     * Create a {@code CorrelationToken} with a {@code UUID} based token.
      */
-    public CorrelationToken(){
-        this(UUID.randomUUID().toString());
+    public CorrelationToken() {
+        this.token = UUID.randomUUID().toString();
     }
 
     /**
-     * Create a {@code CorrelationToken} with a {@String} based token.
+     * Gets the token.
      *
-     * @param token the token.
-     * @throws NullPointerException     if {@token} is null.
-     * @throws IllegalArgumentException if {@token} is empty.
-     */
-    public CorrelationToken(String token) {
-        checkNotNull(token);
-        checkArgument(!token.isEmpty());
-
-        this.token = token;
-    }
-
-    /**
-     * {@inheritDoc}
+     * @return the token.
      */
     public String getToken() {
         return token;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(token);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -73,5 +66,15 @@ public final class CorrelationToken {
         }
         final CorrelationToken other = (CorrelationToken) obj;
         return Objects.equals(this.token, other.token);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return toStringHelper(this)
+                .add("token", token)
+                .toString();
     }
 }

@@ -20,7 +20,7 @@ import com.google.gson.GsonBuilder;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.UserIdentity;
 import io.motown.domain.commandauthorization.CommandAuthorizationService;
-import io.motown.operatorapi.json.gson.*;
+import io.motown.operatorapi.json.gson.deserializer.*;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
@@ -45,12 +45,12 @@ public final class OperatorApiJsonTestUtils {
     public static Gson getGson() {
         return new GsonBuilder().
                 setDateFormat(ISO8601_DATE_FORMAT).
-                registerTypeAdapter(EvseId.class, new EvseIdTypeAdapter()).
-                registerTypeAdapter(TextualToken.class, new TextualTokenTypeAdapter()).
-                registerTypeAdapter(Coordinates.class, new CoordinatesTypeAdapter()).
-                registerTypeAdapter(Address.class, new AddressTypeAdapter()).
-                registerTypeAdapter(OpeningTime.class, new OpeningTimeTypeAdapter()).
-                registerTypeAdapter(Accessibility.class, new AccessibilityTypeAdapter()).
+                registerTypeAdapter(EvseId.class, new EvseIdTypeAdapterDeserializer()).
+                registerTypeAdapter(TextualToken.class, new TextualTokenTypeAdapterDeserializer()).
+                registerTypeAdapter(Coordinates.class, new CoordinatesTypeAdapterDeserializer()).
+                registerTypeAdapter(Address.class, new AddressTypeAdapterDeserializer()).
+                registerTypeAdapter(OpeningTime.class, new OpeningTimeTypeAdapterDeserializer()).
+                registerTypeAdapter(Accessibility.class, new AccessibilityTypeAdapterDeserializer()).
                 create();
     }
 
@@ -59,8 +59,12 @@ public final class OperatorApiJsonTestUtils {
         ChargingStation registeredStation = mock(ChargingStation.class);
         when(registeredStation.getProtocol()).thenReturn("OCPPS15");
         when(registeredStation.isAccepted()).thenReturn(true);
+        when(registeredStation.isConfigured()).thenReturn(true);
+        when(registeredStation.communicationAllowed()).thenReturn(true);
         ChargingStation unregisteredStation = mock(ChargingStation.class);
         when(unregisteredStation.isAccepted()).thenReturn(false);
+        when(unregisteredStation.isConfigured()).thenReturn(false);
+        when(unregisteredStation.communicationAllowed()).thenReturn(false);
         when(repo.findOne(CHARGING_STATION_ID_STRING)).thenReturn(registeredStation);
         when(repo.findOne(UNREGISTERED_CHARGING_STATION_ID_STRING)).thenReturn(unregisteredStation);
         return repo;

@@ -15,12 +15,12 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -33,7 +33,7 @@ public final class RequestSendAuthorizationListCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final List<IdentifyingToken> authorizationList;
+    private final Set<IdentifyingToken> authorizationList;
 
     private final int authorizationListVersion;
 
@@ -47,7 +47,7 @@ public final class RequestSendAuthorizationListCommand {
      * Creates a {@code RequestSendAuthorizationListCommand}
      *
      * @param chargingStationId        the identifier of the charging station.
-     * @param authorizationList        in case of a full update this contains the list of values that form the new local
+     * @param authorizationList        in case of a full update this contains the set of values that form the new local
      *                                 authorization list. In case of a differential update it contains the changes to be
      *                                 applied to the local authorization list in the charging station.
      * @param updateType               the type of update.
@@ -58,10 +58,10 @@ public final class RequestSendAuthorizationListCommand {
      * @throws NullPointerException if {@code chargingStationId}, {@code authorizationList}, {@code authorizationListHash},
      *                              {@code updateType} or {@code identityContext} is {@code null}.
      */
-    public RequestSendAuthorizationListCommand(ChargingStationId chargingStationId, List<IdentifyingToken> authorizationList, int authorizationListVersion,
+    public RequestSendAuthorizationListCommand(ChargingStationId chargingStationId, Set<IdentifyingToken> authorizationList, int authorizationListVersion,
                                                String authorizationListHash, AuthorizationListUpdateType updateType, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.authorizationList = ImmutableList.copyOf(checkNotNull(authorizationList));
+        this.authorizationList = ImmutableSet.copyOf(checkNotNull(authorizationList));
         this.authorizationListVersion = authorizationListVersion;
         this.authorizationListHash = checkNotNull(authorizationListHash);
         this.updateType = checkNotNull(updateType);
@@ -78,12 +78,12 @@ public final class RequestSendAuthorizationListCommand {
     }
 
     /**
-     * In case of a full update this contains the list of values that form the new local authorization list. In case of
-     * a differential update it contains the changes to be applied to the local authorization list in the charging station.
+     * In case of a full update this contains the set of values that form the new local authorization list. In case of
+     * a differential update it contains the changes to be applied to the local authorization set in the charging station.
      *
      * @return list of identifying tokens.
      */
-    public List<IdentifyingToken> getAuthorizationList() {
+    public Set<IdentifyingToken> getAuthorizationList() {
         return authorizationList;
     }
 

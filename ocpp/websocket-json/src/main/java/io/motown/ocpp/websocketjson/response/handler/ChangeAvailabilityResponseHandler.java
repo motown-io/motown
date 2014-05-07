@@ -50,25 +50,36 @@ public class ChangeAvailabilityResponseHandler extends ResponseHandler {
             case ACCEPTED:
             case SCHEDULED:
                 //Upon a successfull change in availability we inform about the new state the evse is in
-                if (Changeavailability.Type.INOPERATIVE.equals(availabilityType)) {
-                    if (evseId.getNumberedId() == 0) {
-                        domainService.changeChargingStationAvailabilityToInoperative(chargingStationId, getCorrelationToken(), addOnIdentity);
-                    } else {
-                        domainService.changeComponentAvailabilityToInoperative(chargingStationId, evseId, ChargingStationComponent.EVSE, getCorrelationToken(), addOnIdentity);
-                    }
-                } else {
-                    if (evseId.getNumberedId() == 0) {
-                        domainService.changeChargingStationAvailabilityToOperative(chargingStationId, getCorrelationToken(), addOnIdentity);
-                    } else {
-                        domainService.changeComponentAvailabilityToOperative(chargingStationId, evseId, ChargingStationComponent.EVSE, getCorrelationToken(), addOnIdentity);
-                    }
-                }
+                handleAcceptedOrScheduledChangeAvailabilityResponse(chargingStationId, domainService, addOnIdentity);
                 break;
             case REJECTED:
                 LOG.info("Failed to set availability of evse {} on chargingstation {} to {}", evseId, chargingStationId, availabilityType.toString());
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status: {}", response.getStatus()));
+                throw new AssertionError(String.format("Unknown change availability response status: %s", response.getStatus()));
+        }
+    }
+
+    /**
+     * Handles the response when the change of availability has been accepted or scheduled, e.g. not rejected.
+     *
+     * @param chargingStationId The charging station identifier.
+     * @param domainService The domain service.
+     * @param addOnIdentity The AddOn identity.
+     */
+    private void handleAcceptedOrScheduledChangeAvailabilityResponse(ChargingStationId chargingStationId, DomainService domainService, AddOnIdentity addOnIdentity) {
+        if (Changeavailability.Type.INOPERATIVE.equals(availabilityType)) {
+            if (evseId.getNumberedId() == 0) {
+                domainService.changeChargingStationAvailabilityToInoperative(chargingStationId, getCorrelationToken(), addOnIdentity);
+            } else {
+                domainService.changeComponentAvailabilityToInoperative(chargingStationId, evseId, ChargingStationComponent.EVSE, getCorrelationToken(), addOnIdentity);
+            }
+        } else {
+            if (evseId.getNumberedId() == 0) {
+                domainService.changeChargingStationAvailabilityToOperative(chargingStationId, getCorrelationToken(), addOnIdentity);
+            } else {
+                domainService.changeComponentAvailabilityToOperative(chargingStationId, evseId, ChargingStationComponent.EVSE, getCorrelationToken(), addOnIdentity);
+            }
         }
     }
 }

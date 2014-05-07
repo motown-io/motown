@@ -19,8 +19,8 @@ package io.motown.ocpp.viewmodel.ocpp;
 import io.motown.domain.api.chargingstation.*;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Client for communicating with OCPP 1.5 charging stations.
@@ -89,7 +89,7 @@ public interface ChargingStationOcpp15Client {
 
     int getAuthorizationListVersion(ChargingStationId id);
 
-    RequestResult sendAuthorizationList(ChargingStationId id, String hash, int listVersion, List<IdentifyingToken> identifyingTokens, AuthorizationListUpdateType updateType);
+    RequestResult sendAuthorizationList(ChargingStationId id, String hash, int listVersion, Set<IdentifyingToken> identifyingTokens, AuthorizationListUpdateType updateType);
 
     ReservationStatus reserveNow(ChargingStationId id, EvseId evseId, IdentifyingToken identifyingToken, Date expiryDate, IdentifyingToken parentIdentifyingToken, int reservationId);
 

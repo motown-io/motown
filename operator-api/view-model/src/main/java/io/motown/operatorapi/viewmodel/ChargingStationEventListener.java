@@ -15,15 +15,20 @@
  */
 package io.motown.operatorapi.viewmodel;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.operatorapi.viewmodel.persistence.entities.Availability;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.entities.Evse;
+import io.motown.operatorapi.viewmodel.persistence.entities.LocalAuthorization;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -40,7 +45,7 @@ public class ChargingStationEventListener {
     public void handle(ChargingStationCreatedEvent event) {
         LOG.debug("ChargingStationCreatedEvent creates [{}] in operator api repo", event.getChargingStationId());
         ChargingStation station = new ChargingStation(event.getChargingStationId().getId());
-        repository.save(station);
+        repository.createOrUpdate(station);
     }
 
     @EventHandler
@@ -52,7 +57,7 @@ public class ChargingStationEventListener {
         if (chargingStation != null) {
             chargingStation.setProtocol(event.getProtocol());
             chargingStation.setAttributes(event.getAttributes());
-            repository.save(chargingStation);
+            repository.createOrUpdate(chargingStation);
         } else {
             LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as booted", event.getChargingStationId());
         }
@@ -66,7 +71,7 @@ public class ChargingStationEventListener {
 
         if (chargingStation != null) {
             chargingStation.setAccepted(true);
-            repository.save(chargingStation);
+            repository.createOrUpdate(chargingStation);
         } else {
             LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and mark it as accepted", event.getChargingStationId());
         }
@@ -120,7 +125,9 @@ public class ChargingStationEventListener {
                 chargingStation.getEvses().add(evse);
             }
 
-            repository.save(chargingStation);
+            chargingStation.setConfigured(true);
+
+            repository.createOrUpdate(chargingStation);
         } else {
             LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and configure it", event.getChargingStationId());
         }
@@ -157,7 +164,7 @@ public class ChargingStationEventListener {
 
         if (chargingStation != null) {
             chargingStation.setStatus(event.getStatus());
-            repository.save(chargingStation);
+            repository.createOrUpdate(chargingStation);
         }
     }
 
@@ -174,7 +181,7 @@ public class ChargingStationEventListener {
 
             if (chargingStation != null) {
                 updateEvseStatus(chargingStation, event.getComponentId().getId(), event.getStatus());
-                repository.save(chargingStation);
+                repository.createOrUpdate(chargingStation);
             }
         }
     }
@@ -190,8 +197,76 @@ public class ChargingStationEventListener {
 
         if (chargingStation != null) {
             chargingStation.setConfigurationItems(toConfigurationItemMap(event.getConfigurationItems()));
-            repository.save(chargingStation);
+            repository.createOrUpdate(chargingStation);
         }
+    }
+
+    /**
+     * Handles the {@link AuthorizationListVersionReceivedEvent}.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(AuthorizationListVersionReceivedEvent event) {
+        ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
+
+        if (chargingStation != null) {
+            chargingStation.setLocalAuthorizationListVersion(event.getVersion());
+            repository.createOrUpdate(chargingStation);
+        }
+    }
+
+    /**
+     * Handles the {@link AuthorizationListChangedEvent}.
+     *
+     * @param event the event to handle.
+     */
+    @EventHandler
+    public void handle(AuthorizationListChangedEvent event) {
+        ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
+
+        if (chargingStation != null) {
+            Set<LocalAuthorization> updatedLocalAuthorizations = toLocalAuthorizationSet(event.getIdentifyingTokens());
+
+            if(AuthorizationListUpdateType.FULL.equals(event.getUpdateType())) {
+                chargingStation.setLocalAuthorizations(updatedLocalAuthorizations);
+            } else {
+                updateAuthorizationList(chargingStation, updatedLocalAuthorizations);
+            }
+            chargingStation.setLocalAuthorizationListVersion(event.getVersion());
+            repository.createOrUpdate(chargingStation);
+        }
+    }
+
+    private Set<LocalAuthorization> toLocalAuthorizationSet(Set<IdentifyingToken> identifyingTokens) {
+        Set<LocalAuthorization> localAuthorizations = Sets.newHashSet();
+        for (IdentifyingToken identifyingToken : identifyingTokens) {
+            LocalAuthorization localAuthorization = new LocalAuthorization();
+            localAuthorization.setToken(identifyingToken.getToken());
+            localAuthorization.setAuthenticationStatus(identifyingToken.getAuthenticationStatus());
+
+            localAuthorizations.add(localAuthorization);
+        }
+        return localAuthorizations;
+    }
+
+    /**
+     * Updates the local representation of the charging station authorization list.
+     * Tokens in the updatedIdentificationTokens will be removed from the local operator api list.
+     *
+     * @param chargingStation               the chargingstation.
+     * @param updatedLocalAuthorizations    the updated tokens.
+     */
+    private void updateAuthorizationList(final ChargingStation chargingStation, final Set<LocalAuthorization> updatedLocalAuthorizations) {
+        Set<LocalAuthorization> authorizationList =  chargingStation.getLocalAuthorizations();
+        Iterables.removeIf(authorizationList, new Predicate<LocalAuthorization>() {
+            @Override
+            public boolean apply(@Nullable LocalAuthorization identifyingToken) {
+                return updatedLocalAuthorizations != null && updatedLocalAuthorizations.contains(identifyingToken);
+            }
+        });
+
+        authorizationList.addAll(updatedLocalAuthorizations);
     }
 
     /**
@@ -268,7 +343,7 @@ public class ChargingStationEventListener {
 
         if (chargingStation != null) {
             chargingStation.setAvailability(availability);
-            repository.save(chargingStation);
+            repository.createOrUpdate(chargingStation);
         }
     }
 
@@ -294,7 +369,7 @@ public class ChargingStationEventListener {
                     break;
                 }
             }
-            repository.save(chargingStation);
+            repository.createOrUpdate(chargingStation);
         }
     }
 
@@ -323,7 +398,7 @@ public class ChargingStationEventListener {
                     chargingStation.getOpeningTimes().add(openingTime);
                 }
 
-                repository.save(chargingStation);
+                repository.createOrUpdate(chargingStation);
             }
 
         } else {
@@ -359,7 +434,7 @@ public class ChargingStationEventListener {
 
             chargingStation.setAccessibility(event.getAccessibility());
 
-            repository.save(chargingStation);
+            repository.createOrUpdate(chargingStation);
         } else {
             LOG.error("operator api repo COULD NOT FIND CHARGEPOINT {} and update its location", event.getChargingStationId());
         }
@@ -378,7 +453,7 @@ public class ChargingStationEventListener {
 
         if (chargingStation != null) {
             chargingStation.setReservable(reservable);
-            repository.save(chargingStation);
+            repository.createOrUpdate(chargingStation);
         }
     }
 

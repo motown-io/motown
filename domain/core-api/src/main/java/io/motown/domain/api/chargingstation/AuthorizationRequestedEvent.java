@@ -17,6 +17,7 @@ package io.motown.domain.api.chargingstation;
 
 import io.motown.domain.api.security.IdentityContext;
 
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -72,5 +73,17 @@ public final class AuthorizationRequestedEvent {
      */
     public IdentityContext getIdentityContext() {
         return identityContext;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return toStringHelper(this)
+                .add("chargingStationId", chargingStationId)
+                .add("identifyingToken", identifyingToken)
+                .add("identityContext", identityContext)
+                .toString();
     }
 }

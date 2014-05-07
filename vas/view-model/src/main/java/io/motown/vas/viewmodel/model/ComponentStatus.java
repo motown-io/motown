@@ -62,7 +62,7 @@ public enum ComponentStatus {
                 componentStatus = OCCUPIED;
                 break;
             case RESERVED:
-                //TODO is this the right status for VAS? Probably there is no car charging yet... - Mark van den Bergh, Februari 13th 2014
+                //Translating Reserved to Occupied is the closest match
                 componentStatus = OCCUPIED;
                 break;
             case UNKNOWN:

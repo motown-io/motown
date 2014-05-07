@@ -21,12 +21,22 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 		  http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
-    <display-name>Motown.IO - Operator JSON API</display-name>
+    <display-name>Motown.IO - Samples - Operator API</display-name>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath:META-INF/spring/operator-api-context.xml
+        </param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
 
     <servlet>
-        <servlet-name>JerseyServlet</servlet-name>
+        <servlet-name>JerseyOperatorApiServlet</servlet-name>
         <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
         <init-param>
             <param-name>com.sun.jersey.config.property.packages</param-name>
             <param-value>io.motown.operatorapi.json.restapi</param-value>
@@ -35,25 +45,40 @@
             <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
             <param-value>true</param-value>
         </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>JerseyUserServlet</servlet-name>
+        <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>io.motown.sample.authentication</param-value>
+        </init-param>
+        <init-param>
+            <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>JerseyServlet</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <servlet-name>JerseyOperatorApiServlet</servlet-name>
+        <url-pattern>/rest/operator-api/*</url-pattern>
     </servlet-mapping>
 
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>
-            classpath:META-INF/spring/json-context.xml
-        </param-value>
-    </context-param>
+    <servlet-mapping>
+        <servlet-name>JerseyUserServlet</servlet-name>
+        <url-pattern>/rest/user/*</url-pattern>
+    </servlet-mapping>
 
-    <listener>
-        <listener-class>ch.qos.logback.classic.selector.servlet.ContextDetachingSCL</listener-class>
-    </listener>
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/rest/operator-api/*</url-pattern>
+    </filter-mapping>
 
-    <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
 </web-app>

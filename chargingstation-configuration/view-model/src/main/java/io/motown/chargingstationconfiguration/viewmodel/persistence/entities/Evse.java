@@ -28,7 +28,7 @@ public class Evse {
 
     private int identifier;
 
-    @OneToMany(cascade = CascadeType.ALL, targetEntity = Connector.class, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = Connector.class, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<Connector> connectors = new HashSet<>();
 
     public Evse() {

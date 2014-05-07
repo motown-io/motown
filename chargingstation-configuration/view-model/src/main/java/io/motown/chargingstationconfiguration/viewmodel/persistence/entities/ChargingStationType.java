@@ -35,7 +35,7 @@ public class ChargingStationType {
 
     private String code;
 
-    @OneToMany(cascade = CascadeType.ALL, targetEntity = Evse.class, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = Evse.class, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<Evse> evses = new HashSet<>();
 
     public Long getId() {

@@ -55,7 +55,7 @@ class RequestAuthorizationListVersionJsonCommandHandler implements JsonCommandHa
         }
 
         ChargingStation chargingStation = repository.findOne(chargingStationId);
-        if (chargingStation != null && chargingStation.isAccepted()) {
+        if (chargingStation != null && chargingStation.communicationAllowed()) {
             commandGateway.send(new RequestAuthorizationListVersionCommand(csId, identityContext), new CorrelationToken());
         }
     }

@@ -27,7 +27,7 @@ public class DataTransferJsonCommandTest {
 
     private Gson gson;
 
-    private DataTransferJsonCommandHandler handler = new DataTransferJsonCommandHandler();
+    private RequestDataTransferJsonCommandHandler handler = new RequestDataTransferJsonCommandHandler();
 
     @Before
     public void setUp() {

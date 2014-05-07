@@ -105,11 +105,17 @@ public final class BootChargingStationCommand {
         return identityContext;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(chargingStationId, protocol, attributes, identityContext);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -120,5 +126,18 @@ public final class BootChargingStationCommand {
         }
         final BootChargingStationCommand other = (BootChargingStationCommand) obj;
         return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.protocol, other.protocol) && Objects.equals(this.attributes, other.attributes) && Objects.equals(this.identityContext, other.identityContext);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return com.google.common.base.Objects.toStringHelper(this)
+                .add("chargingStationId", chargingStationId)
+                .add("protocol", protocol)
+                .add("attributes", attributes)
+                .add("identityContext", identityContext)
+                .toString();
     }
 }

@@ -40,8 +40,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
 
-import javax.ws.rs.core.MediaType;
-
 import static org.junit.Assert.assertEquals;
 
 @ContextConfiguration("classpath:jersey-test-config.xml")
@@ -95,8 +93,8 @@ public class ITChargingStationTypeResourceTest extends JerseyTest {
     public void testCreateChargingStationType() {
         ChargingStationType cst = getChargingStationType();
         ClientResponse response = client.resource(BASE_URI)
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .type(ApiVersion.V1_JSON)
+                .accept(ApiVersion.V1_JSON)
                 .post(ClientResponse.class, cst);
 
         assertEquals(CREATED, response.getStatus());
@@ -115,8 +113,8 @@ public class ITChargingStationTypeResourceTest extends JerseyTest {
         ChargingStationType c2 = getChargingStationType();
         c2.setManufacturer(manufacturer);
         ClientResponse response = client.resource(BASE_URI)
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.TEXT_PLAIN)
+                .type(ApiVersion.V1_JSON)
+                .accept(ApiVersion.V1_JSON)
                 .post(ClientResponse.class, c2);
 
         assertEquals(INTERNAL_SERVER_ERROR, response.getStatus());
@@ -130,8 +128,8 @@ public class ITChargingStationTypeResourceTest extends JerseyTest {
         cst.setCode("TEST02");
         ClientResponse response = client.resource(BASE_URI)
                 .path("/" + cst.getId())
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .type(ApiVersion.V1_JSON)
+                .accept(ApiVersion.V1_JSON)
                 .put(ClientResponse.class, cst);
 
         assertEquals(OK, response.getStatus());
@@ -141,7 +139,7 @@ public class ITChargingStationTypeResourceTest extends JerseyTest {
     @Test
     public void testGetChargingStationTypes() {
         ClientResponse response = client.resource(BASE_URI)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(ApiVersion.V1_JSON)
                 .get(ClientResponse.class);
 
         assertEquals(OK, response.getStatus());
@@ -154,7 +152,7 @@ public class ITChargingStationTypeResourceTest extends JerseyTest {
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/" + cst.getId())
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(ApiVersion.V1_JSON)
                 .get(ClientResponse.class);
 
         assertEquals(OK, response.getStatus());
@@ -164,7 +162,7 @@ public class ITChargingStationTypeResourceTest extends JerseyTest {
     public void testGetChargingStationTypeNotFound() {
         ClientResponse response = client.resource(BASE_URI)
                 .path("/1")
-                .accept(MediaType.TEXT_PLAIN)
+                .accept(ApiVersion.V1_JSON)
                 .get(ClientResponse.class);
 
         assertEquals(NOT_FOUND, response.getStatus());
@@ -177,7 +175,7 @@ public class ITChargingStationTypeResourceTest extends JerseyTest {
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/" + cst.getId())
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(ApiVersion.V1_JSON)
                 .delete(ClientResponse.class);
 
         assertEquals(OK, response.getStatus());
@@ -187,7 +185,7 @@ public class ITChargingStationTypeResourceTest extends JerseyTest {
     public void testDeleteChargingStationTypeNotFound() {
         ClientResponse response = client.resource(BASE_URI)
                 .path("/1")
-                .accept(MediaType.TEXT_PLAIN)
+                .accept(ApiVersion.V1_JSON)
                 .delete(ClientResponse.class);
 
         assertEquals(NOT_FOUND, response.getStatus());

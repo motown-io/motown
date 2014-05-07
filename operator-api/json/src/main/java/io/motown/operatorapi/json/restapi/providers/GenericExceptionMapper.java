@@ -25,6 +25,6 @@ public final class GenericExceptionMapper implements ExceptionMapper<Exception> 
 
     @Override
     public Response toResponse(Exception e) {
-        return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
     }
 }

@@ -65,6 +65,6 @@ public enum MessageProcUri {
             }
         }
 
-        throw new IllegalArgumentException("Unknown procedure uri");
+        throw new IllegalArgumentException(String.format("Unknown procedure uri: %s", value));
     }
 }

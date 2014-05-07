@@ -16,16 +16,15 @@
 package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
-import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.MeterValue;
-import io.motown.domain.api.chargingstation.NumberedTransactionId;
-import io.motown.domain.api.chargingstation.TextualToken;
+import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.*;
 import org.atmosphere.websocket.WebSocket;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 public class StopTransactionRequestHandler extends RequestHandler {
 
@@ -52,22 +51,18 @@ public class StopTransactionRequestHandler extends RequestHandler {
         for (TransactionDatum data : request.getTransactionData()) {
             for (Value__ meterValue : data.getValues()) {
                 for (Value___ value : meterValue.getValues()) {
-                    Map<String, String> attributes = new HashMap<>();
-                    DomainService.addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getContext());
-                    DomainService.addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getFormat());
-                    DomainService.addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getLocation());
-                    DomainService.addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getMeasurand());
-                    DomainService.addAttributeIfNotNull(attributes, DomainService.CONTEXT_KEY, value.getUnit());
-                    meterValues.add(new MeterValue(meterValue.getTimestamp(), value.getValue(), attributes));
+                    ReadingContext readingContext = new ReadingContextTranslator(value.getContext()).translate();
+                    ValueFormat valueFormat = new ValueFormatTranslator(value.getFormat()).translate();
+                    Location location = new LocationTranslator(value.getLocation()).translate();
+                    Measurand measurand = new MeasurandTranslator(value.getMeasurand()).translate();
+                    UnitOfMeasure unitOfMeasure = new UnitOfMeasureTranslator(value.getUnit()).translate();
+
+                    meterValues.add(new MeterValue(meterValue.getTimestamp(), value.getValue(), readingContext, valueFormat, measurand, location, unitOfMeasure));
                 }
             }
         }
 
-        NumberedTransactionId transactionId = null;
-        Integer requestTransactionId = request.getTransactionId();
-        if (requestTransactionId > 0) {
-            transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, requestTransactionId);
-        }
+        NumberedTransactionId transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, request.getTransactionId());
 
         domainService.stopTransaction(chargingStationId, transactionId, new TextualToken(request.getIdTag()), request.getMeterStop(), request.getTimestamp(), meterValues, addOnIdentity);
 

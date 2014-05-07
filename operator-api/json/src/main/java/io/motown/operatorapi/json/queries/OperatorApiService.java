@@ -28,12 +28,20 @@ public class OperatorApiService {
 
     private TransactionRepository transactionRepository;
 
-    public List<ChargingStation> findAllChargingStations() {
-        return repository.findAll();
+    public List<ChargingStation> findAllChargingStations(int offset, int limit) {
+        return repository.findAll(offset, limit);
     }
 
-    public List<Transaction> findAllTransactions() {
-        return transactionRepository.findAll();
+    public Long getTotalNumberOfChargingStations() {
+        return repository.getTotalNumberOfChargingStations();
+    }
+
+    public List<Transaction> findAllTransactions(int offset, int limit) {
+        return transactionRepository.findAll(offset, limit);
+    }
+
+    public Long getTotalNumberOfTransactions() {
+        return transactionRepository.getTotalNumberOfTransactions();
     }
 
     public void setRepository(ChargingStationRepository repository) {

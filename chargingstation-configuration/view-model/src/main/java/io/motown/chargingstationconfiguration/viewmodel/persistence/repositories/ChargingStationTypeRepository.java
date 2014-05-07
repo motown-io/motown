@@ -18,43 +18,92 @@ package io.motown.chargingstationconfiguration.viewmodel.persistence.repositorie
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityTransaction;
 import java.util.List;
 
 public class ChargingStationTypeRepository {
 
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
 
     public List<ChargingStationType> findByCodeAndManufacturerCode(String code, String manufacturerCode) {
-        return entityManager.createQuery("SELECT cst FROM ChargingStationType AS cst where UPPER(cst.code) = UPPER(:code) and UPPER(cst.manufacturer.code) = UPPER(:manufacturerCode)", ChargingStationType.class)
+        return getEntityManager().createQuery("SELECT cst FROM ChargingStationType AS cst where UPPER(cst.code) = UPPER(:code) and UPPER(cst.manufacturer.code) = UPPER(:manufacturerCode)", ChargingStationType.class)
                 .setParameter("code", code)
                 .setParameter("manufacturerCode", manufacturerCode)
                 .getResultList();
     }
 
-    public ChargingStationType createOrUpdate(ChargingStationType chargingStationType) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    public ChargingStationType createOrUpdate(final ChargingStationType chargingStationType) {
+        EntityManager em = getEntityManager();
 
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
+        EntityTransaction tx = null;
         try {
-            ChargingStationType persistentChargingStationType = entityManager.merge(chargingStationType);
-            transaction.commit();
-            return persistentChargingStationType;
+            tx = em.getTransaction();
+            tx.begin();
+
+            ChargingStationType persistedChargingStationType = em.merge(chargingStationType);
+
+            tx.commit();
+
+            return persistedChargingStationType;
         } catch (Exception e) {
-            transaction.rollback();
+            if(tx != null && tx.isActive()) {
+                tx.rollback();
+            }
             throw e;
+        } finally {
+            em.close();
         }
     }
 
-    public List<ChargingStationType> findAll() {
-        return entityManager.createQuery("SELECT cst FROM ChargingStationType cst", ChargingStationType.class).getResultList();
+    public List<ChargingStationType> findAll(int offset, int limit) {
+        return getEntityManager().createQuery("SELECT cst FROM ChargingStationType cst", ChargingStationType.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
+    public Long getTotalNumberOfChargingStationTypes() {
+        return getEntityManager().createQuery("SELECT COUNT(cst) FROM ChargingStationType cst", Long.class).getSingleResult();
     }
 
     public ChargingStationType findOne(Long id) {
+        return findOne(id, getEntityManager());
+    }
+
+    public void delete(Long id) {
+        EntityManager em = getEntityManager();
+
+        ChargingStationType chargingStationType = findOne(id, em);
+
+        EntityTransaction tx = null;
+        try {
+            tx = em.getTransaction();
+            tx.begin();
+
+            em.remove(chargingStationType);
+
+            tx.commit();
+        } catch (Exception e) {
+            if(tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+    }
+
+    private EntityManager getEntityManager() {
+        return entityManagerFactory.createEntityManager();
+    }
+
+    private ChargingStationType findOne(Long id, EntityManager entityManager) {
         ChargingStationType chargingStationType = entityManager.find(ChargingStationType.class, id);
         if (chargingStationType != null) {
             return chargingStationType;
@@ -62,24 +111,4 @@ public class ChargingStationTypeRepository {
         throw new EntityNotFoundException(String.format("Unable to find charging station type with id '%s'", id));
     }
 
-    public void delete(Long id) {
-        ChargingStationType chargingStationType = findOne(id);
-        EntityTransaction transaction = entityManager.getTransaction();
-
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
-        try {
-            entityManager.remove(chargingStationType);
-            transaction.commit();
-        } catch (Exception e) {
-            transaction.rollback();
-            throw e;
-        }
-    }
-
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
 }

@@ -42,7 +42,7 @@ public final class NumberedTransactionId implements TransactionId {
      * @param chargingStationId the charging station's identifier.
      * @param protocol          the protocol identifier.
      * @param number            the number uniquely identifying the transaction.
-     * @throws NullPointerException     if {@code chargingStationId} or {@protocol} is {@code null}.
+     * @throws NullPointerException     if {@code chargingStationId} or {@code protocol} is {@code null}.
      * @throws IllegalArgumentException if {@code protocol} is empty or {@code number} is a negative number.
      */
     public NumberedTransactionId(ChargingStationId chargingStationId, String protocol, int number) {

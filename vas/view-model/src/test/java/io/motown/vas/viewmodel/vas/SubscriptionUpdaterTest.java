@@ -17,7 +17,7 @@ package io.motown.vas.viewmodel.vas;
 
 import io.motown.vas.viewmodel.model.ComponentStatus;
 import io.motown.vas.viewmodel.model.StatusChange;
-import io.motown.vas.viewmodel.model.Subscription;
+import io.motown.vas.viewmodel.persistence.entities.Subscription;
 import org.junit.Test;
 
 import java.util.Date;

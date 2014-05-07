@@ -23,13 +23,9 @@ import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.UUID;
-
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.*;
 
 public class CancelReservationResponseHandlerTest {
 
@@ -46,8 +42,8 @@ public class CancelReservationResponseHandlerTest {
         gson = getGson();
         domainService = mock(DomainService.class);
 
-        token = UUID.randomUUID().toString();
-        correlationToken = new CorrelationToken(token);
+        correlationToken = new CorrelationToken();
+        token = correlationToken.getToken();
         handler = new CancelReservationResponseHandler(RESERVATION_ID, correlationToken);
     }
 

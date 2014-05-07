@@ -96,7 +96,7 @@ public class ChargingStation {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ipAddress, isRegistered, isConfigured, numberOfEvses, protocol);
+        return Objects.hash(id);
     }
 
     @Override
@@ -108,6 +108,6 @@ public class ChargingStation {
             return false;
         }
         final ChargingStation other = (ChargingStation) obj;
-        return Objects.equals(this.id, other.id) && Objects.equals(this.ipAddress, other.ipAddress) && Objects.equals(this.isRegistered, other.isRegistered) && Objects.equals(this.isConfigured, other.isConfigured) && Objects.equals(this.numberOfEvses, other.numberOfEvses) && Objects.equals(this.protocol, other.protocol);
+        return Objects.equals(this.id, other.id);
     }
 }

@@ -61,7 +61,7 @@ class RequestCancelReservationJsonCommandHandler implements JsonCommandHandler {
 
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
-            if (chargingStation != null && chargingStation.isAccepted()) {
+            if (chargingStation != null && chargingStation.communicationAllowed()) {
 
                 RequestCancelReservationApiCommand command = gson.fromJson(commandObject, RequestCancelReservationApiCommand.class);
 

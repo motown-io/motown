@@ -21,40 +21,42 @@ import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Con
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
-@Path("/connectors")
+@Path("/chargingstationtypes/{chargingStationTypeId: [0-9]+}/evses/{evseId: [0-9]+}/connectors")
 @Produces(ApiVersion.V1_JSON)
 public final class ConnectorResource {
 
     private DomainService domainService;
 
+    @GET
+    public Response getConnectors(@PathParam("chargingStationTypeId") Long chargingStationTypeId, @PathParam("evseId") Long evseId) {
+        return Response.ok(domainService.getConnectors(chargingStationTypeId, evseId)).build();
+    }
+
     @POST
     @Consumes(ApiVersion.V1_JSON)
-    public Response createConnector(Connector connector) {
-        return Response.status(Response.Status.CREATED).entity(domainService.createConnector(connector)).build();
+    public Response createConnector(@PathParam("chargingStationTypeId") Long chargingStationTypeId, @PathParam("evseId") Long evseId, Connector connector) {
+        connector.setId(null);
+        return Response.status(Response.Status.CREATED).entity(domainService.createConnector(chargingStationTypeId, evseId, connector)).build();
     }
 
     @PUT
     @Path("/{id: [0-9]+}")
     @Consumes(ApiVersion.V1_JSON)
-    public Response updateConnector(@PathParam("id") Long id, Connector connector) {
-        return Response.ok(domainService.updateConnector(id, connector)).build();
-    }
-
-    @GET
-    public Response getConnectors() {
-        return Response.ok(domainService.getConnectors()).build();
+    public Response updateConnector(@PathParam("chargingStationTypeId") Long chargingStationTypeId, @PathParam("evseId") Long evseId, @PathParam("id") Long id, Connector connector) {
+        connector.setId(id);
+        return Response.ok(domainService.updateConnector(chargingStationTypeId, evseId, connector)).build();
     }
 
     @GET
     @Path("/{id: [0-9]+}")
-    public Response getConnector(@PathParam("id") Long id) {
-        return Response.ok(domainService.getConnector(id)).build();
+    public Response getConnector(@PathParam("chargingStationTypeId") Long chargingStationTypeId, @PathParam("evseId") Long evseId, @PathParam("id") Long id) {
+        return Response.ok(domainService.getConnector(chargingStationTypeId, evseId, id)).build();
     }
 
     @DELETE
     @Path("/{id: [0-9]+}")
-    public Response deleteConnector(@PathParam("id") Long id) {
-        domainService.deleteConnector(id);
+    public Response deleteConnector(@PathParam("chargingStationTypeId") Long chargingStationTypeId, @PathParam("evseId") Long evseId, @PathParam("id") Long id) {
+        domainService.deleteConnector(chargingStationTypeId, evseId, id);
         return Response.ok(id).build();
     }
 

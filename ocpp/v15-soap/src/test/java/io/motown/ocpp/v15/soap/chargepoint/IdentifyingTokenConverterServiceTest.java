@@ -15,7 +15,7 @@
  */
 package io.motown.ocpp.v15.soap.chargepoint;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.chargingstation.IdentifyingToken;
 import io.motown.domain.api.chargingstation.test.ChargingStationTestUtils;
 import io.motown.ocpp.v15.soap.chargepoint.schema.AuthorisationData;
@@ -23,7 +23,7 @@ import io.motown.ocpp.v15.soap.chargepoint.schema.AuthorizationStatus;
 import junit.framework.Assert;
 import org.junit.Test;
 
-import java.util.List;
+import java.util.Set;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static junit.framework.Assert.assertNull;
@@ -92,14 +92,14 @@ public class IdentifyingTokenConverterServiceTest {
 
     @Test
     public void convertIdentifyingTokenListVerifyReturnValue() {
-        ImmutableList<IdentifyingToken> identifyingTokens = ImmutableList.<IdentifyingToken>builder()
+        ImmutableSet<IdentifyingToken> identifyingTokens = ImmutableSet.<IdentifyingToken>builder()
                 .add(IDENTIFYING_TOKEN_ACCEPTED)
                 .add(IDENTIFYING_TOKEN_BLOCKED)
                 .add(IDENTIFYING_TOKEN_DELETED)
                 .add(IDENTIFYING_TOKEN)
                 .build();
 
-        List<AuthorisationData> authorisationDataList = service.convertIdentifyingTokenList(identifyingTokens);
+        Set<AuthorisationData> authorisationDataList = service.convertIdentifyingTokenList(identifyingTokens);
 
         Assert.assertEquals(identifyingTokens.size(), authorisationDataList.size());
     }

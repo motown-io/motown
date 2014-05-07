@@ -15,6 +15,7 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
+import com.google.common.collect.Iterables;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.config.ClientConfig;
@@ -26,8 +27,9 @@ import com.sun.jersey.test.framework.JerseyTest;
 import com.sun.jersey.test.framework.WebAppDescriptor;
 import com.sun.jersey.test.framework.spi.container.TestContainerException;
 import com.sun.jersey.test.framework.spi.container.grizzly2.web.GrizzlyWebTestContainerFactory;
+import io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils;
+import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
-import io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.EvseRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +40,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
 
-import javax.ws.rs.core.MediaType;
+import javax.persistence.EntityManagerFactory;
 
 import static org.junit.Assert.assertEquals;
 
@@ -46,15 +48,17 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ITEvseResourceTest extends JerseyTest {
+
     private static final int OK = 200;
-    private static final int CREATED = 201;
+
     private static final int NOT_FOUND = 404;
-    private static final String BASE_URI = "http://localhost:9998/config/api/evses";
+
+    private static final String BASE_URI = "http://localhost:9998/config/api/chargingstationtypes/1/evses";
 
     private Client client;
 
     @Autowired
-    private EvseRepository repository;
+    private EntityManagerFactory entityManagerFactory;
 
     public ITEvseResourceTest() throws TestContainerException {
         super(new GrizzlyWebTestContainerFactory());
@@ -86,27 +90,16 @@ public class ITEvseResourceTest extends JerseyTest {
     }
 
     @Test
-    public void testCreateEvse() {
-        Evse evse = getEvse();
-        ClientResponse response = client.resource(BASE_URI)
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .post(ClientResponse.class, evse);
-
-        assertEquals(CREATED, response.getStatus());
-    }
-
-    @Test
     public void testUpdateEvse() {
-        Evse evse = getEvse();
-        evse = repository.createOrUpdate(evse);
+        ChargingStationType chargingStationType = TestUtils.getChargingStationTypeNonTransient(entityManagerFactory);
+        Evse evse = Iterables.get(chargingStationType.getEvses(), 0);
 
         evse.setIdentifier(2);
 
         ClientResponse response = client.resource(BASE_URI)
                 .path("/" + evse.getId())
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .type(ApiVersion.V1_JSON)
+                .accept(ApiVersion.V1_JSON)
                 .put(ClientResponse.class, evse);
 
         assertEquals(OK, response.getStatus());
@@ -114,22 +107,13 @@ public class ITEvseResourceTest extends JerseyTest {
     }
 
     @Test
-    public void testGetEvses() {
-        ClientResponse response = client.resource(BASE_URI)
-                .accept(MediaType.APPLICATION_JSON)
-                .get(ClientResponse.class);
-
-        assertEquals(OK, response.getStatus());
-    }
-
-    @Test
     public void testGetEvse() {
-        Evse evse = getEvse();
-        evse = repository.createOrUpdate(evse);
+        ChargingStationType chargingStationType = TestUtils.getChargingStationTypeNonTransient(entityManagerFactory);
+        Long evseId = Iterables.get(chargingStationType.getEvses(), 0).getId();
 
         ClientResponse response = client.resource(BASE_URI)
-                .path("/" + evse.getId())
-                .accept(MediaType.APPLICATION_JSON)
+                .path("/" + evseId)
+                .accept(ApiVersion.V1_JSON)
                 .get(ClientResponse.class);
 
         assertEquals(OK, response.getStatus());
@@ -137,40 +121,24 @@ public class ITEvseResourceTest extends JerseyTest {
 
     @Test
     public void testGetEvseNotFound() {
+        TestUtils.getChargingStationTypeNonTransient(entityManagerFactory);
+
         ClientResponse response = client.resource(BASE_URI)
-                .path("/1")
-                .accept(MediaType.TEXT_PLAIN)
+                .path("/999")
+                .accept(ApiVersion.V1_JSON)
                 .get(ClientResponse.class);
 
         assertEquals(NOT_FOUND, response.getStatus());
     }
 
     @Test
-    public void testDeleteEvse() {
-        Evse evse = getEvse();
-        evse = repository.createOrUpdate(evse);
-
-        ClientResponse response = client.resource(BASE_URI)
-                .path("/" + evse.getId())
-                .accept(MediaType.APPLICATION_JSON)
-                .delete(ClientResponse.class);
-
-        assertEquals(OK, response.getStatus());
-    }
-
-    @Test
     public void testDeleteEvseNotFound() {
         ClientResponse response = client.resource(BASE_URI)
-                .path("/1")
-                .accept(MediaType.TEXT_PLAIN)
+                .path("/999")
+                .accept(ApiVersion.V1_JSON)
                 .delete(ClientResponse.class);
 
         assertEquals(NOT_FOUND, response.getStatus());
     }
 
-    private Evse getEvse() {
-        Evse evse = new Evse();
-        evse.setIdentifier(1);
-        return evse;
-    }
 }

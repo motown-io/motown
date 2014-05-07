@@ -20,6 +20,8 @@ import java.util.Date;
 public class UpdateFirmwareApiCommand implements ApiCommand {
     private String location;
     private Date retrieveDate;
+    private Integer numRetries;
+    private Integer retryInterval;
 
     public UpdateFirmwareApiCommand() {
     }
@@ -38,5 +40,21 @@ public class UpdateFirmwareApiCommand implements ApiCommand {
 
     public void setRetrieveDate(Date retrieveDate) {
         this.retrieveDate = retrieveDate != null ? new Date(retrieveDate.getTime()) : null;
+    }
+
+    public Integer getNumRetries() {
+        return numRetries;
+    }
+
+    public void setNumRetries(Integer numRetries) {
+        this.numRetries = numRetries;
+    }
+
+    public Integer getRetryInterval() {
+        return retryInterval;
+    }
+
+    public void setRetryInterval(Integer retryInterval) {
+        this.retryInterval = retryInterval;
     }
 }

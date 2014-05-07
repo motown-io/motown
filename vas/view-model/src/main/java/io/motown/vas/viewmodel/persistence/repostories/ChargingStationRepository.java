@@ -15,31 +15,31 @@
  */
 package io.motown.vas.viewmodel.persistence.repostories;
 
-import io.motown.vas.viewmodel.model.ChargingStation;
+import io.motown.vas.viewmodel.persistence.entities.ChargingStation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class ChargingStationRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(ChargingStationRepository.class);
 
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
 
-    public void insert(ChargingStation chargingStation) {
+    public ChargingStation createOrUpdate(ChargingStation chargingStation) {
+        EntityManager entityManager = getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
 
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
         try {
-            entityManager.persist(chargingStation);
+            transaction.begin();
+            ChargingStation persistedChargingStation = entityManager.merge(chargingStation);
             transaction.commit();
+
+            return persistedChargingStation;
         } finally {
             if (transaction.isActive()) {
                 LOG.warn("Transaction is still active while it should not be, rolling back.");
@@ -48,21 +48,19 @@ public class ChargingStationRepository {
         }
     }
 
-    public ChargingStation findByChargingStationId(String chargingStationId) {
-        TypedQuery<ChargingStation> query = entityManager.createQuery("SELECT cs FROM io.motown.vas.viewmodel.model.ChargingStation AS cs WHERE cs.chargingStationId = :chargingStationId", ChargingStation.class).setParameter("chargingStationId", chargingStationId);
-        List<ChargingStation> resultList = query.getResultList();
-        if (!resultList.isEmpty()) {
-            return resultList.get(0);
-        } else {
-            return null;
-        }
+    public ChargingStation findOne(String id) {
+        return getEntityManager().find(ChargingStation.class, id);
     }
 
     public List<ChargingStation> findAll() {
-        return entityManager.createQuery("SELECT cs FROM io.motown.vas.viewmodel.model.ChargingStation AS cs", ChargingStation.class).getResultList();
+        return getEntityManager().createQuery("SELECT cs FROM io.motown.vas.viewmodel.persistence.entities.ChargingStation AS cs", ChargingStation.class).getResultList();
     }
 
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+    }
+
+    private EntityManager getEntityManager() {
+        return this.entityManagerFactory.createEntityManager();
     }
 }

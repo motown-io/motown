@@ -50,7 +50,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
      * {@inheritDoc}
      */
     @Override
-    public void handle(StopTransactionRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(StopTransactionRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("StopTransactionRequestedEvent");
 
         if (event.getTransactionId() instanceof NumberedTransactionId) {
@@ -65,7 +65,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
      * {@inheritDoc}
      */
     @Override
-    public void handle(SoftResetChargingStationRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(SoftResetChargingStationRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("SoftResetChargingStationRequestedEvent");
         chargingStationOcpp15Client.softReset(event.getChargingStationId());
     }
@@ -74,7 +74,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
      * {@inheritDoc}
      */
     @Override
-    public void handle(HardResetChargingStationRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(HardResetChargingStationRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("HardResetChargingStationRequestedEvent");
         chargingStationOcpp15Client.hardReset(event.getChargingStationId());
     }
@@ -83,107 +83,107 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
      * {@inheritDoc}
      */
     @Override
-    public void handle(StartTransactionRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(StartTransactionRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("StartTransactionRequestedEvent");
         chargingStationOcpp15Client.startTransaction(event.getChargingStationId(), event.getIdentifyingToken(), event.getEvseId());
     }
 
     @Override
-    public void handle(UnlockEvseRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(UnlockEvseRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("UnlockEvseRequestedEvent");
         RequestResult requestResult = chargingStationOcpp15Client.unlockConnector(event.getChargingStationId(), event.getEvseId());
 
         switch (requestResult) {
             case SUCCESS:
-                domainService.informUnlockEvse(event.getChargingStationId(), event.getEvseId(), statusCorrelationToken, addOnIdentity);
+                domainService.informUnlockEvse(event.getChargingStationId(), event.getEvseId(), correlationToken, addOnIdentity);
                 break;
             case FAILURE:
                 LOG.info("Failed to unlock evse {} on chargingstation {}", event.getEvseId(), event.getChargingStationId().getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status {}", requestResult));
+                throw new AssertionError(String.format("Unkown unlock evse response status: '%s'", requestResult));
         }
     }
 
     @Override
-    public void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(ChangeChargingStationAvailabilityToInoperativeRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("OCPP 1.5 ChangeChargingStationAvailabilityToInoperativeRequestedEvent");
         EvseId chargingStationEvseId = new EvseId(0);
         RequestResult requestResult = chargingStationOcpp15Client.changeAvailabilityToInoperative(event.getChargingStationId(), chargingStationEvseId);
 
         switch (requestResult) {
             case SUCCESS:
-                domainService.changeChargingStationAvailabilityToInoperative(event.getChargingStationId(), statusCorrelationToken, addOnIdentity);
+                domainService.changeChargingStationAvailabilityToInoperative(event.getChargingStationId(), correlationToken, addOnIdentity);
                 break;
             case FAILURE:
                 LOG.info("Failed to set availability of chargingstation {} to inoperative", event.getChargingStationId().getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status {}", requestResult));
+                throw new AssertionError(String.format("Unkown status for change availability to inoperative: '%s'", requestResult));
         }
     }
 
     @Override
-    public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    public void handle(ChangeChargingStationAvailabilityToOperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
         LOG.info("OCPP 1.5 ChangeChargingStationAvailabilityToOperativeRequestedEvent");
         EvseId chargingStationEvseId = new EvseId(0);
         RequestResult requestResult = chargingStationOcpp15Client.changeAvailabilityToOperative(event.getChargingStationId(), chargingStationEvseId);
 
         switch (requestResult) {
             case SUCCESS:
-                domainService.changeChargingStationAvailabilityToOperative(event.getChargingStationId(), statusCorrelationToken, addOnIdentity);
+                domainService.changeChargingStationAvailabilityToOperative(event.getChargingStationId(), correlationToken, addOnIdentity);
                 break;
             case FAILURE:
                 LOG.info("Failed to set availability of chargingstation {} to operative", event.getChargingStationId().getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status {}", requestResult));
+                throw new AssertionError(String.format("Unkown status for change availability to operative: '%s'", requestResult));
         }
     }
 
     @Override
-    public void handle(ChangeComponentAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken statusCorrelationToken) {
+    public void handle(ChangeComponentAvailabilityToInoperativeRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
         LOG.info("OCPP 1.5 ChangeComponentAvailabilityToInoperativeRequestedEvent");
         RequestResult requestResult = chargingStationOcpp15Client.changeAvailabilityToInoperative(event.getChargingStationId(), (EvseId) event.getComponentId());
 
         switch (requestResult) {
             case SUCCESS:
-                domainService.changeComponentAvailabilityToInoperative(event.getChargingStationId(), event.getComponentId(), ChargingStationComponent.EVSE, statusCorrelationToken, addOnIdentity);
+                domainService.changeComponentAvailabilityToInoperative(event.getChargingStationId(), event.getComponentId(), ChargingStationComponent.EVSE, correlationToken, addOnIdentity);
                 break;
             case FAILURE:
                 LOG.info("Failed to set availability of evse {} on chargingstation {} to inoperative", event.getComponentId().getId(), event.getChargingStationId().getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status {}", requestResult));
+                throw new AssertionError(String.format("Unkown status for change component availability to inoperative: '%s'", requestResult));
         }
     }
 
     @Override
-    public void handle(ChangeComponentAvailabilityToOperativeRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(ChangeComponentAvailabilityToOperativeRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("OCPP 1.5 ChangeComponentAvailabilityToOperativeRequestedEvent");
         RequestResult requestResult = chargingStationOcpp15Client.changeAvailabilityToOperative(event.getChargingStationId(), (EvseId) event.getComponentId());
 
         switch (requestResult) {
             case SUCCESS:
-                domainService.changeComponentAvailabilityToOperative(event.getChargingStationId(), event.getComponentId(), ChargingStationComponent.EVSE, statusCorrelationToken, addOnIdentity);
+                domainService.changeComponentAvailabilityToOperative(event.getChargingStationId(), event.getComponentId(), ChargingStationComponent.EVSE, correlationToken, addOnIdentity);
                 break;
             case FAILURE:
                 LOG.info("Failed to set availability of evse {} on chargingstation {} to operative", event.getComponentId().getId(), event.getChargingStationId().getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status {}", requestResult));
+                throw new AssertionError(String.format("Unkown status for change component availability to operative: '%s'", requestResult));
         }
     }
 
     @Override
-    public void handle(DataTransferRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(DataTransferRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("DataTransferRequestedEvent");
         DataTransferRequestResult result = chargingStationOcpp15Client.dataTransfer(event.getChargingStationId(), event.getVendorId(), event.getMessageId(), event.getData());
 
         if (result.isSuccessfull()) {
             String responseData = result.getData();
             if (responseData != null) {
-                domainService.informDataTransferResponse(event.getChargingStationId(), responseData, statusCorrelationToken, addOnIdentity);
+                domainService.informDataTransferResponse(event.getChargingStationId(), responseData, correlationToken, addOnIdentity);
             }
         } else {
             LOG.info("Failed to request datatransfer to chargingstation {}", event.getChargingStationId().getId());
@@ -194,29 +194,29 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
      * {@inheritDoc}
      */
     @Override
-    public void handle(ChangeConfigurationItemRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(ChangeConfigurationItemRequestedEvent event, CorrelationToken correlationToken) {
         boolean hasConfigurationChanged = chargingStationOcpp15Client.changeConfiguration(event.getChargingStationId(), event.getConfigurationItem());
 
         if (hasConfigurationChanged) {
-            domainService.changeConfiguration(event.getChargingStationId(), event.getConfigurationItem(), statusCorrelationToken, addOnIdentity);
+            domainService.changeConfiguration(event.getChargingStationId(), event.getConfigurationItem(), correlationToken, addOnIdentity);
         }
     }
 
     @Override
-    public void handle(DiagnosticsRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(DiagnosticsRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("DiagnosticsRequestedEvent");
         String diagnosticsFilename = chargingStationOcpp15Client.getDiagnostics(event.getChargingStationId(), event.getUploadLocation(), event.getNumRetries(), event.getRetryInterval(), event.getPeriodStartTime(), event.getPeriodStopTime());
 
-        domainService.diagnosticsFileNameReceived(event.getChargingStationId(), diagnosticsFilename, statusCorrelationToken, addOnIdentity);
+        domainService.diagnosticsFileNameReceived(event.getChargingStationId(), diagnosticsFilename, correlationToken, addOnIdentity);
     }
 
     @Override
-    public void handle(ClearCacheRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(ClearCacheRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("ClearCacheRequestedEvent");
         boolean result = chargingStationOcpp15Client.clearCache(event.getChargingStationId());
 
         if (result) {
-            domainService.informCacheCleared(event.getChargingStationId(), statusCorrelationToken, addOnIdentity);
+            domainService.informCacheCleared(event.getChargingStationId(), correlationToken, addOnIdentity);
         } else {
             LOG.info("Unable to clear cache for [{}]", event.getChargingStationId());
         }
@@ -240,34 +240,34 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
     }
 
     @Override
-    public void handle(AuthorizationListVersionRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(AuthorizationListVersionRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("AuthorizationListVersionRequestedEvent");
 
         int currentVersion = chargingStationOcpp15Client.getAuthorizationListVersion(event.getChargingStationId());
 
-        domainService.authorizationListVersionReceived(event.getChargingStationId(), currentVersion, statusCorrelationToken, addOnIdentity);
+        domainService.authorizationListVersionReceived(event.getChargingStationId(), currentVersion, correlationToken, addOnIdentity);
     }
 
     @Override
-    public void handle(SendAuthorizationListRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(SendAuthorizationListRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("SendAuthorizationListRequestedEvent");
 
         RequestResult requestResult = chargingStationOcpp15Client.sendAuthorizationList(event.getChargingStationId(), event.getAuthorizationListHash(), event.getAuthorizationListVersion(), event.getAuthorizationList(), event.getUpdateType());
 
         switch (requestResult) {
             case SUCCESS:
-                domainService.authorizationListChange(event.getChargingStationId(), event.getAuthorizationListVersion(), event.getUpdateType(), event.getAuthorizationList(), statusCorrelationToken, addOnIdentity);
+                domainService.authorizationListChange(event.getChargingStationId(), event.getAuthorizationListVersion(), event.getUpdateType(), event.getAuthorizationList(), correlationToken, addOnIdentity);
                 break;
             case FAILURE:
                 LOG.info("Failed to send authorization list to charging station {}", event.getChargingStationId().getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status: {}", requestResult));
+                throw new AssertionError(String.format("Unkown send authorization list response status: '%s'", requestResult));
         }
     }
 
     @Override
-    public void handle(ReserveNowRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(ReserveNowRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("ReserveNowRequestedEvent");
 
         NumberedReservationId reservationIdentifier = domainService.generateReservationIdentifier(event.getChargingStationId(), event.getProtocol());
@@ -276,35 +276,35 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
 
         switch (reservationStatus) {
             case ACCEPTED:
-                domainService.informReserved(event.getChargingStationId(), reservationIdentifier, event.getEvseId(), event.getExpiryDate(), statusCorrelationToken, addOnIdentity);
+                domainService.informReserved(event.getChargingStationId(), reservationIdentifier, event.getEvseId(), event.getExpiryDate(), correlationToken, addOnIdentity);
                 break;
             case FAULTED:
             case OCCUPIED:
             case UNAVAILABLE:
             case REJECTED:
-                String reservationStatusMessage = (reservationStatus != null) ? reservationStatus.name() : "";
+                String reservationStatusMessage = reservationStatus.name();
                 LOG.info("Failed to reserve evse {} on charging station {}: {}", event.getEvseId().getId(), event.getChargingStationId().getId(), reservationStatusMessage);
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status: {}", reservationStatus));
+                throw new AssertionError(String.format("Unkown reserve now response response status: '%s'", reservationStatus));
         }
     }
 
     @Override
-    public void handle(CancelReservationRequestedEvent event, CorrelationToken statusCorrelationToken) {
+    public void handle(CancelReservationRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("CancelReservationRequestedEvent");
 
         RequestResult requestResult = chargingStationOcpp15Client.cancelReservation(event.getChargingStationId(), ((NumberedReservationId) event.getReservationId()).getNumber());
 
         switch (requestResult) {
             case SUCCESS:
-                domainService.informReservationCancelled(event.getChargingStationId(), event.getReservationId(), statusCorrelationToken, addOnIdentity);
+                domainService.informReservationCancelled(event.getChargingStationId(), event.getReservationId(), correlationToken, addOnIdentity);
                 break;
             case FAILURE:
                 LOG.info("Failed to cancel reservation with reservationId {}", event.getReservationId().getId());
                 break;
             default:
-                throw new AssertionError(String.format("Unexpected status: {}", requestResult));
+                throw new AssertionError(String.format("Unkown cancel reservation response status: '%s'", requestResult));
         }
     }
 

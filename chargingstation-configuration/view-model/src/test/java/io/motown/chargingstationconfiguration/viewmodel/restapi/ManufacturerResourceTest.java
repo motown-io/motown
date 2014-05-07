@@ -26,19 +26,25 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 
+import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.DEFAULT_PAGING_PAGE;
+import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.DEFAULT_PAGING_RECORDS_PER_PAGE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ManufacturerResourceTest {
+
     private ManufacturerResource resource;
 
     @Mock
     private ManufacturerRepository repository;
+
+    @Mock
+    private HttpServletRequest request;
 
     @Before
     public void setUp() {
@@ -47,12 +53,16 @@ public class ManufacturerResourceTest {
 
         service.setManufacturerRepository(repository);
         resource.setDomainService(service);
+
+        when(request.getRequestURI()).thenReturn("/config");
+        when(request.getQueryString()).thenReturn("?offset=0&limit=10");
     }
 
     @Test
     public void testCreateManufacturer() {
-        Response response = resource.createManufacturer(any(Manufacturer.class));
-        verify(repository).createOrUpdate(any(Manufacturer.class));
+        Manufacturer manufacturer = mock(Manufacturer.class);
+        Response response = resource.createManufacturer(manufacturer);
+        verify(repository).createOrUpdate(manufacturer);
 
         assertNotNull(response);
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
@@ -60,8 +70,9 @@ public class ManufacturerResourceTest {
 
     @Test(expected = RuntimeException.class)
     public void testCreateManufacturerThrowsException() {
-        doThrow(mock(PersistenceException.class)).when(repository).createOrUpdate(any(Manufacturer.class));
-        resource.createManufacturer(any(Manufacturer.class));
+        Manufacturer manufacturer = mock(Manufacturer.class);
+        doThrow(mock(PersistenceException.class)).when(repository).createOrUpdate(manufacturer);
+        resource.createManufacturer(manufacturer);
     }
 
     @Test
@@ -85,8 +96,8 @@ public class ManufacturerResourceTest {
 
     @Test
     public void testGetManufacturers() {
-        Response response = resource.getManufacturers();
-        verify(repository).findAll();
+        Response response = resource.getManufacturers(request, DEFAULT_PAGING_PAGE, DEFAULT_PAGING_RECORDS_PER_PAGE);
+        verify(repository).findAll(DEFAULT_PAGING_PAGE, DEFAULT_PAGING_RECORDS_PER_PAGE);
 
         assertNotNull(response);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
@@ -94,8 +105,8 @@ public class ManufacturerResourceTest {
 
     @Test(expected = RuntimeException.class)
     public void testGetManufacturersThrowsException() {
-        when(repository.findAll()).thenThrow(mock(PersistenceException.class));
-        resource.getManufacturers();
+        when(repository.findAll(DEFAULT_PAGING_PAGE, DEFAULT_PAGING_RECORDS_PER_PAGE)).thenThrow(mock(PersistenceException.class));
+        resource.getManufacturers(request, DEFAULT_PAGING_PAGE, DEFAULT_PAGING_RECORDS_PER_PAGE);
     }
 
     @Test

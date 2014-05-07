@@ -15,11 +15,11 @@
  */
 package io.motown.domain.utils.axon;
 
+import io.motown.domain.api.chargingstation.CorrelationToken;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.common.annotation.MetaData;
 import org.axonframework.domain.EventMessage;
-import org.axonframework.domain.IdentifierFactory;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.annotation.AnnotationEventListenerAdapter;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -36,24 +36,22 @@ import static org.axonframework.commandhandling.GenericCommandMessage.asCommandM
 
 public class EventWaitingGateway {
 
-    private static final String CORRELATION_ID_KEY = "correlationId";
-
     private CommandBus commandBus;
     private EventBus eventBus;
 
-    private final Map<String, TimedEventCallback> callbacks = new ConcurrentHashMap<>();
+    private final Map<CorrelationToken, TimedEventCallback> callbacks = new ConcurrentHashMap<>();
 
     private AtomicBoolean started = new AtomicBoolean(false);
 
     public void sendAndWaitForEvent(Object command, final EventCallback callback, final long timeoutInMillis) {
-        final String correlationId = IdentifierFactory.getInstance().generateIdentifier();
+        final CorrelationToken correlationToken = new CorrelationToken();
 
         final TimedEventCallback timedEventCallback = new TimedEventCallback(callback);
-        callbacks.put(correlationId, timedEventCallback);
+        callbacks.put(correlationToken, timedEventCallback);
         timedEventCallback.scheduleTimer(new Runnable() {
             @Override
             public void run() {
-                callbacks.remove(correlationId);
+                callbacks.remove(correlationToken);
             }
         }, timeoutInMillis);
 
@@ -62,19 +60,19 @@ public class EventWaitingGateway {
         }
 
         final CommandMessage commandMessage = asCommandMessage(command)
-                .andMetaData(Collections.singletonMap(CORRELATION_ID_KEY, correlationId));
+                .andMetaData(Collections.singletonMap(CorrelationToken.KEY, correlationToken));
         commandBus.dispatch(commandMessage);
     }
 
     @EventHandler
     protected void onEvent(EventMessage<?> message,
-                           @MetaData(value = CORRELATION_ID_KEY, required = true) String correlationId) {
-        final TimedEventCallback timedEventCallback = callbacks.get(correlationId);
+                           @MetaData(value = CorrelationToken.KEY, required = true) CorrelationToken correlationToken) {
+        final TimedEventCallback timedEventCallback = callbacks.get(correlationToken);
         if (timedEventCallback != null) {
             boolean handled = timedEventCallback.onEvent(message);
             if (handled) {
                 timedEventCallback.cancelTimer();
-                callbacks.remove(correlationId);
+                callbacks.remove(correlationToken);
             }
         }
     }

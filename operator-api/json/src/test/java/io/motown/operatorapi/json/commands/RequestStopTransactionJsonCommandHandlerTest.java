@@ -46,5 +46,9 @@ public class RequestStopTransactionJsonCommandHandlerTest {
         handler.handle(CHARGING_STATION_ID_STRING, commandObject, ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT);
     }
 
-    //TODO: Add more tests scenarios when the RequestStopTransactionJsonCommandHandler is more final - Ingo Pak, 04 dec 2013
+    @Test
+    public void testHandleStopTransactionWithStringBasedTransactionId() throws UserIdentityUnauthorizedException {
+        JsonObject commandObject = gson.fromJson("{'id' : '123'}", JsonObject.class);
+        handler.handle(CHARGING_STATION_ID_STRING, commandObject, ChargingStationTestUtils.ROOT_IDENTITY_CONTEXT);
+    }
 }

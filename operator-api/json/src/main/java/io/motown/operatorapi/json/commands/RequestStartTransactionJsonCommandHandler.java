@@ -61,7 +61,7 @@ class RequestStartTransactionJsonCommandHandler implements JsonCommandHandler {
 
         try {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
-            if (chargingStation != null && chargingStation.isAccepted()) {
+            if (chargingStation != null && chargingStation.communicationAllowed()) {
                 RequestStartTransactionApiCommand command = gson.fromJson(commandObject, RequestStartTransactionApiCommand.class);
 
                 commandGateway.send(new RequestStartTransactionCommand(csId, command.getIdentifyingToken(), command.getEvseId(), identityContext), new CorrelationToken());

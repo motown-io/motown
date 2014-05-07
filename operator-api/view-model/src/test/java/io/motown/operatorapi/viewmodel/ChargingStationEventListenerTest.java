@@ -17,7 +17,6 @@ package io.motown.operatorapi.viewmodel;
 
 import com.google.common.collect.ImmutableSet;
 import io.motown.domain.api.chargingstation.*;
-import io.motown.domain.api.security.UserIdentity;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.entities.Evse;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -64,6 +63,7 @@ public class ChargingStationEventListenerTest {
         assertTrue(cs.getAttributes().isEmpty());
 
         listener.handle(new ConfiguredChargingStationBootedEvent(CHARGING_STATION_ID, PROTOCOL, BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT));
+        cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertNotNull(cs.getProtocol());
         assertFalse(cs.getAttributes().isEmpty());
     }
@@ -74,6 +74,7 @@ public class ChargingStationEventListenerTest {
         assertFalse(cs.isAccepted());
 
         listener.handle(new ChargingStationAcceptedEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
+        cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertTrue(cs.isAccepted());
     }
 
@@ -91,11 +92,13 @@ public class ChargingStationEventListenerTest {
         assertNull(cs.getAccessibility());
 
         listener.handle(new ChargingStationPlacedEvent(CHARGING_STATION_ID, COORDINATES, null, Accessibility.PUBLIC, IDENTITY_CONTEXT));
+        cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertNotNull(cs.getLatitude());
         assertNotNull(cs.getLongitude());
         assertNotNull(cs.getAccessibility());
 
         listener.handle(new ChargingStationPlacedEvent(CHARGING_STATION_ID, null, ADDRESS, Accessibility.PUBLIC, IDENTITY_CONTEXT));
+        cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertNotNull(cs.getAddressLine1());
         assertNotNull(cs.getAddressLine2());
         assertNotNull(cs.getPostalCode());
@@ -120,11 +123,13 @@ public class ChargingStationEventListenerTest {
         assertNull(cs.getAccessibility());
 
         listener.handle(new ChargingStationMovedEvent(CHARGING_STATION_ID, COORDINATES, null, Accessibility.PAYING, IDENTITY_CONTEXT));
+        cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertNotNull(cs.getLatitude());
         assertNotNull(cs.getLongitude());
         assertNotNull(cs.getAccessibility());
 
         listener.handle(new ChargingStationMovedEvent(CHARGING_STATION_ID, null, ADDRESS, Accessibility.PAYING, IDENTITY_CONTEXT));
+        cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertNotNull(cs.getAddressLine1());
         assertNotNull(cs.getAddressLine2());
         assertNotNull(cs.getPostalCode());
@@ -149,11 +154,13 @@ public class ChargingStationEventListenerTest {
         assertNull(cs.getAccessibility());
 
         listener.handle(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, COORDINATES, null, Accessibility.PRIVATE, IDENTITY_CONTEXT));
+        cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertNotNull(cs.getLatitude());
         assertNotNull(cs.getLongitude());
         assertNotNull(cs.getAccessibility());
 
         listener.handle(new ChargingStationLocationImprovedEvent(CHARGING_STATION_ID, null, ADDRESS, Accessibility.PRIVATE, IDENTITY_CONTEXT));
+        cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertNotNull(cs.getAddressLine1());
         assertNotNull(cs.getAddressLine2());
         assertNotNull(cs.getPostalCode());
@@ -170,10 +177,12 @@ public class ChargingStationEventListenerTest {
         assertTrue(cs.getOpeningTimes().isEmpty());
 
         listener.handle(new ChargingStationOpeningTimesSetEvent(CHARGING_STATION_ID, OPENING_TIMES, IDENTITY_CONTEXT));
+        cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertFalse(cs.getOpeningTimes().isEmpty());
         assertEquals(1, cs.getOpeningTimes().size());
 
         listener.handle(new ChargingStationOpeningTimesSetEvent(CHARGING_STATION_ID, OPENING_TIMES, IDENTITY_CONTEXT));
+        cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertFalse(cs.getOpeningTimes().isEmpty());
         assertEquals(1, cs.getOpeningTimes().size());
     }
@@ -184,10 +193,12 @@ public class ChargingStationEventListenerTest {
         assertTrue(cs.getOpeningTimes().isEmpty());
 
         listener.handle(new ChargingStationOpeningTimesAddedEvent(CHARGING_STATION_ID, OPENING_TIMES, IDENTITY_CONTEXT));
+        cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertFalse(cs.getOpeningTimes().isEmpty());
         assertEquals(1, cs.getOpeningTimes().size());
 
         listener.handle(new ChargingStationOpeningTimesAddedEvent(CHARGING_STATION_ID, ImmutableSet.<OpeningTime>builder().add(new OpeningTime(Day.FRIDAY, new TimeOfDay(18, 0), new TimeOfDay(21, 0))).build(), IDENTITY_CONTEXT));
+        cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertFalse(cs.getOpeningTimes().isEmpty());
         assertEquals(2, cs.getOpeningTimes().size());
     }
@@ -198,7 +209,9 @@ public class ChargingStationEventListenerTest {
         assertTrue(cs.getEvses().isEmpty());
 
         listener.handle(new ChargingStationConfiguredEvent(CHARGING_STATION_ID, EVSES, IDENTITY_CONTEXT));
+        cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertFalse(cs.getEvses().isEmpty());
+        assertTrue(cs.isConfigured());
     }
 
     @Test
@@ -207,9 +220,11 @@ public class ChargingStationEventListenerTest {
         assertFalse(cs.isReservable());
 
         listener.handle(new ChargingStationMadeReservableEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
+        cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertTrue(cs.isReservable());
 
         listener.handle(new ChargingStationMadeNotReservableEvent(CHARGING_STATION_ID, IDENTITY_CONTEXT));
+        cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertFalse(cs.isReservable());
     }
 
@@ -219,6 +234,7 @@ public class ChargingStationEventListenerTest {
         assertNull(cs.getStatus());
 
         listener.handle(new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, ComponentStatus.OCCUPIED, new Date(), BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT));
+        cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertNotNull(cs.getStatus());
         assertEquals(ComponentStatus.OCCUPIED, cs.getStatus());
     }
@@ -232,6 +248,7 @@ public class ChargingStationEventListenerTest {
         }
 
         listener.handle(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, ComponentStatus.FAULTED, new Date(), BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT));
+        cs = repository.findOne(CHARGING_STATION_ID.getId());
         for (Evse evse : cs.getEvses()) {
             if (evse.getEvseId().equals("1")) {
                 assertEquals(ComponentStatus.FAULTED, evse.getStatus());
@@ -247,7 +264,57 @@ public class ChargingStationEventListenerTest {
         assertTrue(cs.getConfigurationItems().isEmpty());
 
         listener.handle(new ConfigurationItemsReceivedEvent(CHARGING_STATION_ID, CONFIGURATION_ITEMS, IDENTITY_CONTEXT));
+        cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertFalse(cs.getConfigurationItems().isEmpty());
+    }
+
+    @Test
+    public void testAuthorizationListVersionReceivedEvent() {
+        listener.handle(new AuthorizationListVersionReceivedEvent(CHARGING_STATION_ID, LIST_VERSION, IDENTITY_CONTEXT));
+        ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
+        assertTrue(cs.getLocalAuthorizationListVersion() == LIST_VERSION);
+    }
+
+    @Test
+    public void testListVersionUpdateForAuthorizationListChangedReceivedEvent() {
+        listener.handle(new AuthorizationListChangedEvent(CHARGING_STATION_ID, LIST_VERSION, AuthorizationListUpdateType.FULL, IDENTIFYING_TOKENS, IDENTITY_CONTEXT));
+        ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
+        assertTrue(cs.getLocalAuthorizationListVersion() == LIST_VERSION);
+    }
+
+    @Test
+    public void testFullAuthorizationListChangedReceivedEvent() {
+        listener.handle(new AuthorizationListChangedEvent(CHARGING_STATION_ID, LIST_VERSION, AuthorizationListUpdateType.FULL, IDENTIFYING_TOKENS, IDENTITY_CONTEXT));
+        ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
+        assertTrue(cs.getLocalAuthorizations().size() == IDENTIFYING_TOKENS.size());
+    }
+
+    @Test
+    public void testDifferentialAuthorizationListChangedReceivedEvent() {
+        ImmutableSet<IdentifyingToken> initialIdentifyingTokens = ImmutableSet.<IdentifyingToken>builder()
+                .add(IDENTIFYING_TOKEN)
+                .add(ANOTHER_IDENTIFYING_TOKEN)
+                .build();
+        listener.handle(new AuthorizationListChangedEvent(CHARGING_STATION_ID, LIST_VERSION, AuthorizationListUpdateType.FULL, initialIdentifyingTokens, IDENTITY_CONTEXT));
+
+        //The differential update will add 1 more token
+        ImmutableSet<IdentifyingToken> differentialIdentifyingTokens = ImmutableSet.<IdentifyingToken>builder()
+                .add(IDENTIFYING_TOKEN)
+                .add(new TextualToken("NEW123ABC"))
+                .build();
+        listener.handle(new AuthorizationListChangedEvent(CHARGING_STATION_ID, LIST_VERSION, AuthorizationListUpdateType.DIFFERENTIAL, differentialIdentifyingTokens, IDENTITY_CONTEXT));
+
+        ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
+        assertTrue(cs.getLocalAuthorizations().size() == IDENTIFYING_TOKENS.size() + 1);
+    }
+
+    @Test
+    public void testSameDifferentialAuthorizationListChangedReceivedEvent() {
+        listener.handle(new AuthorizationListChangedEvent(CHARGING_STATION_ID, LIST_VERSION, AuthorizationListUpdateType.DIFFERENTIAL, IDENTIFYING_TOKENS, IDENTITY_CONTEXT));
+        listener.handle(new AuthorizationListChangedEvent(CHARGING_STATION_ID, LIST_VERSION, AuthorizationListUpdateType.DIFFERENTIAL, IDENTIFYING_TOKENS, IDENTITY_CONTEXT));
+
+        ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
+        assertTrue(cs.getLocalAuthorizations().size() == IDENTIFYING_TOKENS.size());
     }
 
 }

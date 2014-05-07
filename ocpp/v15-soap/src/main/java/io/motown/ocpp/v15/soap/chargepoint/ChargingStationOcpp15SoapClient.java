@@ -24,8 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -297,7 +297,7 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     }
 
     @Override
-    public RequestResult sendAuthorizationList(ChargingStationId id, String hash, int listVersion, List<IdentifyingToken> identifyingTokens, AuthorizationListUpdateType updateType) {
+    public RequestResult sendAuthorizationList(ChargingStationId id, String hash, int listVersion, Set<IdentifyingToken> identifyingTokens, AuthorizationListUpdateType updateType) {
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         SendLocalListRequest request = new SendLocalListRequest();

@@ -15,6 +15,7 @@
  */
 package io.motown.domain.utils.axon;
 
+import io.motown.domain.api.chargingstation.CorrelationToken;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.GenericCommandMessage;
@@ -24,14 +25,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 public class EventWaitingGatewayTest {
-
-    private static final String CORRELATION_ID_KEY = "correlationId";
 
     private static final int HIGH_TIMEOUT_IN_MILLIS = 1000;
 
@@ -54,13 +53,13 @@ public class EventWaitingGatewayTest {
     }
 
     @Test
-    public void testIfCommandIsDispatchedAndCorrelationIdIsNotEmpty() {
+    public void testIfCommandIsDispatchedAndCorrelationIdIsNotNull() {
         CommandMessage<Object> command = new GenericCommandMessage<>(new Object());
 
         gateway.sendAndWaitForEvent(command, mock(EventCallback.class), HIGH_TIMEOUT_IN_MILLIS);
 
-        String correlationId = verifyDispatchAndCaptureCorrelationId();
-        assertFalse(correlationId.isEmpty());
+        CorrelationToken correlationToken = verifyDispatchAndCaptureCorrelationToken();
+        assertTrue(correlationToken != null);
     }
 
     @Test
@@ -69,9 +68,9 @@ public class EventWaitingGatewayTest {
         when(eventCallback.onEvent(any(EventMessage.class))).thenReturn(true);
         gateway.sendAndWaitForEvent(new GenericCommandMessage<>(new Object()), eventCallback, HIGH_TIMEOUT_IN_MILLIS);
 
-        String correlationId = verifyDispatchAndCaptureCorrelationId();
+        CorrelationToken correlationToken = verifyDispatchAndCaptureCorrelationToken();
         EventMessage eventMessage = mock(EventMessage.class);
-        gateway.onEvent(eventMessage, correlationId);
+        gateway.onEvent(eventMessage, correlationToken);
 
         verify(eventCallback).onEvent(eventMessage);
     }
@@ -82,9 +81,9 @@ public class EventWaitingGatewayTest {
         when(eventCallback.onEvent(any(EventMessage.class))).thenReturn(false);
         gateway.sendAndWaitForEvent(new GenericCommandMessage<>(new Object()), eventCallback, HIGH_TIMEOUT_IN_MILLIS);
 
-        String correlationId = verifyDispatchAndCaptureCorrelationId();
+        CorrelationToken correlationToken = verifyDispatchAndCaptureCorrelationToken();
         EventMessage eventMessage = mock(EventMessage.class);
-        gateway.onEvent(eventMessage, correlationId);
+        gateway.onEvent(eventMessage, correlationToken);
 
         verify(eventCallback).onEvent(eventMessage);
     }
@@ -94,7 +93,7 @@ public class EventWaitingGatewayTest {
         EventCallback eventCallback = mock(EventCallback.class);
         gateway.sendAndWaitForEvent(new GenericCommandMessage<>(new Object()), eventCallback, HIGH_TIMEOUT_IN_MILLIS);
 
-        gateway.onEvent(mock(EventMessage.class), "unknownCorrelationId");
+        gateway.onEvent(mock(EventMessage.class), new CorrelationToken());
 
         verify(eventCallback, never()).onEvent(any(EventMessage.class));
     }
@@ -104,25 +103,25 @@ public class EventWaitingGatewayTest {
         EventCallback eventCallback = mock(EventCallback.class);
         gateway.sendAndWaitForEvent(new GenericCommandMessage<>(new Object()), eventCallback, LOW_TIMEOUT_IN_MILLIS);
 
-        String correlationId = verifyDispatchAndCaptureCorrelationId();
+        CorrelationToken correlationToken = verifyDispatchAndCaptureCorrelationToken();
         EventMessage eventMessage = mock(EventMessage.class);
 
         Thread.sleep(2);
 
-        gateway.onEvent(eventMessage, correlationId);
+        gateway.onEvent(eventMessage, correlationToken);
 
         verify(eventCallback, never()).onEvent(any(EventMessage.class));
     }
 
     /**
-     * Captures the correlation id which is metadata of the command which is dispatched on the bus.
+     * Captures the {@code CorrelationToken} which is metadata of the command which is dispatched on the bus.
      *
-     * @return the captured correlation id.
+     * @return the captured {@code CorrelationToken}.
      */
-    private String verifyDispatchAndCaptureCorrelationId() {
+    private CorrelationToken verifyDispatchAndCaptureCorrelationToken() {
         ArgumentCaptor<CommandMessage> commandMessageArgumentCaptor = ArgumentCaptor.forClass(CommandMessage.class);
         verify(commandBus).dispatch(commandMessageArgumentCaptor.capture());
-        assertNotNull(commandMessageArgumentCaptor.getValue().getMetaData().get(CORRELATION_ID_KEY));
-        return (String) commandMessageArgumentCaptor.getValue().getMetaData().get(CORRELATION_ID_KEY);
+        assertNotNull(commandMessageArgumentCaptor.getValue().getMetaData().get(CorrelationToken.KEY));
+        return (CorrelationToken) commandMessageArgumentCaptor.getValue().getMetaData().get(CorrelationToken.KEY);
     }
 }

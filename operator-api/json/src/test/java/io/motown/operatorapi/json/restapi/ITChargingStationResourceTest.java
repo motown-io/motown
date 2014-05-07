@@ -35,8 +35,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
 
-import javax.ws.rs.core.MediaType;
-
 import static org.junit.Assert.assertEquals;
 
 @ContextConfiguration("classpath:jersey-test-config.xml")
@@ -46,6 +44,7 @@ public class ITChargingStationResourceTest extends JerseyTest {
     private static final int OK = 200;
     private static final int ACCEPTED = 202;
     private static final int BAD_REQUEST = 400;
+    private static final int FORBIDDEN = 403;
     private static final String BASE_URI = "http://localhost:9998/operator/api/charging-stations";
 
     private Client client;
@@ -64,6 +63,7 @@ public class ITChargingStationResourceTest extends JerseyTest {
                 .servletClass(SpringServlet.class)
                 .servletPath("/api")
                 .initParam("com.sun.jersey.config.property.packages", "io.motown.operatorapi.json.restapi")
+                .initParam("com.sun.jersey.spi.container.ContainerRequestFilters", "io.motown.operatorapi.json.restapi.util.TestSecurityContextFilter")
                 .build();
     }
 
@@ -82,7 +82,7 @@ public class ITChargingStationResourceTest extends JerseyTest {
     @Test
     public void testGetChargingStations() {
         ClientResponse response = client.resource(BASE_URI)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(ApiVersion.V1_JSON)
                 .get(ClientResponse.class);
 
         assertEquals(OK, response.getStatus());
@@ -93,10 +93,10 @@ public class ITChargingStationResourceTest extends JerseyTest {
         ClientResponse response = client.resource(BASE_URI)
                 .path("/TEST01")
                 .path("/commands")
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
+                .type(ApiVersion.V1_JSON)
+                .accept(ApiVersion.V1_JSON)
                 .post(ClientResponse.class, "[\n" +
-                        "    \"Register\",\n" +
+                        "    \"AcceptChargingStation\",\n" +
                         "    {\n" +
                         "        \"configuration\": {\n" +
                         "            \"evses\": [\n" +
@@ -106,7 +106,7 @@ public class ITChargingStationResourceTest extends JerseyTest {
                         "                        {\n" +
                         "                            \"maxAmp\": 32,\n" +
                         "                            \"phase\": 3,\n" +
-                        "                            \"voltage\": 230,\n" +
+                        "                            \"voltage\": 240,\n" +
                         "                            \"chargingProtocol\": \"MODE3\",\n" +
                         "                            \"current\": \"AC\",\n" +
                         "                            \"connectorType\": \"TESLA\"\n" +
@@ -119,7 +119,7 @@ public class ITChargingStationResourceTest extends JerseyTest {
                         "                        {\n" +
                         "                            \"maxAmp\": 32,\n" +
                         "                            \"phase\": 3,\n" +
-                        "                            \"voltage\": 230,\n" +
+                        "                            \"voltage\": 240,\n" +
                         "                            \"chargingProtocol\": \"MODE3\",\n" +
                         "                            \"current\": \"AC\",\n" +
                         "                            \"connectorType\": \"TESLA\"\n" +
@@ -143,9 +143,9 @@ public class ITChargingStationResourceTest extends JerseyTest {
         ClientResponse response = client.resource(BASE_URI)
                 .path("/TEST01")
                 .path("/commands")
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.TEXT_PLAIN)
-                .post(ClientResponse.class, "[\"Register\"]");
+                .type(ApiVersion.V1_JSON)
+                .accept(ApiVersion.V1_JSON)
+                .post(ClientResponse.class, "[\"AcceptChargingStation\"]");
 
         assertEquals(BAD_REQUEST, response.getStatus());
     }
@@ -155,10 +155,10 @@ public class ITChargingStationResourceTest extends JerseyTest {
         ClientResponse response = client.resource(BASE_URI)
                 .path("/TEST01")
                 .path("/commands")
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.TEXT_PLAIN)
+                .type(ApiVersion.V1_JSON)
+                .accept(ApiVersion.V1_JSON)
                 .post(ClientResponse.class, "[\n" +
-                        "    \"RegisterChargingStation\",\n" +
+                        "    \"Accept\",\n" +
                         "    {\n" +
                         "        \"configuration\": {\n" +
                         "            \"evses\": [\n" +
@@ -168,7 +168,7 @@ public class ITChargingStationResourceTest extends JerseyTest {
                         "                        {\n" +
                         "                            \"maxAmp\": 32,\n" +
                         "                            \"phase\": 3,\n" +
-                        "                            \"voltage\": 230,\n" +
+                        "                            \"voltage\": 240,\n" +
                         "                            \"chargingProtocol\": \"MODE3\",\n" +
                         "                            \"current\": \"AC\",\n" +
                         "                            \"connectorType\": \"TESLA\"\n" +
@@ -181,7 +181,7 @@ public class ITChargingStationResourceTest extends JerseyTest {
                         "                        {\n" +
                         "                            \"maxAmp\": 32,\n" +
                         "                            \"phase\": 3,\n" +
-                        "                            \"voltage\": 230,\n" +
+                        "                            \"voltage\": 240,\n" +
                         "                            \"chargingProtocol\": \"MODE3\",\n" +
                         "                            \"current\": \"AC\",\n" +
                         "                            \"connectorType\": \"TESLA\"\n" +
@@ -205,10 +205,61 @@ public class ITChargingStationResourceTest extends JerseyTest {
         ClientResponse response = client.resource(BASE_URI)
                 .path("/TEST01")
                 .path("/commands")
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.TEXT_PLAIN)
-                .post(ClientResponse.class, "[\"Register\"}");
+                .type(ApiVersion.V1_JSON)
+                .accept(ApiVersion.V1_JSON)
+                .post(ClientResponse.class, "[\"AcceptChargingStation\"}");
 
         assertEquals(BAD_REQUEST, response.getStatus());
+    }
+
+    @Test
+    public void testExecuteCommandNotAuthorizedUser() {
+        ClientResponse response = client.resource(BASE_URI)
+                .path("/TEST01")
+                .path("/commands")
+                .header("Non-Authorized-User", Boolean.TRUE)
+                .type(ApiVersion.V1_JSON)
+                .accept(ApiVersion.V1_JSON)
+                .post(ClientResponse.class, "[\n" +
+                        "    \"AcceptChargingStation\",\n" +
+                        "    {\n" +
+                        "        \"configuration\": {\n" +
+                        "            \"evses\": [\n" +
+                        "                {\n" +
+                        "                    \"evseId\": 1,\n" +
+                        "                    \"connectors\": [\n" +
+                        "                        {\n" +
+                        "                            \"maxAmp\": 32,\n" +
+                        "                            \"phase\": 3,\n" +
+                        "                            \"voltage\": 240,\n" +
+                        "                            \"chargingProtocol\": \"MODE3\",\n" +
+                        "                            \"current\": \"AC\",\n" +
+                        "                            \"connectorType\": \"TESLA\"\n" +
+                        "                        }\n" +
+                        "                    ]\n" +
+                        "                },\n" +
+                        "                {\n" +
+                        "                    \"evseId\": 2,\n" +
+                        "                    \"connectors\": [\n" +
+                        "                        {\n" +
+                        "                            \"maxAmp\": 32,\n" +
+                        "                            \"phase\": 3,\n" +
+                        "                            \"voltage\": 240,\n" +
+                        "                            \"chargingProtocol\": \"MODE3\",\n" +
+                        "                            \"current\": \"AC\",\n" +
+                        "                            \"connectorType\": \"TESLA\"\n" +
+                        "                        }\n" +
+                        "                    ]\n" +
+                        "                }\n" +
+                        "            ],\n" +
+                        "            \"settings\": {\n" +
+                        "                \"key\": \"value\",\n" +
+                        "                \"key2\": \"value2\"\n" +
+                        "            }\n" +
+                        "        }\n" +
+                        "    }\n" +
+                        "]");
+
+        assertEquals(FORBIDDEN, response.getStatus());
     }
 }

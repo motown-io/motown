@@ -20,19 +20,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
 public class TransactionRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReservationIdentifierRepository.class);
 
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
 
     public Transaction findTransactionById(Long id) {
-        return entityManager.find(Transaction.class, id);
+        return getEntityManager().find(Transaction.class, id);
     }
 
     public void insert(Transaction transaction) {
+        EntityManager entityManager = getEntityManager();
         EntityTransaction entityTransaction = entityManager.getTransaction();
 
         if (!entityTransaction.isActive()) {
@@ -50,7 +52,11 @@ public class TransactionRepository {
         }
     }
 
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+    }
+
+    private EntityManager getEntityManager() {
+        return this.entityManagerFactory.createEntityManager();
     }
 }

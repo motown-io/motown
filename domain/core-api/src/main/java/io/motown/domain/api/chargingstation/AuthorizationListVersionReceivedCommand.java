@@ -20,6 +20,7 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 import java.util.Objects;
 
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -90,5 +91,17 @@ public final class AuthorizationListVersionReceivedCommand {
         }
         final AuthorizationListVersionReceivedCommand other = (AuthorizationListVersionReceivedCommand) obj;
         return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.version, other.version) && Objects.equals(this.identityContext, other.identityContext);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return toStringHelper(this)
+                .add("chargingStationId", chargingStationId)
+                .add("version", version)
+                .add("identityContext", identityContext)
+                .toString();
     }
 }

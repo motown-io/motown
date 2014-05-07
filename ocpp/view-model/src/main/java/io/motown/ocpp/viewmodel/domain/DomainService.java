@@ -93,11 +93,6 @@ public class DomainService {
     private long authorizationTimeoutInMillis = 10000;
 
     /**
-     * The timeout in milliseconds to wait for the dataTransfer response events
-     */
-    private long dataTransferTimeoutInMillis = 10000;
-
-    /**
      * Set of user identities which shall be used in the {@code CreateChargingStationCommand} to indicate those users
      * are authorized to execute all commands on the created aggregate.
      */
@@ -137,6 +132,7 @@ public class DomainService {
 
         // Keep track of the address on which we can reach the charging station
         chargingStation.setIpAddress(chargingStationAddress);
+        chargingStation = chargingStationRepository.createOrUpdate(chargingStation);
 
         Map<String, String> attributes = Maps.newHashMap();
 
@@ -153,13 +149,13 @@ public class DomainService {
 
         commandGateway.send(new BootChargingStationCommand(chargingStationId, protocol, attributes, identityContext));
 
-        return new BootChargingStationResult(chargingStation.isRegistered(), heartbeatInterval, new Date());
+        return new BootChargingStationResult(chargingStation.isRegisteredAndConfigured(), heartbeatInterval, new Date());
     }
 
     public void incomingDataTransfer(ChargingStationId chargingStationId, String data, String vendorId, String messageId, FutureEventCallback future, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        eventWaitingGateway.sendAndWaitForEvent(new IncomingDataTransferCommand(chargingStationId, vendorId, messageId, data, identityContext), future, dataTransferTimeoutInMillis);
+        eventWaitingGateway.sendAndWaitForEvent(new IncomingDataTransferCommand(chargingStationId, vendorId, messageId, data, identityContext), future, (long) 10000);
     }
 
     public void heartbeat(ChargingStationId chargingStationId, AddOnIdentity addOnIdentity) {
@@ -362,7 +358,7 @@ public class DomainService {
         commandGateway.send(new UnlockEvseCommand(chargingStationId, evseId, identityContext), correlationToken);
     }
 
-    public void authorizationListChange(ChargingStationId chargingStationId, int version, AuthorizationListUpdateType updateType, List<IdentifyingToken> identifyingTokens, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
+    public void authorizationListChange(ChargingStationId chargingStationId, int version, AuthorizationListUpdateType updateType, Set<IdentifyingToken> identifyingTokens, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
         commandGateway.send(new ChangeAuthorizationListCommand(chargingStationId, version, updateType, identifyingTokens, identityContext), correlationToken);
     }
@@ -439,7 +435,6 @@ public class DomainService {
         Transaction transaction = new Transaction();
         transaction.setEvseId(evseId);
 
-        // flush to make sure the generated id is populated
         transactionRepository.insert(transaction);
 
         return transaction;

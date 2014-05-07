@@ -16,14 +16,12 @@
 package io.motown.ocpp.v15.soap;
 
 import com.google.common.collect.ImmutableMap;
-import io.motown.domain.api.chargingstation.*;
-import io.motown.domain.api.chargingstation.MeterValue;
-import io.motown.ocpp.v15.soap.centralsystem.schema.*;
+import io.motown.domain.api.chargingstation.AuthorizationListUpdateType;
+import io.motown.domain.api.chargingstation.FirmwareUpdateAttributeKey;
+import io.motown.domain.api.chargingstation.IdentifyingToken;
+import io.motown.domain.api.chargingstation.TextualToken;
+import io.motown.ocpp.v15.soap.centralsystem.schema.TransactionData;
 import io.motown.ocpp.v15.soap.chargepoint.schema.*;
-import io.motown.ocpp.v15.soap.chargepoint.schema.DataTransferResponse;
-import io.motown.ocpp.v15.soap.chargepoint.schema.DataTransferStatus;
-import io.motown.ocpp.v15.soap.chargepoint.schema.ReservationStatus;
-import io.motown.ocpp.viewmodel.domain.DomainService;
 
 import javax.persistence.EntityManager;
 import java.util.*;
@@ -75,6 +73,16 @@ public final class V15SOAPTestUtils {
 
     public static final String CHARGING_STATION_METER_SERIAL_NUMBER = "METER_SERIAL_NUMBER";
 
+    public static List<TransactionData> TRANSACTION_DATA = new ArrayList<>();
+
+    static {
+        TransactionData transactionData = new TransactionData();
+
+        for (io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue meterValue : getMeterValuesSoap(10)) {
+            transactionData.getValues().add(meterValue);
+        }
+    }
+
     /**
      * Private no-arg constructor to prevent instantiation of utility class.
      */
@@ -106,8 +114,8 @@ public final class V15SOAPTestUtils {
         return AuthorizationListUpdateType.DIFFERENTIAL;
     }
 
-    public static List<IdentifyingToken> getAuthorizationList() {
-        List<IdentifyingToken> list = new ArrayList<>();
+    public static Set<IdentifyingToken> getAuthorizationList() {
+        Set<IdentifyingToken> list = new HashSet<>();
         list.add(new TextualToken("1"));
         list.add(new TextualToken("2"));
         return list;
@@ -214,31 +222,6 @@ public final class V15SOAPTestUtils {
         return response;
     }
 
-    public static List<TransactionData> getTransactionDataForMeterValues(List<MeterValue> meterValues) {
-        List<TransactionData> transactionData = new ArrayList<>();
-
-        for (MeterValue meterValue : meterValues) {
-            io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value value = new io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue.Value();
-            value.setValue(meterValue.getValue());
-            value.setContext(ReadingContext.fromValue(meterValue.getAttributes().get(DomainService.CONTEXT_KEY)));
-            value.setFormat(ValueFormat.fromValue(meterValue.getAttributes().get(DomainService.FORMAT_KEY)));
-            value.setMeasurand(Measurand.fromValue(meterValue.getAttributes().get(DomainService.MEASURAND_KEY)));
-            value.setLocation(Location.fromValue(meterValue.getAttributes().get(DomainService.LOCATION_KEY)));
-            value.setUnit(UnitOfMeasure.fromValue(meterValue.getAttributes().get(DomainService.UNIT_KEY)));
-
-            io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue meterValueSoap = new io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue();
-            meterValueSoap.getValue().add(value);
-            meterValueSoap.setTimestamp(meterValue.getTimestamp());
-
-            TransactionData data = new TransactionData();
-            data.getValues().add(meterValueSoap);
-
-            transactionData.add(data);
-        }
-
-        return transactionData;
-    }
-    
     public static List<io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue> getMeterValuesSoap(int numberOfEntries) {
         List<io.motown.ocpp.v15.soap.centralsystem.schema.MeterValue> meterValues = new ArrayList<>();
 

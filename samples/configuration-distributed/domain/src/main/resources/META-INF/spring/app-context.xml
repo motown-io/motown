@@ -84,25 +84,13 @@
                   value="true"/>
     </bean>
 
-    <bean id="jCacheManager" class="net.sf.ehcache.jcache.JCacheManager">
-        <constructor-arg name="name" value="cacheManager"/>
-        <constructor-arg name="ehcacheManager">
-            <bean class="net.sf.ehcache.CacheManager" factory-method="create"/>
-        </constructor-arg>
-        <constructor-arg name="classLoader">
-            <bean class="java.security.SecureClassLoader"/>
+    <bean id="cacheAdapter" class="org.axonframework.cache.EhCacheAdapter">
+        <constructor-arg ref="cache">
         </constructor-arg>
     </bean>
 
-    <bean id="cache"
-          class="net.sf.ehcache.jcache.JCache">
-        <constructor-arg>
-            <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean"/>
-        </constructor-arg>
-        <constructor-arg ref="jCacheManager"/>
-        <constructor-arg>
-            <bean class="java.security.SecureClassLoader"/>
-        </constructor-arg>
+    <bean id="cache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+        <property name="cacheName" value="testCache"/>
     </bean>
 
     <bean id="serializer"
@@ -121,7 +109,7 @@
                 <property name="transactionManager" ref="commandTransactionManager"/>
                 <property name="handlerInterceptors">
                     <list>
-                        <bean class="io.motown.domain.app.axon.CorrelationCommandHandlerInterceptor"/>
+                        <bean class="io.motown.domain.utils.axon.CorrelationCommandHandlerInterceptor"/>
                         <bean class="org.axonframework.commandhandling.interceptors.LoggingInterceptor"/>
                     </list>
                 </property>
@@ -130,7 +118,7 @@
     </bean>
 
     <bean id="routingKeyResolver"
-          class="io.motown.domain.app.axon.MotownRoutingKeyResolver"/>
+          class="io.motown.domain.utils.axon.MotownRoutingKeyResolver"/>
 
     <axon-amqp:terminal id="terminal"
                         connection-factory="amqpConnection"
@@ -157,7 +145,7 @@
 
     <axon:event-sourcing-repository id="chargingStationRepository"
                                     aggregate-type="io.motown.domain.chargingstation.ChargingStation"
-                                    cache-ref="cache"
+                                    cache-ref="cacheAdapter"
                                     event-bus="eventBus"
                                     event-store="eventStore">
         <axon:snapshotter-trigger event-count-threshold="50" snapshotter-ref="snapshotter"/>

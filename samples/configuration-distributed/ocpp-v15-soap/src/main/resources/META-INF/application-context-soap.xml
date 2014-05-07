@@ -26,7 +26,7 @@
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
 
     <import resource="classpath:META-INF/soap-config.xml" />
-    <import resource="classpath:META-INF/spring/view-model-config.xml" />
+    <import resource="classpath:META-INF/view-model-config.xml" />
 
     <context:property-placeholder location="classpath:configViewModel.properties"
                                   ignore-resource-not-found="true"
@@ -44,8 +44,9 @@
         <property name="continuationTimeout" value="${io.motown.ocpp.v15.soap.cxf.continuation.timeout}" />
         <property name="heartbeatIntervalFallback" value="${io.motown.ocpp.viewmodel.heartbeat.interval}" />
         <property name="soapHeaderReader">
-            <bean class="io.motown.ocpp.soaputils.header.SoapHeaderReader" />
+            <bean class="io.motown.ocpp.soaputils.header.CXFSoapHeaderReader" />
         </property>
+        <property name="addOnId" value="1"/>
     </bean>
 
     <jaxws:endpoint implementor="#centralSystemService"
@@ -80,7 +81,5 @@
             </map>
         </property>
     </bean>
-
-    <bean class="io.motown.ocpp.v15.soap.centralsystem.schema.ObjectFactory"/>
 
 </beans>

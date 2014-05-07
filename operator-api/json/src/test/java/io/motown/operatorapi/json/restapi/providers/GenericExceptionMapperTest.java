@@ -37,7 +37,7 @@ public class GenericExceptionMapperTest {
         Response response = mapper.toResponse(exception);
 
         assertNotNull(response);
-        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
     }
 
 }

@@ -21,11 +21,10 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.motown</groupId>
     <artifactId>motown-io</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.8.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <inceptionYear>2013</inceptionYear>
     <modules>
-        <module>domain/app</module>
         <module>domain/command-authorization</module>
         <module>domain/command-handling</module>
         <module>domain/core-api</module>
@@ -47,7 +46,7 @@
         <module>samples</module>
     </modules>
     <properties>
-        <atmosphere.version>2.1.0</atmosphere.version>
+        <atmosphere.version>2.1.3</atmosphere.version>
         <axon.version>2.1.2</axon.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
         <!-- using 2.7.0 instead of newer versions of CXF, as newer versions have a problem with continuations resulting
@@ -84,7 +83,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <servlet-api.version>3.0.1</servlet-api.version>
-        <skip.integration.tests>true</skip.integration.tests>
         <slf4j.version>1.7.5</slf4j.version>
         <sonar-maven-plugin.version>2.2</sonar-maven-plugin.version>
         <spring-amqp.version>1.1.4.RELEASE</spring-amqp.version>
@@ -140,6 +138,7 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
                 <version>${servlet-api.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>javax.ws.rs</groupId>
@@ -504,16 +503,14 @@
                             <goal>integration-test</goal>
                         </goals>
                     </execution>
-                    <!-- TODO: Uncomment when integration tests with authentication are working - Mark Manders 2014-04-17 -->
-                    <!--<execution>
+                    <execution>
                         <id>verify</id>
                         <goals>
                             <goal>verify</goal>
                         </goals>
-                    </execution>-->
+                    </execution>
                 </executions>
                 <configuration>
-                    <skipTests>${skip.integration.tests}</skipTests>
                     <includes>
                         <include>**/IT*.java</include>
                     </includes>

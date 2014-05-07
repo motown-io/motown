@@ -17,6 +17,9 @@ angular.module('demoApp.controllers', []).
     controller('ChargingStationController',
         ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
             $scope.init = function () {
+                $scope.offset = 0;
+                $scope.limit = 10;
+                $scope.numberOfPages = 1;
                 $scope.getChargingStations();
                 if(!$scope.chargingStationTimer) {
                     $scope.chargingStationTimer = $scope.startGetChargingStationsTimer();
@@ -35,17 +38,26 @@ angular.module('demoApp.controllers', []).
             };
 
             $scope.getChargingStations = function () {
+                var q = ['offset=' + ($scope.offset || 0), 'limit=' + ($scope.limit || 10)];
+
                 $http({
-                    url: 'rest/operator-api/charging-stations',
+                    url: 'rest/operator-api/charging-stations?' + q.join('&'),
                     method: 'GET',
                     data: ''
                 }).success(function (response) {
-                    $scope.chargingStations = response;
+                    $scope.chargingStations = response.elements;
+                    $scope.numberOfPages = Math.floor(parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) / parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10)) + 1;
+                    $scope.totalNumberOfElements = parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) + parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10);
                 }).error(function () {
                     console.log('Error getting charging stations, cancel polling.');
                     $interval.cancel($scope.chargingStationTimer);
                     delete $scope.chargingStationTimer;
                 });
+            };
+
+            $scope.changePage = function(page) {
+                $scope.offset = (page - 1) * $scope.limit;
+                $scope.getChargingStations();
             };
 
             $scope.registerChargingStation = function (chargingStation) {
@@ -54,41 +66,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['Register', {
-                        'configuration': {
-                            'evses': [
-                                {
-                                    'evseId': 1,
-                                    'connectors': [
-                                        {
-                                            'maxAmp': 32,
-                                            'phase': 3,
-                                            'voltage': 240,
-                                            'chargingProtocol': 'MODE3',
-                                            'current': 'AC',
-                                            'connectorType': 'TESLA'
-                                        }
-                                    ]
-                                },
-                                {
-                                    'evseId': 2,
-                                    'connectors': [
-                                        {
-                                            'maxAmp': 32,
-                                            'phase': 3,
-                                            'voltage': 240,
-                                            'chargingProtocol': 'MODE3',
-                                            'current': 'AC',
-                                            'connectorType': 'TESLA'
-                                        }
-                                    ]
-                                }
-                            ],
-                            'settings': {
-                                'key': 'value',
-                                'key2': 'value2'
-                            }
-                        }
+                    data: ['AcceptChargingStation', {
                     }]
                 }).success(function (response) {
                     console.log('registered');
@@ -106,7 +84,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['ResetChargingStation', {
+                    data: ['RequestResetChargingStation', {
                         'type': resetType
                     }]
                 }).success(function (response) {
@@ -131,7 +109,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['UnlockEvse', {
+                    data: ['RequestUnlockEvse', {
                         'evseId': evseId,
                         'identifyingToken': {'token': 'TOKEN'}
                     }]
@@ -144,7 +122,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['DataTransfer', {
+                    data: ['RequestDataTransfer', {
                         'vendorId': vendorId,
                         'messageId': messageId,
                         'data': data
@@ -158,7 +136,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['ChangeConfiguration', {
+                    data: ['RequestChangeConfigurationItem', {
                         'key': key,
                         'value': value
                     }]
@@ -183,7 +161,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['RequestGetConfiguration', {
+                    data: ['RequestConfigurationItems', {
                     }]
                 }).success(function (response) {
                         console.log('get-configuration requested');
@@ -201,13 +179,15 @@ angular.module('demoApp.controllers', []).
                 });
             };
 
-            $scope.updateFirmware = function (chargingStation, location, retrieveDate) {
+            $scope.updateFirmware = function (chargingStation, location, retrieveDate, numRetries, retryInterval) {
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['UpdateFirmware', {
+                    data: ['RequestFirmwareUpdate', {
                         'location': location,
-                        'retrieveDate': retrieveDate
+                        'retrieveDate': retrieveDate,
+                        'numRetries': numRetries,
+                        'retryInterval': retryInterval
                     }]
                 }).success(function (response) {
                     console.log('clear cache requested');
@@ -229,7 +209,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['SendAuthorizationList', {
+                    data: ['RequestSendAuthorizationList', {
                         'listVersion': listVersion,
                         'updateType': updateType,
                         'items': items
@@ -249,7 +229,7 @@ angular.module('demoApp.controllers', []).
                 $http({
                     url: 'rest/operator-api/charging-stations/' + chargingStation.id + '/commands',
                     method: 'POST',
-                    data: ['ChangeAvailability', {
+                    data: ['RequestChangeAvailability', {
                         'evseId': 1,
                         'availability': availabilityType
                     }]
@@ -393,6 +373,9 @@ angular.module('demoApp.controllers', []).
     controller('TransactionController',
         ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
             $scope.init = function () {
+                $scope.offset = 0;
+                $scope.limit = 10;
+                $scope.numberOfPages = 1;
                 $scope.getTransactions();
                 if(!$scope.transactionTimer) {
                     $scope.transactionTimer = $scope.startGetTransactionsTimer();
@@ -412,17 +395,26 @@ angular.module('demoApp.controllers', []).
             };
 
             $scope.getTransactions = function () {
+                var q = ['offset=' + ($scope.offset || 0), 'limit=' + ($scope.limit || 10)];
+
                 $http({
-                    url: 'rest/operator-api/transactions',
+                    url: 'rest/operator-api/transactions?' + q.join('&'),
                     method: 'GET',
                     data: ''
                 }).success(function (response) {
-                    $scope.transactions = response;
+                    $scope.transactions = response.elements;
+                    $scope.numberOfPages = Math.floor(parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) / parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10)) + 1;
+                    $scope.totalNumberOfElements = parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) + parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10);
                 }).error(function() {
                     console.log('Error getting transactions, cancel polling.');
                     $interval.cancel($scope.transactionTimer);
                     delete $scope.transactionTimer;
                 });
+            };
+
+            $scope.changePage = function(page) {
+                $scope.offset = (page - 1) * $scope.limit;
+                $scope.getTransactions();
             };
 
             $scope.stopTransaction = function (chargingStationId, id) {
@@ -440,17 +432,29 @@ angular.module('demoApp.controllers', []).
     controller('ConfigurationController',
         ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
             $scope.init = function () {
+                $scope.offset = 0;
+                $scope.limit = 10;
+                $scope.numberOfPages = 1;
                 $scope.getChargingStationTypes();
             };
 
             $scope.getChargingStationTypes = function () {
+                var q = ['offset=' + ($scope.offset || 0), 'limit=' + ($scope.limit || 10)];
+
                 $http({
-                    url: 'rest/config/chargingstationtypes',
+                    url: 'rest/config/chargingstationtypes?' + q.join('&'),
                     method: 'GET',
                     data: ''
                 }).success(function (response) {
-                    $scope.chargingStationTypes = response;
+                    $scope.chargingStationTypes = response.elements;
+                    $scope.numberOfPages = Math.floor(parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) / parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10)) + 1;
+                    $scope.totalNumberOfElements = parseInt(/offset=([^&]+)/.exec(response.last.href)[1], 10) + parseInt(/limit=([^&]+)/.exec(response.last.href)[1], 10);
                 });
+            };
+
+            $scope.changePage = function(page) {
+                $scope.offset = (page - 1) * $scope.limit;
+                $scope.getChargingStationTypes();
             };
         }]
     ).
@@ -471,11 +475,4 @@ angular.module('demoApp.controllers', []).
                 });
             };
         }
-    ]).
-    controller('HeaderController',
-        ['$scope', '$location', function($scope, $location) {
-            $scope.isActive = function (viewLocation) {
-                return viewLocation === $location.path();
-            };
-        }]
-    );
+    ]);

@@ -15,64 +15,101 @@
  */
 package io.motown.chargingstationconfiguration.viewmodel.persistence.repositories;
 
+import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Manufacturer;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.EntityTransaction;
 import java.util.List;
 
 public class ManufacturerRepository {
 
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
 
     public Manufacturer createOrUpdate(Manufacturer manufacturer) {
-        EntityTransaction transaction = entityManager.getTransaction();
+        EntityManager em = getEntityManager();
 
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
+        EntityTransaction tx = null;
         try {
-            Manufacturer persistentManufacturer = entityManager.merge(manufacturer);
-            transaction.commit();
-            return persistentManufacturer;
+            tx = em.getTransaction();
+            tx.begin();
+
+            Manufacturer persistedManufacturer = em.merge(manufacturer);
+
+            tx.commit();
+
+            return persistedManufacturer;
         } catch (Exception e) {
-            transaction.rollback();
+            if(tx != null && tx.isActive()) {
+                tx.rollback();
+            }
             throw e;
+        } finally {
+            em.close();
         }
     }
 
-    public List<Manufacturer> findAll() {
-        return entityManager.createQuery("SELECT m FROM Manufacturer m", Manufacturer.class).getResultList();
+    public List<Manufacturer> findAll(int offset, int limit) {
+        return getEntityManager().createQuery("SELECT m FROM Manufacturer m", Manufacturer.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
+    public Long getTotalNumberOfManufacturers() {
+        return getEntityManager().createQuery("SELECT COUNT(m) FROM Manufacturer m", Long.class).getSingleResult();
     }
 
     public Manufacturer findOne(Long id) {
+        return findOne(id, getEntityManager());
+    }
+
+    public void delete(Long id) {
+        EntityManager em = getEntityManager();
+
+        Manufacturer manufacturer = findOne(id, em);
+
+        List<ChargingStationType> chargingStationTypes = em.createQuery("SELECT cst FROM ChargingStationType AS cst where UPPER(cst.manufacturer.code) = UPPER(:manufacturerCode)", ChargingStationType.class)
+                .setParameter("manufacturerCode", manufacturer.getCode())
+                .getResultList();
+
+        EntityTransaction tx = null;
+        try {
+            tx = em.getTransaction();
+            tx.begin();
+
+            for (ChargingStationType chargingStationType:chargingStationTypes) {
+                em.remove(chargingStationType);
+            }
+
+            em.remove(manufacturer);
+
+            tx.commit();
+        } catch (Exception e) {
+            if(tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+    }
+
+    private EntityManager getEntityManager() {
+        return entityManagerFactory.createEntityManager();
+    }
+
+    private Manufacturer findOne(Long id, EntityManager entityManager) {
         Manufacturer manufacturer = entityManager.find(Manufacturer.class, id);
         if (manufacturer != null) {
             return manufacturer;
         }
         throw new EntityNotFoundException(String.format("Unable to find manufacturer with id '%s'", id));
-    }
-
-    public void delete(Long id) {
-        Manufacturer manufacturer = findOne(id);
-        EntityTransaction transaction = entityManager.getTransaction();
-
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
-        try {
-            entityManager.remove(manufacturer);
-            transaction.commit();
-        } catch (Exception e) {
-            transaction.rollback();
-            throw e;
-        }
-    }
-
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
     }
 }

@@ -17,19 +17,31 @@ package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
 import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Manufacturer;
+import io.motown.chargingstationconfiguration.viewmodel.restapi.util.ConfigurationApiResponseBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 @Path("/manufacturers")
 @Produces(ApiVersion.V1_JSON)
 public final class ManufacturerResource {
 
+    private static final String OFFSET_PARAMETER = "offset";
+
+    private static final String OFFSET_DEFAULT = "0";
+
+    private static final String LIMIT_PARAMETER = "limit";
+
+    private static final String LIMIT_DEFAULT = "10";
+
     private DomainService domainService;
 
     @POST
     @Consumes(ApiVersion.V1_JSON)
     public Response createManufacturer(Manufacturer manufacturer) {
+        manufacturer.setId(null);
         return Response.status(Response.Status.CREATED).entity(domainService.createManufacturer(manufacturer)).build();
     }
 
@@ -41,8 +53,8 @@ public final class ManufacturerResource {
     }
 
     @GET
-    public Response getManufacturers() {
-        return Response.ok(domainService.getManufacturers()).build();
+    public Response getManufacturers(@Context HttpServletRequest request, @QueryParam(OFFSET_PARAMETER) @DefaultValue(OFFSET_DEFAULT) int offset, @QueryParam(LIMIT_PARAMETER) @DefaultValue(LIMIT_DEFAULT) int limit) {
+        return Response.ok(ConfigurationApiResponseBuilder.buildResponse(request, offset, limit, domainService.getTotalNumberOfManufacturers(), domainService.getManufacturers(offset, limit))).build();
     }
 
     @GET

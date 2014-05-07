@@ -20,19 +20,19 @@ import io.motown.ocpp.v15.soap.chargepoint.schema.AuthorisationData;
 import io.motown.ocpp.v15.soap.chargepoint.schema.AuthorizationStatus;
 import io.motown.ocpp.v15.soap.chargepoint.schema.IdTagInfo;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class IdentifyingTokenConverterService {
 
     /**
-     * Converts a list of {@code IdentifyingToken} to a list of {@code AuthorisationData}.
+     * Converts a set of {@code IdentifyingToken} to a set of {@code AuthorisationData}.
      *
-     * @param tokens    list of identifying tokens.
-     * @return list of authorisation data objects.
+     * @param tokens    set of identifying tokens.
+     * @return set of authorisation data objects.
      */
-    public List<AuthorisationData> convertIdentifyingTokenList(List<IdentifyingToken> tokens) {
-        List<AuthorisationData> resultList = new ArrayList<>();
+    public Set<AuthorisationData> convertIdentifyingTokenList(Set<IdentifyingToken> tokens) {
+        Set<AuthorisationData> resultList = new HashSet<>();
 
         for (IdentifyingToken token : tokens) {
             resultList.add(convertIdentifyingToken(token));

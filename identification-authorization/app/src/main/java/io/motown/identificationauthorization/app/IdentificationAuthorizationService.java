@@ -16,15 +16,15 @@
 package io.motown.identificationauthorization.app;
 
 import io.motown.domain.api.chargingstation.IdentifyingToken;
-import io.motown.identificationauthorization.pluginapi.AuthenticationProvider;
+import io.motown.identificationauthorization.pluginapi.AuthorizationProvider;
 
 import java.util.Set;
 
 public class IdentificationAuthorizationService {
 
-    private Set<AuthenticationProvider> providers;
+    private Set<AuthorizationProvider> providers;
 
-    public void setProviders(Set<AuthenticationProvider> providers) {
+    public void setProviders(Set<AuthorizationProvider> providers) {
         this.providers = providers;
     }
 
@@ -38,7 +38,7 @@ public class IdentificationAuthorizationService {
     public boolean isValid(IdentifyingToken token) {
         boolean valid = false;
 
-        for(AuthenticationProvider provider : providers) {
+        for(AuthorizationProvider provider : providers) {
             if(provider.isValid(token)) {
                 valid = true;
                 break;

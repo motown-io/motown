@@ -28,7 +28,6 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JsonParseExceptionMapperTest {
-    private static final int BAD_REQUEST = 400;
 
     @Mock
     private JsonParseException exception;
@@ -39,6 +38,6 @@ public class JsonParseExceptionMapperTest {
         Response response = mapper.toResponse(exception);
 
         assertNotNull(response);
-        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     }
 }

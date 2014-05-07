@@ -38,8 +38,6 @@
     <!-- Interceptor that adds the messageId if not present, as CXF requires the WS-Addressing messageId header to be present, while according to the spec this is only requierd when using the replyTo or faultTo WSA headers -->
     <bean id="headerInterceptor" class="io.motown.vas.v10.soap.interceptor.MessageIdHeaderInterceptor"/>
 
-    <bean id="replyToInterceptor" class="io.motown.vas.v10.soap.interceptor.ReplyToHeaderInInterceptor"/>
-
     <bean class="io.motown.vas.viewmodel.VasEventHandler">
         <property name="chargingStationRepository" ref="chargingStationRepository" />
         <property name="configurationConversionService">
@@ -70,11 +68,7 @@
     </bean>
 
     <jaxws:endpoint implementor="#vasPublisherService"
-                    address="/vasPublisherService">
-        <jaxws:inInterceptors>
-            <ref bean="replyToInterceptor"/>
-        </jaxws:inInterceptors>
-    </jaxws:endpoint>
+                    address="/vasPublisherService"/>
 
     <!-- TODO what is this taskExecutor used for? Is it still in use? - Mark van den Bergh, Februari 21st 2014 -->
     <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
@@ -216,7 +210,7 @@
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="packagesToScan" value="io.motown.vas.viewmodel.model"/>
+        <property name="packagesToScan" value="io.motown.vas.viewmodel.persistence"/>
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
                 <property name="database" value="HSQL"/>
@@ -225,14 +219,12 @@
         </property>
     </bean>
 
-    <bean id="entityManager" factory-bean="entityManagerFactory" factory-method="createEntityManager" />
-
     <bean id="chargingStationRepository" class="io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository">
-        <property name="entityManager" ref="entityManager" />
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
 
     <bean id="subscriptionRepository" class="io.motown.vas.viewmodel.persistence.repostories.SubscriptionRepository">
-        <property name="entityManager" ref="entityManager" />
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
