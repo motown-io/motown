@@ -52,26 +52,7 @@ public class DomainService {
     public static final String METER_TYPE_KEY = "meterType";
     public static final String METER_SERIALNUMBER_KEY = "meterSerialNumber";
     public static final String RESERVATION_ID_KEY = "reservationId";
-    /**
-     * Meter value context attribute key.
-     */
-    public static final String CONTEXT_KEY = "context";
-    /**
-     * Meter value format attribute key.
-     */
-    public static final String FORMAT_KEY = "format";
-    /**
-     * Meter value measurand attribute key.
-     */
-    public static final String MEASURAND_KEY = "measurand";
-    /**
-     * Meter value location attribute key.
-     */
-    public static final String LOCATION_KEY = "location";
-    /**
-     * Meter value unit attribute key.
-     */
-    public static final String UNIT_KEY = "unit";
+
     private static final Logger LOG = LoggerFactory.getLogger(DomainService.class);
     private DomainCommandGateway commandGateway;
 
