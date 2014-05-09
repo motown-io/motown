@@ -88,6 +88,7 @@
         <spring.version>4.0.3.RELEASE</spring.version>
         <xml-apis.version>1.0.b2</xml-apis.version>
         <cxf-xjc-runtime.version>2.7.0</cxf-xjc-runtime.version>
+        <quartz.version>2.2.1</quartz.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -434,6 +435,12 @@
                 <artifactId>spring-data-jpa</artifactId>
                 <version>${spring-data.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz</artifactId>
+                <version>${quartz.version}</version>
+                <scope>runtime</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
