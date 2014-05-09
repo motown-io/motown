@@ -134,18 +134,24 @@ public class DomainService {
     }
 
     public void incomingDataTransfer(ChargingStationId chargingStationId, String data, String vendorId, String messageId, FutureEventCallback future, AddOnIdentity addOnIdentity) {
+        this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
+
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         eventWaitingGateway.sendAndWaitForEvent(new IncomingDataTransferCommand(chargingStationId, vendorId, messageId, data, identityContext), future, (long) 10000);
     }
 
     public void heartbeat(ChargingStationId chargingStationId, AddOnIdentity addOnIdentity) {
+        this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
+
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         commandGateway.send(new HeartbeatCommand(chargingStationId, identityContext));
     }
 
     public void meterValues(ChargingStationId chargingStationId, TransactionId transactionId, EvseId evseId, List<MeterValue> meterValues, AddOnIdentity addOnIdentity) {
+        this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
+
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, evseId, meterValues, identityContext));
@@ -164,6 +170,8 @@ public class DomainService {
     }
 
     public void authorize(ChargingStationId chargingStationId, String idTag, FutureEventCallback future, AddOnIdentity addOnIdentity) {
+        this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
+
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         eventWaitingGateway.sendAndWaitForEvent(new AuthorizeCommand(chargingStationId, new TextualToken(idTag), identityContext), future, authorizationTimeoutInMillis);
@@ -178,6 +186,8 @@ public class DomainService {
     }
 
     public void diagnosticsUploadStatusUpdate(ChargingStationId chargingStationId, boolean diagnosticsUploaded, AddOnIdentity addOnIdentity) {
+        this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
+
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         UpdateDiagnosticsUploadStatusCommand command = new UpdateDiagnosticsUploadStatusCommand(chargingStationId, diagnosticsUploaded, identityContext);
@@ -185,6 +195,8 @@ public class DomainService {
     }
 
     public void firmwareStatusUpdate(ChargingStationId chargingStationId, FirmwareStatus firmwareStatus, AddOnIdentity addOnIdentity) {
+        this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
+
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         UpdateFirmwareStatusCommand command = new UpdateFirmwareStatusCommand(chargingStationId, firmwareStatus, identityContext);
@@ -193,6 +205,8 @@ public class DomainService {
 
     public void statusNotification(ChargingStationId chargingStationId, EvseId evseId, String errorCode, ComponentStatus status,
                                    String info, Date timeStamp, String vendorId, String vendorErrorCode, AddOnIdentity addOnIdentity) {
+        this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
+
         Map<String, String> attributes = new HashMap<>();
 
         addAttributeIfNotNull(attributes, ERROR_CODE_KEY, errorCode);
@@ -228,14 +242,9 @@ public class DomainService {
      */
     public int startTransaction(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken idTag, int meterStart,
                                 Date timestamp, ReservationId reservationId, String protocolIdentifier, AddOnIdentity addOnIdentity) {
-        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
-        if (chargingStation == null) {
-            throw new IllegalStateException("Cannot start transaction for an unknown charging station.");
-        }
+        this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
 
-        if (!chargingStation.isRegisteredAndConfigured()) {
-            throw new IllegalStateException("Cannot start transaction for charging station that has not been registered/configured.");
-        }
+        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
 
         if (evseId.getNumberedId() > chargingStation.getNumberOfEvses()) {
             throw new IllegalStateException("Cannot start transaction on a unknown evse.");
@@ -259,6 +268,8 @@ public class DomainService {
 
     public void stopTransaction(ChargingStationId chargingStationId, NumberedTransactionId transactionId, IdentifyingToken idTag, int meterValueStop, Date timeStamp,
                                 List<MeterValue> meterValues, AddOnIdentity addOnIdentity) {
+        this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
+
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         StopTransactionCommand command = new StopTransactionCommand(chargingStationId, transactionId, idTag, meterValueStop, timeStamp, identityContext);
@@ -419,5 +430,25 @@ public class DomainService {
         transactionRepository.insert(transaction);
 
         return transaction;
+    }
+
+    /**
+     * Checks if the charging station exists in the repository and if it has been registered and configured. If not a
+     * IllegalStateException will be thrown.
+     *
+     * @param chargingStationId      charging station identifier.
+     * @throws IllegalStateException if the charging station does not exist in the repository, or it has not been
+     *                               registered and configured.
+     */
+    private void checkChargingStationExistsAndIsRegisteredAndConfigured(ChargingStationId chargingStationId) {
+        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
+
+        if (chargingStation == null) {
+            throw new IllegalStateException("Unknown charging station.");
+        }
+
+        if (!chargingStation.isRegisteredAndConfigured()) {
+            throw new IllegalStateException("Charging station has not been registered/configured.");
+        }
     }
 }
