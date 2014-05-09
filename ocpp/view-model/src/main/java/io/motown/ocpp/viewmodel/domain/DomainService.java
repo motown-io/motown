@@ -242,9 +242,7 @@ public class DomainService {
      */
     public int startTransaction(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken idTag, int meterStart,
                                 Date timestamp, ReservationId reservationId, String protocolIdentifier, AddOnIdentity addOnIdentity) {
-        this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
-
-        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
+        ChargingStation chargingStation = this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
 
         if (evseId.getNumberedId() > chargingStation.getNumberOfEvses()) {
             throw new IllegalStateException("Cannot start transaction on a unknown evse.");
@@ -437,10 +435,11 @@ public class DomainService {
      * IllegalStateException will be thrown.
      *
      * @param chargingStationId      charging station identifier.
+     * @return ChargingStation       if the charging station exists and is registered and configured.
      * @throws IllegalStateException if the charging station does not exist in the repository, or it has not been
      *                               registered and configured.
      */
-    private void checkChargingStationExistsAndIsRegisteredAndConfigured(ChargingStationId chargingStationId) {
+    private ChargingStation checkChargingStationExistsAndIsRegisteredAndConfigured(ChargingStationId chargingStationId) {
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
 
         if (chargingStation == null) {
@@ -450,5 +449,7 @@ public class DomainService {
         if (!chargingStation.isRegisteredAndConfigured()) {
             throw new IllegalStateException("Charging station has not been registered/configured.");
         }
+
+        return chargingStation;
     }
 }
