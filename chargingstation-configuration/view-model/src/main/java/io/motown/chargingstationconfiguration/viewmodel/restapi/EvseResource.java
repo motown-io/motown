@@ -19,6 +19,8 @@ import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
 import io.motown.chargingstationconfiguration.viewmodel.exceptions.ResourceAlreadyExistsException;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -26,6 +28,7 @@ import javax.ws.rs.core.Response;
 @Path("/chargingstationtypes/{chargingStationTypeId: [0-9]+}/evses")
 @Produces(ApiVersion.V1_JSON)
 public final class EvseResource {
+    private static final Logger LOG = LoggerFactory.getLogger(EvseResource.class);
 
     private DomainService domainService;
 
@@ -45,6 +48,7 @@ public final class EvseResource {
         try {
             return Response.status(Response.Status.CREATED).entity(domainService.createEvse(chargingStationTypeId, evse)).build();
         } catch (ResourceAlreadyExistsException e) {
+            LOG.error(String.format("An evse with the id '%s' already exists on charging station '%s'", evse.getIdentifier(), chargingStationTypeId), e);
             return Response.status(Response.Status.CONFLICT).build();
         }
     }
