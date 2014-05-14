@@ -66,18 +66,7 @@ public class StopTransactionRequestHandler extends RequestHandler {
 
         domainService.stopTransaction(chargingStationId, transactionId, new TextualToken(request.getIdTag()), request.getMeterStop(), request.getTimestamp(), meterValues, addOnIdentity);
 
-        GregorianCalendar expDate = new GregorianCalendar();
-        expDate.add(GregorianCalendar.YEAR, 1);
-
-        IdTagInfo___ idTagInfo = new IdTagInfo___();
-        idTagInfo.setStatus(IdTagInfo___.Status.ACCEPTED);
-        idTagInfo.setExpiryDate(expDate.getTime());
-        idTagInfo.setParentIdTag(request.getIdTag());
-
-        StoptransactionResponse response = new StoptransactionResponse();
-        response.setIdTagInfo(idTagInfo);
-
-        writeResponse(webSocket, response, callId, gson);
+        writeResponse(webSocket, new StoptransactionResponse(), callId, gson);
     }
 
 }

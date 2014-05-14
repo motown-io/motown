@@ -17,12 +17,12 @@ package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.viewmodel.domain.FutureEventCallback;
 import io.motown.ocpp.websocketjson.OcppWebSocketRequestHandler;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Starttransaction;
 import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -31,7 +31,8 @@ import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.OCPPJ_RESERVATION_ID;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
-import static junit.framework.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -63,10 +64,7 @@ public class StartTransactionRequestHandlerTest {
         WebSocket webSocket = getMockWebSocket();
         handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
 
-        ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(webSocket).write(argumentCaptor.capture());
-        String response = argumentCaptor.getValue();
-        assertNotNull(response);
+        verify(domainService).authorize(eq(CHARGING_STATION_ID), eq(IDENTIFYING_TOKEN.getToken()), any(FutureEventCallback.class), eq(ADD_ON_IDENTITY));
     }
 
 }
