@@ -156,11 +156,11 @@ public class OcppJsonService {
 
             String numRetries = attributes.get(FirmwareUpdateAttributeKey.NUM_RETRIES);
             if (numRetries != null) {
-                updateFirmwareRequest.setRetries(Double.parseDouble(numRetries));
+                updateFirmwareRequest.setRetries(Integer.parseInt(numRetries));
             }
             String retryInterval = attributes.get(FirmwareUpdateAttributeKey.RETRY_INTERVAL);
             if (retryInterval != null) {
-                updateFirmwareRequest.setRetryInterval(Double.parseDouble(retryInterval));
+                updateFirmwareRequest.setRetryInterval(Integer.parseInt(retryInterval));
             }
 
             //No response handler is necessary. No data comes back from the firmwareupdaterequest, so there is nothing to communicate to the caller. Besides that the correlationtoken is not known to the caller.

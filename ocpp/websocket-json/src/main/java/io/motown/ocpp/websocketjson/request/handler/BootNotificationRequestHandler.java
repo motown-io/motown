@@ -51,7 +51,7 @@ public class BootNotificationRequestHandler extends RequestHandler {
         BootnotificationResponse response = new BootnotificationResponse();
         response.setStatus(bootChargingStationResult.isAccepted()? BootnotificationResponse.Status.ACCEPTED:BootnotificationResponse.Status.REJECTED);
         response.setCurrentTime(bootChargingStationResult.getTimeStamp());
-        response.setHeartbeatInterval((double) bootChargingStationResult.getHeartbeatInterval());
+        response.setHeartbeatInterval(bootChargingStationResult.getHeartbeatInterval());
 
         writeResponse(webSocket, response, callId, gson);
     }
