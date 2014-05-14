@@ -24,7 +24,7 @@
     <version>0.8.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <inceptionYear>2013</inceptionYear>
-    <name>Motown</name>
+    <name>${project.groupId}:${project.artifactId}</name>
     <description>Motown's mission is to create an open source, industry-supported charge point management solution,
         facilitating the development of value added services for EV end-users.</description>
     <url>http://motown.io/</url>
