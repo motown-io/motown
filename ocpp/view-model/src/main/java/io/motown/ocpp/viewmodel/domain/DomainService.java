@@ -229,28 +229,20 @@ public class DomainService {
     }
 
     /**
-     * Generates a transaction identifier and starts a transaction by dispatching a StartTransactionCommand.
+     * Initiates a StartTransactionCommand without authorizing the identification. Normally this method is called by the
+     * futureEventCallback of {@link #startTransaction}.
      *
-     * @param chargingStationId  identifier of the charging station
-     * @param evseId             evse identifier on which the transaction is started
-     * @param idTag              the identifier which started the transaction
-     * @param meterStart         meter value in Wh for the evse at start of the transaction
-     * @param timestamp          date and time on which the transaction started
-     * @param reservationId      optional identifier of the reservation that terminates as a result of this transaction
-     * @param protocolIdentifier identifier of the protocol that starts the transaction  @throws IllegalStateException when the charging station cannot be found, is not registered and configured, or the evseId is unknown for this charging station
-     * @return transaction identifier
+     * @param transactionId     transaction identifier.
+     * @param evseId            evse identifier.
+     * @param chargingStationId charging station identifier.
+     * @param reservationId     reservation identifier.
+     * @param addOnIdentity     add on identifier.
+     * @param idTag             identification that started the transaction.
+     * @param meterStart        meter value in Wh for the evse when the transaction started.
+     * @param timestamp         the time at which the transaction started.
      */
-    public int startTransaction(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken idTag, int meterStart,
-                                Date timestamp, ReservationId reservationId, String protocolIdentifier, AddOnIdentity addOnIdentity) {
-        ChargingStation chargingStation = this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
-
-        if (evseId.getNumberedId() > chargingStation.getNumberOfEvses()) {
-            throw new IllegalStateException("Cannot start transaction on a unknown evse.");
-        }
-
-        Transaction transaction = createTransaction(evseId);
-        NumberedTransactionId transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, transaction.getId().intValue());
-
+    public void startTransactionNoAuthorize(TransactionId transactionId, EvseId evseId, ChargingStationId chargingStationId, ReservationId reservationId,
+                                            AddOnIdentity addOnIdentity, IdentifyingToken idTag, int meterStart, Date timestamp) {
         Map<String, String> attributes = Maps.newHashMap();
         if (reservationId != null) {
             attributes.put(RESERVATION_ID_KEY, reservationId.getId());
@@ -258,10 +250,30 @@ public class DomainService {
 
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        StartTransactionCommand command = new StartTransactionCommand(chargingStationId, transactionId, evseId, idTag, meterStart, timestamp, attributes, identityContext);
+        StartTransactionCommand command = new StartTransactionCommand(chargingStationId, transactionId, evseId, idTag,
+                meterStart, timestamp, attributes, identityContext);
         commandGateway.send(command);
+    }
 
-        return transactionId.getNumber();
+    /**
+     * Generates a transaction identifier and starts a transaction by dispatching a StartTransactionCommand.
+     *
+     * @param chargingStationId   identifier of the charging station.
+     * @param evseId              evse identifier on which the transaction is started.
+     * @param idTag               the identification which started the transaction.
+     * @param futureEventCallback will be called once the authorize result event occurs.
+     * @param addOnIdentity       identity of the add on that calls this method.
+     */
+    public void startTransaction(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken idTag, FutureEventCallback futureEventCallback,
+                                 AddOnIdentity addOnIdentity) {
+        ChargingStation chargingStation = this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
+
+        if (evseId.getNumberedId() > chargingStation.getNumberOfEvses()) {
+            throw new IllegalStateException("Cannot start transaction on a unknown evse.");
+        }
+
+        // authorize the token, the future contains the call to start the transaction
+        authorize(chargingStationId, idTag.getToken(), futureEventCallback, addOnIdentity);
     }
 
     public void stopTransaction(ChargingStationId chargingStationId, NumberedTransactionId transactionId, IdentifyingToken idTag, int meterValueStop, Date timeStamp,
@@ -421,7 +433,7 @@ public class DomainService {
      * @param evseId evse identifier that's stored in the transaction
      * @return transaction
      */
-    private Transaction createTransaction(EvseId evseId) {
+    public Transaction createTransaction(EvseId evseId) {
         Transaction transaction = new Transaction();
         transaction.setEvseId(evseId);
 

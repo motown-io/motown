@@ -298,14 +298,14 @@ public class DomainServiceTest {
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionUnknownChargingStation() {
-        domainService.startTransaction(UNKNOWN_CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), RESERVATION_ID, PROTOCOL, ADD_ON_IDENTITY);
+        domainService.startTransaction(UNKNOWN_CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, mock(FutureEventCallback.class), ADD_ON_IDENTITY);
     }
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionUnregisteredChargingStation() {
         chargingStationRepository.createOrUpdate(new ChargingStation(CHARGING_STATION_ID.getId()));
 
-        domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), RESERVATION_ID, PROTOCOL, ADD_ON_IDENTITY);
+        domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, mock(FutureEventCallback.class), ADD_ON_IDENTITY);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -314,39 +314,20 @@ public class DomainServiceTest {
         cs.setRegistered(true);
         chargingStationRepository.createOrUpdate(cs);
 
-        domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), RESERVATION_ID, PROTOCOL, ADD_ON_IDENTITY);
+        domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, mock(FutureEventCallback.class), ADD_ON_IDENTITY);
     }
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionInvalidEvse() {
-        domainService.startTransaction(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, UNKNOWN_EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), RESERVATION_ID, PROTOCOL, ADD_ON_IDENTITY);
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void testStartTransactionUnknownEvse() {
-        domainService.startTransaction(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, UNKNOWN_EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), RESERVATION_ID, PROTOCOL, ADD_ON_IDENTITY);
+        domainService.startTransaction(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, UNKNOWN_EVSE_ID, IDENTIFYING_TOKEN, mock(FutureEventCallback.class), ADD_ON_IDENTITY);
     }
 
     @Test
     public void testStartTransactionEmptyAttributesChargingStation() {
         Date now = new Date();
-        int ocppTransactionId = domainService.startTransaction(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, now, null, PROTOCOL, ADD_ON_IDENTITY);
-        assertTrue(ocppTransactionId > 0);
+        domainService.startTransactionNoAuthorize(TRANSACTION_ID, EVSE_ID, REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, null, ADD_ON_IDENTITY, IDENTIFYING_TOKEN, 0, now);
 
-        TransactionId transactionId = new NumberedTransactionId(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, PROTOCOL, ocppTransactionId);
-
-        verify(gateway).send(new StartTransactionCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, transactionId, EVSE_ID, IDENTIFYING_TOKEN, 0, now, getEmptyAttributesMap(), NULL_USER_IDENTITY_CONTEXT));
-    }
-
-    @Test
-    public void testStartTransactionChargingStation() {
-        Date now = new Date();
-        int ocppTransactionId = domainService.startTransaction(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, now, RESERVATION_ID, PROTOCOL, ADD_ON_IDENTITY);
-        assertTrue(ocppTransactionId > 0);
-
-        TransactionId transactionId = new NumberedTransactionId(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, PROTOCOL, ocppTransactionId);
-
-        verify(gateway).send(new StartTransactionCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, transactionId, EVSE_ID, IDENTIFYING_TOKEN, 0, now, getStartTransactionAttributesMap(RESERVATION_ID.getNumber()), NULL_USER_IDENTITY_CONTEXT));
+        verify(gateway).send(new StartTransactionCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, now, getEmptyAttributesMap(), NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
@@ -366,12 +347,9 @@ public class DomainServiceTest {
      */
     @Test
     public void testStopTransactionWithMeterValues() {
-        // registers a transaction in the transactionRepository
-        Date startTransactionDate = new Date();
-        int ocppTransactionId = domainService.startTransaction(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, startTransactionDate, RESERVATION_ID, PROTOCOL, ADD_ON_IDENTITY);
-
-        NumberedTransactionId transactionId = new NumberedTransactionId(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, PROTOCOL, ocppTransactionId);
         int meterStopValue = 1;
+        Transaction transaction = domainService.createTransaction(EVSE_ID);
+        NumberedTransactionId transactionId = new NumberedTransactionId(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, PROTOCOL, transaction.getId().intValue());
         Date stopTransactionDate = new Date();
 
         domainService.stopTransaction(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, stopTransactionDate, METER_VALUES, ADD_ON_IDENTITY);

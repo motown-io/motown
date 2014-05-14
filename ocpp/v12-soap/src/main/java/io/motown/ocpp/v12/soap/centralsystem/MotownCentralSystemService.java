@@ -185,25 +185,33 @@ public class MotownCentralSystemService implements CentralSystemService {
 
     @Override
     public StartTransactionResponse startTransaction(final StartTransactionRequest parameters, final String chargeBoxIdentity) {
-        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
+        final ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
         ReservationId reservationId = null;
 
-        int transactionId = domainService.startTransaction(chargingStationId, new EvseId(parameters.getConnectorId()), new TextualToken(parameters.getIdTag()),
-                parameters.getMeterStart(), parameters.getTimestamp(), reservationId, PROTOCOL_IDENTIFIER, addOnIdentity);
+        final StartTransactionFutureEventCallback future = new StartTransactionFutureEventCallback(domainService, new EvseId(parameters.getConnectorId()),
+                chargingStationId, PROTOCOL_IDENTIFIER, reservationId, addOnIdentity, new TextualToken(parameters.getIdTag()), parameters.getMeterStart(), parameters.getTimestamp());
 
-        IdTagInfo idTagInfo = new IdTagInfo();
-        idTagInfo.setStatus(AuthorizationStatus.ACCEPTED);
-        idTagInfo.setParentIdTag(parameters.getIdTag());
+        FutureRequestHandler<StartTransactionResponse, StartTransactionFutureResult> handler = new FutureRequestHandler<>(context.getMessageContext(), continuationTimeout);
 
-        GregorianCalendar expDate = new GregorianCalendar();
-        expDate.add(GregorianCalendar.YEAR, 1);
-        idTagInfo.setExpiryDate(expDate.getTime());
+        return handler.handle(future, new CallInitiator() {
+                    @Override
+                    public void initiateCall() {
+                domainService.startTransaction(chargingStationId, new EvseId(parameters.getConnectorId()), new TextualToken(parameters.getIdTag()), future, addOnIdentity);
+            }
+        }, new StartTransactionResponseFactory(), new ResponseFactory<StartTransactionResponse>() {
+            @Override
+            public StartTransactionResponse createResponse() {
+                LOG.error("Error while handling 'startTransaction' request");
 
-        StartTransactionResponse response = new StartTransactionResponse();
-        response.setIdTagInfo(idTagInfo);
-        response.setTransactionId(transactionId);
-        return response;
+                StartTransactionResponse response = new StartTransactionResponse();
+                IdTagInfo tagInfo = new IdTagInfo();
+                tagInfo.setStatus(AuthorizationStatus.INVALID);
+                response.setIdTagInfo(tagInfo);
+
+                return response;
+            }
+        });
     }
 
     @Override
@@ -285,24 +293,59 @@ public class MotownCentralSystemService implements CentralSystemService {
         public AuthorizeResponse createResponse(AuthorizationResult futureResponse) {
             AuthorizeResponse response = new AuthorizeResponse();
             IdTagInfo tagInfo = new IdTagInfo();
-            switch (futureResponse.getStatus()) {
-                case ACCEPTED:
-                    tagInfo.setStatus(AuthorizationStatus.ACCEPTED);
-                    break;
-                case BLOCKED:
-                    tagInfo.setStatus(AuthorizationStatus.BLOCKED);
-                    break;
-                case EXPIRED:
-                    tagInfo.setStatus(AuthorizationStatus.EXPIRED);
-                    break;
-                case INVALID:
-                    tagInfo.setStatus(AuthorizationStatus.INVALID);
-                    break;
-                default:
-                    throw new AssertionError("AuthorizeResponse has unknown status: " + futureResponse.getStatus());
-            }
+            tagInfo.setStatus(convert(futureResponse.getStatus()));
             response.setIdTagInfo(tagInfo);
             return response;
         }
+    }
+
+    /**
+     * Response factory for start transaction, will create a StartTransactionResponse based on the StartTransactionFutureResult.
+     */
+    private static class StartTransactionResponseFactory implements FutureResponseFactory<StartTransactionResponse, StartTransactionFutureResult> {
+        @Override
+        public StartTransactionResponse createResponse(StartTransactionFutureResult startTransactionFutureResult) {
+
+            IdTagInfo idTagInfo = new IdTagInfo();
+            idTagInfo.setStatus(convert(startTransactionFutureResult.getAuthorizationResultStatus()));
+            //TODO parent id tag
+//            idTagInfo.setParentIdTag(parameters.getIdTag());
+
+            StartTransactionResponse response = new StartTransactionResponse();
+            response.setIdTagInfo(idTagInfo);
+            response.setTransactionId(startTransactionFutureResult.getTransactionId());
+
+            return response;
+        }
+    }
+
+    /**
+     * Converts a {@code AuthorizationResultStatus} to a {@code AuthorizationStatus}. Throws an assertion error is the
+     * status is unknown.
+     *
+     * @param status status to convert.
+     * @return converted status.
+     */
+    private static AuthorizationStatus convert(AuthorizationResultStatus status) {
+        AuthorizationStatus result;
+
+        switch (status) {
+            case ACCEPTED:
+                result = AuthorizationStatus.ACCEPTED;
+                break;
+            case BLOCKED:
+                result = AuthorizationStatus.BLOCKED;
+                break;
+            case EXPIRED:
+                result = AuthorizationStatus.EXPIRED;
+                break;
+            case INVALID:
+                result = AuthorizationStatus.INVALID;
+                break;
+            default:
+                throw new AssertionError("AuthorizationResultStatus has unknown status: " + status);
+        }
+
+        return result;
     }
 }
