@@ -22,11 +22,38 @@
     <parent>
         <artifactId>motown-io</artifactId>
         <groupId>io.motown</groupId>
-        <version>0.8.0-SNAPSHOT</version>
+        <version>0.8.1</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <groupId>io.motown.identification-authorization</groupId>
     <artifactId>identification-authorization-app</artifactId>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>Authorizing identifications (eg. RFID-tags). This module contains the command gateway, event listener
+        and service to handle authorization requests.</description>
+    <url>http://motown.io/</url>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Mark van den Bergh</name>
+            <email>mark.van.den.bergh@ihomer.nl</email>
+            <organization>IHomer</organization>
+            <organizationUrl>http://www.ihomer.nl</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+    <scm>
+        <connection>git@github.com:motown-io/motown.git</connection>
+        <developerConnection>git@github.com:motown-io/motown.git</developerConnection>
+        <url>git@github.com:motown-io/motown.git</url>
+    </scm>
     <dependencies>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -49,6 +76,10 @@
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -79,6 +110,30 @@
                         <exclude>src/main/resources/**</exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

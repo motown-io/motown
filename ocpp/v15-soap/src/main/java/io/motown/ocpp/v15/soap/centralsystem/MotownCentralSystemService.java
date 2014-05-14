@@ -29,19 +29,13 @@ import io.motown.ocpp.soaputils.header.SoapHeaderReader;
 import io.motown.ocpp.v15.soap.Ocpp15RequestHandler;
 import io.motown.ocpp.v15.soap.centralsystem.schema.*;
 import io.motown.ocpp.v15.soap.centralsystem.schema.FirmwareStatus;
-import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
-import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
-import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.viewmodel.domain.IncomingDataTransferResult;
+import io.motown.ocpp.viewmodel.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 @javax.jws.WebService(
         serviceName = "CentralSystemService",
@@ -224,7 +218,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         }, new AuthorizeResponseFactory(), new ResponseFactory<AuthorizeResponse>() {
             @Override
             public AuthorizeResponse createResponse() {
-                LOG.error("Error while io.motown.configuration.simple.handling 'authorize' request, returning invalid for idTag: {}", request.getIdTag());
+                LOG.error("Error while handling 'authorize' request, returning invalid for idTag: {}", request.getIdTag());
 
                 AuthorizeResponse response = new AuthorizeResponse();
                 IdTagInfo tagInfo = new IdTagInfo();
@@ -260,28 +254,36 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
 
     @Override
     public StartTransactionResponse startTransaction(final StartTransactionRequest parameters, final String chargeBoxIdentity) {
-        ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
+        final ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
         ReservationId reservationId = null;
         if (parameters.getReservationId() != null) {
             reservationId = new NumberedReservationId(chargingStationId, PROTOCOL_IDENTIFIER, parameters.getReservationId());
         }
 
-        int transactionId = domainService.startTransaction(chargingStationId, new EvseId(parameters.getConnectorId()), new TextualToken(parameters.getIdTag()),
-                parameters.getMeterStart(), parameters.getTimestamp(), reservationId, PROTOCOL_IDENTIFIER, addOnIdentity);
+        final StartTransactionFutureEventCallback future = new StartTransactionFutureEventCallback(domainService, new EvseId(parameters.getConnectorId()),
+                chargingStationId, PROTOCOL_IDENTIFIER, reservationId, addOnIdentity, new TextualToken(parameters.getIdTag()), parameters.getMeterStart(), parameters.getTimestamp());
 
-        IdTagInfo idTagInfo = new IdTagInfo();
-        idTagInfo.setStatus(AuthorizationStatus.ACCEPTED);
-        idTagInfo.setParentIdTag(parameters.getIdTag());
+        FutureRequestHandler<StartTransactionResponse, StartTransactionFutureResult> handler = new FutureRequestHandler<>(context.getMessageContext(), continuationTimeout);
 
-        GregorianCalendar expDate = new GregorianCalendar();
-        expDate.add(GregorianCalendar.YEAR, 1);
-        idTagInfo.setExpiryDate(expDate.getTime());
+        return handler.handle(future, new CallInitiator() {
+            @Override
+            public void initiateCall() {
+                domainService.startTransaction(chargingStationId, new EvseId(parameters.getConnectorId()), new TextualToken(parameters.getIdTag()), future, addOnIdentity);
+            }
+        }, new StartTransactionResponseFactory(), new ResponseFactory<StartTransactionResponse>() {
+            @Override
+            public StartTransactionResponse createResponse() {
+                LOG.error("Error while handling 'startTransaction' request");
 
-        StartTransactionResponse response = new StartTransactionResponse();
-        response.setIdTagInfo(idTagInfo);
-        response.setTransactionId(transactionId);
-        return response;
+                StartTransactionResponse response = new StartTransactionResponse();
+                IdTagInfo tagInfo = new IdTagInfo();
+                tagInfo.setStatus(AuthorizationStatus.INVALID);
+                response.setIdTagInfo(tagInfo);
+
+                return response;
+            }
+        });
     }
 
     public void setDomainService(DomainService domainService) {
@@ -335,22 +337,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         public AuthorizeResponse createResponse(AuthorizationResult futureResponse) {
             AuthorizeResponse response = new AuthorizeResponse();
             IdTagInfo tagInfo = new IdTagInfo();
-            switch (futureResponse.getStatus()) {
-                case ACCEPTED:
-                    tagInfo.setStatus(AuthorizationStatus.ACCEPTED);
-                    break;
-                case BLOCKED:
-                    tagInfo.setStatus(AuthorizationStatus.BLOCKED);
-                    break;
-                case EXPIRED:
-                    tagInfo.setStatus(AuthorizationStatus.EXPIRED);
-                    break;
-                case INVALID:
-                    tagInfo.setStatus(AuthorizationStatus.INVALID);
-                    break;
-                default:
-                    throw new AssertionError("AuthorizeResponse has unknown status: " + futureResponse.getStatus());
-            }
+            tagInfo.setStatus(convert(futureResponse.getStatus()));
             response.setIdTagInfo(tagInfo);
             return response;
         }
@@ -374,4 +361,55 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
             return response;
         }
     }
+
+    /**
+     * Response factory for start transaction, will create a StartTransactionResponse based on the StartTransactionFutureResult.
+     */
+    private static class StartTransactionResponseFactory implements FutureResponseFactory<StartTransactionResponse, StartTransactionFutureResult> {
+        @Override
+        public StartTransactionResponse createResponse(StartTransactionFutureResult startTransactionFutureResult) {
+
+            IdTagInfo idTagInfo = new IdTagInfo();
+            idTagInfo.setStatus(convert(startTransactionFutureResult.getAuthorizationResultStatus()));
+            //TODO parent id tag
+//            idTagInfo.setParentIdTag(parameters.getIdTag());
+
+            StartTransactionResponse response = new StartTransactionResponse();
+            response.setIdTagInfo(idTagInfo);
+            response.setTransactionId(startTransactionFutureResult.getTransactionId());
+
+            return response;
+        }
+    }
+
+    /**
+     * Converts a {@code AuthorizationResultStatus} to a {@code AuthorizationStatus}. Throws an assertion error is the
+     * status is unknown.
+     *
+     * @param status status to convert.
+     * @return converted status.
+     */
+    private static AuthorizationStatus convert(AuthorizationResultStatus status) {
+        AuthorizationStatus result;
+
+        switch (status) {
+            case ACCEPTED:
+                result = AuthorizationStatus.ACCEPTED;
+                break;
+            case BLOCKED:
+                result = AuthorizationStatus.BLOCKED;
+                break;
+            case EXPIRED:
+                result = AuthorizationStatus.EXPIRED;
+                break;
+            case INVALID:
+                result = AuthorizationStatus.INVALID;
+                break;
+            default:
+                throw new AssertionError("AuthorizationResultStatus has unknown status: " + status);
+        }
+
+        return result;
+    }
+
 }

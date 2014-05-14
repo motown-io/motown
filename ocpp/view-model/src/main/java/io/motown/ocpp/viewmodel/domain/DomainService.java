@@ -52,26 +52,7 @@ public class DomainService {
     public static final String METER_TYPE_KEY = "meterType";
     public static final String METER_SERIALNUMBER_KEY = "meterSerialNumber";
     public static final String RESERVATION_ID_KEY = "reservationId";
-    /**
-     * Meter value context attribute key.
-     */
-    public static final String CONTEXT_KEY = "context";
-    /**
-     * Meter value format attribute key.
-     */
-    public static final String FORMAT_KEY = "format";
-    /**
-     * Meter value measurand attribute key.
-     */
-    public static final String MEASURAND_KEY = "measurand";
-    /**
-     * Meter value location attribute key.
-     */
-    public static final String LOCATION_KEY = "location";
-    /**
-     * Meter value unit attribute key.
-     */
-    public static final String UNIT_KEY = "unit";
+
     private static final Logger LOG = LoggerFactory.getLogger(DomainService.class);
     private DomainCommandGateway commandGateway;
 
@@ -153,18 +134,24 @@ public class DomainService {
     }
 
     public void incomingDataTransfer(ChargingStationId chargingStationId, String data, String vendorId, String messageId, FutureEventCallback future, AddOnIdentity addOnIdentity) {
+        this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
+
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         eventWaitingGateway.sendAndWaitForEvent(new IncomingDataTransferCommand(chargingStationId, vendorId, messageId, data, identityContext), future, (long) 10000);
     }
 
     public void heartbeat(ChargingStationId chargingStationId, AddOnIdentity addOnIdentity) {
+        this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
+
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         commandGateway.send(new HeartbeatCommand(chargingStationId, identityContext));
     }
 
     public void meterValues(ChargingStationId chargingStationId, TransactionId transactionId, EvseId evseId, List<MeterValue> meterValues, AddOnIdentity addOnIdentity) {
+        this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
+
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, evseId, meterValues, identityContext));
@@ -183,6 +170,8 @@ public class DomainService {
     }
 
     public void authorize(ChargingStationId chargingStationId, String idTag, FutureEventCallback future, AddOnIdentity addOnIdentity) {
+        this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
+
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         eventWaitingGateway.sendAndWaitForEvent(new AuthorizeCommand(chargingStationId, new TextualToken(idTag), identityContext), future, authorizationTimeoutInMillis);
@@ -197,6 +186,8 @@ public class DomainService {
     }
 
     public void diagnosticsUploadStatusUpdate(ChargingStationId chargingStationId, boolean diagnosticsUploaded, AddOnIdentity addOnIdentity) {
+        this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
+
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         UpdateDiagnosticsUploadStatusCommand command = new UpdateDiagnosticsUploadStatusCommand(chargingStationId, diagnosticsUploaded, identityContext);
@@ -204,6 +195,8 @@ public class DomainService {
     }
 
     public void firmwareStatusUpdate(ChargingStationId chargingStationId, FirmwareStatus firmwareStatus, AddOnIdentity addOnIdentity) {
+        this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
+
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         UpdateFirmwareStatusCommand command = new UpdateFirmwareStatusCommand(chargingStationId, firmwareStatus, identityContext);
@@ -212,6 +205,8 @@ public class DomainService {
 
     public void statusNotification(ChargingStationId chargingStationId, EvseId evseId, String errorCode, ComponentStatus status,
                                    String info, Date timeStamp, String vendorId, String vendorErrorCode, AddOnIdentity addOnIdentity) {
+        this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
+
         Map<String, String> attributes = new HashMap<>();
 
         addAttributeIfNotNull(attributes, ERROR_CODE_KEY, errorCode);
@@ -234,35 +229,20 @@ public class DomainService {
     }
 
     /**
-     * Generates a transaction identifier and starts a transaction by dispatching a StartTransactionCommand.
+     * Initiates a StartTransactionCommand without authorizing the identification. Normally this method is called by the
+     * futureEventCallback of {@link #startTransaction}.
      *
-     * @param chargingStationId  identifier of the charging station
-     * @param evseId             evse identifier on which the transaction is started
-     * @param idTag              the identifier which started the transaction
-     * @param meterStart         meter value in Wh for the evse at start of the transaction
-     * @param timestamp          date and time on which the transaction started
-     * @param reservationId      optional identifier of the reservation that terminates as a result of this transaction
-     * @param protocolIdentifier identifier of the protocol that starts the transaction  @throws IllegalStateException when the charging station cannot be found, is not registered and configured, or the evseId is unknown for this charging station
-     * @return transaction identifier
+     * @param transactionId     transaction identifier.
+     * @param evseId            evse identifier.
+     * @param chargingStationId charging station identifier.
+     * @param reservationId     reservation identifier.
+     * @param addOnIdentity     add on identifier.
+     * @param idTag             identification that started the transaction.
+     * @param meterStart        meter value in Wh for the evse when the transaction started.
+     * @param timestamp         the time at which the transaction started.
      */
-    public int startTransaction(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken idTag, int meterStart,
-                                Date timestamp, ReservationId reservationId, String protocolIdentifier, AddOnIdentity addOnIdentity) {
-        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
-        if (chargingStation == null) {
-            throw new IllegalStateException("Cannot start transaction for an unknown charging station.");
-        }
-
-        if (!chargingStation.isRegisteredAndConfigured()) {
-            throw new IllegalStateException("Cannot start transaction for charging station that has not been registered/configured.");
-        }
-
-        if (evseId.getNumberedId() > chargingStation.getNumberOfEvses()) {
-            throw new IllegalStateException("Cannot start transaction on a unknown evse.");
-        }
-
-        Transaction transaction = createTransaction(evseId);
-        NumberedTransactionId transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, transaction.getId().intValue());
-
+    public void startTransactionNoAuthorize(TransactionId transactionId, EvseId evseId, ChargingStationId chargingStationId, ReservationId reservationId,
+                                            AddOnIdentity addOnIdentity, IdentifyingToken idTag, int meterStart, Date timestamp) {
         Map<String, String> attributes = Maps.newHashMap();
         if (reservationId != null) {
             attributes.put(RESERVATION_ID_KEY, reservationId.getId());
@@ -270,14 +250,36 @@ public class DomainService {
 
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        StartTransactionCommand command = new StartTransactionCommand(chargingStationId, transactionId, evseId, idTag, meterStart, timestamp, attributes, identityContext);
+        StartTransactionCommand command = new StartTransactionCommand(chargingStationId, transactionId, evseId, idTag,
+                meterStart, timestamp, attributes, identityContext);
         commandGateway.send(command);
+    }
 
-        return transactionId.getNumber();
+    /**
+     * Generates a transaction identifier and starts a transaction by dispatching a StartTransactionCommand.
+     *
+     * @param chargingStationId   identifier of the charging station.
+     * @param evseId              evse identifier on which the transaction is started.
+     * @param idTag               the identification which started the transaction.
+     * @param futureEventCallback will be called once the authorize result event occurs.
+     * @param addOnIdentity       identity of the add on that calls this method.
+     */
+    public void startTransaction(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken idTag, FutureEventCallback futureEventCallback,
+                                 AddOnIdentity addOnIdentity) {
+        ChargingStation chargingStation = this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
+
+        if (evseId.getNumberedId() > chargingStation.getNumberOfEvses()) {
+            throw new IllegalStateException("Cannot start transaction on a unknown evse.");
+        }
+
+        // authorize the token, the future contains the call to start the transaction
+        authorize(chargingStationId, idTag.getToken(), futureEventCallback, addOnIdentity);
     }
 
     public void stopTransaction(ChargingStationId chargingStationId, NumberedTransactionId transactionId, IdentifyingToken idTag, int meterValueStop, Date timeStamp,
                                 List<MeterValue> meterValues, AddOnIdentity addOnIdentity) {
+        this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
+
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
         StopTransactionCommand command = new StopTransactionCommand(chargingStationId, transactionId, idTag, meterValueStop, timeStamp, identityContext);
@@ -431,12 +433,35 @@ public class DomainService {
      * @param evseId evse identifier that's stored in the transaction
      * @return transaction
      */
-    private Transaction createTransaction(EvseId evseId) {
+    public Transaction createTransaction(EvseId evseId) {
         Transaction transaction = new Transaction();
         transaction.setEvseId(evseId);
 
         transactionRepository.insert(transaction);
 
         return transaction;
+    }
+
+    /**
+     * Checks if the charging station exists in the repository and if it has been registered and configured. If not a
+     * IllegalStateException will be thrown.
+     *
+     * @param chargingStationId      charging station identifier.
+     * @return ChargingStation       if the charging station exists and is registered and configured.
+     * @throws IllegalStateException if the charging station does not exist in the repository, or it has not been
+     *                               registered and configured.
+     */
+    private ChargingStation checkChargingStationExistsAndIsRegisteredAndConfigured(ChargingStationId chargingStationId) {
+        ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
+
+        if (chargingStation == null) {
+            throw new IllegalStateException("Unknown charging station.");
+        }
+
+        if (!chargingStation.isRegisteredAndConfigured()) {
+            throw new IllegalStateException("Charging station has not been registered/configured.");
+        }
+
+        return chargingStation;
     }
 }

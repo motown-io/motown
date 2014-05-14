@@ -15,7 +15,7 @@
             "format": "date-time"
         },
         "heartbeatInterval": {
-            "type": "number"
+            "type": "integer"
         }
     },
     "required": [

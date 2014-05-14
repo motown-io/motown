@@ -22,10 +22,36 @@
     <parent>
         <artifactId>samples</artifactId>
         <groupId>io.motown</groupId>
-        <version>0.8.0-SNAPSHOT</version>
+        <version>0.8.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>samples-incoming-datatransfer-handling</artifactId>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>Sample on how to create handle an incoming data transfer.</description>
+    <url>http://motown.io/</url>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Ingo Pak</name>
+            <email>ingo.pak@ihomer.nl</email>
+            <organization>IHomer</organization>
+            <organizationUrl>http://www.ihomer.nl</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+    <scm>
+        <connection>git@github.com:motown-io/motown.git</connection>
+        <developerConnection>git@github.com:motown-io/motown.git</developerConnection>
+        <url>git@github.com:motown-io/motown.git</url>
+    </scm>
     <dependencies>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -43,6 +69,10 @@
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>

@@ -4,7 +4,7 @@
     "type": "object",
     "properties": {
         "transactionId": {
-            "type": "number"
+            "type": "integer"
         },
         "idTagInfo": {
             "type": "object",

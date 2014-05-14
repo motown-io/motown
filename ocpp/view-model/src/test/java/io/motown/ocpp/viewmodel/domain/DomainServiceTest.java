@@ -54,6 +54,8 @@ public class DomainServiceTest {
 
     private static final int AUTHORIZATION_TIMEOUT_IN_MILLIS = 1000;
 
+    private static final ChargingStationId REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID = new ChargingStationId("CS-999");
+
     private DomainService domainService;
 
     private DomainCommandGateway gateway;
@@ -94,6 +96,12 @@ public class DomainServiceTest {
 
         eventWaitingGateway = mock(EventWaitingGateway.class);
         domainService.setEventWaitingGateway(eventWaitingGateway);
+
+        ChargingStation chargingStation = new ChargingStation(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID.getId());
+        chargingStation.setConfigured(true);
+        chargingStation.setRegistered(true);
+        chargingStation.setNumberOfEvses(EVSES.size());
+        chargingStationRepository.createOrUpdate(chargingStation);
     }
 
     @Test
@@ -183,24 +191,24 @@ public class DomainServiceTest {
 
     @Test
     public void testHeartbeat() {
-        domainService.heartbeat(CHARGING_STATION_ID, ADD_ON_IDENTITY);
+        domainService.heartbeat(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, ADD_ON_IDENTITY);
 
-        verify(gateway).send(new HeartbeatCommand(CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT));
+        verify(gateway).send(new HeartbeatCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testDataTransfer() {
         FutureEventCallback futureEventCallback = getFutureEventCallback();
-        domainService.incomingDataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_DATA, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, futureEventCallback, ADD_ON_IDENTITY);
+        domainService.incomingDataTransfer(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, DATA_TRANSFER_DATA, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, futureEventCallback, ADD_ON_IDENTITY);
 
-        verify(eventWaitingGateway).sendAndWaitForEvent(new IncomingDataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA, NULL_USER_IDENTITY_CONTEXT), futureEventCallback, 10000);
+        verify(eventWaitingGateway).sendAndWaitForEvent(new IncomingDataTransferCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA, NULL_USER_IDENTITY_CONTEXT), futureEventCallback, 10000);
     }
 
     @Test
     public void testMeterValues() {
-        domainService.meterValues(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, METER_VALUES, ADD_ON_IDENTITY);
+        domainService.meterValues(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, METER_VALUES, ADD_ON_IDENTITY);
 
-        verify(gateway).send(new ProcessMeterValueCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, METER_VALUES, NULL_USER_IDENTITY_CONTEXT));
+        verify(gateway).send(new ProcessMeterValueCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, METER_VALUES, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
@@ -222,8 +230,8 @@ public class DomainServiceTest {
     @Test
     public void testAuthorize() {
         FutureEventCallback futureEventCallback = getFutureEventCallback();
-        domainService.authorize(CHARGING_STATION_ID, IDENTIFYING_TOKEN.getToken(), futureEventCallback, ADD_ON_IDENTITY);
-        verify(eventWaitingGateway).sendAndWaitForEvent(new AuthorizeCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT), futureEventCallback, AUTHORIZATION_TIMEOUT_IN_MILLIS);
+        domainService.authorize(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, IDENTIFYING_TOKEN.getToken(), futureEventCallback, ADD_ON_IDENTITY);
+        verify(eventWaitingGateway).sendAndWaitForEvent(new AuthorizeCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT), futureEventCallback, AUTHORIZATION_TIMEOUT_IN_MILLIS);
     }
 
     @Test
@@ -236,26 +244,26 @@ public class DomainServiceTest {
 
     @Test
     public void testDiagnosticsUploadStatusUpdate() {
-        domainService.diagnosticsUploadStatusUpdate(CHARGING_STATION_ID, true, ADD_ON_IDENTITY);
-        verify(gateway).send(new UpdateDiagnosticsUploadStatusCommand(CHARGING_STATION_ID, true, NULL_USER_IDENTITY_CONTEXT));
+        domainService.diagnosticsUploadStatusUpdate(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, true, ADD_ON_IDENTITY);
+        verify(gateway).send(new UpdateDiagnosticsUploadStatusCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, true, NULL_USER_IDENTITY_CONTEXT));
 
-        domainService.diagnosticsUploadStatusUpdate(CHARGING_STATION_ID, false, ADD_ON_IDENTITY);
-        verify(gateway).send(new UpdateDiagnosticsUploadStatusCommand(CHARGING_STATION_ID, false, NULL_USER_IDENTITY_CONTEXT));
+        domainService.diagnosticsUploadStatusUpdate(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, false, ADD_ON_IDENTITY);
+        verify(gateway).send(new UpdateDiagnosticsUploadStatusCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, false, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testFirmwareStatusUpdate() {
-        domainService.firmwareStatusUpdate(CHARGING_STATION_ID, FirmwareStatus.DOWNLOADED, ADD_ON_IDENTITY);
-        verify(gateway).send(new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.DOWNLOADED, NULL_USER_IDENTITY_CONTEXT));
+        domainService.firmwareStatusUpdate(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, FirmwareStatus.DOWNLOADED, ADD_ON_IDENTITY);
+        verify(gateway).send(new UpdateFirmwareStatusCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, FirmwareStatus.DOWNLOADED, NULL_USER_IDENTITY_CONTEXT));
 
-        domainService.firmwareStatusUpdate(CHARGING_STATION_ID, FirmwareStatus.INSTALLATION_FAILED, ADD_ON_IDENTITY);
-        verify(gateway).send(new UpdateFirmwareStatusCommand(CHARGING_STATION_ID, FirmwareStatus.INSTALLATION_FAILED, NULL_USER_IDENTITY_CONTEXT));
+        domainService.firmwareStatusUpdate(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, FirmwareStatus.INSTALLATION_FAILED, ADD_ON_IDENTITY);
+        verify(gateway).send(new UpdateFirmwareStatusCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, FirmwareStatus.INSTALLATION_FAILED, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testStatusNotification() {
         Date now = new Date();
-        domainService.statusNotification(CHARGING_STATION_ID, EVSE_ID, getStatusNotifactionErrorCode(), ComponentStatus.AVAILABLE, getStatusNotificationInfo(),
+        domainService.statusNotification(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, EVSE_ID, getStatusNotifactionErrorCode(), ComponentStatus.AVAILABLE, getStatusNotificationInfo(),
                 now, getVendor(), getVendorErrorCode(), ADD_ON_IDENTITY);
         Map<String, String> attributes = new HashMap<>();
         attributes.put(DomainService.ERROR_CODE_KEY, getStatusNotifactionErrorCode());
@@ -263,23 +271,23 @@ public class DomainServiceTest {
         attributes.put(DomainService.VENDOR_ID_KEY, getVendor());
         attributes.put(DomainService.VENDOR_ERROR_CODE_KEY, getVendorErrorCode());
 
-        verify(gateway).send(new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));
+        verify(gateway).send(new ComponentStatusNotificationCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));
 
-        domainService.statusNotification(CHARGING_STATION_ID, getChargingStationComponentId(), getStatusNotifactionErrorCode(),
+        domainService.statusNotification(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, getChargingStationComponentId(), getStatusNotifactionErrorCode(),
                 ComponentStatus.AVAILABLE, getStatusNotificationInfo(), now, getVendor(), getVendorErrorCode(), ADD_ON_IDENTITY);
-        verify(gateway).send(new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));
+        verify(gateway).send(new ChargingStationStatusNotificationCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testStatusNotificationEmptyArgs() {
         Date now = new Date();
-        domainService.statusNotification(CHARGING_STATION_ID, EVSE_ID, null, ComponentStatus.AVAILABLE, null, now, null, null, ADD_ON_IDENTITY);
+        domainService.statusNotification(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, EVSE_ID, null, ComponentStatus.AVAILABLE, null, now, null, null, ADD_ON_IDENTITY);
         Map<String, String> attributes = new HashMap<>();
 
-        verify(gateway).send(new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));
+        verify(gateway).send(new ComponentStatusNotificationCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));
 
-        domainService.statusNotification(CHARGING_STATION_ID, getChargingStationComponentId(), null, ComponentStatus.AVAILABLE, null, now, null, null, ADD_ON_IDENTITY);
-        verify(gateway).send(new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));
+        domainService.statusNotification(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, getChargingStationComponentId(), null, ComponentStatus.AVAILABLE, null, now, null, null, ADD_ON_IDENTITY);
+        verify(gateway).send(new ChargingStationStatusNotificationCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
@@ -290,14 +298,14 @@ public class DomainServiceTest {
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionUnknownChargingStation() {
-        domainService.startTransaction(UNKNOWN_CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), RESERVATION_ID, PROTOCOL, ADD_ON_IDENTITY);
+        domainService.startTransaction(UNKNOWN_CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, mock(FutureEventCallback.class), ADD_ON_IDENTITY);
     }
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionUnregisteredChargingStation() {
         chargingStationRepository.createOrUpdate(new ChargingStation(CHARGING_STATION_ID.getId()));
 
-        domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), RESERVATION_ID, PROTOCOL, ADD_ON_IDENTITY);
+        domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, mock(FutureEventCallback.class), ADD_ON_IDENTITY);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -306,60 +314,32 @@ public class DomainServiceTest {
         cs.setRegistered(true);
         chargingStationRepository.createOrUpdate(cs);
 
-        domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), RESERVATION_ID, PROTOCOL, ADD_ON_IDENTITY);
+        domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, mock(FutureEventCallback.class), ADD_ON_IDENTITY);
     }
 
     @Test(expected = IllegalStateException.class)
     public void testStartTransactionInvalidEvse() {
-        chargingStationRepository.createOrUpdate(getRegisteredAndConfiguredChargingStation());
-
-        domainService.startTransaction(CHARGING_STATION_ID, UNKNOWN_EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), RESERVATION_ID, PROTOCOL, ADD_ON_IDENTITY);
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void testStartTransactionUnknownEvse() {
-        chargingStationRepository.createOrUpdate(getRegisteredAndConfiguredChargingStation());
-
-        domainService.startTransaction(CHARGING_STATION_ID, UNKNOWN_EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), RESERVATION_ID, PROTOCOL, ADD_ON_IDENTITY);
+        domainService.startTransaction(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, UNKNOWN_EVSE_ID, IDENTIFYING_TOKEN, mock(FutureEventCallback.class), ADD_ON_IDENTITY);
     }
 
     @Test
     public void testStartTransactionEmptyAttributesChargingStation() {
-        chargingStationRepository.createOrUpdate(getRegisteredAndConfiguredChargingStation());
-
         Date now = new Date();
-        int ocppTransactionId = domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, now, null, PROTOCOL, ADD_ON_IDENTITY);
-        assertTrue(ocppTransactionId > 0);
+        domainService.startTransactionNoAuthorize(TRANSACTION_ID, EVSE_ID, REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, null, ADD_ON_IDENTITY, IDENTIFYING_TOKEN, 0, now);
 
-        TransactionId transactionId = new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL, ocppTransactionId);
-
-        verify(gateway).send(new StartTransactionCommand(CHARGING_STATION_ID, transactionId, EVSE_ID, IDENTIFYING_TOKEN, 0, now, getEmptyAttributesMap(), NULL_USER_IDENTITY_CONTEXT));
-    }
-
-    @Test
-    public void testStartTransactionChargingStation() {
-        System.err.println("testStartTransactionChargingStation");
-        chargingStationRepository.createOrUpdate(getRegisteredAndConfiguredChargingStation());
-
-        Date now = new Date();
-        int ocppTransactionId = domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, now, RESERVATION_ID, PROTOCOL, ADD_ON_IDENTITY);
-        assertTrue(ocppTransactionId > 0);
-
-        TransactionId transactionId = new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL, ocppTransactionId);
-
-        verify(gateway).send(new StartTransactionCommand(CHARGING_STATION_ID, transactionId, EVSE_ID, IDENTIFYING_TOKEN, 0, now, getStartTransactionAttributesMap(RESERVATION_ID.getNumber()), NULL_USER_IDENTITY_CONTEXT));
+        verify(gateway).send(new StartTransactionCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, now, getEmptyAttributesMap(), NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testStopTransaction() {
         int ocppTransactionId = 0;
-        NumberedTransactionId transactionId = new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL, ocppTransactionId);
+        NumberedTransactionId transactionId = new NumberedTransactionId(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, PROTOCOL, ocppTransactionId);
         int meterStopValue = 1;
         Date now = new Date();
 
-        domainService.stopTransaction(CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, now, getEmptyMeterValuesList(), ADD_ON_IDENTITY);
+        domainService.stopTransaction(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, now, getEmptyMeterValuesList(), ADD_ON_IDENTITY);
 
-        verify(gateway).send(new StopTransactionCommand(CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, now, NULL_USER_IDENTITY_CONTEXT));
+        verify(gateway).send(new StopTransactionCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, now, NULL_USER_IDENTITY_CONTEXT));
     }
 
     /**
@@ -367,21 +347,16 @@ public class DomainServiceTest {
      */
     @Test
     public void testStopTransactionWithMeterValues() {
-        chargingStationRepository.createOrUpdate(getRegisteredAndConfiguredChargingStation());
-
-        // registers a transaction in the transactionRepository
-        Date startTransactionDate = new Date();
-        int ocppTransactionId = domainService.startTransaction(CHARGING_STATION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, startTransactionDate, RESERVATION_ID, PROTOCOL, ADD_ON_IDENTITY);
-
-        NumberedTransactionId transactionId = new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL, ocppTransactionId);
         int meterStopValue = 1;
+        Transaction transaction = domainService.createTransaction(EVSE_ID);
+        NumberedTransactionId transactionId = new NumberedTransactionId(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, PROTOCOL, transaction.getId().intValue());
         Date stopTransactionDate = new Date();
 
-        domainService.stopTransaction(CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, stopTransactionDate, METER_VALUES, ADD_ON_IDENTITY);
+        domainService.stopTransaction(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, stopTransactionDate, METER_VALUES, ADD_ON_IDENTITY);
 
-        verify(gateway).send(new StopTransactionCommand(CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, stopTransactionDate, NULL_USER_IDENTITY_CONTEXT));
+        verify(gateway).send(new StopTransactionCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, transactionId, IDENTIFYING_TOKEN, meterStopValue, stopTransactionDate, NULL_USER_IDENTITY_CONTEXT));
         // stored transaction should provide the evse id that's needed to process the meter values
-        verify(gateway).send(new ProcessMeterValueCommand(CHARGING_STATION_ID, transactionId, EVSE_ID, METER_VALUES, NULL_USER_IDENTITY_CONTEXT));
+        verify(gateway).send(new ProcessMeterValueCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, transactionId, EVSE_ID, METER_VALUES, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
