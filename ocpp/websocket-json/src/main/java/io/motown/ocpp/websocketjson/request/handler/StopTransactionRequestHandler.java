@@ -23,7 +23,6 @@ import io.motown.ocpp.websocketjson.schema.generated.v15.*;
 import org.atmosphere.websocket.WebSocket;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class StopTransactionRequestHandler extends RequestHandler {
