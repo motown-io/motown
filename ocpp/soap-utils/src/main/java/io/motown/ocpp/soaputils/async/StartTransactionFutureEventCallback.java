@@ -62,7 +62,7 @@ public class StartTransactionFutureEventCallback extends FutureEventCallback<Sta
         this.addOnIdentity = addOnIdentity;
         this.identifyingToken = identifyingToken;
         this.meterStart = meterStart;
-        this.timestamp = timestamp;
+        this.timestamp = timestamp != null ? new Date(timestamp.getTime()) : null;
     }
 
     /**
