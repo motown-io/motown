@@ -28,6 +28,11 @@
     <description>Motown's mission is to create an open source, industry-supported charge point management solution,
         facilitating the development of value added services for EV end-users.</description>
     <url>http://motown.io/</url>
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
