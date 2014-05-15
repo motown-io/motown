@@ -34,7 +34,6 @@ import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 @javax.jws.WebService(
