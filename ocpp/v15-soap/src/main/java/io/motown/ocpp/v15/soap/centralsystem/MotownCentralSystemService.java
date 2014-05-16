@@ -371,8 +371,6 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
 
             IdTagInfo idTagInfo = new IdTagInfo();
             idTagInfo.setStatus(convert(startTransactionFutureResult.getAuthorizationResultStatus()));
-            //TODO parent id tag
-//            idTagInfo.setParentIdTag(parameters.getIdTag());
 
             StartTransactionResponse response = new StartTransactionResponse();
             response.setIdTagInfo(idTagInfo);

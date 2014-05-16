@@ -21,13 +21,18 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.motown</groupId>
     <artifactId>motown-io</artifactId>
-    <version>0.8.1</version>
+    <version>0.8.2</version>
     <packaging>pom</packaging>
     <inceptionYear>2013</inceptionYear>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Motown's mission is to create an open source, industry-supported charge point management solution,
         facilitating the development of value added services for EV end-users.</description>
     <url>http://motown.io/</url>
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
