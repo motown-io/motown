@@ -34,7 +34,6 @@ import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 @javax.jws.WebService(
@@ -308,8 +307,6 @@ public class MotownCentralSystemService implements CentralSystemService {
 
             IdTagInfo idTagInfo = new IdTagInfo();
             idTagInfo.setStatus(convert(startTransactionFutureResult.getAuthorizationResultStatus()));
-            //TODO parent id tag
-//            idTagInfo.setParentIdTag(parameters.getIdTag());
 
             StartTransactionResponse response = new StartTransactionResponse();
             response.setIdTagInfo(idTagInfo);

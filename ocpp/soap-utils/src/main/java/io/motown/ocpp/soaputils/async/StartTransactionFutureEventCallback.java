@@ -62,7 +62,7 @@ public class StartTransactionFutureEventCallback extends FutureEventCallback<Sta
         this.addOnIdentity = addOnIdentity;
         this.identifyingToken = identifyingToken;
         this.meterStart = meterStart;
-        this.timestamp = timestamp;
+        this.timestamp = timestamp != null ? new Date(timestamp.getTime()) : null;
     }
 
     /**
@@ -85,7 +85,6 @@ public class StartTransactionFutureEventCallback extends FutureEventCallback<Sta
 
         resultEvent = (AuthorizationResultEvent) event.getPayload();
 
-        //TODO should the code below be a separate method on the domain service?
         Transaction transaction = domainService.createTransaction(evseId);
         NumberedTransactionId transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, transaction.getId().intValue());
 
