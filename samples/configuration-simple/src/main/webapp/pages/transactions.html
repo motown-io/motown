@@ -38,7 +38,9 @@
             <td>{{transaction.transactionId}}</td>
             <td>{{transaction.chargingStationId}}</td>
             <td>{{transaction.startedTimestamp | date:'dd/MM/yyyy hh:mm'}}</td>
-            <td><span ng-if="transaction.stoppedTimestamp">{{transaction.startedTimestamp | date:'dd/MM/yyyy hh:mm'}}</span></td>
+            <td><span
+                    ng-if="transaction.stoppedTimestamp">{{transaction.stoppedTimestamp | date:'dd/MM/yyyy hh:mm'}}</span>
+            </td>
             <td><button ng-if="!transaction.stoppedTimestamp" class="btn btn-default" href="#" ng-click="stopTransaction(transaction.chargingStationId, transaction.id)">stop</button></td>
         </tr>
         </tbody>
