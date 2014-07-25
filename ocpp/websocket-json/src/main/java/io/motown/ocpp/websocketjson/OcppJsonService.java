@@ -127,7 +127,7 @@ public class OcppJsonService {
         sendWampMessage(wampMessage, chargingStationId);
     }
 
-    public void getDiagnostics(ChargingStationId chargingStationId, int numRetries, int retryInterval, Date start, Date stop, String uploadLocation, CorrelationToken correlationToken) {
+    public void getDiagnostics(ChargingStationId chargingStationId, Integer numRetries, Integer retryInterval, Date start, Date stop, String uploadLocation, CorrelationToken correlationToken) {
         Getdiagnostics getDiagnosticsRequest = new Getdiagnostics();
         try {
             getDiagnosticsRequest.setLocation(new URI(uploadLocation));
