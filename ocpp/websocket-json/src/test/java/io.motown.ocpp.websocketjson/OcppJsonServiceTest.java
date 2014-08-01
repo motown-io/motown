@@ -191,7 +191,7 @@ public class OcppJsonServiceTest {
 
     @Test
     public void getConfigurationRequest() throws IOException {
-        service.getConfiguration(CHARGING_STATION_ID);
+        service.getConfiguration(CHARGING_STATION_ID, CONFIGURATION_SPECIFIC_KEYS);
         verify(mockWebSocket).write(anyString());
     }
 

@@ -27,7 +27,7 @@ import java.util.Set;
  */
 public interface ChargingStationOcpp15Client {
 
-    Map<String, String> getConfiguration(ChargingStationId id);
+    Map<String, String> getConfiguration(ChargingStationId id, Set<String> keys);
 
     /**
      * Requests the charging station to start a transaction.

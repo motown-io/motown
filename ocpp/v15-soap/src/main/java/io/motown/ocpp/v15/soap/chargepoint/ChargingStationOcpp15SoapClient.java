@@ -40,12 +40,15 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
 
     private IdentifyingTokenConverterService identifyingTokenConverterService;
 
-    public Map<String, String> getConfiguration(ChargingStationId id) {
+    public Map<String, String> getConfiguration(ChargingStationId id, Set<String> keys) {
         LOG.info("Retrieving configuration for {}", id);
 
         ChargePointService chargePointService = this.createChargingStationService(id);
 
-        GetConfigurationResponse response = chargePointService.getConfiguration(new GetConfigurationRequest(), id.getId());
+        GetConfigurationRequest getConfigurationRequest = new GetConfigurationRequest();
+        getConfigurationRequest.getKey().addAll(keys);
+
+        GetConfigurationResponse response = chargePointService.getConfiguration(getConfigurationRequest, id.getId());
 
         Map<String, String> configurationItems = Maps.newHashMap();
         for (KeyValue keyValue : response.getConfigurationKey()) {

@@ -73,7 +73,14 @@ public class Ocpp15RequestHandlerTest {
     public void testConfigurationRequestedEvent() {
         requestHandler.handle(new ConfigurationItemsRequestedEvent(CHARGING_STATION_ID, CONFIGURATION_KEYS, PROTOCOL, ROOT_IDENTITY_CONTEXT));
 
-        verify(client).getConfiguration(CHARGING_STATION_ID);
+        verify(client).getConfiguration(CHARGING_STATION_ID, CONFIGURATION_KEYS);
+    }
+
+    @Test
+    public void testConfigurationRequestedEventSpecificConfigKeys() {
+        requestHandler.handle(new ConfigurationItemsRequestedEvent(CHARGING_STATION_ID, CONFIGURATION_SPECIFIC_KEYS, PROTOCOL, ROOT_IDENTITY_CONTEXT));
+
+        verify(client).getConfiguration(CHARGING_STATION_ID, CONFIGURATION_SPECIFIC_KEYS);
     }
 
     @Test

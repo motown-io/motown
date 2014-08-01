@@ -26,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.util.HashSet;
 import java.util.Map;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
@@ -63,7 +64,7 @@ public class ChargingStationOcpp15SoapClientTest {
     public void getConfigurationVerifyReturnValue() {
         when(chargePointService.getConfiguration(any(GetConfigurationRequest.class), anyString())).thenReturn(getGetConfigurationResponse());
 
-        Map<String, String> configuration = client.getConfiguration(CHARGING_STATION_ID);
+        Map<String, String> configuration = client.getConfiguration(CHARGING_STATION_ID, new HashSet<String>());
 
         for (KeyValue keyValue : getGetConfigurationResponse().getConfigurationKey()) {
             assertTrue(configuration.containsKey(keyValue.getKey()));
@@ -76,10 +77,10 @@ public class ChargingStationOcpp15SoapClientTest {
         when(chargePointService.getConfiguration(any(GetConfigurationRequest.class), anyString())).thenReturn(getGetConfigurationResponse());
         ArgumentCaptor<GetConfigurationRequest> getConfigurationRequestArgument = ArgumentCaptor.forClass(GetConfigurationRequest.class);
 
-        client.getConfiguration(CHARGING_STATION_ID);
+        client.getConfiguration(CHARGING_STATION_ID, CONFIGURATION_SPECIFIC_KEYS);
 
         verify(chargePointService).getConfiguration(getConfigurationRequestArgument.capture(), eq(CHARGING_STATION_ID.getId()));
-        Assert.assertEquals(getConfigurationRequestArgument.getValue().getKey().size(), 0);
+        Assert.assertEquals(getConfigurationRequestArgument.getValue().getKey().size(), CONFIGURATION_SPECIFIC_KEYS.size());
     }
 
     @Test

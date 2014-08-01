@@ -116,10 +116,10 @@ public class OcppJsonService {
         sendWampMessage(wampMessage, chargingStationId);
     }
 
-    public void getConfiguration(ChargingStationId chargingStationId) {
-
+    public void getConfiguration(ChargingStationId chargingStationId, Set<String> keys) {
         CorrelationToken correlationToken = new CorrelationToken();
         Getconfiguration getConfigurationRequest = new Getconfiguration();
+        getConfigurationRequest.setKey(new ArrayList<>(keys));
 
         responseHandlers.put(correlationToken.getToken(), new GetConfigurationResponseHandler(correlationToken));
 

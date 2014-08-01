@@ -31,7 +31,7 @@ public class OcppWebSocketRequestHandler implements OcppRequestHandler {
     @Override
     public void handle(ConfigurationItemsRequestedEvent event) {
         LOG.info("Handling ConfigurationItemsRequestedEvent");
-        ocppJsonService.getConfiguration(event.getChargingStationId());
+        ocppJsonService.getConfiguration(event.getChargingStationId(), event.getKeys());
     }
 
     @Override

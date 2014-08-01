@@ -314,6 +314,13 @@ public final class ChargingStationTestUtils {
     public static final Set<String> CONFIGURATION_KEYS = new HashSet<>();
 
     /**
+     * Specific configuration keys to retrieve from the charging station
+     */
+    public static final Set<String> CONFIGURATION_SPECIFIC_KEYS = ImmutableSet.<String>builder()
+            .add("KVCBX_PROFILE")
+            .build();
+
+    /**
      * The default user identity.
      */
     public static final UserIdentity USER_IDENTITY = new SimpleUserIdentity("USER-ID");
