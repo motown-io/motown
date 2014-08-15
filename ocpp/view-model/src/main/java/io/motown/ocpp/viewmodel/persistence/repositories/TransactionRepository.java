@@ -30,7 +30,12 @@ public class TransactionRepository {
     private EntityManagerFactory entityManagerFactory;
 
     public Transaction findTransactionById(Long id) {
-        return getEntityManager().find(Transaction.class, id);
+        EntityManager entityManager = getEntityManager();
+        try {
+            return entityManager.find(Transaction.class, id);
+        } finally {
+            entityManager.close();
+        }
     }
 
     public void insert(Transaction transaction) {
@@ -49,6 +54,7 @@ public class TransactionRepository {
                 LOG.warn("Transaction is still active while it should not be, rolling back.");
                 entityTransaction.rollback();
             }
+            entityManager.close();
         }
     }
 

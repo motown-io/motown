@@ -41,10 +41,11 @@ public class ReservationIdentifierRepository {
             entityManager.persist(reservationIdentifier);
             transaction.commit();
         } finally {
-            if (transaction.isActive()) {
+            if (transaction != null && transaction.isActive()) {
                 LOG.warn("Transaction is still active while it should not be, rolling back.");
                 transaction.rollback();
             }
+            entityManager.close();
         }
     }
 

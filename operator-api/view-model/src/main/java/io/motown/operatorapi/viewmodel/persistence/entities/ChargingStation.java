@@ -41,16 +41,16 @@ public class ChargingStation {
     private Availability availability;
     private ComponentStatus status;
     private int localAuthorizationListVersion;
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<LocalAuthorization> localAuthorizations = new HashSet<>();
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<OpeningTime> openingTimes = new HashSet<>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Evse.class)
     private Set<Evse> evses = new HashSet<>();
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn
     private Map<String, String> attributes = new HashMap<>();
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn
     private Map<String, String> configurationItems = new HashMap<>();
 

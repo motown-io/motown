@@ -52,18 +52,33 @@ public class ManufacturerRepository {
     }
 
     public List<Manufacturer> findAll(int offset, int limit) {
-        return getEntityManager().createQuery("SELECT m FROM Manufacturer m", Manufacturer.class)
-                .setFirstResult(offset)
-                .setMaxResults(limit)
-                .getResultList();
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery("SELECT m FROM Manufacturer m", Manufacturer.class)
+                    .setFirstResult(offset)
+                    .setMaxResults(limit)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
     }
 
     public Long getTotalNumberOfManufacturers() {
-        return getEntityManager().createQuery("SELECT COUNT(m) FROM Manufacturer m", Long.class).getSingleResult();
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery("SELECT COUNT(m) FROM Manufacturer m", Long.class).getSingleResult();
+        } finally {
+            em.close();
+        }
     }
 
     public Manufacturer findOne(Long id) {
-        return findOne(id, getEntityManager());
+        EntityManager em = getEntityManager();
+        try {
+            return findOne(id, em);
+        } finally {
+            em.close();
+        }
     }
 
     public void delete(Long id) {

@@ -64,47 +64,73 @@ public class SubscriptionRepository {
             task.execute();
             transaction.commit();
         } finally {
-            if (transaction.isActive()) {
+            if (transaction != null && transaction.isActive()) {
                 LOG.warn("Transaction is still active while it should not be, rolling back.");
                 transaction.rollback();
             }
+            entityManager.close();
         }
     }
 
     public Subscription findById(Long id) {
-        return getEntityManager().find(Subscription.class, id);
+        EntityManager entityManager = getEntityManager();
+        try {
+            return entityManager.find(Subscription.class, id);
+        } finally {
+            entityManager.close();
+        }
     }
 
     public Subscription findBySubscriptionId(String subscriptionId) {
-        List<Subscription> subscriptions = getEntityManager().createQuery("SELECT s FROM io.motown.vas.viewmodel.persistence.entities.Subscription AS s " +
-                "WHERE s.subscriptionId = :subscriptionId", Subscription.class)
-                .setParameter("subscriptionId", subscriptionId)
-                .getResultList();
+        EntityManager entityManager = getEntityManager();
+        try {
+            List<Subscription> subscriptions = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.persistence.entities.Subscription AS s " +
+                    "WHERE s.subscriptionId = :subscriptionId", Subscription.class)
+                    .setParameter("subscriptionId", subscriptionId)
+                    .getResultList();
 
-        return !subscriptions.isEmpty() ? subscriptions.get(0) : null;
+            return !subscriptions.isEmpty() ? subscriptions.get(0) : null;
+        } finally {
+            entityManager.close();
+        }
     }
 
     public Subscription findBySubscriberIdentityAndDeliveryAddress(String subscriberIdentity, String deliveryAddress) {
-        List<Subscription> subscriptions = getEntityManager().createQuery("SELECT s FROM io.motown.vas.viewmodel.persistence.entities.Subscription AS s " +
-                "WHERE s.subscriberIdentity = :subscriberIdentity " +
-                "AND s.deliveryAddress = :deliveryAddress", Subscription.class)
-                .setParameter("subscriberIdentity", subscriberIdentity)
-                .setParameter("deliveryAddress", deliveryAddress)
-                .getResultList();
+        EntityManager entityManager = getEntityManager();
+        try {
+            List<Subscription> subscriptions = entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.persistence.entities.Subscription AS s " +
+                    "WHERE s.subscriberIdentity = :subscriberIdentity " +
+                    "AND s.deliveryAddress = :deliveryAddress", Subscription.class)
+                    .setParameter("subscriberIdentity", subscriberIdentity)
+                    .setParameter("deliveryAddress", deliveryAddress)
+                    .getResultList();
 
-        return !subscriptions.isEmpty() ? subscriptions.get(0) : null;
+            return !subscriptions.isEmpty() ? subscriptions.get(0) : null;
+        } finally {
+            entityManager.close();
+        }
     }
 
     public List<Subscription> findBySubscriberIdentity(String subscriberIdentity) {
-        return getEntityManager().createQuery("SELECT s FROM io.motown.vas.viewmodel.persistence.entities.Subscription AS s " +
-                "WHERE s.subscriberIdentity = :subscriberIdentity", Subscription.class)
-                .setParameter("subscriberIdentity", subscriberIdentity)
-                .getResultList();
+        EntityManager entityManager = getEntityManager();
+        try {
+            return entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.persistence.entities.Subscription AS s " +
+                    "WHERE s.subscriberIdentity = :subscriberIdentity", Subscription.class)
+                    .setParameter("subscriberIdentity", subscriberIdentity)
+                    .getResultList();
+        } finally {
+            entityManager.close();
+        }
     }
 
     public List<Subscription> findAll() {
-        return getEntityManager().createQuery("SELECT s FROM io.motown.vas.viewmodel.persistence.entities.Subscription AS s", Subscription.class)
-                .getResultList();
+        EntityManager entityManager = getEntityManager();
+        try {
+            return entityManager.createQuery("SELECT s FROM io.motown.vas.viewmodel.persistence.entities.Subscription AS s", Subscription.class)
+                    .getResultList();
+        } finally {
+            entityManager.close();
+        }
     }
 
     public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {

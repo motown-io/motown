@@ -30,7 +30,12 @@ public class ChargingStationRepository {
     private EntityManagerFactory entityManagerFactory;
 
     public ChargingStation findOne(String id) {
-        return getEntityManager().find(ChargingStation.class, id);
+        EntityManager entityManager = getEntityManager();
+        try {
+            return entityManager.find(ChargingStation.class, id);
+        } finally {
+            entityManager.close();
+        }
     }
 
     public ChargingStation createOrUpdate(ChargingStation chargingStation) {
@@ -47,10 +52,11 @@ public class ChargingStationRepository {
             storedChargingStation = entityManager.merge(chargingStation);
             transaction.commit();
         } finally {
-            if (transaction.isActive()) {
+            if (transaction != null && transaction.isActive()) {
                 LOG.warn("Transaction is still active while it should not be, rolling back.");
                 transaction.rollback();
             }
+            entityManager.close();
         }
         return storedChargingStation;
     }

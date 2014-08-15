@@ -58,20 +58,35 @@ public class TransactionRepository {
      * Find transactions by transaction id (not the auto-increment transaction.id)
      */
     public Transaction findByTransactionId(String transactionId) {
-        return getEntityManager().createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t WHERE t.transactionId = :transactionId", Transaction.class)
-                .setParameter("transactionId", transactionId)
-                .getSingleResult();
+        EntityManager entityManager = getEntityManager();
+        try {
+            return entityManager.createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t WHERE t.transactionId = :transactionId", Transaction.class)
+                    .setParameter("transactionId", transactionId)
+                    .getSingleResult();
+        } finally {
+            entityManager.close();
+        }
     }
 
     public List<Transaction> findAll(int offset, int limit) {
-        return getEntityManager().createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t", Transaction.class)
-                .setFirstResult(offset)
-                .setMaxResults(limit)
-                .getResultList();
+        EntityManager entityManager = getEntityManager();
+        try {
+            return entityManager.createQuery("SELECT t FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction AS t", Transaction.class)
+                    .setFirstResult(offset)
+                    .setMaxResults(limit)
+                    .getResultList();
+        } finally {
+            entityManager.close();
+        }
     }
 
     public Long getTotalNumberOfTransactions() {
-        return getEntityManager().createQuery("SELECT COUNT(t) FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction t", Long.class).getSingleResult();
+        EntityManager entityManager = getEntityManager();
+        try {
+            return entityManager.createQuery("SELECT COUNT(t) FROM io.motown.operatorapi.viewmodel.persistence.entities.Transaction t", Long.class).getSingleResult();
+        } finally {
+            entityManager.close();
+        }
     }
 
     public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {

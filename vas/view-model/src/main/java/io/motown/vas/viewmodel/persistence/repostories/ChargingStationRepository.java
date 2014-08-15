@@ -41,19 +41,30 @@ public class ChargingStationRepository {
 
             return persistedChargingStation;
         } finally {
-            if (transaction.isActive()) {
+            if (transaction != null && transaction.isActive()) {
                 LOG.warn("Transaction is still active while it should not be, rolling back.");
                 transaction.rollback();
             }
+            entityManager.close();
         }
     }
 
     public ChargingStation findOne(String id) {
-        return getEntityManager().find(ChargingStation.class, id);
+        EntityManager entityManager = getEntityManager();
+        try {
+            return entityManager.find(ChargingStation.class, id);
+        } finally {
+            entityManager.close();
+        }
     }
 
     public List<ChargingStation> findAll() {
-        return getEntityManager().createQuery("SELECT cs FROM io.motown.vas.viewmodel.persistence.entities.ChargingStation AS cs", ChargingStation.class).getResultList();
+        EntityManager entityManager = getEntityManager();
+        try {
+            return entityManager.createQuery("SELECT cs FROM io.motown.vas.viewmodel.persistence.entities.ChargingStation AS cs", ChargingStation.class).getResultList();
+        } finally {
+            entityManager.close();
+        }
     }
 
     public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {

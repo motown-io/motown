@@ -55,18 +55,33 @@ public class ChargingStationRepository {
     }
 
     public ChargingStation findOne(String id) {
-        return getEntityManager().find(ChargingStation.class, id);
+        EntityManager entityManager = getEntityManager();
+        try {
+            return entityManager.find(ChargingStation.class, id);
+        } finally {
+            entityManager.close();
+        }
     }
 
     public List<ChargingStation> findAll(int offset, int limit) {
-        return getEntityManager().createQuery("SELECT cs FROM io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation AS cs", ChargingStation.class)
-                .setFirstResult(offset)
-                .setMaxResults(limit)
-                .getResultList();
+        EntityManager entityManager = getEntityManager();
+        try {
+            return entityManager.createQuery("SELECT cs FROM io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation AS cs", ChargingStation.class)
+                    .setFirstResult(offset)
+                    .setMaxResults(limit)
+                    .getResultList();
+        } finally {
+            entityManager.close();
+        }
     }
 
     public Long getTotalNumberOfChargingStations() {
-        return getEntityManager().createQuery("SELECT COUNT(cs) FROM io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation cs", Long.class).getSingleResult();
+        EntityManager entityManager = getEntityManager();
+        try {
+            return entityManager.createQuery("SELECT COUNT(cs) FROM io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation cs", Long.class).getSingleResult();
+        } finally {
+            entityManager.close();
+        }
     }
 
     public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {

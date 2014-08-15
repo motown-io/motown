@@ -52,7 +52,7 @@ public class Transaction {
 
     private Date stoppedTimestamp;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<MeterValue> meterValues = new HashSet<>();
 
     private Transaction() {

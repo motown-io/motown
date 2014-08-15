@@ -28,10 +28,15 @@ public class ChargingStationTypeRepository {
     private EntityManagerFactory entityManagerFactory;
 
     public List<ChargingStationType> findByCodeAndManufacturerCode(String code, String manufacturerCode) {
-        return getEntityManager().createQuery("SELECT cst FROM ChargingStationType AS cst where UPPER(cst.code) = UPPER(:code) and UPPER(cst.manufacturer.code) = UPPER(:manufacturerCode)", ChargingStationType.class)
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery("SELECT cst FROM ChargingStationType AS cst where UPPER(cst.code) = UPPER(:code) and UPPER(cst.manufacturer.code) = UPPER(:manufacturerCode)", ChargingStationType.class)
                 .setParameter("code", code)
                 .setParameter("manufacturerCode", manufacturerCode)
                 .getResultList();
+        } finally {
+            em.close();
+        }
     }
 
     public ChargingStationType createOrUpdate(final ChargingStationType chargingStationType) {
@@ -58,18 +63,33 @@ public class ChargingStationTypeRepository {
     }
 
     public List<ChargingStationType> findAll(int offset, int limit) {
-        return getEntityManager().createQuery("SELECT cst FROM ChargingStationType cst", ChargingStationType.class)
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery("SELECT cst FROM ChargingStationType cst", ChargingStationType.class)
                 .setFirstResult(offset)
                 .setMaxResults(limit)
                 .getResultList();
+        } finally {
+            em.close();
+        }
     }
 
     public Long getTotalNumberOfChargingStationTypes() {
-        return getEntityManager().createQuery("SELECT COUNT(cst) FROM ChargingStationType cst", Long.class).getSingleResult();
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery("SELECT COUNT(cst) FROM ChargingStationType cst", Long.class).getSingleResult();
+        } finally {
+            em.close();
+        }
     }
 
     public ChargingStationType findOne(Long id) {
-        return findOne(id, getEntityManager());
+        EntityManager em = getEntityManager();
+        try {
+            return findOne(id, em);
+        } finally {
+            em.close();
+        }
     }
 
     public void delete(Long id) {
