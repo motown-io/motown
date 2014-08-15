@@ -29,7 +29,7 @@ public class Evse {
     private Long id;
     private String evseId;
     private ComponentStatus status;
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<Connector> connectors = new ArrayList<>();
     private Availability availability;
 
