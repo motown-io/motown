@@ -162,6 +162,7 @@
         <cxf-xjc-runtime.version>2.7.0</cxf-xjc-runtime.version>
         <quartz.version>2.2.1</quartz.version>
         <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
+        <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -639,6 +640,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>
