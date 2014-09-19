@@ -36,7 +36,6 @@ public class RemoteStopTransactionResponseHandlerTest {
     private DomainService domainService;
 
     private String token;
-    private CorrelationToken correlationToken;
     private RemoteStopTransactionResponseHandler handler;
 
     @Before
@@ -44,7 +43,7 @@ public class RemoteStopTransactionResponseHandlerTest {
         gson = getGson();
         domainService = mock(DomainService.class);
 
-        correlationToken = new CorrelationToken();
+        CorrelationToken correlationToken = new CorrelationToken();
         token = correlationToken.getToken();
         handler = new RemoteStopTransactionResponseHandler(correlationToken);
     }

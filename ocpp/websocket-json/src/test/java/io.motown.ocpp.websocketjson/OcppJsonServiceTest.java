@@ -50,8 +50,6 @@ public class OcppJsonServiceTest {
 
     private OcppJsonService service;
 
-    private DomainService domainService;
-
     private Gson gson;
 
     private WebSocket mockWebSocket;
@@ -64,7 +62,7 @@ public class OcppJsonServiceTest {
     public void setup() {
         gson = getGson();
 
-        domainService = mock(DomainService.class);
+        DomainService domainService = mock(DomainService.class);
         when(domainService.generateReservationIdentifier(any(ChargingStationId.class), anyString())).thenReturn(RESERVATION_ID);
 
         mockWebSocket = getMockWebSocket();

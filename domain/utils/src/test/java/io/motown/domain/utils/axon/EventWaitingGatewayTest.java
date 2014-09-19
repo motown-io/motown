@@ -39,16 +39,13 @@ public class EventWaitingGatewayTest {
 
     private CommandBus commandBus;
 
-    private EventBus eventBus;
-
     @Before
     public void setup() {
         commandBus = mock(CommandBus.class);
-        eventBus = mock(EventBus.class);
 
         gateway = new EventWaitingGateway();
         gateway.setCommandBus(commandBus);
-        gateway.setEventBus(eventBus);
+        gateway.setEventBus(mock(EventBus.class));
     }
 
     @Test

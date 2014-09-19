@@ -40,7 +40,6 @@ public class GetDiagnosticsResponseHandlerTest {
     private DomainService domainService;
 
     private String token;
-    private CorrelationToken correlationToken;
     private GetDiagnosticsResponseHandler handler;
 
     @Before
@@ -48,7 +47,7 @@ public class GetDiagnosticsResponseHandlerTest {
         gson = getGson();
         domainService = mock(DomainService.class);
 
-        correlationToken = new CorrelationToken();
+        CorrelationToken correlationToken = new CorrelationToken();
         token = correlationToken.getToken();
         handler = new GetDiagnosticsResponseHandler(correlationToken);
     }
