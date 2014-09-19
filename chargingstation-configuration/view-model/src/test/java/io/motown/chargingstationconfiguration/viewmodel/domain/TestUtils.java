@@ -109,9 +109,7 @@ public final class TestUtils {
     }
 
     public static Manufacturer getManufacturerWithConfiguration(String vendor, String model) {
-        Manufacturer manufacturer = getManufacturer(vendor);
-
-        return manufacturer;
+        return getManufacturer(vendor);
     }
 
     public static Set<ChargingStationType> getChargingStationTypes(Manufacturer manufacturer, String model) {
