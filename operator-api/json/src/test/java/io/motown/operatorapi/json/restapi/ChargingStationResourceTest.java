@@ -33,7 +33,6 @@ import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)

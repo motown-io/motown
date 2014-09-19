@@ -32,7 +32,6 @@ import java.util.Collections;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static org.axonframework.commandhandling.GenericCommandMessage.asCommandMessage;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
 
 public class AuthorizationEventListenerTest {

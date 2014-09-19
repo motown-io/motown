@@ -40,8 +40,6 @@ import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils
 import static io.motown.ocpp.v15.soap.V15SOAPTestUtils.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class MotownCentralSystemServiceTest {

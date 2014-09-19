@@ -36,7 +36,6 @@ import java.util.Set;
 import static io.motown.chargingstationconfiguration.viewmodel.domain.TestUtils.*;
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 @ContextConfiguration("classpath:chargingstation-configuration-view-model-test-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)

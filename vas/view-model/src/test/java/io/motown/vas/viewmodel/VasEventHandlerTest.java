@@ -18,7 +18,6 @@ package io.motown.vas.viewmodel;
 import com.google.common.collect.Iterables;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.chargingstation.ComponentStatus;
-import io.motown.domain.api.chargingstation.OpeningTime;
 import io.motown.vas.viewmodel.model.*;
 import io.motown.vas.viewmodel.model.ConnectorType;
 import io.motown.vas.viewmodel.persistence.entities.ChargingStation;

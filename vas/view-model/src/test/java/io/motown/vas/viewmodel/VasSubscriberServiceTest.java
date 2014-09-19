@@ -26,7 +26,6 @@ import java.util.concurrent.ExecutorService;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.vas.viewmodel.VasViewModelTestUtils.SUBSCRIPTIONS;
 import static io.motown.vas.viewmodel.VasViewModelTestUtils.getRegisteredAndConfiguredChargingStation;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 public class VasSubscriberServiceTest {

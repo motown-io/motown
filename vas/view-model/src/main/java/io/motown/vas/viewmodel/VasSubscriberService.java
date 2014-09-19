@@ -15,7 +15,6 @@
  */
 package io.motown.vas.viewmodel;
 
-import io.motown.vas.viewmodel.persistence.entities.ChargingStation;
 import io.motown.vas.viewmodel.model.StatusChange;
 import io.motown.vas.viewmodel.persistence.entities.*;
 import io.motown.vas.viewmodel.persistence.repostories.SubscriptionRepository;
