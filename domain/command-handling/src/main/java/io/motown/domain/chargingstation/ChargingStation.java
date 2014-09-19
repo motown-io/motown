@@ -397,7 +397,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     @CommandHandler
     public void handle(IncomingDataTransferCommand command) {
-        apply(new IncomingDataTransferReceivedEvent(command.getChargingStationId(), command.getVendorId(), command.getMessageId(), command.getData(), command.getIdentityContext()));
+        apply(new IncomingDataTransferReceivedEvent(command.getChargingStationId(), command.getDataTransferMessage().getVendorId(), command.getDataTransferMessage().getMessageId(), command.getDataTransferMessage().getData(), command.getIdentityContext()));
     }
 
     @CommandHandler

@@ -32,11 +32,7 @@ public final class IncomingDataTransferCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final String vendorId;
-
-    private final String messageId;
-
-    private final String data;
+    private final DataTransferMessage dataTransferMessage;
 
     private final IdentityContext identityContext;
 
@@ -44,21 +40,14 @@ public final class IncomingDataTransferCommand {
      * Creates a {@code IncomingDataTransferCommand} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param vendorId          the charging station vendor.
-     * @param messageId         optional additional identification field (empty if no value).
-     * @param data              the data to transfer (empty if no value).
+     * @param dataTransferMessage the data transfer message.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code vendorId}, {@code messageId}, {@code data} or is
-     *                             {@code identityContext} is {@code null}.
-     * @throws IllegalArgumentException if {@code vendorId} is empty.
+     * @throws NullPointerException if {@code chargingStationId}, {@code dataTransferMessage}, or
+     *                              {@code identityContext} is {@code null}.
      */
-    public IncomingDataTransferCommand(ChargingStationId chargingStationId, String vendorId, String messageId, String data, IdentityContext identityContext) {
+    public IncomingDataTransferCommand(ChargingStationId chargingStationId, DataTransferMessage dataTransferMessage, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        checkNotNull(vendorId);
-        checkArgument(!vendorId.isEmpty());
-        this.vendorId = checkNotNull(vendorId);
-        this.messageId = checkNotNull(messageId);
-        this.data = checkNotNull(data);
+        this.dataTransferMessage = checkNotNull(dataTransferMessage);
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -69,25 +58,8 @@ public final class IncomingDataTransferCommand {
         return chargingStationId;
     }
 
-    /**
-     * @return the vendor identifier.
-     */
-    public String getVendorId() {
-        return vendorId;
-    }
-
-    /**
-     * @return the additional message identifier.
-     */
-    public String getMessageId() {
-        return messageId;
-    }
-
-    /**
-     * @return the data.
-     */
-    public String getData() {
-        return data;
+    public DataTransferMessage getDataTransferMessage() {
+        return dataTransferMessage;
     }
 
     /**
@@ -101,7 +73,7 @@ public final class IncomingDataTransferCommand {
 
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, vendorId, messageId, data, identityContext);
+        return Objects.hash(chargingStationId, dataTransferMessage, identityContext);
     }
 
     @Override
@@ -113,6 +85,6 @@ public final class IncomingDataTransferCommand {
             return false;
         }
         final IncomingDataTransferCommand other = (IncomingDataTransferCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.vendorId, other.vendorId) && Objects.equals(this.messageId, other.messageId) && Objects.equals(this.data, other.data) && Objects.equals(this.identityContext, other.identityContext);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.dataTransferMessage, other.dataTransferMessage) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

@@ -201,7 +201,7 @@ public class DomainServiceTest {
         FutureEventCallback futureEventCallback = getFutureEventCallback();
         domainService.incomingDataTransfer(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, DATA_TRANSFER_DATA, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, futureEventCallback, ADD_ON_IDENTITY);
 
-        verify(eventWaitingGateway).sendAndWaitForEvent(new IncomingDataTransferCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA, NULL_USER_IDENTITY_CONTEXT), futureEventCallback, 10000);
+        verify(eventWaitingGateway).sendAndWaitForEvent(new IncomingDataTransferCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, new DataTransferMessage(DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA), NULL_USER_IDENTITY_CONTEXT), futureEventCallback, 10000);
     }
 
     @Test

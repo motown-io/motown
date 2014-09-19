@@ -137,8 +137,9 @@ public class DomainService {
         this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
 
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+        DataTransferMessage dataTransferMessage = new DataTransferMessage(vendorId, messageId, data);
 
-        eventWaitingGateway.sendAndWaitForEvent(new IncomingDataTransferCommand(chargingStationId, vendorId, messageId, data, identityContext), future, (long) 10000);
+        eventWaitingGateway.sendAndWaitForEvent(new IncomingDataTransferCommand(chargingStationId, dataTransferMessage, identityContext), future, (long) 10000);
     }
 
     public void heartbeat(ChargingStationId chargingStationId, AddOnIdentity addOnIdentity) {

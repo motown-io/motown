@@ -20,25 +20,30 @@ import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
-public class IncomingDataTransferCommandTest {
+public class DataTransferMessageTest {
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenChargingStationIdNull() {
-        new IncomingDataTransferCommand(null, new DataTransferMessage(DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA), NULL_USER_IDENTITY_CONTEXT);
+    public void nullPointerExceptionThrownWhenVendorIdNull() {
+        new DataTransferMessage(null, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void illegalArgumentExceptionThrownWhenVendorIdEmpty() {
+        new DataTransferMessage("", DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
     }
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenDataTransferMessageNull() {
-        new IncomingDataTransferCommand(CHARGING_STATION_ID, null, NULL_USER_IDENTITY_CONTEXT);
+    public void nullPointerExceptionThrownWhenMessageIdNull() {
+        new DataTransferMessage(DATA_TRANSFER_VENDOR, null, DATA_TRANSFER_DATA);
     }
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenIdentityContextNull() {
-        new IncomingDataTransferCommand(CHARGING_STATION_ID, new DataTransferMessage(DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA), null);
+    public void nullPointerExceptionThrownWhenDataNull() {
+        new DataTransferMessage(DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, null);
     }
 
     @Test
     public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
-        EqualsVerifier.forClass(IncomingDataTransferCommand.class).usingGetClass().verify();
+        EqualsVerifier.forClass(DataTransferMessage.class).usingGetClass().verify();
     }
 }
