@@ -49,7 +49,7 @@ public class ChangeAvailabilityResponseHandler extends ResponseHandler {
         switch (response.getStatus()) {
             case ACCEPTED:
             case SCHEDULED:
-                //Upon a successfull change in availability we inform about the new state the evse is in
+                //Upon a successful change in availability we inform about the new state the evse is in
                 handleAcceptedOrScheduledChangeAvailabilityResponse(chargingStationId, domainService, addOnIdentity);
                 break;
             case REJECTED:

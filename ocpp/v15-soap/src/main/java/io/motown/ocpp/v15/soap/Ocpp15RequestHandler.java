@@ -180,7 +180,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         LOG.info("DataTransferRequestedEvent");
         DataTransferRequestResult result = chargingStationOcpp15Client.dataTransfer(event.getChargingStationId(), event.getDataTransferMessage());
 
-        if (result.isSuccessfull()) {
+        if (result.isSuccessful()) {
             String responseData = result.getData();
             if (responseData != null) {
                 domainService.informDataTransferResponse(event.getChargingStationId(), responseData, correlationToken, addOnIdentity);

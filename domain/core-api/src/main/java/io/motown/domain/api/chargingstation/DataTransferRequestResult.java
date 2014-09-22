@@ -37,7 +37,7 @@ public final class DataTransferRequestResult {
         return data;
     }
 
-    public boolean isSuccessfull() {
+    public boolean isSuccessful() {
         return RequestResult.SUCCESS.equals(requestResult);
     }
 }
