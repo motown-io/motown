@@ -24,7 +24,7 @@ public class IncomingDataTransferCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenChargingStationIdNull() {
-        new IncomingDataTransferCommand(null, new DataTransferMessage(DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA), NULL_USER_IDENTITY_CONTEXT);
+        new IncomingDataTransferCommand(null, DATA_TRANSFER_MESSAGE, NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
@@ -34,7 +34,7 @@ public class IncomingDataTransferCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenIdentityContextNull() {
-        new IncomingDataTransferCommand(CHARGING_STATION_ID, new DataTransferMessage(DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA), null);
+        new IncomingDataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_MESSAGE, null);
     }
 
     @Test
