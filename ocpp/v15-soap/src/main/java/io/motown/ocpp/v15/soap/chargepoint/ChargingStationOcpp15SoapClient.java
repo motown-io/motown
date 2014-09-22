@@ -174,22 +174,25 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
         return changeAvailability(id, evseId, AvailabilityType.OPERATIVE);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public DataTransferRequestResult dataTransfer(ChargingStationId id, String vendorId, String messageId, String data) {
+    public DataTransferRequestResult dataTransfer(ChargingStationId id, DataTransferMessage dataTransferMessage) {
         LOG.debug("Data transfer to {}", id);
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         DataTransferRequest request = new DataTransferRequest();
-        request.setVendorId(vendorId);
-        request.setMessageId(messageId);
-        request.setData(data);
+        request.setVendorId(dataTransferMessage.getVendorId());
+        request.setMessageId(dataTransferMessage.getMessageId());
+        request.setData(dataTransferMessage.getData());
 
         DataTransferResponse response = chargePointService.dataTransfer(request, id.getId());
 
         if (response.getStatus() == DataTransferStatus.UNKNOWN_MESSAGE_ID) {
-            LOG.error("Unknown message id {} for datatransfer request", messageId);
+            LOG.error("Unknown message id {} for datatransfer request", dataTransferMessage.getMessageId());
         } else if(response.getStatus() == DataTransferStatus.UNKNOWN_VENDOR_ID) {
-            LOG.error("Unknown vendor id {} for datatransfer request", vendorId);
+            LOG.error("Unknown vendor id {} for datatransfer request", dataTransferMessage.getVendorId());
         }
 
         RequestResult requestResult = DataTransferStatus.ACCEPTED.equals(response.getStatus()) ? RequestResult.SUCCESS : RequestResult.FAILURE;

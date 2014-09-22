@@ -290,7 +290,7 @@ public class ChargingStationOcpp15SoapClientTest {
     public void dataTransferAcceptedVerifyReturnValue() {
         when(chargePointService.dataTransfer(any(DataTransferRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getDataTransferResponse(DataTransferStatus.ACCEPTED));
 
-        DataTransferRequestResult result = client.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
+        DataTransferRequestResult result = client.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_MESSAGE);
 
         assertEquals(RequestResult.SUCCESS, result.getRequestResult());
     }
@@ -299,7 +299,7 @@ public class ChargingStationOcpp15SoapClientTest {
     public void dataTransferRejectedVerifyReturnValue() {
         when(chargePointService.dataTransfer(any(DataTransferRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getDataTransferResponse(DataTransferStatus.REJECTED));
 
-        DataTransferRequestResult result = client.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
+        DataTransferRequestResult result = client.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_MESSAGE);
 
         assertEquals(RequestResult.FAILURE, result.getRequestResult());
     }
@@ -309,12 +309,12 @@ public class ChargingStationOcpp15SoapClientTest {
         when(chargePointService.dataTransfer(any(DataTransferRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getDataTransferResponse(DataTransferStatus.ACCEPTED));
         ArgumentCaptor<DataTransferRequest> dataTransferArgument = ArgumentCaptor.forClass(DataTransferRequest.class);
 
-        client.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
+        client.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_MESSAGE);
 
         verify(chargePointService).dataTransfer(dataTransferArgument.capture(), eq(CHARGING_STATION_ID.getId()));
-        assertEquals(DATA_TRANSFER_MESSAGE_ID, dataTransferArgument.getValue().getMessageId());
-        assertEquals(DATA_TRANSFER_DATA, dataTransferArgument.getValue().getData());
-        assertEquals(DATA_TRANSFER_VENDOR, dataTransferArgument.getValue().getVendorId());
+        assertEquals(DATA_TRANSFER_MESSAGE.getVendorId(), dataTransferArgument.getValue().getVendorId());
+        assertEquals(DATA_TRANSFER_MESSAGE.getMessageId(), dataTransferArgument.getValue().getMessageId());
+        assertEquals(DATA_TRANSFER_MESSAGE.getData(), dataTransferArgument.getValue().getData());
     }
 
     @Test

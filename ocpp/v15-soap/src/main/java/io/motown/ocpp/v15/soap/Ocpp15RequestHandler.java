@@ -178,7 +178,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
     @Override
     public void handle(DataTransferRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("DataTransferRequestedEvent");
-        DataTransferRequestResult result = chargingStationOcpp15Client.dataTransfer(event.getChargingStationId(), event.getDataTransferMessage().getVendorId(), event.getDataTransferMessage().getMessageId(), event.getDataTransferMessage().getData());
+        DataTransferRequestResult result = chargingStationOcpp15Client.dataTransfer(event.getChargingStationId(), event.getDataTransferMessage());
 
         if (result.isSuccessfull()) {
             String responseData = result.getData();

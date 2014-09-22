@@ -70,7 +70,14 @@ public interface ChargingStationOcpp15Client {
 
     RequestResult changeAvailabilityToOperative(ChargingStationId id, EvseId evseId);
 
-    DataTransferRequestResult dataTransfer(ChargingStationId id, String vendorId, String messageId, String data);
+    /**
+     * Send a data transfer message to the charging station.
+     *
+     * @param id the charging station's id.
+     * @param dataTransferMessage the data transfer message to send.
+     * @return the charging station's response to the data transfer message.
+     */
+    DataTransferRequestResult dataTransfer(ChargingStationId id, DataTransferMessage dataTransferMessage);
 
     /**
      * Requests the charging station to change a configuration item.
