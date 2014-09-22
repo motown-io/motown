@@ -341,11 +341,11 @@ public class OcppJsonService {
         sendWampMessage(wampMessage, chargingStationId);
     }
 
-    public void dataTransfer(ChargingStationId chargingStationId, String vendorId, String messageId, String data, CorrelationToken correlationToken) {
+    public void dataTransfer(ChargingStationId chargingStationId, DataTransferMessage dataTransferMessage, CorrelationToken correlationToken) {
         Datatransfer dataTransferRequest = new Datatransfer();
-        dataTransferRequest.setVendorId(vendorId);
-        dataTransferRequest.setMessageId(messageId);
-        dataTransferRequest.setData(data);
+        dataTransferRequest.setVendorId(dataTransferMessage.getVendorId());
+        dataTransferRequest.setMessageId(dataTransferMessage.getMessageId());
+        dataTransferRequest.setData(dataTransferMessage.getData());
 
         responseHandlers.put(correlationToken.getToken(), new DataTransferResponseHandler(correlationToken));
 

@@ -162,7 +162,7 @@ public final class ChargingStationTestUtils {
     /**
      * The default data transfer data.
      */
-    public static final String DATA_TRANSFER_DATA = "['acme', 'widget']";
+    public static final String DATA_TRANSFER_DATA = "['acme','widget']";
     /**
      * The default data transfer message.
      */

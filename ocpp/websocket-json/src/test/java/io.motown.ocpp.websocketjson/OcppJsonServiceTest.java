@@ -308,15 +308,12 @@ public class OcppJsonServiceTest {
 
     @Test
     public void dataTransferRequest() throws IOException {
-        String vendorId = "fr.tm.cnr";
-        String messageId = "GetChargeInstruction";
-        String data = "";
-        service.dataTransfer(CHARGING_STATION_ID, vendorId, messageId, data, CORRELATION_TOKEN);
+        service.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_MESSAGE, CORRELATION_TOKEN);
 
         Datatransfer requestPayload = new Datatransfer();
-        requestPayload.setVendorId(vendorId);
-        requestPayload.setMessageId(messageId);
-        requestPayload.setData(data);
+        requestPayload.setVendorId(DATA_TRANSFER_MESSAGE.getVendorId());
+        requestPayload.setMessageId(DATA_TRANSFER_MESSAGE.getMessageId());
+        requestPayload.setData(DATA_TRANSFER_MESSAGE.getData());
 
         String expectedMessage = createExpectedMessageCall(MessageProcUri.DATA_TRANSFER, requestPayload);
         verify(mockWebSocket).write(expectedMessage);
