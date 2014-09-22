@@ -22,12 +22,11 @@
         <artifactId>motown-io</artifactId>
         <groupId>io.motown</groupId>
         <version>0.8.3-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
-    <groupId>io.motown.ocpp</groupId>
-    <artifactId>ocpp-soap-utils</artifactId>
+    <artifactId>soap-utils</artifactId>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Open Charge Point Protocol (OCPP). Utility classes used by v12-soap and v15-soap.</description>
+    <description>Utility classes used by soap modules.</description>
     <url>http://motown.io/</url>
     <licenses>
         <license>
@@ -83,21 +82,6 @@
         <url>git@github.com:motown-io/motown.git</url>
     </scm>
     <dependencies>
-        <dependency>
-            <groupId>io.motown.domain</groupId>
-            <artifactId>domain-core-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.motown.ocpp</groupId>
-            <artifactId>ocpp-view-model</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.motown</groupId>
-            <artifactId>soap-utils</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

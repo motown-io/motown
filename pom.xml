@@ -101,6 +101,7 @@
         <module>domain/command-handling</module>
         <module>domain/core-api</module>
         <module>domain/utils</module>
+        <module>soap-utils</module>
         <module>ocpp/v12-soap</module>
         <module>ocpp/v15-soap</module>
         <module>ocpp/view-model</module>

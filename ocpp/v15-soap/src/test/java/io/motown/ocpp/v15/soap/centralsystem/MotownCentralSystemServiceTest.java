@@ -19,7 +19,7 @@ import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.chargingstation.MeterValue;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.api.security.TypeBasedAddOnIdentity;
-import io.motown.ocpp.soaputils.header.SoapHeaderReader;
+import io.motown.soaputils.header.SoapHeaderReader;
 import io.motown.ocpp.v15.soap.centralsystem.schema.*;
 import io.motown.ocpp.v15.soap.centralsystem.schema.FirmwareStatus;
 import io.motown.ocpp.viewmodel.domain.*;

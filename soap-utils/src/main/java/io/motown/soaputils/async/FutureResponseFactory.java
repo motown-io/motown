@@ -13,16 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.soaputils.async;
+package io.motown.soaputils.async;
 
-/**
- * Used by the {@link FutureRequestHandler} to initiate the call that it should wait for.
- */
-public interface CallInitiator {
+public interface FutureResponseFactory<T, X> {
 
-    /**
-     * Initiates the call
-     */
-    void initiateCall();
+    T createResponse(X futureResponse);
 
 }

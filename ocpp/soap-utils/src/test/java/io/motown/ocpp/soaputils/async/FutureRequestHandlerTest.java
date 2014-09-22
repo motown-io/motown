@@ -16,17 +16,20 @@
 package io.motown.ocpp.soaputils.async;
 
 import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
+import io.motown.soaputils.async.CallInitiator;
+import io.motown.soaputils.async.FutureResponseFactory;
 import org.apache.cxf.continuations.Continuation;
 import org.apache.cxf.continuations.ContinuationProvider;
+import io.motown.soaputils.async.ResponseFactory;
+import io.motown.soaputils.async.FutureRequestHandler;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.xml.ws.handler.MessageContext;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class FutureRequestHandlerTest {
 

@@ -18,6 +18,7 @@ package io.motown.ocpp.soaputils.async;
 import io.motown.domain.api.chargingstation.IncomingDataTransferResultEvent;
 import io.motown.ocpp.viewmodel.domain.FutureEventCallback;
 import io.motown.ocpp.viewmodel.domain.IncomingDataTransferResult;
+import io.motown.soaputils.async.ContinuationFutureCallback;
 import org.apache.cxf.continuations.Continuation;
 import org.axonframework.domain.EventMessage;
 

@@ -15,6 +15,7 @@
  */
 package io.motown.ocpp.soaputils.async;
 
+import io.motown.soaputils.async.ContinuationFutureCallback;
 import io.motown.domain.api.chargingstation.AuthorizationResultEvent;
 import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
 import io.motown.ocpp.viewmodel.domain.FutureEventCallback;

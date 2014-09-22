@@ -20,6 +20,7 @@ import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.domain.FutureEventCallback;
 import io.motown.ocpp.viewmodel.persistence.entities.Transaction;
+import io.motown.soaputils.async.ContinuationFutureCallback;
 import org.apache.cxf.continuations.Continuation;
 import org.axonframework.domain.EventMessage;
 
