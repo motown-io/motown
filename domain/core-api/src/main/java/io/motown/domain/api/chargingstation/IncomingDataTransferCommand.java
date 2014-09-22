@@ -100,4 +100,16 @@ public final class IncomingDataTransferCommand {
         final IncomingDataTransferCommand other = (IncomingDataTransferCommand) obj;
         return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.dataTransferMessage, other.dataTransferMessage) && Objects.equals(this.identityContext, other.identityContext);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return com.google.common.base.Objects.toStringHelper(this)
+                .add("chargingStationId", chargingStationId)
+                .add("dataTransferMessage", dataTransferMessage)
+                .add("identityContext", identityContext)
+                .toString();
+    }
 }
