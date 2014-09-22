@@ -93,6 +93,11 @@
             <artifactId>commons-dbcp</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.motown</groupId>
+            <artifactId>soap-utils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>io.motown.domain</groupId>
             <artifactId>domain-core-api</artifactId>
             <version>${project.version}</version>

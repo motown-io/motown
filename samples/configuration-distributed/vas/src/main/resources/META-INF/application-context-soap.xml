@@ -36,7 +36,7 @@
     <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
 
     <!-- Interceptor that adds the messageId if not present, as CXF requires the WS-Addressing messageId header to be present, while according to the spec this is only requierd when using the replyTo or faultTo WSA headers -->
-    <bean id="headerInterceptor" class="io.motown.vas.v10.soap.interceptor.MessageIdHeaderInterceptor"/>
+    <bean id="headerInterceptor" class="io.motown.soaputils.interceptor.MessageIdHeaderInterceptor"/>
 
     <bean class="io.motown.vas.viewmodel.VasEventHandler">
         <property name="chargingStationRepository" ref="chargingStationRepository" />
