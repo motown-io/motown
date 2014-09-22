@@ -423,12 +423,9 @@ public class ChargingStationTest {
 
     @Test
     public void testDataTransfer() {
-        String messageId = "updateChargeSchema";
-        String data = "{'schema' : [{'offset':'2013-07-19T12:47:11.5959704Z', 'power':0.0}, {'offset':'2013-07-19T12:52:11.5959704Z'}]}";
-        DataTransferMessage dataTransferMessage = new DataTransferMessage(CHARGING_STATION_VENDOR, messageId, data);
         fixture.given(CHARGING_STATION)
-                .when(new RequestDataTransferCommand(CHARGING_STATION_ID, dataTransferMessage, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new DataTransferRequestedEvent(CHARGING_STATION_ID, PROTOCOL, CHARGING_STATION_VENDOR, messageId, data, ROOT_IDENTITY_CONTEXT));
+                .when(new RequestDataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_MESSAGE, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new DataTransferRequestedEvent(CHARGING_STATION_ID, PROTOCOL, DATA_TRANSFER_MESSAGE, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
@@ -678,10 +675,9 @@ public class ChargingStationTest {
 
     @Test
     public void testIncomingDataTransfer() {
-        DataTransferMessage dataTransferMessage = new DataTransferMessage(CHARGING_STATION_VENDOR, "MessageId", "Data to transfer");
         fixture.given(CHARGING_STATION)
-                .when(new IncomingDataTransferCommand(CHARGING_STATION_ID, dataTransferMessage, NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new IncomingDataTransferReceivedEvent(CHARGING_STATION_ID, dataTransferMessage, NULL_USER_IDENTITY_CONTEXT));
+                .when(new IncomingDataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_MESSAGE, NULL_USER_IDENTITY_CONTEXT))
+                .expectEvents(new IncomingDataTransferReceivedEvent(CHARGING_STATION_ID, DATA_TRANSFER_MESSAGE, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test

@@ -17,6 +17,8 @@ package io.motown.domain.api.chargingstation;
 
 import io.motown.domain.api.security.IdentityContext;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -29,11 +31,7 @@ public final class DataTransferRequestedEvent implements CommunicationWithChargi
 
     private final String protocol;
 
-    private final String vendorId;
-
-    private final String messageId;
-
-    private final String data;
+    private final DataTransferMessage dataTransferMessage;
 
     private final IdentityContext identityContext;
 
@@ -42,23 +40,18 @@ public final class DataTransferRequestedEvent implements CommunicationWithChargi
      *
      * @param chargingStationId the identifier of the charging station.
      * @param protocol          the protocol identifier.
-     * @param vendorId          the vendor identifier.
-     * @param messageId         the optional additional message identifier.
-     * @param data              the free format data to send to the charging station.
+     * @param dataTransferMessage the data transfer message.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId} or {@code protocol}, {@code vendorId} or
+     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code dataTransferMessage} or
      *                              {@code identityContext} is {@code null}.
+     * @throws IllegalArgumentException if {@code protocol} is empty.
      */
-    public DataTransferRequestedEvent(ChargingStationId chargingStationId, String protocol, String vendorId, String messageId, String data, IdentityContext identityContext) {
+    public DataTransferRequestedEvent(ChargingStationId chargingStationId, String protocol, DataTransferMessage dataTransferMessage, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());
         this.protocol = protocol;
-        checkNotNull(vendorId);
-        checkArgument(!vendorId.isEmpty());
-        this.vendorId = vendorId;
-        this.messageId = checkNotNull(messageId);
-        this.data = checkNotNull(data);
+        this.dataTransferMessage = checkNotNull(dataTransferMessage);
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -79,24 +72,12 @@ public final class DataTransferRequestedEvent implements CommunicationWithChargi
     }
 
     /**
-     * @return the vendor identifier
+     * Gets the data transfer message.
+     *
+     * @return the data transfer message.
      */
-    public String getVendorId() {
-        return vendorId;
-    }
-
-    /**
-     * @return the optional additional message identifier
-     */
-    public String getMessageId() {
-        return messageId;
-    }
-
-    /**
-     * @return the free format data
-     */
-    public String getData() {
-        return data;
+    public DataTransferMessage getDataTransferMessage() {
+        return dataTransferMessage;
     }
 
     /**
@@ -106,5 +87,41 @@ public final class DataTransferRequestedEvent implements CommunicationWithChargi
      */
     public IdentityContext getIdentityContext() {
         return identityContext;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, protocol, dataTransferMessage, identityContext);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final DataTransferRequestedEvent other = (DataTransferRequestedEvent) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.protocol, other.protocol) && Objects.equals(this.dataTransferMessage, other.dataTransferMessage) && Objects.equals(this.identityContext, other.identityContext);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return com.google.common.base.Objects.toStringHelper(this)
+                .add("chargingStationId", chargingStationId)
+                .add("protocol", protocol)
+                .add("dataTransferMessage", dataTransferMessage)
+                .add("identityContext", identityContext)
+                .toString();
     }
 }

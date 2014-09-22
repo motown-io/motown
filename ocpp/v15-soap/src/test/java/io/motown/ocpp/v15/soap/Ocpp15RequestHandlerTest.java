@@ -190,7 +190,7 @@ public class Ocpp15RequestHandlerTest {
         String expectedResponse = "some test data to transfer";
         when(client.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA)).thenReturn(new DataTransferRequestResult(RequestResult.SUCCESS, expectedResponse));
 
-        requestHandler.handle(new DataTransferRequestedEvent(CHARGING_STATION_ID, PROTOCOL, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
+        requestHandler.handle(new DataTransferRequestedEvent(CHARGING_STATION_ID, PROTOCOL, DATA_TRANSFER_MESSAGE, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
         verify(this.service).informDataTransferResponse(CHARGING_STATION_ID, expectedResponse, CORRELATION_TOKEN, addOnIdentity);
@@ -201,7 +201,7 @@ public class Ocpp15RequestHandlerTest {
         String expectedResponse = null;
         when(client.dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA)).thenReturn(new DataTransferRequestResult(RequestResult.SUCCESS, expectedResponse));
 
-        requestHandler.handle(new DataTransferRequestedEvent(CHARGING_STATION_ID, PROTOCOL, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
+        requestHandler.handle(new DataTransferRequestedEvent(CHARGING_STATION_ID, PROTOCOL, DATA_TRANSFER_MESSAGE, ROOT_IDENTITY_CONTEXT), CORRELATION_TOKEN);
 
         verify(client).dataTransfer(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
         verifyNoMoreInteractions(this.service);
