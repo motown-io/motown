@@ -30,11 +30,7 @@ public final class IncomingDataTransferReceivedEvent {
 
     private final ChargingStationId chargingStationId;
 
-    private final String vendorId;
-
-    private final String messageId;
-
-    private final String data;
+    private final DataTransferMessage dataTransferMessage;
 
     private final IdentityContext identityContext;
 
@@ -42,21 +38,14 @@ public final class IncomingDataTransferReceivedEvent {
      * Creates a {@code IncomingDataTransferReceivedEvent} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param vendorId          the charging station vendor.
-     * @param messageId         optional additional identification field (empty if no value).
-     * @param data              the data to transfer (empty if no value).
+     * @param dataTransferMessage the data transfer message.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code vendorId}, {@code messageId}, {@code data} or
-     *                          {@code identityContext} is {@code null}.
-     * @throws IllegalArgumentException if {@code vendorId} is empty.
+     * @throws NullPointerException if {@code chargingStationId}, {@code dataTransferMessage}, or
+     *                              {@code identityContext} is {@code null}.
      */
-    public IncomingDataTransferReceivedEvent(ChargingStationId chargingStationId, String vendorId, String messageId, String data, IdentityContext identityContext) {
+    public IncomingDataTransferReceivedEvent(ChargingStationId chargingStationId, DataTransferMessage dataTransferMessage, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        checkNotNull(vendorId);
-        checkArgument(!vendorId.isEmpty());
-        this.vendorId = checkNotNull(vendorId);
-        this.messageId = checkNotNull(messageId);
-        this.data = checkNotNull(data);
+        this.dataTransferMessage = checkNotNull(dataTransferMessage);
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -68,24 +57,12 @@ public final class IncomingDataTransferReceivedEvent {
     }
 
     /**
-     * @return the vendor identifier.
+     * Gets the data transfer message.
+     *
+     * @return the data transfer message.
      */
-    public String getVendorId() {
-        return vendorId;
-    }
-
-    /**
-     * @return the additional message identifier.
-     */
-    public String getMessageId() {
-        return messageId;
-    }
-
-    /**
-     * @return the data.
-     */
-    public String getData() {
-        return data;
+    public DataTransferMessage getDataTransferMessage() {
+        return dataTransferMessage;
     }
 
     /**
@@ -97,11 +74,17 @@ public final class IncomingDataTransferReceivedEvent {
         return identityContext;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, vendorId, messageId, data, identityContext);
+        return Objects.hash(chargingStationId, dataTransferMessage, identityContext);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -111,6 +94,18 @@ public final class IncomingDataTransferReceivedEvent {
             return false;
         }
         final IncomingDataTransferReceivedEvent other = (IncomingDataTransferReceivedEvent) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.vendorId, other.vendorId) && Objects.equals(this.messageId, other.messageId) && Objects.equals(this.data, other.data) && Objects.equals(this.identityContext, other.identityContext);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.dataTransferMessage, other.dataTransferMessage) && Objects.equals(this.identityContext, other.identityContext);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return com.google.common.base.Objects.toStringHelper(this)
+                .add("chargingStationId", chargingStationId)
+                .add("dataTransferMessage", dataTransferMessage)
+                .add("identityContext", identityContext)
+                .toString();
     }
 }

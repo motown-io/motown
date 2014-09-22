@@ -677,11 +677,10 @@ public class ChargingStationTest {
 
     @Test
     public void testIncomingDataTransfer() {
-        String messageId = "MessageId";
-        String dataToTransfer = "Data to transfer";
+        DataTransferMessage dataTransferMessage = new DataTransferMessage(CHARGING_STATION_VENDOR, "MessageId", "Data to transfer");
         fixture.given(CHARGING_STATION)
-                .when(new IncomingDataTransferCommand(CHARGING_STATION_ID, new DataTransferMessage(CHARGING_STATION_VENDOR, messageId, dataToTransfer), NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new IncomingDataTransferReceivedEvent(CHARGING_STATION_ID, CHARGING_STATION_VENDOR, messageId, dataToTransfer, NULL_USER_IDENTITY_CONTEXT));
+                .when(new IncomingDataTransferCommand(CHARGING_STATION_ID, dataTransferMessage, NULL_USER_IDENTITY_CONTEXT))
+                .expectEvents(new IncomingDataTransferReceivedEvent(CHARGING_STATION_ID, dataTransferMessage, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test

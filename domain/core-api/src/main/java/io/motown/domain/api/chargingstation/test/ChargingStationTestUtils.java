@@ -164,6 +164,10 @@ public final class ChargingStationTestUtils {
      */
     public static final String DATA_TRANSFER_DATA = "['acme', 'widget']";
     /**
+     * The default data transfer message.
+     */
+    public static final DataTransferMessage DATA_TRANSFER_MESSAGE = new DataTransferMessage(DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA);
+    /**
      * The default meter start value.
      */
     public static final int METER_START = 100;

@@ -24,32 +24,17 @@ public class IncomingDataTransferReceivedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenChargingStationIdNull() {
-        new IncomingDataTransferReceivedEvent(null, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA, NULL_USER_IDENTITY_CONTEXT);
+        new IncomingDataTransferReceivedEvent(null, DATA_TRANSFER_MESSAGE, NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenVendorIdNull() {
-        new IncomingDataTransferReceivedEvent(CHARGING_STATION_ID, null, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA, NULL_USER_IDENTITY_CONTEXT);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void illegalArgumentExceptionThrownWhenVendorIdEmpty() {
-        new IncomingDataTransferReceivedEvent(CHARGING_STATION_ID, "", DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA, NULL_USER_IDENTITY_CONTEXT);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenMessageIdNull() {
-        new IncomingDataTransferReceivedEvent(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, null, DATA_TRANSFER_DATA, NULL_USER_IDENTITY_CONTEXT);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenDataNull() {
-        new IncomingDataTransferReceivedEvent(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, null, NULL_USER_IDENTITY_CONTEXT);
+    public void nullPointerExceptionThrownWhenDataTransferMessageNull() {
+        new IncomingDataTransferReceivedEvent(CHARGING_STATION_ID, null, NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenIdentityContextNull() {
-        new IncomingDataTransferReceivedEvent(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, DATA_TRANSFER_MESSAGE_ID, DATA_TRANSFER_DATA, null);
+        new IncomingDataTransferReceivedEvent(CHARGING_STATION_ID, DATA_TRANSFER_MESSAGE, null);
     }
 
     @Test
