@@ -52,12 +52,19 @@ public final class IncomingDataTransferCommand {
     }
 
     /**
+     * Gets the charging station identifier.
+     *
      * @return the charging station identifier.
      */
     public ChargingStationId getChargingStationId() {
         return chargingStationId;
     }
 
+    /**
+     * Gets the data transfer message.
+     *
+     * @return the data transfer message.
+     */
     public DataTransferMessage getDataTransferMessage() {
         return dataTransferMessage;
     }
@@ -71,11 +78,17 @@ public final class IncomingDataTransferCommand {
         return identityContext;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(chargingStationId, dataTransferMessage, identityContext);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
