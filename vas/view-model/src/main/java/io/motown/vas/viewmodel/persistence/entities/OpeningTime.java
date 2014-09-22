@@ -15,7 +15,7 @@
  */
 package io.motown.vas.viewmodel.persistence.entities;
 
-import io.motown.vas.viewmodel.model.Day;
+import io.motown.domain.api.chargingstation.Day;
 
 import javax.persistence.*;
 

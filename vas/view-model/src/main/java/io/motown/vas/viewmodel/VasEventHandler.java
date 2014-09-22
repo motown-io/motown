@@ -20,7 +20,6 @@ import io.motown.domain.api.chargingstation.Evse;
 import io.motown.domain.api.chargingstation.OpeningTime;
 import io.motown.vas.viewmodel.persistence.entities.ChargingStation;
 import io.motown.vas.viewmodel.model.ComponentStatus;
-import io.motown.vas.viewmodel.model.Day;
 import io.motown.vas.viewmodel.persistence.repostories.ChargingStationRepository;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
