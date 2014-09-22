@@ -68,7 +68,7 @@ class RequestDataTransferJsonCommandHandler implements JsonCommandHandler {
             if (chargingStation != null && chargingStation.communicationAllowed()) {
                 DataTransferApiCommand command = gson.fromJson(commandObject, DataTransferApiCommand.class);
 
-                commandGateway.send(new RequestDataTransferCommand(csId, command.getVendorId(), command.getMessageId(), command.getData(), identityContext), new CorrelationToken());
+                commandGateway.send(new RequestDataTransferCommand(csId, command.getDataTransferMessage(), identityContext), new CorrelationToken());
             }
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Data transfer command not able to parse the payload, is your json correctly formatted?", ex);

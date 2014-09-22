@@ -425,8 +425,9 @@ public class ChargingStationTest {
     public void testDataTransfer() {
         String messageId = "updateChargeSchema";
         String data = "{'schema' : [{'offset':'2013-07-19T12:47:11.5959704Z', 'power':0.0}, {'offset':'2013-07-19T12:52:11.5959704Z'}]}";
+        DataTransferMessage dataTransferMessage = new DataTransferMessage(CHARGING_STATION_VENDOR, messageId, data);
         fixture.given(CHARGING_STATION)
-                .when(new RequestDataTransferCommand(CHARGING_STATION_ID, CHARGING_STATION_VENDOR, messageId, data, ROOT_IDENTITY_CONTEXT))
+                .when(new RequestDataTransferCommand(CHARGING_STATION_ID, dataTransferMessage, ROOT_IDENTITY_CONTEXT))
                 .expectEvents(new DataTransferRequestedEvent(CHARGING_STATION_ID, PROTOCOL, CHARGING_STATION_VENDOR, messageId, data, ROOT_IDENTITY_CONTEXT));
     }
 

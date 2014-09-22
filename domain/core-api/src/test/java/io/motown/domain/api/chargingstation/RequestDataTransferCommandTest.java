@@ -20,36 +20,21 @@ import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
-public class DataTransferCommandTest {
+public class RequestDataTransferCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new RequestDataTransferCommand(null, DATA_TRANSFER_VENDOR, "", "", ROOT_IDENTITY_CONTEXT);
+        new RequestDataTransferCommand(null, DATA_TRANSFER_MESSAGE, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingCommandWithVendorIdNull() {
-        new RequestDataTransferCommand(CHARGING_STATION_ID, null, "", "", ROOT_IDENTITY_CONTEXT);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void illegalArgumentExceptionThrownWhenCreatingCommandWithVendorIdEmpty() {
-        new RequestDataTransferCommand(CHARGING_STATION_ID, "", "", "", ROOT_IDENTITY_CONTEXT);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingCommandWithMessageIdNull() {
-        new RequestDataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, null, "", ROOT_IDENTITY_CONTEXT);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingCommandWithDataNull() {
-        new RequestDataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, "", null, ROOT_IDENTITY_CONTEXT);
+    public void nullPointerExceptionThrownWhenCreatingCommandWithDataTransferMessageNull() {
+        new RequestDataTransferCommand(CHARGING_STATION_ID, null, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
-        new RequestDataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_VENDOR, "", "", null);
+        new RequestDataTransferCommand(CHARGING_STATION_ID, DATA_TRANSFER_MESSAGE, null);
     }
 
     @Test

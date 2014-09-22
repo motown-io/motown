@@ -15,36 +15,20 @@
  */
 package io.motown.operatorapi.viewmodel.model;
 
+import io.motown.domain.api.chargingstation.DataTransferMessage;
+
 public class DataTransferApiCommand implements ApiCommand {
 
-    private String vendorId;
-    private String messageId;
-    private String data;
+    private DataTransferMessage dataTransferMessage;
 
     public DataTransferApiCommand() {
     }
 
-    public String getVendorId() {
-        return vendorId;
+    public DataTransferMessage getDataTransferMessage() {
+        return dataTransferMessage;
     }
 
-    public void setVendorId(String vendorId) {
-        this.vendorId = vendorId;
-    }
-
-    public String getMessageId() {
-        return messageId;
-    }
-
-    public void setMessageId(String messageId) {
-        this.messageId = messageId;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
+    public void setDataTransferMessage(DataTransferMessage dataTransferMessage) {
+        this.dataTransferMessage = dataTransferMessage;
     }
 }
