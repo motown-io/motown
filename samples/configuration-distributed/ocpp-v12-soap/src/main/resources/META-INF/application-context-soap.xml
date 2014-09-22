@@ -35,16 +35,16 @@
     <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
 
     <!-- Interceptor that adds the messageId if not present, as CXF requires the WS-Addressing messageId header to be present, while according to the spec this is only requierd when using the replyTo or faultTo WSA headers -->
-    <bean id="headerInterceptor" class="io.motown.ocpp.soaputils.interceptor.MessageIdHeaderInterceptor"/>
+    <bean id="headerInterceptor" class="io.motown.soaputils.interceptor.MessageIdHeaderInterceptor"/>
 
-    <bean id="replyToInterceptor" class="io.motown.ocpp.soaputils.interceptor.ReplyToHeaderInInterceptor"/>
+    <bean id="replyToInterceptor" class="io.motown.soaputils.interceptor.ReplyToHeaderInInterceptor"/>
 
     <bean id="centralSystemService" class="io.motown.ocpp.v12.soap.centralsystem.MotownCentralSystemService">
         <property name="domainService" ref="domainService" />
         <property name="continuationTimeout" value="${io.motown.ocpp.v12.soap.cxf.continuation.timeout}" />
         <property name="heartbeatIntervalFallback" value="${io.motown.ocpp.viewmodel.heartbeat.interval}" />
         <property name="soapHeaderReader">
-            <bean class="io.motown.ocpp.soaputils.header.CXFSoapHeaderReader" />
+            <bean class="io.motown.soaputils.header.CXFSoapHeaderReader" />
         </property>
         <property name="addOnId" value="1"/>
     </bean>
