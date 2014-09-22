@@ -41,9 +41,8 @@ public final class DataTransferResponseCommand {
      * @param chargingStationId the identifier of the charging station.
      * @param data              the data to transfer (use an empty string to signify no value).
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code vendorId}, {@code messageId}, {@code data}
-     *                              or {@code identityContext} is {@code null}.
-     * @throws IllegalArgumentException if {@code vendorId} is empty.
+     * @throws NullPointerException if {@code chargingStationId}, {@code data}, or {@code identityContext} is
+     *                              {@code null}.
      */
     public DataTransferResponseCommand(ChargingStationId chargingStationId, String data, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);

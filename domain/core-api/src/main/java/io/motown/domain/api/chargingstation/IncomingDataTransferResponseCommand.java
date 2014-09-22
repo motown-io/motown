@@ -44,9 +44,8 @@ public final class IncomingDataTransferResponseCommand {
      * @param responseData              the responseData to transfer back to the charging station (empty if no value).
      * @param status            the status of the processing of the datatransfer responseData from the charging station.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code vendorId}, {@code messageId}, {@code responseData} or is
-     *                             {@code identityContext} is {@code null}.
-     * @throws IllegalArgumentException if {@code vendorId} is empty.
+     * @throws NullPointerException if {@code chargingStationId}, {@code responseData}, or {@code identityContext} is
+     *                              {@code null}.
      */
     public IncomingDataTransferResponseCommand(ChargingStationId chargingStationId, String responseData, IncomingDataTransferResultStatus status, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);

@@ -36,8 +36,8 @@ public final class DataTransferResponseReceivedEvent {
      * @param chargingStationId the identifier of the charging station.
      * @param data              the free format data to send to the charging station.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId} or {@code protocol}, {@code vendorId} or
-     *                              {@code identityContext} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId}, {@code data}, or {@code identityContext} is
+     *                              {@code null}.
      */
     public DataTransferResponseReceivedEvent(ChargingStationId chargingStationId, String data, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
