@@ -102,6 +102,7 @@
         <module>domain/core-api</module>
         <module>domain/utils</module>
         <module>utils/soap</module>
+        <module>utils/rest</module>
         <module>ocpp/v12-soap</module>
         <module>ocpp/v15-soap</module>
         <module>ocpp/view-model</module>
