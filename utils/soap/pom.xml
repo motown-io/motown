@@ -22,8 +22,9 @@
         <artifactId>motown-io</artifactId>
         <groupId>io.motown</groupId>
         <version>0.8.3-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
+    <groupId>io.motown.utils</groupId>
     <artifactId>soap-utils</artifactId>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Utility classes used by soap modules.</description>
