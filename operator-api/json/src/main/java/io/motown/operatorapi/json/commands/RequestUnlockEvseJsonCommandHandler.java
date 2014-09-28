@@ -28,17 +28,9 @@ import io.motown.operatorapi.viewmodel.model.UnlockEvseApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
-class RequestUnlockEvseJsonCommandHandler implements JsonCommandHandler {
+class RequestUnlockEvseJsonCommandHandler extends JsonCommandHandler {
 
     private static final String COMMAND_NAME = "RequestUnlockEvse";
-
-    private DomainCommandGateway commandGateway;
-
-    private ChargingStationRepository repository;
-
-    private Gson gson;
-
-    private CommandAuthorizationService commandAuthorizationService;
 
     /**
      * {@inheritDoc}
@@ -68,42 +60,5 @@ class RequestUnlockEvseJsonCommandHandler implements JsonCommandHandler {
         } catch (JsonSyntaxException e) {
             throw new IllegalArgumentException("Unlock evse command not able to parse the payload, is your JSON correctly formatted?", e);
         }
-    }
-
-    /**
-     * Sets the command gateway.
-     *
-     * @param commandGateway the command gateway.
-     */
-    public void setCommandGateway(DomainCommandGateway commandGateway) {
-        this.commandGateway = commandGateway;
-    }
-
-    /**
-     * Sets the charging station repository.
-     *
-     * @param repository the charging station repository.
-     */
-    public void setRepository(ChargingStationRepository repository) {
-        this.repository = repository;
-    }
-
-    /**
-     * Sets the GSON instance.
-     *
-     * @param gson the GSON instance.
-     */
-    public void setGson(Gson gson) {
-        this.gson = gson;
-    }
-
-    /**
-     * Sets the command authorization service to use. The command authorization service checks if a certain user is
-     * allowed to execute a certain command.
-     *
-     * @param commandAuthorizationService command authorization.
-     */
-    public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
-        this.commandAuthorizationService = commandAuthorizationService;
     }
 }

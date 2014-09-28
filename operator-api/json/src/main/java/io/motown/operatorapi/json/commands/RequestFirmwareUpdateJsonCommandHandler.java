@@ -32,17 +32,9 @@ import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationR
 
 import java.util.Map;
 
-class RequestFirmwareUpdateJsonCommandHandler implements JsonCommandHandler {
+class RequestFirmwareUpdateJsonCommandHandler extends JsonCommandHandler {
 
     private static final String COMMAND_NAME = "RequestFirmwareUpdate";
-
-    private DomainCommandGateway commandGateway;
-
-    private ChargingStationRepository repository;
-
-    private Gson gson;
-
-    private CommandAuthorizationService commandAuthorizationService;
 
     /**
      * {@inheritDoc}
@@ -82,42 +74,5 @@ class RequestFirmwareUpdateJsonCommandHandler implements JsonCommandHandler {
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Update firmware command not able to parse the payload, is your json correctly formatted?", ex);
         }
-    }
-
-    /**
-     * Sets the command gateway.
-     *
-     * @param commandGateway the command gateway.
-     */
-    public void setCommandGateway(DomainCommandGateway commandGateway) {
-        this.commandGateway = commandGateway;
-    }
-
-    /**
-     * Sets the charging station repository.
-     *
-     * @param repository the charging station repository.
-     */
-    public void setRepository(ChargingStationRepository repository) {
-        this.repository = repository;
-    }
-
-    /**
-     * Sets the GSON instance.
-     *
-     * @param gson the GSON instance.
-     */
-    public void setGson(Gson gson) {
-        this.gson = gson;
-    }
-
-    /**
-     * Sets the command authorization service to use. The command authorization service checks if a certain user is
-     * allowed to execute a certain command.
-     *
-     * @param commandAuthorizationService command authorization.
-     */
-    public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
-        this.commandAuthorizationService = commandAuthorizationService;
     }
 }

@@ -25,15 +25,9 @@ import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
-class RequestClearCacheJsonCommandHandler implements JsonCommandHandler {
+class RequestClearCacheJsonCommandHandler extends JsonCommandHandler {
 
     private static final String COMMAND_NAME = "RequestClearCache";
-
-    private DomainCommandGateway commandGateway;
-
-    private ChargingStationRepository repository;
-
-    private CommandAuthorizationService commandAuthorizationService;
 
     /**
      * {@inheritDoc}
@@ -58,33 +52,5 @@ class RequestClearCacheJsonCommandHandler implements JsonCommandHandler {
         if (chargingStation != null && chargingStation.communicationAllowed()) {
             commandGateway.send(new RequestClearCacheCommand(csId, identityContext), new CorrelationToken());
         }
-    }
-
-    /**
-     * Sets the command gateway.
-     *
-     * @param commandGateway the command gateway.
-     */
-    public void setCommandGateway(DomainCommandGateway commandGateway) {
-        this.commandGateway = commandGateway;
-    }
-
-    /**
-     * Sets the charging station repository.
-     *
-     * @param repository the charging station repository.
-     */
-    public void setRepository(ChargingStationRepository repository) {
-        this.repository = repository;
-    }
-
-    /**
-     * Sets the command authorization service to use. The command authorization service checks if a certain user is
-     * allowed to execute a certain command.
-     *
-     * @param commandAuthorizationService    command authorization.
-     */
-    public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
-        this.commandAuthorizationService = commandAuthorizationService;
     }
 }

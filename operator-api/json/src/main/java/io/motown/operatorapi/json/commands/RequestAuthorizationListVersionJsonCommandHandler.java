@@ -17,23 +17,15 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.JsonObject;
 import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.RequestAuthorizationListVersionCommand;
 import io.motown.domain.api.chargingstation.CorrelationToken;
+import io.motown.domain.api.chargingstation.RequestAuthorizationListVersionCommand;
 import io.motown.domain.api.security.IdentityContext;
-import io.motown.domain.commandauthorization.CommandAuthorizationService;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
-import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
-class RequestAuthorizationListVersionJsonCommandHandler implements JsonCommandHandler {
+class RequestAuthorizationListVersionJsonCommandHandler extends JsonCommandHandler {
 
     private static final String COMMAND_NAME = "RequestAuthorizationListVersion";
-
-    private DomainCommandGateway commandGateway;
-
-    private ChargingStationRepository repository;
-
-    private CommandAuthorizationService commandAuthorizationService;
 
     /**
      * {@inheritDoc}
@@ -58,33 +50,5 @@ class RequestAuthorizationListVersionJsonCommandHandler implements JsonCommandHa
         if (chargingStation != null && chargingStation.communicationAllowed()) {
             commandGateway.send(new RequestAuthorizationListVersionCommand(csId, identityContext), new CorrelationToken());
         }
-    }
-
-    /**
-     * Sets the command gateway.
-     *
-     * @param commandGateway the command gateway.
-     */
-    public void setCommandGateway(DomainCommandGateway commandGateway) {
-        this.commandGateway = commandGateway;
-    }
-
-    /**
-     * Sets the charging station repository.
-     *
-     * @param repository the charging station repository.
-     */
-    public void setRepository(ChargingStationRepository repository) {
-        this.repository = repository;
-    }
-
-    /**
-     * Sets the command authorization service to use. The command authorization service checks if a certain user is
-     * allowed to execute a certain command.
-     *
-     * @param commandAuthorizationService command authorization.
-     */
-    public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
-        this.commandAuthorizationService = commandAuthorizationService;
     }
 }

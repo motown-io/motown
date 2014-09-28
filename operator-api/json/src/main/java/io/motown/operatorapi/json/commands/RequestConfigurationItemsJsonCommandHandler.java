@@ -15,31 +15,20 @@
  */
 package io.motown.operatorapi.json.commands;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestConfigurationItemsCommand;
 import io.motown.domain.api.security.IdentityContext;
-import io.motown.domain.commandauthorization.CommandAuthorizationService;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.model.RequestGetConfigurationApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
-import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
 import java.util.HashSet;
 
-class RequestConfigurationItemsJsonCommandHandler implements JsonCommandHandler {
+class RequestConfigurationItemsJsonCommandHandler extends JsonCommandHandler {
 
     private static final String COMMAND_NAME = "RequestConfigurationItems";
-
-    private DomainCommandGateway commandGateway;
-
-    private ChargingStationRepository repository;
-
-    private Gson gson;
-
-    private CommandAuthorizationService commandAuthorizationService;
 
     /**
      * {@inheritDoc}
@@ -73,42 +62,5 @@ class RequestConfigurationItemsJsonCommandHandler implements JsonCommandHandler 
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Get configuration command is not able to parse the payload, is your json correctly formatted?", ex);
         }
-    }
-
-    /**
-     * Sets the command gateway.
-     *
-     * @param commandGateway the command gateway.
-     */
-    public void setCommandGateway(DomainCommandGateway commandGateway) {
-        this.commandGateway = commandGateway;
-    }
-
-    /**
-     * Sets the charging station repository.
-     *
-     * @param repository the charging station repository.
-     */
-    public void setRepository(ChargingStationRepository repository) {
-        this.repository = repository;
-    }
-
-    /**
-     * Sets the GSON instance.
-     *
-     * @param gson the GSON instance.
-     */
-    public void setGson(Gson gson) {
-        this.gson = gson;
-    }
-
-    /**
-     * Sets the command authorization service to use. The command authorization service checks if a certain user is
-     * allowed to execute a certain command.
-     *
-     * @param commandAuthorizationService command authorization.
-     */
-    public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
-        this.commandAuthorizationService = commandAuthorizationService;
     }
 }

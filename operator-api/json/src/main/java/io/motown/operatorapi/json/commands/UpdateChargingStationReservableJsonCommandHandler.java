@@ -15,29 +15,20 @@
  */
 package io.motown.operatorapi.json.commands;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.api.chargingstation.ChargingStationId;
+import io.motown.domain.api.chargingstation.MakeChargingStationNotReservableCommand;
+import io.motown.domain.api.chargingstation.MakeChargingStationReservableCommand;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.api.security.UserIdentity;
-import io.motown.domain.commandauthorization.CommandAuthorizationService;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.model.UpdateChargingStationReservableApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
-import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
-class UpdateChargingStationReservableJsonCommandHandler implements JsonCommandHandler {
+class UpdateChargingStationReservableJsonCommandHandler extends JsonCommandHandler {
 
     private static final String COMMAND_NAME = "UpdateChargingStationReservable";
-
-    private DomainCommandGateway commandGateway;
-
-    private ChargingStationRepository repository;
-
-    private Gson gson;
-
-    private CommandAuthorizationService commandAuthorizationService;
 
     /**
      * {@inheritDoc}
@@ -73,43 +64,6 @@ class UpdateChargingStationReservableJsonCommandHandler implements JsonCommandHa
         } catch (JsonSyntaxException e) {
             throw new IllegalArgumentException("Update charging station reservable command not able to parse the payload, is your JSON correctly formatted?", e);
         }
-    }
-
-    /**
-     * Sets the command gateway.
-     *
-     * @param commandGateway the command gateway.
-     */
-    public void setCommandGateway(DomainCommandGateway commandGateway) {
-        this.commandGateway = commandGateway;
-    }
-
-    /**
-     * Sets the charging station repository.
-     *
-     * @param repository the charging station repository.
-     */
-    public void setRepository(ChargingStationRepository repository) {
-        this.repository = repository;
-    }
-
-    /**
-     * Sets the GSON instance.
-     *
-     * @param gson the GSON instance.
-     */
-    public void setGson(Gson gson) {
-        this.gson = gson;
-    }
-
-    /**
-     * Sets the command authorization service to use. The command authorization service checks if a certain user is
-     * allowed to execute a certain command.
-     *
-     * @param commandAuthorizationService    command authorization.
-     */
-    public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
-        this.commandAuthorizationService = commandAuthorizationService;
     }
 
     private void checkAuthorization(ChargingStationId chargingStationId, UserIdentity userIdentity, Class commandClass) throws UserIdentityUnauthorizedException {

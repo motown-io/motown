@@ -30,17 +30,9 @@ import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationR
 /**
  * Handles the Add ChargingStation Opening Times JSON command.
  */
-class AddChargingStationOpeningTimesJsonCommandHandler implements JsonCommandHandler {
+class AddChargingStationOpeningTimesJsonCommandHandler extends JsonCommandHandler {
 
     private static final String COMMAND_NAME = "AddChargingStationOpeningTimes";
-
-    private DomainCommandGateway commandGateway;
-
-    private ChargingStationRepository repository;
-
-    private Gson gson;
-
-    private CommandAuthorizationService commandAuthorizationService;
 
     /**
      * {@inheritDoc}
@@ -71,42 +63,5 @@ class AddChargingStationOpeningTimesJsonCommandHandler implements JsonCommandHan
         } catch (JsonSyntaxException e) {
             throw new IllegalArgumentException("Set charging station opening times command not able to parse the payload, is your JSON correctly formatted?", e);
         }
-    }
-
-    /**
-     * Sets the command gateway.
-     *
-     * @param commandGateway the command gateway.
-     */
-    public void setCommandGateway(DomainCommandGateway commandGateway) {
-        this.commandGateway = commandGateway;
-    }
-
-    /**
-     * Sets the charging station repository.
-     *
-     * @param repository the charging station repository.
-     */
-    public void setRepository(ChargingStationRepository repository) {
-        this.repository = repository;
-    }
-
-    /**
-     * Sets the GSON instance.
-     *
-     * @param gson the GSON instance.
-     */
-    public void setGson(Gson gson) {
-        this.gson = gson;
-    }
-
-    /**
-     * Sets the command authorization service to use. The command authorization service checks if a certain user is
-     * allowed to execute a certain command.
-     *
-     * @param commandAuthorizationService    command authorization.
-     */
-    public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
-        this.commandAuthorizationService = commandAuthorizationService;
     }
 }

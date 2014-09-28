@@ -29,17 +29,9 @@ import io.motown.operatorapi.viewmodel.model.RevokePermissionApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
-class RevokePermissionJsonCommandHandler implements JsonCommandHandler {
+class RevokePermissionJsonCommandHandler extends JsonCommandHandler {
 
     private static final String COMMAND_NAME = "RevokePermission";
-
-    private DomainCommandGateway commandGateway;
-
-    private ChargingStationRepository repository;
-
-    private Gson gson;
-
-    private CommandAuthorizationService commandAuthorizationService;
 
     /**
      * {@inheritDoc}
@@ -75,42 +67,5 @@ class RevokePermissionJsonCommandHandler implements JsonCommandHandler {
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException("Revoke permission command cannot instantiate class object for command class, is the passed command class value a valid class?", e);
         }
-    }
-
-    /**
-     * Sets the command gateway.
-     *
-     * @param commandGateway the command gateway.
-     */
-    public void setCommandGateway(DomainCommandGateway commandGateway) {
-        this.commandGateway = commandGateway;
-    }
-
-    /**
-     * Sets the charging station repository.
-     *
-     * @param repository the charging station repository.
-     */
-    public void setRepository(ChargingStationRepository repository) {
-        this.repository = repository;
-    }
-
-    /**
-     * Sets the GSON instance.
-     *
-     * @param gson the GSON instance.
-     */
-    public void setGson(Gson gson) {
-        this.gson = gson;
-    }
-
-    /**
-     * Sets the command authorization service to use. The command authorization service checks if a certain user is
-     * allowed to execute a certain command.
-     *
-     * @param commandAuthorizationService    command authorization.
-     */
-    public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
-        this.commandAuthorizationService = commandAuthorizationService;
     }
 }
