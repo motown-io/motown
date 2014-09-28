@@ -15,7 +15,6 @@
  */
 package io.motown.operatorapi.json.commands;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
@@ -24,11 +23,9 @@ import io.motown.domain.api.chargingstation.RequestHardResetChargingStationComma
 import io.motown.domain.api.chargingstation.RequestSoftResetChargingStationCommand;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.api.security.UserIdentity;
-import io.motown.domain.commandauthorization.CommandAuthorizationService;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.model.RequestResetChargingStationApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
-import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
 class RequestResetChargingStationJsonCommandHandler extends JsonCommandHandler {
 
@@ -65,12 +62,6 @@ class RequestResetChargingStationJsonCommandHandler extends JsonCommandHandler {
             }
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Configure command not able to parse the payload, is your json correctly formatted?", ex);
-        }
-    }
-
-    private void checkAuthorization(ChargingStationId chargingStationId, UserIdentity userIdentity, Class commandClass) throws UserIdentityUnauthorizedException {
-        if (!commandAuthorizationService.isAuthorized(chargingStationId, userIdentity, commandClass)) {
-            throw new UserIdentityUnauthorizedException(chargingStationId.getId(), userIdentity, commandClass);
         }
     }
 }

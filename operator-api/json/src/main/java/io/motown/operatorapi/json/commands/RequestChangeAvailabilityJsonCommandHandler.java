@@ -15,17 +15,14 @@
  */
 package io.motown.operatorapi.json.commands;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.api.security.UserIdentity;
-import io.motown.domain.commandauthorization.CommandAuthorizationService;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.model.RequestChangeChargingStationAvailabilityApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
-import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
 class RequestChangeAvailabilityJsonCommandHandler extends JsonCommandHandler {
 
@@ -78,12 +75,6 @@ class RequestChangeAvailabilityJsonCommandHandler extends JsonCommandHandler {
                 checkAuthorization(csId, userIdentity, RequestChangeComponentAvailabilityToOperativeCommand.class);
                 commandGateway.send(new RequestChangeComponentAvailabilityToOperativeCommand(new ChargingStationId(chargingStationId), command.getEvseId(), ChargingStationComponent.EVSE, identityContext), new CorrelationToken());
             }
-        }
-    }
-
-    private void checkAuthorization(ChargingStationId chargingStationId, UserIdentity userIdentity, Class commandClass) throws UserIdentityUnauthorizedException {
-        if (!commandAuthorizationService.isAuthorized(chargingStationId, userIdentity, commandClass)) {
-            throw new UserIdentityUnauthorizedException(chargingStationId.getId(), userIdentity, commandClass);
         }
     }
 }

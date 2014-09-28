@@ -17,7 +17,9 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.security.IdentityContext;
+import io.motown.domain.api.security.UserIdentity;
 import io.motown.domain.commandauthorization.CommandAuthorizationService;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
@@ -67,6 +69,12 @@ public abstract class JsonCommandHandler {
      */
     public void setCommandAuthorizationService(CommandAuthorizationService commandAuthorizationService) {
         this.commandAuthorizationService = commandAuthorizationService;
+    }
+
+    protected void checkAuthorization(ChargingStationId chargingStationId, UserIdentity userIdentity, Class commandClass) throws UserIdentityUnauthorizedException {
+        if (!commandAuthorizationService.isAuthorized(chargingStationId, userIdentity, commandClass)) {
+            throw new UserIdentityUnauthorizedException(chargingStationId.getId(), userIdentity, commandClass);
+        }
     }
 
     /**

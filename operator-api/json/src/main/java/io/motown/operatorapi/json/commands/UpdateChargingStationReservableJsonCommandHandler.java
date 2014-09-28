@@ -65,10 +65,4 @@ class UpdateChargingStationReservableJsonCommandHandler extends JsonCommandHandl
             throw new IllegalArgumentException("Update charging station reservable command not able to parse the payload, is your JSON correctly formatted?", e);
         }
     }
-
-    private void checkAuthorization(ChargingStationId chargingStationId, UserIdentity userIdentity, Class commandClass) throws UserIdentityUnauthorizedException {
-        if (!commandAuthorizationService.isAuthorized(chargingStationId, userIdentity, commandClass)) {
-            throw new UserIdentityUnauthorizedException(chargingStationId.getId(), userIdentity, commandClass);
-        }
-    }
 }
