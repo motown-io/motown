@@ -17,8 +17,7 @@ package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.domain.api.chargingstation.ComponentStatus;
-import io.motown.domain.api.chargingstation.EvseId;
+import io.motown.domain.api.chargingstation.StatusNotification;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Statusnotification;
@@ -63,7 +62,7 @@ public class StatusNotificationRequestHandlerTest {
         requestPayload.setVendorErrorCode("");
 
         String response = handleRequest(requestPayload);
-        verify(domainService).statusNotification(notNull(ChargingStationId.class), notNull(EvseId.class), anyString(), any(ComponentStatus.class), anyString(), notNull(Date.class), anyString(), anyString(), any(AddOnIdentity.class));
+        verify(domainService).statusNotification(notNull(ChargingStationId.class), any(StatusNotification.class), any(AddOnIdentity.class));
         assertNotNull(response);
     }
 
@@ -80,7 +79,7 @@ public class StatusNotificationRequestHandlerTest {
 
         String response = handleRequest(requestPayload);
         //In case the timestamp is missing it has to be created ('time of receipt')
-        verify(domainService).statusNotification(notNull(ChargingStationId.class), notNull(EvseId.class), anyString(), any(ComponentStatus.class), anyString(), notNull(Date.class), anyString(), anyString(), any(AddOnIdentity.class));
+        verify(domainService).statusNotification(notNull(ChargingStationId.class), any(StatusNotification.class), any(AddOnIdentity.class));
         assertNotNull(response);
     }
 

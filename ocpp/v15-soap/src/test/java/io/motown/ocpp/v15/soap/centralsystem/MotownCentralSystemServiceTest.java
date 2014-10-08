@@ -19,6 +19,8 @@ import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.chargingstation.MeterValue;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.api.security.TypeBasedAddOnIdentity;
+import io.motown.domain.utils.AttributeMap;
+import io.motown.domain.utils.AttributeMapKeys;
 import io.motown.soaputils.header.SoapHeaderReader;
 import io.motown.ocpp.v15.soap.centralsystem.schema.*;
 import io.motown.ocpp.v15.soap.centralsystem.schema.FirmwareStatus;
@@ -192,7 +194,12 @@ public class MotownCentralSystemServiceTest {
 
         motownCentralSystemService.statusNotification(request, CHARGING_STATION_ID.getId());
 
-        verify(domainService).statusNotification(CHARGING_STATION_ID, EVSE_ID, ChargePointErrorCode.GROUND_FAILURE.value(), ComponentStatus.FAULTED, STATUS_NOTIFICATION_ERROR_INFO, FIVE_MINUTES_AGO, CHARGING_STATION_VENDOR, STATUS_NOTIFICATION_VENDOR_ERROR_CODE, OCPPS15_ADD_ON_IDENTITY);
+        AttributeMap<String, String> attributes = new AttributeMap<String, String>().
+                putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_ERROR_CODE_KEY, ChargePointErrorCode.GROUND_FAILURE.value()).
+                putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_INFO_KEY, STATUS_NOTIFICATION_ERROR_INFO).
+                putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_VENDOR_ID_KEY, CHARGING_STATION_VENDOR).
+                putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_VENDOR_ERROR_CODE_KEY, STATUS_NOTIFICATION_VENDOR_ERROR_CODE);
+        verify(domainService).statusNotification(CHARGING_STATION_ID, new StatusNotification(EVSE_ID, ComponentStatus.FAULTED, FIVE_MINUTES_AGO, attributes), OCPPS15_ADD_ON_IDENTITY);
     }
 
     @Test

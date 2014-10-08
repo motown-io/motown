@@ -19,7 +19,10 @@ import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.ComponentStatus;
 import io.motown.domain.api.chargingstation.EvseId;
+import io.motown.domain.api.chargingstation.StatusNotification;
 import io.motown.domain.api.security.AddOnIdentity;
+import io.motown.domain.utils.AttributeMap;
+import io.motown.domain.utils.AttributeMapKeys;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Statusnotification;
 import io.motown.ocpp.websocketjson.schema.generated.v15.StatusnotificationResponse;
@@ -51,7 +54,15 @@ public class StatusNotificationRequestHandler extends RequestHandler {
             timestamp = new Date();
         }
 
-        domainService.statusNotification(chargingStationId, new EvseId(request.getConnectorId()), errorCode, getComponentStatusFromChargePointStatus(request.getStatus()), request.getInfo(), timestamp, request.getVendorId(), request.getVendorErrorCode(), addOnIdentity);
+        AttributeMap<String, String> attributes = new AttributeMap<String, String>().
+                putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_VENDOR_ERROR_CODE_KEY, errorCode).
+                putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_INFO_KEY, request.getInfo()).
+                putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_VENDOR_ID_KEY, request.getVendorId()).
+                putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_VENDOR_ERROR_CODE_KEY, request.getVendorErrorCode());
+
+        domainService.statusNotification(chargingStationId,
+                new StatusNotification(new EvseId(request.getConnectorId()), getComponentStatusFromChargePointStatus(request.getStatus()), timestamp, attributes),
+                addOnIdentity);
 
         writeResponse(webSocket, new StatusnotificationResponse(), callId, gson);
     }

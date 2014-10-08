@@ -17,6 +17,7 @@ package io.motown.ocpp.viewmodel.domain;
 
 import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.utils.AttributeMap;
 import io.motown.domain.utils.axon.EventWaitingGateway;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.entities.ReservationIdentifier;
@@ -263,30 +264,30 @@ public class DomainServiceTest {
     @Test
     public void testStatusNotification() {
         Date now = new Date();
-        domainService.statusNotification(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, EVSE_ID, getStatusNotifactionErrorCode(), ComponentStatus.AVAILABLE, getStatusNotificationInfo(),
-                now, getVendor(), getVendorErrorCode(), ADD_ON_IDENTITY);
-        Map<String, String> attributes = new HashMap<>();
-        attributes.put(DomainService.ERROR_CODE_KEY, getStatusNotifactionErrorCode());
-        attributes.put(DomainService.INFO_KEY, getStatusNotificationInfo());
-        attributes.put(DomainService.VENDOR_ID_KEY, getVendor());
-        attributes.put(DomainService.VENDOR_ERROR_CODE_KEY, getVendorErrorCode());
+        AttributeMap<String, String> attributes = new AttributeMap<>();
+        attributes.putIfValueNotNull(DomainService.ERROR_CODE_KEY, getStatusNotifactionErrorCode());
+        attributes.putIfValueNotNull(DomainService.INFO_KEY, getStatusNotificationInfo());
+        attributes.putIfValueNotNull(DomainService.VENDOR_ID_KEY, getVendor());
+        attributes.putIfValueNotNull(DomainService.VENDOR_ERROR_CODE_KEY, getVendorErrorCode());
+        StatusNotification statusNotification = new StatusNotification(EVSE_ID, ComponentStatus.AVAILABLE, now, attributes);
+        domainService.statusNotification(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, statusNotification, ADD_ON_IDENTITY);
 
         verify(gateway).send(new ComponentStatusNotificationCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));
 
-        domainService.statusNotification(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, getChargingStationComponentId(), getStatusNotifactionErrorCode(),
-                ComponentStatus.AVAILABLE, getStatusNotificationInfo(), now, getVendor(), getVendorErrorCode(), ADD_ON_IDENTITY);
+        domainService.statusNotification(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, new StatusNotification(getChargingStationComponentId(), ComponentStatus.AVAILABLE, now, attributes), ADD_ON_IDENTITY);
         verify(gateway).send(new ChargingStationStatusNotificationCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testStatusNotificationEmptyArgs() {
         Date now = new Date();
-        domainService.statusNotification(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, EVSE_ID, null, ComponentStatus.AVAILABLE, null, now, null, null, ADD_ON_IDENTITY);
-        Map<String, String> attributes = new HashMap<>();
+        AttributeMap<String, String> attributes = new AttributeMap<>();
+        StatusNotification statusNotification = new StatusNotification(EVSE_ID, ComponentStatus.AVAILABLE, now, attributes);
+        domainService.statusNotification(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, statusNotification, ADD_ON_IDENTITY);
 
         verify(gateway).send(new ComponentStatusNotificationCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));
 
-        domainService.statusNotification(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, getChargingStationComponentId(), null, ComponentStatus.AVAILABLE, null, now, null, null, ADD_ON_IDENTITY);
+        domainService.statusNotification(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, new StatusNotification(getChargingStationComponentId(), ComponentStatus.AVAILABLE, now, attributes), ADD_ON_IDENTITY);
         verify(gateway).send(new ChargingStationStatusNotificationCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, ComponentStatus.AVAILABLE, now, attributes, NULL_USER_IDENTITY_CONTEXT));
     }
 

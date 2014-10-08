@@ -24,6 +24,8 @@ import io.motown.domain.api.chargingstation.UnitOfMeasure;
 import io.motown.domain.api.chargingstation.ValueFormat;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.api.security.TypeBasedAddOnIdentity;
+import io.motown.domain.utils.AttributeMap;
+import io.motown.domain.utils.AttributeMapKeys;
 import io.motown.ocpp.soaputils.async.*;
 import io.motown.soaputils.header.SoapHeaderReader;
 import io.motown.ocpp.v15.soap.Ocpp15RequestHandler;
@@ -104,7 +106,13 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
             timestamp = new Date();
         }
 
-        domainService.statusNotification(chargingStationId, evseId, errorCode, componentStatus, request.getInfo(), timestamp, request.getVendorId(), request.getVendorErrorCode(), addOnIdentity);
+        Map<String, String> attributes = new AttributeMap<String, String>().
+                putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_ERROR_CODE_KEY, errorCode).
+                putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_INFO_KEY, request.getInfo()).
+                putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_VENDOR_ID_KEY, request.getVendorId()).
+                putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_VENDOR_ERROR_CODE_KEY, request.getVendorErrorCode());
+
+        domainService.statusNotification(chargingStationId, new StatusNotification(evseId, componentStatus, timestamp, attributes), addOnIdentity);
         return new StatusNotificationResponse();
     }
 

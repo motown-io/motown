@@ -19,6 +19,8 @@ import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.chargingstation.MeterValue;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.api.security.TypeBasedAddOnIdentity;
+import io.motown.domain.utils.AttributeMap;
+import io.motown.domain.utils.AttributeMapKeys;
 import io.motown.ocpp.soaputils.async.*;
 import io.motown.ocpp.v12.soap.Ocpp12RequestHandler;
 import io.motown.ocpp.v12.soap.centralsystem.schema.*;
@@ -224,11 +226,10 @@ public class MotownCentralSystemService implements CentralSystemService {
         ComponentStatus componentStatus = getComponentStatusFromChargePointStatus(request.getStatus());
         String errorCode = request.getErrorCode() != null ? request.getErrorCode().value() : null;
 
-        String info = null;
         Date timestamp = new Date();
-        String vendorId = null;
-        String vendorErrorCode = null;
-        domainService.statusNotification(chargingStationId, evseId, errorCode, componentStatus, info, timestamp, vendorId, vendorErrorCode, addOnIdentity);
+        AttributeMap<String, String> attributes = new AttributeMap<>();
+        attributes.putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_ERROR_CODE_KEY, errorCode);
+        domainService.statusNotification(chargingStationId, new StatusNotification(evseId, componentStatus, timestamp, attributes), addOnIdentity);
         return new StatusNotificationResponse();
     }
 

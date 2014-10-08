@@ -204,26 +204,20 @@ public class DomainService {
         commandGateway.send(command);
     }
 
-    public void statusNotification(ChargingStationId chargingStationId, EvseId evseId, String errorCode, ComponentStatus status,
-                                   String info, Date timeStamp, String vendorId, String vendorErrorCode, AddOnIdentity addOnIdentity) {
+    public void statusNotification(ChargingStationId chargingStationId, StatusNotification statusNotification, AddOnIdentity addOnIdentity) {
         this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
-
-        Map<String, String> attributes = new HashMap<>();
-
-        addAttributeIfNotNull(attributes, ERROR_CODE_KEY, errorCode);
-        addAttributeIfNotNull(attributes, INFO_KEY, info);
-        addAttributeIfNotNull(attributes, VENDOR_ID_KEY, vendorId);
-        addAttributeIfNotNull(attributes, VENDOR_ERROR_CODE_KEY, vendorErrorCode);
 
         StatusNotificationCommand command;
 
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        if (evseId.getNumberedId() == CHARGING_STATION_EVSE_ID) {
-            command = new ChargingStationStatusNotificationCommand(chargingStationId, status, timeStamp, attributes, identityContext);
+        if (statusNotification.getEvseId().getNumberedId() == CHARGING_STATION_EVSE_ID) {
+            command = new ChargingStationStatusNotificationCommand(chargingStationId, statusNotification.getStatus(),
+                    statusNotification.getTimeStamp(), statusNotification.getAttributes(), identityContext);
         } else {
             ChargingStationComponent component = ChargingStationComponent.EVSE;
-            command = new ComponentStatusNotificationCommand(chargingStationId, component, evseId, status, timeStamp, attributes, identityContext);
+            command = new ComponentStatusNotificationCommand(chargingStationId, component, statusNotification.getEvseId(),
+                    statusNotification.getStatus(), statusNotification.getTimeStamp(), statusNotification.getAttributes(), identityContext);
         }
 
         commandGateway.send(command);
@@ -428,8 +422,7 @@ public class DomainService {
     }
 
     /**
-     * Creates a transaction based on the charging station and protocol identifier. The evse identifier is
-     * stored for later usage.
+     * Creates a transaction identifier. The EVSE identifier is stored for later usage.
      *
      * @param evseId evse identifier that's stored in the transaction
      * @return transaction
