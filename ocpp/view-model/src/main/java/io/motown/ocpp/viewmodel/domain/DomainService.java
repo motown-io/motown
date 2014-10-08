@@ -204,20 +204,18 @@ public class DomainService {
         commandGateway.send(command);
     }
 
-    public void statusNotification(ChargingStationId chargingStationId, StatusNotification statusNotification, AddOnIdentity addOnIdentity) {
+    public void statusNotification(ChargingStationId chargingStationId, EvseId evseId, StatusNotification statusNotification, AddOnIdentity addOnIdentity) {
         this.checkChargingStationExistsAndIsRegisteredAndConfigured(chargingStationId);
 
         StatusNotificationCommand command;
 
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        if (statusNotification.getEvseId().getNumberedId() == CHARGING_STATION_EVSE_ID) {
-            command = new ChargingStationStatusNotificationCommand(chargingStationId, statusNotification.getStatus(),
-                    statusNotification.getTimeStamp(), statusNotification.getAttributes(), identityContext);
+        if (evseId.getNumberedId() == CHARGING_STATION_EVSE_ID) {
+            command = new ChargingStationStatusNotificationCommand(chargingStationId, statusNotification, identityContext);
         } else {
             ChargingStationComponent component = ChargingStationComponent.EVSE;
-            command = new ComponentStatusNotificationCommand(chargingStationId, component, statusNotification.getEvseId(),
-                    statusNotification.getStatus(), statusNotification.getTimeStamp(), statusNotification.getAttributes(), identityContext);
+            command = new ComponentStatusNotificationCommand(chargingStationId, component, evseId, statusNotification, identityContext);
         }
 
         commandGateway.send(command);

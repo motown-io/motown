@@ -46,19 +46,17 @@ public abstract class StatusNotificationCommand {
      * Creates a {@code StatusNotificationCommand}.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param status            the status of the component.
-     * @param timestamp         the date and time.
-     * @param attributes        optional attributes.
+     * @param statusNotification contains the status notification information.
      * @param identityContext   identity context.
      * @throws NullPointerException if {@code chargingStationId}, {@code status}, {@code timestamp}, {@code attributes}
      *                          or {@code identityContext} is {@code null}.
      */
-    public StatusNotificationCommand(ChargingStationId chargingStationId, ComponentStatus status, Date timestamp,
-                                     Map<String, String> attributes, IdentityContext identityContext) {
+    public StatusNotificationCommand(ChargingStationId chargingStationId, StatusNotification statusNotification,
+                                     IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.status = checkNotNull(status);
-        this.timestamp = new Date(checkNotNull(timestamp).getTime());
-        this.attributes = ImmutableMap.copyOf(checkNotNull(attributes));
+        this.status = checkNotNull(statusNotification.getStatus());
+        this.timestamp = new Date(checkNotNull(statusNotification.getTimeStamp()).getTime());
+        this.attributes = ImmutableMap.copyOf(checkNotNull(statusNotification.getAttributes()));
         this.identityContext = checkNotNull(identityContext);
     }
 

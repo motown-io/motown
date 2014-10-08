@@ -229,7 +229,7 @@ public class MotownCentralSystemService implements CentralSystemService {
         Date timestamp = new Date();
         AttributeMap<String, String> attributes = new AttributeMap<>();
         attributes.putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_ERROR_CODE_KEY, errorCode);
-        domainService.statusNotification(chargingStationId, new StatusNotification(evseId, componentStatus, timestamp, attributes), addOnIdentity);
+        domainService.statusNotification(chargingStationId, evseId, new StatusNotification(componentStatus, timestamp, attributes), addOnIdentity);
         return new StatusNotificationResponse();
     }
 

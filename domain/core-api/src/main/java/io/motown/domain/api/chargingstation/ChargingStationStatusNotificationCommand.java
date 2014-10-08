@@ -30,15 +30,12 @@ public final class ChargingStationStatusNotificationCommand extends StatusNotifi
      * Creates a {@code ChargingStationStatusNotificationCommand}.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param status            the status of the component.
-     * @param timeStamp         the optional date and time.
-     * @param attributes        optional attributes.
+     * @param statusNotification contains the status notification information.
      * @param identityContext   identity context.
      * @throws NullPointerException if {@code chargingStationId}, {@code status}, {@code timestamp}, {@code attributes}
      *                          or {@code identityContext} is {@code null}.
      */
-    public ChargingStationStatusNotificationCommand(ChargingStationId chargingStationId, ComponentStatus status, Date timeStamp,
-                                                    Map<String, String> attributes, IdentityContext identityContext) {
-        super(chargingStationId, status, timeStamp, attributes, identityContext);
+    public ChargingStationStatusNotificationCommand(ChargingStationId chargingStationId, StatusNotification statusNotification, IdentityContext identityContext) {
+        super(chargingStationId, statusNotification, identityContext);
     }
 }

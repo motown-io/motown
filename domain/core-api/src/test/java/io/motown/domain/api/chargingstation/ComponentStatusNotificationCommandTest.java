@@ -22,51 +22,29 @@ import java.util.Collections;
 import java.util.Date;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
-import static junit.framework.Assert.assertEquals;
 
 public class ComponentStatusNotificationCommandTest {
 
+    private static final StatusNotification STATUS_NOTIFICATION = new StatusNotification(ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap());
+
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new ComponentStatusNotificationCommand(null, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT);
+        new ComponentStatusNotificationCommand(null, ChargingStationComponent.CONNECTOR, EVSE_ID, STATUS_NOTIFICATION, NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithComponentNull() {
-        new ComponentStatusNotificationCommand(CHARGING_STATION_ID, null, EVSE_ID, ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT);
+        new ComponentStatusNotificationCommand(CHARGING_STATION_ID, null, EVSE_ID, STATUS_NOTIFICATION, NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithComponentIdNull() {
-        new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, null, ComponentStatus.AVAILABLE, new Date(), null, NULL_USER_IDENTITY_CONTEXT);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingCommandWithStatusNull() {
-        new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, null, new Date(), Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingCommandWithTimestampNull() {
-        new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, null, Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingCommandWithAttributesNull() {
-        new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, new Date(), null, NULL_USER_IDENTITY_CONTEXT);
+        new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, null, STATUS_NOTIFICATION, NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
-        new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap(), null);
-    }
-
-    @Test
-    public void testImmutableDate() {
-        Date now = new Date();
-        ComponentStatusNotificationCommand command = new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, now, BOOT_NOTIFICATION_ATTRIBUTES, NULL_USER_IDENTITY_CONTEXT);
-        command.getTimestamp().setTime(TWO_MINUTES_AGO.getTime());
-        assertEquals(now, command.getTimestamp());
+        new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, STATUS_NOTIFICATION, null);
     }
 
     @Test

@@ -29,8 +29,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class StatusNotification {
 
-    private final EvseId evseId;
-
     private final ComponentStatus status;
 
     private final Date timeStamp;
@@ -38,20 +36,14 @@ public class StatusNotification {
     private final Map<String, String> attributes;
 
     /**
-     * Creates a {@code StatusNotification} with a EvseId, ComponentStatus, TimeStamp and optional attributes.
+     * Creates a {@code StatusNotification} with ComponentStatus, TimeStamp and optional attributes.
      *
-     * @throws NullPointerException if {@code evseId}, {@code status} or {@code timeStamp} is {@code null}.
+     * @throws NullPointerException if {@code status} or {@code timeStamp} is {@code null}.
      */
-    public StatusNotification(EvseId evseId, ComponentStatus status, Date timeStamp, Map<String, String> attributes) {
-        this.evseId = checkNotNull(evseId);
+    public StatusNotification(ComponentStatus status, Date timeStamp, Map<String, String> attributes) {
         this.status = checkNotNull(status);
-        checkNotNull(timeStamp);
-        this.timeStamp = new Date(timeStamp.getTime());
-        this.attributes = ImmutableMap.copyOf(attributes);
-    }
-
-    public EvseId getEvseId() {
-        return evseId;
+        this.timeStamp = new Date(checkNotNull(timeStamp).getTime());
+        this.attributes = ImmutableMap.copyOf(checkNotNull(attributes));
     }
 
     public ComponentStatus getStatus() {
@@ -59,7 +51,7 @@ public class StatusNotification {
     }
 
     public Date getTimeStamp() {
-        return timeStamp;
+        return new Date(timeStamp.getTime());
     }
 
     public Map<String, String> getAttributes() {
@@ -68,7 +60,7 @@ public class StatusNotification {
 
     @Override
     public int hashCode() {
-        return Objects.hash(evseId, status, timeStamp, attributes);
+        return Objects.hash(status, timeStamp, attributes);
     }
 
     @Override
@@ -80,14 +72,13 @@ public class StatusNotification {
             return false;
         }
         final StatusNotification other = (StatusNotification) obj;
-        return Objects.equals(this.evseId, other.evseId) && Objects.equals(this.status, other.status) && Objects.equals(this.timeStamp, other.timeStamp) && Objects.equals(this.attributes, other.attributes);
+        return Objects.equals(this.status, other.status) && Objects.equals(this.timeStamp, other.timeStamp) && Objects.equals(this.attributes, other.attributes);
     }
 
     @Override
     public String toString() {
         return "StatusNotification{" +
-                "evseId=" + evseId +
-                ", status=" + status +
+                "status=" + status +
                 ", timeStamp=" + timeStamp +
                 ", attributes=" + attributes +
                 '}';

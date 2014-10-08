@@ -694,7 +694,7 @@ public class ChargingStationTest {
         Date timeStamp = new Date();
 
         fixture.given(CHARGING_STATION)
-                .when(new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT))
+                .when(new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, new StatusNotification(ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap()), NULL_USER_IDENTITY_CONTEXT))
                 .expectEvents(new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT));
     }
 
@@ -703,7 +703,7 @@ public class ChargingStationTest {
         Date timeStamp = new Date();
 
         fixture.given(CHARGING_STATION)
-                .when(new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT))
+                .when(new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, new StatusNotification(ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap()), NULL_USER_IDENTITY_CONTEXT))
                 .expectEvents(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT));
     }
 

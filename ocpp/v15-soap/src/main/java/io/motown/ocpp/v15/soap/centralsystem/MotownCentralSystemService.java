@@ -112,7 +112,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
                 putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_VENDOR_ID_KEY, request.getVendorId()).
                 putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_VENDOR_ERROR_CODE_KEY, request.getVendorErrorCode());
 
-        domainService.statusNotification(chargingStationId, new StatusNotification(evseId, componentStatus, timestamp, attributes), addOnIdentity);
+        domainService.statusNotification(chargingStationId, evseId, new StatusNotification(componentStatus, timestamp, attributes), addOnIdentity);
         return new StatusNotificationResponse();
     }
 

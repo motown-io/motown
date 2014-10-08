@@ -60,8 +60,8 @@ public class StatusNotificationRequestHandler extends RequestHandler {
                 putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_VENDOR_ID_KEY, request.getVendorId()).
                 putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_VENDOR_ERROR_CODE_KEY, request.getVendorErrorCode());
 
-        domainService.statusNotification(chargingStationId,
-                new StatusNotification(new EvseId(request.getConnectorId()), getComponentStatusFromChargePointStatus(request.getStatus()), timestamp, attributes),
+        domainService.statusNotification(chargingStationId, new EvseId(request.getConnectorId()),
+                new StatusNotification(getComponentStatusFromChargePointStatus(request.getStatus()), timestamp, attributes),
                 addOnIdentity);
 
         writeResponse(webSocket, new StatusnotificationResponse(), callId, gson);

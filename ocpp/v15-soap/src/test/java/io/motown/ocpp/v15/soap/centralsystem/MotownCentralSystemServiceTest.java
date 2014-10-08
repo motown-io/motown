@@ -199,7 +199,7 @@ public class MotownCentralSystemServiceTest {
                 putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_INFO_KEY, STATUS_NOTIFICATION_ERROR_INFO).
                 putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_VENDOR_ID_KEY, CHARGING_STATION_VENDOR).
                 putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_VENDOR_ERROR_CODE_KEY, STATUS_NOTIFICATION_VENDOR_ERROR_CODE);
-        verify(domainService).statusNotification(CHARGING_STATION_ID, new StatusNotification(EVSE_ID, ComponentStatus.FAULTED, FIVE_MINUTES_AGO, attributes), OCPPS15_ADD_ON_IDENTITY);
+        verify(domainService).statusNotification(CHARGING_STATION_ID, EVSE_ID, new StatusNotification(ComponentStatus.FAULTED, FIVE_MINUTES_AGO, attributes), OCPPS15_ADD_ON_IDENTITY);
     }
 
     @Test

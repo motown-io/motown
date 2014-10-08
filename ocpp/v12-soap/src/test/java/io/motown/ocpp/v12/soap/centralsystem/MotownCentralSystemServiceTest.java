@@ -86,7 +86,7 @@ public class MotownCentralSystemServiceTest {
         motownCentralSystemService.statusNotification(request, CHARGING_STATION_ID.getId());
 
         // using matchers because the generated date is unknown
-        verify(domainService).statusNotification(eq(CHARGING_STATION_ID), any(StatusNotification.class), eq(OCPPS12_ADD_ON_IDENTITY));
+        verify(domainService).statusNotification(eq(CHARGING_STATION_ID), eq(EVSE_ID), any(StatusNotification.class), eq(OCPPS12_ADD_ON_IDENTITY));
     }
 
     @Test
