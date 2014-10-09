@@ -18,14 +18,9 @@ package io.motown.domain.api.chargingstation;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
-import java.util.Collections;
-import java.util.Date;
-
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 
 public class ComponentStatusNotificationCommandTest {
-
-    private static final StatusNotification STATUS_NOTIFICATION = new StatusNotification(ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap());
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {

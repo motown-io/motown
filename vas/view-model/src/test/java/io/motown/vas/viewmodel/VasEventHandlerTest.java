@@ -390,7 +390,7 @@ public class VasEventHandlerTest {
     public void chargingStationStatusNotificationReceivedEventUnknownChargingStationNoException() {
         assertNull(getTestChargingStationFromRepository());
 
-        eventHandler.handle(new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, new Date(), new HashMap<String, String>(), NULL_USER_IDENTITY_CONTEXT));
+        eventHandler.handle(new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, STATUS_NOTIFICATION, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
@@ -398,8 +398,9 @@ public class VasEventHandlerTest {
         chargingStationRepository.createOrUpdate(getRegisteredAndConfiguredChargingStation());
         ChargingStation chargingStation = getTestChargingStationFromRepository();
         assertTrue(chargingStation.getState().equals(io.motown.vas.viewmodel.model.ComponentStatus.UNKNOWN));
+        StatusNotification statusNotification = new StatusNotification(ComponentStatus.AVAILABLE, new Date(), new HashMap<String, String>());
 
-        eventHandler.handle(new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, new Date(), new HashMap<String, String>(), NULL_USER_IDENTITY_CONTEXT));
+        eventHandler.handle(new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, statusNotification, NULL_USER_IDENTITY_CONTEXT));
 
         assertTrue(getTestChargingStationFromRepository().getState().equals(io.motown.vas.viewmodel.model.ComponentStatus.AVAILABLE));
     }
@@ -407,8 +408,9 @@ public class VasEventHandlerTest {
     @Test
     public void chargingStationStatusNotificationVerifySubscriberServiceCall() {
         chargingStationRepository.createOrUpdate(getRegisteredAndConfiguredChargingStation());
+        StatusNotification statusNotification = new StatusNotification(ComponentStatus.AVAILABLE, FIVE_MINUTES_AGO, new HashMap<String, String>());
 
-        eventHandler.handle(new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, FIVE_MINUTES_AGO, new HashMap<String, String>(), NULL_USER_IDENTITY_CONTEXT));
+        eventHandler.handle(new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, statusNotification, NULL_USER_IDENTITY_CONTEXT));
 
         verify(subscriberService).updateSubscribers(getTestChargingStationFromRepository(), FIVE_MINUTES_AGO);
     }
@@ -417,14 +419,14 @@ public class VasEventHandlerTest {
     public void componentStatusNotificationReceivedEventUnknownChargingStationNoException() {
         assertNull(getTestChargingStationFromRepository());
 
-        eventHandler.handle(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, ComponentStatus.AVAILABLE, new Date(), new HashMap<String, String>(), NULL_USER_IDENTITY_CONTEXT));
+        eventHandler.handle(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, STATUS_NOTIFICATION, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
     public void componentStatusNotificationReceivedEventUnknownEvseNoException() {
         assertNull(getTestChargingStationFromRepository());
 
-        eventHandler.handle(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.EVSE, UNKNOWN_EVSE_ID, ComponentStatus.AVAILABLE, new Date(), new HashMap<String, String>(), NULL_USER_IDENTITY_CONTEXT));
+        eventHandler.handle(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.EVSE, UNKNOWN_EVSE_ID, STATUS_NOTIFICATION, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
@@ -432,8 +434,9 @@ public class VasEventHandlerTest {
         chargingStationRepository.createOrUpdate(getRegisteredAndConfiguredChargingStation());
         ChargingStation chargingStation = getTestChargingStationFromRepository();
         assertTrue(chargingStation.getEvse(EVSE_ID.getNumberedId()).getState().equals(io.motown.vas.viewmodel.model.ComponentStatus.UNKNOWN));
+        StatusNotification statusNotification = new StatusNotification(ComponentStatus.AVAILABLE, new Date(), new HashMap<String, String>());
 
-        eventHandler.handle(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, ComponentStatus.AVAILABLE, new Date(), new HashMap<String, String>(), NULL_USER_IDENTITY_CONTEXT));
+        eventHandler.handle(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, statusNotification, NULL_USER_IDENTITY_CONTEXT));
 
         chargingStation = getTestChargingStationFromRepository();
         assertTrue(chargingStation.getEvse(EVSE_ID.getNumberedId()).getState().equals(io.motown.vas.viewmodel.model.ComponentStatus.AVAILABLE));
@@ -442,8 +445,9 @@ public class VasEventHandlerTest {
     @Test
     public void componentStatusNotificationReceivedVerifySubscriptionServiceCall() {
         chargingStationRepository.createOrUpdate(getRegisteredAndConfiguredChargingStation());
+        StatusNotification statusNotification = new StatusNotification(ComponentStatus.AVAILABLE, FIVE_MINUTES_AGO, new HashMap<String, String>());
 
-        eventHandler.handle(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, ComponentStatus.AVAILABLE, FIVE_MINUTES_AGO, new HashMap<String, String>(), NULL_USER_IDENTITY_CONTEXT));
+        eventHandler.handle(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, statusNotification, NULL_USER_IDENTITY_CONTEXT));
 
         verify(subscriberService).updateSubscribers(getTestChargingStationFromRepository(), FIVE_MINUTES_AGO);
     }

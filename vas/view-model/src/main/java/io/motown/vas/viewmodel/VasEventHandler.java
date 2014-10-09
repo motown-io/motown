@@ -187,10 +187,10 @@ public class VasEventHandler {
 
         ChargingStation chargingStation = getChargingStation(event.getChargingStationId());
         if (chargingStation != null) {
-            chargingStation.setState(ComponentStatus.fromApiComponentStatus(event.getStatus()));
+            chargingStation.setState(ComponentStatus.fromApiComponentStatus(event.getStatusNotification().getStatus()));
             chargingStationRepository.createOrUpdate(chargingStation);
 
-            subscriberService.updateSubscribers(chargingStation, event.getTimestamp());
+            subscriberService.updateSubscribers(chargingStation, event.getStatusNotification().getTimeStamp());
         }
     }
 
@@ -202,10 +202,10 @@ public class VasEventHandler {
 
         if (chargingStation != null && event.getComponentId() instanceof EvseId) {
             io.motown.vas.viewmodel.persistence.entities.Evse evse = chargingStation.getEvse(((EvseId) event.getComponentId()).getNumberedId());
-            evse.setState(ComponentStatus.fromApiComponentStatus(event.getStatus()));
+            evse.setState(ComponentStatus.fromApiComponentStatus(event.getStatusNotification().getStatus()));
             chargingStationRepository.createOrUpdate(chargingStation);
 
-            subscriberService.updateSubscribers(chargingStation, event.getTimestamp());
+            subscriberService.updateSubscribers(chargingStation, event.getStatusNotification().getTimeStamp());
         }
 
     }

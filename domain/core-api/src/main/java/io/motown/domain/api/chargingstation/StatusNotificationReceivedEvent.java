@@ -18,8 +18,6 @@ package io.motown.domain.api.chargingstation;
 import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import java.util.Date;
-import java.util.Map;
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -33,11 +31,7 @@ public abstract class StatusNotificationReceivedEvent {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final ComponentStatus status;
-
-    private final Date timestamp;
-
-    private final Map<String, String> attributes;
+    private final StatusNotification statusNotification;
 
     private final IdentityContext identityContext;
 
@@ -45,18 +39,13 @@ public abstract class StatusNotificationReceivedEvent {
      * Creates a {@code StatusNotificationReceivedEvent}.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param status            the status of the component
-     * @param timestamp         the date and time
-     * @param attributes        optional attributes
+     * @param statusNotification contains the status notification information.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code component}, {@code componentId}, {@code timestamp}, {@code status} or {@code attributes} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId}, {@code statusNotification} or {@code attributes} is {@code null}.
      */
-    public StatusNotificationReceivedEvent(ChargingStationId chargingStationId, ComponentStatus status, Date timestamp,
-                                           Map<String, String> attributes, IdentityContext identityContext) {
+    public StatusNotificationReceivedEvent(ChargingStationId chargingStationId, StatusNotification statusNotification, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.status = checkNotNull(status);
-        this.timestamp = new Date(checkNotNull(timestamp).getTime());
-        this.attributes = checkNotNull(attributes);
+        this.statusNotification = checkNotNull(statusNotification);
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -74,26 +63,8 @@ public abstract class StatusNotificationReceivedEvent {
      *
      * @return the status.
      */
-    public ComponentStatus getStatus() {
-        return status;
-    }
-
-    /**
-     * Gets the timestamp at which the status notification occurred.
-     *
-     * @return the timestamp at which the status notification occurred.
-     */
-    public Date getTimestamp() {
-        return new Date(timestamp.getTime());
-    }
-
-    /**
-     * Gets the optional attributes.
-     *
-     * @return the optional attributes.
-     */
-    public Map<String, String> getAttributes() {
-        return attributes;
+    public StatusNotification getStatusNotification() {
+        return statusNotification;
     }
 
     /**
@@ -107,7 +78,7 @@ public abstract class StatusNotificationReceivedEvent {
 
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, status, timestamp, attributes, identityContext);
+        return Objects.hash(chargingStationId, statusNotification, identityContext);
     }
 
     @Override
@@ -119,6 +90,6 @@ public abstract class StatusNotificationReceivedEvent {
             return false;
         }
         final StatusNotificationReceivedEvent other = (StatusNotificationReceivedEvent) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.status, other.status) && Objects.equals(this.timestamp, other.timestamp) && Objects.equals(this.attributes, other.attributes) && Objects.equals(this.identityContext, other.identityContext);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.statusNotification, other.statusNotification) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

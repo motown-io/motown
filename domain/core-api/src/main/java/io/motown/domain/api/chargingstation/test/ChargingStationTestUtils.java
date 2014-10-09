@@ -308,6 +308,11 @@ public final class ChargingStationTestUtils {
     public static final IdentityContext NULL_USER_IDENTITY_CONTEXT = new IdentityContext(ADD_ON_IDENTITY, new NullUserIdentity());
 
     /**
+     * The default status notification.
+     */
+    public static final StatusNotification STATUS_NOTIFICATION = new StatusNotification(ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap());
+
+    /**
      * The default configuration item.
      */
     public static final ConfigurationItem CONFIGURATION_ITEM = new ConfigurationItem("key", "value");

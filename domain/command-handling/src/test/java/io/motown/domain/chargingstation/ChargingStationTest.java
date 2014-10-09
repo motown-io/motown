@@ -691,20 +691,20 @@ public class ChargingStationTest {
 
     @Test
     public void testChargingStationStatusNotification() {
-        Date timeStamp = new Date();
+        StatusNotification statusNotification = new StatusNotification(ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap());
 
         fixture.given(CHARGING_STATION)
-                .when(new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, new StatusNotification(ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap()), NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT));
+                .when(new ChargingStationStatusNotificationCommand(CHARGING_STATION_ID, statusNotification, NULL_USER_IDENTITY_CONTEXT))
+                .expectEvents(new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, statusNotification, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testComponentStatusNotification() {
-        Date timeStamp = new Date();
+        StatusNotification statusNotification = new StatusNotification(ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap());
 
         fixture.given(CHARGING_STATION)
-                .when(new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, new StatusNotification(ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap()), NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, ComponentStatus.AVAILABLE, timeStamp, Collections.<String, String>emptyMap(), NULL_USER_IDENTITY_CONTEXT));
+                .when(new ComponentStatusNotificationCommand(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, statusNotification, NULL_USER_IDENTITY_CONTEXT))
+                .expectEvents(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.CONNECTOR, EVSE_ID, statusNotification, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test

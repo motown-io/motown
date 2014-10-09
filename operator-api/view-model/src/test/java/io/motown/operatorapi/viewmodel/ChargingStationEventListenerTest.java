@@ -232,8 +232,9 @@ public class ChargingStationEventListenerTest {
     public void testHandleChargingStationStatusNotificationReceivedEvent() {
         ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertNull(cs.getStatus());
+        StatusNotification statusNotification = new StatusNotification(ComponentStatus.OCCUPIED, new Date(), BOOT_NOTIFICATION_ATTRIBUTES);
 
-        listener.handle(new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, ComponentStatus.OCCUPIED, new Date(), BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT));
+        listener.handle(new ChargingStationStatusNotificationReceivedEvent(CHARGING_STATION_ID, statusNotification, IDENTITY_CONTEXT));
         cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertNotNull(cs.getStatus());
         assertEquals(ComponentStatus.OCCUPIED, cs.getStatus());
@@ -246,8 +247,9 @@ public class ChargingStationEventListenerTest {
         for (Evse evse : cs.getEvses()) {
             assertNull(evse.getStatus());
         }
+        StatusNotification statusNotification = new StatusNotification(ComponentStatus.FAULTED, new Date(), BOOT_NOTIFICATION_ATTRIBUTES);
 
-        listener.handle(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, ComponentStatus.FAULTED, new Date(), BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT));
+        listener.handle(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.EVSE, EVSE_ID, statusNotification, IDENTITY_CONTEXT));
         cs = repository.findOne(CHARGING_STATION_ID.getId());
         for (Evse evse : cs.getEvses()) {
             if (evse.getEvseId().equals("1")) {

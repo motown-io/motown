@@ -17,8 +17,6 @@ package io.motown.domain.api.chargingstation;
 
 import io.motown.domain.api.security.IdentityContext;
 
-import java.util.Date;
-import java.util.Map;
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -39,16 +37,14 @@ public final class ComponentStatusNotificationReceivedEvent extends StatusNotifi
      * @param chargingStationId the identifier of the charging station.
      * @param component         the component type.
      * @param componentId       the component identifier.
-     * @param status            the status of the component.
-     * @param timeStamp         the optional date and time.
-     * @param attributes        optional attributes.
+     * @param statusNotification contains the status notification information.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code component}, {@code componentId}, {@code status}, {@code attributes}
+     * @throws NullPointerException if {@code chargingStationId}, {@code component}, {@code componentId}, {@code statusNotification}
      *                          or {@code identityContext} is {@code null}.
      */
     public ComponentStatusNotificationReceivedEvent(ChargingStationId chargingStationId, ChargingStationComponent component, ComponentId componentId,
-                                                    ComponentStatus status, Date timeStamp, Map<String, String> attributes, IdentityContext identityContext) {
-        super(chargingStationId, status, timeStamp, attributes, identityContext);
+                                                    StatusNotification statusNotification, IdentityContext identityContext) {
+        super(chargingStationId, statusNotification, identityContext);
         this.component = checkNotNull(component);
         this.componentId = checkNotNull(componentId);
     }

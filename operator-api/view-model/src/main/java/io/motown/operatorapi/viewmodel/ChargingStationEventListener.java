@@ -163,7 +163,7 @@ public class ChargingStationEventListener {
         ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
 
         if (chargingStation != null) {
-            chargingStation.setStatus(event.getStatus());
+            chargingStation.setStatus(event.getStatusNotification().getStatus());
             repository.createOrUpdate(chargingStation);
         }
     }
@@ -180,7 +180,7 @@ public class ChargingStationEventListener {
             ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
 
             if (chargingStation != null) {
-                updateEvseStatus(chargingStation, event.getComponentId().getId(), event.getStatus());
+                updateEvseStatus(chargingStation, event.getComponentId().getId(), event.getStatusNotification().getStatus());
                 repository.createOrUpdate(chargingStation);
             }
         }
