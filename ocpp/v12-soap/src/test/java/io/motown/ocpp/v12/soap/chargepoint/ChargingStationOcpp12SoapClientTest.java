@@ -15,6 +15,7 @@
  */
 package io.motown.ocpp.v12.soap.chargepoint;
 
+import io.motown.domain.api.chargingstation.DiagnosticsUploadSettings;
 import io.motown.domain.api.chargingstation.NumberedTransactionId;
 import io.motown.domain.api.chargingstation.RequestResult;
 import io.motown.ocpp.v12.soap.chargepoint.schema.*;
@@ -296,7 +297,7 @@ public class ChargingStationOcpp12SoapClientTest {
     public void getDiagnosticsVerifyReturnValue() {
         when(chargePointService.getDiagnostics(any(GetDiagnosticsRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getGetDiagnosticsResponse(DIAGNOSTICS_FILENAME));
 
-        String returnFilename = client.getDiagnostics(CHARGING_STATION_ID, UPLOAD_LOCATION, NUMBER_OF_RETRIES, RETRY_INTERVAL, PERIOD_START_TIME, PERIOD_STOP_TIME);
+        String returnFilename = client.getDiagnostics(CHARGING_STATION_ID, DIAGNOSTICS_UPLOAD_SETTINGS);
 
         assertEquals(DIAGNOSTICS_FILENAME, returnFilename);
     }
@@ -306,7 +307,7 @@ public class ChargingStationOcpp12SoapClientTest {
         when(chargePointService.getDiagnostics(any(GetDiagnosticsRequest.class), eq(CHARGING_STATION_ID.getId()))).thenReturn(getGetDiagnosticsResponse(DIAGNOSTICS_FILENAME));
         ArgumentCaptor<GetDiagnosticsRequest> getDiagnosticsArgument = ArgumentCaptor.forClass(GetDiagnosticsRequest.class);
 
-        client.getDiagnostics(CHARGING_STATION_ID, UPLOAD_LOCATION, NUMBER_OF_RETRIES, RETRY_INTERVAL, PERIOD_START_TIME, PERIOD_STOP_TIME);
+        client.getDiagnostics(CHARGING_STATION_ID, new DiagnosticsUploadSettings(UPLOAD_LOCATION, NUMBER_OF_RETRIES, RETRY_INTERVAL, PERIOD_START_TIME, PERIOD_STOP_TIME));
 
         verify(chargePointService).getDiagnostics(getDiagnosticsArgument.capture(), eq(CHARGING_STATION_ID.getId()));
         assertEquals(UPLOAD_LOCATION, getDiagnosticsArgument.getValue().getLocation());

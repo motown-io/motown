@@ -440,23 +440,22 @@ public class ChargingStationTest {
     public void testGetDiagnostics() {
         String targetLocation = "ftp://abc.com/";
         fixture.given(CHARGING_STATION)
-                .when(new RequestDiagnosticsCommand(CHARGING_STATION_ID, targetLocation, null, null, null, null, ROOT_IDENTITY_CONTEXT))
-                .expectEvents(new DiagnosticsRequestedEvent(CHARGING_STATION_ID, PROTOCOL, targetLocation, ROOT_IDENTITY_CONTEXT));
+                .when(new RequestDiagnosticsCommand(CHARGING_STATION_ID, DIAGNOSTICS_UPLOAD_SETTINGS, ROOT_IDENTITY_CONTEXT))
+                .expectEvents(new DiagnosticsRequestedEvent(CHARGING_STATION_ID, PROTOCOL, DIAGNOSTICS_UPLOAD_SETTINGS, ROOT_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testGetDiagnosticsForNotAcceptedChargingStation() {
         String targetLocation = "ftp://abc.com/";
         fixture.given(UNCONFIGURED_CHARGING_STATION)
-                .when(new RequestDiagnosticsCommand(CHARGING_STATION_ID, targetLocation, null, null, null, null, ROOT_IDENTITY_CONTEXT))
+                .when(new RequestDiagnosticsCommand(CHARGING_STATION_ID, DIAGNOSTICS_UPLOAD_SETTINGS, ROOT_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
 
     @Test
     public void testGetDiagnosticsForUnconfiguredChargingStation() {
-        String targetLocation = "ftp://abc.com/";
         fixture.given(UNCONFIGURED_ACCEPTED_CHARGING_STATION)
-                .when(new RequestDiagnosticsCommand(CHARGING_STATION_ID, targetLocation, null, null, null, null, ROOT_IDENTITY_CONTEXT))
+                .when(new RequestDiagnosticsCommand(CHARGING_STATION_ID, DIAGNOSTICS_UPLOAD_SETTINGS, ROOT_IDENTITY_CONTEXT))
                 .expectException(IllegalStateException.class);
     }
 

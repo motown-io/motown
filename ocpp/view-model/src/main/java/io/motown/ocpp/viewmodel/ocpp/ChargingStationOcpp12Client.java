@@ -40,7 +40,7 @@ public interface ChargingStationOcpp12Client {
 
     boolean clearCache(ChargingStationId id);
 
-    String getDiagnostics(ChargingStationId id, String uploadLocation, Integer numRetries, Integer retryInterval, Date periodStartTime, Date periodStopTime);
+    String getDiagnostics(ChargingStationId id, DiagnosticsUploadSettings diagnosticsUploadSettings);
 
     /**
      * Requests the charging station to start a transaction.

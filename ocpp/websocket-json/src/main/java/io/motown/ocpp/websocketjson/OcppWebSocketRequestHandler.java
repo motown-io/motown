@@ -99,7 +99,7 @@ public class OcppWebSocketRequestHandler implements OcppRequestHandler {
     @Override
     public void handle(DiagnosticsRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("DiagnosticsRequestedEvent");
-        ocppJsonService.getDiagnostics(event.getChargingStationId(), event.getNumRetries(), event.getRetryInterval(), event.getPeriodStartTime(), event.getPeriodStopTime(), event.getUploadLocation(), correlationToken);
+        ocppJsonService.getDiagnostics(event.getChargingStationId(), event.getDiagnosticsUploadSettings(), correlationToken);
     }
 
     @Override

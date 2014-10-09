@@ -241,15 +241,15 @@ public class ChargingStationOcpp15SoapClient implements ChargingStationOcpp15Cli
     }
 
     @Override
-    public String getDiagnostics(ChargingStationId id, String uploadLocation, Integer numRetries, Integer retryInterval, Date periodStartTime, Date periodStopTime) {
+    public String getDiagnostics(ChargingStationId id, DiagnosticsUploadSettings diagnosticsUploadSettings) {
         ChargePointService chargePointService = this.createChargingStationService(id);
 
         GetDiagnosticsRequest request = new GetDiagnosticsRequest();
-        request.setLocation(uploadLocation);
-        request.setRetries(numRetries);
-        request.setRetryInterval(retryInterval);
-        request.setStartTime(periodStartTime);
-        request.setStopTime(periodStopTime);
+        request.setLocation(diagnosticsUploadSettings.getUploadLocation());
+        request.setRetries(diagnosticsUploadSettings.getNumRetries());
+        request.setRetryInterval(diagnosticsUploadSettings.getRetryInterval());
+        request.setStartTime(diagnosticsUploadSettings.getPeriodStartTime());
+        request.setStopTime(diagnosticsUploadSettings.getPeriodStopTime());
 
         GetDiagnosticsResponse response = chargePointService.getDiagnostics(request, id.getId());
         return response.getFileName();

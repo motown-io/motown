@@ -295,7 +295,7 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
         checkCommunicationAllowed();
 
-        apply(new DiagnosticsRequestedEvent(this.id, this.protocol, command.getUploadLocation(), command.getNumRetries(), command.getRetryInterval(), command.getPeriodStartTime(), command.getPeriodEndTime(), command.getIdentityContext()));
+        apply(new DiagnosticsRequestedEvent(this.id, this.protocol, command.getDiagnosticsUploadSettings(), command.getIdentityContext()));
     }
 
     @CommandHandler

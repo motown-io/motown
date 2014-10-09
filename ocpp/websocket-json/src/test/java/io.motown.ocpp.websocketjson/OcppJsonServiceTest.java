@@ -199,7 +199,7 @@ public class OcppJsonServiceTest {
         int retryInterval = 1000;
         Date startTime = new Date();
         Date stopTime = new Date(DateTimeUtils.currentTimeMillis() - FIVE_MINUTES);
-        service.getDiagnostics(CHARGING_STATION_ID, numRetries, retryInterval, startTime, stopTime, FTP_LOCATION, CORRELATION_TOKEN);
+        service.getDiagnostics(CHARGING_STATION_ID, new DiagnosticsUploadSettings(FTP_LOCATION, numRetries, retryInterval, startTime, stopTime), CORRELATION_TOKEN);
         verify(mockWebSocket).write(anyString());
     }
 

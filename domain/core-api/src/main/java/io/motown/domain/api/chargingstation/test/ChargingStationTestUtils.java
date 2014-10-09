@@ -313,6 +313,11 @@ public final class ChargingStationTestUtils {
     public static final StatusNotification STATUS_NOTIFICATION = new StatusNotification(ComponentStatus.AVAILABLE, new Date(), Collections.<String, String>emptyMap());
 
     /**
+     * The default diagnostics upload settings.
+     */
+    public static final DiagnosticsUploadSettings DIAGNOSTICS_UPLOAD_SETTINGS = new DiagnosticsUploadSettings("ftp://localhost", 3, 10, FIVE_MINUTES_AGO, IN_FIVE_MINUTES);
+
+    /**
      * The default configuration item.
      */
     public static final ConfigurationItem CONFIGURATION_ITEM = new ConfigurationItem("key", "value");

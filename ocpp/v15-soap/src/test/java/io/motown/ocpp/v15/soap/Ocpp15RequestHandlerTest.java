@@ -161,11 +161,10 @@ public class Ocpp15RequestHandlerTest {
 
     @Test
     public void testDiagnosticsRequestedEvent() {
-        String uploadLocation = "ftp://abc.com/xyz";
         CorrelationToken correlationToken = new CorrelationToken();
-        requestHandler.handle(new DiagnosticsRequestedEvent(CHARGING_STATION_ID, PROTOCOL, uploadLocation, ROOT_IDENTITY_CONTEXT), correlationToken);
+        requestHandler.handle(new DiagnosticsRequestedEvent(CHARGING_STATION_ID, PROTOCOL, DIAGNOSTICS_UPLOAD_SETTINGS, ROOT_IDENTITY_CONTEXT), correlationToken);
 
-        verify(client).getDiagnostics(CHARGING_STATION_ID, uploadLocation, null, null, null, null);
+        verify(client).getDiagnostics(CHARGING_STATION_ID, DIAGNOSTICS_UPLOAD_SETTINGS);
     }
 
     @Test

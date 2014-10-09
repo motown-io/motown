@@ -189,7 +189,7 @@ public class Ocpp12RequestHandler implements OcppRequestHandler {
     @Override
     public void handle(DiagnosticsRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("OCPP 1.2 DiagnosticsRequestedEvent");
-        String diagnosticsFilename = chargingStationOcpp12Client.getDiagnostics(event.getChargingStationId(), event.getUploadLocation(), event.getNumRetries(), event.getRetryInterval(), event.getPeriodStartTime(), event.getPeriodStopTime());
+        String diagnosticsFilename = chargingStationOcpp12Client.getDiagnostics(event.getChargingStationId(), event.getDiagnosticsUploadSettings());
 
         domainService.diagnosticsFileNameReceived(event.getChargingStationId(), diagnosticsFilename, correlationToken, addOnIdentity);
     }

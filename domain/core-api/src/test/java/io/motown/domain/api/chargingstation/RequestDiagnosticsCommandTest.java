@@ -18,86 +18,27 @@ package io.motown.domain.api.chargingstation;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
-import java.util.Date;
-
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
-import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 public class RequestDiagnosticsCommandTest {
 
-    private static final String UPLOAD_LOCATION = "http://localhost/";
-
-    private static final int NUM_RETRIES = 3;
-
-    private static final int RETRY_INTERVAL = 60;
-
-    private static final Date START_TIME = FIVE_MINUTES_AGO;
-
-    private static final Date END_TIME = TWO_MINUTES_AGO;
-
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithChargingStationIdNull() {
-        new RequestDiagnosticsCommand(null, UPLOAD_LOCATION, null, null, null, null, ROOT_IDENTITY_CONTEXT);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void illegalArgumentExceptionThrownWhenCreatingCommandWithoutUploadLocation() {
-        new RequestDiagnosticsCommand(CHARGING_STATION_ID, null, null, null, null, null, ROOT_IDENTITY_CONTEXT);
+        new RequestDiagnosticsCommand(null, DIAGNOSTICS_UPLOAD_SETTINGS, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingCommandWithIdentityContextNull() {
-        new RequestDiagnosticsCommand(CHARGING_STATION_ID, UPLOAD_LOCATION, NUM_RETRIES, RETRY_INTERVAL, null, null, null);
-    }
-
-    @Test
-    public void datesShouldNotBeModifiable() {
-        Date startTime = new Date();
-        Date endTime = new Date();
-        RequestDiagnosticsCommand command = new RequestDiagnosticsCommand(CHARGING_STATION_ID, UPLOAD_LOCATION, NUM_RETRIES, RETRY_INTERVAL, startTime, endTime, ROOT_IDENTITY_CONTEXT);
-
-        startTime.setTime(0);
-        endTime.setTime(0);
-
-        assertFalse(startTime.equals(command.getPeriodStartTime()));
-        assertFalse(endTime.equals(command.getPeriodEndTime()));
-    }
-
-    @Test
-    public void exposedDatesShouldNotAffectInternalRepresentation() {
-        RequestDiagnosticsCommand command = new RequestDiagnosticsCommand(CHARGING_STATION_ID, UPLOAD_LOCATION, NUM_RETRIES, RETRY_INTERVAL, START_TIME, END_TIME, ROOT_IDENTITY_CONTEXT);
-
-        Date startTime = command.getPeriodStartTime();
-        assert startTime != null;
-        startTime.setTime(0);
-        Date endTime = command.getPeriodEndTime();
-        assert endTime != null;
-        endTime.setTime(0);
-
-        assertFalse(startTime.equals(command.getPeriodStartTime()));
-        assertFalse(endTime.equals(command.getPeriodEndTime()));
+        new RequestDiagnosticsCommand(CHARGING_STATION_ID, DIAGNOSTICS_UPLOAD_SETTINGS, null);
     }
 
     @Test
     public void constructorSetsFields() {
-        RequestDiagnosticsCommand command = new RequestDiagnosticsCommand(CHARGING_STATION_ID, UPLOAD_LOCATION, NUM_RETRIES, RETRY_INTERVAL, START_TIME, END_TIME, ROOT_IDENTITY_CONTEXT);
+        RequestDiagnosticsCommand command = new RequestDiagnosticsCommand(CHARGING_STATION_ID, DIAGNOSTICS_UPLOAD_SETTINGS, ROOT_IDENTITY_CONTEXT);
 
         assertEquals(CHARGING_STATION_ID, command.getChargingStationId());
-        assertEquals(UPLOAD_LOCATION, command.getUploadLocation());
-        assertEquals(Integer.valueOf(NUM_RETRIES), command.getNumRetries());
-        assertEquals(Integer.valueOf(RETRY_INTERVAL), command.getRetryInterval());
-        assertEquals(START_TIME, command.getPeriodStartTime());
-        assertEquals(END_TIME, command.getPeriodEndTime());
-    }
-
-    @Test
-    public void testNullStartAndEndPeriods() {
-        RequestDiagnosticsCommand command = new RequestDiagnosticsCommand(CHARGING_STATION_ID, UPLOAD_LOCATION, NUM_RETRIES, RETRY_INTERVAL, null, null, ROOT_IDENTITY_CONTEXT);
-
-        assertNull(command.getPeriodStartTime());
-        assertNull(command.getPeriodEndTime());
+        assertEquals(DIAGNOSTICS_UPLOAD_SETTINGS, command.getDiagnosticsUploadSettings());
     }
 
     @Test

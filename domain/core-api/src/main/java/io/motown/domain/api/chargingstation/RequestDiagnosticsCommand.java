@@ -18,9 +18,6 @@ package io.motown.domain.api.chargingstation;
 import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import javax.annotation.Nullable;
-import java.util.Date;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -32,39 +29,22 @@ public final class RequestDiagnosticsCommand {
     @TargetAggregateIdentifier
     private final ChargingStationId chargingStationId;
 
-    private final String uploadLocation;
-
-    private final Integer numRetries;
-
-    private final Integer retryInterval;
-
-    private final Date periodStartTime;
-
-    private final Date periodEndTime;
+    private final DiagnosticsUploadSettings diagnosticsUploadSettings;
 
     private final IdentityContext identityContext;
 
     /**
      * Creates a {@code RequestDiagnosticsCommand}.
      *
-     * @param chargingStationId the charging station identifier
-     * @param uploadLocation    the location to upload the diagnostics file to
-     * @param numRetries        the number of retries the charging station should attempt to deliver the diagnostics file
-     * @param retryInterval     the time in seconds between the retry attempts
-     * @param periodStartTime   the date/time of the oldest diagnostics information that should be contained in the diagnostics report
-     * @param periodEndTime     the date/time of the latest diagnostics information that should be contained in the diagnostics report
+     * @param chargingStationId the charging station identifier.
+     * @param diagnosticsUploadSettings the settings for the diagnostics upload.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code uploadLocation} or {@code identityContext} is {@code null}.
+     * @throws NullPointerException if {@code chargingStationId}, {@code diagnosticsUploadSettings} or {@code identityContext} is {@code null}.
      */
-    public RequestDiagnosticsCommand(ChargingStationId chargingStationId, String uploadLocation, @Nullable Integer numRetries,
-                                     @Nullable Integer retryInterval, @Nullable Date periodStartTime, @Nullable Date periodEndTime,
+    public RequestDiagnosticsCommand(ChargingStationId chargingStationId, DiagnosticsUploadSettings diagnosticsUploadSettings,
                                      IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
-        this.uploadLocation = checkNotNull(uploadLocation);
-        this.numRetries = numRetries;
-        this.retryInterval = retryInterval;
-        this.periodStartTime = periodStartTime != null ? new Date(periodStartTime.getTime()) : null;
-        this.periodEndTime = periodEndTime != null ? new Date(periodEndTime.getTime()) : null;
+        this.diagnosticsUploadSettings = checkNotNull(diagnosticsUploadSettings);
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -78,43 +58,12 @@ public final class RequestDiagnosticsCommand {
     }
 
     /**
+     * Gets the diagnostics upload settings.
      *
-     * @return the location where the diagnostics file should be uploaded to
+     * @return the diagnostics upload settings.
      */
-    public String getUploadLocation() {
-        return uploadLocation;
-    }
-
-    /**
-     * @return the optional number of retries to perform in case the upload fails
-     */
-    @Nullable
-    public Integer getNumRetries() {
-        return numRetries;
-    }
-
-    /**
-     * @return the optional amount of time in seconds to wait before performing a retry
-     */
-    @Nullable
-    public Integer getRetryInterval() {
-        return retryInterval;
-    }
-
-    /**
-     * @return the optional date and time of the oldest logging information to include in the diagnostics report
-     */
-    @Nullable
-    public Date getPeriodStartTime() {
-        return periodStartTime != null ? new Date(periodStartTime.getTime()) : null;
-    }
-
-    /**
-     * @return the optional date and time of the latest logging information to include in the diagnostics report
-     */
-    @Nullable
-    public Date getPeriodEndTime() {
-        return periodEndTime != null ? new Date(periodEndTime.getTime()) : null;
+    public DiagnosticsUploadSettings getDiagnosticsUploadSettings() {
+        return diagnosticsUploadSettings;
     }
 
     /**

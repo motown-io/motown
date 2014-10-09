@@ -88,7 +88,7 @@ public interface ChargingStationOcpp15Client {
      */
     boolean changeConfiguration(ChargingStationId id, ConfigurationItem configurationItem);
 
-    String getDiagnostics(ChargingStationId id, String uploadLocation, Integer numRetries, Integer retryInterval, Date periodStartTime, Date periodStopTime);
+    String getDiagnostics(ChargingStationId id, DiagnosticsUploadSettings diagnosticsUploadSettings);
 
     boolean clearCache(ChargingStationId id);
 

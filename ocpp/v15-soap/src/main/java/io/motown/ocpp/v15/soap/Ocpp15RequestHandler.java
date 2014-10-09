@@ -205,7 +205,7 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
     @Override
     public void handle(DiagnosticsRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("DiagnosticsRequestedEvent");
-        String diagnosticsFilename = chargingStationOcpp15Client.getDiagnostics(event.getChargingStationId(), event.getUploadLocation(), event.getNumRetries(), event.getRetryInterval(), event.getPeriodStartTime(), event.getPeriodStopTime());
+        String diagnosticsFilename = chargingStationOcpp15Client.getDiagnostics(event.getChargingStationId(), event.getDiagnosticsUploadSettings());
 
         domainService.diagnosticsFileNameReceived(event.getChargingStationId(), diagnosticsFilename, correlationToken, addOnIdentity);
     }

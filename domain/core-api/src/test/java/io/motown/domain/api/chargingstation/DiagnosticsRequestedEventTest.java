@@ -24,22 +24,22 @@ public class DiagnosticsRequestedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithChargingStationIdNull() {
-        new DiagnosticsRequestedEvent(null, PROTOCOL, "ftp://abc.com", ROOT_IDENTITY_CONTEXT);
+        new DiagnosticsRequestedEvent(null, PROTOCOL, DIAGNOSTICS_UPLOAD_SETTINGS, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithProtocolNull() {
-        new DiagnosticsRequestedEvent(CHARGING_STATION_ID, null, "ftp://abc.com", ROOT_IDENTITY_CONTEXT);
+        new DiagnosticsRequestedEvent(CHARGING_STATION_ID, null, DIAGNOSTICS_UPLOAD_SETTINGS, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentExceptionThrownWhenCreatingWithEmptyProtocol() {
-        new DiagnosticsRequestedEvent(CHARGING_STATION_ID, "", "ftp://abc.com", ROOT_IDENTITY_CONTEXT);
+        new DiagnosticsRequestedEvent(CHARGING_STATION_ID, "", DIAGNOSTICS_UPLOAD_SETTINGS, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithIdentityContextNull() {
-        new DiagnosticsRequestedEvent(CHARGING_STATION_ID, PROTOCOL, "ftp://abc.com", null);
+        new DiagnosticsRequestedEvent(CHARGING_STATION_ID, PROTOCOL, DIAGNOSTICS_UPLOAD_SETTINGS, null);
     }
 
     @Test

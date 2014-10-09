@@ -18,9 +18,6 @@ package io.motown.domain.api.chargingstation;
 import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import javax.annotation.Nullable;
-import java.util.Date;
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -36,15 +33,7 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
 
     private final String protocol;
 
-    private final String uploadLocation;
-
-    private final Integer numRetries;
-
-    private final Integer retryInterval;
-
-    private final Date periodStartTime;
-
-    private final Date periodStopTime;
+    private final DiagnosticsUploadSettings diagnosticsUploadSettings;
 
     private final IdentityContext identityContext;
 
@@ -52,41 +41,19 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
      * Creates a {@code DiagnosticsRequestedEvent}.
      *
      * @param chargingStationId the identifier of the charging station.
-     * @param protocol          the protocol the charging station supports
-     * @param uploadLocation    the location where the diagnostics file should be uploaded to
+     * @param protocol          the protocol the charging station supports.
+     * @param diagnosticsUploadSettings the settings for the diagnostics upload.
      * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code uploadLocation} or
+     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code diagnosticsUploadSettings} or
      *                              {@code identityContext} is {@code null}.
      */
-    public DiagnosticsRequestedEvent(ChargingStationId chargingStationId, String protocol, String uploadLocation, IdentityContext identityContext) {
-        this(chargingStationId, protocol, uploadLocation, null, null, null, null, identityContext);
-    }
-
-    /**
-     * Creates a {@code DiagnosticsRequestedEvent}.
-     *
-     * @param chargingStationId the identifier of the charging station.
-     * @param protocol          the protocol the charging station supports
-     * @param uploadLocation    the location where the diagnostics file should be uploaded to
-     * @param numRetries        the optional number of retries the charging station should perform in case of failure
-     * @param retryInterval     the optional interval in seconds between retry attempts
-     * @param periodStartTime   the optional date and time of the oldest logging information to include in the diagnostics report
-     * @param periodStopTime    the optional date and time of the latest logging information to include in the diagnostics report
-     * @param identityContext   identity context.
-     * @throws NullPointerException if {@code chargingStationId}, {@code protocol}, {@code uploadLocation} or
-     *                              {@code identityContext} is {@code null}.
-     */
-    public DiagnosticsRequestedEvent(ChargingStationId chargingStationId, String protocol, String uploadLocation, @Nullable Integer numRetries,
-                                     @Nullable Integer retryInterval, @Nullable Date periodStartTime, @Nullable Date periodStopTime, IdentityContext identityContext) {
+    public DiagnosticsRequestedEvent(ChargingStationId chargingStationId, String protocol,
+                                     DiagnosticsUploadSettings diagnosticsUploadSettings, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         checkNotNull(protocol);
         checkArgument(!protocol.isEmpty());
         this.protocol = protocol;
-        this.uploadLocation = checkNotNull(uploadLocation);
-        this.numRetries = numRetries;
-        this.retryInterval = retryInterval;
-        this.periodStartTime = periodStartTime != null ? new Date(periodStartTime.getTime()) : null;
-        this.periodStopTime = periodStopTime != null ? new Date(periodStopTime.getTime()) : null;
+        this.diagnosticsUploadSettings = checkNotNull(diagnosticsUploadSettings);
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -100,49 +67,19 @@ public final class DiagnosticsRequestedEvent implements CommunicationWithChargin
     }
 
     /**
-     * @return the protocol identifier
+     * @return the protocol identifier.
      */
     public String getProtocol() {
         return protocol;
     }
 
     /**
-     * @return the location where the diagnostics file should be uploaded to
+     * Gets the diagnostics upload settings.
+     *
+     * @return diagnostic upload settings.
      */
-    public String getUploadLocation() {
-        return uploadLocation;
-    }
-
-    /**
-     * @return the optional number of retries to perform in case the upload fails
-     */
-    @Nullable
-    public Integer getNumRetries() {
-        return numRetries;
-    }
-
-    /**
-     * @return the optional amount of time in seconds to wait before performing a retry
-     */
-    @Nullable
-    public Integer getRetryInterval() {
-        return retryInterval;
-    }
-
-    /**
-     * @return the optional date and time of the oldest logging information to include in the diagnostics report
-     */
-    @Nullable
-    public Date getPeriodStartTime() {
-        return periodStartTime != null ? new Date(periodStartTime.getTime()) : null;
-    }
-
-    /**
-     * @return the optional date and time of the latest logging information to include in the diagnostics report
-     */
-    @Nullable
-    public Date getPeriodStopTime() {
-        return periodStopTime != null ? new Date(periodStopTime.getTime()) : null;
+    public DiagnosticsUploadSettings getDiagnosticsUploadSettings() {
+        return diagnosticsUploadSettings;
     }
 
     /**
