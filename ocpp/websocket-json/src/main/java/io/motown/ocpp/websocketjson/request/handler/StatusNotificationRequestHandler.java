@@ -57,7 +57,7 @@ public class StatusNotificationRequestHandler extends RequestHandler {
         AttributeMap<String, String> attributes = new AttributeMap<String, String>().
                 putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_VENDOR_ERROR_CODE_KEY, errorCode).
                 putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_INFO_KEY, request.getInfo()).
-                putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_VENDOR_ID_KEY, request.getVendorId()).
+                putIfValueNotNull(AttributeMapKeys.VENDOR_ID, request.getVendorId()).
                 putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_VENDOR_ERROR_CODE_KEY, request.getVendorErrorCode());
 
         domainService.statusNotification(chargingStationId, new EvseId(request.getConnectorId()),

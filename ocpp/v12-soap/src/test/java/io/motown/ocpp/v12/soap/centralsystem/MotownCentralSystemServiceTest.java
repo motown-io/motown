@@ -19,6 +19,8 @@ import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.chargingstation.MeterValue;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.api.security.TypeBasedAddOnIdentity;
+import io.motown.domain.utils.AttributeMap;
+import io.motown.domain.utils.AttributeMapKeys;
 import io.motown.soaputils.header.SoapHeaderReader;
 import io.motown.ocpp.v12.soap.V12SOAPTestUtils;
 import io.motown.ocpp.v12.soap.centralsystem.schema.*;
@@ -129,7 +131,7 @@ public class MotownCentralSystemServiceTest {
         BootNotificationRequest request = new BootNotificationRequest();
         Date now = new Date();
         BootChargingStationResult result = new BootChargingStationResult(true, V12SOAPTestUtils.HEARTBEAT_INTERVAL, now);
-        when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(AddOnIdentity.class))).thenReturn(result);
+        when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), any(AttributeMap.class), any(AddOnIdentity.class))).thenReturn(result);
 
         BootNotificationResponse response = motownCentralSystemService.bootNotification(request, CHARGING_STATION_ID.getId());
 
@@ -143,7 +145,7 @@ public class MotownCentralSystemServiceTest {
         BootNotificationRequest request = new BootNotificationRequest();
         Date now = new Date();
         BootChargingStationResult result = new BootChargingStationResult(false, HEARTBEAT_INTERVAL, now);
-        when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(AddOnIdentity.class))).thenReturn(result);
+        when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), any(AttributeMap.class), any(AddOnIdentity.class))).thenReturn(result);
 
         BootNotificationResponse response = motownCentralSystemService.bootNotification(request, CHARGING_STATION_ID.getId());
 
@@ -165,14 +167,25 @@ public class MotownCentralSystemServiceTest {
         request.setMeterType(CHARGING_STATION_METER_TYPE);
         request.setMeterSerialNumber(CHARGING_STATION_METER_SERIAL_NUMBER);
 
+        AttributeMap<String, String> attributes = new AttributeMap<String, String>().
+                putIfValueNotNull(AttributeMapKeys.CHARGING_STATION_ADDRESS, LOCALHOST).
+                putIfValueNotNull(AttributeMapKeys.VENDOR_ID, request.getChargePointVendor()).
+                putIfValueNotNull(AttributeMapKeys.MODEL, request.getChargePointModel()).
+                putIfValueNotNull(AttributeMapKeys.CHARGING_STATION_SERIAL_NUMBER, request.getChargePointSerialNumber()).
+                putIfValueNotNull(AttributeMapKeys.CHARGE_BOX_SERIAL_NUMBER, request.getChargeBoxSerialNumber()).
+                putIfValueNotNull(AttributeMapKeys.FIRMWARE_VERSION, request.getFirmwareVersion()).
+                putIfValueNotNull(AttributeMapKeys.ICCID, request.getIccid()).
+                putIfValueNotNull(AttributeMapKeys.IMSI, request.getImsi()).
+                putIfValueNotNull(AttributeMapKeys.METER_TYPE, request.getMeterType()).
+                putIfValueNotNull(AttributeMapKeys.METER_SERIAL_NUMBER, request.getMeterSerialNumber());
+
         Date now = new Date();
         BootChargingStationResult result = new BootChargingStationResult(true, HEARTBEAT_INTERVAL, now);
-        when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(AddOnIdentity.class))).thenReturn(result);
+        when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), any(AttributeMap.class), any(AddOnIdentity.class))).thenReturn(result);
 
         motownCentralSystemService.bootNotification(request, CHARGING_STATION_ID.getId());
 
-        verify(domainService).bootChargingStation(CHARGING_STATION_ID, LOCALHOST, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL_IDENTIFIER, CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER,
-                CHARGING_STATION_FIRMWARE_VERSION, CHARGING_STATION_ICCID, CHARGING_STATION_IMSI, CHARGING_STATION_METER_TYPE, CHARGING_STATION_METER_SERIAL_NUMBER, OCPPS12_ADD_ON_IDENTITY);
+        verify(domainService).bootChargingStation(CHARGING_STATION_ID, PROTOCOL_IDENTIFIER, attributes, OCPPS12_ADD_ON_IDENTITY);
     }
 
     @Test

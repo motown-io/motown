@@ -21,6 +21,8 @@ import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.api.security.NullUserIdentity;
 import io.motown.domain.api.security.UserIdentity;
+import io.motown.domain.utils.AttributeMap;
+import io.motown.domain.utils.AttributeMapKeys;
 import io.motown.domain.utils.axon.EventWaitingGateway;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.entities.ReservationIdentifier;
@@ -41,16 +43,6 @@ public class DomainService {
     public static final String INFO_KEY = "info";
     public static final String VENDOR_ID_KEY = "vendorId";
     public static final String VENDOR_ERROR_CODE_KEY = "vendorErrorCode";
-    public static final String VENDOR_KEY = "vendor";
-    public static final String MODEL_KEY = "model";
-    public static final String ADDRESS_KEY = "address";
-    public static final String CHARGING_STATION_SERIALNUMBER_KEY = "chargingStationSerialNumber";
-    public static final String CHARGE_BOX_SERIALNUMBER_KEY = "chargeBoxSerialNumber";
-    public static final String FIRMWARE_VERSION_KEY = "firmwareVersion";
-    public static final String ICCID_KEY = "iccid";
-    public static final String IMSI_KEY = "imsi";
-    public static final String METER_TYPE_KEY = "meterType";
-    public static final String METER_SERIALNUMBER_KEY = "meterSerialNumber";
     public static final String RESERVATION_ID_KEY = "reservationId";
 
     private static final Logger LOG = LoggerFactory.getLogger(DomainService.class);
@@ -79,22 +71,8 @@ public class DomainService {
      */
     private Set<UserIdentity> userIdentitiesWithAllPermissions;
 
-    /**
-     * Adds the attribute to the map using the key and value if the value is not null.
-     *
-     * @param attributes map of keys and values.
-     * @param key        key of the attribute.
-     * @param value      value of the attribute.
-     */
-    public static void addAttributeIfNotNull(Map<String, String> attributes, String key, String value) {
-        if (value != null) {
-            attributes.put(key, value);
-        }
-    }
-
-    public BootChargingStationResult bootChargingStation(ChargingStationId chargingStationId, String chargingStationAddress, String vendor, String model,
-                                                         String protocol, String chargingStationSerialNumber, String chargeBoxSerialNumber, String firmwareVersion, String iccid,
-                                                         String imsi, String meterType, String meterSerialNumber, AddOnIdentity addOnIdentity) {
+    public BootChargingStationResult bootChargingStation(ChargingStationId chargingStationId, String protocol,
+                                                         AttributeMap<String, String> attributes, AddOnIdentity addOnIdentity) {
         // Check if we already know the charging station, or have to create one
         ChargingStation chargingStation = chargingStationRepository.findOne(chargingStationId.getId());
 
@@ -104,29 +82,15 @@ public class DomainService {
             LOG.debug("Not a known charging station on boot notification, we send a CreateChargingStationCommand.");
 
             commandGateway.send(new CreateChargingStationCommand(chargingStationId, userIdentitiesWithAllPermissions, identityContext), new CreateChargingStationCommandCallback(
-                    chargingStationId, chargingStationAddress, vendor, model, protocol, chargingStationSerialNumber, chargeBoxSerialNumber, firmwareVersion, iccid,
-                    imsi, meterType, meterSerialNumber, addOnIdentity, chargingStationRepository, this));
+                    chargingStationId, protocol, attributes, addOnIdentity, chargingStationRepository, this));
 
             // we didn't know the charging station when this bootNotification occurred so we reject it.
             return new BootChargingStationResult(false, heartbeatInterval, new Date());
         }
 
         // Keep track of the address on which we can reach the charging station
-        chargingStation.setIpAddress(chargingStationAddress);
+        chargingStation.setIpAddress(attributes.get(AttributeMapKeys.CHARGING_STATION_ADDRESS));
         chargingStation = chargingStationRepository.createOrUpdate(chargingStation);
-
-        Map<String, String> attributes = Maps.newHashMap();
-
-        addAttributeIfNotNull(attributes, ADDRESS_KEY, chargingStationAddress);
-        addAttributeIfNotNull(attributes, VENDOR_KEY, vendor);
-        addAttributeIfNotNull(attributes, MODEL_KEY, model);
-        addAttributeIfNotNull(attributes, CHARGING_STATION_SERIALNUMBER_KEY, chargingStationSerialNumber);
-        addAttributeIfNotNull(attributes, CHARGE_BOX_SERIALNUMBER_KEY, chargeBoxSerialNumber);
-        addAttributeIfNotNull(attributes, FIRMWARE_VERSION_KEY, firmwareVersion);
-        addAttributeIfNotNull(attributes, ICCID_KEY, iccid);
-        addAttributeIfNotNull(attributes, IMSI_KEY, imsi);
-        addAttributeIfNotNull(attributes, METER_TYPE_KEY, meterType);
-        addAttributeIfNotNull(attributes, METER_SERIALNUMBER_KEY, meterSerialNumber);
 
         commandGateway.send(new BootChargingStationCommand(chargingStationId, protocol, attributes, identityContext));
 

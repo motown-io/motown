@@ -18,6 +18,7 @@ package io.motown.ocpp.websocketjson.request.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.security.AddOnIdentity;
+import io.motown.domain.utils.AttributeMap;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Bootnotification;
@@ -60,7 +61,7 @@ public class BootNotificationRequestHandlerTest {
 
     @Test
     public void handleValidRequest() throws IOException {
-        when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(AddOnIdentity.class)))
+        when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), any(AttributeMap.class), any(AddOnIdentity.class)))
                 .thenReturn(new BootChargingStationResult(true, HEARTBEAT_INTERVAL, NOW));
 
         String response = handleRequest();
@@ -70,7 +71,7 @@ public class BootNotificationRequestHandlerTest {
 
     @Test
     public void handleInvalidRequest() throws IOException {
-        when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(AddOnIdentity.class)))
+        when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), any(AttributeMap.class), any(AddOnIdentity.class)))
                 .thenReturn(new BootChargingStationResult(false, HEARTBEAT_INTERVAL, NOW));
 
         String response = handleRequest();

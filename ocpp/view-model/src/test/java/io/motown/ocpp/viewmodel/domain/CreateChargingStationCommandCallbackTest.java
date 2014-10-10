@@ -15,6 +15,7 @@
  */
 package io.motown.ocpp.viewmodel.domain;
 
+import io.motown.domain.utils.AttributeMap;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository;
 import org.junit.Before;
@@ -24,7 +25,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
-import static io.motown.ocpp.viewmodel.domain.OccpViewModelTestUtils.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -48,16 +48,15 @@ public class CreateChargingStationCommandCallbackTest {
         DomainCommandGateway gateway = mock(DomainCommandGateway.class);
         domainService.setCommandGateway(gateway);
 
-        createChargingStationCommandCallback = new CreateChargingStationCommandCallback(CHARGING_STATION_ID, CHARGING_STATION_ADDRESS, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL,
-                CHARGING_STATION_SERIAL_NUMBER, CHARGE_BOX_SERIAL_NUMBER, getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber(), ADD_ON_IDENTITY, chargingStationRepository, domainService);
+        createChargingStationCommandCallback = new CreateChargingStationCommandCallback(CHARGING_STATION_ID, PROTOCOL,
+                new AttributeMap<String, String>(), ADD_ON_IDENTITY, chargingStationRepository, domainService);
     }
 
     @Test
     public void testOnSuccess() {
         createChargingStationCommandCallback.onSuccess(new Object());
 
-        verify(domainService).bootChargingStation(CHARGING_STATION_ID, CHARGING_STATION_ADDRESS, CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL, PROTOCOL, CHARGING_STATION_SERIAL_NUMBER,
-                CHARGE_BOX_SERIAL_NUMBER, getFirmwareVersion(), getIccid(), getImsi(), getMeterType(), getMeterSerialNumber(), ADD_ON_IDENTITY);
+        verify(domainService).bootChargingStation(CHARGING_STATION_ID, PROTOCOL, new AttributeMap<String, String>(), ADD_ON_IDENTITY);
         verify(chargingStationRepository).createOrUpdate(new ChargingStation(CHARGING_STATION_ID.getId()));
     }
 

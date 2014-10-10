@@ -25,9 +25,27 @@ public class AttributeMapKeys {
 
     public static final String STATUS_NOTIFICATION_INFO_KEY = "info";
 
-    public static final String STATUS_NOTIFICATION_VENDOR_ID_KEY = "vendorId";
+    public static final String VENDOR_ID = "vendorId";
 
     public static final String STATUS_NOTIFICATION_VENDOR_ERROR_CODE_KEY = "vendorErrorCode";
+
+    public static final String CHARGING_STATION_ADDRESS = "chargingStationAddress";
+
+    public static final String MODEL = "model";
+
+    public static final String CHARGING_STATION_SERIAL_NUMBER = "chargingStationSerialNumber";
+
+    public static final String CHARGE_BOX_SERIAL_NUMBER = "chargeBoxSerialNumber";
+
+    public static final String FIRMWARE_VERSION = "firmwareVersion";
+
+    public static final String ICCID = "iccid";
+
+    public static final String IMSI = "imsi";
+
+    public static final String METER_TYPE = "meterType";
+
+    public static final String METER_SERIAL_NUMBER = "meterSerialNumber";
 
     private AttributeMapKeys() {
         // class should not be instantiated

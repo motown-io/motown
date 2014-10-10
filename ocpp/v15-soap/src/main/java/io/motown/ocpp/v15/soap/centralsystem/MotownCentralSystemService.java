@@ -109,7 +109,7 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
         Map<String, String> attributes = new AttributeMap<String, String>().
                 putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_ERROR_CODE_KEY, errorCode).
                 putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_INFO_KEY, request.getInfo()).
-                putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_VENDOR_ID_KEY, request.getVendorId()).
+                putIfValueNotNull(AttributeMapKeys.VENDOR_ID, request.getVendorId()).
                 putIfValueNotNull(AttributeMapKeys.STATUS_NOTIFICATION_VENDOR_ERROR_CODE_KEY, request.getVendorErrorCode());
 
         domainService.statusNotification(chargingStationId, evseId, new StatusNotification(componentStatus, timestamp, attributes), addOnIdentity);
@@ -159,9 +159,20 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
             return response;
         }
 
-        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, chargingStationAddress, request.getChargePointVendor(), request.getChargePointModel(), PROTOCOL_IDENTIFIER,
-                request.getChargePointSerialNumber(), request.getChargeBoxSerialNumber(), request.getFirmwareVersion(), request.getIccid(), request.getImsi(), request.getMeterType(), request.getMeterSerialNumber(),
-                addOnIdentity);
+        AttributeMap<String, String> attributes = new AttributeMap<String, String>().
+                putIfValueNotNull(AttributeMapKeys.CHARGING_STATION_ADDRESS, chargingStationAddress).
+                putIfValueNotNull(AttributeMapKeys.VENDOR_ID, request.getChargePointVendor()).
+                putIfValueNotNull(AttributeMapKeys.MODEL, request.getChargePointModel()).
+                putIfValueNotNull(AttributeMapKeys.CHARGING_STATION_SERIAL_NUMBER, request.getChargePointSerialNumber()).
+                putIfValueNotNull(AttributeMapKeys.CHARGE_BOX_SERIAL_NUMBER, request.getChargeBoxSerialNumber()).
+                putIfValueNotNull(AttributeMapKeys.FIRMWARE_VERSION, request.getFirmwareVersion()).
+                putIfValueNotNull(AttributeMapKeys.ICCID, request.getIccid()).
+                putIfValueNotNull(AttributeMapKeys.IMSI, request.getImsi()).
+                putIfValueNotNull(AttributeMapKeys.METER_TYPE, request.getMeterType()).
+                putIfValueNotNull(AttributeMapKeys.METER_SERIAL_NUMBER, request.getMeterSerialNumber());
+
+        BootChargingStationResult result = domainService.bootChargingStation(chargingStationId, PROTOCOL_IDENTIFIER,
+                attributes, addOnIdentity);
 
         BootNotificationResponse response = new BootNotificationResponse();
         response.setStatus(result.isAccepted() ? RegistrationStatus.ACCEPTED : RegistrationStatus.REJECTED);

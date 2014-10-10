@@ -18,6 +18,8 @@ package io.motown.ocpp.websocketjson.request.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.security.AddOnIdentity;
+import io.motown.domain.utils.AttributeMap;
+import io.motown.domain.utils.AttributeMapKeys;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.OcppJsonService;
@@ -43,10 +45,18 @@ public class BootNotificationRequestHandler extends RequestHandler {
     public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
         Bootnotification request = gson.fromJson(payload, Bootnotification.class);
 
-        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(chargingStationId, null, request.getChargePointVendor(),
-                request.getChargePointModel(), OcppJsonService.PROTOCOL_IDENTIFIER, request.getChargePointSerialNumber(), request.getChargeBoxSerialNumber(),
-                request.getFirmwareVersion(), request.getIccid(), request.getImsi(), request.getMeterType(),
-                request.getMeterSerialNumber(), addOnIdentity);
+        AttributeMap<String, String> attributes = new AttributeMap<String, String>().
+                putIfValueNotNull(AttributeMapKeys.VENDOR_ID, request.getChargePointVendor()).
+                putIfValueNotNull(AttributeMapKeys.MODEL, request.getChargePointModel()).
+                putIfValueNotNull(AttributeMapKeys.CHARGING_STATION_SERIAL_NUMBER, request.getChargePointSerialNumber()).
+                putIfValueNotNull(AttributeMapKeys.CHARGE_BOX_SERIAL_NUMBER, request.getChargeBoxSerialNumber()).
+                putIfValueNotNull(AttributeMapKeys.FIRMWARE_VERSION, request.getFirmwareVersion()).
+                putIfValueNotNull(AttributeMapKeys.ICCID, request.getIccid()).
+                putIfValueNotNull(AttributeMapKeys.IMSI, request.getImsi()).
+                putIfValueNotNull(AttributeMapKeys.METER_TYPE, request.getMeterType()).
+                putIfValueNotNull(AttributeMapKeys.METER_SERIAL_NUMBER, request.getMeterSerialNumber());
+
+        BootChargingStationResult bootChargingStationResult = domainService.bootChargingStation(chargingStationId, OcppJsonService.PROTOCOL_IDENTIFIER, attributes, addOnIdentity);
 
         BootnotificationResponse response = new BootnotificationResponse();
         response.setStatus(bootChargingStationResult.isAccepted()? BootnotificationResponse.Status.ACCEPTED:BootnotificationResponse.Status.REJECTED);
