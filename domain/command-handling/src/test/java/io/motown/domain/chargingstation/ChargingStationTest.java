@@ -15,7 +15,6 @@
  */
 package io.motown.domain.chargingstation;
 
-import com.google.common.collect.ImmutableMap;
 import io.motown.domain.api.chargingstation.*;
 import org.axonframework.repository.AggregateNotFoundException;
 import org.axonframework.test.FixtureConfiguration;
@@ -190,24 +189,16 @@ public class ChargingStationTest {
 
     @Test
     public void testStartTransactionEmptyAttributes() {
-        Date now = new Date();
-        EvseId evseId = new EvseId(1);
-        int meterStart = 0;
-
         fixture.given(CHARGING_STATION)
-                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, evseId, IDENTIFYING_TOKEN, meterStart, now, NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, evseId, IDENTIFYING_TOKEN, meterStart, now, ImmutableMap.<String, String>of(), NULL_USER_IDENTITY_CONTEXT));
+                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, START_TRANSACTION_INFO, NULL_USER_IDENTITY_CONTEXT))
+                .expectEvents(new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, START_TRANSACTION_INFO, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
     public void testStartTransactionFilledAttributes() {
-        Date now = new Date();
-        EvseId evseId = new EvseId(1);
-        int meterStart = 0;
-
         fixture.given(CHARGING_STATION)
-                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, evseId, IDENTIFYING_TOKEN, meterStart, now, BOOT_NOTIFICATION_ATTRIBUTES, NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, evseId, IDENTIFYING_TOKEN, meterStart, now, BOOT_NOTIFICATION_ATTRIBUTES, NULL_USER_IDENTITY_CONTEXT));
+                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, START_TRANSACTION_INFO, NULL_USER_IDENTITY_CONTEXT))
+                .expectEvents(new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, START_TRANSACTION_INFO, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test
@@ -255,7 +246,7 @@ public class ChargingStationTest {
     @Test
     public void testStartTransactionOnUnknownEvse() {
         fixture.given(CHARGING_STATION)
-                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, UNKNOWN_EVSE_ID, IDENTIFYING_TOKEN, 0, new Date(), NULL_USER_IDENTITY_CONTEXT))
+                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, new StartTransactionInfo(UNKNOWN_EVSE_ID, 0, new Date(), IDENTIFYING_TOKEN, Collections.<String, String>emptyMap()), NULL_USER_IDENTITY_CONTEXT))
                 .expectEvents(new EvseNotFoundEvent(CHARGING_STATION_ID, UNKNOWN_EVSE_ID, NULL_USER_IDENTITY_CONTEXT));
     }
 

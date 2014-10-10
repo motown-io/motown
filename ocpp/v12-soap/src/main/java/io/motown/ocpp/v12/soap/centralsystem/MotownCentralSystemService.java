@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Resource;
 import javax.xml.ws.WebServiceContext;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -203,10 +204,10 @@ public class MotownCentralSystemService implements CentralSystemService {
     public StartTransactionResponse startTransaction(final StartTransactionRequest parameters, final String chargeBoxIdentity) {
         final ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
-        ReservationId reservationId = null;
-
-        final StartTransactionFutureEventCallback future = new StartTransactionFutureEventCallback(domainService, new EvseId(parameters.getConnectorId()),
-                chargingStationId, PROTOCOL_IDENTIFIER, reservationId, addOnIdentity, new TextualToken(parameters.getIdTag()), parameters.getMeterStart(), parameters.getTimestamp());
+        StartTransactionInfo startTransactionInfo = new StartTransactionInfo(new EvseId(parameters.getConnectorId()),
+                parameters.getMeterStart(), parameters.getTimestamp(), new TextualToken(parameters.getIdTag()), Collections.<String, String>emptyMap());
+        final StartTransactionFutureEventCallback future = new StartTransactionFutureEventCallback(domainService,
+                chargingStationId, PROTOCOL_IDENTIFIER, startTransactionInfo, addOnIdentity);
 
         FutureRequestHandler<StartTransactionResponse, StartTransactionFutureResult> handler = new FutureRequestHandler<>(context.getMessageContext(), continuationTimeout);
 

@@ -62,7 +62,7 @@ public class TransactionEventListenerTest {
         cs.setEvses(ImmutableSet.<Evse>builder().add(new Evse("1", ComponentStatus.AVAILABLE)).build());
         chargingStationRepository.createOrUpdate(cs);
 
-        listener.handle(new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN_ACCEPTED, METER_START, new Date(), BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT));
+        listener.handle(new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, START_TRANSACTION_INFO, IDENTITY_CONTEXT));
         Transaction transaction = repository.findByTransactionId(TRANSACTION_ID.getId());
         assertNotNull(transaction);
         assertEquals(0, transaction.getMeterStop());
@@ -75,7 +75,7 @@ public class TransactionEventListenerTest {
         cs.setEvses(ImmutableSet.<Evse>builder().add(new Evse("1", ComponentStatus.AVAILABLE)).build());
         chargingStationRepository.createOrUpdate(cs);
 
-        listener.handle(new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN_ACCEPTED, METER_START, new Date(), BOOT_NOTIFICATION_ATTRIBUTES, IDENTITY_CONTEXT));
+        listener.handle(new TransactionStartedEvent(CHARGING_STATION_ID, TRANSACTION_ID, START_TRANSACTION_INFO, IDENTITY_CONTEXT));
         Transaction transaction = repository.findByTransactionId(TRANSACTION_ID.getId());
         assertNotNull(transaction);
         assertEquals(0, transaction.getMeterStop());

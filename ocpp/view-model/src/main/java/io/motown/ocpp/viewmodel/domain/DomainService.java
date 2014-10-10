@@ -15,7 +15,6 @@
  */
 package io.motown.ocpp.viewmodel.domain;
 
-import com.google.common.collect.Maps;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.api.security.IdentityContext;
@@ -43,7 +42,6 @@ public class DomainService {
     public static final String INFO_KEY = "info";
     public static final String VENDOR_ID_KEY = "vendorId";
     public static final String VENDOR_ERROR_CODE_KEY = "vendorErrorCode";
-    public static final String RESERVATION_ID_KEY = "reservationId";
 
     private static final Logger LOG = LoggerFactory.getLogger(DomainService.class);
     private DomainCommandGateway commandGateway;
@@ -189,26 +187,16 @@ public class DomainService {
      * Initiates a StartTransactionCommand without authorizing the identification. Normally this method is called by the
      * futureEventCallback of {@link #startTransaction}.
      *
-     * @param transactionId     transaction identifier.
-     * @param evseId            evse identifier.
      * @param chargingStationId charging station identifier.
-     * @param reservationId     reservation identifier.
+     * @param transactionId     transaction identifier.
+     * @param startTransactionInfo information about the started transaction.
      * @param addOnIdentity     add on identifier.
-     * @param idTag             identification that started the transaction.
-     * @param meterStart        meter value in Wh for the evse when the transaction started.
-     * @param timestamp         the time at which the transaction started.
      */
-    public void startTransactionNoAuthorize(TransactionId transactionId, EvseId evseId, ChargingStationId chargingStationId, ReservationId reservationId,
-                                            AddOnIdentity addOnIdentity, IdentifyingToken idTag, int meterStart, Date timestamp) {
-        Map<String, String> attributes = Maps.newHashMap();
-        if (reservationId != null) {
-            attributes.put(RESERVATION_ID_KEY, reservationId.getId());
-        }
-
+    public void startTransactionNoAuthorize(ChargingStationId chargingStationId, TransactionId transactionId,
+                                            StartTransactionInfo startTransactionInfo, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        StartTransactionCommand command = new StartTransactionCommand(chargingStationId, transactionId, evseId, idTag,
-                meterStart, timestamp, attributes, identityContext);
+        StartTransactionCommand command = new StartTransactionCommand(chargingStationId, transactionId, startTransactionInfo, identityContext);
         commandGateway.send(command);
     }
 

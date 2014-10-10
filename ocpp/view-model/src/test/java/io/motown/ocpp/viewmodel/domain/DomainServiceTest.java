@@ -36,6 +36,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.util.Collections;
 import java.util.Date;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
@@ -315,9 +316,10 @@ public class DomainServiceTest {
     @Test
     public void testStartTransactionEmptyAttributesChargingStation() {
         Date now = new Date();
-        domainService.startTransactionNoAuthorize(TRANSACTION_ID, EVSE_ID, REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, null, ADD_ON_IDENTITY, IDENTIFYING_TOKEN, 0, now);
+        StartTransactionInfo startTransactionInfo = new StartTransactionInfo(EVSE_ID, 0, now, IDENTIFYING_TOKEN, Collections.<String, String>emptyMap());
+        domainService.startTransactionNoAuthorize(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, TRANSACTION_ID, startTransactionInfo, ADD_ON_IDENTITY);
 
-        verify(gateway).send(new StartTransactionCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 0, now, getEmptyAttributesMap(), NULL_USER_IDENTITY_CONTEXT));
+        verify(gateway).send(new StartTransactionCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, TRANSACTION_ID, startTransactionInfo, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test

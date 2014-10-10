@@ -183,6 +183,7 @@ public final class ChargingStationTestUtils {
      * The default reservation identifier.
      */
     public static final NumberedReservationId RESERVATION_ID = new NumberedReservationId(CHARGING_STATION_ID, PROTOCOL, 1);
+
     /**
      * The default transaction identifier.
      */
@@ -274,6 +275,11 @@ public final class ChargingStationTestUtils {
      * The default coordinates.
      */
     public static final Coordinates COORDINATES = new Coordinates(52.3702157, 4.895167899999933);
+
+    /**
+     * The default start transaction information.
+     */
+    public static final StartTransactionInfo START_TRANSACTION_INFO = new StartTransactionInfo(EVSE_ID, 1, new Date(), IDENTIFYING_TOKEN, Collections.<String, String>emptyMap());
 
     /**
      * The default address.

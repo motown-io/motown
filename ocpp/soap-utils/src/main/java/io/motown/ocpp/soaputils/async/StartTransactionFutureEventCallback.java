@@ -24,8 +24,6 @@ import io.motown.soaputils.async.ContinuationFutureCallback;
 import org.apache.cxf.continuations.Continuation;
 import org.axonframework.domain.EventMessage;
 
-import java.util.Date;
-
 /**
  * Future event callback for the start transaction action. Before starting a transaction the identification that starts the
  * transaction needs to be validated. It could be that the charging station has an outdated local list of identifications.
@@ -36,34 +34,21 @@ public class StartTransactionFutureEventCallback extends FutureEventCallback<Sta
 
     private DomainService domainService;
 
-    private EvseId evseId;
-
     private ChargingStationId chargingStationId;
 
     private String protocolIdentifier;
 
-    private ReservationId reservationId;
-
     private AddOnIdentity addOnIdentity;
 
-    private IdentifyingToken identifyingToken;
+    private StartTransactionInfo startTransaction;
 
-    private int meterStart;
-
-    private Date timestamp;
-
-    public StartTransactionFutureEventCallback(DomainService domainService, EvseId evseId, ChargingStationId chargingStationId,
-                                               String protocolIdentifier, ReservationId reservationId, AddOnIdentity addOnIdentity,
-                                               IdentifyingToken identifyingToken, int meterStart, Date timestamp) {
+    public StartTransactionFutureEventCallback(DomainService domainService, ChargingStationId chargingStationId, String protocolIdentifier,
+                                               StartTransactionInfo startTransaction, AddOnIdentity addOnIdentity) {
         this.domainService = domainService;
-        this.evseId = evseId;
         this.chargingStationId = chargingStationId;
         this.protocolIdentifier = protocolIdentifier;
-        this.reservationId = reservationId;
         this.addOnIdentity = addOnIdentity;
-        this.identifyingToken = identifyingToken;
-        this.meterStart = meterStart;
-        this.timestamp = timestamp != null ? new Date(timestamp.getTime()) : null;
+        this.startTransaction = startTransaction;
     }
 
     /**
@@ -86,10 +71,10 @@ public class StartTransactionFutureEventCallback extends FutureEventCallback<Sta
 
         resultEvent = (AuthorizationResultEvent) event.getPayload();
 
-        Transaction transaction = domainService.createTransaction(evseId);
+        Transaction transaction = domainService.createTransaction(startTransaction.getEvseId());
         NumberedTransactionId transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, transaction.getId().intValue());
 
-        domainService.startTransactionNoAuthorize(transactionId, evseId, chargingStationId, reservationId, addOnIdentity, identifyingToken, meterStart, timestamp);
+        domainService.startTransactionNoAuthorize(chargingStationId, transactionId, startTransaction, addOnIdentity);
 
         StartTransactionFutureResult futureResult = new StartTransactionFutureResult();
         futureResult.setAuthorizationResultStatus(resultEvent.getAuthenticationStatus());

@@ -18,39 +18,23 @@ package io.motown.domain.api.chargingstation;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
-import java.util.Date;
-
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
-import static junit.framework.Assert.assertEquals;
 
 public class StartTransactionCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullChargingStationId() {
-        new StartTransactionCommand(null, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 1, new Date(), NULL_USER_IDENTITY_CONTEXT);
+        new StartTransactionCommand(null, TRANSACTION_ID, START_TRANSACTION_INFO, NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingWithNullTransactionId() {
-        new StartTransactionCommand(CHARGING_STATION_ID, null, EVSE_ID, IDENTIFYING_TOKEN, 1, new Date(), NULL_USER_IDENTITY_CONTEXT);
+        new StartTransactionCommand(CHARGING_STATION_ID, null, START_TRANSACTION_INFO, NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingWithNullIdentifyingToken() {
-        new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, null, 1, new Date(), NULL_USER_IDENTITY_CONTEXT);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullPointerExceptionThrownWhenCreatingWithNullTimestamp() {
-        new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, 1, null, NULL_USER_IDENTITY_CONTEXT);
-    }
-
-    @Test
-    public void testImmutableDate() {
-        Date now = new Date();
-        StartTransactionCommand command = new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, EVSE_ID, IDENTIFYING_TOKEN, TRANSACTION_NUMBER, now, NULL_USER_IDENTITY_CONTEXT);
-        command.getTimestamp().setTime(TWO_MINUTES_AGO.getTime());
-        assertEquals(now, command.getTimestamp());
+    public void nullPointerExceptionThrownWhenCreatingWithNullStartTransactionInfo() {
+        new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, null, NULL_USER_IDENTITY_CONTEXT);
     }
 
     @Test

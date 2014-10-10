@@ -279,13 +279,14 @@ public class MotownCentralSystemService implements io.motown.ocpp.v15.soap.centr
     public StartTransactionResponse startTransaction(final StartTransactionRequest parameters, final String chargeBoxIdentity) {
         final ChargingStationId chargingStationId = new ChargingStationId(chargeBoxIdentity);
 
-        ReservationId reservationId = null;
-        if (parameters.getReservationId() != null) {
-            reservationId = new NumberedReservationId(chargingStationId, PROTOCOL_IDENTIFIER, parameters.getReservationId());
-        }
+        AttributeMap<String, String> attributes = new AttributeMap<String, String>().
+                putIfValueNotNull(AttributeMapKeys.RESERVATION_ID, parameters.getReservationId() != null ? parameters.getReservationId().toString() : null);
 
-        final StartTransactionFutureEventCallback future = new StartTransactionFutureEventCallback(domainService, new EvseId(parameters.getConnectorId()),
-                chargingStationId, PROTOCOL_IDENTIFIER, reservationId, addOnIdentity, new TextualToken(parameters.getIdTag()), parameters.getMeterStart(), parameters.getTimestamp());
+        StartTransactionInfo startTransactionInfo = new StartTransactionInfo(new EvseId(parameters.getConnectorId()),
+                parameters.getMeterStart(), parameters.getTimestamp(), new TextualToken(parameters.getIdTag()), attributes);
+
+        final StartTransactionFutureEventCallback future = new StartTransactionFutureEventCallback(domainService,
+                chargingStationId, PROTOCOL_IDENTIFIER, startTransactionInfo, addOnIdentity);
 
         FutureRequestHandler<StartTransactionResponse, StartTransactionFutureResult> handler = new FutureRequestHandler<>(context.getMessageContext(), continuationTimeout);
 

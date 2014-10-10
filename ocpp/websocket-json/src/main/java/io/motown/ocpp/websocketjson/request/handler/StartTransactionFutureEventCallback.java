@@ -23,7 +23,6 @@ import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.domain.FutureEventCallback;
 import io.motown.ocpp.viewmodel.persistence.entities.Transaction;
 import io.motown.ocpp.websocketjson.schema.generated.v15.IdTagInfo__;
-import io.motown.ocpp.websocketjson.schema.generated.v15.Starttransaction;
 import io.motown.ocpp.websocketjson.schema.generated.v15.StarttransactionResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import org.atmosphere.websocket.WebSocket;
@@ -52,21 +51,21 @@ public class StartTransactionFutureEventCallback extends FutureEventCallback<Aut
 
     private String protocolIdentifier;
 
-    private Starttransaction request;
+    private StartTransactionInfo startTransactionInfo;
 
     private DomainService domainService;
 
     private AddOnIdentity addOnIdentity;
 
     public StartTransactionFutureEventCallback(String callId, WebSocket webSocket, Gson gson, ChargingStationId chargingStationId,
-                                               String protocolIdentifier, Starttransaction request, DomainService domainService,
+                                               String protocolIdentifier, StartTransactionInfo startTransactionInfo, DomainService domainService,
                                                AddOnIdentity addOnIdentity) {
         this.webSocket = webSocket;
         this.callId = callId;
         this.gson = gson;
         this.chargingStationId = chargingStationId;
         this.protocolIdentifier = protocolIdentifier;
-        this.request = request;
+        this.startTransactionInfo = startTransactionInfo;
         this.domainService = domainService;
         this.addOnIdentity = addOnIdentity;
     }
@@ -91,17 +90,10 @@ public class StartTransactionFutureEventCallback extends FutureEventCallback<Aut
 
         resultEvent = (AuthorizationResultEvent) event.getPayload();
 
-        ReservationId reservationId = null;
-        if (request.getReservationId() != null && request.getReservationId() != 0) {
-            reservationId = new NumberedReservationId(chargingStationId, protocolIdentifier, request.getReservationId());
-        }
-
-        EvseId evseId = new EvseId(request.getConnectorId());
-        Transaction transaction = domainService.createTransaction(evseId);
+        Transaction transaction = domainService.createTransaction(startTransactionInfo.getEvseId());
         NumberedTransactionId transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, transaction.getId().intValue());
 
-        domainService.startTransactionNoAuthorize(transactionId, evseId, chargingStationId, reservationId, addOnIdentity,
-                new TextualToken(request.getIdTag()), request.getMeterStart(), request.getTimestamp());
+        domainService.startTransactionNoAuthorize(chargingStationId, transactionId, startTransactionInfo, addOnIdentity);
 
         IdTagInfo__ idTagInfo = new IdTagInfo__();
         idTagInfo.setStatus(convert(resultEvent.getAuthenticationStatus()));

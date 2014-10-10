@@ -15,12 +15,9 @@
  */
 package io.motown.domain.api.chargingstation;
 
-import com.google.common.collect.ImmutableMap;
 import io.motown.domain.api.security.IdentityContext;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-import java.util.Date;
-import java.util.Map;
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -35,15 +32,7 @@ public final class StartTransactionCommand {
 
     private final TransactionId transactionId;
 
-    private final EvseId evseId;
-
-    private final IdentifyingToken identifyingToken;
-
-    private final int meterStart;
-
-    private final Date timestamp;
-
-    private final Map<String, String> attributes;
+    private final StartTransactionInfo startTransactionInfo;
 
     private final IdentityContext identityContext;
 
@@ -56,49 +45,14 @@ public final class StartTransactionCommand {
      *
      * @param chargingStationId the charging station's identifier.
      * @param transactionId     the transaction's identifier.
-     * @param evseId            the evse's identifier or position.
-     * @param identifyingToken  the token which started the transaction.
-     * @param meterStart        meter value in Wh for the evse when the transaction started.
-     * @param timestamp         the time at which the transaction started.
+     * @param startTransactionInfo the information about the started transaction.
      * @param identityContext   the identity context.
-     * @throws NullPointerException     if {@code chargingStationId}, {@code transactionId}, {@code evseId}, {@code identifyingToken},
-     *                                  {@code timestamp} or {@code identityContext} is {@code null}.
-     * @throws IllegalArgumentException if {@code evseId} is negative.
+     * @throws NullPointerException     if {@code chargingStationId}, {@code transactionId}, {@code startTransactionInfo} or {@code identityContext} is {@code null}.
      */
-    public StartTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId, EvseId evseId, IdentifyingToken identifyingToken, int meterStart, Date timestamp, IdentityContext identityContext) {
-        this(chargingStationId, transactionId, evseId, identifyingToken, meterStart, timestamp, ImmutableMap.<String, String>of(), identityContext);
-    }
-
-
-    /**
-     * Creates a {@code StartTransactionCommand}.
-     * <p/>
-     * In contrast to most of the other classes and methods in the Core API the {@code transactionId} and
-     * {@code identifyingToken} are possibly mutable. Some default, immutable implementations of these interfaces are
-     * provided but the mutability of these parameters can't be guaranteed.
-     *
-     * @param chargingStationId the charging station's identifier.
-     * @param transactionId     the transaction's identifier.
-     * @param evseId            the evse's identifier or position.
-     * @param identifyingToken  the token which started the transaction.
-     * @param meterStart        meter value in Wh for the evse when the transaction started.
-     * @param timestamp         the time at which the transaction started.
-     * @param attributes        a {@link java.util.Map} of attributes. These attributes are additional information provided by
-     *                          the charging station when it booted but which are not required by Motown. Because
-     *                          {@link java.util.Map} implementations are potentially mutable a defensive copy is made.
-     * @param identityContext   the identity context.
-     * @throws NullPointerException     if {@code chargingStationId}, {@code transactionId}, {@code evseId}, {@code identifyingToken},
-     *                                  {@code timestamp}, {@code attributes} or {@code identityContext} is {@code null}.
-     * @throws IllegalArgumentException if {@code evseId} is negative.
-     */
-    public StartTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId, EvseId evseId, IdentifyingToken identifyingToken, int meterStart, Date timestamp, Map<String, String> attributes, IdentityContext identityContext) {
+    public StartTransactionCommand(ChargingStationId chargingStationId, TransactionId transactionId, StartTransactionInfo startTransactionInfo, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.transactionId = checkNotNull(transactionId);
-        this.evseId = checkNotNull(evseId);
-        this.identifyingToken = checkNotNull(identifyingToken);
-        this.meterStart = meterStart;
-        this.timestamp = new Date(checkNotNull(timestamp).getTime());
-        this.attributes = ImmutableMap.copyOf(checkNotNull(attributes));
+        this.startTransactionInfo = checkNotNull(startTransactionInfo);
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -121,51 +75,12 @@ public final class StartTransactionCommand {
     }
 
     /**
-     * Gets the evse's identifier or position.
+     * Gets the start transaction information.
      *
-     * @return the evse's identifier or position.
+     * @return the start transaction information.
      */
-    public EvseId getEvseId() {
-        return evseId;
-    }
-
-    /**
-     * Gets the token which started the transaction.
-     *
-     * @return the token.
-     */
-    public IdentifyingToken getIdentifyingToken() {
-        return identifyingToken;
-    }
-
-    /**
-     * Gets the meter value when the transaction started.
-     *
-     * @return the meter value when the transaction started.
-     */
-    public int getMeterStart() {
-        return meterStart;
-    }
-
-    /**
-     * Gets the time at which the transaction started.
-     *
-     * @return the time at which the transaction started.
-     */
-    public Date getTimestamp() {
-        return new Date(timestamp.getTime());
-    }
-
-    /**
-     * Gets the attributes associated with the start of the transaction.
-     * <p/>
-     * These attributes are additional information provided by the charging station when it started the transaction
-     * but which are not required by Motown.
-     *
-     * @return an immutable {@link java.util.Map} of attributes.
-     */
-    public Map<String, String> getAttributes() {
-        return attributes;
+    public StartTransactionInfo getStartTransactionInfo() {
+        return startTransactionInfo;
     }
 
     /**
@@ -179,7 +94,7 @@ public final class StartTransactionCommand {
 
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, transactionId, evseId, identifyingToken, meterStart, timestamp, attributes, identityContext);
+        return Objects.hash(chargingStationId, transactionId, startTransactionInfo, identityContext);
     }
 
     @Override
@@ -191,6 +106,6 @@ public final class StartTransactionCommand {
             return false;
         }
         final StartTransactionCommand other = (StartTransactionCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.transactionId, other.transactionId) && Objects.equals(this.evseId, other.evseId) && Objects.equals(this.identifyingToken, other.identifyingToken) && Objects.equals(this.meterStart, other.meterStart) && Objects.equals(this.timestamp, other.timestamp) && Objects.equals(this.attributes, other.attributes) && Objects.equals(this.identityContext, other.identityContext);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.transactionId, other.transactionId) && Objects.equals(this.startTransactionInfo, other.startTransactionInfo) && Objects.equals(this.identityContext, other.identityContext);
     }
 }

@@ -18,6 +18,8 @@ package io.motown.ocpp.websocketjson.request.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.AddOnIdentity;
+import io.motown.domain.utils.AttributeMap;
+import io.motown.domain.utils.AttributeMapKeys;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.viewmodel.domain.FutureEventCallback;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Starttransaction;
@@ -44,8 +46,14 @@ public class StartTransactionRequestHandler extends RequestHandler {
     public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
         Starttransaction request = gson.fromJson(payload, Starttransaction.class);
 
+        AttributeMap<String, String> attributes = new AttributeMap<String, String>().
+                putIfValueNotNull(AttributeMapKeys.RESERVATION_ID, request.getReservationId() != null ? request.getReservationId().toString() : null);
+
+        StartTransactionInfo startTransactionInfo = new StartTransactionInfo(new EvseId(request.getConnectorId()),
+                request.getMeterStart(), request.getTimestamp(), new TextualToken(request.getIdTag()), attributes);
+
         FutureEventCallback futureEventCallback = new StartTransactionFutureEventCallback(callId, webSocket, gson, chargingStationId,
-                protocolIdentifier, request, domainService, addOnIdentity);
+                protocolIdentifier, startTransactionInfo, domainService, addOnIdentity);
 
         // futureEventCallback will handle authorize result and trigger a startTransaction command
         domainService.authorize(chargingStationId, request.getIdTag(), futureEventCallback, addOnIdentity);

@@ -140,12 +140,12 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
      */
     @CommandHandler
     public void handle(StartTransactionCommand command, MetaData metaData) {
-        if (command.getEvseId().getNumberedId() > numberOfEvses) {
-            apply(new EvseNotFoundEvent(id, command.getEvseId(), command.getIdentityContext()), metaData);
+        if (command.getStartTransactionInfo().getEvseId().getNumberedId() > numberOfEvses) {
+            apply(new EvseNotFoundEvent(id, command.getStartTransactionInfo().getEvseId(), command.getIdentityContext()), metaData);
             return;
         }
 
-        apply(new TransactionStartedEvent(command.getChargingStationId(), command.getTransactionId(), command.getEvseId(), command.getIdentifyingToken(), command.getMeterStart(), command.getTimestamp(), command.getAttributes(), command.getIdentityContext()), metaData);
+        apply(new TransactionStartedEvent(command.getChargingStationId(), command.getTransactionId(), command.getStartTransactionInfo(), command.getIdentityContext()), metaData);
     }
 
     @CommandHandler

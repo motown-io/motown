@@ -47,6 +47,8 @@ public class AttributeMapKeys {
 
     public static final String METER_SERIAL_NUMBER = "meterSerialNumber";
 
+    public static final String RESERVATION_ID = "reservationId";
+
     private AttributeMapKeys() {
         // class should not be instantiated
     }
