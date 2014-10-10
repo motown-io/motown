@@ -16,7 +16,6 @@
 package io.motown.operatorapi.json.commands;
 
 import com.google.common.collect.Maps;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
@@ -24,11 +23,9 @@ import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.FirmwareUpdateAttributeKey;
 import io.motown.domain.api.chargingstation.RequestFirmwareUpdateCommand;
 import io.motown.domain.api.security.IdentityContext;
-import io.motown.domain.commandauthorization.CommandAuthorizationService;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.model.UpdateFirmwareApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
-import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
 import java.util.Map;
 

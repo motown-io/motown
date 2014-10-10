@@ -20,10 +20,8 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.RequestClearCacheCommand;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.security.IdentityContext;
-import io.motown.domain.commandauthorization.CommandAuthorizationService;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
-import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
 class RequestClearCacheJsonCommandHandler extends JsonCommandHandler {
 

@@ -15,7 +15,6 @@
  */
 package io.motown.operatorapi.json.commands;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
@@ -23,11 +22,9 @@ import io.motown.domain.api.chargingstation.RevokePermissionCommand;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.api.security.SimpleUserIdentity;
 import io.motown.domain.api.security.UserIdentity;
-import io.motown.domain.commandauthorization.CommandAuthorizationService;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.model.RevokePermissionApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
-import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
 class RevokePermissionJsonCommandHandler extends JsonCommandHandler {
 

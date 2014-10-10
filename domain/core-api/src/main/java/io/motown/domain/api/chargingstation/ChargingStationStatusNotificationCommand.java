@@ -17,9 +17,6 @@ package io.motown.domain.api.chargingstation;
 
 import io.motown.domain.api.security.IdentityContext;
 
-import java.util.Date;
-import java.util.Map;
-
 /**
  * {@code ChargingStationStatusNotificationCommand} is the command which is published when a charging station notifies
  * Motown about its status.

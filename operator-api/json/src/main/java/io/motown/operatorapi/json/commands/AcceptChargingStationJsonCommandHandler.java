@@ -21,10 +21,8 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CreateAndAcceptChargingStationCommand;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.api.security.UserIdentity;
-import io.motown.domain.commandauthorization.CommandAuthorizationService;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
-import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
 import java.util.Set;
 
