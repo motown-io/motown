@@ -29,4 +29,8 @@ public class AttributeMapKeys {
 
     public static final String STATUS_NOTIFICATION_VENDOR_ERROR_CODE_KEY = "vendorErrorCode";
 
+    private AttributeMapKeys() {
+        // class should not be instantiated
+    }
+
 }
