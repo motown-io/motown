@@ -71,8 +71,12 @@ public final class OperatorApiJsonTestUtils {
     }
 
     public static CommandAuthorizationService getCommandAuthorizationService() {
+        return getCommandAuthorizationService(true);
+    }
+
+    public static CommandAuthorizationService getCommandAuthorizationService(boolean authorized) {
         CommandAuthorizationService commandAuthorizationService = mock(CommandAuthorizationService.class);
-        when(commandAuthorizationService.isAuthorized(any(ChargingStationId.class), any(UserIdentity.class), any(Class.class))).thenReturn(true);
+        when(commandAuthorizationService.isAuthorized(any(ChargingStationId.class), any(UserIdentity.class), any(Class.class))).thenReturn(authorized);
         return commandAuthorizationService;
     }
 }

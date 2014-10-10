@@ -50,4 +50,11 @@ public class RequestResetChargingStationJsonCommandHandlerTest {
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
+    @Test(expected = UserIdentityUnauthorizedException.class)
+    public void testHardResetCommandUnauthorized() throws UserIdentityUnauthorizedException {
+        handler.setCommandAuthorizationService(OperatorApiJsonTestUtils.getCommandAuthorizationService(false));
+        JsonObject commandObject = gson.fromJson("{type:'hard'}", JsonObject.class);
+        handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
+    }
+
 }
