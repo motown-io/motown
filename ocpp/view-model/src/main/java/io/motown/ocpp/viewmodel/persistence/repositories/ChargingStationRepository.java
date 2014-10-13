@@ -52,7 +52,7 @@ public class ChargingStationRepository {
             storedChargingStation = entityManager.merge(chargingStation);
             transaction.commit();
         } finally {
-            if (transaction != null && transaction.isActive()) {
+            if (transaction.isActive()) {
                 LOG.warn("Transaction is still active while it should not be, rolling back.");
                 transaction.rollback();
             }
