@@ -13,32 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.utils.rest.json.providers;
+package io.motown.utils.rest.json.jax_rs;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.persistence.PersistenceException;
+import javax.persistence.NoResultException;
 import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PersistenceExceptionMapperTest {
-    private static final int INTERNAL_SERVER_ERROR = 500;
+public class NoResultExceptionMapperTest {
+    private static final int NOT_FOUND = 404;
 
     @Mock
-    private PersistenceException exception;
+    private NoResultException exception;
 
     @Test
-    public void testPersistenceExceptionMapper() {
-        PersistenceExceptionMapper mapper = new PersistenceExceptionMapper();
+    public void testNoResultExceptionMapper() {
+        NoResultExceptionMapper mapper = new NoResultExceptionMapper();
         Response response = mapper.toResponse(exception);
 
         assertNotNull(response);
-        assertEquals(INTERNAL_SERVER_ERROR, response.getStatus());
+        assertEquals(NOT_FOUND, response.getStatus());
     }
 }

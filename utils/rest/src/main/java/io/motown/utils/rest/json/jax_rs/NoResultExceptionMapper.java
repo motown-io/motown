@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.utils.rest.json.providers;
+package io.motown.utils.rest.json.jax_rs;
 
-import com.google.gson.JsonSyntaxException;
-
+import javax.persistence.NoResultException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public final class JsonSyntaxExceptionMapper implements ExceptionMapper<JsonSyntaxException> {
+public final class NoResultExceptionMapper implements ExceptionMapper<NoResultException> {
 
     @Override
-    public Response toResponse(JsonSyntaxException e) {
-        return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
+    public Response toResponse(NoResultException e) {
+        return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
     }
 }

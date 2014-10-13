@@ -13,32 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.utils.rest.json.providers;
+package io.motown.utils.rest.json.jax_rs;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
-public class NoResultExceptionMapperTest {
-    private static final int NOT_FOUND = 404;
+public class NonUniqueResultExceptionMapperTest {
+
+    private static final int BAD_REQUEST = 400;
 
     @Mock
-    private NoResultException exception;
+    private NonUniqueResultException exception;
 
     @Test
-    public void testNoResultExceptionMapper() {
-        NoResultExceptionMapper mapper = new NoResultExceptionMapper();
+    public void testNonUniqueResultExceptionMapper() {
+        NonUniqueResultExceptionMapper mapper = new NonUniqueResultExceptionMapper();
         Response response = mapper.toResponse(exception);
 
         assertNotNull(response);
-        assertEquals(NOT_FOUND, response.getStatus());
+        assertEquals(BAD_REQUEST, response.getStatus());
     }
 }

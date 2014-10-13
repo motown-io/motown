@@ -13,33 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.utils.rest.json.providers;
+package io.motown.utils.rest.json.jax_rs;
 
+import com.google.gson.JsonParseException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.persistence.NonUniqueResultException;
 import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
-public class NonUniqueResultExceptionMapperTest {
-
-    private static final int BAD_REQUEST = 400;
+public class JsonParseExceptionMapperTest {
 
     @Mock
-    private NonUniqueResultException exception;
+    private JsonParseException exception;
 
     @Test
-    public void testNonUniqueResultExceptionMapper() {
-        NonUniqueResultExceptionMapper mapper = new NonUniqueResultExceptionMapper();
+    public void testJsonParseExceptionMapper() {
+        JsonParseExceptionMapper mapper = new JsonParseExceptionMapper();
         Response response = mapper.toResponse(exception);
 
         assertNotNull(response);
-        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     }
 }

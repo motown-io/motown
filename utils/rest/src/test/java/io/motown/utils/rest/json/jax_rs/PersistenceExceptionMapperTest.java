@@ -13,32 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.utils.rest.json.providers;
+package io.motown.utils.rest.json.jax_rs;
 
-import com.google.gson.JsonIOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.persistence.PersistenceException;
 import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
-public class JsonIOExceptionMapperTest {
-    private static final int BAD_REQUEST = 400;
+public class PersistenceExceptionMapperTest {
+    private static final int INTERNAL_SERVER_ERROR = 500;
 
     @Mock
-    private Throwable cause;
+    private PersistenceException exception;
 
     @Test
-    public void testJsonIOExceptionMapper() {
-        JsonIOExceptionMapper mapper = new JsonIOExceptionMapper();
-        Response response = mapper.toResponse(new JsonIOException(cause));
+    public void testPersistenceExceptionMapper() {
+        PersistenceExceptionMapper mapper = new PersistenceExceptionMapper();
+        Response response = mapper.toResponse(exception);
 
         assertNotNull(response);
-        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(INTERNAL_SERVER_ERROR, response.getStatus());
     }
 }

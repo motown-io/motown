@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.utils.rest.json.providers;
+package io.motown.utils.rest.json.jax_rs;
 
+import com.google.gson.JsonSyntaxException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -26,18 +27,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GenericExceptionMapperTest {
-    private static final int INTERNAL_SERVER_ERROR = 500;
+public class JsonSyntaxExceptionMapperTest {
+    private static final int BAD_REQUEST = 400;
 
     @Mock
-    private Exception exception;
+    private Throwable cause;
 
     @Test
-    public void testGenericExceptionMapper() {
-        GenericExceptionMapper mapper = new GenericExceptionMapper();
-        Response response = mapper.toResponse(exception);
+    public void testJsonSyntaxExceptionMapper() {
+        JsonSyntaxExceptionMapper mapper = new JsonSyntaxExceptionMapper();
+        Response response = mapper.toResponse(new JsonSyntaxException(cause));
 
         assertNotNull(response);
-        assertEquals(INTERNAL_SERVER_ERROR, response.getStatus());
+        assertEquals(BAD_REQUEST, response.getStatus());
     }
 }

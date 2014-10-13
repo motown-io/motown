@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.utils.rest.json.providers;
+package io.motown.utils.rest.json.jax_rs;
 
-import com.google.gson.JsonParseException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -27,17 +26,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
-public class JsonParseExceptionMapperTest {
+public class GenericExceptionMapperTest {
+    private static final int INTERNAL_SERVER_ERROR = 500;
 
     @Mock
-    private JsonParseException exception;
+    private Exception exception;
 
     @Test
-    public void testJsonParseExceptionMapper() {
-        JsonParseExceptionMapper mapper = new JsonParseExceptionMapper();
+    public void testGenericExceptionMapper() {
+        GenericExceptionMapper mapper = new GenericExceptionMapper();
         Response response = mapper.toResponse(exception);
 
         assertNotNull(response);
-        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+        assertEquals(INTERNAL_SERVER_ERROR, response.getStatus());
     }
 }

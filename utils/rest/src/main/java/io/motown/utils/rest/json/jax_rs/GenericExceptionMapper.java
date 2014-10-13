@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.utils.rest.json.providers;
+package io.motown.utils.rest.json.jax_rs;
 
-import javax.persistence.PersistenceException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public final class PersistenceExceptionMapper implements ExceptionMapper<PersistenceException> {
+public final class GenericExceptionMapper implements ExceptionMapper<Exception> {
 
     @Override
-    public Response toResponse(PersistenceException e) {
+    public Response toResponse(Exception e) {
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
     }
 }

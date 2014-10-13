@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.utils.rest.json.providers;
+package io.motown.utils.rest.json.jax_rs;
 
-import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -23,10 +23,10 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public final class JsonIOExceptionMapper implements ExceptionMapper<JsonIOException> {
+public final class JsonSyntaxExceptionMapper implements ExceptionMapper<JsonSyntaxException> {
 
     @Override
-    public Response toResponse(JsonIOException e) {
+    public Response toResponse(JsonSyntaxException e) {
         return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
     }
 }
