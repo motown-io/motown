@@ -45,22 +45,32 @@ class ReadingContextTranslator implements Translator<ReadingContext> {
             return ReadingContext.PERIODIC_SAMPLE;
         }
 
+        ReadingContext result;
+
         switch (this.readingContext) {
             case INTERRUPTION_BEGIN:
-                return ReadingContext.BEGIN_INTERRUPTION;
+                result = ReadingContext.BEGIN_INTERRUPTION;
+                break;
             case INTERRUPTION_END:
-                return ReadingContext.END_INTERRUPTION;
+                result = ReadingContext.END_INTERRUPTION;
+                break;
             case SAMPLE_CLOCK:
-                return ReadingContext.CLOCK_SAMPLE;
+                result = ReadingContext.CLOCK_SAMPLE;
+                break;
             case SAMPLE_PERIODIC:
-                return ReadingContext.PERIODIC_SAMPLE;
+                result = ReadingContext.PERIODIC_SAMPLE;
+                break;
             case TRANSACTION_BEGIN:
-                return ReadingContext.BEGIN_TRANSACTION;
+                result = ReadingContext.BEGIN_TRANSACTION;
+                break;
             case TRANSACTION_END:
-                return ReadingContext.END_TRANSACTION;
+                result = ReadingContext.END_TRANSACTION;
+                break;
             default:
                 throw new AssertionError(String.format("Unknown value for ReadingContext: '%s'", readingContext));
         }
+
+        return result;
     }
 
 }

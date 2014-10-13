@@ -42,31 +42,45 @@ public class UnitOfMeasureTranslator implements Translator<UnitOfMeasure> {
             return UnitOfMeasure.WATT_HOUR;
         }
 
+        UnitOfMeasure result;
         switch (this.unitOfMeasure) {
             case "Wh":
-                return UnitOfMeasure.WATT_HOUR;
+                result = UnitOfMeasure.WATT_HOUR;
+                break;
             case "kWh":
-                return UnitOfMeasure.KILOWATT_HOUR;
+                result = UnitOfMeasure.KILOWATT_HOUR;
+                break;
             case "varh":
-                return UnitOfMeasure.VAR_HOUR;
+                result = UnitOfMeasure.VAR_HOUR;
+                break;
             case "kvarh":
-                return UnitOfMeasure.KILOVAR_HOUR;
+                result = UnitOfMeasure.KILOVAR_HOUR;
+                break;
             case "W":
-                return UnitOfMeasure.WATT;
+                result = UnitOfMeasure.WATT;
+                break;
             case "kW":
-                return UnitOfMeasure.KILOWATT;
+                result = UnitOfMeasure.KILOWATT;
+                break;
             case "var":
-                return UnitOfMeasure.VAR;
+                result = UnitOfMeasure.VAR;
+                break;
             case "kvar":
-                return UnitOfMeasure.KILOVAR;
+                result = UnitOfMeasure.KILOVAR;
+                break;
             case "Amp":
-                return UnitOfMeasure.AMPERES;
+                result = UnitOfMeasure.AMPERES;
+                break;
             case "Volt":
-                return UnitOfMeasure.VOLTAGE;
+                result = UnitOfMeasure.VOLTAGE;
+                break;
             case "Celsius":
-                return UnitOfMeasure.CELSIUS;
+                result = UnitOfMeasure.CELSIUS;
+                break;
             default:
                 throw new AssertionError(String.format("Unknown value for UnitOfMeasure: '%s'", this.unitOfMeasure));
         }
+
+        return result;
     }
 }

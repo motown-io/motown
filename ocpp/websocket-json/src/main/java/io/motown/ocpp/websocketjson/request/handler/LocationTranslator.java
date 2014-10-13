@@ -42,15 +42,21 @@ class LocationTranslator implements Translator<Location> {
             return Location.OUTLET;
         }
 
+        Location result;
         switch (this.location) {
             case "Inlet":
-                return Location.INLET;
+                result = Location.INLET;
+                break;
             case "Outlet":
-                return Location.OUTLET;
+                result = Location.OUTLET;
+                break;
             case "Body":
-                return Location.BODY;
+                result = Location.BODY;
+                break;
             default:
                 throw new AssertionError(String.format("Unknown value for Location: '%s'", this.location));
         }
+
+        return result;
     }
 }
