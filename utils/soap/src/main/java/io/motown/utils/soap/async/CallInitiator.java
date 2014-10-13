@@ -13,12 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.soaputils.async;
+package io.motown.utils.soap.async;
 
-import org.apache.cxf.continuations.Continuation;
+/**
+ * Used by the {@link FutureRequestHandler} to initiate the call that it should wait for.
+ */
+public interface CallInitiator {
 
-public interface ContinuationFutureCallback {
-
-    void setContinuation(Continuation continuation);
+    /**
+     * Initiates the call
+     */
+    void initiateCall();
 
 }

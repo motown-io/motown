@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.soaputils.async;
+package io.motown.utils.soap.async;
 
 public interface FutureResponseFactory<T, X> {
 

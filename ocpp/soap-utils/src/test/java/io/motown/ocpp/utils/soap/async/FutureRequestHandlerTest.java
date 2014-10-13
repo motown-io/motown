@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.soaputils.async;
+package io.motown.ocpp.utils.soap.async;
 
 import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
-import io.motown.soaputils.async.CallInitiator;
-import io.motown.soaputils.async.FutureResponseFactory;
+import io.motown.utils.soap.async.CallInitiator;
+import io.motown.utils.soap.async.FutureResponseFactory;
 import org.apache.cxf.continuations.Continuation;
 import org.apache.cxf.continuations.ContinuationProvider;
-import io.motown.soaputils.async.ResponseFactory;
-import io.motown.soaputils.async.FutureRequestHandler;
+import io.motown.utils.soap.async.ResponseFactory;
+import io.motown.utils.soap.async.FutureRequestHandler;
 
 import org.junit.Before;
 import org.junit.Test;

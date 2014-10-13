@@ -13,19 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.soaputils.async;
+package io.motown.utils.soap.async;
 
-/**
- * Utility to throw an undeclared checked exception which is needed to test FutureRequestHandler.
- */
-public class AnyThrow {
+import org.apache.cxf.continuations.Continuation;
 
-    public static void throwUnchecked(Throwable e) {
-        AnyThrow.<RuntimeException>throwAny(e);
-    }
+public interface ContinuationFutureCallback {
 
-    @SuppressWarnings("unchecked")
-    private static <E extends Throwable> void throwAny(Throwable e) throws E {
-        throw (E)e;
-    }
+    void setContinuation(Continuation continuation);
+
 }

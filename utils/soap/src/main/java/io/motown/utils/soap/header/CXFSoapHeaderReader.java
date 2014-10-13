@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.soaputils.header;
+package io.motown.utils.soap.header;
 
 import org.apache.cxf.headers.Header;
 import org.apache.cxf.helpers.CastUtils;

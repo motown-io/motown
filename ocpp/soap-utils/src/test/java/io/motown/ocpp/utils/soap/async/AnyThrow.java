@@ -13,8 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.soaputils.async;
+package io.motown.ocpp.utils.soap.async;
 
-public interface ResponseFactory<T> {
-    T createResponse();
+/**
+ * Utility to throw an undeclared checked exception which is needed to test FutureRequestHandler.
+ */
+public class AnyThrow {
+
+    public static void throwUnchecked(Throwable e) {
+        AnyThrow.<RuntimeException>throwAny(e);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <E extends Throwable> void throwAny(Throwable e) throws E {
+        throw (E)e;
+    }
 }
