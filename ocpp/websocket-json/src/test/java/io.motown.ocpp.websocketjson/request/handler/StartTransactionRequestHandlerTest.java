@@ -61,8 +61,24 @@ public class StartTransactionRequestHandlerTest {
         requestPayload.setMeterStart(meterStart);
         requestPayload.setReservationId(OCPPJ_RESERVATION_ID.getNumber());
 
-        WebSocket webSocket = getMockWebSocket();
-        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), getMockWebSocket());
+
+        verify(domainService).authorize(eq(CHARGING_STATION_ID), eq(IDENTIFYING_TOKEN.getToken()), any(FutureEventCallback.class), eq(ADD_ON_IDENTITY));
+    }
+
+    @Test
+    public void handleValidRequestNoReservation() throws IOException {
+        String token = UUID.randomUUID().toString();
+        int meterStart = 4;
+        StartTransactionRequestHandler handler = new StartTransactionRequestHandler(gson, domainService, OcppWebSocketRequestHandler.PROTOCOL_IDENTIFIER, ADD_ON_IDENTITY);
+
+        Starttransaction requestPayload = new Starttransaction();
+        requestPayload.setConnectorId(EVSE_ID.getNumberedId());
+        requestPayload.setIdTag(IDENTIFYING_TOKEN.getToken());
+        requestPayload.setTimestamp(FIVE_MINUTES_AGO);
+        requestPayload.setMeterStart(meterStart);
+
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), getMockWebSocket());
 
         verify(domainService).authorize(eq(CHARGING_STATION_ID), eq(IDENTIFYING_TOKEN.getToken()), any(FutureEventCallback.class), eq(ADD_ON_IDENTITY));
     }
