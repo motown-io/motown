@@ -45,42 +45,62 @@ class MeasurandTranslator implements Translator<Measurand> {
             return Measurand.IMPORTED_ACTIVE_ENERGY_REGISTER;
         }
 
+        Measurand result;
+
         switch (this.measurand) {
             case ENERGY_ACTIVE_EXPORT_REGISTER:
-                return Measurand.EXPORTED_ACTIVE_ENERGY_REGISTER;
+                result = Measurand.EXPORTED_ACTIVE_ENERGY_REGISTER;
+                break;
             case ENERGY_ACTIVE_IMPORT_REGISTER:
-                return Measurand.IMPORTED_ACTIVE_ENERGY_REGISTER;
+                result = Measurand.IMPORTED_ACTIVE_ENERGY_REGISTER;
+                break;
             case ENERGY_REACTIVE_EXPORT_REGISTER:
-                return Measurand.EXPORTED_REACTIVE_ENERGY_REGISTER;
+                result = Measurand.EXPORTED_REACTIVE_ENERGY_REGISTER;
+                break;
             case ENERGY_REACTIVE_IMPORT_REGISTER:
-                return Measurand.IMPORTED_REACTIVE_ENERGY_REGISTER;
+                result = Measurand.IMPORTED_REACTIVE_ENERGY_REGISTER;
+                break;
             case ENERGY_ACTIVE_EXPORT_INTERVAL:
-                return Measurand.EXPORTED_ACTIVE_ENERGY_INTERVAL;
+                result = Measurand.EXPORTED_ACTIVE_ENERGY_INTERVAL;
+                break;
             case ENERGY_ACTIVE_IMPORT_INTERVAL:
-                return Measurand.IMPORTED_ACTIVE_ENERGY_INTERVAL;
+                result = Measurand.IMPORTED_ACTIVE_ENERGY_INTERVAL;
+                break;
             case ENERGY_REACTIVE_EXPORT_INTERVAL:
-                return Measurand.EXPORTED_REACTIVE_ENERGY_INTERVAL;
+                result = Measurand.EXPORTED_REACTIVE_ENERGY_INTERVAL;
+                break;
             case ENERGY_REACTIVE_IMPORT_INTERVAL:
-                return Measurand.IMPORTED_REACTIVE_ENERGY_INTERVAL;
+                result = Measurand.IMPORTED_REACTIVE_ENERGY_INTERVAL;
+                break;
             case POWER_ACTIVE_EXPORT:
-                return Measurand.EXPORTED_ACTIVE_POWER;
+                result = Measurand.EXPORTED_ACTIVE_POWER;
+                break;
             case POWER_ACTIVE_IMPORT:
-                return Measurand.IMPORTED_ACTIVE_POWER;
+                result = Measurand.IMPORTED_ACTIVE_POWER;
+                break;
             case POWER_REACTIVE_EXPORT:
-                return Measurand.EXPORTED_REACTIVE_POWER;
+                result = Measurand.EXPORTED_REACTIVE_POWER;
+                break;
             case POWER_REACTIVE_IMPORT:
-                return Measurand.IMPORTED_REACTIVE_POWER;
+                result =Measurand.IMPORTED_REACTIVE_POWER;
+                break;
             case CURRENT_EXPORT:
-                return Measurand.EXPORTED_CURRENT;
+                result = Measurand.EXPORTED_CURRENT;
+                break;
             case CURRENT_IMPORT:
-                return Measurand.IMPORTED_CURRENT;
+                result = Measurand.IMPORTED_CURRENT;
+                break;
             case VOLTAGE:
-                return Measurand.VOLTAGE;
+                result = Measurand.VOLTAGE;
+                break;
             case TEMPERATURE:
-                return Measurand.TEMPERATURE;
+                result = Measurand.TEMPERATURE;
+                break;
             default:
                 throw new AssertionError(String.format("Unknown value for Measurand: '%s'", measurand));
         }
+
+        return result;
     }
 
 }
