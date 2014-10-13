@@ -25,16 +25,16 @@
 
     <bean id="random" class="java.util.Random"/>
 
-    <bean id="operatorApiGsonFactoryBean" class="io.motown.operatorapi.json.gson.GsonFactoryBean">
+    <bean id="operatorApiGsonFactoryBean" class="io.motown.utils.rest.json.gson.GsonFactoryBean">
         <property name="dateFormat" value="yyyy-MM-dd'T'HH:mm:ss'Z'"/>
         <property name="typeAdapterDeserializers">
             <set>
-                <bean class="io.motown.operatorapi.json.gson.deserializer.EvseIdTypeAdapterDeserializer"/>
-                <bean class="io.motown.operatorapi.json.gson.deserializer.TextualTokenTypeAdapterDeserializer"/>
-                <bean class="io.motown.operatorapi.json.gson.deserializer.CoordinatesTypeAdapterDeserializer"/>
-                <bean class="io.motown.operatorapi.json.gson.deserializer.AddressTypeAdapterDeserializer"/>
-                <bean class="io.motown.operatorapi.json.gson.deserializer.OpeningTimeTypeAdapterDeserializer"/>
-                <bean class="io.motown.operatorapi.json.gson.deserializer.AccessibilityTypeAdapterDeserializer"/>
+                <bean class="io.motown.operatorapi.json.gson.EvseIdTypeAdapterDeserializer"/>
+                <bean class="io.motown.operatorapi.json.gson.TextualTokenTypeAdapterDeserializer"/>
+                <bean class="io.motown.operatorapi.json.gson.CoordinatesTypeAdapterDeserializer"/>
+                <bean class="io.motown.operatorapi.json.gson.AddressTypeAdapterDeserializer"/>
+                <bean class="io.motown.operatorapi.json.gson.OpeningTimeTypeAdapterDeserializer"/>
+                <bean class="io.motown.operatorapi.json.gson.AccessibilityTypeAdapterDeserializer"/>
             </set>
         </property>
         <property name="typeAdapterSerializers">
@@ -266,7 +266,7 @@
         <property name="service" ref="operatorApiService"/>
     </bean>
 
-    <bean class="io.motown.operatorapi.json.restapi.providers.GsonJsonProvider" scope="singleton">
+    <bean class="io.motown.operatorapi.json.gson.GsonMessageBodyWriter" scope="singleton">
         <property name="gson" ref="operatorApiGson"/>
     </bean>
 

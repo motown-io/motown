@@ -19,7 +19,7 @@ import io.motown.domain.api.security.SimpleUserIdentity;
 import io.motown.operatorapi.json.commands.JsonCommandService;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
 import io.motown.operatorapi.json.queries.OperatorApiService;
-import io.motown.operatorapi.json.restapi.util.OperatorApiResponseBuilder;
+import io.motown.utils.rest.response.ResponseBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +64,7 @@ public final class ChargingStationResource {
 
     @GET
     public Response getChargingStations(@Context HttpServletRequest request, @QueryParam(OFFSET_PARAMETER) @DefaultValue(OFFSET_DEFAULT) int offset, @QueryParam(LIMIT_PARAMETER) @DefaultValue(LIMIT_DEFAULT) int limit) {
-        return Response.ok(OperatorApiResponseBuilder.buildResponse(request, offset, limit, service.getTotalNumberOfChargingStations(), service.findAllChargingStations(offset, limit))).build();
+        return Response.ok(ResponseBuilder.buildResponse(request, offset, limit, service.getTotalNumberOfChargingStations(), service.findAllChargingStations(offset, limit))).build();
     }
 
     public void setService(OperatorApiService service) {

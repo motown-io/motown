@@ -62,7 +62,7 @@ public class ITChargingStationResourceTest extends JerseyTest {
                 .requestListenerClass(RequestContextListener.class)
                 .servletClass(SpringServlet.class)
                 .servletPath("/api")
-                .initParam("com.sun.jersey.config.property.packages", "io.motown.operatorapi.json.restapi")
+                .initParam("com.sun.jersey.config.property.packages", "io.motown.operatorapi.json.restapi;io.motown.utils.rest.jax_rs")
                 .initParam("com.sun.jersey.spi.container.ContainerRequestFilters", "io.motown.operatorapi.json.restapi.util.TestSecurityContextFilter")
                 .build();
     }

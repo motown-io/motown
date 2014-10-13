@@ -20,7 +20,7 @@ import com.google.gson.GsonBuilder;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.UserIdentity;
 import io.motown.domain.commandauthorization.CommandAuthorizationService;
-import io.motown.operatorapi.json.gson.deserializer.*;
+import io.motown.operatorapi.json.gson.*;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
 
