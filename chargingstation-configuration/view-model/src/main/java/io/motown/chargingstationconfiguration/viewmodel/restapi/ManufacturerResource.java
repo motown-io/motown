@@ -17,7 +17,7 @@ package io.motown.chargingstationconfiguration.viewmodel.restapi;
 
 import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Manufacturer;
-import io.motown.chargingstationconfiguration.viewmodel.restapi.util.ConfigurationApiResponseBuilder;
+import io.motown.utils.rest.response.ResponseBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -54,7 +54,7 @@ public final class ManufacturerResource {
 
     @GET
     public Response getManufacturers(@Context HttpServletRequest request, @QueryParam(OFFSET_PARAMETER) @DefaultValue(OFFSET_DEFAULT) int offset, @QueryParam(LIMIT_PARAMETER) @DefaultValue(LIMIT_DEFAULT) int limit) {
-        return Response.ok(ConfigurationApiResponseBuilder.buildResponse(request, offset, limit, domainService.getTotalNumberOfManufacturers(), domainService.getManufacturers(offset, limit))).build();
+        return Response.ok(ResponseBuilder.buildResponse(request, offset, limit, domainService.getTotalNumberOfManufacturers(), domainService.getManufacturers(offset, limit))).build();
     }
 
     @GET

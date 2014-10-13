@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.chargingstationconfiguration.viewmodel.restapi.providers;
+package io.motown.chargingstationconfiguration.viewmodel.restapi.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -31,12 +31,12 @@ import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
 @Provider
-public final class GsonJsonProvider implements MessageBodyReader<Object>, MessageBodyWriter<Object> {
+public final class GsonMessageBodyReaderWriter implements MessageBodyReader<Object>, MessageBodyWriter<Object> {
     private static final String UTF_8 = "UTF-8";
 
     private final Gson gson;
 
-    public GsonJsonProvider() {
+    public GsonMessageBodyReaderWriter() {
         gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()

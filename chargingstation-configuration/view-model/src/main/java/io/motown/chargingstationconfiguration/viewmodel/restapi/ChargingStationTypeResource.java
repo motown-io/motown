@@ -19,7 +19,7 @@ import io.motown.chargingstationconfiguration.viewmodel.domain.DomainService;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.ChargingStationType;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Connector;
 import io.motown.chargingstationconfiguration.viewmodel.persistence.entities.Evse;
-import io.motown.chargingstationconfiguration.viewmodel.restapi.util.ConfigurationApiResponseBuilder;
+import io.motown.utils.rest.response.ResponseBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -63,7 +63,7 @@ public final class ChargingStationTypeResource {
 
     @GET
     public Response getChargingStationTypes(@Context HttpServletRequest request, @QueryParam(OFFSET_PARAMETER) @DefaultValue(OFFSET_DEFAULT) int offset, @QueryParam(LIMIT_PARAMETER) @DefaultValue(LIMIT_DEFAULT) int limit) {
-        return Response.ok(ConfigurationApiResponseBuilder.buildResponse(request, offset, limit, domainService.getTotalNumberOfChargingStationTypes(), domainService.getChargingStationTypes(offset, limit))).build();
+        return Response.ok(ResponseBuilder.buildResponse(request, offset, limit, domainService.getTotalNumberOfChargingStationTypes(), domainService.getChargingStationTypes(offset, limit))).build();
     }
 
     @GET

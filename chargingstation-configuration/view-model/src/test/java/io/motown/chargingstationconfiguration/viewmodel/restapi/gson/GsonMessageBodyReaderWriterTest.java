@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.chargingstationconfiguration.viewmodel.restapi.providers;
+package io.motown.chargingstationconfiguration.viewmodel.restapi.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -31,7 +31,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
-public class GsonJsonProviderTest {
+public class GsonMessageBodyReaderWriterTest {
     private static final String MOCK_OBJECT_JSON = "{\"name\":\"TEST\",\"age\":1}";
     private static final String INCORRECT_MOCK_OBJECT_JSON = "{\"name\":{\"age\":1}}";
     private static final ByteArrayInputStream IS = new ByteArrayInputStream(MOCK_OBJECT_JSON.getBytes());
@@ -40,7 +40,7 @@ public class GsonJsonProviderTest {
     private static final MockObject MOCK_OBJECT = new MockObject("TEST", 1);
     private static final ByteArrayOutputStream OS = new ByteArrayOutputStream();
 
-    private GsonJsonProvider provider = new GsonJsonProvider();
+    private GsonMessageBodyReaderWriter provider = new GsonMessageBodyReaderWriter();
 
     @Test
     public void testIsReadable() {
