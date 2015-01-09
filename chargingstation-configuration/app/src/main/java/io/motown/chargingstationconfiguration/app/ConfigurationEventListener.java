@@ -23,6 +23,7 @@ import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.api.security.NullUserIdentity;
 import io.motown.domain.api.security.TypeBasedAddOnIdentity;
+import io.motown.domain.utils.AttributeMapKeys;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +35,6 @@ public class ConfigurationEventListener {
 
     public static final String ADD_ON_TYPE = "CHARGINGSTATION-CONFIGURATION";
     private static final Logger LOG = LoggerFactory.getLogger(ConfigurationEventListener.class);
-    private static final String MODEL_ATTRIBUTE = "model";
-    private static final String VENDOR_ATTRIBUTE = "vendor";
     private ConfigurationCommandGateway commandGateway;
     private DomainService domainService;
     private AddOnIdentity addOnIdentity;
@@ -51,7 +50,7 @@ public class ConfigurationEventListener {
         LOG.info("Handling UnconfiguredChargingStationBootedEvent");
 
         Map<String, String> attributes = event.getAttributes();
-        Set<Evse> evses = domainService.getEvses(attributes.get(VENDOR_ATTRIBUTE), attributes.get(MODEL_ATTRIBUTE));
+        Set<Evse> evses = domainService.getEvses(attributes.get(AttributeMapKeys.VENDOR_ID), attributes.get(AttributeMapKeys.MODEL));
 
         if (evses != null && !evses.isEmpty()) {
             IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
@@ -59,7 +58,7 @@ public class ConfigurationEventListener {
             ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(event.getChargingStationId(), evses, identityContext);
             commandGateway.send(command);
         } else {
-            LOG.info("No Evses found for vender {} and model {}", attributes.get(VENDOR_ATTRIBUTE), attributes.get(MODEL_ATTRIBUTE));
+            LOG.info("No Evses found for vendor {} and model {}", attributes.get(AttributeMapKeys.VENDOR_ID), attributes.get(AttributeMapKeys.MODEL));
         }
     }
 
