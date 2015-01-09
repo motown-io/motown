@@ -32,7 +32,7 @@ public class ChargingStationTestUtilsTest {
     public void getAttributesShouldReturnMapWithGivenVendor() {
         final Map<String, String> attributes = getAttributes(CHARGING_STATION_VENDOR, CHARGING_STATION_MODEL);
 
-        assertEquals(CHARGING_STATION_VENDOR, attributes.get("vendor"));
+        assertEquals(CHARGING_STATION_VENDOR, attributes.get("vendorId"));
     }
 
     @Test

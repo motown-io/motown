@@ -510,7 +510,7 @@ public final class ChargingStationTestUtils {
      */
     public static Map<String, String> getAttributes(String vendor, String model) {
         return ImmutableMap.<String, String>builder()
-                .put("vendor", vendor)
+                .put("vendorId", vendor)
                 .put("model", model)
                 .build();
     }
