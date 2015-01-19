@@ -1,0 +1,951 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+Copyright Logica 2010
+
+All rights reserved. This document is protected by international copyright law and may not be reprinted,
+reproduced, copied or utilised in whole or in part by any means including electronic, mechanical,
+or other means without the prior written consent of Logica.
+
+
+Whilst reasonable care has been taken by Logica to ensure the information contained herein is
+reasonably accurate, Logica shall not, under any circumstances be liable for any loss or damage
+(direct or consequential) suffered by any party as a result of the contents of this publication or
+the reliance of any party thereon or any inaccuracy or omission therein. The information in this
+document is therefore provided on an "as is" basis without warranty and is subject to change
+without further notice and cannot be construed as a commitment by Logica.
+
+
+The products mentioned in this document are identified by the names, trademarks, service marks and
+logos of their respective companies or organisations and may not be used in any advertising or publicity
+or in any other way whatsoever without the prior written consent of those companies or organisations
+and Logica.
+-->
+<xs:schema elementFormDefault="qualified" targetNamespace="urn://Vas/Cs/2010/12/"
+           xmlns:tns="urn://Vas/Cs/2010/12/" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:simpleType name="DeliveryAddress">
+    <xs:annotation>
+      <xs:documentation>
+        The address at which to receive the notifications which are being subscribed to.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:anyURI">
+      <xs:minLength value="1" />
+      <xs:maxLength value="1024" />
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="SubscriberIdentity">
+    <xs:annotation>
+      <xs:documentation>
+        A subscriber's unique identifier.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" />
+      <xs:maxLength value="15" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SubscriptionIdentity">
+    <xs:annotation>
+      <xs:documentation>
+        A subscription's unique identifier.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" />
+      <xs:maxLength value="15" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PublisherIdentity">
+    <xs:annotation>
+      <xs:documentation>
+        A publisher's unique identifier.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" />
+      <xs:maxLength value="15"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="OpeningTime">
+    <xs:annotation>
+      <xs:documentation>
+        Notation of time used for opening schedules. (Matches times seperated by either : or . will match a 24 hour time, or a 12 hour time with AM or PM specified. Allows 0-59 minutes, and 0-59 seconds. Seconds are not required.)
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="^([0-1][0-9]|[2][0-3]):([0-5][0-9])$" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ChargePointStatus">
+    <xs:annotation>
+      <xs:documentation>
+        This lists the possible values for the status of a ChargePoint.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Available">
+        <xs:annotation>
+          <xs:documentation>
+            This means that a charge point is available for charging.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Occupied">
+        <xs:annotation>
+          <xs:documentation>
+            This means that all connectors of a charge point are occupied.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Unavailable">
+        <xs:annotation>
+          <xs:documentation>
+            The means that a charge point is (temporarily) out of service.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Unknown">
+        <xs:annotation>
+          <xs:documentation>
+            This means that the charge point cannot communicate with the central system. The charge point may still be available for charging, but the central system cannot determine if that's true. It could be that the charge point just couldn't communicate due to network problems.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="StatusChange">
+    <xs:annotation>
+      <xs:documentation>
+        This contains the last known status of a charge point.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="chargePoint" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Unique identifier (uid) of charge point.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="timestamp" type="xs:dateTime" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Time (UTC) when status change occurred.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="status" type="tns:ChargePointStatus" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            New status of charge point.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="connectorsFree" type="xs:int" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Number of connectors currently free for charging.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="Accessibility">
+    <xs:annotation>
+      <xs:documentation>
+        This lists the types of access to a charge point.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="FreePublic">
+        <xs:annotation>
+          <xs:documentation>
+            Freely accessible to the public.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="PayingPublic">
+        <xs:annotation>
+          <xs:documentation>
+            Accessible to the public, but in a location with paid access, e.g. a paid parking.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Restricted">
+        <xs:annotation>
+          <xs:documentation>
+            Charge point not accessible to the public, e.g. restricted to private or company use.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ChargingCapability">
+    <xs:annotation>
+      <xs:documentation>
+        This lists all currently envisioned charging capabilities.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unspecified">
+        <xs:annotation>
+          <xs:documentation>
+            Unspecified.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="BatteryExchange">
+        <xs:annotation>
+          <xs:documentation>
+            Battery exchange.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="120V1Phase10A">
+        <xs:annotation>
+          <xs:documentation>
+            100-120V 1 phase 10A.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="120V1Phase12A">
+        <xs:annotation>
+          <xs:documentation>
+            100-120V 1 phase 12A.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="120V1Phase16A">
+        <xs:annotation>
+          <xs:documentation>
+            100-120V 1 phase 16A.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="240V1Phase10A">
+        <xs:annotation>
+          <xs:documentation>
+            200-240V 1 phase 10A.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="240V1Phase12A">
+        <xs:annotation>
+          <xs:documentation>
+            200-240V 1 phase 12A.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="240V1Phase16A">
+        <xs:annotation>
+          <xs:documentation>
+            200-240V 1 phase 16A.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="240V1Phase32A">
+        <xs:annotation>
+          <xs:documentation>
+            200-240V 1 phase 32A.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="240V3Phase16A">
+        <xs:annotation>
+          <xs:documentation>
+            200-240V 3 phase 16A.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="240V3Phase32A">
+        <xs:annotation>
+          <xs:documentation>
+            200-240V 3 phase 32A.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="480V3Phase16A">
+        <xs:annotation>
+          <xs:documentation>
+            380-480V 3 phase 16A.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="480V3Phase32A">
+        <xs:annotation>
+          <xs:documentation>
+            380-480V 3 phase 32A.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="480V3Phase63A">
+        <xs:annotation>
+          <xs:documentation>
+            380-480V 3 phase 63A.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DcFastCharging">
+        <xs:annotation>
+          <xs:documentation>
+            DC fast charging.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ChargingMode">
+    <xs:annotation>
+      <xs:documentation>
+        Charging modes. Mode 4 and CHAdeMO are DC fast charging modes.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unspecified">
+        <xs:annotation>
+          <xs:documentation>
+            No charging mode specified.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Iec61851Mode1">
+        <xs:annotation>
+          <xs:documentation>
+            Regular household charging.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Iec61851Mode2">
+        <xs:annotation>
+          <xs:documentation>
+            Charging using a cable with a box to emulate mode 3.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Iec61851Mode3">
+        <xs:annotation>
+          <xs:documentation>
+            High power charging with car and charge point negotiating the power to be delivered.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Iec61851Mode4">
+        <xs:annotation>
+          <xs:documentation>
+            DC fast charging according to IEC 61851 protocol.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ChaDeMo">
+        <xs:annotation>
+          <xs:documentation>
+            DC fast charging according to CHAdeMO protocol.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ConnectorType">
+    <xs:annotation>
+      <xs:documentation>
+        List of all known connector types.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unspecified">
+        <xs:annotation>
+          <xs:documentation>
+            Unspecified.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SmallPaddleInductive">
+        <xs:annotation>
+          <xs:documentation>
+            Small paddle inductive.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="LargePaddleInductive">
+        <xs:annotation>
+          <xs:documentation>
+            Large paddle inductive.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="AvconConnector">
+        <xs:annotation>
+          <xs:documentation>
+            AVCON connector.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="TeslaConnector">
+        <xs:annotation>
+          <xs:documentation>
+            Tesla connector.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SaeJ1772Yazaki">
+        <xs:annotation>
+          <xs:documentation>
+            SAE J1772 (Yazaki).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Nema520">
+        <xs:annotation>
+          <xs:documentation>
+            Nema 5-20
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="TepcoChaMeDo">
+        <xs:annotation>
+          <xs:documentation>
+            TEPCO CHAmeDO.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Iec621962Type1Yazaki">
+        <xs:annotation>
+          <xs:documentation>
+            IEC 62196-2 Type 1 (Yazaki).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Iec621962Type2Mennekes">
+        <xs:annotation>
+          <xs:documentation>
+            IEC 62196-2 Type 1 (Mennekes).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Iec621962Type3Scame">
+        <xs:annotation>
+          <xs:documentation>
+            IEC 62196-2 Type 3 (SCAME).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="60309Industrial2PDc">
+        <xs:annotation>
+          <xs:documentation>
+            60309 - industrial 2P (DC).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="60309IndustrialPneAc">
+        <xs:annotation>
+          <xs:documentation>
+            60309 - industrial P + N int  + E (AC).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="60309Industrial3PEAc">
+        <xs:annotation>
+          <xs:documentation>
+            60309 - industrial 3P + E (AC).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="60309Industrial3PENAc">
+        <xs:annotation>
+          <xs:documentation>
+            60309 - industrial 3P + E + N (AC).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeANema115Unpolarised">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type A (NEMA 1-15 unpolarised).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeANema115Polarised">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type A (NEMA 1-15 polarised).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeAJisC8303ClassII">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type A (JIS C 8303, Class II).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeBNema515">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type B (NEMA 5-15).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeBNema520">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type B (NEMA 5-20).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeBJis8393ClassI">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type B (JIS C 8393, Class I).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeCCee716Europlug">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type C (CEE 7/16 Europlug).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeCCee717">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type C (CEE 7/17).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeCGost7396C1">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type C (GOST 7396 C 1).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeDBs5462Pin">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type D (BS 546, 2 pin).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeDBs5463Pin">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type D (BS 546, 3 pin).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeECee75">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type E (CEE 7/5).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeFCee74Schuko">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type F (CEE 7/4 Schuko).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeEFCee77">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type E+F (CEE 7/7).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeGBs1363Is401411Ms58">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type G (BS 1363, IS 401  411, MS 58).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeHSi32">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type H (SI 32).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeIAsNzs3112">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type I (AS/NZS 3112).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeICpcsCcc">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type I (CPCS-CCC).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeIIram2073">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type I (IRAM 2073).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeJSev1011">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type J (SEV 1011) .
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeKSection1072D1">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type K (Section 107-2-D1).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeKThailandTis1662549">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type K (Thailand TIS 166 - 2549).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeLCei2316VII">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type L (CEI 23-16/VII).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeIec6090612Pin">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type IEC 60906-1 (2 pin).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DomesticPlugTypeIec6090613Pin">
+        <xs:annotation>
+          <xs:documentation>
+            Domestic plug type IEC 60906-1 (3 pin).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SubscribeStatus">
+    <xs:annotation>
+      <xs:documentation>
+        Status of the subscription.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Accepted">
+        <xs:annotation>
+          <xs:documentation>
+            Subscription or unsubscription is accepted.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Rejected">
+        <xs:annotation>
+          <xs:documentation>
+            Subscription or unsubscription is not accepted.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DuplicateIgnored">
+        <xs:annotation>
+          <xs:documentation>
+            Subscription request is ignored, because caller is already subscribed.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="WeekDay">
+    <xs:annotation>
+      <xs:documentation>
+        This lists all days of the week to specify opening periods.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Monday">
+        <xs:annotation>
+          <xs:documentation>
+            Monday.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Tuesday">
+        <xs:annotation>
+          <xs:documentation>
+            Tuesday.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Wednesday">
+        <xs:annotation>
+          <xs:documentation>
+            Wednesday.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Thursday">
+        <xs:annotation>
+          <xs:documentation>
+            Thursday.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Friday">
+        <xs:annotation>
+          <xs:documentation>
+            Friday.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Saturday">
+        <xs:annotation>
+          <xs:documentation>
+            Saturday.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Sunday">
+        <xs:annotation>
+          <xs:documentation>
+            Sunday.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Latitude">
+    <xs:annotation>
+      <xs:documentation>
+        Latitude of position in decimal degrees.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:double">
+      <xs:minInclusive value="-90" />
+      <xs:maxInclusive value="90" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Longitude">
+    <xs:annotation>
+      <xs:documentation>
+        Longitude of position in decimal degrees.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:double">
+      <xs:minInclusive value="-180" />
+      <xs:maxInclusive value="180" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="Wgs84Coordinates">
+    <xs:annotation>
+      <xs:documentation>
+        GPS location coordinates.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="latitude" type="tns:Latitude" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Latitude of position in decimal degrees.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="longitude" type="tns:Longitude" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Longitude of position in decimal degrees.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="OpeningPeriod">
+    <xs:annotation>
+      <xs:documentation>
+        This defines an opening period of a charging point. Usually a charge point will have one or more opening periods per day.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="weekDay" type="tns:WeekDay" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Day of week.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="startTime" type="tns:OpeningTime" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Start time of the opening period. Refers to local time at the charge point location.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="endTime" type="tns:OpeningTime" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            End time of the opening period. Refers to local time at the charge point location.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ChargePoint">
+    <xs:sequence>
+      <xs:element name="uid" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            This contains the unique identifier or name of a Charge Point by which it is known in the physical world.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="operator" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Operator of this charge point.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="coordinates" type="tns:Wgs84Coordinates" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            WGS84 coordinates of the charge point.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="address" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            The address where the charge point is installed.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="postalCode" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            The postal code where the charge point is installed.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="city" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            The city in which the charge point is installed.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="region" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Region (province, state) in which the charge point is located.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="country" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Country where charge point is located.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="public" type="tns:Accessibility" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            This attribute indicates whether this ChargePoint is publicly accessible.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="openingPeriod" type="tns:OpeningPeriod" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>
+            Opening periods applicable to charge point.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="status" type="tns:ChargePointStatus" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            This attributes indicates whether this ChargePoint is publicly accessible.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="connectors" type="xs:int" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            The number of connectors on this charge point.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="connectorsFree" type="xs:int" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            The number of currently free connectors on this charge point.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="chargingCapabilities" type="tns:ChargingCapability" minOccurs="1" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>
+            This is a list of currently envisioned charging capabilities. More than one may apply to a charge point.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="connectorTypes" type="tns:ConnectorType" minOccurs="1" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>
+            Contains the type of connector the charge point supports. More than one may apply to a charge point.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="chargingMode" type="tns:ChargingMode" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Supported charging mode.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="isReservable" type="xs:boolean" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Indicates whether charge point can be reserved.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="hasFixedCable" type="xs:boolean" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            Indicates whether charge point as a fixed cable attached. If so, then connectorType refers to the connector at loose end of the cable.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

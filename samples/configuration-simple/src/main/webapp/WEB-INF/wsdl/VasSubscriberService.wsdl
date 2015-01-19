@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright Logica 2010
+
+All rights reserved. This document is protected by international copyright law and may not be reprinted,
+reproduced, copied or utilised in whole or in part by any means including electronic, mechanical,
+or other means without the prior written consent of Logica. 
+
+
+Whilst reasonable care has been taken by Logica to ensure the information contained herein is
+reasonably accurate, Logica shall not, under any circumstances be liable for any loss or damage
+(direct or consequential) suffered by any party as a result of the contents of this publication or
+the reliance of any party thereon or any inaccuracy or omission therein. The information in this
+document is therefore provided on an "as is" basis without warranty and is subject to change
+without further notice and cannot be construed as a commitment by Logica. 
+
+
+The products mentioned in this document are identified by the names, trademarks, service marks and
+logos of their respective companies or organisations and may not be used in any advertising or publicity
+or in any other way whatsoever without the prior written consent of those companies or organisations
+and Logica.
+-->
+<wsdl:definitions targetNamespace="urn://Vas/Cs/2010/12/"
+         xmlns:tns="urn://Vas/Cs/2010/12/"
+         xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+				 xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+				 xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+				 xmlns:s="http://www.w3.org/2001/XMLSchema"
+				 xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+				 xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+			   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+         xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+	       xmlns:wsa="http://www.w3.org/2005/08/addressing"
+	       xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+	       xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+
+  <wsp:Policy wsu:Id="ServicePolicy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <wsaw:UsingAddressing />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="urn://Vas/Cs/2010/12/">
+      <s:include schemaLocation="VasTypes.xsd" />
+                
+      <s:complexType name="StatusChangeNotification">
+        <s:annotation>
+          <s:documentation>
+            Message sent by CiMS to sends a (list of) status changes.
+          </s:documentation>
+        </s:annotation>
+        <s:sequence>
+          <s:element name="subscriptionId" type="tns:SubscriptionIdentity" minOccurs="1" maxOccurs="1">
+            <s:annotation>
+              <s:documentation>
+                ID referring to the subscription for which this information is sent.
+              </s:documentation>
+            </s:annotation>
+          </s:element>
+          <s:element name="statusChanges" type="tns:StatusChange" minOccurs="1" maxOccurs="unbounded">
+            <s:annotation>
+              <s:documentation>
+                Status change of a charge point.
+              </s:documentation>
+            </s:annotation>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+
+      <s:element name="publisherIdentity" type="tns:PublisherIdentity" />
+      <s:element name="statusChangeNotification" type="tns:StatusChangeNotification" />
+    </s:schema>
+  </wsdl:types>
+
+  <wsdl:message name="SubscriberHeader">
+    <wsdl:part name="PublisherIdentity" element="tns:publisherIdentity" />
+  </wsdl:message>
+
+  <wsdl:message name="StatusChangeInput">
+    <wsdl:part name="parameters" element="tns:statusChangeNotification" />
+  </wsdl:message>
+
+  <wsdl:portType name="VasSubscriberService">
+    <wsdl:operation name="StatusChange">
+      <wsdl:input message="tns:StatusChangeInput" wsaw:Action="/StatusChange" />
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <wsdl:binding name="VasSubscriberServiceSoap" type="tns:VasSubscriberService">
+    <wsp:PolicyReference URI="#ServicePolicy" />
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+
+    <wsdl:operation name="StatusChange">
+      <soap12:operation soapAction="/StatusChange" style="document"/>
+      
+      <wsdl:input>
+        <soap12:header use="literal" message="tns:SubscriberHeader" part="PublisherIdentity"/>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+ 
+  <wsdl:service name="VasSubscriberService">
+    <wsdl:documentation>The Central System Service for VAS.</wsdl:documentation>
+    <wsdl:port name="VasSubscriberServiceSoap12" binding="tns:VasSubscriberServiceSoap" />
+  </wsdl:service>
+</wsdl:definitions>

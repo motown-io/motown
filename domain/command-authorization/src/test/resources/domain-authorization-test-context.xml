@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd">
+
+    <bean id="entityManagerFactoryDomainAuthorization" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSourceDomainAuthorization"/>
+        <property name="packagesToScan" value="io.motown.domain.commandauthorization"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="database" value="HSQL"/>
+                <property name="generateDdl" value="true"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="entityManagerDomainAuthorization" factory-bean="entityManagerFactoryDomainAuthorization" factory-method="createEntityManager" />
+
+    <bean id="commandAuthorizationRepository" class="io.motown.domain.commandauthorization.repositories.CommandAuthorizationRepository">
+        <property name="entityManager" ref="entityManagerDomainAuthorization" />
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactoryDomainAuthorization"/>
+    </bean>
+
+    <jdbc:embedded-database id="dataSourceDomainAuthorization" type="HSQL"/>
+
+</beans>

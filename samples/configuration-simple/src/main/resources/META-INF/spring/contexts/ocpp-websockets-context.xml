@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2013 Motown.IO (info@motown.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean class="io.motown.ocpp.websocketjson.servlet.ApplicationContextProvider" />
+
+    <bean id="gsonFactoryBean" class="io.motown.ocpp.websocketjson.gson.GsonFactoryBean">
+        <property name="dateFormat" value="yyyy-MM-dd'T'HH:mm:ss'Z'"/>
+        <property name="typeAdapterSerializers">
+            <set>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.AuthorizationListIdTagStatusTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.BootnotificationResponseStatusTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.ChangeAvailabilityTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.DataTransferResponseStatusTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.ResetTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.SendLocalListRequestUpdateTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.StartTransactionIdTagStatusTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.MessageProcUriAdapterSerializer"/>
+            </set>
+        </property>
+        <property name="typeAdapterDeserializers">
+            <set>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.AuthorizationIdTagStatusAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.CancelReservationResponseStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ChangeAvailabilityTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ChangeConfigurationResponseStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ChargePointErrorCodeTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ChargePointStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ClearCacheResponseStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.DataTransferResponseStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.DiagnosticsStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.FirmwareStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.MessageProcUriAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.RemoteStartTransactionResponseTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.RemoteStopTransactionResponseTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ReserveNowResponseStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ResetResponseStatusAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.SendLocalListResponseStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.StopTransactionIdTagStatusAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.UnlockConnectorResponseStatusTypeAdapterDeserializer"/>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="gson" factory-bean="gsonFactoryBean" factory-method="createGson"/>
+
+    <bean id="ocppJsonService" class="io.motown.ocpp.websocketjson.OcppJsonService">
+        <property name="domainService" ref="ocppDomainService" />
+        <property name="schemaValidator">
+            <bean class="io.motown.ocpp.websocketjson.schema.SchemaValidator" />
+        </property>
+        <property name="wampMessageParser">
+            <bean class="io.motown.ocpp.websocketjson.wamp.WampMessageParser"/>
+        </property>
+        <property name="gson" ref="gson" />
+        <property name="addOnId" value="1" />
+    </bean>
+
+</beans>

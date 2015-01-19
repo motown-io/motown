@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2013 Motown.IO (info@motown.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>samples</artifactId>
+        <groupId>io.motown</groupId>
+        <version>0.8.3-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>samples-configuration-distributed</artifactId>
+    <packaging>pom</packaging>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>Distributed configuration sample root pom. Shows how a distributed configuration can be set up.</description>
+    <url>http://motown.io/</url>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Dennis Laumen</name>
+            <email>dennis.laumen@ihomer.nl</email>
+            <organization>IHomer</organization>
+            <organizationUrl>http://www.ihomer.nl</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <name>Mark van den Bergh</name>
+            <email>mark.van.den.bergh@ihomer.nl</email>
+            <organization>IHomer</organization>
+            <organizationUrl>http://www.ihomer.nl</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <name>Ingo Pak</name>
+            <email>ingo.pak@ihomer.nl</email>
+            <organization>IHomer</organization>
+            <organizationUrl>http://www.ihomer.nl</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <name>Mark Manders</name>
+            <email>mark.manders@ihomer.nl</email>
+            <organization>IHomer</organization>
+            <organizationUrl>http://www.ihomer.nl</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+    <scm>
+        <connection>git@github.com:motown-io/motown.git</connection>
+        <developerConnection>git@github.com:motown-io/motown.git</developerConnection>
+        <url>git@github.com:motown-io/motown.git</url>
+    </scm>
+    <modules>
+        <module>domain</module>
+        <module>chargingstation-configuration</module>
+        <module>identification-authorization</module>
+        <module>ocpp-v15-soap</module>
+        <module>ocpp-v15-websocket-json</module>
+        <module>ocpp-v12-soap</module>
+        <module>operator-api</module>
+        <module>vas</module>
+        <module>incoming-datatransfer-handling</module>
+    </modules>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${spring.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

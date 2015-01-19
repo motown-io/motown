@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2013 Motown.IO (info@motown.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+
+    <bean class="io.motown.chargingstationconfiguration.app.ConfigurationEventListener">
+        <property name="commandGateway" ref="chargingStationConfigurationCommandGateway" />
+        <property name="domainService" ref="chargingStationConfigurationDomainService" />
+        <property name="addOnId" value="1" />
+    </bean>
+
+    <bean id="chargingStationConfigurationDomainService" class="io.motown.chargingstationconfiguration.viewmodel.domain.DomainService">
+        <property name="chargingStationTypeRepository" ref="chargingStationRepositoryChargingStationConfiguration" />
+        <property name="manufacturerRepository" ref="manufacturerRepositoryChargingStationConfiguration" />
+    </bean>
+
+    <bean id="chargingStationRepositoryChargingStationConfiguration" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository">
+        <property name="entityManagerFactory" ref="entityManagerFactoryChargingStationConfiguration" />
+    </bean>
+
+    <bean id="manufacturerRepositoryChargingStationConfiguration" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ManufacturerRepository">
+        <property name="entityManagerFactory" ref="entityManagerFactoryChargingStationConfiguration" />
+    </bean>
+
+    <bean id="beanValidationInterceptor" class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor"/>
+
+    <bean id="chargingStationConfigurationCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
+        <property name="commandBus" ref="commandBus"/>
+        <property name="gatewayInterface" value="io.motown.chargingstationconfiguration.app.ConfigurationCommandGateway"/>
+    </bean>
+
+    <!-- Spring Data JPA -->
+    <bean id="entityManagerFactoryChargingStationConfiguration" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="io.motown.chargingstationconfiguration.viewmodel.persistence"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="database" value="HSQL"/>
+                <property name="generateDdl" value="true"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactoryChargingStationConfiguration" />
+    </bean>
+
+    <jdbc:embedded-database id="dataSource" type="HSQL">
+        <jdbc:script location="classpath*:META-INF/hsqldb/schema.sql" />
+        <!-- initialData.sql contains some dummy values to be able to use the charging station configuration add-on -->
+        <jdbc:script location="classpath*:META-INF/hsqldb/initialData.sql" />
+    </jdbc:embedded-database>
+
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.ChargingStationTypeResource">
+        <property name="domainService" ref="chargingStationConfigurationDomainService" />
+    </bean>
+
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.ConnectorResource">
+        <property name="domainService" ref="chargingStationConfigurationDomainService" />
+    </bean>
+
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.EvseResource">
+        <property name="domainService" ref="chargingStationConfigurationDomainService" />
+    </bean>
+
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.ManufacturerResource">
+        <property name="domainService" ref="chargingStationConfigurationDomainService" />
+    </bean>
+
+</beans>

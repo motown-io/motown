@@ -1,0 +1,6 @@
+box: mies/java7-oracle@0.0.1
+build:
+  steps:
+    - script:
+        name: mvn-install
+        code: mvn install

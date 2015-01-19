@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd">
+
+    <bean id="entityManagerFactoryChargingStationConfiguration" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSourceChargingStationConfiguration"/>
+        <property name="packagesToScan" value="io.motown.chargingstationconfiguration.viewmodel.persistence"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="database" value="HSQL"/>
+                <property name="generateDdl" value="true"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="entityManagerChargingStationConfiguration" factory-bean="entityManagerFactoryChargingStationConfiguration" factory-method="createEntityManager" />
+
+    <bean id="chargingStationTypeRepository" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ChargingStationTypeRepository">
+        <property name="entityManagerFactory" ref="entityManagerFactoryChargingStationConfiguration" />
+    </bean>
+
+    <bean id="manufacturerRepository" class="io.motown.chargingstationconfiguration.viewmodel.persistence.repositories.ManufacturerRepository">
+        <property name="entityManagerFactory" ref="entityManagerFactoryChargingStationConfiguration" />
+    </bean>
+
+    <bean id="domainService" class="io.motown.chargingstationconfiguration.viewmodel.domain.DomainService">
+        <property name="chargingStationTypeRepository" ref="chargingStationTypeRepository" />
+        <property name="manufacturerRepository" ref="manufacturerRepository" />
+    </bean>
+
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.ChargingStationTypeResource">
+        <property name="domainService" ref="domainService" />
+    </bean>
+
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.ConnectorResource">
+        <property name="domainService" ref="domainService" />
+    </bean>
+
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.EvseResource">
+        <property name="domainService" ref="domainService" />
+    </bean>
+
+    <bean class="io.motown.chargingstationconfiguration.viewmodel.restapi.ManufacturerResource">
+        <property name="domainService" ref="domainService" />
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactoryChargingStationConfiguration"/>
+    </bean>
+
+    <jdbc:embedded-database id="dataSourceChargingStationConfiguration" type="HSQL">
+        <jdbc:script location="hsqldb/schema.sql" />
+    </jdbc:embedded-database>
+
+</beans>

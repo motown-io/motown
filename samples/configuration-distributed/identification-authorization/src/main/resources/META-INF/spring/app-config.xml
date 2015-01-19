@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:axon="http://www.axonframework.org/schema/core"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xmlns:axon-amqp="http://www.axonframework.org/schema/amqp"
+       xsi:schemaLocation="http://www.axonframework.org/schema/amqp http://www.axonframework.org/schema/axon-amqp.xsd
+                           http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
+
+
+    <context:property-placeholder location="classpath:config.properties, file:${io.motown.identificationauthorization.app.config}"
+                                  ignore-resource-not-found="true"/>
+
+    <bean class="io.motown.identificationauthorization.app.AuthorizationEventListener">
+        <property name="commandGateway" ref="authorizationCommandGateway" />
+        <property name="identificationAuthorizationService" ref="identificationAuthorizationService" />
+        <property name="addOnIdentity" value="1" />
+    </bean>
+
+    <bean id="identificationAuthorizationService" class="io.motown.identificationauthorization.app.IdentificationAuthorizationService">
+        <property name="providers">
+            <set>
+                <bean id="cirAuthentication" class="io.motown.identificationauthorization.cirplugin.CirAuthorization">
+                    <property name="username" value="${io.motown.identificationauthorization.cirplugin.cirservice.username}" />
+                    <property name="password" value="${io.motown.identificationauthorization.cirplugin.cirservice.password}" />
+                    <property name="endpoint" value="${io.motown.identificationauthorization.cirplugin.cirservice.endpoint}" />
+                </bean>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="beanValidationInterceptor" class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor"/>
+
+    <bean id="asyncExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean">
+        <property name="corePoolSize" value="1"/>
+        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+    </bean>
+
+    <bean id="authorizationCommandGateway" class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
+        <property name="commandBus" ref="commandBus"/>
+        <property name="gatewayInterface" value="io.motown.identificationauthorization.app.AuthorizationCommandGateway"/>
+    </bean>
+
+    <bean id="commandBus"
+          class="org.axonframework.commandhandling.distributed.DistributedCommandBus">
+        <constructor-arg ref="jgroupsConnector"/>
+        <property name="CommandDispatchInterceptors" ref="beanValidationInterceptor"/>
+    </bean>
+
+    <bean id="jgroupsConnector"
+          class="org.axonframework.commandhandling.distributed.jgroups.JGroupsConnectorFactoryBean">
+        <property name="configuration"
+                  value="flush-udp.xml"/>
+        <property name="clusterName"
+                  value="io.motown.commands"/>
+        <property name="localSegment">
+            <axon:command-bus/>
+        </property>
+        <property name="serializer">
+            <bean class="org.axonframework.serializer.xml.XStreamSerializer"/>
+        </property>
+    </bean>
+
+    <!-- Axon -->
+
+    <axon:annotation-config/>
+
+    <axon:event-bus id="eventBus" terminal="terminal"/>
+
+    <axon-amqp:terminal id="terminal"
+                        connection-factory="amqpConnection"
+                        serializer="serializer"
+                        exchange-name="${io.motown.identificationauthorization.app.eventbus.amqp.rabbit.exchange.name}">
+        <axon-amqp:default-configuration />
+    </axon-amqp:terminal>
+
+    <axon:cluster id="cluster" default="true">
+        <bean class="org.axonframework.eventhandling.async.AsynchronousCluster">
+            <constructor-arg value="${io.motown.identificationauthorization.app.eventbus.amqp.rabbit.queue.name}"/>
+            <constructor-arg ref="asyncExecutor"/>
+            <constructor-arg>
+                <bean class="org.axonframework.eventhandling.async.FullConcurrencyPolicy"/>
+            </constructor-arg>
+        </bean>
+    </axon:cluster>
+
+    <bean id="serializer" class="org.axonframework.serializer.xml.XStreamSerializer"/>
+
+    <!-- AMQP -->
+
+    <rabbit:connection-factory id="amqpConnection"
+                               username="${io.motown.identificationauthorization.app.eventbus.amqp.rabbit.username}"
+                               password="${io.motown.identificationauthorization.app.eventbus.amqp.rabbit.password}"
+                               virtual-host="${io.motown.identificationauthorization.app.eventbus.amqp.rabbit.virtualhost}"
+                               host="${io.motown.identificationauthorization.app.eventbus.amqp.rabbit.host}"/>
+
+    <rabbit:admin id="amqpAdmin"
+                  connection-factory="amqpConnection"/>
+
+    <rabbit:queue id="queue"
+                  name="${io.motown.identificationauthorization.app.eventbus.amqp.rabbit.queue.name}"
+                  durable="true"/>
+
+    <rabbit:fanout-exchange id="exchange"
+                            name="${io.motown.identificationauthorization.app.eventbus.amqp.rabbit.exchange.name}"
+                            durable="true">
+        <rabbit:bindings>
+            <rabbit:binding queue="queue"/>
+        </rabbit:bindings>
+    </rabbit:fanout-exchange>
+
+</beans>

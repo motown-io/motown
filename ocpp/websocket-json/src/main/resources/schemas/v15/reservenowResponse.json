@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "ReserveNowResponse",
+    "type": "object",
+    "properties": {
+        "status": {
+            "type": "string",
+            "enum": [
+                "Accepted",
+                "Faulted",
+                "Occupied",
+                "Rejected",
+                "Unavailable"
+            ]
+        }
+    },
+    "required": [
+        "status"
+    ]
+}
