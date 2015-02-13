@@ -26,6 +26,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import java.util.List;
 
@@ -43,14 +44,19 @@ public class CommandAuthorizationRepositoryTest {
     private CommandAuthorizationRepository commandAuthorizationRepository;
 
     @Autowired
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
 
     private static final Class<AcceptChargingStationCommand> COMMAND_CLASS = AcceptChargingStationCommand.class;
 
     @Before
     public void setUp() {
-        entityManager.clear();
-        deleteFromDatabase(entityManager, CommandAuthorization.class);
+        EntityManager em = entityManagerFactory.createEntityManager();
+        try {
+            em.clear();
+            deleteFromDatabase(em, CommandAuthorization.class);
+        } finally {
+            em.close();
+        }
     }
 
     @Test

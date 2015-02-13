@@ -40,10 +40,8 @@
         </property>
     </bean>
 
-    <bean id="jpaEntityManagerCommandAuthorization" factory-bean="entityManagerFactoryCommandAuthorization" factory-method="createEntityManager" />
-
     <bean id="commandAuthorizationRepository" class="io.motown.domain.commandauthorization.repositories.CommandAuthorizationRepository">
-        <property name="entityManager" ref="jpaEntityManagerCommandAuthorization" />
+        <property name="entityManagerFactory" ref="entityManagerFactoryCommandAuthorization" />
     </bean>
 
     <bean class="io.motown.domain.commandauthorization.CommandAuthorizationEventHandler">

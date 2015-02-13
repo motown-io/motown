@@ -16,10 +16,8 @@
         </property>
     </bean>
 
-    <bean id="entityManagerDomainAuthorization" factory-bean="entityManagerFactoryDomainAuthorization" factory-method="createEntityManager" />
-
     <bean id="commandAuthorizationRepository" class="io.motown.domain.commandauthorization.repositories.CommandAuthorizationRepository">
-        <property name="entityManager" ref="entityManagerDomainAuthorization" />
+        <property name="entityManagerFactory" ref="entityManagerFactoryDomainAuthorization" />
     </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
