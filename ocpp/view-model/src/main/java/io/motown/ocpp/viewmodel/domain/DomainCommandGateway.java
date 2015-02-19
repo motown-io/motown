@@ -17,6 +17,7 @@ package io.motown.ocpp.viewmodel.domain;
 
 import io.motown.domain.api.chargingstation.*;
 import org.axonframework.commandhandling.CommandCallback;
+import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.common.annotation.MetaData;
 
 import java.util.concurrent.TimeUnit;
@@ -37,7 +38,13 @@ interface DomainCommandGateway {
 
     void send(ConfigureChargingStationCommand command);
 
+    void send(CommandMessage commandMessage);
+
     void send(StartTransactionCommand command);
+
+    void send(RequestStartTransactionAcceptedCommand command);
+
+    void send(RequestStartTransactionRejectedCommand command);
 
     void send(StopTransactionCommand command);
 

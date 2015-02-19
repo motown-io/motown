@@ -17,10 +17,9 @@ package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.viewmodel.domain.FutureEventCallback;
+import io.motown.domain.utils.axon.FutureEventCallback;
 import io.motown.ocpp.websocketjson.OcppWebSocketRequestHandler;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Starttransaction;
-import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
 

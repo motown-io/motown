@@ -17,6 +17,7 @@ package io.motown.ocpp.viewmodel.domain;
 
 import com.google.common.collect.ImmutableMap;
 import io.motown.domain.api.chargingstation.*;
+import io.motown.domain.utils.axon.FutureEventCallback;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import org.axonframework.domain.EventMessage;
 

@@ -21,7 +21,7 @@ import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.utils.AttributeMap;
 import io.motown.domain.utils.AttributeMapKeys;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.viewmodel.domain.FutureEventCallback;
+import io.motown.domain.utils.axon.FutureEventCallback;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Starttransaction;
 import org.atmosphere.websocket.WebSocket;
 

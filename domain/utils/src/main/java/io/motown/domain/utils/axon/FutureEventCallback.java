@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.viewmodel.domain;
+package io.motown.domain.utils.axon;
 
 import io.motown.domain.utils.axon.EventCallback;
 

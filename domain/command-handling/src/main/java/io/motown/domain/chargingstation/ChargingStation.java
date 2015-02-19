@@ -27,7 +27,7 @@ import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
 
 public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
-    private static final long serialVersionUID = -7260002079024555928L;
+    private static final long serialVersionUID = -3089562761704323707L;
 
     @AggregateIdentifier
     private ChargingStationId id;
@@ -134,6 +134,26 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     /**
+     * Handles a {@link RequestStartTransactionAcceptedCommand}.
+     *
+     * @param command the command which needs to be applied to the ChargingStation.
+     */
+    @CommandHandler
+    public void handle(RequestStartTransactionAcceptedCommand command) {
+        apply(new RequestStartTransactionAcceptedEvent(command.getChargingStationId(), command.getEvseId(), command.getIdentifyingToken(), command.getIdentityContext()));
+    }
+
+    /**
+     * Handles a {@link RequestStartTransactionRejectedCommand}.
+     *
+     * @param command the command which needs to be applied to the ChargingStation.
+     */
+    @CommandHandler
+    public void handle(RequestStartTransactionRejectedCommand command) {
+        apply(new RequestStartTransactionRejectedEvent(command.getChargingStationId(), command.getEvseId(), command.getIdentifyingToken(), command.getIdentityContext()));
+    }
+
+    /**
      * Handles a {@link StartTransactionCommand}.
      *
      * @param command the command which needs to be applied to the ChargingStation.
@@ -146,6 +166,26 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         }
 
         apply(new TransactionStartedEvent(command.getChargingStationId(), command.getTransactionId(), command.getStartTransactionInfo(), command.getIdentityContext()), metaData);
+    }
+
+    /**
+     * Handles a {@link RequestStopTransactionAcceptedCommand}.
+     *
+     * @param command the command which needs to be applied to the ChargingStation.
+     */
+    @CommandHandler
+    public void handle(RequestStopTransactionAcceptedCommand command) {
+        apply(new RequestStopTransactionAcceptedEvent(command.getChargingStationId(), command.getTransactionId(), command.getIdentityContext()));
+    }
+
+    /**
+     * Handles a {@link RequestStopTransactionRejectedCommand}.
+     *
+     * @param command the command which needs to be applied to the ChargingStation.
+     */
+    @CommandHandler
+    public void handle(RequestStopTransactionRejectedCommand command) {
+        apply(new RequestStopTransactionRejectedEvent(command.getChargingStationId(), command.getTransactionId(), command.getIdentityContext()));
     }
 
     @CommandHandler

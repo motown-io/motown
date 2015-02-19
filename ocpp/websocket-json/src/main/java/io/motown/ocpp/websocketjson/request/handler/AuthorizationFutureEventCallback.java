@@ -18,7 +18,7 @@ package io.motown.ocpp.websocketjson.request.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.AuthorizationResultEvent;
 import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
-import io.motown.ocpp.viewmodel.domain.FutureEventCallback;
+import io.motown.domain.utils.axon.FutureEventCallback;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import org.atmosphere.websocket.WebSocket;
 import org.axonframework.domain.EventMessage;

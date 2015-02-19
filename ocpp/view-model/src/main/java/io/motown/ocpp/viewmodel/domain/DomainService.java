@@ -23,17 +23,21 @@ import io.motown.domain.api.security.UserIdentity;
 import io.motown.domain.utils.AttributeMap;
 import io.motown.domain.utils.AttributeMapKeys;
 import io.motown.domain.utils.axon.EventWaitingGateway;
+import io.motown.domain.utils.axon.FutureEventCallback;
 import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.viewmodel.persistence.entities.ReservationIdentifier;
 import io.motown.ocpp.viewmodel.persistence.entities.Transaction;
 import io.motown.ocpp.viewmodel.persistence.repositories.ChargingStationRepository;
 import io.motown.ocpp.viewmodel.persistence.repositories.ReservationIdentifierRepository;
 import io.motown.ocpp.viewmodel.persistence.repositories.TransactionRepository;
+import org.axonframework.commandhandling.CommandMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.*;
+
+import static org.axonframework.commandhandling.GenericCommandMessage.asCommandMessage;
 
 public class DomainService {
 
@@ -234,6 +238,46 @@ public class DomainService {
             Transaction transaction = transactionRepository.findTransactionById((long) transactionId.getNumber());
             commandGateway.send(new ProcessMeterValueCommand(chargingStationId, transactionId, transaction.getEvseId(), meterValues, identityContext));
         }
+    }
+
+    public void informRequestStartTransactionAccepted(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken identifyingToken, IdentityContext identityContext, CorrelationToken correlationToken) {
+        CommandMessage commandMessage = asCommandMessage(new RequestStartTransactionAcceptedCommand(chargingStationId, evseId, identifyingToken, identityContext));
+
+        if (correlationToken != null) {
+            commandMessage = commandMessage.andMetaData(Collections.singletonMap(CorrelationToken.KEY, correlationToken));
+        }
+
+        commandGateway.send(commandMessage);
+    }
+
+    public void informRequestStartTransactionRejected(ChargingStationId chargingStationId, EvseId evseId, IdentifyingToken identifyingToken, IdentityContext identityContext, CorrelationToken correlationToken) {
+        CommandMessage commandMessage = asCommandMessage(new RequestStartTransactionRejectedCommand(chargingStationId, evseId, identifyingToken, identityContext));
+
+        if (correlationToken != null) {
+            commandMessage = commandMessage.andMetaData(Collections.singletonMap(CorrelationToken.KEY, correlationToken));
+        }
+
+        commandGateway.send(commandMessage);
+    }
+
+    public void informRequestStopTransactionAccepted(ChargingStationId chargingStationId, TransactionId transactionId, IdentityContext identityContext, CorrelationToken correlationToken) {
+        CommandMessage commandMessage = asCommandMessage(new RequestStopTransactionAcceptedCommand(chargingStationId, transactionId, identityContext));
+
+        if (correlationToken != null) {
+            commandMessage = commandMessage.andMetaData(Collections.singletonMap(CorrelationToken.KEY, correlationToken));
+        }
+
+        commandGateway.send(commandMessage);
+    }
+
+    public void informRequestStopTransactionRejected(ChargingStationId chargingStationId, TransactionId transactionId, IdentityContext identityContext, CorrelationToken correlationToken) {
+        CommandMessage commandMessage = asCommandMessage(new RequestStopTransactionRejectedCommand(chargingStationId, transactionId, identityContext));
+
+        if (correlationToken != null) {
+            commandMessage = commandMessage.andMetaData(Collections.singletonMap(CorrelationToken.KEY, correlationToken));
+        }
+
+        commandGateway.send(commandMessage);
     }
 
     public void informReserved(ChargingStationId chargingStationId, ReservationId reservationId, EvseId evseId, Date expiryDate, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
