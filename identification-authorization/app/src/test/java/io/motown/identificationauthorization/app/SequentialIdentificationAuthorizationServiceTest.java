@@ -25,9 +25,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
-public class IdentificationAuthorizationServiceTest {
+public class SequentialIdentificationAuthorizationServiceTest {
 
-    private IdentificationAuthorizationService service;
+    private SequentialIdentificationAuthorizationService service;
 
     private AuthorizationProvider firstProvider;
 
@@ -35,7 +35,7 @@ public class IdentificationAuthorizationServiceTest {
 
     @Before
     public void setup() {
-        service = new IdentificationAuthorizationService();
+        service = new SequentialIdentificationAuthorizationService();
 
         firstProvider = mock(AuthorizationProvider.class);
         when(firstProvider.isValid(IDENTIFYING_TOKEN)).thenReturn(true);

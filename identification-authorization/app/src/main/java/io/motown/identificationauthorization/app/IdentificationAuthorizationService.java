@@ -16,36 +16,7 @@
 package io.motown.identificationauthorization.app;
 
 import io.motown.domain.api.chargingstation.IdentifyingToken;
-import io.motown.identificationauthorization.pluginapi.AuthorizationProvider;
 
-import java.util.Set;
-
-public class IdentificationAuthorizationService {
-
-    private Set<AuthorizationProvider> providers;
-
-    public void setProviders(Set<AuthorizationProvider> providers) {
-        this.providers = providers;
-    }
-
-    /**
-     * Validates the token with the configured authentication providers, as soon as one provider indicates the
-     * identification is valid this will be the result.
-     *
-     * @param token identifying token to be validated.
-     * @return true if one of the authentication providers indicates the identification is valid, otherwise false.
-     */
-    public boolean isValid(IdentifyingToken token) {
-        boolean valid = false;
-
-        for(AuthorizationProvider provider : providers) {
-            if(provider.isValid(token)) {
-                valid = true;
-                break;
-            }
-        }
-
-        return valid;
-    }
-
+public interface IdentificationAuthorizationService {
+    boolean isValid(IdentifyingToken token);
 }
