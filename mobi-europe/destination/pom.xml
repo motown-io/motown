@@ -16,7 +16,7 @@
     limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -67,13 +67,18 @@
     <dependencies>
 
         <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-jdk-http</artifactId>
-            <version>2.10.1</version>
+            <groupId>io.motown.domain</groupId>
+            <artifactId>domain-core-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.motown.domain</groupId>
+            <artifactId>domain-utils</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>io.motown.mobi-europe</groupId>
-            <artifactId>mobi-europe-soap</artifactId>
+            <artifactId>mobi-europe-shared</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -104,6 +109,44 @@
                         <exclude>src/main/webapp/js/libs/**</exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-codegen-plugin</artifactId>
+                <version>${cxf.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>wsdl2java</goal>
+                        </goals>
+                        <configuration>
+                            <wsdlOptions>
+                                <wsdlOption>
+                                    <wsdl>src/main/resources/wsdl/SourcePMS.wsdl</wsdl>
+                                    <packagenames>
+                                        <packagename>io.motown.mobieurope.source.soap.schema</packagename>
+                                    </packagenames>
+                                    <extraargs>
+                                        <extraarg>-exsh</extraarg>
+                                        <extraarg>true</extraarg>
+                                    </extraargs>
+                                </wsdlOption>
+                                <wsdlOption>
+                                    <wsdl>src/main/resources/wsdl/DestinationPMS.wsdl</wsdl>
+                                    <packagenames>
+                                        <packagename>io.motown.mobieurope.destination.soap.schema</packagename>
+                                    </packagenames>
+                                    <extraargs>
+                                        <extraarg>-exsh</extraarg>
+                                        <extraarg>true</extraarg>
+                                    </extraargs>
+                                </wsdlOption>
+                            </wsdlOptions>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

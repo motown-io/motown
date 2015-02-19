@@ -108,7 +108,9 @@
         <module>ocpp/view-model</module>
         <module>ocpp/websocket-json</module>
         <module>ocpp/soap-utils</module>
+        <module>mobi-europe/shared</module>
         <module>mobi-europe/destination</module>
+        <module>mobi-europe/source</module>
         <module>operator-api/json</module>
         <module>operator-api/view-model</module>
         <module>identification-authorization/app</module>

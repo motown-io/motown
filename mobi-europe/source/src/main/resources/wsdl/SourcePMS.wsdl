@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:tns="http://webservice.pms.mobieurope.com"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  name="PmsServerService"
+                  targetNamespace="http://webservice.pms.mobieurope.com">
+    <wsdl:types>
+        <xs:schema xmlns:mobieuropeData="http://webservice.common.mobieurope.com" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   targetNamespace="http://webservice.common.mobieurope.com"
+                   version="1.0">
+
+            <xs:element name="ResponseError">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="errorCode" type="xs:string"/>
+                        <xs:element name="errorMsg" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="TransactionData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serviceType" type="mobieuropeData:ServiceType"/>
+                        <xs:element name="startTimestamp" type="xs:dateTime"/>
+                        <xs:element minOccurs="0" name="endTimestamp" type="xs:dateTime"/>
+                        <xs:element name="transactionStatus" type="mobieuropeData:TransactionStatus"/>
+                        <xs:element minOccurs="0" name="energyConsumed" type="xs:double"/>
+                        <xs:element minOccurs="0" name="energyUnit" type="mobieuropeData:EnergyUnit"/>
+                        <xs:element name="localOperatorIdentifier" type="xs:string"/>
+                        <xs:element name="localServiceIdentifier" type="xs:string"/>
+                        <xs:element name="homeOperatorIdentifier" type="xs:string"/>
+                        <xs:element name="userIdentifier" type="xs:string"/>
+                        <xs:element name="authorizationIdentifier" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:simpleType name="ServiceType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="EV_CHARGING"/>
+                    <xs:enumeration value="PARKING"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType name="TransactionStatus">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="ACTIVE"/>
+                    <xs:enumeration value="TERMINATED"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType name="EnergyUnit">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Wh"/>
+                    <xs:enumeration value="kWh"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:schema>
+        <xs:schema xmlns:mobieuropeData="http://webservice.common.mobieurope.com" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   targetNamespace="http://webservice.pms.mobieurope.com"
+                   version="1.0">
+            <xs:import xmlns:mobieuropeData="http://webservice.common.mobieurope.com"
+                       namespace="http://webservice.common.mobieurope.com"/>
+
+            <xs:element name="endTransactionRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="authorizationIdentifier" type="xs:string"/>
+                        <xs:element name="startTransactionTimestamp" type="xs:dateTime"/>
+                        <xs:element name="endTransactionTimestamp" type="xs:dateTime"/>
+                        <xs:element ref="mobieuropeData:TransactionData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="endTransactionResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" ref="mobieuropeData:ResponseError"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="notifyRequestResultRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="requestIdentifier" type="xs:string"/>
+                        <xs:element name="requestSuccess" type="xs:boolean"/>
+                        <xs:element minOccurs="0" name="cause" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="notifyRequestResultResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" ref="mobieuropeData:ResponseError"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="transactionProgressUpdateRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="authorizationIdentifier" type="xs:string"/>
+                        <xs:element name="startTransactionTimestamp" type="xs:dateTime"/>
+                        <xs:element ref="mobieuropeData:TransactionData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="transactionProgressUpdateResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" ref="mobieuropeData:ResponseError"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+
+    </wsdl:types>
+
+    <wsdl:message name="notifyRequestResult">
+        <wsdl:part element="tns:notifyRequestResultRequest" name="parameters"/>
+    </wsdl:message>
+
+    <wsdl:message name="transactionProgressUpdateResponse">
+        <wsdl:part element="tns:transactionProgressUpdateResponse" name="parameters"/>
+    </wsdl:message>
+    <wsdl:message name="notifyRequestResultResponse">
+        <wsdl:part element="tns:notifyRequestResultResponse" name="parameters"/>
+    </wsdl:message>
+
+    <wsdl:message name="endTransaction">
+        <wsdl:part element="tns:endTransactionRequest" name="parameters"/>
+    </wsdl:message>
+
+
+    <wsdl:message name="transactionProgressUpdate">
+        <wsdl:part element="tns:transactionProgressUpdateRequest" name="parameters"/>
+    </wsdl:message>
+    <wsdl:message name="endTransactionResponse">
+        <wsdl:part element="tns:endTransactionResponse" name="parameters"/>
+    </wsdl:message>
+
+    <wsdl:portType name="PmsServerPortType">
+
+        <wsdl:operation name="transactionProgressUpdate">
+            <wsdl:input message="tns:transactionProgressUpdate" name="transactionProgressUpdate"/>
+            <wsdl:output message="tns:transactionProgressUpdateResponse" name="transactionProgressUpdateResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="notifyRequestResult">
+            <wsdl:input message="tns:notifyRequestResult" name="notifyRequestResult"/>
+            <wsdl:output message="tns:notifyRequestResultResponse" name="notifyRequestResultResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="endTransaction">
+            <wsdl:input message="tns:endTransaction" name="endTransaction"/>
+            <wsdl:output message="tns:endTransactionResponse" name="endTransactionResponse"/>
+        </wsdl:operation>
+
+    </wsdl:portType>
+    <wsdl:binding name="PmsServerServiceSoapBinding" type="tns:PmsServerPortType">
+        <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+        <wsdl:operation name="transactionProgressUpdate">
+            <soap12:operation soapAction="transactionProgressUpdate" style="document"/>
+            <wsdl:input name="transactionProgressUpdate">
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="transactionProgressUpdateResponse">
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="notifyRequestResult">
+            <soap12:operation soapAction="notifyRequestResult" style="document"/>
+            <wsdl:input name="notifyRequestResult">
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="notifyRequestResultResponse">
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="endTransaction">
+            <soap12:operation soapAction="endTransaction" style="document"/>
+            <wsdl:input name="endTransaction">
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="endTransactionResponse">
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+
+    </wsdl:binding>
+    <wsdl:service name="PmsServerService">
+        <wsdl:port binding="tns:PmsServerServiceSoapBinding" name="PmsServerBinding">
+            <soap12:address location="http://localhost:8085/mobieu/ws/PmsServerService"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
