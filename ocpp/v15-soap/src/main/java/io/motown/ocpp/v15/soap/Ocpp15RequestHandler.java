@@ -55,7 +55,12 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
 
         if (event.getTransactionId() instanceof NumberedTransactionId) {
             NumberedTransactionId transactionId = (NumberedTransactionId) event.getTransactionId();
-            chargingStationOcpp15Client.stopTransaction(event.getChargingStationId(), transactionId.getNumber());
+            boolean stopTransactionAccepted = chargingStationOcpp15Client.stopTransaction(event.getChargingStationId(), transactionId.getNumber());
+            if (stopTransactionAccepted){
+                domainService.informRequestStopTransactionAccepted(event.getChargingStationId(), event.getTransactionId(), event.getIdentityContext(), correlationToken);
+            } else {
+                domainService.informRequestStopTransactionRejected(event.getChargingStationId(), event.getTransactionId(), event.getIdentityContext(), correlationToken);
+            }
         } else {
             LOG.warn("StopTransactionRequestedEvent does not contain a NumberedTransactionId. Event: {}", event);
         }
@@ -85,7 +90,12 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
     @Override
     public void handle(StartTransactionRequestedEvent event, CorrelationToken correlationToken) {
         LOG.info("StartTransactionRequestedEvent");
-        chargingStationOcpp15Client.startTransaction(event.getChargingStationId(), event.getIdentifyingToken(), event.getEvseId());
+        boolean startTransactionAccepted = chargingStationOcpp15Client.startTransaction(event.getChargingStationId(), event.getIdentifyingToken(), event.getEvseId());
+        if (startTransactionAccepted){
+            domainService.informRequestStartTransactionAccepted(event.getChargingStationId(), event.getEvseId(), event.getIdentifyingToken(), event.getIdentityContext(), correlationToken);
+        } else {
+            domainService.informRequestStartTransactionRejected(event.getChargingStationId(), event.getEvseId(), event.getIdentifyingToken(), event.getIdentityContext(), correlationToken);
+        }
     }
 
     @Override

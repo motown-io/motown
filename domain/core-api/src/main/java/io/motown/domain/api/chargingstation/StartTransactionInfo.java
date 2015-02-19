@@ -53,7 +53,6 @@ public class StartTransactionInfo {
         this.attributes = ImmutableMap.copyOf(checkNotNull(attributes));
     }
 
-
     /**
      * Gets the evse's identifier or position.
      *

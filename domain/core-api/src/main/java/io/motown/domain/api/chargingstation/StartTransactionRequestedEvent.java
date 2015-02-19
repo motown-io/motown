@@ -17,6 +17,9 @@ package io.motown.domain.api.chargingstation;
 
 import io.motown.domain.api.security.IdentityContext;
 
+import java.util.Objects;
+
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -99,5 +102,33 @@ public final class StartTransactionRequestedEvent implements CommunicationWithCh
      */
     public IdentityContext getIdentityContext() {
         return identityContext;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chargingStationId, protocol, identifyingToken, evseId, identityContext);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final StartTransactionRequestedEvent other = (StartTransactionRequestedEvent) obj;
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.protocol, other.protocol) && Objects.equals(this.identifyingToken, other.identifyingToken) && Objects.equals(this.evseId, other.evseId) && Objects.equals(this.identityContext, other.identityContext);
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper(this)
+                .add("chargingStationId", chargingStationId)
+                .add("protocol", protocol)
+                .add("identifyingToken", identifyingToken)
+                .add("evseId", evseId)
+                .add("identityContext", identityContext)
+                .toString();
     }
 }

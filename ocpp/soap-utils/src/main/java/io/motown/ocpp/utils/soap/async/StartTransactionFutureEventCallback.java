@@ -18,7 +18,7 @@ package io.motown.ocpp.utils.soap.async;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
-import io.motown.ocpp.viewmodel.domain.FutureEventCallback;
+import io.motown.domain.utils.axon.FutureEventCallback;
 import io.motown.ocpp.viewmodel.persistence.entities.Transaction;
 import io.motown.utils.soap.async.ContinuationFutureCallback;
 import org.apache.cxf.continuations.Continuation;
