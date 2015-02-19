@@ -43,15 +43,22 @@ public class SubscriptionRepository {
     public void delete(final Subscription subscription) {
         final EntityManager entityManager = getEntityManager();
 
-        //Making sure the subscription is in the scope of this entitymanager
-        final Subscription subscriptionToRemove = entityManager.contains(subscription) ? subscription : entityManager.merge(subscription);
+        try {
+            //Making sure the subscription is in the scope of this entitymanager
+            final Subscription subscriptionToRemove = entityManager.contains(subscription) ? subscription : entityManager.merge(subscription);
 
-        executeWithinTransaction(new TransactionalTask() {
-            @Override
-            public void execute() {
-                entityManager.remove(subscriptionToRemove);
+            executeWithinTransaction(new TransactionalTask() {
+                @Override
+                public void execute() {
+                    entityManager.remove(subscriptionToRemove);
+                }
+            }, entityManager);
+        } finally {
+            if (entityManager.isOpen()) {
+                entityManager.close();
             }
-        }, entityManager);
+        }
+
     }
 
     private void executeWithinTransaction(TransactionalTask task, EntityManager entityManager) {

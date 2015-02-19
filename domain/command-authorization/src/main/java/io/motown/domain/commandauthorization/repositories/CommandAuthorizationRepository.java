@@ -17,10 +17,9 @@ package io.motown.domain.commandauthorization.repositories;
 
 import io.motown.domain.commandauthorization.model.CommandAuthorization;
 import io.motown.domain.commandauthorization.model.CommandAuthorizationId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
 /**
@@ -28,9 +27,7 @@ import javax.persistence.EntityTransaction;
  */
 public class CommandAuthorizationRepository {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CommandAuthorizationRepository.class);
-
-    private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
 
     /**
      * Finds {@code CommandAuthorization} based on charging station id, user identity and command class.
@@ -42,7 +39,13 @@ public class CommandAuthorizationRepository {
      */
     public CommandAuthorization find(String chargingStationId, String userIdentity, Class commandClass) {
         CommandAuthorizationId id = new CommandAuthorizationId(chargingStationId, userIdentity, commandClass);
-        return entityManager.find(CommandAuthorization.class, id);
+
+        EntityManager em = getEntityManager();
+        try {
+            return em.find(CommandAuthorization.class, id);
+        } finally {
+            em.close();
+        }
     }
 
     /**
@@ -54,24 +57,26 @@ public class CommandAuthorizationRepository {
      * @return (updated) command authorization.
      */
     public CommandAuthorization createOrUpdate(String chargingStationId, String userIdentity, Class commandClass) {
-        EntityTransaction transaction = entityManager.getTransaction();
+        EntityManager em = getEntityManager();
 
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
-        CommandAuthorization storedCommandAuthorization = null;
-
+        EntityTransaction tx = null;
         try {
-            storedCommandAuthorization = entityManager.merge(new CommandAuthorization(new CommandAuthorizationId(chargingStationId, userIdentity, commandClass)));
-            transaction.commit();
-        } finally {
-            if (transaction.isActive()) {
-                LOG.warn("Transaction is still active while it should not be, rolling back.");
-                transaction.rollback();
+            tx = em.getTransaction();
+            tx.begin();
+
+            CommandAuthorization storedCommandAuthorization = em.merge(new CommandAuthorization(new CommandAuthorizationId(chargingStationId, userIdentity, commandClass)));
+
+            tx.commit();
+
+            return storedCommandAuthorization;
+        } catch (Exception e) {
+            if(tx != null && tx.isActive()) {
+                tx.rollback();
             }
+            throw e;
+        } finally {
+            em.close();
         }
-        return storedCommandAuthorization;
     }
 
     /**
@@ -82,33 +87,37 @@ public class CommandAuthorizationRepository {
      * @param commandClass         command class.
      */
     public void remove(String chargingStationId, String userIdentity, Class commandClass) {
-        CommandAuthorizationId id = new CommandAuthorizationId(chargingStationId, userIdentity, commandClass);
-        CommandAuthorization commandAuthorization = entityManager.find(CommandAuthorization.class, id);
+        EntityManager em = getEntityManager();
 
-        if (commandAuthorization == null) {
-            return;
-        }
-
-        EntityTransaction transaction = entityManager.getTransaction();
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
+        EntityTransaction tx = null;
         try {
-            entityManager.remove(commandAuthorization);
-            transaction.commit();
+            CommandAuthorizationId id = new CommandAuthorizationId(chargingStationId, userIdentity, commandClass);
+            CommandAuthorization commandAuthorization = em.find(CommandAuthorization.class, id);
+
+            if (commandAuthorization != null) {
+                tx = em.getTransaction();
+                tx.begin();
+
+                em.remove(commandAuthorization);
+
+                tx.commit();
+            }
         } catch (Exception e) {
-            transaction.rollback();
+            if(tx != null && tx.isActive()) {
+                tx.rollback();
+            }
             throw e;
+        } finally {
+            em.close();
         }
     }
 
-    /**
-     * Sets the entity manager to use.
-     *
-     * @param entityManager    entity manager.
-     */
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
     }
+
+    private EntityManager getEntityManager() {
+        return entityManagerFactory.createEntityManager();
+    }
+
 }

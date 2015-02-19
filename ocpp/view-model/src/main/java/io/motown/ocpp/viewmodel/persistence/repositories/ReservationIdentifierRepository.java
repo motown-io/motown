@@ -30,22 +30,24 @@ public class ReservationIdentifierRepository {
     private EntityManagerFactory entityManagerFactory;
 
     public void insert(ReservationIdentifier reservationIdentifier) {
-        EntityManager entityManager = getEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
+        EntityManager em = getEntityManager();
 
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
+        EntityTransaction tx = null;
         try {
-            entityManager.persist(reservationIdentifier);
-            transaction.commit();
-        } finally {
-            if (transaction.isActive()) {
+            tx = em.getTransaction();
+            tx.begin();
+
+            em.persist(reservationIdentifier);
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
                 LOG.warn("Transaction is still active while it should not be, rolling back.");
-                transaction.rollback();
+                tx.rollback();
             }
-            entityManager.close();
+            throw e;
+        } finally {
+            em.close();
         }
     }
 

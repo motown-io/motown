@@ -452,6 +452,15 @@ public class VasEventHandlerTest {
         verify(subscriberService).updateSubscribers(getTestChargingStationFromRepository(), FIVE_MINUTES_AGO);
     }
 
+    @Test
+    public void componentStatusNotificationReceivedForUnknownComponent() {
+        chargingStationRepository.createOrUpdate(getRegisteredAndConfiguredChargingStation());
+        StatusNotification statusNotification = new StatusNotification(ComponentStatus.AVAILABLE, FIVE_MINUTES_AGO, new HashMap<String, String>());
+
+        // no exceptions thrown
+        eventHandler.handle(new ComponentStatusNotificationReceivedEvent(CHARGING_STATION_ID, ChargingStationComponent.EVSE, UNKNOWN_EVSE_ID, statusNotification, NULL_USER_IDENTITY_CONTEXT));
+    }
+
     private ChargingStation getTestChargingStationFromRepository() {
         return chargingStationRepository.findOne(CHARGING_STATION_ID.getId());
     }

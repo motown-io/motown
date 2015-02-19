@@ -95,10 +95,10 @@ public class ChargingStationTypeRepository {
     public void delete(Long id) {
         EntityManager em = getEntityManager();
 
-        ChargingStationType chargingStationType = findOne(id, em);
-
         EntityTransaction tx = null;
         try {
+            ChargingStationType chargingStationType = findOne(id, em);
+
             tx = em.getTransaction();
             tx.begin();
 

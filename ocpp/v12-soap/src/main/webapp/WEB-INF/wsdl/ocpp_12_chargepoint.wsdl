@@ -7,18 +7,18 @@ Copyright e-laad.nl. Free to use without modifications.
 See: http://ev-services.net/ocpp/
 -->
 <wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-				 xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
-				 xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
-				 xmlns:s="http://www.w3.org/2001/XMLSchema"
-				 xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
-				 xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
-				 xmlns:tns="urn://Ocpp/Cp/2010/08/"
-			   targetNamespace="urn://Ocpp/Cp/2010/08/"
-			   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-         xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
-	       xmlns:wsa="http://www.w3.org/2005/08/addressing"
-	       xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
-	       xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+                  xmlns:s="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+                  xmlns:tns="urn://Ocpp/Cp/2010/08/"
+                  targetNamespace="urn://Ocpp/Cp/2010/08/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+                  xmlns:wsa="http://www.w3.org/2005/08/addressing"
+                  xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
 
   <wsp:Policy wsu:Id="ServicePolicy">
     <wsp:ExactlyOne>
@@ -103,7 +103,7 @@ See: http://ev-services.net/ocpp/
           <s:enumeration value="Operative" />
         </s:restriction>
       </s:simpleType>
-      
+
       <s:complexType name="ChangeAvailabilityRequest">
         <s:annotation>
           <s:documentation>Defines the ChangeAvailability.req PDU</s:documentation>
@@ -171,7 +171,7 @@ See: http://ev-services.net/ocpp/
           <s:enumeration value="Rejected" />
         </s:restriction>
       </s:simpleType>
-      
+
       <s:complexType name="ClearCacheResponse">
         <s:annotation>
           <s:documentation>Defines the ClearCache.conf PDU</s:documentation>
@@ -213,7 +213,7 @@ See: http://ev-services.net/ocpp/
           <s:enumeration value="NotSupported" />
         </s:restriction>
       </s:simpleType>
-      
+
       <s:complexType name="ChangeConfigurationResponse">
         <s:annotation>
           <s:documentation>Defines the ChangeConfiguration.conf PDU</s:documentation>
@@ -242,7 +242,7 @@ See: http://ev-services.net/ocpp/
           <s:enumeration value="Rejected" />
         </s:restriction>
       </s:simpleType>
-      
+
       <s:complexType name="RemoteStartTransactionResponse">
         <s:annotation>
           <s:documentation>Defines the RemoteStartTransaction.conf PDU</s:documentation>
@@ -367,7 +367,7 @@ See: http://ev-services.net/ocpp/
   <wsdl:message name="RemoteStopTransactionOutput">
     <wsdl:part name="parameters" element="tns:remoteStopTransactionResponse" />
   </wsdl:message>
-  
+
   <wsdl:portType name="ChargePointService">
 
     <wsdl:operation name="UnlockConnector">
@@ -414,7 +414,7 @@ See: http://ev-services.net/ocpp/
       <wsdl:input message="tns:RemoteStopTransactionInput" wsaw:Action="/RemoteStopTransaction" />
       <wsdl:output message="tns:RemoteStopTransactionOutput" />
     </wsdl:operation>
-    
+
   </wsdl:portType>
 
   <wsdl:binding name="ChargePointServiceSoap" type="tns:ChargePointService">
@@ -443,7 +443,7 @@ See: http://ev-services.net/ocpp/
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    
+
     <wsdl:operation name="ChangeAvailability">
       <soap12:operation soapAction="/ChangeAvailability" style="document" />
       <wsdl:input>
@@ -451,7 +451,7 @@ See: http://ev-services.net/ocpp/
         <soap12:body use="literal" />
       </wsdl:input>
       <wsdl:output>
-         <soap12:body use="literal" />
+        <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
 
@@ -487,7 +487,7 @@ See: http://ev-services.net/ocpp/
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    
+
     <wsdl:operation name="ChangeConfiguration">
       <soap12:operation soapAction="/ChangeConfiguration" style="document" />
       <wsdl:input>

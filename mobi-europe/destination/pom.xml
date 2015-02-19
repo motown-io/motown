@@ -28,7 +28,7 @@
     <groupId>io.motown.mobi-europe</groupId>
     <artifactId>mobi-europe-destination</artifactId>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Mobi.Europe source PMS module.</description>
+    <description>Mobi.Europe destination PMS module.</description>
     <url>http://motown.io/</url>
     <licenses>
         <license>

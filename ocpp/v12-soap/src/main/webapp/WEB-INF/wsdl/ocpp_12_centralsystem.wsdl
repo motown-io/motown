@@ -7,18 +7,18 @@ Copyright e-laad.nl. Free to use without modifications.
 See: http://ev-services.net/ocpp/
 -->
 <wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-				 xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
-				 xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
-				 xmlns:s="http://www.w3.org/2001/XMLSchema"
-				 xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
-				 xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
-				 xmlns:tns="urn://Ocpp/Cs/2010/08/"
-			   targetNamespace="urn://Ocpp/Cs/2010/08/"
-			   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-         xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
-	       xmlns:wsa="http://www.w3.org/2005/08/addressing"
-	       xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
-	       xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+                  xmlns:s="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+                  xmlns:tns="urn://Ocpp/Cs/2010/08/"
+                  targetNamespace="urn://Ocpp/Cs/2010/08/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+                  xmlns:wsa="http://www.w3.org/2005/08/addressing"
+                  xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
 
   <wsp:Policy wsu:Id="ServicePolicy">
     <wsp:ExactlyOne>

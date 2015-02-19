@@ -39,26 +39,27 @@ public class ChargingStationRepository {
     }
 
     public ChargingStation createOrUpdate(ChargingStation chargingStation) {
-        EntityManager entityManager = getEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
-
-        if (!transaction.isActive()) {
-            transaction.begin();
-        }
-
-        ChargingStation storedChargingStation = null;
+        EntityManager em = getEntityManager();
+        EntityTransaction tx = null;
 
         try {
-            storedChargingStation = entityManager.merge(chargingStation);
-            transaction.commit();
-        } finally {
-            if (transaction.isActive()) {
+            tx = em.getTransaction();
+            tx.begin();
+
+            ChargingStation storedChargingStation = em.merge(chargingStation);
+
+            tx.commit();
+
+            return storedChargingStation;
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
                 LOG.warn("Transaction is still active while it should not be, rolling back.");
-                transaction.rollback();
+                tx.rollback();
             }
-            entityManager.close();
+            throw e;
+        } finally {
+            em.close();
         }
-        return storedChargingStation;
     }
 
     public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {

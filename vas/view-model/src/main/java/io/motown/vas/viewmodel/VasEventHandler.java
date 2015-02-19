@@ -202,12 +202,14 @@ public class VasEventHandler {
 
         if (chargingStation != null && event.getComponentId() instanceof EvseId) {
             io.motown.vas.viewmodel.persistence.entities.Evse evse = chargingStation.getEvse(((EvseId) event.getComponentId()).getNumberedId());
-            evse.setState(ComponentStatus.fromApiComponentStatus(event.getStatusNotification().getStatus()));
-            chargingStationRepository.createOrUpdate(chargingStation);
-
+            if (evse != null) {
+                evse.setState(ComponentStatus.fromApiComponentStatus(event.getStatusNotification().getStatus()));
+                chargingStationRepository.createOrUpdate(chargingStation);
+            } else {
+                LOG.error("Received ComponentStatusNotificationReceivedEvent for unknown component.");
+            }
             subscriberService.updateSubscribers(chargingStation, event.getStatusNotification().getTimeStamp());
         }
-
     }
 
     public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {

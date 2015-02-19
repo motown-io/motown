@@ -84,14 +84,14 @@ public class ManufacturerRepository {
     public void delete(Long id) {
         EntityManager em = getEntityManager();
 
-        Manufacturer manufacturer = findOne(id, em);
-
-        List<ChargingStationType> chargingStationTypes = em.createQuery("SELECT cst FROM ChargingStationType AS cst where UPPER(cst.manufacturer.code) = UPPER(:manufacturerCode)", ChargingStationType.class)
-                .setParameter("manufacturerCode", manufacturer.getCode())
-                .getResultList();
-
         EntityTransaction tx = null;
         try {
+            Manufacturer manufacturer = findOne(id, em);
+
+            List<ChargingStationType> chargingStationTypes = em.createQuery("SELECT cst FROM ChargingStationType AS cst where UPPER(cst.manufacturer.code) = UPPER(:manufacturerCode)", ChargingStationType.class)
+                    .setParameter("manufacturerCode", manufacturer.getCode())
+                    .getResultList();
+
             tx = em.getTransaction();
             tx.begin();
 

@@ -39,22 +39,23 @@ public class TransactionRepository {
     }
 
     public void insert(Transaction transaction) {
-        EntityManager entityManager = getEntityManager();
-        EntityTransaction entityTransaction = entityManager.getTransaction();
-
-        if (!entityTransaction.isActive()) {
-            entityTransaction.begin();
-        }
+        EntityManager em = getEntityManager();
+        EntityTransaction tx = null;
 
         try {
-            entityManager.persist(transaction);
-            entityTransaction.commit();
-        } finally {
-            if (entityTransaction.isActive()) {
+            tx = em.getTransaction();
+            tx.begin();
+
+            em.persist(transaction);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
                 LOG.warn("Transaction is still active while it should not be, rolling back.");
-                entityTransaction.rollback();
+                tx.rollback();
             }
-            entityManager.close();
+            throw e;
+        } finally {
+            em.close();
         }
     }
 

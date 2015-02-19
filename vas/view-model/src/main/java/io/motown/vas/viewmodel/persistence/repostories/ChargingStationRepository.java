@@ -31,21 +31,25 @@ public class ChargingStationRepository {
     private EntityManagerFactory entityManagerFactory;
 
     public ChargingStation createOrUpdate(ChargingStation chargingStation) {
-        EntityManager entityManager = getEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
+        EntityManager em = getEntityManager();
+        EntityTransaction tx = null;
 
         try {
-            transaction.begin();
-            ChargingStation persistedChargingStation = entityManager.merge(chargingStation);
-            transaction.commit();
+            tx = em.getTransaction();
+            tx.begin();
+
+            ChargingStation persistedChargingStation = em.merge(chargingStation);
+            tx.commit();
 
             return persistedChargingStation;
-        } finally {
-            if (transaction != null && transaction.isActive()) {
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
                 LOG.warn("Transaction is still active while it should not be, rolling back.");
-                transaction.rollback();
+                tx.rollback();
             }
-            entityManager.close();
+            throw e;
+        } finally {
+            em.close();
         }
     }
 
