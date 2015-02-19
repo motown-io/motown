@@ -41,6 +41,8 @@
 
     <import resource="contexts/ocpp-websockets-context.xml" />
 
+    <import resource="contexts/mobi-europe-context.xml" />
+
     <import resource="contexts/security-context.xml" />
 
     <import resource="contexts/datatransfer-handling-configuration-context.xml" />

@@ -458,6 +458,116 @@ angular.module('demoApp.controllers', []).
             };
         }]
     ).
+
+
+    controller('MobiEuropeController',
+        ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
+            $scope.init = function () {
+                $scope.pmsIdentifier = "NL-MOT";
+                $scope.serviceTypeIdentifier = "EV_CHARGING";
+
+                $scope.servicePms = "NL-LOC";
+                $scope.localServiceIdentifier = "DEMO_001";
+                $scope.userIdentifier = "testPas";
+                $scope.connectorIdentifier = "1";
+
+                if(!$scope.pollSessionInfoTimer) {
+                    $scope.pollSessionInfoTimer = $scope.startPollSessionInfoTimer();
+                }
+            };
+
+            $scope.$on('$destroy', function destroy() {
+                $interval.cancel($scope.pollSessionInfoTimer);
+                delete $scope.pollSessionInfoTimer;
+            });
+
+            $scope.startPollSessionInfoTimer = function () {
+                return $interval(function () {
+                    $scope.pollSessionInfo($scope.authorizationIdentifier);
+                }, 2000);
+            };
+
+            $scope.pollSessionInfo = function(authorizationIdentifier) {
+                if ($scope.sessionInfo != undefined) {
+                    if ($scope.sessionInfo.sessionStateMachine.state == 'StartTxRequested' ||
+                        $scope.sessionInfo.sessionStateMachine.state == 'StopTxRequested') {
+                        console.log("polling");
+                        $http({
+                            url: 'rest/mobi-europe/source/session',
+                            method: 'POST',
+                            data: authorizationIdentifier
+                        }).success(function (sessionInfo) {
+                            $scope.sessionInfo = sessionInfo;
+                        });
+                    }
+                }
+            };
+
+            $scope.authorize = function(userIdentifier, pmsIdentifier, servicePms, localServiceIdentifier, connectorIdentifier) {
+                $http({
+                    headers: {
+                        "Content-Type": "application/vnd.io.motown.mobi-europe-source-api-v1+json"
+                    },
+                    url: 'rest/mobi-europe/source/authorize',
+                    method: 'POST',
+                    data: {
+                        'servicePms': servicePms,
+                        'userIdentifier': userIdentifier,
+                        'pmsIdentifier': pmsIdentifier,
+                        'localServiceIdentifier': localServiceIdentifier,
+                        'connectorIdentifier': connectorIdentifier
+                    }
+                }).success(function (data) {
+                    $scope.authorizationIdentifier = data.response.authorizationIdentifier;
+                    $scope.sessionInfo = data.sessionInfo;
+                    console.log('authorize request sent');
+                }).error(function(response) {
+                    $scope.responseError = response.responseError;
+                    console.log('Error while sending authorize request.');
+                });
+            };
+
+            $scope.requestStartTransaction = function(authorizationIdentifier) {
+                $http({
+                    headers: {
+                        "Content-Type": "application/vnd.io.motown.mobi-europe-source-api-v1+json"
+                    },
+                    url: 'rest/mobi-europe/source/requestStartTransaction',
+                    method: 'POST',
+                    data: {
+                        'authorizationIdentifier': authorizationIdentifier
+                    }
+                }).success(function (data) {
+                    $scope.requestIdentifier = data.response.requestIdentifier;
+                    $scope.sessionInfo = data.sessionInfo;
+                    console.log('requestStartTransaction request sent');
+                }).error(function(response) {
+                    $scope.responseError = response.responseError;
+                    console.log('Error while sending requestStartTransaction request.');
+                });
+            };
+
+            $scope.requestStopTransaction = function(authorizationIdentifier) {
+                $http({
+                    headers: {
+                        "Content-Type": "application/vnd.io.motown.mobi-europe-source-api-v1+json"
+                    },
+                    url: 'rest/mobi-europe/source/requestStopTransaction',
+                    method: 'POST',
+                    data: {
+                        'authorizationIdentifier': authorizationIdentifier
+                    }
+                }).success(function (data) {
+                    $scope.response = data.response.requestIdentifier;
+                    $scope.sessionInfo = data.sessionInfo;
+                    console.log('requestStopTransaction request sent');
+                }).error(function(response) {
+                    $scope.responseError = response.responseError;
+                    console.log('Error while sending requestStopTransaction request.');
+                });
+            };
+        }
+    ]).
     controller('LoginController',
         ['$scope', '$rootScope', '$location', '$cookieStore', 'UserService', function ($scope, $rootScope, $location, $cookieStore, UserService) {
             $scope.rememberMe = false;

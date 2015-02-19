@@ -1,0 +1,151 @@
+<!--
+
+    Copyright (C) 2013 Motown.IO (info@motown.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<h2>Mobi Europe Demonstrator</h2>
+<br/>
+
+<div ng-controller="MobiEuropeController" ng-init="init()">
+    <div ng-if="responseError!=null">
+        <div class="alert alert-danger">
+            <strong>{{responseError.errorCode}}</strong>: {{responseError.errorMsg}}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+
+            <form class="form-horizontal" role="form">
+
+                <div id="controls">
+                    <p>
+                    <!--<p ng-if="state==null">-->
+                        <button class="btn btn-primary btn-block" href="#" ng-click="authorize(userIdentifier, pmsIdentifier, servicePms, localServiceIdentifier, connectorIdentifier)" type="button">Authorize</button>
+                    </p>
+                    <!--<p ng-if="state='Ready'">-->
+                    <p>
+                        <button class="btn btn-success btn-block" href="#" ng-click="requestStartTransaction(authorizationIdentifier)" type="button">Start Transaction</button>
+                    </p>
+                    <!--<p ng-if="state=='READY'">-->
+                    <p>
+                        <button class="btn btn-danger btn-block" href="#" ng-click="requestStopTransaction(authorizationIdentifier)" type="button">Stop Transaction</button>
+                    </p>
+                </div>
+
+                <hr>
+
+                <div class="form-group">
+                    <label for="pmsIdentifier" class="col-md-3 control-label">Pms identifier</label>
+
+                    <div class="col-md-9">
+                        <input type="text" id="pmsIdentifier" ng-model="pmsIdentifier" class="form-control" disabled="disabled" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="serviceTypeIdentifier" class="col-md-3 control-label">Service type identifier</label>
+
+                    <div class="col-md-9">
+                        <input type="text" id="serviceTypeIdentifier" ng-model="serviceTypeIdentifier" class="form-control" disabled="disabled" />
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="form-group">
+                    <label for="userIdentifier" class="col-md-3 control-label">User identifier</label>
+
+                    <div class="col-md-9">
+                        <input type="text" id="userIdentifier" ng-model="userIdentifier" placeholder="User identifier" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="servicePms" class="col-md-3 control-label">Service PMS</label>
+
+                    <div class="col-md-9">
+                        <input type="text" id="servicePms" ng-model="servicePms" placeholder="Service PMS" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="localServiceIdentifier" class="col-md-3 control-label">Service identifier</label>
+
+                    <div class="col-md-9">
+                        <input type="text" id="localServiceIdentifier" ng-model="localServiceIdentifier" placeholder="Service identifier" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="connectorIdentifier" class="col-md-3 control-label">Connector</label>
+
+                    <div class="col-md-9">
+                        <input type="text" id="connectorIdentifier" ng-model="connectorIdentifier" placeholder="Connector" class="form-control" />
+                    </div>
+                </div>
+
+            </form>
+        </div>
+        <div class="col-lg-4">
+            <div class="alert alert-info">
+                <strong>Session Info</strong>
+                <p>
+                    AuthorizationId: {{sessionInfo.authorizationIdentifier}}<br/>
+                    RequestId: {{sessionInfo.requestIdentifier}}<br/>
+                    State: {{sessionInfo.sessionStateMachine.state}}
+                </p>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th colspan="2">Session info</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-lg-1"><span class="glyphicon glyphicon-ok" aria-hidden="true" ng-if="['Ready', 'StartTxRequested', 'TxRunning', 'StopTxRequested', 'TxFinished'].indexOf(sessionInfo.sessionStateMachine.state) != -1"></span></td>
+                        <td class="col-lg-11">User authorized</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-ok" aria-hidden="true" ng-if="['StartTxRequested', 'TxRunning', 'StopTxRequested', 'TxFinished'].indexOf(sessionInfo.sessionStateMachine.state) != -1"></span></td>
+                        <td>Transaction start requested</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-ok" aria-hidden="true" ng-if="['TxRunning', 'StopTxRequested', 'TxFinished'].indexOf(sessionInfo.sessionStateMachine.state) != -1"></span></td>
+                        <td>Transaction running</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-ok" aria-hidden="true" ng-if="['StopTxRequested', 'TxFinished'].indexOf(sessionInfo.sessionStateMachine.state) != -1"></span></td>
+                        <td>Transaction stop requested</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-ok" aria-hidden="true" ng-if="['TxFinished'].indexOf(sessionInfo.sessionStateMachine.state) != -1"></span></td>
+                        <td>Transaction finished</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-ok" aria-hidden="true" ng-if="['TxFinished'].indexOf(sessionInfo.sessionStateMachine.state) != -1"></span></td>
+                        <td>Transaction data received</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-ok" aria-hidden="true" ng-if="['TxFinished'].indexOf(sessionInfo.sessionStateMachine.state) != -1"></span></td>
+                        <td>Done</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -143,6 +143,16 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.motown.mobi-europe</groupId>
+            <artifactId>mobi-europe-destination</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.motown.mobi-europe</groupId>
+            <artifactId>mobi-europe-source</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>io.motown.ocpp</groupId>
             <artifactId>ocpp-v15-soap</artifactId>
             <version>${project.version}</version>

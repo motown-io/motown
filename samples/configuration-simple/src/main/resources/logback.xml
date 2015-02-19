@@ -6,6 +6,7 @@
     </appender>
     <logger name="org.axonframework" level="DEBUG"/>
     <logger name="io.motown" level="DEBUG"/>
+    <logger name="io.motown.mobieurope" level="TRACE"/>
     <logger name="ch.qos.logback" level="ERROR"/>
     <root level="INFO">
         <appender-ref ref="Console"/>
