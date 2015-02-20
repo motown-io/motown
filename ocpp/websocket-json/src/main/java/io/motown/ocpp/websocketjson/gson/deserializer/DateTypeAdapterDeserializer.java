@@ -57,7 +57,7 @@ public class DateTypeAdapterDeserializer implements TypeAdapterDeserializer<Date
     }
 
     @Override
-    public Date deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    public Date deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
         for(DateFormat dateFormat:dateFormats) {
             try {
                 return dateFormat.parse(jsonElement.getAsString());
