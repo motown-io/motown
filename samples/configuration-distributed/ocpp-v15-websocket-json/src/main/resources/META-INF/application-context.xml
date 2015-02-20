@@ -209,6 +209,10 @@
                 <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ChargePointStatusTypeAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.deserializer.ClearCacheResponseStatusTypeAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.deserializer.DataTransferResponseStatusTypeAdapterDeserializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.deserializer.DateTypeAdapterDeserializer">
+                    <constructor-arg name="dateFormat" ref="dateFormat"/>
+                    <constructor-arg name="timeZone" ref="timeZone"/>
+                </bean>
                 <bean class="io.motown.ocpp.websocketjson.gson.deserializer.DiagnosticsStatusTypeAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.deserializer.FirmwareStatusTypeAdapterDeserializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.deserializer.MessageProcUriAdapterDeserializer"/>

@@ -80,6 +80,7 @@ public class OcppWebSocketJsonTestUtils {
                 .add(new FirmwareStatusNotificationStatusTypeAdapterSerializer())
                 .add(new StatusnotificationStatusTypeAdapterSerializer())
                 .add(new StatusnotificationErrorCodeTypeAdapterSerializer())
+                .add(new DateTypeAdapterSerializer())
                 .build();
         gsonFactoryBean.setTypeAdapterSerializers(typeAdapterSerializers);
 
@@ -102,6 +103,7 @@ public class OcppWebSocketJsonTestUtils {
                 .add(new SendLocalListResponseStatusTypeAdapterDeserializer())
                 .add(new StopTransactionIdTagStatusAdapterDeserializer())
                 .add(new UnlockConnectorResponseStatusTypeAdapterDeserializer())
+                .add(new DateTypeAdapterDeserializer())
                 .build();
         gsonFactoryBean.setTypeAdapterDeserializers(typeAdapterDeserializers);
 
