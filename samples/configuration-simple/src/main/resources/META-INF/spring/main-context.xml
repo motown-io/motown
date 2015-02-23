@@ -25,6 +25,18 @@
                                   ignore-resource-not-found="false"
                                   ignore-unresolvable="false"/>
 
+    <bean id="dateFormat" class="java.lang.String">
+        <constructor-arg value="yyyy-MM-dd'T'HH:mm:ss'Z'"/>
+    </bean>
+
+    <bean id="timeZone" class="java.util.TimeZone" factory-method="getTimeZone">
+        <constructor-arg value="UTC" />
+    </bean>
+
+    <bean class="io.motown.sample.simple.timezone.TimeZoneDefault">
+        <constructor-arg name="timeZone" ref="timeZone" />
+    </bean>
+
     <import resource="contexts/axon-context.xml" />
 
     <import resource="contexts/command-authorization-context.xml" />

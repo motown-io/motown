@@ -35,7 +35,7 @@ public class DateTypeAdapterDeserializerTest {
     public void defaultFormatShouldBeSupported() throws ParseException {
         String dateString = "2015-01-02T12:12:02Z";
         DateFormat iso8601Format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        iso8601Format.setTimeZone(TimeZone.getTimeZone("GMT"));
+        iso8601Format.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date expectedDate = iso8601Format.parse(dateString);
 
         assertEquals(expectedDate, new DateTypeAdapterDeserializer().deserialize(getJsonElement(dateString), null, null));
@@ -47,7 +47,7 @@ public class DateTypeAdapterDeserializerTest {
         String date1 = "2015-01-02T12:12:02Z";
         String format2 = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
         String date2 = "2015-01-02T12:12:02.312+01:00";
-        TimeZone timeZone = TimeZone.getTimeZone("GMT");
+        TimeZone timeZone = TimeZone.getTimeZone("UTC");
 
         DateTypeAdapterDeserializer deserializer = new DateTypeAdapterDeserializer(Arrays.asList(format1, format2), timeZone);
 
@@ -57,7 +57,7 @@ public class DateTypeAdapterDeserializerTest {
 
     @Test(expected = JsonParseException.class)
     public void unknownFormatShouldResultInException() {
-        // by default the format with GMT offset is not supported
+        // by default the format with offset is not supported
         String dateString = "2015-01-04T13:42:33+01:00";
 
         new DateTypeAdapterDeserializer().deserialize(getJsonElement(dateString), null, null);

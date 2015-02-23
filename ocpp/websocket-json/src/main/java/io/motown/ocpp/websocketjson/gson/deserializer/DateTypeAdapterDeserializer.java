@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Type adapter for Date. By default "GMT" timezone is used with date format "yyyy-MM-dd'T'HH:mm:ss'Z'".
+ * Type adapter for Date. By default "UTC" is used with date format "yyyy-MM-dd'T'HH:mm:ss'Z'".
  */
 public class DateTypeAdapterDeserializer implements TypeAdapterDeserializer<Date> {
 
@@ -35,7 +35,7 @@ public class DateTypeAdapterDeserializer implements TypeAdapterDeserializer<Date
     private static final Logger LOG = LoggerFactory.getLogger(DateTypeAdapterDeserializer.class);
 
     public DateTypeAdapterDeserializer() {
-        this("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("GMT"));
+        this("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"));
     }
 
     public DateTypeAdapterDeserializer(String dateFormat, TimeZone timeZone) {

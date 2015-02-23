@@ -26,14 +26,14 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
- * Type adapter for Date. By default "GMT" timezone is used with date format "yyyy-MM-dd'T'HH:mm:ss'Z'".
+ * Type adapter for Date. By default "UTC" is used with date format "yyyy-MM-dd'T'HH:mm:ss'Z'".
  */
 public class DateTypeAdapterSerializer implements TypeAdapterSerializer<Date> {
 
     private DateFormat iso8601Format;
 
     public DateTypeAdapterSerializer() {
-        this("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("GMT"));
+        this("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"));
     }
 
     public DateTypeAdapterSerializer(String dateFormat, TimeZone timeZone) {
