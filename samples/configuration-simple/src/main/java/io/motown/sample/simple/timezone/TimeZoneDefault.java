@@ -15,13 +15,9 @@
  */
 package io.motown.sample.simple.timezone;
 
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-
 import java.util.TimeZone;
 
-public class TimeZoneDefault implements ApplicationContextAware {
+public class TimeZoneDefault {
 
     public TimeZoneDefault() {
         this(TimeZone.getTimeZone("UTC"));
@@ -29,10 +25,6 @@ public class TimeZoneDefault implements ApplicationContextAware {
 
     public TimeZoneDefault(TimeZone timeZone) {
         TimeZone.setDefault(timeZone);
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
     }
 
 }
