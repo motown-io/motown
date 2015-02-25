@@ -20,6 +20,7 @@ import io.motown.mobieurope.shared.persistence.entities.SessionInfo;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
 
 public class DestinationSessionRepository {
 
@@ -48,6 +49,17 @@ public class DestinationSessionRepository {
             return entityManager.createQuery("SELECT si FROM SessionInfo AS si WHERE si.transactionId = :transactionId", SessionInfo.class)
                     .setParameter("transactionId", transactionId)
                     .getSingleResult();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+
+    public SessionInfo findLastOpenSessionInfo() throws NoResultException {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        try {
+            return entityManager.createQuery("SELECT si FROM SessionInfo AS si ORDER BY si.id desc", SessionInfo.class).setMaxResults(1).getSingleResult();
         } finally {
             entityManager.close();
         }

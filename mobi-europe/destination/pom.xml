@@ -67,6 +67,10 @@
     <dependencies>
 
         <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.motown.domain</groupId>
             <artifactId>domain-core-api</artifactId>
             <version>${project.version}</version>
