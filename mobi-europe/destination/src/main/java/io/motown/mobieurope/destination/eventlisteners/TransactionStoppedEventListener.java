@@ -25,7 +25,6 @@ import io.motown.mobieurope.destination.persistence.repository.DestinationSessio
 import io.motown.mobieurope.destination.persistence.repository.SourceEndpointRepository;
 import io.motown.mobieurope.destination.service.SourceClient;
 import io.motown.mobieurope.shared.persistence.entities.SessionInfo;
-import io.motown.mobieurope.source.soap.schema.EnergyUnit;
 import io.motown.mobieurope.source.soap.schema.ServiceType;
 import io.motown.mobieurope.source.soap.schema.TransactionStatus;
 import org.axonframework.eventhandling.annotation.EventHandler;
