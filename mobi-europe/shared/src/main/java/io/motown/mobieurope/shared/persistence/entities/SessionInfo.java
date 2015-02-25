@@ -19,6 +19,7 @@ import io.motown.mobieurope.shared.enums.ServiceTypeIdentifier;
 import io.motown.mobieurope.shared.session.SessionStateMachine;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 public class SessionInfo {
@@ -49,6 +50,14 @@ public class SessionInfo {
     private String connectorIdentifier;
 
     private ServiceTypeIdentifier serviceTypeIdentifier;
+
+    private Date startTimestamp;
+
+    private Date endTimestamp;
+
+    private int meterStart;
+
+    private int meterStop;
 
     public SessionInfo() {
         /* needed for persistence framework */
@@ -136,6 +145,38 @@ public class SessionInfo {
 
     public void setServiceTypeIdentifier(ServiceTypeIdentifier serviceTypeIdentifier) {
         this.serviceTypeIdentifier = serviceTypeIdentifier;
+    }
+
+    public Date getStartTimestamp() {
+        return startTimestamp;
+    }
+
+    public void setStartTimestamp(Date startTimestamp) {
+        this.startTimestamp = startTimestamp;
+    }
+
+    public Date getEndTimestamp() {
+        return endTimestamp;
+    }
+
+    public void setEndTimestamp(Date endTimestamp) {
+        this.endTimestamp = endTimestamp;
+    }
+
+    public int getMeterStart() {
+        return meterStart;
+    }
+
+    public void setMeterStart(int meterStart) {
+        this.meterStart = meterStart;
+    }
+
+    public int getMeterStop() {
+        return meterStop;
+    }
+
+    public void setMeterStop(int meterStop) {
+        this.meterStop = meterStop;
     }
 
     public SessionStateMachine getSessionStateMachine() {

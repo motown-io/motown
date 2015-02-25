@@ -44,6 +44,8 @@ public class TransactionStartedEventListener {
         SessionInfo sessionInfo = destinationSessionRepository.findSessionInfoByAuthorizationId(authorizationIdentifier);
         sessionInfo.setTransactionId(transactionId);
         sessionInfo.getSessionStateMachine().eventStartOk();
+        sessionInfo.setMeterStart(event.getStartTransactionInfo().getMeterStart());
+        sessionInfo.setStartTimestamp(event.getStartTransactionInfo().getTimestamp());
 
         destinationSessionRepository.insertOrUpdateSessionInfo(sessionInfo);
 

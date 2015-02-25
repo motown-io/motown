@@ -24,17 +24,11 @@ import io.motown.mobieurope.destination.persistence.entities.SourceEndpoint;
 import io.motown.mobieurope.destination.persistence.repository.DestinationSessionRepository;
 import io.motown.mobieurope.destination.persistence.repository.SourceEndpointRepository;
 import io.motown.mobieurope.destination.service.SourceClient;
+import io.motown.mobieurope.shared.enums.TransactionStatus;
 import io.motown.mobieurope.shared.persistence.entities.SessionInfo;
-import io.motown.mobieurope.source.soap.schema.ServiceType;
-import io.motown.mobieurope.source.soap.schema.TransactionStatus;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class TransactionStoppedEventListener {
 
@@ -50,8 +44,9 @@ public class TransactionStoppedEventListener {
         Integer transactionId = ((NumberedTransactionId) event.getTransactionId()).getNumber();
 
         SessionInfo sessionInfo = destinationSessionRepository.findSessionInfoByTransactionId(transactionId);
-        sessionInfo.setTransactionId(transactionId);
         sessionInfo.getSessionStateMachine().eventStopOk();
+        sessionInfo.setMeterStop(event.getMeterStop());
+        sessionInfo.setEndTimestamp(event.getTimestamp());
 
         destinationSessionRepository.insertOrUpdateSessionInfo(sessionInfo);
 
@@ -63,28 +58,19 @@ public class TransactionStoppedEventListener {
         DestinationNotifyRequestResultRequest destinationNotifyRequestResultRequest = new DestinationNotifyRequestResultRequest(requestIdentifier);
         sourceClient.notifyRequestResult(destinationNotifyRequestResultRequest);
 
-        GregorianCalendar gregorianCalendar = new GregorianCalendar();
-        gregorianCalendar.setTime(new Date());
-
         try {
-            XMLGregorianCalendar d1 = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar);
-            XMLGregorianCalendar d2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar);
+            TransactionData transactionData = new TransactionData();
+            transactionData.setTransactionStatus(TransactionStatus.TERMINATED);
+            transactionData.setLocalOperatorIdentifier(sessionInfo.getServicePms());
+            transactionData.setLocalServiceIdentifier(sessionInfo.getLocalServiceIdentifier());
+            transactionData.setHomeOperatorIdentifier(sessionInfo.getPmsIdentifier());
+            transactionData.setUserIdentifier(sessionInfo.getUserIdentifier());
+            transactionData.setAuthorizationIdentifier(sessionInfo.getAuthorizationIdentifier());
+            transactionData.setStartTimestamp(sessionInfo.getStartTimestamp());
+            transactionData.setEndTimestamp(sessionInfo.getEndTimestamp());
+            transactionData.setEnergyConsumed(sessionInfo.getMeterStop() - sessionInfo.getMeterStart());
 
-            io.motown.mobieurope.source.soap.schema.TransactionData transactionData1 = new io.motown.mobieurope.source.soap.schema.TransactionData();
-            transactionData1.setServiceType(ServiceType.EV_CHARGING);
-            transactionData1.setTransactionStatus(TransactionStatus.TERMINATED);
-            transactionData1.setStartTimestamp(d1);
-            transactionData1.setEndTimestamp(d2);
-            transactionData1.setEnergyConsumed(5.0);
-            transactionData1.setLocalOperatorIdentifier(sessionInfo.getServicePms());
-            transactionData1.setLocalServiceIdentifier(sessionInfo.getLocalServiceIdentifier());
-            transactionData1.setHomeOperatorIdentifier(sessionInfo.getPmsIdentifier());
-            transactionData1.setUserIdentifier(sessionInfo.getUserIdentifier());
-            transactionData1.setAuthorizationIdentifier(sessionInfo.getAuthorizationIdentifier());
-
-            TransactionData transactionData = new TransactionData(transactionData1);
-
-            DestinationEndTransactionRequest destinationEndTransactionRequest = new DestinationEndTransactionRequest(sessionInfo.getAuthorizationIdentifier(), d1, d2, transactionData);
+            DestinationEndTransactionRequest destinationEndTransactionRequest = new DestinationEndTransactionRequest(sessionInfo, transactionData);
 
             sourceClient.endTransaction(destinationEndTransactionRequest);
 

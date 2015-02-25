@@ -16,14 +16,26 @@
 package io.motown.mobieurope.shared.enums;
 
 public enum EnergyUnit {
-    wH,
-    kWh;
 
-    public static EnergyUnit fromValue(String v) {
-        return valueOf(v);
+    WH("Wh"),
+    K_WH("kWh");
+
+    private final String value;
+
+    EnergyUnit(String v) {
+        value = v;
     }
 
     public String value() {
-        return name();
+        return value;
+    }
+
+    public static EnergyUnit fromValue(String v) {
+        for (EnergyUnit c: EnergyUnit.values()) {
+            if (c.value.equals(v)) {
+                return c;
+            }
+        }
+        throw new IllegalArgumentException(v);
     }
 }

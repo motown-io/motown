@@ -127,8 +127,8 @@ public class SourceResource {
     /**
      * Polling of the sessionInfo
      *
-     * @param authorizationIdentifier
-     * @return
+     * @param authorizationIdentifier The session authorizationIdentifier
+     * @return The session for the given authorizationIdentifier
      */
     @POST
     @Path("/session")

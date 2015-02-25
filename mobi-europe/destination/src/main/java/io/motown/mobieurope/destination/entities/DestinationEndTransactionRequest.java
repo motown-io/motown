@@ -15,32 +15,48 @@
  */
 package io.motown.mobieurope.destination.entities;
 
+import io.motown.mobieurope.shared.persistence.entities.SessionInfo;
 import io.motown.mobieurope.source.soap.schema.EndTransactionRequest;
 
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class DestinationEndTransactionRequest extends DestinationRequest {
 
     private String authorizationIdentifier;
 
-    private XMLGregorianCalendar startTransactionTimestamp;
+    private Date startTransactionTimestamp;
 
-    private XMLGregorianCalendar endTransactionTimestamp;
+    private Date endTransactionTimestamp;
 
     private TransactionData transactionData;
 
-    public DestinationEndTransactionRequest(String authorizationIdentifier, XMLGregorianCalendar startTransactionTimestamp, XMLGregorianCalendar endTransactionTimestamp, TransactionData transactionData) {
-        this.authorizationIdentifier = authorizationIdentifier;
-        this.startTransactionTimestamp = startTransactionTimestamp;
-        this.endTransactionTimestamp = endTransactionTimestamp;
+    public DestinationEndTransactionRequest(SessionInfo sessionInfo, TransactionData transactionData) {
+        this.authorizationIdentifier = sessionInfo.getAuthorizationIdentifier();
+        this.startTransactionTimestamp = sessionInfo.getStartTimestamp();
+        this.endTransactionTimestamp = sessionInfo.getEndTimestamp();
         this.transactionData = transactionData;
     }
 
     public EndTransactionRequest getEndTransactionRequest() {
         EndTransactionRequest endTransactionRequest = new EndTransactionRequest();
         endTransactionRequest.setAuthorizationIdentifier(this.authorizationIdentifier);
-        endTransactionRequest.setStartTransactionTimestamp(this.startTransactionTimestamp);
-        endTransactionRequest.setEndTransactionTimestamp(this.endTransactionTimestamp);
+
+        try {
+            GregorianCalendar calendarStart = new GregorianCalendar();
+            GregorianCalendar calendarStop = new GregorianCalendar();
+            calendarStart.setTime(this.startTransactionTimestamp);
+            calendarStop.setTime(this.endTransactionTimestamp);
+            XMLGregorianCalendar xmlGregorianCalendarStart = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendarStart);
+            XMLGregorianCalendar xmlGregorianCalendarStop = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendarStop);
+            endTransactionRequest.setStartTransactionTimestamp(xmlGregorianCalendarStart);
+            endTransactionRequest.setEndTransactionTimestamp(xmlGregorianCalendarStop);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         endTransactionRequest.setTransactionData(this.transactionData.getTransactionData());
         return endTransactionRequest;
     }
