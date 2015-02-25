@@ -74,6 +74,20 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <servlet>
+        <servlet-name>MobiEuropeDestinationApiServlet</servlet-name>
+        <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>io.motown.destination.api.rest</param-value>
+        </init-param>
+        <init-param>
+            <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
     <filter>
         <filter-name>SecWebSocketVersionInterceptor</filter-name>
         <filter-class>io.motown.ocpp.websocketjson.servlet.SecWebSocketVersionInterceptor</filter-class>
@@ -145,7 +159,12 @@
 
     <servlet-mapping>
         <servlet-name>MobiEuropeSourceApiServlet</servlet-name>
-        <url-pattern>/rest/mobi-europe/*</url-pattern>
+        <url-pattern>/rest/mobieurope/source/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>MobiEuropeDestinationApiServlet</servlet-name>
+        <url-pattern>/rest/mobieurope/destination/*</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

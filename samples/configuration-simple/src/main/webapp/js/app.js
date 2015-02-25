@@ -39,6 +39,10 @@ angular.module('demoApp', ['ngRoute', 'ngCookies', 'mgcrea.ngStrap.navbar', 'ui.
             templateUrl: 'pages/mobieurope.html'
         });
 
+        $routeProvider.when('/mobieuropedestination', {
+            templateUrl: 'pages/mobieuropedestination.html'
+        });
+
         $routeProvider.otherwise({
             redirectTo: '/chargingstations'
         });

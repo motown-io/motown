@@ -466,7 +466,7 @@ angular.module('demoApp.controllers', []).
                 $scope.pmsIdentifier = "NL-MOT";
                 $scope.serviceTypeIdentifier = "EV_CHARGING";
 
-                $scope.servicePms = "NL-LOC";
+                $scope.servicePms = "NL-MOT";
                 $scope.localServiceIdentifier = "DEMO_001";
                 $scope.userIdentifier = "testPas";
                 $scope.connectorIdentifier = "1";
@@ -493,7 +493,7 @@ angular.module('demoApp.controllers', []).
                         $scope.sessionInfo.sessionStateMachine.state == 'StopTxRequested') {
                         console.log("polling");
                         $http({
-                            url: 'rest/mobi-europe/source/session',
+                            url: 'rest/mobieurope/source/sv1/session',
                             method: 'POST',
                             data: authorizationIdentifier
                         }).success(function (sessionInfo) {
@@ -508,7 +508,7 @@ angular.module('demoApp.controllers', []).
                     headers: {
                         "Content-Type": "application/vnd.io.motown.mobi-europe-source-api-v1+json"
                     },
-                    url: 'rest/mobi-europe/source/authorize',
+                    url: 'rest/mobieurope/source/sv1/authorize',
                     method: 'POST',
                     data: {
                         'servicePms': servicePms,
@@ -532,7 +532,7 @@ angular.module('demoApp.controllers', []).
                     headers: {
                         "Content-Type": "application/vnd.io.motown.mobi-europe-source-api-v1+json"
                     },
-                    url: 'rest/mobi-europe/source/requestStartTransaction',
+                    url: 'rest/mobieurope/source/sv1/requestStartTransaction',
                     method: 'POST',
                     data: {
                         'authorizationIdentifier': authorizationIdentifier
@@ -552,7 +552,7 @@ angular.module('demoApp.controllers', []).
                     headers: {
                         "Content-Type": "application/vnd.io.motown.mobi-europe-source-api-v1+json"
                     },
-                    url: 'rest/mobi-europe/source/requestStopTransaction',
+                    url: 'rest/mobieurope/source/sv1/requestStopTransaction',
                     method: 'POST',
                     data: {
                         'authorizationIdentifier': authorizationIdentifier
@@ -568,6 +568,38 @@ angular.module('demoApp.controllers', []).
             };
         }
     ]).
+
+    controller('MobiEuropeDestinationController',
+        ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
+            $scope.init = function () {
+                if(!$scope.pollSessionInfoTimer) {
+                    $scope.pollSessionInfoTimer = $scope.startPollSessionInfoTimer();
+                }
+            };
+
+            $scope.$on('$destroy', function destroy() {
+                $interval.cancel($scope.pollSessionInfoTimer);
+                delete $scope.pollSessionInfoTimer;
+            });
+
+            $scope.startPollSessionInfoTimer = function () {
+                return $interval(function () {
+                    $scope.pollSessionInfo();
+                }, 2000);
+            };
+
+            $scope.pollSessionInfo = function() {
+                console.log("polling");
+                $http({
+                    url: 'rest/mobieurope/destination/dv1/lastopensession',
+                    method: 'GET'
+                }).success(function (sessionInfo) {
+                    $scope.sessionInfo = sessionInfo;
+                });
+            };
+        }
+    ]).
+
     controller('LoginController',
         ['$scope', '$rootScope', '$location', '$cookieStore', 'UserService', function ($scope, $rootScope, $location, $cookieStore, UserService) {
             $scope.rememberMe = false;

@@ -18,12 +18,12 @@ package io.motown.mobieurope.destination.api.rest;
 import io.motown.mobieurope.destination.persistence.repository.DestinationSessionRepository;
 
 import javax.persistence.NoResultException;
-import javax.ws.rs.POST;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-@Path("/destinationresource")
+@Path("dv1")
 @Produces(ApiVersion.V1_JSON)
 public class DestinationResource {
 
@@ -33,7 +33,7 @@ public class DestinationResource {
         this.destinationSessionRepository = destinationSessionRepository;
     }
 
-    @POST
+    @GET
     @Path("/lastopensession")
     public Response getLastOpenSession() {
         try {

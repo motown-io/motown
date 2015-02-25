@@ -52,7 +52,7 @@ public class TransactionData {
         this.endTimestamp = transactionData.getEndTimestamp();
         this.transactionStatus = TransactionStatus.fromValue(transactionData.getTransactionStatus().value());
         this.energyConsumed = transactionData.getEnergyConsumed();
-        this.energyUnit = EnergyUnit.fromValue(transactionData.getEnergyUnit().value());
+        this.energyUnit = EnergyUnit.wH;
         this.localOperatorIdentifier = transactionData.getLocalOperatorIdentifier();
         this.localServiceIdentifier = transactionData.getLocalServiceIdentifier();
         this.homeOperatorIdentifier = transactionData.getHomeOperatorIdentifier();
@@ -67,7 +67,7 @@ public class TransactionData {
         transactionData.setEndTimestamp(this.endTimestamp);
         transactionData.setTransactionStatus(io.motown.mobieurope.source.soap.schema.TransactionStatus.fromValue(this.transactionStatus.value()));
         transactionData.setEnergyConsumed(this.energyConsumed);
-        transactionData.setEnergyUnit(io.motown.mobieurope.source.soap.schema.EnergyUnit.fromValue(this.energyUnit.value()));
+        transactionData.setEnergyUnit(io.motown.mobieurope.source.soap.schema.EnergyUnit.WH);
         transactionData.setLocalOperatorIdentifier(this.localOperatorIdentifier);
         transactionData.setLocalServiceIdentifier(this.localServiceIdentifier);
         transactionData.setHomeOperatorIdentifier(this.homeOperatorIdentifier);

@@ -35,6 +35,10 @@
         <property name="sourceSessionRepository" ref="sourceSessionRepository"/>
     </bean>
 
+    <bean class="io.motown.mobieurope.destination.api.rest.DestinationResource">
+        <property name="destinationSessionRepository" ref="destinationSessionRepository"/>
+    </bean>
+
     <!-- DESTINATION PMS -->
     <bean id="destinationService" class="io.motown.mobieurope.destination.service.DestinationService">
         <property name="eventWaitingGateway" ref="eventWaitingGateway"/>
