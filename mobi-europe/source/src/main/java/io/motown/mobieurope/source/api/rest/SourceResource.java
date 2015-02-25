@@ -32,7 +32,7 @@ import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
 
-@Path("/source")
+@Path("sv1")
 @Produces(ApiVersion.V1_JSON)
 public class SourceResource {
 
