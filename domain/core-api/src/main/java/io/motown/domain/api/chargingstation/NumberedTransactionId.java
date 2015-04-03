@@ -55,6 +55,27 @@ public final class NumberedTransactionId implements TransactionId {
     }
 
     /**
+     * Creates a  {@code NumberedTransactionId}.
+     * <p/>
+     * This constructor should be used if a {@code NumberedTransactionId} is needed and the transaction number is not
+     * available, but the transactionId string is.
+     *
+     * @param chargingStationId the charging station's identifier.
+     * @param protocol          the protocol identifier.
+     * @param transactionId     the transaction id string (containing the number).
+     * @throws NumberFormatException if the number cannot be extracted from {@code transactionId}.
+     */
+    public NumberedTransactionId(ChargingStationId chargingStationId, String protocol, String transactionId) {
+        this.chargingStationId = checkNotNull(chargingStationId);
+        checkNotNull(protocol);
+        checkArgument(!protocol.isEmpty());
+        this.protocol = protocol;
+        checkNotNull(transactionId);
+        checkArgument(!transactionId.isEmpty());
+        this.number = numberFromTransactionIdString(chargingStationId, protocol, transactionId);
+    }
+
+    /**
      * Gets the number on which this transaction identifier is based.
      *
      * @return the number on which this transaction identifier is based.
@@ -74,6 +95,25 @@ public final class NumberedTransactionId implements TransactionId {
     @Override
     public String getId() {
         return String.format("%s_%s_%s", chargingStationId.getId(), protocol, number);
+    }
+
+    /**
+     * Retrieves the number from a transaction id string. ChargingStationId and protocol are passed to make a better
+     * guess at the number.
+     *
+     * @param chargingStationId    the charging station's identifier.
+     * @param protocol             the protocol identifier.
+     * @param transactionId        the transaction id containing the number.
+     * @return the transaction number
+     * @throws NumberFormatException if the number cannot be extracted from {@code transactionId}.
+     */
+    private int numberFromTransactionIdString(ChargingStationId chargingStationId, String protocol, String transactionId) {
+        String transactionIdPartBeforeNumber = String.format("%s_%s_", chargingStationId.getId(), protocol);
+        try {
+            return Integer.parseInt(transactionId.substring(transactionIdPartBeforeNumber.length()));
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(String.format("Cannot retrieve transaction number from string [%s]", transactionId));
+        }
     }
 
     @Override

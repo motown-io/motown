@@ -31,16 +31,16 @@ public class TransactionIdFactory {
 
     /**
      * Creates {@code NumberedTransactionId} or {@code UUIDTransactionId} by inspecting the provided transactionId String.
-     * @param transactionIdString   the String to create into a TransactionId
+     * @param transactionNumber     the String to create into a TransactionId
      * @param chargingStationId     the chargingstation id
      * @param protocol              the protocol identifier
      * @return a {@code TransactionId}
-     * @throws NullPointerException in case transactionIdString is null.
+     * @throws NullPointerException in case transactionNumber is null.
      * @throws IllegalArgumentException in case no {@code TransactionId} could be created.
      */
-    public static TransactionId createTransactionId(String transactionIdString, ChargingStationId chargingStationId, String protocol) {
-        return Ints.tryParse(checkNotNull(transactionIdString)) != null
-                ? new NumberedTransactionId(chargingStationId, protocol, Ints.tryParse(transactionIdString))
-                : new UuidTransactionId(UUID.fromString(transactionIdString));
+    public static TransactionId createTransactionId(String transactionNumber, ChargingStationId chargingStationId, String protocol) {
+        return Ints.tryParse(checkNotNull(transactionNumber)) != null
+                ? new NumberedTransactionId(chargingStationId, protocol, Ints.tryParse(transactionNumber))
+                : new UuidTransactionId(UUID.fromString(transactionNumber));
     }
 }

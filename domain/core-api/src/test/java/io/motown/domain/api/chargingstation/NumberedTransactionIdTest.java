@@ -19,6 +19,7 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
+import static org.junit.Assert.assertEquals;
 
 public class NumberedTransactionIdTest {
 
@@ -47,5 +48,14 @@ public class NumberedTransactionIdTest {
     @Test
     public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
         EqualsVerifier.forClass(NumberedTransactionId.class).usingGetClass().verify();
+    }
+
+    @Test
+    public void transactionNumberShouldBeRetrievedInConstruction() {
+        Integer transactionNumber = 1;
+        NumberedTransactionId transactionId = new NumberedTransactionId(CHARGING_STATION_ID, PROTOCOL,
+                TransactionIdFactory.createTransactionId(transactionNumber.toString(), CHARGING_STATION_ID, PROTOCOL).getId());
+
+        assertEquals(transactionNumber.intValue(), transactionId.getNumber());
     }
 }

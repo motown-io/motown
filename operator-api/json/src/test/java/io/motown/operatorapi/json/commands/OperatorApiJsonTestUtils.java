@@ -36,7 +36,11 @@ public final class OperatorApiJsonTestUtils {
 
     public static final String UNREGISTERED_CHARGING_STATION_ID_STRING = "TEST_UNREGISTERED";
 
+    public static final String COMMUNICATION_PROTOCOL = "OCPPS15";
+
     public static final ChargingStationId CHARGING_STATION_ID = new ChargingStationId(CHARGING_STATION_ID_STRING);
+
+    public static final TransactionId NUMBERED_TRANSACTION_ID = TransactionIdFactory.createTransactionId("1", CHARGING_STATION_ID, COMMUNICATION_PROTOCOL);
 
     private OperatorApiJsonTestUtils() {
         // Private no-arg constructor to prevent instantiation of utility class.
@@ -57,7 +61,7 @@ public final class OperatorApiJsonTestUtils {
     public static ChargingStationRepository getMockChargingStationRepository() {
         ChargingStationRepository repo = mock(ChargingStationRepository.class);
         ChargingStation registeredStation = mock(ChargingStation.class);
-        when(registeredStation.getProtocol()).thenReturn("OCPPS15");
+        when(registeredStation.getProtocol()).thenReturn(COMMUNICATION_PROTOCOL);
         when(registeredStation.isAccepted()).thenReturn(true);
         when(registeredStation.isConfigured()).thenReturn(true);
         when(registeredStation.communicationAllowed()).thenReturn(true);

@@ -51,7 +51,7 @@ class RequestStopTransactionJsonCommandHandler extends JsonCommandHandler {
 
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.communicationAllowed()) {
-                TransactionId transactionId = TransactionIdFactory.createTransactionId(command.getId(), csId, chargingStation.getProtocol());
+                TransactionId transactionId = new NumberedTransactionId(csId, chargingStation.getProtocol(), command.getId());
 
                 commandGateway.send(new RequestStopTransactionCommand(csId, transactionId, identityContext), new CorrelationToken());
             }
