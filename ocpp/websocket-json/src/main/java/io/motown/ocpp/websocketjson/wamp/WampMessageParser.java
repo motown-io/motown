@@ -25,23 +25,27 @@ import java.io.Reader;
  */
 public class WampMessageParser {
 
+    private WampMessageHandler wampMessageHandler;
+
     public WampMessageParser() {
     }
 
     /**
      * Parses a CALL, RESULT, or ERROR message and constructs a WampMessage
+     * @param chargingStationId sending the message
      * @param reader containing the message
      * @return WampMessage
      * @throws IOException in case the message could not be read
      * @throws IllegalArgumentException in case an unknown wamp messageType is encountered
      */
-    public WampMessage parseMessage(Reader reader) throws IOException {
+    public WampMessage parseMessage(ChargingStationId chargingStationId, Reader reader) throws IOException {
         String rawMessage = this.convertToString(reader);
+        String trimmedMessage = this.removeBrackets(rawMessage);
 
         //In case a payload is present, it always is the last part of the message
-        int payloadStart = rawMessage.indexOf("{");
-        String payload = payloadStart > 0 ? rawMessage.substring(payloadStart) : null;
-        String metaData = payloadStart > 0 ? rawMessage.substring(0, payloadStart) : rawMessage;
+        int payloadStart = trimmedMessage.indexOf("{");
+        String payload = payloadStart > 0 ? trimmedMessage.substring(payloadStart) : null;
+        String metaData = payloadStart > 0 ? trimmedMessage.substring(0, payloadStart) : trimmedMessage;
         String[] metaDataParts = metaData.split(",");
 
         int messageType = Integer.parseInt(removeQuotesAndTrim(metaDataParts[0]));
@@ -85,11 +89,14 @@ public class WampMessageParser {
             }
         } while (numChars != -1);
 
-        String result = stringBuilder.toString();
+        return stringBuilder.toString();
+    }
+
+    private String removeBrackets(String wampString) {
         //Remove any leading or trailing spaces
-        result = result.trim();
+        String result = wampString.trim();
         //Strip off the leading '[' and trailing ']' characters
-        return result.substring(1,result.length()-1);
+        return result.substring(1, result.length() - 1);
     }
 
     /**
