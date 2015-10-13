@@ -65,7 +65,7 @@ public class OcppJsonService {
 
     public void handleMessage(ChargingStationId chargingStationId, Reader reader) {
         try {
-            WampMessage wampMessage = wampMessageParser.parseMessage(reader);
+            WampMessage wampMessage = wampMessageParser.parseMessage(chargingStationId, reader);
 
             LOG.info("Received call from [{}]: {}", chargingStationId.getId(), wampMessage.getPayloadAsString());
 

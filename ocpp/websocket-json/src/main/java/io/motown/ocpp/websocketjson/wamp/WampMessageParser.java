@@ -15,6 +15,7 @@
  */
 package io.motown.ocpp.websocketjson.wamp;
 
+import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.ocpp.websocketjson.schema.MessageProcUri;
 
 import java.io.IOException;
@@ -56,17 +57,29 @@ public class WampMessageParser {
             case WampMessage.CALL:
                 MessageProcUri procUri = MessageProcUri.fromValue(removeQuotesAndTrim(metaDataParts[2]));
                 wampMessage = new WampMessage(messageType, callId, procUri, payload);
+                if (wampMessageHandler != null) {
+                    wampMessageHandler.handleWampCall(chargingStationId.getId(), rawMessage);
+                }
                 break;
             case WampMessage.CALL_RESULT:
                 wampMessage = new WampMessage(messageType, callId, payload);
+                if (wampMessageHandler != null) {
+                    wampMessageHandler.handleWampCallResult(chargingStationId.getId(), rawMessage);
+                }
                 break;
             case WampMessage.CALL_ERROR:
                 String errorCode = removeQuotes(metaDataParts[2]);
                 String errorDescription = removeQuotes(metaDataParts[3]);
                 String errorDetails = removeQuotes(metaDataParts[4]);
                 wampMessage = new WampMessage(messageType, callId, errorCode, errorDescription, errorDetails);
+                if (wampMessageHandler != null) {
+                    wampMessageHandler.handleWampCallError(chargingStationId.getId(), rawMessage);
+                }
                 break;
             default:
+                if (wampMessageHandler != null) {
+                    wampMessageHandler.handle(chargingStationId.getId(), rawMessage);
+                }
                 throw new IllegalArgumentException(String.format("Unknown WAMP messageType: %s", messageType));
         }
         return wampMessage;
@@ -119,4 +132,7 @@ public class WampMessageParser {
         return removeQuotes(message).trim();
     }
 
+    public void setWampMessageHandler(WampMessageHandler wampMessageHandler) {
+        this.wampMessageHandler = wampMessageHandler;
+    }
 }
