@@ -27,6 +27,7 @@ import io.motown.ocpp.websocketjson.schema.MessageProcUri;
 import io.motown.ocpp.websocketjson.schema.SchemaValidator;
 import io.motown.ocpp.websocketjson.schema.generated.v15.*;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
+import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
 import io.motown.ocpp.websocketjson.wamp.WampMessageParser;
 import org.atmosphere.websocket.WebSocket;
 import org.slf4j.Logger;
@@ -44,6 +45,7 @@ public class OcppJsonService {
     private static final Logger LOG = LoggerFactory.getLogger(OcppJsonService.class);
     private static final String ADD_ON_TYPE = "OCPPJ15";
     private WampMessageParser wampMessageParser;
+    private WampMessageHandler wampMessageHandler;
     private SchemaValidator schemaValidator;
     private DomainService domainService;
     private Gson gson;
@@ -357,7 +359,11 @@ public class OcppJsonService {
         WebSocket webSocket = sockets.get(chargingStationId.getId());
         if (webSocket != null) {
             try {
-                webSocket.write(wampMessage.toJson(gson));
+                String wampMessageRaw = wampMessage.toJson(gson);
+                webSocket.write(wampMessageRaw);
+                if (this.wampMessageHandler != null) {
+                    this.wampMessageHandler.handleWampCall(chargingStationId.getId(), wampMessageRaw);
+                }
             } catch (IOException e) {
                 LOG.error("IOException while writing to web socket", e);
             }
@@ -446,6 +452,10 @@ public class OcppJsonService {
 
     public void addRequestHandler(MessageProcUri procUri, RequestHandler requestHandler) {
         requestHandlers.put(procUri, requestHandler);
+    }
+
+    public void setWampMessageHandler(WampMessageHandler wampMessageHandler) {
+        this.wampMessageHandler = wampMessageHandler;
     }
 
     /**
