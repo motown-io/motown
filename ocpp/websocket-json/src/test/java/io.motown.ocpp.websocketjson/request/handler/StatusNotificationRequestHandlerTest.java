@@ -86,7 +86,7 @@ public class StatusNotificationRequestHandlerTest {
 
     private String handleRequest(Statusnotification requestPayload) throws IOException {
         String token = UUID.randomUUID().toString();
-        StatusNotificationRequestHandler handler = new StatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY);
+        StatusNotificationRequestHandler handler = new StatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY, null);
 
         WebSocket webSocket = getMockWebSocket();
         handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);

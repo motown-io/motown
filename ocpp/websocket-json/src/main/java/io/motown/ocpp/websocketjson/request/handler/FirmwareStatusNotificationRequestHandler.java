@@ -21,6 +21,7 @@ import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Firmwarestatusnotification;
 import io.motown.ocpp.websocketjson.schema.generated.v15.FirmwarestatusnotificationResponse;
+import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
 import org.atmosphere.websocket.WebSocket;
 
 public class FirmwareStatusNotificationRequestHandler extends RequestHandler {
@@ -31,7 +32,8 @@ public class FirmwareStatusNotificationRequestHandler extends RequestHandler {
 
     private AddOnIdentity addOnIdentity;
 
-    public FirmwareStatusNotificationRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
+    public FirmwareStatusNotificationRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity, WampMessageHandler wampMessageHandler) {
+        super(wampMessageHandler);
         this.gson = gson;
         this.domainService = domainService;
         this.addOnIdentity = addOnIdentity;
@@ -57,6 +59,6 @@ public class FirmwareStatusNotificationRequestHandler extends RequestHandler {
 
         domainService.firmwareStatusUpdate(chargingStationId, firmwareStatus, addOnIdentity);
 
-        writeResponse(webSocket, new FirmwarestatusnotificationResponse(), callId, gson);
+        writeResponse(webSocket, chargingStationId, new FirmwarestatusnotificationResponse(), callId, gson);
     }
 }

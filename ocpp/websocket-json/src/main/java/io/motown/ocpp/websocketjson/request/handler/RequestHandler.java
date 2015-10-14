@@ -18,6 +18,7 @@ package io.motown.ocpp.websocketjson.request.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
+import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
 import org.atmosphere.websocket.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,13 +31,22 @@ public abstract class RequestHandler {
 
     public abstract void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket websocket);
 
-    protected void writeResponse(WebSocket webSocket, Object response, String callId, Gson gson) {
-        if(response != null) {
-            String responseString = new WampMessage(WampMessage.CALL_RESULT, callId, response).toJson(gson);
+    protected WampMessageHandler wampMessageHandler;
 
-            if(responseString != null) {
+    public RequestHandler(WampMessageHandler wampMessageHandler) {
+        this.wampMessageHandler = wampMessageHandler;
+    }
+
+    protected void writeResponse(WebSocket webSocket, ChargingStationId chargingStationId, Object response, String callId, Gson gson) {
+        if (response != null) {
+            String wampMessageRaw = new WampMessage(WampMessage.CALL_RESULT, callId, response).toJson(gson);
+
+            if (wampMessageRaw != null) {
                 try {
-                    webSocket.write(responseString);
+                    webSocket.write(wampMessageRaw);
+                    if (this.wampMessageHandler != null) {
+                        this.wampMessageHandler.handleWampCallResult(chargingStationId.getId(), wampMessageRaw);
+                    }
                 } catch (IOException e) {
                     LOG.error("IOException while writing to web socket.", e);
                 }

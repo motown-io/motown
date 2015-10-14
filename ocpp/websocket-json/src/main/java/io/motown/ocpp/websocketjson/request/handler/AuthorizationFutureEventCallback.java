@@ -17,9 +17,12 @@ package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.AuthorizationResultEvent;
+import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
 import io.motown.domain.utils.axon.FutureEventCallback;
+import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
+import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
 import org.atmosphere.websocket.WebSocket;
 import org.axonframework.domain.EventMessage;
 import org.slf4j.Logger;
@@ -37,10 +40,16 @@ public class AuthorizationFutureEventCallback extends FutureEventCallback<Author
 
     private Gson gson;
 
-    public AuthorizationFutureEventCallback(String callId, WebSocket webSocket, Gson gson) {
+    private WampMessageHandler wampMessageHandler;
+
+    private ChargingStationId chargingStationId;
+
+    public AuthorizationFutureEventCallback(String callId, WebSocket webSocket, Gson gson, ChargingStationId chargingStationId, WampMessageHandler wampMessageHandler) {
         this.webSocket = webSocket;
         this.callId = callId;
         this.gson = gson;
+        this.chargingStationId = chargingStationId;
+        this.wampMessageHandler = wampMessageHandler;
     }
 
     @Override
@@ -67,7 +76,11 @@ public class AuthorizationFutureEventCallback extends FutureEventCallback<Author
 
     private void writeResult(AuthorizationResult result) {
         try {
-            webSocket.write(new WampMessage(WampMessage.CALL_RESULT, callId, result).toJson(gson));
+            String wampMessageRaw = new WampMessage(WampMessage.CALL_RESULT, callId, result).toJson(gson);
+            webSocket.write(wampMessageRaw);
+            if (this.wampMessageHandler != null) {
+                this.wampMessageHandler.handleWampCallResult(this.chargingStationId.getId(), wampMessageRaw);
+            }
         } catch (IOException e) {
             LOG.error("IOException while writing to web socket.", e);
         }

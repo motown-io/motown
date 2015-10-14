@@ -23,6 +23,7 @@ import io.motown.domain.utils.AttributeMapKeys;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.domain.utils.axon.FutureEventCallback;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Starttransaction;
+import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
 import org.atmosphere.websocket.WebSocket;
 
 public class StartTransactionRequestHandler extends RequestHandler {
@@ -35,7 +36,8 @@ public class StartTransactionRequestHandler extends RequestHandler {
 
     private AddOnIdentity addOnIdentity;
 
-    public StartTransactionRequestHandler(Gson gson, DomainService domainService, String protocolIdentifier, AddOnIdentity addOnIdentity) {
+    public StartTransactionRequestHandler(Gson gson, DomainService domainService, String protocolIdentifier, AddOnIdentity addOnIdentity, WampMessageHandler wampMessageHandler) {
+        super(wampMessageHandler);
         this.gson = gson;
         this.domainService = domainService;
         this.protocolIdentifier = protocolIdentifier;
@@ -53,7 +55,7 @@ public class StartTransactionRequestHandler extends RequestHandler {
                 request.getMeterStart(), request.getTimestamp(), new TextualToken(request.getIdTag()), attributes);
 
         FutureEventCallback futureEventCallback = new StartTransactionFutureEventCallback(callId, webSocket, gson, chargingStationId,
-                protocolIdentifier, startTransactionInfo, domainService, addOnIdentity);
+                protocolIdentifier, startTransactionInfo, domainService, addOnIdentity, wampMessageHandler);
 
         // futureEventCallback will handle authorize result and trigger a startTransaction command
         domainService.authorize(chargingStationId, request.getIdTag(), futureEventCallback, addOnIdentity);

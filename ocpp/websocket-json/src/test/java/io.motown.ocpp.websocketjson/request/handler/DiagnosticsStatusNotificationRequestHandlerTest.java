@@ -49,7 +49,7 @@ public class DiagnosticsStatusNotificationRequestHandlerTest {
     @Test
     public void handleValidRequest() throws IOException {
         String token = UUID.randomUUID().toString();
-        DiagnosticsStatusNotificationRequestHandler handler = new DiagnosticsStatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY);
+        DiagnosticsStatusNotificationRequestHandler handler = new DiagnosticsStatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY, null);
 
         Diagnosticsstatusnotification requestPayload = new Diagnosticsstatusnotification();
         requestPayload.setStatus(Diagnosticsstatusnotification.Status.UPLOADED);

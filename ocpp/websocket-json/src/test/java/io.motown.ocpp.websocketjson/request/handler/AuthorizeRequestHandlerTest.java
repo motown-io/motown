@@ -46,7 +46,7 @@ public class AuthorizeRequestHandlerTest {
     @Test
     public void handleValidRequest() throws IOException {
         String token = UUID.randomUUID().toString();
-        AuthorizeRequestHandler handler = new AuthorizeRequestHandler(gson, domainService, ADD_ON_IDENTITY);
+        AuthorizeRequestHandler handler = new AuthorizeRequestHandler(gson, domainService, ADD_ON_IDENTITY, null);
 
         Authorize requestPayload = new Authorize();
         requestPayload.setIdTag("B4F62CEF");

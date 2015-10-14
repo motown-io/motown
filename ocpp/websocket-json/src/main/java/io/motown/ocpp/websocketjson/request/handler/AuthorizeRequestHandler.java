@@ -21,6 +21,7 @@ import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.domain.utils.axon.FutureEventCallback;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Authorize;
+import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
 import org.atmosphere.websocket.WebSocket;
 
 public class AuthorizeRequestHandler extends RequestHandler {
@@ -31,7 +32,8 @@ public class AuthorizeRequestHandler extends RequestHandler {
 
     private AddOnIdentity addOnIdentity;
 
-    public AuthorizeRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
+    public AuthorizeRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity, WampMessageHandler wampMessageHandler) {
+        super(wampMessageHandler);
         this.gson = gson;
         this.domainService = domainService;
         this.addOnIdentity = addOnIdentity;
@@ -39,7 +41,7 @@ public class AuthorizeRequestHandler extends RequestHandler {
 
     @Override
     public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
-        FutureEventCallback futureEventCallback = new AuthorizationFutureEventCallback(callId, webSocket, gson);
+        FutureEventCallback futureEventCallback = new AuthorizationFutureEventCallback(callId, webSocket, gson, chargingStationId, wampMessageHandler);
 
         Authorize request = gson.fromJson(payload, Authorize.class);
 

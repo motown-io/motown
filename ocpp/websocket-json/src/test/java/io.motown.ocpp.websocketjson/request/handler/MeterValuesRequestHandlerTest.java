@@ -55,7 +55,7 @@ public class MeterValuesRequestHandlerTest {
     @Test
     public void handleValidRequest() throws IOException {
         String token = UUID.randomUUID().toString();
-        MeterValuesRequestHandler handler = new MeterValuesRequestHandler(gson, domainService, OcppWebSocketRequestHandler.PROTOCOL_IDENTIFIER, ADD_ON_IDENTITY);
+        MeterValuesRequestHandler handler = new MeterValuesRequestHandler(gson, domainService, OcppWebSocketRequestHandler.PROTOCOL_IDENTIFIER, ADD_ON_IDENTITY, null);
 
         Metervalues requestPayload = new Metervalues();
         requestPayload.setConnectorId(2);

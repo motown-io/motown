@@ -22,6 +22,7 @@ import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.domain.utils.axon.FutureEventCallback;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Datatransfer;
 import io.motown.ocpp.websocketjson.schema.generated.v15.DatatransferResponse;
+import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
 import org.atmosphere.websocket.WebSocket;
 
 public class DataTransferRequestHandler extends RequestHandler {
@@ -32,7 +33,8 @@ public class DataTransferRequestHandler extends RequestHandler {
 
     private AddOnIdentity addOnIdentity;
 
-    public DataTransferRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
+    public DataTransferRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity, WampMessageHandler wampMessageHandler) {
+        super(wampMessageHandler);
         this.gson = gson;
         this.domainService = domainService;
         this.addOnIdentity = addOnIdentity;
@@ -50,6 +52,6 @@ public class DataTransferRequestHandler extends RequestHandler {
         response.setStatus(DatatransferResponse.Status.ACCEPTED);
         response.setData(null);
 
-        writeResponse(webSocket, response, callId, gson);
+        writeResponse(webSocket, chargingStationId, response, callId, gson);
     }
 }

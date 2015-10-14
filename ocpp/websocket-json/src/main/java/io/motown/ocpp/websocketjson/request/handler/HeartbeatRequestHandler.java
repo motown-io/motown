@@ -20,6 +20,7 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.HeartbeatResponse;
+import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
 import org.atmosphere.websocket.WebSocket;
 
 import java.util.Date;
@@ -32,7 +33,8 @@ public class HeartbeatRequestHandler extends RequestHandler {
 
     private final AddOnIdentity addOnIdentity;
 
-    public HeartbeatRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
+    public HeartbeatRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity, WampMessageHandler wampMessageHandler) {
+        super(wampMessageHandler);
         this.gson = gson;
         this.domainService = domainService;
         this.addOnIdentity = addOnIdentity;
@@ -45,6 +47,6 @@ public class HeartbeatRequestHandler extends RequestHandler {
         HeartbeatResponse response = new HeartbeatResponse();
         response.setCurrentTime(new Date());
 
-        writeResponse(webSocket, response, callId, gson);
+        writeResponse(webSocket, chargingStationId, response, callId, gson);
     }
 }

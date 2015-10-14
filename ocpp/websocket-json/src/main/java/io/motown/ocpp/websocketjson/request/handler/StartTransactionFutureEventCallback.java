@@ -25,6 +25,7 @@ import io.motown.ocpp.viewmodel.persistence.entities.Transaction;
 import io.motown.ocpp.websocketjson.schema.generated.v15.IdTagInfo__;
 import io.motown.ocpp.websocketjson.schema.generated.v15.StarttransactionResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
+import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
 import org.atmosphere.websocket.WebSocket;
 import org.axonframework.domain.EventMessage;
 import org.slf4j.Logger;
@@ -57,9 +58,11 @@ public class StartTransactionFutureEventCallback extends FutureEventCallback<Aut
 
     private AddOnIdentity addOnIdentity;
 
+    private WampMessageHandler wampMessageHandler;
+
     public StartTransactionFutureEventCallback(String callId, WebSocket webSocket, Gson gson, ChargingStationId chargingStationId,
                                                String protocolIdentifier, StartTransactionInfo startTransactionInfo, DomainService domainService,
-                                               AddOnIdentity addOnIdentity) {
+                                               AddOnIdentity addOnIdentity, WampMessageHandler wampMessageHandler) {
         this.webSocket = webSocket;
         this.callId = callId;
         this.gson = gson;
@@ -68,6 +71,7 @@ public class StartTransactionFutureEventCallback extends FutureEventCallback<Aut
         this.startTransactionInfo = startTransactionInfo;
         this.domainService = domainService;
         this.addOnIdentity = addOnIdentity;
+        this.wampMessageHandler = wampMessageHandler;
     }
 
     /**
@@ -109,7 +113,11 @@ public class StartTransactionFutureEventCallback extends FutureEventCallback<Aut
 
     private void writeResult(StarttransactionResponse result) {
         try {
-            webSocket.write(new WampMessage(WampMessage.CALL_RESULT, callId, result).toJson(gson));
+            String wampMessageRaw = new WampMessage(WampMessage.CALL_RESULT, callId, result).toJson(gson);
+            webSocket.write(wampMessageRaw);
+            if (this.wampMessageHandler != null) {
+                this.wampMessageHandler.handleWampCallResult(this.chargingStationId.getId(), wampMessageRaw);
+            }
         } catch (IOException e) {
             LOG.error("IOException while writing to web socket.", e);
         }

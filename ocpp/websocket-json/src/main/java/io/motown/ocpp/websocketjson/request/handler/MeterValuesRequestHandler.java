@@ -23,6 +23,7 @@ import io.motown.ocpp.websocketjson.schema.generated.v15.Metervalues;
 import io.motown.ocpp.websocketjson.schema.generated.v15.MetervaluesResponse;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Value;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Value_;
+import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
 import org.atmosphere.websocket.WebSocket;
 
 import java.util.ArrayList;
@@ -38,7 +39,8 @@ public class MeterValuesRequestHandler extends RequestHandler {
 
     private AddOnIdentity addOnIdentity;
 
-    public MeterValuesRequestHandler(Gson gson, DomainService domainService, String protocolIdentifier, AddOnIdentity addOnIdentity) {
+    public MeterValuesRequestHandler(Gson gson, DomainService domainService, String protocolIdentifier, AddOnIdentity addOnIdentity, WampMessageHandler wampMessageHandler) {
+        super(wampMessageHandler);
         this.gson = gson;
         this.domainService = domainService;
         this.protocolIdentifier = protocolIdentifier;
@@ -70,7 +72,7 @@ public class MeterValuesRequestHandler extends RequestHandler {
 
         domainService.meterValues(chargingStationId, transactionId, new EvseId(request.getConnectorId()), meterValues, addOnIdentity);
 
-        writeResponse(webSocket, new MetervaluesResponse(), callId, gson);
+        writeResponse(webSocket, chargingStationId, new MetervaluesResponse(), callId, gson);
     }
 
 }

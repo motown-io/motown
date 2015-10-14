@@ -51,7 +51,7 @@ public class StartTransactionRequestHandlerTest {
     public void handleValidRequest() throws IOException {
         String token = UUID.randomUUID().toString();
         int meterStart = 4;
-        StartTransactionRequestHandler handler = new StartTransactionRequestHandler(gson, domainService, OcppWebSocketRequestHandler.PROTOCOL_IDENTIFIER, ADD_ON_IDENTITY);
+        StartTransactionRequestHandler handler = new StartTransactionRequestHandler(gson, domainService, OcppWebSocketRequestHandler.PROTOCOL_IDENTIFIER, ADD_ON_IDENTITY, null);
 
         Starttransaction requestPayload = new Starttransaction();
         requestPayload.setConnectorId(EVSE_ID.getNumberedId());
@@ -69,7 +69,7 @@ public class StartTransactionRequestHandlerTest {
     public void handleValidRequestNoReservation() throws IOException {
         String token = UUID.randomUUID().toString();
         int meterStart = 4;
-        StartTransactionRequestHandler handler = new StartTransactionRequestHandler(gson, domainService, OcppWebSocketRequestHandler.PROTOCOL_IDENTIFIER, ADD_ON_IDENTITY);
+        StartTransactionRequestHandler handler = new StartTransactionRequestHandler(gson, domainService, OcppWebSocketRequestHandler.PROTOCOL_IDENTIFIER, ADD_ON_IDENTITY, null);
 
         Starttransaction requestPayload = new Starttransaction();
         requestPayload.setConnectorId(EVSE_ID.getNumberedId());

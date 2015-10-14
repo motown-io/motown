@@ -51,7 +51,7 @@ public class DataTransferRequestHandlerTest {
     @Test
     public void handleValidRequest() throws IOException {
         String token = UUID.randomUUID().toString();
-        DataTransferRequestHandler handler = new DataTransferRequestHandler(gson, domainService, ADD_ON_IDENTITY);
+        DataTransferRequestHandler handler = new DataTransferRequestHandler(gson, domainService, ADD_ON_IDENTITY, null);
 
         Datatransfer requestPayload = new Datatransfer();
         requestPayload.setVendorId("fr.tm.cnr");

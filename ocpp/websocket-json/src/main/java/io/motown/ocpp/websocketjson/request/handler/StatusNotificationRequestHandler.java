@@ -26,6 +26,7 @@ import io.motown.domain.utils.AttributeMapKeys;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Statusnotification;
 import io.motown.ocpp.websocketjson.schema.generated.v15.StatusnotificationResponse;
+import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
 import org.atmosphere.websocket.WebSocket;
 
 import java.util.Date;
@@ -38,7 +39,8 @@ public class StatusNotificationRequestHandler extends RequestHandler {
 
     private AddOnIdentity addOnIdentity;
 
-    public StatusNotificationRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
+    public StatusNotificationRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity, WampMessageHandler wampMessageHandler) {
+        super(wampMessageHandler);
         this.gson = gson;
         this.domainService = domainService;
         this.addOnIdentity = addOnIdentity;
@@ -64,7 +66,7 @@ public class StatusNotificationRequestHandler extends RequestHandler {
                 new StatusNotification(getComponentStatusFromChargePointStatus(request.getStatus()), timestamp, attributes),
                 addOnIdentity);
 
-        writeResponse(webSocket, new StatusnotificationResponse(), callId, gson);
+        writeResponse(webSocket, chargingStationId, new StatusnotificationResponse(), callId, gson);
     }
 
     /**

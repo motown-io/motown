@@ -49,7 +49,7 @@ public class HeartbeatRequestHandlerTest {
     @Test
     public void handleValidRequest() throws IOException {
         String token = UUID.randomUUID().toString();
-        HeartbeatRequestHandler handler = new HeartbeatRequestHandler(gson, domainService, ADD_ON_IDENTITY);
+        HeartbeatRequestHandler handler = new HeartbeatRequestHandler(gson, domainService, ADD_ON_IDENTITY, null);
 
         Heartbeat requestPayload = new Heartbeat();
 

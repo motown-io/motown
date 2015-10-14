@@ -25,6 +25,7 @@ import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.OcppJsonService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Bootnotification;
 import io.motown.ocpp.websocketjson.schema.generated.v15.BootnotificationResponse;
+import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
 import org.atmosphere.websocket.WebSocket;
 
 public class BootNotificationRequestHandler extends RequestHandler {
@@ -35,7 +36,8 @@ public class BootNotificationRequestHandler extends RequestHandler {
 
     private AddOnIdentity addOnIdentity;
 
-    public BootNotificationRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
+    public BootNotificationRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity, WampMessageHandler wampMessageHandler) {
+        super(wampMessageHandler);
         this.gson = gson;
         this.domainService = domainService;
         this.addOnIdentity = addOnIdentity;
@@ -63,6 +65,6 @@ public class BootNotificationRequestHandler extends RequestHandler {
         response.setCurrentTime(bootChargingStationResult.getTimeStamp());
         response.setHeartbeatInterval(bootChargingStationResult.getHeartbeatInterval());
 
-        writeResponse(webSocket, response, callId, gson);
+        writeResponse(webSocket, chargingStationId, response, callId, gson);
     }
 }

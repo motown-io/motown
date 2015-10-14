@@ -49,7 +49,7 @@ public class FirmwareStatusNotificationRequestHandlerTest {
     @Test
     public void handleDownloadedRequest() throws IOException {
         String token = UUID.randomUUID().toString();
-        FirmwareStatusNotificationRequestHandler handler = new FirmwareStatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY);
+        FirmwareStatusNotificationRequestHandler handler = new FirmwareStatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY, null);
 
         Firmwarestatusnotification requestPayload = new Firmwarestatusnotification();
         requestPayload.setStatus(Firmwarestatusnotification.Status.DOWNLOADED);
@@ -64,7 +64,7 @@ public class FirmwareStatusNotificationRequestHandlerTest {
     @Test
     public void handleDownloadFailedRequest() throws IOException {
         String token = UUID.randomUUID().toString();
-        FirmwareStatusNotificationRequestHandler handler = new FirmwareStatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY);
+        FirmwareStatusNotificationRequestHandler handler = new FirmwareStatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY, null);
 
         Firmwarestatusnotification requestPayload = new Firmwarestatusnotification();
         requestPayload.setStatus(Firmwarestatusnotification.Status.DOWNLOAD_FAILED);
@@ -79,7 +79,7 @@ public class FirmwareStatusNotificationRequestHandlerTest {
     @Test
     public void handleInstallationFailedRequest() throws IOException {
         String token = UUID.randomUUID().toString();
-        FirmwareStatusNotificationRequestHandler handler = new FirmwareStatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY);
+        FirmwareStatusNotificationRequestHandler handler = new FirmwareStatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY, null);
 
         Firmwarestatusnotification requestPayload = new Firmwarestatusnotification();
         requestPayload.setStatus(Firmwarestatusnotification.Status.INSTALLATION_FAILED);
@@ -94,7 +94,7 @@ public class FirmwareStatusNotificationRequestHandlerTest {
     @Test
     public void handleInstalledRequest() throws IOException {
         String token = UUID.randomUUID().toString();
-        FirmwareStatusNotificationRequestHandler handler = new FirmwareStatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY);
+        FirmwareStatusNotificationRequestHandler handler = new FirmwareStatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY, null);
 
         Firmwarestatusnotification requestPayload = new Firmwarestatusnotification();
         requestPayload.setStatus(Firmwarestatusnotification.Status.INSTALLED);

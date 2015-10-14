@@ -20,6 +20,7 @@ import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.*;
+import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
 import org.atmosphere.websocket.WebSocket;
 
 import java.util.ArrayList;
@@ -35,7 +36,8 @@ public class StopTransactionRequestHandler extends RequestHandler {
 
     private AddOnIdentity addOnIdentity;
 
-    public StopTransactionRequestHandler(Gson gson, DomainService domainService, String protocolIdentifier, AddOnIdentity addOnIdentity) {
+    public StopTransactionRequestHandler(Gson gson, DomainService domainService, String protocolIdentifier, AddOnIdentity addOnIdentity, WampMessageHandler wampMessageHandler) {
+        super(wampMessageHandler);
         this.gson = gson;
         this.domainService = domainService;
         this.protocolIdentifier = protocolIdentifier;
@@ -65,7 +67,7 @@ public class StopTransactionRequestHandler extends RequestHandler {
 
         domainService.stopTransaction(chargingStationId, transactionId, new TextualToken(request.getIdTag()), request.getMeterStop(), request.getTimestamp(), meterValues, addOnIdentity);
 
-        writeResponse(webSocket, new StoptransactionResponse(), callId, gson);
+        writeResponse(webSocket, chargingStationId, new StoptransactionResponse(), callId, gson);
     }
 
 }

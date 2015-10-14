@@ -379,34 +379,34 @@ public class OcppJsonService {
         if (requestHandler == null) {
             switch (procUri) {
                 case AUTHORIZE:
-                    requestHandler = new AuthorizeRequestHandler(gson, domainService, addOnIdentity);
+                    requestHandler = new AuthorizeRequestHandler(gson, domainService, addOnIdentity, wampMessageHandler);
                     break;
                 case BOOT_NOTIFICATION:
-                    requestHandler = new BootNotificationRequestHandler(gson, domainService, addOnIdentity);
+                    requestHandler = new BootNotificationRequestHandler(gson, domainService, addOnIdentity, wampMessageHandler);
                     break;
                 case DATA_TRANSFER:
-                    requestHandler = new DataTransferRequestHandler(gson, domainService, addOnIdentity);
+                    requestHandler = new DataTransferRequestHandler(gson, domainService, addOnIdentity, wampMessageHandler);
                     break;
                 case DIAGNOSTICSS_STATUS_NOTIFICATION:
-                    requestHandler = new DiagnosticsStatusNotificationRequestHandler(gson, domainService, addOnIdentity);
+                    requestHandler = new DiagnosticsStatusNotificationRequestHandler(gson, domainService, addOnIdentity, wampMessageHandler);
                     break;
                 case FIRMWARE_STATUS_NOTIFICATION:
-                    requestHandler = new FirmwareStatusNotificationRequestHandler(gson, domainService, addOnIdentity);
+                    requestHandler = new FirmwareStatusNotificationRequestHandler(gson, domainService, addOnIdentity, wampMessageHandler);
                     break;
                 case HEARTBEAT:
-                    requestHandler = new HeartbeatRequestHandler(gson, domainService, addOnIdentity);
+                    requestHandler = new HeartbeatRequestHandler(gson, domainService, addOnIdentity, wampMessageHandler);
                     break;
                 case METERVALUES:
-                    requestHandler = new MeterValuesRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER, addOnIdentity);
+                    requestHandler = new MeterValuesRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER, addOnIdentity, wampMessageHandler);
                     break;
                 case START_TRANSACTION:
-                    requestHandler = new StartTransactionRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER, addOnIdentity);
+                    requestHandler = new StartTransactionRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER, addOnIdentity, wampMessageHandler);
                     break;
                 case STATUS_NOTIFICATION:
-                    requestHandler = new StatusNotificationRequestHandler(gson, domainService, addOnIdentity);
+                    requestHandler = new StatusNotificationRequestHandler(gson, domainService, addOnIdentity, wampMessageHandler);
                     break;
                 case STOP_TRANSACTION:
-                    requestHandler = new StopTransactionRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER, addOnIdentity);
+                    requestHandler = new StopTransactionRequestHandler(gson, domainService, PROTOCOL_IDENTIFIER, addOnIdentity, wampMessageHandler);
                     break;
                 default:
                     throw new AssertionError("Unknown ProcUri: " + wampMessage.getProcUri());

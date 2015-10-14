@@ -21,6 +21,7 @@ import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Diagnosticsstatusnotification;
 import io.motown.ocpp.websocketjson.schema.generated.v15.DiagnosticsstatusnotificationResponse;
+import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
 import org.atmosphere.websocket.WebSocket;
 
 public class DiagnosticsStatusNotificationRequestHandler extends RequestHandler {
@@ -31,7 +32,8 @@ public class DiagnosticsStatusNotificationRequestHandler extends RequestHandler 
 
     private AddOnIdentity addOnIdentity;
 
-    public DiagnosticsStatusNotificationRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
+    public DiagnosticsStatusNotificationRequestHandler(Gson gson, DomainService domainService, AddOnIdentity addOnIdentity, WampMessageHandler wampMessageHandler) {
+        super(wampMessageHandler);
         this.gson = gson;
         this.domainService = domainService;
         this.addOnIdentity = addOnIdentity;
@@ -43,6 +45,6 @@ public class DiagnosticsStatusNotificationRequestHandler extends RequestHandler 
 
         domainService.diagnosticsUploadStatusUpdate(chargingStationId, request.getStatus().equals(Diagnosticsstatusnotification.Status.UPLOADED), addOnIdentity);
 
-        writeResponse(webSocket, new DiagnosticsstatusnotificationResponse(), callId, gson);
+        writeResponse(webSocket, chargingStationId, new DiagnosticsstatusnotificationResponse(), callId, gson);
     }
 }

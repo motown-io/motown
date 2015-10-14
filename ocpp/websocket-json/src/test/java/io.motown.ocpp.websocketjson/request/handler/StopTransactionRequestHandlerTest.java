@@ -56,7 +56,7 @@ public class StopTransactionRequestHandlerTest {
     @Test
     public void handleValidRequest() throws IOException {
         String token = UUID.randomUUID().toString();
-        StopTransactionRequestHandler handler = new StopTransactionRequestHandler(gson, domainService, OcppWebSocketRequestHandler.PROTOCOL_IDENTIFIER, ADD_ON_IDENTITY);
+        StopTransactionRequestHandler handler = new StopTransactionRequestHandler(gson, domainService, OcppWebSocketRequestHandler.PROTOCOL_IDENTIFIER, ADD_ON_IDENTITY, null);
 
         Stoptransaction requestPayload = new Stoptransaction();
         requestPayload.setIdTag(IDENTIFYING_TOKEN.getToken());

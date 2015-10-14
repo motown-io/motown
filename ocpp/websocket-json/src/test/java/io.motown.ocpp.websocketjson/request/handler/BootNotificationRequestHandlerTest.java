@@ -82,7 +82,7 @@ public class BootNotificationRequestHandlerTest {
 
     private String handleRequest() throws IOException {
         String token = UUID.randomUUID().toString();
-        BootNotificationRequestHandler handler = new BootNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY);
+        BootNotificationRequestHandler handler = new BootNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY, null);
 
         Bootnotification requestPayload = new Bootnotification();
         requestPayload.setChargePointVendor("DBT");
