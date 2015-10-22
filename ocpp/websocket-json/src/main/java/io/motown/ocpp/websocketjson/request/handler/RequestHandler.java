@@ -45,7 +45,7 @@ public abstract class RequestHandler {
                 try {
                     webSocket.write(wampMessageRaw);
                     if (this.wampMessageHandler != null) {
-                        this.wampMessageHandler.handleWampCallResult(chargingStationId.getId(), wampMessageRaw);
+                        this.wampMessageHandler.handleWampCallResult(chargingStationId.getId(), wampMessageRaw, callId);
                     }
                 } catch (IOException e) {
                     LOG.error("IOException while writing to web socket.", e);

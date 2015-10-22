@@ -116,7 +116,7 @@ public class StartTransactionFutureEventCallback extends FutureEventCallback<Aut
             String wampMessageRaw = new WampMessage(WampMessage.CALL_RESULT, callId, result).toJson(gson);
             webSocket.write(wampMessageRaw);
             if (this.wampMessageHandler != null) {
-                this.wampMessageHandler.handleWampCallResult(this.chargingStationId.getId(), wampMessageRaw);
+                this.wampMessageHandler.handleWampCallResult(this.chargingStationId.getId(), wampMessageRaw, callId);
             }
         } catch (IOException e) {
             LOG.error("IOException while writing to web socket.", e);

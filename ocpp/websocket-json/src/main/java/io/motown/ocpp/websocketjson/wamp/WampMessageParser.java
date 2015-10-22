@@ -58,13 +58,13 @@ public class WampMessageParser {
                 MessageProcUri procUri = MessageProcUri.fromValue(removeQuotesAndTrim(metaDataParts[2]));
                 wampMessage = new WampMessage(messageType, callId, procUri, payload);
                 if (wampMessageHandler != null) {
-                    wampMessageHandler.handleWampCall(chargingStationId.getId(), rawMessage);
+                    wampMessageHandler.handleWampCall(chargingStationId.getId(), rawMessage, callId);
                 }
                 break;
             case WampMessage.CALL_RESULT:
                 wampMessage = new WampMessage(messageType, callId, payload);
                 if (wampMessageHandler != null) {
-                    wampMessageHandler.handleWampCallResult(chargingStationId.getId(), rawMessage);
+                    wampMessageHandler.handleWampCallResult(chargingStationId.getId(), rawMessage, callId);
                 }
                 break;
             case WampMessage.CALL_ERROR:
@@ -73,7 +73,7 @@ public class WampMessageParser {
                 String errorDetails = removeQuotes(metaDataParts[4]);
                 wampMessage = new WampMessage(messageType, callId, errorCode, errorDescription, errorDetails);
                 if (wampMessageHandler != null) {
-                    wampMessageHandler.handleWampCallError(chargingStationId.getId(), rawMessage);
+                    wampMessageHandler.handleWampCallError(chargingStationId.getId(), rawMessage, callId);
                 }
                 break;
             default:

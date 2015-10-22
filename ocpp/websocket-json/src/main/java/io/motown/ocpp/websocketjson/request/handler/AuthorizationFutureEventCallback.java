@@ -18,9 +18,8 @@ package io.motown.ocpp.websocketjson.request.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.AuthorizationResultEvent;
 import io.motown.domain.api.chargingstation.ChargingStationId;
-import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
 import io.motown.domain.utils.axon.FutureEventCallback;
-import io.motown.ocpp.viewmodel.persistence.entities.ChargingStation;
+import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
 import org.atmosphere.websocket.WebSocket;
@@ -79,7 +78,7 @@ public class AuthorizationFutureEventCallback extends FutureEventCallback<Author
             String wampMessageRaw = new WampMessage(WampMessage.CALL_RESULT, callId, result).toJson(gson);
             webSocket.write(wampMessageRaw);
             if (this.wampMessageHandler != null) {
-                this.wampMessageHandler.handleWampCallResult(this.chargingStationId.getId(), wampMessageRaw);
+                this.wampMessageHandler.handleWampCallResult(this.chargingStationId.getId(), wampMessageRaw, callId);
             }
         } catch (IOException e) {
             LOG.error("IOException while writing to web socket.", e);

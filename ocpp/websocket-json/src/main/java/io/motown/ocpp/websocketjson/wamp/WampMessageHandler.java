@@ -25,21 +25,21 @@ public interface WampMessageHandler {
      * @param chargingStationId identifier of the charging station that sent the call
      * @param wampMessageRaw the unparsed WAMP message sent by the charging station
      */
-    public void handleWampCall(String chargingStationId, String wampMessageRaw);
+    public void handleWampCall(String chargingStationId, String wampMessageRaw, String callId);
 
     /**
      * Handle @see io.motown.ocpp.websocketjson.wamp.CALL_RESULT
      * @param chargingStationId identifier of the charging station that sent the call
      * @param wampMessageRaw the unparsed WAMP message sent by the charging station
      */
-    public void handleWampCallResult(String chargingStationId, String wampMessageRaw);
+    public void handleWampCallResult(String chargingStationId, String wampMessageRaw, String callId);
 
     /**
      * Handle @see io.motown.ocpp.websocketjson.wamp.CALL_ERROR
      * @param chargingStationId identifier of the charging station that sent the call
      * @param wampMessageRaw the unparsed WAMP message sent by the charging station
      */
-    public void handleWampCallError(String chargingStationId, String wampMessageRaw);
+    public void handleWampCallError(String chargingStationId, String wampMessageRaw, String callId);
 
     /**
      * Handle a message that can't be parsed as a Wamp message

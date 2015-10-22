@@ -362,7 +362,7 @@ public class OcppJsonService {
                 String wampMessageRaw = wampMessage.toJson(gson);
                 webSocket.write(wampMessageRaw);
                 if (this.wampMessageHandler != null) {
-                    this.wampMessageHandler.handleWampCall(chargingStationId.getId(), wampMessageRaw);
+                    this.wampMessageHandler.handleWampCall(chargingStationId.getId(), wampMessageRaw, wampMessage.getCallId());
                 }
             } catch (IOException e) {
                 LOG.error("IOException while writing to web socket", e);
