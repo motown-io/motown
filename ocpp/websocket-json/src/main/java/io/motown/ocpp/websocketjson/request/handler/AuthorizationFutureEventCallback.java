@@ -17,8 +17,9 @@ package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.AuthorizationResultEvent;
-import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
 import io.motown.domain.utils.axon.FutureEventCallback;
+import io.motown.ocpp.websocketjson.schema.generated.v15.AuthorizeResponse;
+import io.motown.ocpp.websocketjson.schema.generated.v15.IdTagInfo;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import org.atmosphere.websocket.WebSocket;
 import org.axonframework.domain.EventMessage;
@@ -27,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class AuthorizationFutureEventCallback extends FutureEventCallback<AuthorizationResult> {
+public class AuthorizationFutureEventCallback extends FutureEventCallback<AuthorizeResponse> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AuthorizationFutureEventCallback.class);
 
@@ -50,13 +51,16 @@ public class AuthorizationFutureEventCallback extends FutureEventCallback<Author
         if (event.getPayload() instanceof AuthorizationResultEvent) {
             resultEvent = (AuthorizationResultEvent) event.getPayload();
 
-            AuthorizationResult result = new AuthorizationResult(resultEvent.getIdentifyingToken().getToken(), resultEvent.getAuthenticationStatus());
+            AuthorizeResponse response = new AuthorizeResponse();
+            IdTagInfo idTagInfo = new IdTagInfo();
+            idTagInfo.setStatus(IdTagInfo.Status.fromValue(resultEvent.getAuthenticationStatus().value()));
+            response.setIdTagInfo(idTagInfo);
 
-            this.setResult(result);
+            this.setResult(response);
 
             this.countDownLatch();
 
-            this.writeResult(result);
+            this.writeResult(response);
 
             return true;
         } else {
@@ -65,7 +69,7 @@ public class AuthorizationFutureEventCallback extends FutureEventCallback<Author
         }
     }
 
-    private void writeResult(AuthorizationResult result) {
+    private void writeResult(AuthorizeResponse result) {
         try {
             webSocket.write(new WampMessage(WampMessage.CALL_RESULT, callId, result).toJson(gson));
         } catch (IOException e) {

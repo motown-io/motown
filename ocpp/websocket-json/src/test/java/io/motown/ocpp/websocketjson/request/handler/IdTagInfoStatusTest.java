@@ -13,25 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.motown.ocpp.websocketjson.gson.serializer;
+package io.motown.ocpp.websocketjson.request.handler;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
 import io.motown.domain.api.chargingstation.AuthorizationResultStatus;
+import io.motown.ocpp.websocketjson.schema.generated.v15.IdTagInfo;
+import org.junit.Test;
 
-import java.lang.reflect.Type;
+public class IdTagInfoStatusTest {
 
-public class AuthorizationResultStatusSerializer implements TypeAdapterSerializer<AuthorizationResultStatus> {
-
-    @Override
-    public JsonElement serialize(AuthorizationResultStatus authorizationResultStatus, Type type, JsonSerializationContext jsonSerializationContext) {
-        return new JsonPrimitive(authorizationResultStatus.value());
-    }
-
-    @Override
-    public Class<?> getAdaptedType() {
-        return AuthorizationResultStatus.class;
+    @Test
+    public void testIdTagStatusFromAuthenticationStatus() {
+        // for every AuthorizationResultStatus a IdTagInfo.Status should exist
+        for(AuthorizationResultStatus authStatus : AuthorizationResultStatus.values()) {
+            // no exception should be thrown
+            IdTagInfo.Status.fromValue(authStatus.value());
+        }
     }
 
 }
