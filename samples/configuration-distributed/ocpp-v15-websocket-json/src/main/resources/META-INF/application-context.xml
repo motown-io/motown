@@ -194,7 +194,7 @@
                     <constructor-arg name="dateFormat" ref="dateFormat"/>
                     <constructor-arg name="timeZone" ref="timeZone"/>
                 </bean>
-                <bean class="io.motown.ocpp.websocketjson.gson.serializer.IdTagInforStatusSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.IdTagInfoStatusSerializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.serializer.ResetTypeAdapterSerializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.serializer.SendLocalListRequestUpdateTypeAdapterSerializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.serializer.StartTransactionIdTagStatusTypeAdapterSerializer"/>
