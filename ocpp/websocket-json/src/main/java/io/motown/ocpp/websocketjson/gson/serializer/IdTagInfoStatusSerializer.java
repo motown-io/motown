@@ -22,7 +22,7 @@ import io.motown.ocpp.websocketjson.schema.generated.v15.IdTagInfo;
 
 import java.lang.reflect.Type;
 
-public class IdTagInforStatusSerializer implements TypeAdapterSerializer<IdTagInfo.Status> {
+public class IdTagInfoStatusSerializer implements TypeAdapterSerializer<IdTagInfo.Status> {
 
     @Override
     public JsonElement serialize(IdTagInfo.Status authorizationResultStatus, Type type, JsonSerializationContext jsonSerializationContext) {
