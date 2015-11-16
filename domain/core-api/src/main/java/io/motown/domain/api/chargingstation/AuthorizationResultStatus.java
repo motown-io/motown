@@ -17,5 +17,27 @@
 package io.motown.domain.api.chargingstation;
 
 public enum AuthorizationResultStatus {
-    ACCEPTED, BLOCKED, EXPIRED, INVALID
+    ACCEPTED("Accepted"),
+    BLOCKED("Blocked"),
+    EXPIRED("Expired"),
+    INVALID("Invalid"),
+    CONCURRENT_TX("ConcurrentTx");
+    private final String value;
+
+    AuthorizationResultStatus(String v) {
+        value = v;
+    }
+
+    public String value() {
+        return value;
+    }
+
+    public static AuthorizationResultStatus fromValue(String v) {
+        for (AuthorizationResultStatus c: AuthorizationResultStatus.values()) {
+            if (c.value.equals(v)) {
+                return c;
+            }
+        }
+        throw new IllegalArgumentException(v);
+    }
 }
