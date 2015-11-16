@@ -27,6 +27,7 @@
         <property name="typeAdapterSerializers">
             <set>
                 <bean class="io.motown.ocpp.websocketjson.gson.serializer.AuthorizationListIdTagStatusTypeAdapterSerializer"/>
+                <bean class="io.motown.ocpp.websocketjson.gson.serializer.AuthorizationResultStatusSerializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.serializer.BootnotificationResponseStatusTypeAdapterSerializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.serializer.ChangeAvailabilityTypeAdapterSerializer"/>
                 <bean class="io.motown.ocpp.websocketjson.gson.serializer.DataTransferResponseStatusTypeAdapterSerializer"/>
