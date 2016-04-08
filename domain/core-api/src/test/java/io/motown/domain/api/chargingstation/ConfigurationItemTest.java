@@ -30,16 +30,6 @@ public class ConfigurationItemTest {
         new ConfigurationItem("", "bar");
     }
 
-    @Test(expected = NullPointerException.class)
-    public void creatingWithValueNullShouldThrowNullPointerException() {
-        new ConfigurationItem("foo", null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void creatingWithValueEmptyShouldThrowIllegalArgumentException() {
-        new ConfigurationItem("foo", "");
-    }
-
     @Test
     public void equalsAndHashCodeShouldBeImplementedAccordingToTheContract() {
         EqualsVerifier.forClass(ConfigurationItem.class).usingGetClass().verify();

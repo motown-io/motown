@@ -39,8 +39,6 @@ public class ConfigurationItem {
         checkNotNull(key);
         checkArgument(!key.isEmpty());
         this.key = key;
-        checkNotNull(value);
-        checkArgument(!value.isEmpty());
         this.value = value;
     }
 
