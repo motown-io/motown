@@ -15,7 +15,6 @@
  */
 package io.motown.ocpp.websocketjson.wamp;
 
-import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.ocpp.websocketjson.schema.MessageProcUri;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,9 +23,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
 
 public class WampMessageParserTest {
 
@@ -44,7 +43,7 @@ public class WampMessageParserTest {
         String payload = "{\"connectorId\":2,\"transactionId\":32201,\"values\":[{\"timestamp\":\"2013-03-07T16:52:16Z\",\"values\":[{\"value\":\"0\",\"unit\":\"Wh\",\"measurand\":\"Energy.Active.Import.Register\"},{\"value\":\"0\",\"unit\":\"varh\",\"measurand\":\"Energy.Reactive.Import.Register\"}]},{\"timestamp\":\"2013-03-07T19:52:16Z\",\"values\":[{\"value\":\"20\",\"unit\":\"Wh\",\"measurand\":\"Energy.Active.Import.Register\"},{\"value\":\"20\",\"unit\":\"varh\",\"measurand\":\"Energy.Reactive.Import.Register\"}]}]}";
         Reader reader = new StringReader(String.format("[%d,\"%s\",\"%s\",%s]", WampMessage.CALL, CALL_ID, MessageProcUri.METERVALUES.toString(), payload));
 
-        WampMessage wampMessage = parser.parseMessage(any(ChargingStationId.class), reader);
+        WampMessage wampMessage = parser.parseMessage(CHARGING_STATION_ID, reader);
 
         assertEquals(WampMessage.CALL, wampMessage.getMessageType());
         assertEquals(CALL_ID, wampMessage.getCallId());
@@ -57,7 +56,7 @@ public class WampMessageParserTest {
         String payload = "{\"connectorId\":2,\"transactionId\":32201,\"values\":[{\"timestamp\":\"2013-03-07T16:52:16Z\",\"values\":[{\"value\":\"0\",\"unit\":\"Wh\",\"measurand\":\"Energy.Active.Import.Register\"},{\"value\":\"0\",\"unit\":\"varh\",\"measurand\":\"Energy.Reactive.Import.Register\"}]},{\"timestamp\":\"2013-03-07T19:52:16Z\",\"values\":[{\"value\":\"20\",\"unit\":\"Wh\",\"measurand\":\"Energy.Active.Import.Register\"},{\"value\":\"20\",\"unit\":\"varh\",\"measurand\":\"Energy.Reactive.Import.Register\"}]}]}";
         Reader reader = new StringReader(String.format(" [ %d,\" %s\",\"%s\",%s]", WampMessage.CALL, CALL_ID, MessageProcUri.METERVALUES.toString(), payload));
 
-        WampMessage wampMessage = parser.parseMessage(any(ChargingStationId.class), reader);
+        WampMessage wampMessage = parser.parseMessage(CHARGING_STATION_ID, reader);
 
         assertEquals(WampMessage.CALL, wampMessage.getMessageType());
         assertEquals(CALL_ID, wampMessage.getCallId());
@@ -69,7 +68,7 @@ public class WampMessageParserTest {
     public void processResponse() throws IOException {
         Reader reader = new StringReader(String.format("[%d,\"%s\",{\"status\":\"%s\"}]", WampMessage.CALL_RESULT, CALL_ID, "Accepted"));
 
-        WampMessage wampMessage = parser.parseMessage(any(ChargingStationId.class), reader);
+        WampMessage wampMessage = parser.parseMessage(CHARGING_STATION_ID, reader);
 
         assertEquals(WampMessage.CALL_RESULT, wampMessage.getMessageType());
         assertEquals(CALL_ID, wampMessage.getCallId());
@@ -83,7 +82,7 @@ public class WampMessageParserTest {
         String errorDetails = "No details available";
         Reader reader = new StringReader(String.format("[%d,\"%s\",\"%s\",\"%s\",\"%s\"]", WampMessage.CALL_ERROR, CALL_ID, errorCode, errorDescription, errorDetails));
 
-        WampMessage wampMessage = parser.parseMessage(any(ChargingStationId.class), reader);
+        WampMessage wampMessage = parser.parseMessage(CHARGING_STATION_ID, reader);
 
         assertEquals(WampMessage.CALL_ERROR, wampMessage.getMessageType());
         assertEquals(CALL_ID, wampMessage.getCallId());
