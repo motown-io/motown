@@ -16,6 +16,8 @@
 package io.motown.identificationauthorization.cirplugin;
 
 import io.motown.domain.api.chargingstation.IdentifyingToken;
+import io.motown.domain.api.chargingstation.IdentifyingToken.AuthenticationStatus;
+import io.motown.domain.api.chargingstation.TextualToken;
 import io.motown.identificationauthorization.cirplugin.cir.schema.*;
 import io.motown.identificationauthorization.cirplugin.cir.schema.Error;
 import io.motown.identificationauthorization.pluginapi.AuthorizationProvider;
@@ -57,13 +59,41 @@ public class CirAuthorization implements AuthorizationProvider {
      * Validates the identification against the CIR service.
      *
      * @param identification identification to verify.
-     * @return true if identification is valid according to CIR. False if CIR cannot be reached or
-     * CIR responded the identification is invalid.
+     * @return The validated IdentifyingToken, status ACCEPTED if identification is valid according to CIR. If CIR cannot be reached or
+     * CIR responded the identification is invalid, an empty authenticationStatus is returned.
      */
     @Override
-    public boolean isValid(IdentifyingToken identification) {
+    public IdentifyingToken validate(IdentifyingToken identification) {
+
+        InquireResult inquireResult = inquire(identification.getToken());
+        if (inquireResult == null) {
+            LOG.info("No result while querying CIR. Returning 'false' for identification: {}", identification);
+            return identification;
+        }
+
+        Error error = inquireResult.getError();
+        if (error != null) {
+            LOG.warn("Received error while querying CIR, ErrorCode: {}, ErrorTest: {}", error.getErrorCode(), error.getErrorText());
+        }
+
+        if (inquireResult.getCards() != null && inquireResult.getCards().getCard() != null
+                && inquireResult.getCards().getCard().get(0) != null) {
+        	Card card = inquireResult.getCards().getCard().get(0);
+        	if (card.isValid())
+        	{
+        		return new TextualToken(identification.getToken(), AuthenticationStatus.ACCEPTED, card.getProvider(), card.getExternalID());
+        	}
+        } else {
+            LOG.warn("CIR response didn't contain result. Returning 'false' for identification: {}", identification);
+        }
+
+        return identification;
+    }
+
+    private InquireResult inquire(String token)
+    {
         Card card = new Card();
-        card.setCardID(identification.getToken());
+        card.setCardID(token);
 
         ArrayOfCard arrayOfCard = new ArrayOfCard();
         arrayOfCard.getCard().add(card);
@@ -75,26 +105,7 @@ public class CirAuthorization implements AuthorizationProvider {
         } catch (Exception e) {
             LOG.error("Exception calling CIR", e);
         }
-
-        if (inquireResult == null) {
-            LOG.info("No result while querying CIR. Returning 'false' for identification: {}", identification);
-            return false;
-        }
-
-        Error error = inquireResult.getError();
-        if (error != null) {
-            LOG.warn("Received error while querying CIR, ErrorCode: {}, ErrorTest: {}", error.getErrorCode(), error.getErrorText());
-        }
-
-        boolean valid = false;
-        if (inquireResult.getCards() != null && inquireResult.getCards().getCard() != null
-                && inquireResult.getCards().getCard().get(0) != null) {
-            valid = inquireResult.getCards().getCard().get(0).isValid();
-        } else {
-            LOG.warn("CIR response didn't contain result. Returning 'false' for identification: {}", identification);
-        }
-
-        return valid;
+        return inquireResult;
     }
 
     public void setCirService(ServiceSoap service) {

@@ -24,7 +24,7 @@ public class GrantAuthorizationCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void createCommandWithNullChargingStationId() {
-        new GrantAuthorizationCommand(null, IDENTIFYING_TOKEN, ROOT_IDENTITY_CONTEXT);
+        new GrantAuthorizationCommand(null, IDENTIFYING_TOKEN_ACCEPTED, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
@@ -34,7 +34,7 @@ public class GrantAuthorizationCommandTest {
 
     @Test(expected = NullPointerException.class)
     public void createCommandWithNullIdentityContext() {
-        new GrantAuthorizationCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, null);
+        new GrantAuthorizationCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN_ACCEPTED, null);
     }
 
     @Test

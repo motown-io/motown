@@ -40,5 +40,32 @@ public interface IdentifyingToken {
      */
     String getToken();
 
+    /**
+     * Gets the authenticationStatus
+     * 
+     * @return
+     */
     AuthenticationStatus getAuthenticationStatus();
+    
+    /**
+     * Gets the mobilityServiceProvider
+     * 
+     * @return the mobilityServiceProvider
+     */
+    String getMobilityServiceProvider();
+    
+    /**
+     * Gets the visible ID
+     * 
+     * @return visibleId
+     */
+    String getVisibleId();
+    
+    /**
+     * Determines if the Token is valid
+     * 
+     * returns true if authenticationstatus is 'ACCEPTED'
+     * 
+     */
+    boolean isValid();
 }

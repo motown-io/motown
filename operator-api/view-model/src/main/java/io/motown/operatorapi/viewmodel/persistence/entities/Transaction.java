@@ -34,6 +34,10 @@ public class Transaction {
     private Date created;
 
     private String chargingStationId;
+    
+    private String mobilityServiceProvider;
+    
+    private String visibleId;
 
     @Column(unique = true)
     private String transactionId;
@@ -64,12 +68,14 @@ public class Transaction {
         this.transactionId = transactionId;
     }
 
-    public Transaction(String chargingStationId, String transactionId, EvseId evseId, String idTag, int meterStart, Date startedTimestamp) {
+    public Transaction(String chargingStationId, String transactionId, EvseId evseId, String idTag, int meterStart, Date startedTimestamp, String mobilityServiceProvider, String visibleId) {
         this(chargingStationId, transactionId);
         this.evseId = checkNotNull(evseId);
         this.idTag = idTag;
         this.meterStart = meterStart;
         this.startedTimestamp = startedTimestamp != null ? new Date(startedTimestamp.getTime()) : null;
+        this.mobilityServiceProvider = mobilityServiceProvider;
+        this.visibleId = visibleId;
     }
 
     public Long getId() {
@@ -167,4 +173,20 @@ public class Transaction {
     protected void onUpdate() {
         updated = new Date();
     }
+
+	public String getMobilityServiceProvider() {
+		return mobilityServiceProvider;
+	}
+
+	public void setMobilityServiceProvider(String mobilityServiceProvider) {
+		this.mobilityServiceProvider = mobilityServiceProvider;
+	}
+
+	public String getVisibleId() {
+		return visibleId;
+	}
+
+	public void setVisibleId(String visibleId) {
+		this.visibleId = visibleId;
+	}
 }

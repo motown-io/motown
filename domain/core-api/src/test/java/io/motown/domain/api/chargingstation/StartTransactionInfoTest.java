@@ -29,12 +29,12 @@ public class StartTransactionInfoTest {
 
     @Test(expected = NullPointerException.class)
     public void nullEvseIdShouldThrowException() {
-        new StartTransactionInfo(null, 0, new Date(), IDENTIFYING_TOKEN, Collections.<String, String>emptyMap());
+        new StartTransactionInfo(null, 0, new Date(), IDENTIFYING_TOKEN_ACCEPTED, Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
     public void nullTimestampShouldThrowException() {
-        new StartTransactionInfo(EVSE_ID, 0, null, IDENTIFYING_TOKEN, Collections.<String, String>emptyMap());
+        new StartTransactionInfo(EVSE_ID, 0, null, IDENTIFYING_TOKEN_ACCEPTED, Collections.<String, String>emptyMap());
     }
 
     @Test(expected = NullPointerException.class)
@@ -44,7 +44,7 @@ public class StartTransactionInfoTest {
 
     @Test(expected = NullPointerException.class)
     public void nullAttributesShouldThrowException() {
-        new StartTransactionInfo(EVSE_ID, 0, new Date(), IDENTIFYING_TOKEN, null);
+        new StartTransactionInfo(EVSE_ID, 0, new Date(), IDENTIFYING_TOKEN_ACCEPTED, null);
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -52,13 +52,13 @@ public class StartTransactionInfoTest {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("key", "value");
 
-        new StartTransactionInfo(EVSE_ID, 0, new Date(), IDENTIFYING_TOKEN, attributes).getAttributes().put("key2", "value2");
+        new StartTransactionInfo(EVSE_ID, 0, new Date(), IDENTIFYING_TOKEN_ACCEPTED, attributes).getAttributes().put("key2", "value2");
     }
 
     @Test
     public void testImmutableDate() {
         Date now = new Date();
-        StartTransactionInfo startTransactionInfo = new StartTransactionInfo(EVSE_ID, 0, now, IDENTIFYING_TOKEN, Collections.<String, String>emptyMap());
+        StartTransactionInfo startTransactionInfo = new StartTransactionInfo(EVSE_ID, 0, now, IDENTIFYING_TOKEN_ACCEPTED, Collections.<String, String>emptyMap());
         startTransactionInfo.getTimestamp().setTime(TWO_MINUTES_AGO.getTime());
         assertEquals(now, startTransactionInfo.getTimestamp());
     }

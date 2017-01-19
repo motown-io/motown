@@ -48,11 +48,15 @@ public class TextualTokenTypeAdapterDeserializerTest {
         JsonObject textualTokenJson = new JsonObject();
         textualTokenJson.addProperty("token", "1");
         textualTokenJson.addProperty("status", "ACCEPTED");
-
+        textualTokenJson.addProperty("mobilityServiceProvider", "MSP");
+        textualTokenJson.addProperty("visibleId", "7007");
+        
         TextualToken textualToken = adapter.deserialize(textualTokenJson, TextualToken.class, null);
 
         assertEquals(textualTokenJson.get("token").getAsString(), textualToken.getToken());
         assertEquals(textualTokenJson.get("status").getAsString(), textualToken.getAuthenticationStatus().toString());
+        assertEquals(textualTokenJson.get("mobilityServiceProvider").getAsString(), textualToken.getMobilityServiceProvider());
+        assertEquals(textualTokenJson.get("visibleId").getAsString(), textualToken.getVisibleId());
     }
 
     @Test(expected = JsonParseException.class)

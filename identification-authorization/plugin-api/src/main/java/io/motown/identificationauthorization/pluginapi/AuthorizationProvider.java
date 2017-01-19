@@ -23,11 +23,10 @@ import io.motown.domain.api.chargingstation.IdentifyingToken;
 public interface AuthorizationProvider {
 
     /**
-     * Validates the identification.
-     *
-     * @param identification the identification to validate.
-     * @return true if the identification is valid, false if not or if the identification is unknown.
+     * Returns a validated identifyingToken
+     * 
+     * @param token
+     * @return validated IdentifyingToken
      */
-    boolean isValid(IdentifyingToken identification);
-
+	IdentifyingToken validate(IdentifyingToken token);
 }
