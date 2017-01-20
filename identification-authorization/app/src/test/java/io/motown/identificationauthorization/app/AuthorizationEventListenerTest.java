@@ -51,8 +51,8 @@ public class AuthorizationEventListenerTest {
         eventListener = new AuthorizationEventListener();
 
         service = mock(IdentificationAuthorizationService.class);
-        when(service.isValid(INVALID_IDENTIFYING_TOKEN)).thenReturn(false);
-        when(service.isValid(IDENTIFYING_TOKEN)).thenReturn(true);
+        when(service.validate(IDENTIFYING_TOKEN)).thenReturn(IDENTIFYING_TOKEN_ACCEPTED);
+        when(service.validate(INVALID_IDENTIFYING_TOKEN)).thenReturn(INVALID_IDENTIFYING_TOKEN);
         eventListener.setIdentificationAuthorizationService(service);
 
         gateway = mock(AuthorizationCommandGateway.class);
@@ -67,10 +67,10 @@ public class AuthorizationEventListenerTest {
         CorrelationToken token = new CorrelationToken();
         eventListener.onEvent(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, identityContext), token);
 
-        verify(service).isValid(IDENTIFYING_TOKEN);
+        verify(service).validate(IDENTIFYING_TOKEN);
 
         final CommandMessage command = asCommandMessage(
-                new GrantAuthorizationCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, identityContext)).andMetaData(Collections.singletonMap(CorrelationToken.KEY, token));
+                new GrantAuthorizationCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN_ACCEPTED, identityContext)).andMetaData(Collections.singletonMap(CorrelationToken.KEY, token));
 
         // because GenericCommandMessage doesn't implement 'equals' method we have to provide a ArgumentMatcher to validate the argument
         verify(gateway).send(argThat(new ArgumentMatcher<CommandMessage>() {
@@ -91,7 +91,7 @@ public class AuthorizationEventListenerTest {
 
         eventListener.onEvent(new AuthorizationRequestedEvent(CHARGING_STATION_ID, INVALID_IDENTIFYING_TOKEN, identityContext), token);
 
-        verify(service).isValid(INVALID_IDENTIFYING_TOKEN);
+        verify(service).validate(INVALID_IDENTIFYING_TOKEN);
 
         final CommandMessage command = asCommandMessage(
                 new DenyAuthorizationCommand(CHARGING_STATION_ID, INVALID_IDENTIFYING_TOKEN, identityContext)).andMetaData(Collections.singletonMap(CorrelationToken.KEY, token));
@@ -114,7 +114,7 @@ public class AuthorizationEventListenerTest {
     public void testNullCorrelationId() {
         eventListener.onEvent(new AuthorizationRequestedEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, identityContext), null);
 
-        verify(service).isValid(IDENTIFYING_TOKEN);
+        verify(service).validate(IDENTIFYING_TOKEN);
 
         // because GenericCommandMessage doesn't implement 'equals' method we have to provide a ArgumentMatcher to validate the argument
         verify(gateway).send(argThat(new ArgumentMatcher<CommandMessage>() {

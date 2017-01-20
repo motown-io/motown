@@ -96,8 +96,10 @@ public class StartTransactionFutureEventCallback extends FutureEventCallback<Aut
 
         Transaction transaction = domainService.createTransaction(startTransactionInfo.getEvseId());
         NumberedTransactionId transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, transaction.getId().intValue());
-
-        domainService.startTransactionNoAuthorize(chargingStationId, transactionId, startTransactionInfo, addOnIdentity);
+        IdentifyingToken identifyingToken = resultEvent.getIdentifyingToken();
+        StartTransactionInfo extendedStartTransactionInfo = new StartTransactionInfo(startTransactionInfo.getEvseId(), startTransactionInfo.getMeterStart(), startTransactionInfo.getTimestamp(), identifyingToken, startTransactionInfo.getAttributes());
+        
+        domainService.startTransactionNoAuthorize(chargingStationId, transactionId, extendedStartTransactionInfo, addOnIdentity);
 
         IdTagInfo__ idTagInfo = new IdTagInfo__();
         idTagInfo.setStatus(convert(resultEvent.getAuthenticationStatus()));

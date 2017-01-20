@@ -42,19 +42,19 @@ public class RequestSendAuthorizationListJsonCommandHandlerTest {
 
     @Test
     public void testSendAuthorizationListCommand() throws UserIdentityUnauthorizedException {
-        JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'FULL',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'FULL',items:[{token:'1',status:'ACCEPTED', mobilityServiceProvider:'MSP',visibleId:'7007'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test
     public void testDifferentialUpdateType() throws UserIdentityUnauthorizedException {
-        JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'DIFFERENTIAL',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'DIFFERENTIAL',items:[{token:'1',status:'ACCEPTED', mobilityServiceProvider:'MSP',visibleId:'7007'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidUpdateType() throws UserIdentityUnauthorizedException {
-        JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'NEW',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'NEW',items:[{token:'1',status:'ACCEPTED', mobilityServiceProvider:'MSP',visibleId:'7007'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, commandObject, ROOT_IDENTITY_CONTEXT);
     }
 
@@ -66,7 +66,7 @@ public class RequestSendAuthorizationListJsonCommandHandlerTest {
 
     @Test(expected = IllegalStateException.class)
     public void handleWithNullChargingStation() throws UserIdentityUnauthorizedException {
-        JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'DIFFERENTIAL',items:[{token:'1',status:'ACCEPTED'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
+        JsonObject commandObject = gson.fromJson("{listVersion:1,updateType:'DIFFERENTIAL',items:[{token:'1',status:'ACCEPTED', mobilityServiceProvider:'MSP',visibleId:'7007'},{token:'2',status:'BLOCKED'}]}", JsonObject.class);
         handler.handle(UNKNOWN_CHARGING_STATION_ID.getId(), commandObject, ROOT_IDENTITY_CONTEXT);
     }
 

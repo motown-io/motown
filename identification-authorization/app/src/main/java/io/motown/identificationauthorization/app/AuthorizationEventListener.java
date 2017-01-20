@@ -19,6 +19,7 @@ import io.motown.domain.api.chargingstation.AuthorizationRequestedEvent;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.DenyAuthorizationCommand;
 import io.motown.domain.api.chargingstation.GrantAuthorizationCommand;
+import io.motown.domain.api.chargingstation.IdentifyingToken;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.domain.api.security.NullUserIdentity;
@@ -53,14 +54,16 @@ public class AuthorizationEventListener {
     @EventHandler
     protected void onEvent(AuthorizationRequestedEvent event,
                            @MetaData(value = CorrelationToken.KEY, required = false) CorrelationToken correlationToken) {
-        boolean valid = identificationAuthorizationService.isValid(event.getIdentifyingToken());
+    	IdentifyingToken identifyingToken = event.getIdentifyingToken();
+    	
+    	identifyingToken = identificationAuthorizationService.validate(identifyingToken);
 
         CommandMessage commandMessage;
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
-        if (valid) {
-            commandMessage = asCommandMessage(new GrantAuthorizationCommand(event.getChargingStationId(), event.getIdentifyingToken(), identityContext));
+        if (identifyingToken.isValid()) {
+            commandMessage = asCommandMessage(new GrantAuthorizationCommand(event.getChargingStationId(), identifyingToken, identityContext));
         } else {
-            commandMessage = asCommandMessage(new DenyAuthorizationCommand(event.getChargingStationId(), event.getIdentifyingToken(), identityContext));
+            commandMessage = asCommandMessage(new DenyAuthorizationCommand(event.getChargingStationId(), identifyingToken, identityContext));
         }
 
         if (correlationToken != null) {

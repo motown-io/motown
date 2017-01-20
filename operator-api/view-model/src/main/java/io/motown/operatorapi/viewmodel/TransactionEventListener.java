@@ -40,9 +40,12 @@ public class TransactionEventListener {
     public void handle(TransactionStartedEvent event) {
         LOG.debug("TransactionStartedEvent for [{}] received!", event.getChargingStationId());
 
+        StartTransactionInfo startTransactionInfo = event.getStartTransactionInfo();
+        IdentifyingToken identifyingToken = startTransactionInfo.getIdentifyingToken();
+        
         Transaction transaction = new Transaction(event.getChargingStationId().getId(), event.getTransactionId().getId(),
-                event.getStartTransactionInfo().getEvseId(), event.getStartTransactionInfo().getIdentifyingToken().getToken(),
-                event.getStartTransactionInfo().getMeterStart(), event.getStartTransactionInfo().getTimestamp());
+                startTransactionInfo.getEvseId(), identifyingToken.getToken(),
+                startTransactionInfo.getMeterStart(), startTransactionInfo.getTimestamp(), identifyingToken.getMobilityServiceProvider(), identifyingToken.getVisibleId());
         repository.createOrUpdate(transaction);
     }
 

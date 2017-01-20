@@ -46,6 +46,8 @@ public final class CirPluginTestUtils {
 
         ArrayOfCard arrayOfCard = getArrayOfCard(IDENTIFYING_TOKEN);
         arrayOfCard.getCard().get(0).setValid(valid);
+        arrayOfCard.getCard().get(0).setProvider("MSP");
+        arrayOfCard.getCard().get(0).setExternalID("777");
         result.setCards(arrayOfCard);
 
         return result;

@@ -44,31 +44,49 @@ public class TextualTokenTypeAdapterDeserializer implements TypeAdapterDeseriali
 
     @Override
     public TextualToken deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
-        JsonObject obj;
-        String token;
 
+    	JsonObject obj;
         try {
             obj = json.getAsJsonObject();
         } catch (ClassCastException | IllegalStateException e) {
             throw new JsonParseException("TextualToken must be a JSON object", e);
         }
 
-        try {
-            token = obj.getAsJsonPrimitive(TOKEN_MEMBER) != null ? obj.getAsJsonPrimitive(TOKEN_MEMBER).getAsString() : "";
-        } catch (ClassCastException | IllegalStateException e) {
-            throw new JsonParseException("token must be a JSON string", e);
-        }
+        String token = getMemberAsString(obj, TOKEN_MEMBER, "");
 
-        try {
-            JsonPrimitive authenticationStatus = obj.getAsJsonPrimitive("status");
-            if (authenticationStatus != null) {
-                String status = authenticationStatus.getAsString();
-                return new TextualToken(token, IdentifyingToken.AuthenticationStatus.valueOf(status));
-            }
-        } catch (ClassCastException | IllegalStateException e) {
-            throw new JsonParseException("status must be a JSON string", e);
+        IdentifyingToken.AuthenticationStatus statusToSet = null;
+        String status = getMemberAsString(obj, "status", null);
+        if (status != null)
+        {
+	        statusToSet = IdentifyingToken.AuthenticationStatus.valueOf(status);
         }
-
-        return new TextualToken(token);
+    	String mobilityServiceProvider = getMemberAsString(obj, "mobilityServiceProvider", null);
+    	String visibleId = getMemberAsString(obj, "visibleId", null);
+    	
+    	return new TextualToken(token, statusToSet, mobilityServiceProvider, visibleId);
     }
+
+    /**
+     * getMember
+     * @param obj
+     * @param memberName
+     * @param defaultValue
+     * 
+     * @return
+     */
+    private String getMemberAsString(JsonObject obj, String memberName, String defaultValue)
+    {
+        try {
+     	   JsonPrimitive value = obj.getAsJsonPrimitive(memberName);
+
+	        if (value != null) {
+	            return value.getAsString();
+	        }
+	        return defaultValue;
+	        
+        } catch (ClassCastException | IllegalStateException e) {
+            throw new JsonParseException("Not a JSON string", e);
+        }
+    }
+    
 }

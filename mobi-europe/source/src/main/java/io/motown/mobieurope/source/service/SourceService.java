@@ -52,7 +52,7 @@ public class SourceService {
         LOG.trace("Authorize called");
         SourceAuthorizeResponse sourceAuthorizeResponse;
 
-        if (identificationAuthorizationService.isValid(new TextualToken(sourceAuthorizeRequest.getUserIdentifier()))) {
+        if (identificationAuthorizationService.validate(new TextualToken(sourceAuthorizeRequest.getUserIdentifier())).isValid()) {
             DestinationEndpoint destinationEndpoint = destinationEndpointRepository.findDestinationEndpointByPmsIdentifier(sourceAuthorizeRequest.getServicePms());
             if (destinationEndpoint != null) {
                 DestinationClient destinationClient = new DestinationClient(destinationEndpoint.getDestinationEndpointUrl());

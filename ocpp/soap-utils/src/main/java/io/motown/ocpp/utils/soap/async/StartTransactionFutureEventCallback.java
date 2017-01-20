@@ -21,6 +21,10 @@ import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.domain.utils.axon.FutureEventCallback;
 import io.motown.ocpp.viewmodel.persistence.entities.Transaction;
 import io.motown.utils.soap.async.ContinuationFutureCallback;
+
+import java.util.Date;
+import java.util.Map;
+
 import org.apache.cxf.continuations.Continuation;
 import org.axonframework.domain.EventMessage;
 
@@ -74,7 +78,10 @@ public class StartTransactionFutureEventCallback extends FutureEventCallback<Sta
         Transaction transaction = domainService.createTransaction(startTransaction.getEvseId());
         NumberedTransactionId transactionId = new NumberedTransactionId(chargingStationId, protocolIdentifier, transaction.getId().intValue());
 
-        domainService.startTransactionNoAuthorize(chargingStationId, transactionId, startTransaction, addOnIdentity);
+        IdentifyingToken identifyingToken = resultEvent.getIdentifyingToken();
+        StartTransactionInfo extendedStartTransactionInfo = new StartTransactionInfo(startTransaction.getEvseId(), startTransaction.getMeterStart(), startTransaction.getTimestamp(), identifyingToken, startTransaction.getAttributes());
+        
+        domainService.startTransactionNoAuthorize(chargingStationId, transactionId, extendedStartTransactionInfo, addOnIdentity);
 
         StartTransactionFutureResult futureResult = new StartTransactionFutureResult();
         futureResult.setAuthorizationResultStatus(resultEvent.getAuthenticationStatus());

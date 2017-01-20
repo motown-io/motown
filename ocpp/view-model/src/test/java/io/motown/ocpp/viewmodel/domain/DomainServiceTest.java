@@ -317,7 +317,7 @@ public class DomainServiceTest {
     @Test
     public void testStartTransactionEmptyAttributesChargingStation() {
         Date now = new Date();
-        StartTransactionInfo startTransactionInfo = new StartTransactionInfo(EVSE_ID, 0, now, IDENTIFYING_TOKEN, Collections.<String, String>emptyMap());
+        StartTransactionInfo startTransactionInfo = new StartTransactionInfo(EVSE_ID, 0, now, IDENTIFYING_TOKEN_ACCEPTED, Collections.<String, String>emptyMap());
         domainService.startTransactionNoAuthorize(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, TRANSACTION_ID, startTransactionInfo, ADD_ON_IDENTITY);
 
         verify(gateway).send(new StartTransactionCommand(REGISTERED_AND_CONFIGURED_CHARGING_STATION_ID, TRANSACTION_ID, startTransactionInfo, NULL_USER_IDENTITY_CONTEXT));

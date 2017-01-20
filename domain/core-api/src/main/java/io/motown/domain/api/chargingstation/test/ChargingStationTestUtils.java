@@ -254,7 +254,7 @@ public final class ChargingStationTestUtils {
     /**
      * The default identifying token, status ACCEPTED.
      */
-    public static final IdentifyingToken IDENTIFYING_TOKEN_ACCEPTED = new TextualToken("ACCEPTED", IdentifyingToken.AuthenticationStatus.ACCEPTED);
+    public static final IdentifyingToken IDENTIFYING_TOKEN_ACCEPTED = new TextualToken("ACCEPTED", IdentifyingToken.AuthenticationStatus.ACCEPTED, "MSP", "7007");
     /**
      * The default identifying token, status BLOCKED.
      */
@@ -279,7 +279,7 @@ public final class ChargingStationTestUtils {
     /**
      * The default start transaction information.
      */
-    public static final StartTransactionInfo START_TRANSACTION_INFO = new StartTransactionInfo(EVSE_ID, 1, new Date(), IDENTIFYING_TOKEN, Collections.<String, String>emptyMap());
+    public static final StartTransactionInfo START_TRANSACTION_INFO = new StartTransactionInfo(EVSE_ID, 1, new Date(), IDENTIFYING_TOKEN_ACCEPTED, Collections.<String, String>emptyMap());
 
     /**
      * The default address.

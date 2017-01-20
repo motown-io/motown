@@ -253,7 +253,7 @@ public class OcppJsonServiceTest {
     public void sendLocalListRequest() throws IOException {
         Set<IdentifyingToken> list = Sets.newHashSet();
         String idTag = "044943121F1D80";
-        TextualToken id = new TextualToken(idTag, IdentifyingToken.AuthenticationStatus.ACCEPTED);
+        TextualToken id = new TextualToken(idTag, IdentifyingToken.AuthenticationStatus.ACCEPTED, "MSP", "7007");
         list.add(id);
 
         int listVersion = 1;

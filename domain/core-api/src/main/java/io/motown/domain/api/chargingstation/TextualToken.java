@@ -29,6 +29,12 @@ public final class TextualToken implements IdentifyingToken {
 
     private final AuthenticationStatus authenticationStatus;
 
+    @Nullable
+    private final String mobilityServiceProvider;
+
+    @Nullable
+    private final String visibleId;
+    
     /**
      * Create a {@code TextualToken} with a {@code String} based token.
      *
@@ -48,9 +54,27 @@ public final class TextualToken implements IdentifyingToken {
      * @throws NullPointerException     if {@code token} is null.
      */
     public TextualToken(String token, @Nullable AuthenticationStatus status) {
-        checkNotNull(token);
-        this.token = token;
+        this(token, status, null, null);
+    }
+
+    /**
+     * 
+     * @param token
+     * @param status
+     * @param mobilityServiceProvider
+     * @param visibleId
+     */
+    public TextualToken(String token, @Nullable AuthenticationStatus status, @Nullable String mobilityServiceProvider, @Nullable String visibleId) {
+        
+        this.token = checkNotNull(token);
         this.authenticationStatus = status;
+        if (isValid())
+        {
+	        checkNotNull(mobilityServiceProvider);
+	        checkNotNull(visibleId);
+        }
+    	this.mobilityServiceProvider = mobilityServiceProvider;
+    	this.visibleId = visibleId;
     }
 
     /**
@@ -70,9 +94,37 @@ public final class TextualToken implements IdentifyingToken {
         return authenticationStatus;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Nullable
+    public String getMobilityServiceProvider()
+    {
+    	return mobilityServiceProvider;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Nullable
+    public String getVisibleId()
+    {
+    	return visibleId;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isValid()
+    {
+    	return authenticationStatus != null && AuthenticationStatus.ACCEPTED.equals(authenticationStatus);
+    }
+    
     @Override
     public int hashCode() {
-        return Objects.hash(token);
+        return Objects.hash(token, authenticationStatus, mobilityServiceProvider, visibleId);
     }
 
     @Override
@@ -84,6 +136,9 @@ public final class TextualToken implements IdentifyingToken {
             return false;
         }
         final TextualToken other = (TextualToken) obj;
-        return Objects.equals(this.token, other.token);
+        return Objects.equals(this.token, other.token) && 
+        		Objects.equals(this.authenticationStatus, other.authenticationStatus) && 
+        		Objects.equals(this.mobilityServiceProvider, other.mobilityServiceProvider) && 
+        		Objects.equals(this.visibleId, other.visibleId);
     }
 }

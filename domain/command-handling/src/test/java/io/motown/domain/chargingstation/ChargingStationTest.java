@@ -246,7 +246,7 @@ public class ChargingStationTest {
     @Test
     public void testStartTransactionOnUnknownEvse() {
         fixture.given(CHARGING_STATION)
-                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, new StartTransactionInfo(UNKNOWN_EVSE_ID, 0, new Date(), IDENTIFYING_TOKEN, Collections.<String, String>emptyMap()), NULL_USER_IDENTITY_CONTEXT))
+                .when(new StartTransactionCommand(CHARGING_STATION_ID, TRANSACTION_ID, new StartTransactionInfo(UNKNOWN_EVSE_ID, 0, new Date(), IDENTIFYING_TOKEN_ACCEPTED, Collections.<String, String>emptyMap()), NULL_USER_IDENTITY_CONTEXT))
                 .expectEvents(new EvseNotFoundEvent(CHARGING_STATION_ID, UNKNOWN_EVSE_ID, NULL_USER_IDENTITY_CONTEXT));
     }
 
@@ -743,8 +743,8 @@ public class ChargingStationTest {
     @Test
     public void testGrantAuthorization() {
         fixture.given(CHARGING_STATION)
-                .when(new GrantAuthorizationCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN, NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new AuthorizationResultEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN, AuthorizationResultStatus.ACCEPTED, NULL_USER_IDENTITY_CONTEXT));
+                .when(new GrantAuthorizationCommand(CHARGING_STATION_ID, IDENTIFYING_TOKEN_ACCEPTED, NULL_USER_IDENTITY_CONTEXT))
+                .expectEvents(new AuthorizationResultEvent(CHARGING_STATION_ID, IDENTIFYING_TOKEN_ACCEPTED, AuthorizationResultStatus.ACCEPTED, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test

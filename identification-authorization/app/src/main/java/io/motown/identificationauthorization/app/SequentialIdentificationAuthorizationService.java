@@ -29,24 +29,24 @@ public class SequentialIdentificationAuthorizationService implements Identificat
     }
 
     /**
-     * Validates the token with the configured authentication providers, as soon as one provider indicates the
-     * identification is valid this will be the result.
+     * Validates the token with the configured authentication providers, as soon as one provider provides
+     * valid authorization this will be the result.
      *
-     * @param token identifying token to be validated.
-     * @return true if one of the authentication providers indicates the identification is valid, otherwise false.
+     * @param token identifying token for which authorization is required
+     * @return validated IdentifyingToken
      */
     @Override
-    public boolean isValid(IdentifyingToken token) {
-        boolean valid = false;
-
-        for(AuthorizationProvider provider : providers) {
-            if(provider.isValid(token)) {
-                valid = true;
-                break;
-            }
+    public IdentifyingToken validate(IdentifyingToken token)
+    {
+        for(AuthorizationProvider provider : providers) 
+        {
+        	IdentifyingToken validatedToken = provider.validate(token);
+        	if (validatedToken.isValid())
+        	{
+        		return validatedToken;
+        	}
         }
-
-        return valid;
+        return token;
     }
 
 }

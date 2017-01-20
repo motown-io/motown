@@ -16,7 +16,10 @@
 package io.motown.sample.simple.authentication;
 
 import io.motown.domain.api.chargingstation.IdentifyingToken;
+import io.motown.domain.api.chargingstation.IdentifyingToken.AuthenticationStatus;
+import io.motown.domain.api.chargingstation.TextualToken;
 import io.motown.identificationauthorization.pluginapi.AuthorizationProvider;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,9 +32,9 @@ public class DummyIdentificationAuthorization implements AuthorizationProvider {
     private static final Logger LOG = LoggerFactory.getLogger(DummyIdentificationAuthorization.class);
 
     @Override
-    public boolean isValid(IdentifyingToken identification) {
-        LOG.warn("Using DummyIdentificationAuthorization for identification authentication. This will always return 'valid'.");
-        return true;
+    public IdentifyingToken validate(IdentifyingToken token)
+    {
+    	return new TextualToken(token.getToken(), AuthenticationStatus.ACCEPTED, "MSP", "7007");
     }
 
 }

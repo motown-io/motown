@@ -43,7 +43,7 @@ public class RequestStartTransactionJsonCommandHandlerTest {
 
     @Test
     public void testStartTransaction() throws UserIdentityUnauthorizedException {
-        JsonObject command = gson.fromJson("{evseId:'1',identifyingToken:{token:'1',status:'ACCEPTED'}}", JsonObject.class);
+        JsonObject command = gson.fromJson("{evseId:'1',identifyingToken:{token:'1',status:'ACCEPTED', mobilityServiceProvider:'MSP', visibleId:'7007'}}", JsonObject.class);
         handler.handle(CHARGING_STATION_ID_STRING, command, ROOT_IDENTITY_CONTEXT);
     }
 
