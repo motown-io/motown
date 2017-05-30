@@ -16,8 +16,10 @@
 package io.motown.operatorapi.json.queries;
 
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
+import io.motown.operatorapi.viewmodel.persistence.entities.Reservation;
 import io.motown.operatorapi.viewmodel.persistence.entities.Transaction;
 import io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository;
+import io.motown.operatorapi.viewmodel.persistence.repositories.ReservationRepository;
 import io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository;
 
 import java.util.List;
@@ -27,6 +29,8 @@ public class OperatorApiService {
     private ChargingStationRepository repository;
 
     private TransactionRepository transactionRepository;
+
+    private ReservationRepository reservationRepository;
 
     public List<ChargingStation> findAllChargingStations(int offset, int limit) {
         return repository.findAll(offset, limit);
@@ -40,8 +44,16 @@ public class OperatorApiService {
         return transactionRepository.findAll(offset, limit);
     }
 
+    public List<Reservation> findAllReservations(int offset, int limit) {
+        return reservationRepository.findAll(offset, limit);
+    }
+    
     public Long getTotalNumberOfTransactions() {
         return transactionRepository.getTotalNumberOfTransactions();
+    }
+
+    public Long getTotalNumberOfReservations() {
+        return reservationRepository.getTotalNumberOfReservations();
     }
 
     public void setRepository(ChargingStationRepository repository) {

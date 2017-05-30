@@ -286,6 +286,25 @@ public class DomainService {
         commandGateway.send(new ReserveNowCommand(chargingStationId, reservationId, evseId, expiryDate, identityContext), correlationToken);
     }
 
+    public void informReservationFaulted(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+        commandGateway.send(new ReservationFaultedCommand(chargingStationId, evseId, identityContext), correlationToken);
+    }
+    
+    public void informReservationRejected(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+        commandGateway.send(new ReservationRejectedCommand(chargingStationId, evseId, identityContext), correlationToken);
+    }
+    
+    public void informChargingStationUnavailable(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+        commandGateway.send(new ChargingStationUnavailableCommand(chargingStationId, evseId, identityContext), correlationToken);
+    }
+    public void informChargingStationOccupied(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
+        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
+        commandGateway.send(new ChargingStationOccupiedCommand(chargingStationId, evseId, identityContext), correlationToken);
+    }
+    
     public void informReservationCancelled(ChargingStationId chargingStationId, ReservationId reservationId, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 

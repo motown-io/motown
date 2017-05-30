@@ -227,6 +227,18 @@ public class OcppRequestEventHandler {
         }
     }
 
+    @EventHandler
+    public void handle(CancelReservationRequestedEvent event, @MetaData(CorrelationToken.KEY) CorrelationToken correlationToken) {
+        LOG.info("CancelReservationRequestedEvent");
+
+        OcppRequestHandler ocppRequestHandler = getOcppRequestHandler(event.getChargingStationId());
+
+        if (ocppRequestHandler != null) {
+            ocppRequestHandler.handle(event, correlationToken);
+        }
+    }
+
+    
     public void setChargingStationRepository(ChargingStationRepository chargingStationRepository) {
         this.chargingStationRepository = chargingStationRepository;
     }

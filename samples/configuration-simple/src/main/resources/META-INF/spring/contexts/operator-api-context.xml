@@ -56,6 +56,10 @@
         <property name="repository" ref="transactionRepositoryOperatorApi"/>
     </bean>
 
+    <bean class="io.motown.operatorapi.viewmodel.ReservationEventListener">
+        <property name="repository" ref="reservationRepositoryOperatorApi"/>
+    </bean>
+
     <bean id="chargingStationRepositoryOperatorApi"
           class="io.motown.operatorapi.viewmodel.persistence.repositories.ChargingStationRepository">
         <property name="entityManagerFactory" ref="operatorApiEntityManagerFactory"/>
@@ -63,6 +67,11 @@
 
     <bean id="transactionRepositoryOperatorApi"
           class="io.motown.operatorapi.viewmodel.persistence.repositories.TransactionRepository">
+        <property name="entityManagerFactory" ref="operatorApiEntityManagerFactory"/>
+    </bean>
+
+    <bean id="reservationRepositoryOperatorApi"
+          class="io.motown.operatorapi.viewmodel.persistence.repositories.ReservationRepository">
         <property name="entityManagerFactory" ref="operatorApiEntityManagerFactory"/>
     </bean>
 

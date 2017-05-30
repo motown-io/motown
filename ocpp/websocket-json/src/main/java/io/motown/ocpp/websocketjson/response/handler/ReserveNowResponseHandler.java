@@ -54,11 +54,17 @@ public class ReserveNowResponseHandler extends ResponseHandler {
             case ACCEPTED:
                 domainService.informReserved(chargingStationId, reservationId, evseId, expiryDate, getCorrelationToken(), addOnIdentity);
                 break;
-            case REJECTED:
             case FAULTED:
+                domainService.informReservationFaulted(chargingStationId, evseId, getCorrelationToken(), addOnIdentity);
+                break;
             case OCCUPIED:
+                 domainService.informChargingStationOccupied(chargingStationId, evseId, getCorrelationToken(), addOnIdentity);
+                 break;
             case UNAVAILABLE:
-                LOG.info("Failed to reserve evse {} on charging station {}: {}", evseId.getId(), chargingStationId.getId(), response.getStatus().toString());
+                domainService.informChargingStationUnavailable(chargingStationId, evseId, getCorrelationToken(), addOnIdentity);
+                break;
+            case REJECTED:
+                domainService.informReservationRejected(chargingStationId, evseId, getCorrelationToken(), addOnIdentity);
                 break;
             default:
                 throw new AssertionError(String.format("Unknown reserve now response status: %s", response.getStatus()));

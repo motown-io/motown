@@ -19,10 +19,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
+import io.motown.domain.api.chargingstation.DataTransferMessage;
 import io.motown.domain.api.chargingstation.RequestDataTransferCommand;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
-import io.motown.operatorapi.viewmodel.model.DataTransferApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 
 /**
@@ -55,9 +55,10 @@ class RequestDataTransferJsonCommandHandler extends JsonCommandHandler {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
 
             if (chargingStation != null && chargingStation.communicationAllowed()) {
-                DataTransferApiCommand command = gson.fromJson(commandObject, DataTransferApiCommand.class);
-
-                commandGateway.send(new RequestDataTransferCommand(csId, command.getDataTransferMessage(), identityContext), new CorrelationToken());
+            	
+                DataTransferMessage dataTransferMessage = gson.fromJson(commandObject, DataTransferMessage.class);
+                
+                commandGateway.send(new RequestDataTransferCommand(csId, dataTransferMessage, identityContext), new CorrelationToken());
             }
         } catch (JsonSyntaxException ex) {
             throw new IllegalArgumentException("Data transfer command not able to parse the payload, is your json correctly formatted?", ex);

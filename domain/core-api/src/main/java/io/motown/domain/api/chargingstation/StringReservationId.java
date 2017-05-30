@@ -1,3 +1,4 @@
+package io.motown.domain.api.chargingstation;
 /**
  * Copyright (C) 2013 Motown.IO (info@motown.io)
  *
@@ -13,9 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+public class StringReservationId implements ReservationId {
 
-package io.motown.domain.api.chargingstation;
+	private String id;
+	
+	
+	public StringReservationId(String id)
+	{
+		this.id = id;
+	}
+	
+	@Override
+	public String getId() {
+		return id;
+	}
 
-public enum ReservationStatus {
-    ACCEPTED, FAULTED, OCCUPIED, REJECTED, UNAVAILABLE, CANCELLED
+	public int getNumber()
+	{
+		return Integer.valueOf(id.substring(id.lastIndexOf('_') + 1, id.length()));
+	}
+	
 }

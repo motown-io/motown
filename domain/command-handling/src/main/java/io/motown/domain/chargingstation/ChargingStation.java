@@ -422,17 +422,17 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
     }
 
     @CommandHandler
-    public void handle(RequestCancelReservationCommand command) {
+    public void handle(RequestCancelReservationCommand command, MetaData metaData) {
         checkCommandAllowed(command.getIdentityContext(), command.getClass());
 
         checkCommunicationAllowed();
 
-        apply(new CancelReservationRequestedEvent(command.getChargingStationId(), this.protocol, command.getReservationId(), command.getIdentityContext()));
+        apply(new CancelReservationRequestedEvent(command.getChargingStationId(), this.protocol, command.getReservationId(), command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
-    public void handle(CancelReservationCommand command) {
-        apply(new ReservationCancelledEvent(command.getChargingStationId(), command.getReservationId(), command.getIdentityContext()));
+    public void handle(CancelReservationCommand command, MetaData metaData) {
+        apply(new ReservationCancelledEvent(command.getChargingStationId(), command.getReservationId(), command.getIdentityContext()), metaData);
     }
 
     @CommandHandler
@@ -480,6 +480,26 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         apply(new ReservedNowEvent(command.getChargingStationId(), command.getReservationId(), command.getEvseId(), command.getExpiryDate(), command.getIdentityContext()), metaData);
     }
 
+    @CommandHandler
+    public void handle(ReservationFaultedCommand command, MetaData metaData) {
+        apply(new ReservationFaultedEvent(command.getChargingStationId(), command.getEvseId(), command.getIdentityContext()), metaData);
+    }
+
+    @CommandHandler
+    public void handle(ReservationRejectedCommand command, MetaData metaData) {
+        apply(new ReservationRejectedEvent(command.getChargingStationId(), command.getEvseId(), command.getIdentityContext()), metaData);
+    }
+
+    @CommandHandler
+    public void handle(ChargingStationUnavailableCommand command, MetaData metaData) {
+        apply(new ChargingStationUnavailableEvent(command.getChargingStationId(), command.getEvseId(), command.getIdentityContext()), metaData);
+    }
+
+    @CommandHandler
+    public void handle(ChargingStationOccupiedCommand command, MetaData metaData) {
+        apply(new ChargingStationOccupiedEvent(command.getChargingStationId(), command.getEvseId(), command.getIdentityContext()), metaData);
+    }
+    
     @CommandHandler
     public void handle(GrantAuthorizationCommand command) {
         apply(new AuthorizationResultEvent(command.getChargingStationId(), command.getIdentifyingToken(), AuthorizationResultStatus.ACCEPTED, command.getIdentityContext()));

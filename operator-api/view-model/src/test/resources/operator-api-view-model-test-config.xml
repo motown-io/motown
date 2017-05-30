@@ -30,4 +30,8 @@
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
+    <bean class="io.motown.operatorapi.viewmodel.persistence.repositories.ReservationRepository">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
 </beans>

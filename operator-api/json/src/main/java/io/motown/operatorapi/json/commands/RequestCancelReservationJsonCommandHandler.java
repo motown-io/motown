@@ -17,12 +17,14 @@ package io.motown.operatorapi.json.commands;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.CorrelationToken;
 import io.motown.domain.api.chargingstation.RequestCancelReservationCommand;
+import io.motown.domain.api.chargingstation.ReservationId;
+import io.motown.domain.api.chargingstation.StringReservationId;
 import io.motown.domain.api.security.IdentityContext;
 import io.motown.operatorapi.json.exceptions.UserIdentityUnauthorizedException;
-import io.motown.operatorapi.viewmodel.model.RequestCancelReservationApiCommand;
 import io.motown.operatorapi.viewmodel.persistence.entities.ChargingStation;
 
 class RequestCancelReservationJsonCommandHandler extends JsonCommandHandler {
@@ -52,9 +54,9 @@ class RequestCancelReservationJsonCommandHandler extends JsonCommandHandler {
             ChargingStation chargingStation = repository.findOne(chargingStationId);
             if (chargingStation != null && chargingStation.communicationAllowed()) {
 
-                RequestCancelReservationApiCommand command = gson.fromJson(commandObject, RequestCancelReservationApiCommand.class);
+                ReservationId reservationId = new StringReservationId(commandObject.get("reservationId").getAsString());
 
-                commandGateway.send(new RequestCancelReservationCommand(csId, command.getReservationId(), identityContext), new CorrelationToken());
+                commandGateway.send(new RequestCancelReservationCommand(csId, reservationId, identityContext), new CorrelationToken());
             } else {
                 throw new IllegalStateException("It is not possible to cancel a reservation on a charging station that is not registered");
             }

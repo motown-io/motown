@@ -40,8 +40,8 @@ public class CancelReservationResponseHandler extends ResponseHandler {
     @Override
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         CancelreservationResponse response = gson.fromJson(wampMessage.getPayloadAsString(), CancelreservationResponse.class);
-
-        switch (response.getStatus()) {
+        CancelreservationResponse.Status status = response.getStatus();
+        switch (status) {
             case ACCEPTED:
                 domainService.informReservationCancelled(chargingStationId, this.reservationId, getCorrelationToken(), addOnIdentity);
                 break;

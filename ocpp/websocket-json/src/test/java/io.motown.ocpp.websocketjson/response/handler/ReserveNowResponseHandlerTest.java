@@ -66,7 +66,7 @@ public class ReserveNowResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verifyZeroInteractions(domainService);
+        verify(domainService).informReservationRejected(CHARGING_STATION_ID, EVSE_ID, correlationToken, ADD_ON_IDENTITY);
     }
 
     @Test
@@ -77,7 +77,7 @@ public class ReserveNowResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verifyZeroInteractions(domainService);
+        verify(domainService).informReservationFaulted(CHARGING_STATION_ID, EVSE_ID, correlationToken, ADD_ON_IDENTITY);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class ReserveNowResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verifyZeroInteractions(domainService);
+        verify(domainService).informChargingStationUnavailable(CHARGING_STATION_ID, EVSE_ID, correlationToken, ADD_ON_IDENTITY);
     }
 
     @Test
@@ -99,7 +99,7 @@ public class ReserveNowResponseHandlerTest {
 
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
-        verifyZeroInteractions(domainService);
+        verify(domainService).informChargingStationOccupied(CHARGING_STATION_ID, EVSE_ID, correlationToken, ADD_ON_IDENTITY);
     }
 
 }

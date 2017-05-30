@@ -220,7 +220,7 @@ public class OcppJsonService {
         sendWampMessage(wampMessage, chargingStationId);
     }
 
-    public void cancelReservation(ChargingStationId chargingStationId, NumberedReservationId reservationId, CorrelationToken correlationToken) {
+    public void cancelReservation(ChargingStationId chargingStationId, ReservationId reservationId, CorrelationToken correlationToken) {
         Cancelreservation cancelReservationRequest = new Cancelreservation();
         cancelReservationRequest.setReservationId(reservationId.getNumber());
 

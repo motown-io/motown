@@ -26,4 +26,6 @@ public interface ReservationId {
      * @return the textual representation of the reservation identifier.
      */
     String getId();
+    
+    int getNumber();
 }

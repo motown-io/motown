@@ -811,6 +811,32 @@ public class ChargingStationTest {
                 .expectEvents(new ReservedNowEvent(CHARGING_STATION_ID, RESERVATION_ID, EVSE_ID, reservationExpiryDate, IDENTITY_CONTEXT));
     }
 
+    
+    @Test
+    public void testReservationRejectedResult() {
+        fixture.given(CHARGING_STATION)
+                .when(new ReservationRejectedCommand(CHARGING_STATION_ID, EVSE_ID, IDENTITY_CONTEXT))
+                .expectEvents(new ReservationRejectedEvent(CHARGING_STATION_ID, EVSE_ID, IDENTITY_CONTEXT));
+    }
+    @Test
+    public void testReservationFaultedResult() {
+        fixture.given(CHARGING_STATION)
+                .when(new ReservationFaultedCommand(CHARGING_STATION_ID, EVSE_ID, IDENTITY_CONTEXT))
+                .expectEvents(new ReservationFaultedEvent(CHARGING_STATION_ID, EVSE_ID, IDENTITY_CONTEXT));
+    }
+    @Test
+    public void testChargingStationOccupiedResult() {
+        fixture.given(CHARGING_STATION)
+                .when(new ChargingStationOccupiedCommand(CHARGING_STATION_ID, EVSE_ID, IDENTITY_CONTEXT))
+                .expectEvents(new ChargingStationOccupiedEvent(CHARGING_STATION_ID, EVSE_ID, IDENTITY_CONTEXT));
+    }
+    @Test
+    public void testChargingStationUnavailableResult() {
+        fixture.given(CHARGING_STATION)
+                .when(new ChargingStationUnavailableCommand(CHARGING_STATION_ID, EVSE_ID, IDENTITY_CONTEXT))
+                .expectEvents(new ChargingStationUnavailableEvent(CHARGING_STATION_ID, EVSE_ID, IDENTITY_CONTEXT));
+    }
+    
     @Test
     public void testUnlockEvseResult() {
         fixture.given(CHARGING_STATION)

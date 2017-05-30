@@ -45,9 +45,10 @@ public class DataTransferJsonCommandTest {
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, command, ROOT_IDENTITY_CONTEXT);
     }
 
+    
     @Test(expected = NullPointerException.class)
     public void testInvalidDataTransferCommand() throws UserIdentityUnauthorizedException {
-        JsonObject command = gson.fromJson("{IncorrectFieldName:{vendorID:'ALFEN',messageID:'1',data:'NEW DATA'}}", JsonObject.class);
+        JsonObject command = null;
         handler.handle(OperatorApiJsonTestUtils.CHARGING_STATION_ID_STRING, command, ROOT_IDENTITY_CONTEXT);
     }
 }

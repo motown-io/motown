@@ -28,6 +28,10 @@ public final class ChargingStationId implements Serializable {
 
     private final String id;
 
+    public ChargingStationId() {
+    	this.id = "";
+    }
+    
     public ChargingStationId(String id) {
         checkNotNull(id);
         checkArgument(!id.isEmpty());

@@ -283,17 +283,22 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         NumberedReservationId reservationIdentifier = domainService.generateReservationIdentifier(event.getChargingStationId(), event.getProtocol());
 
         ReservationStatus reservationStatus = chargingStationOcpp15Client.reserveNow(event.getChargingStationId(), event.getEvseId(), event.getIdentifyingToken(), event.getExpiryDate(), event.getParentIdentifyingToken(), reservationIdentifier.getNumber());
-
+        
         switch (reservationStatus) {
             case ACCEPTED:
                 domainService.informReserved(event.getChargingStationId(), reservationIdentifier, event.getEvseId(), event.getExpiryDate(), correlationToken, addOnIdentity);
                 break;
             case FAULTED:
+                domainService.informReservationFaulted(event.getChargingStationId(), event.getEvseId(), correlationToken, addOnIdentity);
+                break;
             case OCCUPIED:
+                domainService.informChargingStationOccupied(event.getChargingStationId(), event.getEvseId(), correlationToken, addOnIdentity);
+                break;
             case UNAVAILABLE:
+                domainService.informChargingStationUnavailable(event.getChargingStationId(), event.getEvseId(), correlationToken, addOnIdentity);
+                break;
             case REJECTED:
-                String reservationStatusMessage = reservationStatus.name();
-                LOG.info("Failed to reserve evse {} on charging station {}: {}", event.getEvseId().getId(), event.getChargingStationId().getId(), reservationStatusMessage);
+                domainService.informReservationRejected(event.getChargingStationId(), event.getEvseId(), correlationToken, addOnIdentity);
                 break;
             default:
                 throw new AssertionError(String.format("Unkown reserve now response response status: '%s'", reservationStatus));
