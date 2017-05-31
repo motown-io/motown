@@ -22,31 +22,29 @@ import java.util.Set;
 
 public class SequentialIdentificationAuthorizationService implements IdentificationAuthorizationService {
 
-    private Set<AuthorizationProvider> providers;
+	private Set<AuthorizationProvider> providers;
 
-    public void setProviders(Set<AuthorizationProvider> providers) {
-        this.providers = providers;
-    }
+	public void setProviders(Set<AuthorizationProvider> providers) {
+		this.providers = providers;
+	}
 
-    /**
-     * Validates the token with the configured authentication providers, as soon as one provider provides
-     * valid authorization this will be the result.
-     *
-     * @param token identifying token for which authorization is required
-     * @return validated IdentifyingToken
-     */
-    @Override
-    public IdentifyingToken validate(IdentifyingToken token)
-    {
-        for(AuthorizationProvider provider : providers) 
-        {
-        	IdentifyingToken validatedToken = provider.validate(token);
-        	if (validatedToken.isValid())
-        	{
-        		return validatedToken;
-        	}
-        }
-        return token;
-    }
+	/**
+	 * Validates the token with the configured authentication providers, as soon
+	 * as one provider provides valid authorization this will be the result.
+	 *
+	 * @param token
+	 *            identifying token for which authorization is required
+	 * @return validated IdentifyingToken
+	 */
+	@Override
+	public IdentifyingToken validate(IdentifyingToken token) {
+		for (AuthorizationProvider provider : providers) {
+			IdentifyingToken validatedToken = provider.validate(token);
+			if (validatedToken.isValid()) {
+				return validatedToken;
+			}
+		}
+		return token;
+	}
 
 }

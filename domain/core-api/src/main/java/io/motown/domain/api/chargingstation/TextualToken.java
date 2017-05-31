@@ -21,119 +21,124 @@ import java.util.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * A {@code String} based identifying token used to start or stop a charging transaction.
+ * A {@code String} based identifying token used to start or stop a charging
+ * transaction.
  */
 public final class TextualToken implements IdentifyingToken {
 
-    private final String token;
+	private final String token;
 
-    private final AuthenticationStatus authenticationStatus;
+	private final AuthenticationStatus authenticationStatus;
 
-    @Nullable
-    private final String mobilityServiceProvider;
+	@Nullable
+	private final String mobilityServiceProvider;
 
-    @Nullable
-    private final String visibleId;
-    
-    /**
-     * Create a {@code TextualToken} with a {@code String} based token.
-     *
-     * @param token the token.
-     * @throws NullPointerException     if {@code token} is null.
-     * @throws IllegalArgumentException if {@code token} is empty.
-     */
-    public TextualToken(String token) {
-        this(token, null);
-    }
+	@Nullable
+	private final String visibleId;
 
-    /**
-     * Create a {@code TextualToken} with a {@code String} based token.
-     *
-     * @param token  the token.
-     * @param status the authentication status
-     * @throws NullPointerException     if {@code token} is null.
-     */
-    public TextualToken(String token, @Nullable AuthenticationStatus status) {
-        this(token, status, null, null);
-    }
+	/**
+	 * Create a {@code TextualToken} with a {@code String} based token.
+	 *
+	 * @param token
+	 *            the token.
+	 * @throws NullPointerException
+	 *             if {@code token} is null.
+	 * @throws IllegalArgumentException
+	 *             if {@code token} is empty.
+	 */
+	public TextualToken(String token) {
+		this(token, null);
+	}
 
-    /**
-     * 
-     * @param token
-     * @param status
-     * @param mobilityServiceProvider
-     * @param visibleId
-     */
-    public TextualToken(String token, @Nullable AuthenticationStatus status, @Nullable String mobilityServiceProvider, @Nullable String visibleId) {
-        
-        this.token = checkNotNull(token);
-        this.authenticationStatus = status;
-    	this.mobilityServiceProvider = mobilityServiceProvider;
-    	this.visibleId = visibleId;
-    }
+	/**
+	 * Create a {@code TextualToken} with a {@code String} based token.
+	 *
+	 * @param token
+	 *            the token.
+	 * @param status
+	 *            the authentication status
+	 * @throws NullPointerException
+	 *             if {@code token} is null.
+	 */
+	public TextualToken(String token, @Nullable AuthenticationStatus status) {
+		this(token, status, null, null);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getToken() {
-        return token;
-    }
+	/**
+	 * 
+	 * @param token
+	 * @param status
+	 * @param mobilityServiceProvider
+	 * @param visibleId
+	 */
+	public TextualToken(String token, @Nullable AuthenticationStatus status, @Nullable String mobilityServiceProvider,
+			@Nullable String visibleId) {
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Nullable
-    public AuthenticationStatus getAuthenticationStatus() {
-        return authenticationStatus;
-    }
+		this.token = checkNotNull(token);
+		this.authenticationStatus = status;
+		this.mobilityServiceProvider = mobilityServiceProvider;
+		this.visibleId = visibleId;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Nullable
-    public String getMobilityServiceProvider()
-    {
-    	return mobilityServiceProvider;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Nullable
-    public String getVisibleId()
-    {
-    	return visibleId;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getToken() {
+		return token;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isValid()
-    {
-    	return authenticationStatus != null && AuthenticationStatus.ACCEPTED.equals(authenticationStatus);
-    }
-    
-    @Override
-    public int hashCode() {
-        return Objects.hash(token, authenticationStatus, mobilityServiceProvider, visibleId);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@Nullable
+	public AuthenticationStatus getAuthenticationStatus() {
+		return authenticationStatus;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        final TextualToken other = (TextualToken) obj;
-        return Objects.equals(this.token, other.token) && 
-        		Objects.equals(this.authenticationStatus, other.authenticationStatus) && 
-        		Objects.equals(this.mobilityServiceProvider, other.mobilityServiceProvider) && 
-        		Objects.equals(this.visibleId, other.visibleId);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@Nullable
+	public String getMobilityServiceProvider() {
+		return mobilityServiceProvider;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@Nullable
+	public String getVisibleId() {
+		return visibleId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isValid() {
+		return authenticationStatus != null && AuthenticationStatus.ACCEPTED.equals(authenticationStatus);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(token, authenticationStatus, mobilityServiceProvider, visibleId);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		final TextualToken other = (TextualToken) obj;
+		return Objects.equals(this.token, other.token)
+				&& Objects.equals(this.authenticationStatus, other.authenticationStatus)
+				&& Objects.equals(this.mobilityServiceProvider, other.mobilityServiceProvider)
+				&& Objects.equals(this.visibleId, other.visibleId);
+	}
 }

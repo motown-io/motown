@@ -32,8 +32,7 @@ public class DummyIdentificationAuthorization implements AuthorizationProvider {
     private static final Logger LOG = LoggerFactory.getLogger(DummyIdentificationAuthorization.class);
 
     @Override
-    public IdentifyingToken validate(IdentifyingToken token)
-    {
+    public IdentifyingToken validate(IdentifyingToken token) {
     	return new TextualToken(token.getToken(), AuthenticationStatus.ACCEPTED, "MSP", "7007");
     }
 

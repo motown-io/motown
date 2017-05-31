@@ -74,8 +74,7 @@ public class TextualTokenTypeAdapterDeserializer implements TypeAdapterDeseriali
      * 
      * @return
      */
-    private String getMemberAsString(JsonObject obj, String memberName, String defaultValue)
-    {
+    private String getMemberAsString(JsonObject obj, String memberName, String defaultValue) {
         try {
      	   JsonPrimitive value = obj.getAsJsonPrimitive(memberName);
 

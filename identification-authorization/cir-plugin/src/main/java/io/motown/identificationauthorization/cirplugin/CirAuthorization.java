@@ -90,8 +90,7 @@ public class CirAuthorization implements AuthorizationProvider {
         return identification;
     }
 
-    private InquireResult inquire(String token)
-    {
+    private InquireResult inquire(String token) {
         Card card = new Card();
         card.setCardID(token);
 
