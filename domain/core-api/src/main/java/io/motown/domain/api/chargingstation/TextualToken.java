@@ -68,11 +68,6 @@ public final class TextualToken implements IdentifyingToken {
         
         this.token = checkNotNull(token);
         this.authenticationStatus = status;
-        if (isValid())
-        {
-	        checkNotNull(mobilityServiceProvider);
-	        checkNotNull(visibleId);
-        }
     	this.mobilityServiceProvider = mobilityServiceProvider;
     	this.visibleId = visibleId;
     }
