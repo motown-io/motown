@@ -29,7 +29,8 @@ import io.motown.ocpi.persistence.entities.Endpoint.ModuleIdentifier;
 import io.motown.ocpi.persistence.entities.Subscription;
 
 /**
- * Batch job for synchronizing the token table against the OCPI providers token database
+ * Batch job for synchronizing the token table against the OCPI providers token
+ * database
  * 
  * AuthorizationOcpiUpdateJob
  * 
@@ -46,28 +47,27 @@ public class AuthorizationTokenUpdateJob {
 
 	@Autowired
 	private SubscriptionService subscriptionService;
-	
-	@Value( "${io.motown.ocpi.hosturl}" )
-    protected String HOST_URL;
+
+	@Value("${io.motown.ocpi.hosturl}")
+	protected String HOST_URL;
 
 	@Scheduled(cron = "${io.motown.ocpi.token.sync.cron}")
 	public void synchronizeTokens() {
 
-		LOG.info("Token Sync: host_url: " + HOST_URL);
-//		try {
-//			for (Subscription subscription : subscriptionService.findAllSubscriptions()) {
-//
-//				if (!subscription.isRegistered()) {
-//					subscriptionService.register(subscription);
-//				}
-//				Endpoint tokenEndpoint = subscription.getEndpoint(ModuleIdentifier.TOKENS);
-//				if (tokenEndpoint != null) {
-//					authorizationService.synchronizeTokens(tokenEndpoint);
-//				}
-//			}
-//		} catch (Exception ex) {
-//			LOG.error("Exception synchronizing tokens: ", ex);
-//			throw ex; // to make sure we get a rollback
-//		}
+		try {
+			for (Subscription subscription : subscriptionService.findAllSubscriptions()) {
+
+				if (!subscription.isRegistered()) {
+					subscriptionService.register(subscription);
+				}
+				Endpoint tokenEndpoint = subscription.getEndpoint(ModuleIdentifier.TOKENS);
+				if (tokenEndpoint != null) {
+					authorizationService.synchronizeTokens(tokenEndpoint);
+				}
+			}
+		} catch (Exception ex) {
+			LOG.error("Exception synchronizing tokens: ", ex);
+			throw ex; // to make sure we get a rollback
+		}
 	}
 }

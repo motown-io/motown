@@ -54,6 +54,7 @@ import io.motown.ocpi.service.SubscriptionService;
  * Implementation for CPO OCPI rest services
  * 
  * CpoService
+ * 
  * @author bartwolfs
  *
  */
@@ -64,13 +65,13 @@ public class CpoService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CpoService.class);
 
-	@Value( "${io.motown.ocpi.hosturl}" )
-    protected String HOST_URL;
+	@Value("${io.motown.ocpi.hosturl}")
+	protected String HOST_URL;
 
 	@Autowired
-    private SubscriptionService subscriptionService;
+	private SubscriptionService subscriptionService;
 
-    /**
+	/**
 	 * Finds Subscription object based on request.
 	 *
 	 * @param request
@@ -89,88 +90,91 @@ public class CpoService {
 		String tokenValue = tokenHeader.substring(tokenHeader.indexOf(" ")).trim();
 		LOG.info("Token value: " + tokenValue);
 
-		if (tokenValue != null){
+		if (tokenValue != null) {
 			return subscriptionService.findSubscriptionByLukasAuthorizationToken(tokenValue);
 		}
 		return null;
 	}
 
 	@GET
-    @Path("/{ocpiVersion}")
-    public Response getVersionDetails(@PathParam("ocpiVersion") String ocpiVersion, @Context HttpServletRequest request, @Context SecurityContext securityContext) {
+	@Path("/{ocpiVersion}")
+	public Response getVersionDetails(@PathParam("ocpiVersion") String ocpiVersion, @Context HttpServletRequest request,
+			@Context SecurityContext securityContext) {
 
-		LOG.info("GGG getVersionDetails " + ocpiVersion);
+		LOG.info("getVersionDetails " + ocpiVersion);
 
-        if (getSubscriptionFromRequest(request) == null){
-        	return new Response(StatusCode.CLIENT_ERROR, "Forbidden");
-        }
-        
-        VersionDetails versionDetails = new VersionDetails();
-        versionDetails.version = ocpiVersion;
-        io.motown.ocpi.dto.Endpoint endpoint = new io.motown.ocpi.dto.Endpoint();
-        endpoint.identifier = ModuleIdentifier.CREDENTIALS;
-        endpoint.url = HOST_URL + "/cpo/" + ocpiVersion + "/credentials/";
-        versionDetails.endpoints.add(endpoint);
-        
-        return new VersionDetailsResponse(versionDetails);
-    }
+		if (getSubscriptionFromRequest(request) == null) {
+			return new Response(StatusCode.CLIENT_ERROR, "Forbidden");
+		}
+
+		VersionDetails versionDetails = new VersionDetails();
+		versionDetails.version = ocpiVersion;
+		io.motown.ocpi.dto.Endpoint endpoint = new io.motown.ocpi.dto.Endpoint();
+		endpoint.identifier = ModuleIdentifier.CREDENTIALS;
+		endpoint.url = HOST_URL + "/cpo/" + ocpiVersion + "/credentials/";
+		versionDetails.endpoints.add(endpoint);
+
+		return new VersionDetailsResponse(versionDetails);
+	}
 
 	@GET
-    @Path("/versions")
-    public Response getVersions(@Context HttpServletRequest request) {
+	@Path("/versions")
+	public Response getVersions(@Context HttpServletRequest request) {
 
-		LOG.info("GGG getVersions");
-        if (getSubscriptionFromRequest(request) == null){
-        	return new Response(StatusCode.CLIENT_ERROR, "Forbidden");
-        }
-        
-        List<Version> versions = new ArrayList<Version>();
+		LOG.info("getVersions");
+		if (getSubscriptionFromRequest(request) == null) {
+			return new Response(StatusCode.CLIENT_ERROR, "Forbidden");
+		}
 
-        for (String supportedVersion : Arrays.asList(AppConfig.SUPPORTED_VERSIONS)){
-        	Version version = new Version();
-        	version.version = supportedVersion;
-        	version.url = HOST_URL + "/cpo/" + supportedVersion;
-            versions.add(version);
-        }
-        return new VersionsResponse(versions);
-    }
+		List<Version> versions = new ArrayList<Version>();
 
-    @PUT
-    @Path("/{ocpiVersion}/credentials")
-    public Response putCredentials(Credentials credentials, @PathParam("ocpiVersion") String ocpiVersion, @Context HttpServletRequest request, @Context SecurityContext securityContext) {
-        LOG.info("putCredentials()");
+		for (String supportedVersion : Arrays.asList(AppConfig.SUPPORTED_VERSIONS)) {
+			Version version = new Version();
+			version.version = supportedVersion;
+			version.url = HOST_URL + "/cpo/" + supportedVersion;
+			versions.add(version);
+		}
+		return new VersionsResponse(versions);
+	}
 
-        Subscription subscription = getSubscriptionFromRequest(request);
-        if (subscription == null){
-        	return new Response(StatusCode.CLIENT_ERROR, "Forbidden");
-        }
+	@PUT
+	@Path("/{ocpiVersion}/credentials")
+	public Response putCredentials(Credentials credentials, @PathParam("ocpiVersion") String ocpiVersion,
+			@Context HttpServletRequest request, @Context SecurityContext securityContext) {
+		LOG.info("putCredentials()");
 
-        Versions versions = subscriptionService.getVersions(credentials.url, credentials.token);
-        if (versions == null) {
-        	LOG.error("Could not retrieve versions from endpoint ${credentialsDto.url?.url}.");
-            return new Response(StatusCode.UNABLE_TO_USE_CLIENT_API);
-        }
+		Subscription subscription = getSubscriptionFromRequest(request);
+		if (subscription == null) {
+			return new Response(StatusCode.CLIENT_ERROR, "Forbidden");
+		}
 
-        Version version = versions.find(ocpiVersion);
-        if (version == null) {
-        	LOG.error("Client does not support the OCPI version it contacted on Lukas, this is not allowed. Versions URL: ${credentialsDto.url?.url}");
-            return new Response(StatusCode.UNSUPPORTED_VERSION);
-        }
+		Versions versions = subscriptionService.getVersions(credentials.url, credentials.token);
+		if (versions == null) {
+			LOG.error("Could not retrieve versions from endpoint ${credentialsDto.url?.url}.");
+			return new Response(StatusCode.UNABLE_TO_USE_CLIENT_API);
+		}
 
-        VersionDetails versionDetails = subscriptionService.getVersionDetails(version.url, credentials.token);
-        if (versionDetails == null) {
-        	LOG.error("Unable to retrieve version details from endpoint " + version.url);
-            return new Response(StatusCode.UNABLE_TO_USE_CLIENT_API);
-        }
-        SubscriptionUpdate update = new SubscriptionUpdate();
-        update.credentials = credentials;
-        update.lukasAuthorizationToken = subscription.getLukasAuthorizationToken();
-        update.versionDetails = versionDetails;
+		Version version = versions.find(ocpiVersion);
+		if (version == null) {
+			LOG.error(
+					"Client does not support the OCPI version it contacted on Lukas, this is not allowed. Versions URL: ${credentialsDto.url?.url}");
+			return new Response(StatusCode.UNSUPPORTED_VERSION);
+		}
 
-        subscription = subscriptionService.updateSubscription(update);
+		VersionDetails versionDetails = subscriptionService.getVersionDetails(version.url, credentials.token);
+		if (versionDetails == null) {
+			LOG.error("Unable to retrieve version details from endpoint " + version.url);
+			return new Response(StatusCode.UNABLE_TO_USE_CLIENT_API);
+		}
+		SubscriptionUpdate update = new SubscriptionUpdate();
+		update.credentials = credentials;
+		update.lukasAuthorizationToken = subscription.getLukasAuthorizationToken();
+		update.versionDetails = versionDetails;
 
-        credentials.token = subscription.getLukasAuthorizationToken();
-        
-        return new CredentialsResponse(credentials);
-    }
+		subscription = subscriptionService.updateSubscription(update);
+
+		credentials.token = subscription.getLukasAuthorizationToken();
+
+		return new CredentialsResponse(credentials);
+	}
 }

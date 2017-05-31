@@ -100,7 +100,7 @@ public class AuthorizationService extends BaseService {
 	 */
 	@Transactional
 	public void synchronizeTokens(Endpoint tokenEndPoint) {
-		
+
 		String lastSyncDate = getLastSyncDate();
 
 		int totalCount = 1;

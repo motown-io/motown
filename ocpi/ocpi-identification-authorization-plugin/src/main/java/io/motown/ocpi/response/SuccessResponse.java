@@ -25,8 +25,8 @@ package io.motown.ocpi.response;
  */
 public class SuccessResponse extends Response {
 
-	public SuccessResponse(){
+	public SuccessResponse() {
 		super(StatusCode.SUCCESS);
 	}
-	
+
 }

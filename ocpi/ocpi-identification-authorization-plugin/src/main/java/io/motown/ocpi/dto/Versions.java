@@ -26,14 +26,13 @@ import java.util.List;
 public class Versions {
 
 	private List<Version> list;
-	
-	public Versions(List<Version> list){
+
+	public Versions(List<Version> list) {
 		this.list = list;
 	}
-	
+
 	/**
-	 * find
-	 * returns the version object with the version passed as argument
+	 * find returns the version object with the version passed as argument
 	 * 
 	 * @param versionToFind
 	 * @return

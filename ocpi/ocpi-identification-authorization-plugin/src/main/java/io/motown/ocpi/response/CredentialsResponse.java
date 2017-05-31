@@ -28,12 +28,12 @@ import io.motown.ocpi.dto.Credentials;
 public class CredentialsResponse extends SuccessResponse {
 
 	public Credentials data;
-	
-	public CredentialsResponse(){
-		
+
+	public CredentialsResponse() {
+
 	}
-	
-	public CredentialsResponse(Credentials credentials){
+
+	public CredentialsResponse(Credentials credentials) {
 		super();
 		data = credentials;
 	}

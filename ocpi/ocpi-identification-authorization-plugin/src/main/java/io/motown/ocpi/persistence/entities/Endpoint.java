@@ -35,7 +35,7 @@ import org.codehaus.jackson.annotate.JsonCreator;
  *
  */
 @Entity
-@Table(name="ENDPOINT")//, uniqueConstraints = @UniqueConstraint(columnNames = { "code", "manufacturerId" }))
+@Table(name = "ENDPOINT")
 public class Endpoint {
 
 	public enum ModuleIdentifier {
@@ -43,7 +43,7 @@ public class Endpoint {
 				"locations"), SESSIONS("sessions"), TARIFFS("tariffs"), TOKENS("tokens"), VERSIONS("versions");
 
 		@JsonCreator // This is the factory method and must be static
-	    public static ModuleIdentifier fromString(String string) {
+		public static ModuleIdentifier fromString(String string) {
 			for (ModuleIdentifier m : values()) {
 				if (m.value.equalsIgnoreCase(string)) {
 					return m;
@@ -70,11 +70,12 @@ public class Endpoint {
 		public String toString() {
 			return super.toString();
 		}
-		
+
 		public String value() {
 			return value;
 		}
 	}
+
 	@Id
 	@Column(name = "id")
 	@SequenceGenerator(name = "ENDPOINT_SEQ", allocationSize = 1, initialValue = 1)
@@ -85,7 +86,7 @@ public class Endpoint {
 	@Enumerated(EnumType.STRING)
 	private ModuleIdentifier identifier;
 
-    @Column(name = "URL")
+	@Column(name = "URL")
 	private String url;
 
 	@ManyToOne

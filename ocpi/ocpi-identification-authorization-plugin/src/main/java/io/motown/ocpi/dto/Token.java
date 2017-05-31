@@ -20,22 +20,23 @@ import io.motown.ocpi.persistence.entities.Token.WhitelistType;
 
 /**
  * Token
+ * 
  * @author bartwolfs
  *
  */
 public class Token {
 
-    public String uid;              // Identification used by CPO system to identify this token,
-    public TokenType type;          // Type of the token
-    public String auth_id;          // Uniquely identifies the EV Driver
-    public String visual_number;    // Visual readable number/identification of the Token
-    public String issuer;           // Issuing company
-    public Boolean valid;           // Is this Token valid
-    public WhitelistType whitelist; // Indicates what type of white listing is allowed
-    public String languageCode;     // Language Code ISO 639-1
-    public String last_updated;
-    
-    public Token(){
-    	
-    }
+	public String uid; // Identification used by CPO system to identify this token,
+	public TokenType type; // Type of the token
+	public String auth_id; // Uniquely identifies the EV Driver
+	public String visual_number; // Visual readable number/identification of the Token
+	public String issuer; // Issuing company
+	public Boolean valid; // Is this Token valid
+	public WhitelistType whitelist; // Indicates what type of white listing is allowed
+	public String languageCode; // Language Code ISO 639-1
+	public String last_updated;
+
+	public Token() {
+
+	}
 }

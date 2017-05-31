@@ -33,45 +33,46 @@ import io.motown.ocpi.persistence.repository.OcpiRepository;
 
 public class TokenValidatorTest {
 
-    private TokenValidator tokenValidator;
+	private TokenValidator tokenValidator;
 
-    private OcpiRepository ocpiRepository;
+	private OcpiRepository ocpiRepository;
 
-    @Before
-    public void setup() {
-    	tokenValidator = new TokenValidator();
+	@Before
+	public void setup() {
+		tokenValidator = new TokenValidator();
 
-    	ocpiRepository = mock(OcpiRepository.class);
-        tokenValidator.setOcpiRepository(ocpiRepository);
-    }
+		ocpiRepository = mock(OcpiRepository.class);
+		tokenValidator.setOcpiRepository(ocpiRepository);
+	}
 
-    
-    private Token getToken(String uid, Boolean isValid){
-    	Token token = new Token();
-    	token.setAuthId("111");
-    	token.setDateCreated(new Date(System.currentTimeMillis()));
-    	token.setIssuingCompany("e-clearing");
-    	token.setTokenType(TokenType.RFID);
-    	token.setUid(uid);
-    	token.setValid(isValid);
-    	token.setVisualNumber("7007");
-    	return token;
-    }
-    
-    @Test
-    public void testIsValidByUid() {
-        when(ocpiRepository.findTokenByUid(IDENTIFYING_TOKEN.getToken())).thenReturn(getToken(IDENTIFYING_TOKEN.getToken(), Boolean.TRUE));
+	private Token getToken(String uid, Boolean isValid) {
+		Token token = new Token();
+		token.setAuthId("111");
+		token.setDateCreated(new Date(System.currentTimeMillis()));
+		token.setIssuingCompany("e-clearing");
+		token.setTokenType(TokenType.RFID);
+		token.setUid(uid);
+		token.setValid(isValid);
+		token.setVisualNumber("7007");
+		return token;
+	}
 
-        assertTrue(tokenValidator.validate(IDENTIFYING_TOKEN).isValid());
-        assertEquals(tokenValidator.validate(IDENTIFYING_TOKEN).getToken(), IDENTIFYING_TOKEN.getToken());
-    }
+	@Test
+	public void testIsValidByUid() {
+		when(ocpiRepository.findTokenByUid(IDENTIFYING_TOKEN.getToken()))
+				.thenReturn(getToken(IDENTIFYING_TOKEN.getToken(), Boolean.TRUE));
 
-    @Test
-    public void testIsInvalidByUid() {
-        when(ocpiRepository.findTokenByUid(IDENTIFYING_TOKEN.getToken())).thenReturn(getToken(IDENTIFYING_TOKEN.getToken(), Boolean.FALSE));
+		assertTrue(tokenValidator.validate(IDENTIFYING_TOKEN).isValid());
+		assertEquals(tokenValidator.validate(IDENTIFYING_TOKEN).getToken(), IDENTIFYING_TOKEN.getToken());
+	}
 
-        assertFalse(tokenValidator.validate(IDENTIFYING_TOKEN).isValid());
-        assertEquals(tokenValidator.validate(IDENTIFYING_TOKEN).getToken(), IDENTIFYING_TOKEN.getToken());
-    }
-    
+	@Test
+	public void testIsInvalidByUid() {
+		when(ocpiRepository.findTokenByUid(IDENTIFYING_TOKEN.getToken()))
+				.thenReturn(getToken(IDENTIFYING_TOKEN.getToken(), Boolean.FALSE));
+
+		assertFalse(tokenValidator.validate(IDENTIFYING_TOKEN).isValid());
+		assertEquals(tokenValidator.validate(IDENTIFYING_TOKEN).getToken(), IDENTIFYING_TOKEN.getToken());
+	}
+
 }

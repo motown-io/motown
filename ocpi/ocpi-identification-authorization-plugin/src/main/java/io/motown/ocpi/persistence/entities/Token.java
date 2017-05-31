@@ -33,118 +33,130 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "TOKEN")//, uniqueConstraints=@UniqueConstraint(columnNames = {"issuing_company","uid"}))
+@Table(name = "TOKEN")
 public class Token {
 
 	public enum TokenType {
-	    RFID,
-	    OTHER
-	}
-	public enum WhitelistType {
-	    ALWAYS,
-	    ALLOWED,
-	    ALLOWED_OFFLINE,
-	    NEVER
+		RFID, OTHER
 	}
 
-    @Id
-    @Column(name = "id")
-    @SequenceGenerator(name="TOKEN_SEQ", allocationSize=1, initialValue=1)
-    @GeneratedValue(generator="TOKEN_SEQ")
+	public enum WhitelistType {
+		ALWAYS, ALLOWED, ALLOWED_OFFLINE, NEVER
+	}
+
+	@Id
+	@Column(name = "id")
+	@SequenceGenerator(name = "TOKEN_SEQ", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(generator = "TOKEN_SEQ")
 	private Integer id;
 
-    @Column(name = "AUTH_ID")
-    private String authId;                   // Uniquely identifies the EV Driver
+	@Column(name = "AUTH_ID")
+	private String authId; // Uniquely identifies the EV Driver
 
-    @Column(name = "TOKEN_UID")
-    private String uid;                      // Identification used by CPO system to identify this token,
+	@Column(name = "TOKEN_UID")
+	private String uid; // Identification used by CPO system to identify this
+						// token,
 
-    @Column(name = "token_type")
-    @Enumerated(EnumType.STRING)
-    private TokenType tokenType;             // Type of the token
+	@Column(name = "token_type")
+	@Enumerated(EnumType.STRING)
+	private TokenType tokenType; // Type of the token
 
-    @Column(name = "VISUAL_NUMBER")
-    private String visualNumber;             // Visual readable number/identification of the Token
- 
-    @Column(name = "ISSUING_COMPANY")
-    private String issuingCompany;           // Issuing company
- 
-    @Column(name = "VALID")
-    private Boolean valid;                   // Is this Token valid
+	@Column(name = "VISUAL_NUMBER")
+	private String visualNumber; // Visual readable number/identification of the
+									// Token
 
-    @Column(name = "WHITELIST")
-    @Enumerated(EnumType.STRING)
-    private WhitelistType whitelist;         // Indicates what type of white listing is allowed
+	@Column(name = "ISSUING_COMPANY")
+	private String issuingCompany; // Issuing company
 
-    @Column(name = "LANGUAGE_CODE")
-    private String languageCode;             // Language Code ISO 639-1
+	@Column(name = "VALID")
+	private Boolean valid; // Is this Token valid
 
-    @Column(name = "DATE_CREATED")
-    private Date dateCreated;
+	@Column(name = "WHITELIST")
+	@Enumerated(EnumType.STRING)
+	private WhitelistType whitelist; // Indicates what type of white listing is
+										// allowed
 
-    @Column(name = "LAST_UPDATED")
-    private Date lastUpdated;
-    
-    public Token(){
-    	
-    }
-    
-    public String getAuthId() {
+	@Column(name = "LANGUAGE_CODE")
+	private String languageCode; // Language Code ISO 639-1
+
+	@Column(name = "DATE_CREATED")
+	private Date dateCreated;
+
+	@Column(name = "LAST_UPDATED")
+	private Date lastUpdated;
+
+	public Token() {
+
+	}
+
+	public String getAuthId() {
 		return authId;
 	}
-    
+
 	public Date getDateCreated() {
 		return dateCreated;
 	}
-	public Integer getId(){
-    	return id;
-    }
+
+	public Integer getId() {
+		return id;
+	}
+
 	public String getIssuingCompany() {
 		return issuingCompany;
 	}
+
 	public String getLanguageCode() {
 		return languageCode;
 	}
+
 	public Date getLastUpdated() {
 		return lastUpdated;
 	}
+
 	public TokenType getTokenType() {
 		return tokenType;
 	}
+
 	public String getUid() {
 		return uid;
 	}
+
 	public Boolean getValid() {
 		return valid;
 	}
+
 	public String getVisualNumber() {
 		return visualNumber;
 	}
+
 	public WhitelistType getWhitelist() {
 		return whitelist;
 	}
+
 	public Boolean isValid() {
-		return uid != null && 
-				visualNumber != null && 
-				issuingCompany != null && 
-				valid;
+		return uid != null && visualNumber != null && issuingCompany != null && valid;
 	}
+
 	public void setAuthId(String authId) {
 		this.authId = authId;
 	}
-	
+
 	public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
 	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
 	public void setIssuingCompany(String issuingCompany) {
 		this.issuingCompany = issuingCompany;
 	}
+
 	public void setLanguageCode(String languageCode) {
 		this.languageCode = languageCode;
 	}
+
 	public void setLastUpdated(Date lastUpdated) {
 		this.lastUpdated = lastUpdated;
 	}

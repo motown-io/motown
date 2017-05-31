@@ -22,12 +22,12 @@ package io.motown.ocpi.dto;
  *
  */
 public class Version {
-	
-    public String version; // The version number.
-    public String url;     // URL to the endpoint containing version specific information.
 
-    public Version(){
-    	
-    }
-    
+	public String version; // The version number.
+	public String url; // URL to the endpoint containing version specific information.
+
+	public Version() {
+
+	}
+
 }

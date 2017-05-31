@@ -31,22 +31,22 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name="TOKEN_SYNC_DATE")
+@Table(name = "TOKEN_SYNC_DATE")
 public class TokenSyncDate {
 
-    @Id
-    @Column(name = "id")
-    @SequenceGenerator(name="TOKEN_SYNC_DATE_SEQ", allocationSize=1, initialValue=1)
-    @GeneratedValue(generator="TOKEN_SYNC_DATE_SEQ")
+	@Id
+	@Column(name = "id")
+	@SequenceGenerator(name = "TOKEN_SYNC_DATE_SEQ", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(generator = "TOKEN_SYNC_DATE_SEQ")
 	private Integer id;
 
-    @Column(name = "SYNC_DATE")
+	@Column(name = "SYNC_DATE")
 	private Date syncDate;
 
 	public TokenSyncDate() {
 
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}

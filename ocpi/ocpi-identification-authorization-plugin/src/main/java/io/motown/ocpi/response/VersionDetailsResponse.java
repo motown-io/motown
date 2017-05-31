@@ -28,14 +28,14 @@ import io.motown.ocpi.dto.VersionDetails;
 public class VersionDetailsResponse extends SuccessResponse {
 
 	public VersionDetails data;
-	
-	public VersionDetailsResponse(){
-		
+
+	public VersionDetailsResponse() {
+
 	}
-	
-	public VersionDetailsResponse(VersionDetails details){
+
+	public VersionDetailsResponse(VersionDetails details) {
 		super();
 		this.data = details;
 	}
-	
+
 }

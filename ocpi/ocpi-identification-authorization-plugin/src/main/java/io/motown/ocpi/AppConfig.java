@@ -34,18 +34,16 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableScheduling
 @EnableTransactionManagement
-//@PropertySource("file:${io.motown.ocpi.app.config}")
-@PropertySource("classpath:application.properties")
+@PropertySource("file:${io.motown.ocpi.app.config}")
 public class AppConfig {
 
-    public static final String[] SUPPORTED_VERSIONS = {"2.1.1"};
-    
+	public static final String[] SUPPORTED_VERSIONS = { "2.1.1" };
+
 	public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-	
+
 	@Bean
-	public static PropertySourcesPlaceholderConfigurer
-	     propertySourcesPlaceholderConfigurer() {
-	      return new PropertySourcesPlaceholderConfigurer();
+	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+		return new PropertySourcesPlaceholderConfigurer();
 	}
-	
+
 }

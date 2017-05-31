@@ -26,5 +26,5 @@ public class SubscriptionUpdate {
 	public VersionDetails versionDetails;
 	public String lukasAuthorizationToken;
 	public Credentials credentials;
-	
+
 }

@@ -20,15 +20,17 @@ import java.util.List;
 
 /**
  * VersionDetails
+ * 
  * @author bartwolfs
  *
  */
 public class VersionDetails {
 
 	public String version; // The version number.
-    public List<Endpoint> endpoints = new ArrayList<Endpoint>();        // URL to the endpoint containing version specific information.
-    
-    public VersionDetails(){
-    	
-    }
+	public List<Endpoint> endpoints = new ArrayList<Endpoint>(); // URL to the endpoint
+																 // containing version specific information.
+
+	public VersionDetails() {
+
+	}
 }

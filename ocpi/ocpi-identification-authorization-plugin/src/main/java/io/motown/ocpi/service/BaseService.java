@@ -48,19 +48,19 @@ public class BaseService {
 
 	protected static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-	@Value( "${io.motown.ocpi.hosturl}" )
-    protected String HOST_URL;
-	
-	@Value( "${io.motown.ocpi.partyid}" )
+	@Value("${io.motown.ocpi.hosturl}")
+	protected String HOST_URL;
+
+	@Value("${io.motown.ocpi.partyid}")
 	protected String PARTY_ID;
-	
-	@Value( "${io.motown.ocpi.countrycode}" )
+
+	@Value("${io.motown.ocpi.countrycode}")
 	protected String COUNTRY_CODE;
-	
-	@Value( "${io.motown.ocpi.clientname}" )
+
+	@Value("${io.motown.ocpi.clientname}")
 	protected String CLIENT_NAME;
-	
-	@Value( "${io.motown.ocpi.token.sync.pagesize:999}" )
+
+	@Value("${io.motown.ocpi.token.sync.pagesize:999}")
 	protected String PAGE_SIZE = "1000";
 
 	@Autowired
@@ -89,7 +89,7 @@ public class BaseService {
 		assertValid(authorizationToken, "An authorizationToken is required for web resource call");
 
 		WebResource webResource = Client.create().resource(url);
-		Builder builder = webResource.type(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE); 
+		Builder builder = webResource.type(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE);
 		return builder.header("Authorization", "Token " + authorizationToken);
 	}
 
@@ -101,18 +101,17 @@ public class BaseService {
 	 * @return
 	 */
 	protected Response process(ClientResponse clientResponse, Class<?> successResponseClass) {
-		
+
 		String entity = clientResponse.getEntity(String.class);
-		
-		System.err.println("ENTITY: " + entity);
+
 		try {
 			Response response = (Response) OBJECT_MAPPER.readValue(entity, successResponseClass);
 
-			if (!StatusCode.SUCCESS.equals(response.status_code)){
-			
+			if (!StatusCode.SUCCESS.equals(response.status_code)) {
+
 				throw new RuntimeException(response.toString());
 			}
-			
+
 			String totalCount = clientResponse.getHeaders().getFirst("X-Total-Count");
 			if (totalCount != null) {
 				response.totalCount = Integer.valueOf(totalCount);
@@ -134,15 +133,12 @@ public class BaseService {
 	 * @param value
 	 * @return json
 	 */
-	protected String toJson(Object value){
-		
+	protected String toJson(Object value) {
+
 		OBJECT_MAPPER.setDateFormat(AppConfig.DATE_FORMAT);
 		try {
-			String json = OBJECT_MAPPER.writeValueAsString(value);
-			
-			System.err.println("JSON: " + json);
-			return json;
-			
+			return OBJECT_MAPPER.writeValueAsString(value);
+
 		} catch (JsonGenerationException e) {
 			throw new RuntimeException(e);
 		} catch (JsonMappingException e) {

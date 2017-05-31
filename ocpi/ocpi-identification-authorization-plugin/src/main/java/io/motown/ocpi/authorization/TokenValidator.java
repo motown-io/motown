@@ -34,8 +34,8 @@ import io.motown.ocpi.persistence.repository.OcpiRepository;
  *
  */
 @Component
-public class TokenValidator implements AuthorizationProvider { 
-	
+public class TokenValidator implements AuthorizationProvider {
+
 	private static final Logger LOG = LoggerFactory.getLogger(TokenValidator.class);
 
 	@Autowired
@@ -49,7 +49,7 @@ public class TokenValidator implements AuthorizationProvider {
 	 * @return The validated IdentifyingToken, status ACCEPTED if identification
 	 *         is valid according to OCPI.
 	 */
-	@Override 
+	@Override
 	public IdentifyingToken validate(IdentifyingToken identification) {
 
 		LOG.info("Handle authorization request on OCPI");
@@ -68,7 +68,8 @@ public class TokenValidator implements AuthorizationProvider {
 				return new TextualToken(identification.getToken(), AuthenticationStatus.ACCEPTED,
 						token.getIssuingCompany(), token.getVisualNumber());
 			}
-			LOG.warn("No token found in OCPI database. Returning 'false' for identification: " + identification.toString());
+			LOG.warn("No token found in OCPI database. Returning 'false' for identification: "
+					+ identification.toString());
 
 		} catch (Exception e) {
 			LOG.error("Exception OCPI authorization", e);
@@ -79,5 +80,5 @@ public class TokenValidator implements AuthorizationProvider {
 	public void setOcpiRepository(OcpiRepository ocpiRepository) {
 		this.ocpiRepository = ocpiRepository;
 	}
-	
+
 }

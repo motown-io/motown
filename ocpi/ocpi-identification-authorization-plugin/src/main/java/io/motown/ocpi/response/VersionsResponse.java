@@ -30,14 +30,14 @@ import io.motown.ocpi.dto.Version;
 public class VersionsResponse extends SuccessResponse {
 
 	public List<Version> data;
-	
-	public VersionsResponse(){
-		
+
+	public VersionsResponse() {
+
 	}
-	
-	public VersionsResponse(List<Version> versions){
+
+	public VersionsResponse(List<Version> versions) {
 		super();
 		this.data = versions;
 	}
-	
+
 }

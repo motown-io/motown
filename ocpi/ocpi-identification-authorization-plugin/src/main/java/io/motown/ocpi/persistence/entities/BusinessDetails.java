@@ -29,7 +29,7 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name="BUSINESS_DETAILS")
+@Table(name = "BUSINESS_DETAILS")
 public class BusinessDetails {
 
 	@Id
@@ -38,10 +38,10 @@ public class BusinessDetails {
 	@GeneratedValue(generator = "BUSINESS_DETAILS_SEQ")
 	private Integer id;
 
-    @Column(name = "NAME")
+	@Column(name = "NAME")
 	private String name; // name of the operator
-    
-    @Column(name = "WEBSITE")
+
+	@Column(name = "WEBSITE")
 	private String website; // URL of the operator's website
 
 	public BusinessDetails() {

@@ -29,8 +29,8 @@ public class BusinessDetails {
 	public String website;
 	@JsonIgnore
 	public String logo;
-	
-	public BusinessDetails(){
-		
+
+	public BusinessDetails() {
+
 	}
 }

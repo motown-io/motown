@@ -30,9 +30,9 @@ import io.motown.ocpi.dto.Token;
 public class TokenResponse extends SuccessResponse {
 
 	public List<Token> data;
-	
-	public TokenResponse(){
-		
+
+	public TokenResponse() {
+
 	}
-	
+
 }

@@ -44,74 +44,76 @@ import io.motown.ocpi.persistence.entities.Endpoint.ModuleIdentifier;
  *
  */
 @Entity
-@Table(name="SUBSCRIPTION")
+@Table(name = "SUBSCRIPTION")
 public class Subscription {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Subscription.class);
 
-    @Id
-    @Column(name = "id")
-    @SequenceGenerator(name="SUBSCRIPTION_SEQ", allocationSize=1, initialValue=1)
-    @GeneratedValue(generator="SUBSCRIPTION_SEQ")
+	@Id
+	@Column(name = "id")
+	@SequenceGenerator(name = "SUBSCRIPTION_SEQ", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(generator = "SUBSCRIPTION_SEQ")
 	private Integer id;
-	
+
 	@ManyToOne
-	@JoinColumn(name="business_details_id")
-    private BusinessDetails businessDetails;
+	@JoinColumn(name = "business_details_id")
+	private BusinessDetails businessDetails;
 
-    @Column(name = "OCPI_VERSION")
-	private String ocpiVersion;                // OCPI version to use
+	@Column(name = "OCPI_VERSION")
+	private String ocpiVersion; // OCPI version to use
 
-    @Column(name = "LUKAS_AUTHORIZATION_TOKEN")
-	private String lukasAuthorizationToken;    // token to be used when contacting Lukas
+	@Column(name = "LUKAS_AUTHORIZATION_TOKEN")
+	private String lukasAuthorizationToken; // token to be used when contacting
+											// Lukas
 
-    @Column(name = "PARTNER_AUTHORIZATION_TOKEN")
-	private String partnerAuthorizationToken;  // token to be used when contacting the partners OCPI endpoints
+	@Column(name = "PARTNER_AUTHORIZATION_TOKEN")
+	private String partnerAuthorizationToken; // token to be used when
+												// contacting the partners OCPI
+												// endpoints
 
-    @OneToMany(cascade = CascadeType.ALL, targetEntity = Endpoint.class, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "subscription")
-    private Set<Endpoint> endpoints = new HashSet<>();
-    
-    public Subscription(){
-    	
-    }
-    
-    public void addToEndpoints(Endpoint endpoint){
-    	endpoint.setSubscription(this);
-    	this.endpoints.add(endpoint);
-    }
-    
-    
-    public void generateNewLukasAuthorizationToken() {
-        lukasAuthorizationToken = UUID.randomUUID().toString();
-    }
+	@OneToMany(cascade = CascadeType.ALL, targetEntity = Endpoint.class, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "subscription")
+	private Set<Endpoint> endpoints = new HashSet<>();
 
-    public BusinessDetails getBusinessDetails() {
+	public Subscription() {
+
+	}
+
+	public void addToEndpoints(Endpoint endpoint) {
+		endpoint.setSubscription(this);
+		this.endpoints.add(endpoint);
+	}
+
+	public void generateNewLukasAuthorizationToken() {
+		lukasAuthorizationToken = UUID.randomUUID().toString();
+	}
+
+	public BusinessDetails getBusinessDetails() {
 		return businessDetails;
 	}
-    
-    /**
-     * returns the Endpoint with the identifier passed as argument
-     * if not found returns null
-     *
-     * @param identifier
-     * @return Endpoint
-     */
-    public Endpoint getEndpoint(ModuleIdentifier identifier) {
-    	for (Endpoint endpoint : getEndpoints()) {
-    		if (endpoint.getIdentifier().equals(identifier)) {
-    			return endpoint;
-    		}
-    	}
-    	return null;
-    }
 
-    public Collection<Endpoint> getEndpoints() {
-    	return endpoints;
-    }
+	/**
+	 * returns the Endpoint with the identifier passed as argument if not found
+	 * returns null
+	 *
+	 * @param identifier
+	 * @return Endpoint
+	 */
+	public Endpoint getEndpoint(ModuleIdentifier identifier) {
+		for (Endpoint endpoint : getEndpoints()) {
+			if (endpoint.getIdentifier().equals(identifier)) {
+				return endpoint;
+			}
+		}
+		return null;
+	}
 
-    public Integer getId() {
-    	return id;
-    }
+	public Collection<Endpoint> getEndpoints() {
+		return endpoints;
+	}
+
+	public Integer getId() {
+		return id;
+	}
 
 	public String getLukasAuthorizationToken() {
 		return lukasAuthorizationToken;
@@ -126,12 +128,13 @@ public class Subscription {
 	}
 
 	/**
-     * returns true if this subscription is not yet registered with the emsp
-     * @return boolean
-     */
-    public boolean isRegistered() {
-        return getEndpoint(ModuleIdentifier.VERSIONS) == null;
-    }
+	 * returns true if this subscription is not yet registered with the emsp
+	 * 
+	 * @return boolean
+	 */
+	public boolean isRegistered() {
+		return getEndpoint(ModuleIdentifier.VERSIONS) == null;
+	}
 
 	public void setBusinessDetails(BusinessDetails businessDetails) {
 		this.businessDetails = businessDetails;
@@ -153,4 +156,3 @@ public class Subscription {
 		this.partnerAuthorizationToken = partnerAuthorizationToken;
 	}
 }
-

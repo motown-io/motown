@@ -19,16 +19,17 @@ import io.motown.ocpi.persistence.entities.Endpoint.ModuleIdentifier;
 
 /**
  * Endpoint
+ * 
  * @author bartwolfs
  *
  */
 public class Endpoint {
 
-    public ModuleIdentifier identifier;
-    public String url;
-    
-    public Endpoint(){
-    	
-    }
+	public ModuleIdentifier identifier;
+	public String url;
+
+	public Endpoint() {
+
+	}
 
 }
