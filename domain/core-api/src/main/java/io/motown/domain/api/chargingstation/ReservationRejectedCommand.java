@@ -24,7 +24,7 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import io.motown.domain.api.security.IdentityContext;
 
 /**
- * {@code ReservationRejectedCommand} will mark an EVSE as reserved.
+ * {@code ReservationRejectedCommand} will mark a Reservation as rejected.
  */
 public final class ReservationRejectedCommand {
 

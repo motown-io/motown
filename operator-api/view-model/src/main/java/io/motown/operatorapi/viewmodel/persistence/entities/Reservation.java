@@ -123,25 +123,7 @@ public class Reservation {
     protected void onUpdate() {
         updated = new Date();
     }
-
 	
-	//TODO ZIJN DEZE NODIG?
-	public void setChargingStationId(String chargingStationId) {
-        this.chargingStationId = chargingStationId;
-    }
-
-	public void setEvseId(EvseId evseId) {
-        this.evseId = evseId;
-    }
-
-	public void setExpiryDate(Date expiryDate) {
-		this.expiryDate = expiryDate;
-	}
-
-	public void setReservationId(String reservationId) {
-		this.reservationId = reservationId;
-	}
-//NODIG?
 	public void setStatus(ReservationStatus status) {
 		this.status = status;
 	}

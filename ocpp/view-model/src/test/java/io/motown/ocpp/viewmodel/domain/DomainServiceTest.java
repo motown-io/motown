@@ -72,8 +72,6 @@ public class DomainServiceTest {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    //TODO BW ADD RESERVATION REPO
-    
     @Autowired
     private ReservationIdentifierRepository reservationIdentifierRepository;
 
@@ -375,45 +373,5 @@ public class DomainServiceTest {
         assertNotNull(numberedReservationId.getId());
         assertNotNull(numberedReservationId.getNumber());
     }
-
     
-//    @Test
-//    public void testInformReserved(ChargingStationId chargingStationId, ReservationId reservationId, EvseId evseId, Date expiryDate, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
-//    	
-//        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
-//
-//        domainService.informReserved(ChargingStationId chargingStationId, ReservationId reservationId, EvseId evseId, Date expiryDate, CorrelationToken correlationToken, AddOnIdentity addOnIdentity)
-//        
-//        commandGateway.send(new ReserveNowCommand(chargingStationId, reservationId, evseId, expiryDate, identityContext), correlationToken);
-//    }
-//
-//    @Test
-//    public void testInformReservationFaulted(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
-//        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
-//        commandGateway.send(new ReservationFaultedCommand(chargingStationId, evseId, identityContext), correlationToken);
-//    }
-//
-//    @Test
-//    public void testInformReservationRejected(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
-//        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
-//        commandGateway.send(new ReservationRejectedCommand(chargingStationId, evseId, identityContext), correlationToken);
-//    }
-//    
-//    @Test
-//    public void testInformChargingStationUnavailable(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
-//        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
-//        commandGateway.send(new ChargingStationUnavailableCommand(chargingStationId, evseId, identityContext), correlationToken);
-//    }
-//    @Test
-//    public void testInformChargingStationOccupied(ChargingStationId chargingStationId, EvseId evseId, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
-//        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
-//        commandGateway.send(new ChargingStationOccupiedCommand(chargingStationId, evseId, identityContext), correlationToken);
-//    }
-//    @Test
-//    public void testInformReservationCancelled(ChargingStationId chargingStationId, ReservationId reservationId, CorrelationToken correlationToken, AddOnIdentity addOnIdentity) {
-//        IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
-//
-//        commandGateway.send(new CancelReservationCommand(chargingStationId, reservationId, identityContext), correlationToken);
-//    }
-
 }

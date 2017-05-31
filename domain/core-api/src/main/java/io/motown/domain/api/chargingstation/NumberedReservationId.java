@@ -33,11 +33,6 @@ public final class NumberedReservationId implements ReservationId {
 
     private final int number;
 
-    public NumberedReservationId() {
-    	this.protocol = null;
-    	this.number = 0;
-    	this.chargingStationId = null;
-    }
     /**
      * Creates a {@code NumberedReservationId}.
      * <p/>

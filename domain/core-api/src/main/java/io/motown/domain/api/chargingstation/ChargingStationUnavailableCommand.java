@@ -24,7 +24,7 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import io.motown.domain.api.security.IdentityContext;
 
 /**
- * {@code ChargingStationUnavailableCommand} will mark an EVSE as reserved.
+ * {@code ChargingStationUnavailableCommand} will mark a ChargingStation as unavailable.
  */
 public final class ChargingStationUnavailableCommand {
 

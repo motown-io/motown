@@ -23,7 +23,7 @@ import java.util.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * {@code ReservationFaultedCommand} will mark an EVSE as reserved.
+ * {@code ReservationFaultedCommand} will mark a Reservation as faulted.
  */
 public final class ReservationFaultedCommand {
 
