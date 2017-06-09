@@ -79,12 +79,15 @@ public class Token {
 	@Column(name = "LANGUAGE_CODE")
 	private String languageCode; // Language Code ISO 639-1
 
-	@Column(name = "DATE_CREATED")
+	@Column(name = "DATE_CREATED", nullable = false)
 	private Date dateCreated;
 
 	@Column(name = "LAST_UPDATED")
 	private Date lastUpdated;
 
+	@Column(name = "SUBSCRIPTION_ID", nullable = false)
+	private Integer subscriptionId;
+	
 	public Token() {
 
 	}
@@ -111,6 +114,10 @@ public class Token {
 
 	public Date getLastUpdated() {
 		return lastUpdated;
+	}
+
+	public Integer getSubscriptionId() {
+		return subscriptionId;
 	}
 
 	public TokenType getTokenType() {
@@ -159,6 +166,10 @@ public class Token {
 
 	public void setLastUpdated(Date lastUpdated) {
 		this.lastUpdated = lastUpdated;
+	}
+
+	public void setSubscriptionId(Integer subscriptionId) {
+		this.subscriptionId = subscriptionId;
 	}
 
 	public void setTokenType(TokenType tokenType) {

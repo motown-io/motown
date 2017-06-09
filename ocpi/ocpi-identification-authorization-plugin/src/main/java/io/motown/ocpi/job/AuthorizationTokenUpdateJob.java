@@ -42,6 +42,8 @@ public class AuthorizationTokenUpdateJob {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AuthorizationTokenUpdateJob.class);
 
+	private static boolean jobRunning = false;
+	
 	@Autowired
 	private AuthorizationService authorizationService;
 
@@ -54,20 +56,31 @@ public class AuthorizationTokenUpdateJob {
 	@Scheduled(cron = "${io.motown.ocpi.token.sync.cron}")
 	public void synchronizeTokens() {
 
-		try {
-			for (Subscription subscription : subscriptionService.findAllSubscriptions()) {
+		LOG.info("synchronizeTokens");
+		
+		if (!jobRunning){
+			LOG.info("Executing SyncJob");
 
-				if (!subscription.isRegistered()) {
-					subscriptionService.register(subscription);
+			jobRunning = true;
+			try {
+				for (Subscription subscription : subscriptionService.findAllSubscriptions()) {
+	
+					if (!subscription.isRegistered()) {
+						subscriptionService.register(subscription);
+					}
+					Endpoint tokenEndpoint = subscription.getEndpoint(ModuleIdentifier.TOKENS);
+					if (tokenEndpoint != null) {
+						authorizationService.synchronizeTokens(tokenEndpoint);
+					}
 				}
-				Endpoint tokenEndpoint = subscription.getEndpoint(ModuleIdentifier.TOKENS);
-				if (tokenEndpoint != null) {
-					authorizationService.synchronizeTokens(tokenEndpoint);
-				}
+			} catch (Exception ex) {
+				LOG.error("Exception synchronizing tokens: ", ex);
+				throw ex; // to make sure we get a rollback
+			} finally {
+				jobRunning = false;
 			}
-		} catch (Exception ex) {
-			LOG.error("Exception synchronizing tokens: ", ex);
-			throw ex; // to make sure we get a rollback
+		} else {
+			LOG.info("SyncJob is already running");
 		}
 	}
 }

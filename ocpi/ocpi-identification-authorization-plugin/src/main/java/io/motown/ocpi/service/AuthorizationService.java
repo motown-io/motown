@@ -49,13 +49,14 @@ public class AuthorizationService extends BaseService {
 	 *
 	 * @return
 	 */
-	private String getLastSyncDate() {
+	public String getLastSyncDate(Integer subscriptionId) {
 		String lastSyncDate = null;
-		TokenSyncDate tokenSyncDate = ocpiRepository.getTokenSyncDate();
+		TokenSyncDate tokenSyncDate = ocpiRepository.getTokenSyncDate(subscriptionId);
 		if (tokenSyncDate != null) {
 			lastSyncDate = AppConfig.DATE_FORMAT.format(tokenSyncDate.getSyncDate());
 		} else {
 			tokenSyncDate = new TokenSyncDate();
+			tokenSyncDate.setSubscriptionId(subscriptionId);
 		}
 		tokenSyncDate.sync();
 		ocpiRepository.insertOrUpdate(tokenSyncDate);
@@ -68,12 +69,13 @@ public class AuthorizationService extends BaseService {
 	 *
 	 * @param tokenUpdate
 	 */
-	private void insertOrUpdateToken(io.motown.ocpi.dto.Token tokenUpdate) {
+	private void insertOrUpdateToken(io.motown.ocpi.dto.Token tokenUpdate, Integer subscriptionId) {
 
 		Token token = ocpiRepository.findTokenByUidAndIssuingCompany(tokenUpdate.uid, tokenUpdate.issuer);
 		if (token == null) {
 			token = new Token();
 			token.setUid(tokenUpdate.uid);
+			token.setSubscriptionId(subscriptionId);
 			token.setDateCreated(new Date());
 		}
 		token.setTokenType(tokenUpdate.type);
@@ -101,7 +103,7 @@ public class AuthorizationService extends BaseService {
 	@Transactional
 	public void synchronizeTokens(Endpoint tokenEndPoint) {
 
-		String lastSyncDate = getLastSyncDate();
+		String lastSyncDate = getLastSyncDate(tokenEndPoint.getSubscriptionId());
 
 		int totalCount = 1;
 		int numberRetrieved = 0;
@@ -119,6 +121,8 @@ public class AuthorizationService extends BaseService {
 					tokenEndPoint.getSubscription().getPartnerAuthorizationToken()).get(ClientResponse.class);
 			TokenResponse tokenResponse = (TokenResponse) process(clientResponse, TokenResponse.class);
 
+			LOG.info("TokenResponse: " + tokenResponse);
+			
 			if (tokenResponse.totalCount == null) {
 				break;
 			}
@@ -128,7 +132,7 @@ public class AuthorizationService extends BaseService {
 			LOG.info("inserting " + tokenResponse.data.size() + " tokens");
 
 			for (io.motown.ocpi.dto.Token token : tokenResponse.data) {
-				insertOrUpdateToken(token);
+				insertOrUpdateToken(token, tokenEndPoint.getSubscriptionId());
 			}
 		}
 		LOG.debug("Number of tokens retrieved: " + numberRetrieved);

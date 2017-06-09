@@ -101,6 +101,8 @@ public class SubscriptionService extends BaseService {
 	 */
 	public VersionDetails getVersionDetails(String versionURL, String authorizationToken) {
 
+		LOG.info("getVersionDetails with token: " + authorizationToken);
+		
 		ClientResponse clientResponse = getWebResource(versionURL, authorizationToken).get(ClientResponse.class);
 		VersionDetailsResponse versionDetailsResponse = (VersionDetailsResponse) process(clientResponse,
 				VersionDetailsResponse.class);
@@ -116,6 +118,8 @@ public class SubscriptionService extends BaseService {
 	 */
 	public Versions getVersions(String versionsURL, String authorizationToken) {
 
+		LOG.info("getVersions with token: " + authorizationToken);
+		
 		ClientResponse clientResponse = getWebResource(versionsURL, authorizationToken).get(ClientResponse.class);
 		VersionsResponse versionsResponse = (VersionsResponse) process(clientResponse, VersionsResponse.class);
 		return new Versions(versionsResponse.data);

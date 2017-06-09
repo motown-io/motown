@@ -15,6 +15,8 @@
  */
 package io.motown.ocpi.dto;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import io.motown.ocpi.persistence.entities.Endpoint.ModuleIdentifier;
 
 /**
@@ -32,4 +34,8 @@ public class Endpoint {
 
 	}
 
+	@JsonProperty("identifier")
+	public String getIdentifier() {
+		return identifier.value();
+	}
 }

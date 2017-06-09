@@ -40,7 +40,7 @@ public class Endpoint {
 
 	public enum ModuleIdentifier {
 		CDRS("cdrs"), CHARGING_PROFILES("chargingprofiles"), CREDENTIALS("credentials"), LOCATIONS(
-				"locations"), SESSIONS("sessions"), TARIFFS("tariffs"), TOKENS("tokens"), VERSIONS("versions");
+				"locations"), SESSIONS("sessions"), TARIFFS("tariffs"), TOKENS("tokens"), VERSIONS("versions"), COMMANDS("commands");
 
 		@JsonCreator // This is the factory method and must be static
 		public static ModuleIdentifier fromString(String string) {
@@ -93,6 +93,9 @@ public class Endpoint {
 	@JoinColumn(referencedColumnName = "ID", name = "SUBSCRIPTION_ID")
 	private Subscription subscription;
 
+	@Column(name = "SUBSCRIPTION_ID", insertable = false, updatable = false)
+	private Integer subscriptionId;
+	
 	public Endpoint() {
 
 	}
@@ -128,5 +131,9 @@ public class Endpoint {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public Integer getSubscriptionId() {
+		return subscriptionId;
 	}
 }

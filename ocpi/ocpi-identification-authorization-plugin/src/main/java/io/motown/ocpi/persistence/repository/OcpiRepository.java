@@ -147,14 +147,18 @@ public class OcpiRepository {
 	}
 
 	/**
+	 * get the date the tokens where last synced for the subscriptionId passed as argument
+	 * 
 	 * getTokenSyncDate
 	 * 
+	 * @param subscriptionId
 	 * @return
 	 */
-	public TokenSyncDate getTokenSyncDate() {
+	public TokenSyncDate getTokenSyncDate(Integer subscriptionId) {
 		try {
 			List<TokenSyncDate> list = entityManager
-					.createQuery("SELECT syncDate FROM TokenSyncDate AS syncDate", TokenSyncDate.class).setMaxResults(1)
+					.createQuery("SELECT syncDate FROM TokenSyncDate AS syncDate WHERE subscriptionId = :subscriptionId", TokenSyncDate.class).setMaxResults(1)
+					.setParameter("subscriptionId", subscriptionId)
 					.getResultList();
 			if (!list.isEmpty()) {
 				return list.get(0);

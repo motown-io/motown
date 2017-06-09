@@ -40,9 +40,13 @@ public class TokenSyncDate {
 	@GeneratedValue(generator = "TOKEN_SYNC_DATE_SEQ")
 	private Integer id;
 
-	@Column(name = "SYNC_DATE")
+	@Column(name = "SYNC_DATE", nullable = false)
 	private Date syncDate;
 
+	@Column(name = "SUBSCRIPTION_ID", nullable = false)
+	private Integer subscriptionId;
+
+	
 	public TokenSyncDate() {
 
 	}
@@ -51,8 +55,16 @@ public class TokenSyncDate {
 		return id;
 	}
 
+	public Integer getSubscriptionId() {
+		return subscriptionId;
+	}
+
 	public Date getSyncDate() {
 		return syncDate;
+	}
+	
+	public void setSubscriptionId(Integer subscriptionId) {
+		this.subscriptionId = subscriptionId;
 	}
 
 	public void sync() {
