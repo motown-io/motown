@@ -17,7 +17,6 @@ package io.motown.ocpi.authorization;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import io.motown.domain.api.chargingstation.IdentifyingToken;
@@ -38,7 +37,6 @@ public class TokenValidator implements AuthorizationProvider {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TokenValidator.class);
 
-	@Autowired
 	private OcpiRepository ocpiRepository;
 
 	/**
@@ -52,7 +50,7 @@ public class TokenValidator implements AuthorizationProvider {
 	@Override
 	public IdentifyingToken validate(IdentifyingToken identification) {
 
-		LOG.info("Handle authorization request on OCPI");
+		LOG.info("Handle authorization request on OCPI, repository: " + ocpiRepository);
 		try {
 			String hiddenId = identification.getToken();
 			String visibleId = identification.getVisibleId();
@@ -62,9 +60,10 @@ public class TokenValidator implements AuthorizationProvider {
 			} else {
 				token = ocpiRepository.findTokenByVisualNumber(visibleId);
 			}
-			LOG.info("Authorization request for OCPI: " + token.toString());
 
 			if (token != null && token.isValid()) {
+				LOG.info("Authorization request for OCPI: " + token.toString());
+
 				return new TextualToken(identification.getToken(), AuthenticationStatus.ACCEPTED,
 						token.getIssuingCompany(), token.getVisualNumber());
 			}
@@ -78,6 +77,8 @@ public class TokenValidator implements AuthorizationProvider {
 	}
 
 	public void setOcpiRepository(OcpiRepository ocpiRepository) {
+		
+		LOG.info("setOcpiRepository " + ocpiRepository);
 		this.ocpiRepository = ocpiRepository;
 	}
 

@@ -62,9 +62,8 @@ public class Subscription {
 	@Column(name = "OCPI_VERSION")
 	private String ocpiVersion; // OCPI version to use
 
-	@Column(name = "LUKAS_AUTHORIZATION_TOKEN")
-	private String lukasAuthorizationToken; // token to be used when contacting
-											// Lukas
+	@Column(name = "AUTHORIZATION_TOKEN")
+	private String authorizationToken; // token to be used when contacting our system
 
 	@Column(name = "PARTNER_AUTHORIZATION_TOKEN")
 	private String partnerAuthorizationToken; // token to be used when
@@ -83,8 +82,8 @@ public class Subscription {
 		this.endpoints.add(endpoint);
 	}
 
-	public void generateNewLukasAuthorizationToken() {
-		lukasAuthorizationToken = UUID.randomUUID().toString();
+	public void generateNewAuthorizationToken() {
+		authorizationToken = UUID.randomUUID().toString();
 	}
 
 	public BusinessDetails getBusinessDetails() {
@@ -115,8 +114,8 @@ public class Subscription {
 		return id;
 	}
 
-	public String getLukasAuthorizationToken() {
-		return lukasAuthorizationToken;
+	public String getAuthorizationToken() {
+		return authorizationToken;
 	}
 
 	public String getOcpiVersion() {
@@ -144,8 +143,8 @@ public class Subscription {
 		this.endpoints = endpoints;
 	}
 
-	public void setLukasAuthorizationToken(String lukasAuthorizationToken) {
-		this.lukasAuthorizationToken = lukasAuthorizationToken;
+	public void setAuthorizationToken(String authorizationToken) {
+		this.authorizationToken = authorizationToken;
 	}
 
 	public void setOcpiVersion(String ocpiVersion) {

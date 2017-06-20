@@ -22,7 +22,7 @@
     <parent>
         <artifactId>samples-configuration-distributed</artifactId>
         <groupId>io.motown</groupId>
-        <version>0.8.3-SNAPSHOT</version>
+        <version>0.9.0</version>
     </parent>
     <artifactId>samples-configuration-distributed-vas</artifactId>
     <packaging>war</packaging>

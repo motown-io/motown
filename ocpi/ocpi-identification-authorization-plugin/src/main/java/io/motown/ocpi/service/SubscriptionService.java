@@ -141,7 +141,7 @@ public class SubscriptionService extends BaseService {
 
 		Credentials credentials = new Credentials();
 		credentials.url = HOST_URL + "/cpo/versions";
-		credentials.token = subscription.getLukasAuthorizationToken();
+		credentials.token = subscription.getAuthorizationToken();
 		credentials.party_id = PARTY_ID;
 		credentials.country_code = COUNTRY_CODE;
 
@@ -193,8 +193,8 @@ public class SubscriptionService extends BaseService {
 		}
 
 		// if not present generate a new token
-		if (subscription.getLukasAuthorizationToken() == null) {
-			subscription.generateNewLukasAuthorizationToken();
+		if (subscription.getAuthorizationToken() == null) {
+			subscription.generateNewAuthorizationToken();
 		}
 		ocpiRepository.insertOrUpdate(subscription);
 
@@ -220,7 +220,7 @@ public class SubscriptionService extends BaseService {
 	public Subscription updateSubscription(SubscriptionUpdate subscriptionUpdate) {
 
 		Subscription subscription = ocpiRepository
-				.findSubscriptionByLukasAuthorizationToken(subscriptionUpdate.lukasAuthorizationToken);
+				.findSubscriptionByLukasAuthorizationToken(subscriptionUpdate.authorizationToken);
 
 		subscription.getEndpoints().clear();
 		// store business details, version and endpoints for this subscription
@@ -241,7 +241,7 @@ public class SubscriptionService extends BaseService {
 			subscription.addToEndpoints(endpoint);
 		}
 		// generate new token which will invalidate the token that existed
-		subscription.generateNewLukasAuthorizationToken();
+		subscription.generateNewAuthorizationToken();
 
 		return ocpiRepository.insertOrUpdate(subscription);
 	}

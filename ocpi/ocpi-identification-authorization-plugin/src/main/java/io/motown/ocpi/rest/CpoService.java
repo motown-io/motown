@@ -168,12 +168,12 @@ public class CpoService {
 		}
 		SubscriptionUpdate update = new SubscriptionUpdate();
 		update.credentials = credentials;
-		update.lukasAuthorizationToken = subscription.getLukasAuthorizationToken();
+		update.authorizationToken = subscription.getAuthorizationToken();
 		update.versionDetails = versionDetails;
 
 		subscription = subscriptionService.updateSubscription(update);
 
-		credentials.token = subscription.getLukasAuthorizationToken();
+		credentials.token = subscription.getAuthorizationToken();
 
 		return new CredentialsResponse(credentials);
 	}

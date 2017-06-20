@@ -19,6 +19,7 @@ import io.motown.domain.api.chargingstation.ChargingProtocol;
 import io.motown.domain.api.chargingstation.ConnectorType;
 import io.motown.domain.api.chargingstation.Current;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
@@ -27,6 +28,7 @@ public class Connector {
     private int phase;
     private int voltage;
     private ChargingProtocol chargingProtocol;
+    @Column(name="conn_current")
     private Current current;
     private ConnectorType type;
 

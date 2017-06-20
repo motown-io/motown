@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.motown</groupId>
     <artifactId>motown-io</artifactId>
-    <version>0.8.3-SNAPSHOT</version>
+    <version>0.9.0</version>
     <packaging>pom</packaging>
     <inceptionYear>2013</inceptionYear>
     <name>${project.groupId}:${project.artifactId}</name>

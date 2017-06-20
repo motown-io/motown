@@ -24,7 +24,7 @@ package io.motown.ocpi.dto;
 public class SubscriptionUpdate {
 
 	public VersionDetails versionDetails;
-	public String lukasAuthorizationToken;
+	public String authorizationToken;
 	public Credentials credentials;
 
 }

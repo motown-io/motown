@@ -42,7 +42,7 @@ public class ChargingStation {
     private ComponentStatus status;
     private int localAuthorizationListVersion;
     @ElementCollection(fetch = FetchType.EAGER)
-    private Set<LocalAuthorization> localAuthorizations = new HashSet<>();
+    private Set<LocalAuthorization> localAuths = new HashSet<>();
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<OpeningTime> openingTimes = new HashSet<>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Evse.class)
@@ -52,7 +52,7 @@ public class ChargingStation {
     private Map<String, String> attributes = new HashMap<>();
     @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn
-    private Map<String, String> configurationItems = new HashMap<>();
+    private Map<String, String> confItems = new HashMap<>();
 
     private ChargingStation() {
         // Private no-arg constructor for Hibernate.
@@ -214,11 +214,11 @@ public class ChargingStation {
     }
 
     public void setConfigurationItems(Map<String, String> configurationItems) {
-        this.configurationItems = configurationItems;
+        this.confItems = configurationItems;
     }
 
     public Map<String, String> getConfigurationItems() {
-        return configurationItems;
+        return confItems;
     }
 
     public int getLocalAuthorizationListVersion() {
@@ -230,11 +230,11 @@ public class ChargingStation {
     }
 
     public void setLocalAuthorizations(Set<LocalAuthorization> localAuthorizations) {
-        this.localAuthorizations = localAuthorizations;
+        this.localAuths = localAuthorizations;
     }
 
     public Set<LocalAuthorization> getLocalAuthorizations() {
-        return localAuthorizations;
+        return localAuths;
     }
 
     public boolean communicationAllowed() {
