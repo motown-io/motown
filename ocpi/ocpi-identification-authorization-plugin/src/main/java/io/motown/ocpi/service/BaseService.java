@@ -16,20 +16,30 @@
 package io.motown.ocpi.service;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.WebResource.Builder;
+import com.google.common.net.HttpHeaders;
 
 import io.motown.ocpi.AppConfig;
 import io.motown.ocpi.persistence.repository.OcpiRepository;
@@ -45,6 +55,8 @@ import io.motown.ocpi.response.Response.StatusCode;
  *
  */
 public class BaseService {
+
+	private static final Logger LOG = LoggerFactory.getLogger(BaseService.class);
 
 	protected static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -79,45 +91,57 @@ public class BaseService {
 	}
 
 	/**
+	 * doRequest
 	 * 
-	 * @param url
+	 * @param request
 	 * @param authorizationToken
-	 * @return
-	 */
-	protected Builder getWebResource(String url, String authorizationToken) {
-		assertValid(url, "An url is required for a web resource");
-		assertValid(authorizationToken, "An authorizationToken is required for web resource call");
-
-		WebResource webResource = Client.create().resource(url);
-		Builder builder = webResource.type(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON_TYPE);
-		return builder.header("Authorization", "Token " + authorizationToken);
-	}
-
-	/**
-	 * process
-	 * 
-	 * @param clientResponse
 	 * @param successResponseClass
 	 * @return
 	 */
-	protected Response process(ClientResponse clientResponse, Class<?> successResponseClass) {
+	protected Response doRequest(HttpRequestBase request, String authorizationToken, Class<?> successResponseClass) {
 
-		String entity = clientResponse.getEntity(String.class);
+		assertValid(authorizationToken, "An authorizationToken is required for web resource call");
 
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		request.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+		request.setHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
+		request.setHeader("Authorization", "Token " + authorizationToken);
+		
 		try {
-			Response response = (Response) OBJECT_MAPPER.readValue(entity, successResponseClass);
+			CloseableHttpResponse clientResponse = httpclient.execute(request);
+		
+		    HttpEntity entity = clientResponse.getEntity();
 
+		    InputStream inputStream = entity.getContent();
+
+		    StringWriter writer = new StringWriter();
+		    IOUtils.copy(inputStream, writer, "UTF-8");
+		    String json = writer.toString();
+		    
+		    LOG.debug("json: " + json);
+		    
+			Response response = (Response) OBJECT_MAPPER.readValue(json, successResponseClass);
+
+			LOG.debug("response.statuscode: " + response.status_code);
+			
 			if (!StatusCode.SUCCESS.equals(response.status_code)) {
 
 				throw new RuntimeException(response.toString());
 			}
 
-			String totalCount = clientResponse.getHeaders().getFirst("X-Total-Count");
+			Header totalCount = clientResponse.getFirstHeader("X-Total-Count");
 			if (totalCount != null) {
-				response.totalCount = Integer.valueOf(totalCount);
+				response.totalCount = Integer.valueOf(totalCount.getValue());
 			}
+		    EntityUtils.consume(entity);
+			clientResponse.close();
+		    
+			LOG.debug("Response: " + response);
+		    
 			return response;
 
+		} catch (ClientProtocolException e) {
+			throw new RuntimeException(e);
 		} catch (JsonParseException e) {
 			throw new RuntimeException(e);
 		} catch (JsonMappingException e) {
@@ -126,7 +150,7 @@ public class BaseService {
 			throw new RuntimeException(e);
 		}
 	}
-
+	
 	/**
 	 * toJson
 	 * 

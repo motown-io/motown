@@ -213,11 +213,11 @@ public class ChargingStation {
         this.attributes = attributes;
     }
 
-    public void setConfigurationItems(Map<String, String> configurationItems) {
+    public void setConfItems(Map<String, String> configurationItems) {
         this.confItems = configurationItems;
     }
 
-    public Map<String, String> getConfigurationItems() {
+    public Map<String, String> getConfItems() {
         return confItems;
     }
 
@@ -229,11 +229,11 @@ public class ChargingStation {
         this.localAuthorizationListVersion = localAuthorizationListVersion;
     }
 
-    public void setLocalAuthorizations(Set<LocalAuthorization> localAuthorizations) {
+    public void setLocalAuths(Set<LocalAuthorization> localAuthorizations) {
         this.localAuths = localAuthorizations;
     }
 
-    public Set<LocalAuthorization> getLocalAuthorizations() {
+    public Set<LocalAuthorization> getLocalAuths() {
         return localAuths;
     }
 

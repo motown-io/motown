@@ -196,7 +196,8 @@ public class ChargingStationEventListener {
         ChargingStation chargingStation = repository.findOne(event.getChargingStationId().getId());
 
         if (chargingStation != null) {
-            chargingStation.setConfigurationItems(toConfigurationItemMap(event.getConfigurationItems()));
+        	LOG.debug("found chargingstation: " + chargingStation.getId() + " setting configurationitems");
+            chargingStation.setConfItems(toConfigurationItemMap(event.getConfigurationItems()));
             repository.createOrUpdate(chargingStation);
         }
     }
@@ -229,7 +230,7 @@ public class ChargingStationEventListener {
             Set<LocalAuthorization> updatedLocalAuthorizations = toLocalAuthorizationSet(event.getIdentifyingTokens());
 
             if(AuthorizationListUpdateType.FULL.equals(event.getUpdateType())) {
-                chargingStation.setLocalAuthorizations(updatedLocalAuthorizations);
+                chargingStation.setLocalAuths(updatedLocalAuthorizations);
             } else {
                 updateAuthorizationList(chargingStation, updatedLocalAuthorizations);
             }
@@ -258,7 +259,7 @@ public class ChargingStationEventListener {
      * @param updatedLocalAuthorizations    the updated tokens.
      */
     private void updateAuthorizationList(final ChargingStation chargingStation, final Set<LocalAuthorization> updatedLocalAuthorizations) {
-        Set<LocalAuthorization> authorizationList =  chargingStation.getLocalAuthorizations();
+        Set<LocalAuthorization> authorizationList =  chargingStation.getLocalAuths();
         Iterables.removeIf(authorizationList, new Predicate<LocalAuthorization>() {
             @Override
             public boolean apply(@Nullable LocalAuthorization identifyingToken) {

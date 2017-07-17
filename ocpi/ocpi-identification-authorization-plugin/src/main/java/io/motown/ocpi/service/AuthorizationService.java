@@ -18,12 +18,11 @@ package io.motown.ocpi.service;
 import java.text.ParseException;
 import java.util.Date;
 
+import org.apache.http.client.methods.HttpGet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.sun.jersey.api.client.ClientResponse;
 
 import io.motown.ocpi.AppConfig;
 import io.motown.ocpi.persistence.entities.Endpoint;
@@ -115,27 +114,23 @@ public class AuthorizationService extends BaseService {
 			if (lastSyncDate != null) {
 				tokenUrl += "&date_from=" + lastSyncDate;
 			}
-			LOG.info("get tokens at endpoint: " + tokenUrl);
+			LOG.info("Get tokens at endpoint: " + tokenUrl);
 
-			ClientResponse clientResponse = getWebResource(tokenUrl,
-					tokenEndPoint.getSubscription().getPartnerAuthorizationToken()).get(ClientResponse.class);
-			TokenResponse tokenResponse = (TokenResponse) process(clientResponse, TokenResponse.class);
+			TokenResponse tokenResponse = (TokenResponse) doRequest(new HttpGet(tokenUrl), tokenEndPoint.getSubscription().getPartnerAuthorizationToken(), TokenResponse.class);
 
-			LOG.info("TokenResponse: " + tokenResponse);
-			
 			if (tokenResponse.totalCount == null) {
 				break;
 			}
 			totalCount = tokenResponse.totalCount;
 
 			numberRetrieved += tokenResponse.data.size();
-			LOG.info("inserting " + tokenResponse.data.size() + " tokens");
+			LOG.info("Inserting " + tokenResponse.data.size() + " tokens");
 
 			for (io.motown.ocpi.dto.Token token : tokenResponse.data) {
 				insertOrUpdateToken(token, tokenEndPoint.getSubscriptionId());
 			}
 		}
-		LOG.debug("Number of tokens retrieved: " + numberRetrieved);
+		LOG.info("Number of tokens retrieved: " + numberRetrieved);
 	}
 
 }

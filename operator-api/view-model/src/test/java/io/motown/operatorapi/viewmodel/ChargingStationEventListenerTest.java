@@ -263,11 +263,11 @@ public class ChargingStationEventListenerTest {
     @Test
     public void testHandleConfigurationItemsReceivedEvent() {
         ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
-        assertTrue(cs.getConfigurationItems().isEmpty());
+        assertTrue(cs.getConfItems().isEmpty());
 
         listener.handle(new ConfigurationItemsReceivedEvent(CHARGING_STATION_ID, CONFIGURATION_ITEMS, IDENTITY_CONTEXT));
         cs = repository.findOne(CHARGING_STATION_ID.getId());
-        assertFalse(cs.getConfigurationItems().isEmpty());
+        assertFalse(cs.getConfItems().isEmpty());
     }
 
     @Test
@@ -288,7 +288,7 @@ public class ChargingStationEventListenerTest {
     public void testFullAuthorizationListChangedReceivedEvent() {
         listener.handle(new AuthorizationListChangedEvent(CHARGING_STATION_ID, LIST_VERSION, AuthorizationListUpdateType.FULL, IDENTIFYING_TOKENS, IDENTITY_CONTEXT));
         ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
-        assertTrue(cs.getLocalAuthorizations().size() == IDENTIFYING_TOKENS.size());
+        assertTrue(cs.getLocalAuths().size() == IDENTIFYING_TOKENS.size());
     }
 
     @Test
@@ -307,7 +307,7 @@ public class ChargingStationEventListenerTest {
         listener.handle(new AuthorizationListChangedEvent(CHARGING_STATION_ID, LIST_VERSION, AuthorizationListUpdateType.DIFFERENTIAL, differentialIdentifyingTokens, IDENTITY_CONTEXT));
 
         ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
-        assertTrue(cs.getLocalAuthorizations().size() == IDENTIFYING_TOKENS.size() + 1);
+        assertTrue(cs.getLocalAuths().size() == IDENTIFYING_TOKENS.size() + 1);
     }
 
     @Test
@@ -316,7 +316,7 @@ public class ChargingStationEventListenerTest {
         listener.handle(new AuthorizationListChangedEvent(CHARGING_STATION_ID, LIST_VERSION, AuthorizationListUpdateType.DIFFERENTIAL, IDENTIFYING_TOKENS, IDENTITY_CONTEXT));
 
         ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
-        assertTrue(cs.getLocalAuthorizations().size() == IDENTIFYING_TOKENS.size());
+        assertTrue(cs.getLocalAuths().size() == IDENTIFYING_TOKENS.size());
     }
 
 }

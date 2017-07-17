@@ -18,12 +18,12 @@ package io.motown.ocpi.service;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.sun.jersey.api.client.ClientResponse;
 
 import io.motown.ocpi.AppConfig;
 import io.motown.ocpi.dto.BusinessDetails;
@@ -102,10 +102,9 @@ public class SubscriptionService extends BaseService {
 	public VersionDetails getVersionDetails(String versionURL, String authorizationToken) {
 
 		LOG.info("getVersionDetails with token: " + authorizationToken);
-		
-		ClientResponse clientResponse = getWebResource(versionURL, authorizationToken).get(ClientResponse.class);
-		VersionDetailsResponse versionDetailsResponse = (VersionDetailsResponse) process(clientResponse,
-				VersionDetailsResponse.class);
+
+		VersionDetailsResponse versionDetailsResponse = (VersionDetailsResponse) doRequest(new HttpGet(versionURL),
+				authorizationToken, VersionDetailsResponse.class);
 		return versionDetailsResponse.data;
 	}
 
@@ -119,9 +118,9 @@ public class SubscriptionService extends BaseService {
 	public Versions getVersions(String versionsURL, String authorizationToken) {
 
 		LOG.info("getVersions with token: " + authorizationToken);
-		
-		ClientResponse clientResponse = getWebResource(versionsURL, authorizationToken).get(ClientResponse.class);
-		VersionsResponse versionsResponse = (VersionsResponse) process(clientResponse, VersionsResponse.class);
+
+		VersionsResponse versionsResponse = (VersionsResponse) doRequest(new HttpGet(versionsURL), authorizationToken,
+				VersionsResponse.class);
 		return new Versions(versionsResponse.data);
 	}
 
@@ -153,11 +152,8 @@ public class SubscriptionService extends BaseService {
 
 		LOG.info("Credentials POST: " + json);
 
-		ClientResponse clientResponse = getWebResource(credentialsUrl, subscription.getPartnerAuthorizationToken())
-				.post(ClientResponse.class, json);
-
-		CredentialsResponse credentialsResponse = (CredentialsResponse) process(clientResponse,
-				CredentialsResponse.class);
+		CredentialsResponse credentialsResponse = (CredentialsResponse) doRequest(new HttpPost(credentialsUrl),
+				subscription.getPartnerAuthorizationToken(), CredentialsResponse.class);
 		LOG.debug("credentialsResponse data: " + credentialsResponse);
 
 		return credentialsResponse.data;

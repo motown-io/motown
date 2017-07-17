@@ -142,7 +142,7 @@
         <jackson-schema-core.version>1.1.8</jackson-schema-core.version>
         <jaxb-api.version>2.1</jaxb-api.version>
         <jaxb2-maven-plugin.version>1.5</jaxb2-maven-plugin.version>
-        <jersey.version>1.18.1</jersey.version>
+        <jersey.version>1.19.4</jersey.version>
         <jetty-maven-plugin.version>9.0.4.v20130625</jetty-maven-plugin.version>
         <jgroups.version>3.1.0.Final</jgroups.version>
         <joda-time.version>2.1</joda-time.version>
