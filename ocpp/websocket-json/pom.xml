@@ -21,7 +21,7 @@
     <parent>
         <artifactId>motown-io</artifactId>
         <groupId>io.motown</groupId>
-        <version>0.9.0</version>
+        <version>0.9.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <groupId>io.motown.ocpp</groupId>
