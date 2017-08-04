@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.motown</groupId>
     <artifactId>motown-io</artifactId>
-    <version>0.9.0</version>
+    <version>0.9.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <inceptionYear>2013</inceptionYear>
     <name>${project.groupId}:${project.artifactId}</name>
@@ -133,7 +133,7 @@
         <gson.version>2.2.4</gson.version>
         <guava.version>16.0.1</guava.version>
         <hibernate-validator.version>5.1.0.Final</hibernate-validator.version>
-        <hibernate.version>4.2.2.Final</hibernate.version>
+        <hibernate.version>4.3.11.Final</hibernate.version>
         <!-- use older version of hibernate to ensure tomcat can start the simple config app. -->
         <!-- TODO find out which dependency breaks when using new version of hibernate. - Mark van den Bergh, april 22nd 2014 -->
         <!--<hibernate.version>4.3.5.Final</hibernate.version>-->
@@ -146,7 +146,7 @@
         <jetty-maven-plugin.version>9.0.4.v20130625</jetty-maven-plugin.version>
         <jgroups.version>3.1.0.Final</jgroups.version>
         <joda-time.version>2.1</joda-time.version>
-        <jpa-2.0.version>1.0.1.Final</jpa-2.0.version>
+        <jpa-2.1.version>1.0.0.Final</jpa-2.1.version>
         <json-schema-validator.version>2.1.7</json-schema-validator.version>
         <junit.version>4.8.1</junit.version>
         <license-maven-plugin.version>2.5</license-maven-plugin.version>
@@ -312,8 +312,8 @@
             </dependency>
             <dependency>
                 <groupId>org.hibernate.javax.persistence</groupId>
-                <artifactId>hibernate-jpa-2.0-api</artifactId>
-                <version>${jpa-2.0.version}</version>
+                <artifactId>hibernate-jpa-2.1-api</artifactId>
+                <version>${jpa-2.1.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
