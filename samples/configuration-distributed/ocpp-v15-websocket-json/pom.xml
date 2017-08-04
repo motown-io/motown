@@ -23,7 +23,7 @@
     <parent>
         <artifactId>samples-configuration-distributed</artifactId>
         <groupId>io.motown</groupId>
-        <version>0.9.1-SNAPSHOT</version>
+        <version>0.9.1</version>
     </parent>
     <artifactId>samples-configuration-distributed-ocpp-v15-websocket-json</artifactId>
     <packaging>war</packaging>
