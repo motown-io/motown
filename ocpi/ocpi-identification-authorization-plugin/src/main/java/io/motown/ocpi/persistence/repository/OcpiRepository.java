@@ -69,18 +69,18 @@ public class OcpiRepository {
 	}
 
 	/**
-	 * findSubscriptionByLukasAuthorizationToken
+	 * findSubscriptionByAuthorizationToken
 	 * 
-	 * @param lukasAuthorizationToken
-	 * @return
+	 * @param authorizationToken
+	 * @return subscription if it can be found for this authorization token
 	 */
-	public Subscription findSubscriptionByLukasAuthorizationToken(String lukasAuthorizationToken) {
+	public Subscription findSubscriptionByAuthorizationToken(String authorizationToken) {
 		try {
 			return entityManager
 					.createQuery(
-							"SELECT subscription FROM Subscription AS subscription WHERE lukasAuthorizationToken = :lukasAuthorizationToken",
+							"SELECT subscription FROM Subscription AS subscription WHERE authorizationToken = :authorizationToken",
 							Subscription.class)
-					.setParameter("lukasAuthorizationToken", lukasAuthorizationToken).setMaxResults(1)
+					.setParameter("authorizationToken", authorizationToken).setMaxResults(1)
 					.getSingleResult();
 		} catch (NoResultException e) {
 			return null;

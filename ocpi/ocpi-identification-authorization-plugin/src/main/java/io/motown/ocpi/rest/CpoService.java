@@ -91,7 +91,7 @@ public class CpoService {
 		LOG.info("Token value: " + tokenValue);
 
 		if (tokenValue != null) {
-			return subscriptionService.findSubscriptionByLukasAuthorizationToken(tokenValue);
+			return subscriptionService.findSubscriptionByAuthorizationToken(tokenValue);
 		}
 		return null;
 	}
@@ -157,7 +157,7 @@ public class CpoService {
 		Version version = versions.find(ocpiVersion);
 		if (version == null) {
 			LOG.error(
-					"Client does not support the OCPI version it contacted on Lukas, this is not allowed. Versions URL: ${credentialsDto.url?.url}");
+					"Client does not support the OCPI version it contacted us, this is not allowed. Versions URL: ${credentialsDto.url?.url}");
 			return new Response(StatusCode.UNSUPPORTED_VERSION);
 		}
 

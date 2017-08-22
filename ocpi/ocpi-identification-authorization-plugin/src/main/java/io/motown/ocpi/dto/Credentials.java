@@ -23,12 +23,11 @@ package io.motown.ocpi.dto;
  */
 public class Credentials {
 
-	public String token; // The token for the other party to authenticate in Lukas
-	public String url; // URL to the 'versions' endpoint
+	public String token; 				     // The token for the other party to authenticate with us
+	public String url; 						 // URL to the 'versions' endpoint
 	public BusinessDetails business_details; // Details of the other party
-	public String party_id; // CPO or eMSP ID of this party. (following the
-							// 15118 ISO standard).
-	public String country_code; // Country code of the country this party is operating in.
+	public String party_id; 				 // CPO or eMSP ID of this party. (following the 15118 ISO standard).
+	public String country_code; 			 // Country code of the country this party is operating in.
 
 	public Credentials() {
 

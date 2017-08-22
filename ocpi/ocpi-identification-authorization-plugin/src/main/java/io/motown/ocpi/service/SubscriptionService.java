@@ -62,21 +62,20 @@ public class SubscriptionService extends BaseService {
 	}
 
 	/**
-	 * findSubscriptionByLukasAuthorizationToken
+	 * findSubscriptionByAuthorizationToken
 	 * 
-	 * @param lukasAuthorizationToken
+	 * @param authorizationToken
 	 * @return
 	 */
-	public Subscription findSubscriptionByLukasAuthorizationToken(String lukasAuthorizationToken) {
-		return ocpiRepository.findSubscriptionByLukasAuthorizationToken(lukasAuthorizationToken);
+	public Subscription findSubscriptionByAuthorizationToken(String authorizationToken) {
+		return ocpiRepository.findSubscriptionByAuthorizationToken(authorizationToken);
 	}
 
 	/**
 	 * returns the highest mutual version between the offeredVersions of the
-	 * partner and the supported versions of Lukas
+	 * partner and the supported versions on our side
 	 *
 	 * @param offeredVersions
-	 * @param supportedVersions
 	 * @return
 	 */
 	private Version findHighestMutualVersion(Versions offeredVersions) {
@@ -127,9 +126,7 @@ public class SubscriptionService extends BaseService {
 	/**
 	 * Posts the credentials of the user with the EMSP credentials endpoint
 	 *
-	 * @param credentialsUrl
-	 * @param partnerAuthorizationToken
-	 * @param lukasAuthorizationToken
+	 * @param subscription
 	 * @return the definitive partnerAuthorizationToken in the post response
 	 */
 	private Credentials postCredentials(Subscription subscription) {
@@ -216,7 +213,7 @@ public class SubscriptionService extends BaseService {
 	public Subscription updateSubscription(SubscriptionUpdate subscriptionUpdate) {
 
 		Subscription subscription = ocpiRepository
-				.findSubscriptionByLukasAuthorizationToken(subscriptionUpdate.authorizationToken);
+				.findSubscriptionByAuthorizationToken(subscriptionUpdate.authorizationToken);
 
 		subscription.getEndpoints().clear();
 		// store business details, version and endpoints for this subscription
