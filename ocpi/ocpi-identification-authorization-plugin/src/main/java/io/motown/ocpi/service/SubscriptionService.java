@@ -15,11 +15,14 @@
  */
 package io.motown.ocpi.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -149,7 +152,16 @@ public class SubscriptionService extends BaseService {
 
 		LOG.info("Credentials POST: " + json);
 
-		CredentialsResponse credentialsResponse = (CredentialsResponse) doRequest(new HttpPost(credentialsUrl),
+		HttpPost post = new HttpPost(credentialsUrl);
+		HttpEntity entity = null;
+		try {
+			entity = new ByteArrayEntity(json.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			LOG.error("UnsupportedEncodingException while setting body for posting credentials", e);
+		}
+		post.setEntity(entity);
+
+		CredentialsResponse credentialsResponse = (CredentialsResponse) doRequest(post,
 				subscription.getPartnerAuthorizationToken(), CredentialsResponse.class);
 		LOG.debug("credentialsResponse data: " + credentialsResponse);
 
