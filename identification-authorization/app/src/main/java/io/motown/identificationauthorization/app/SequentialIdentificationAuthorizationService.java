@@ -15,9 +15,11 @@
  */
 package io.motown.identificationauthorization.app;
 
+import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.IdentifyingToken;
 import io.motown.identificationauthorization.pluginapi.AuthorizationProvider;
 
+import javax.annotation.Nullable;
 import java.util.Set;
 
 public class SequentialIdentificationAuthorizationService implements IdentificationAuthorizationService {
@@ -32,14 +34,14 @@ public class SequentialIdentificationAuthorizationService implements Identificat
 	 * Validates the token with the configured authentication providers, as soon
 	 * as one provider provides valid authorization this will be the result.
 	 *
-	 * @param token
-	 *            identifying token for which authorization is required
+	 * @param token identifying token for which authorization is required
+     * @param chargingStationId optional charging station id for this authorization
 	 * @return validated IdentifyingToken
 	 */
 	@Override
-	public IdentifyingToken validate(IdentifyingToken token) {
+	public IdentifyingToken validate(IdentifyingToken token, @Nullable ChargingStationId chargingStationId) {
 		for (AuthorizationProvider provider : providers) {
-			IdentifyingToken validatedToken = provider.validate(token);
+			IdentifyingToken validatedToken = provider.validate(token, chargingStationId);
 			if (validatedToken.isValid()) {
 				return validatedToken;
 			}

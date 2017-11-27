@@ -38,14 +38,14 @@ public class SequentialIdentificationAuthorizationServiceTest {
         service = new SequentialIdentificationAuthorizationService();
 
         firstProvider = mock(AuthorizationProvider.class);
-        when(firstProvider.validate(IDENTIFYING_TOKEN)).thenReturn(IDENTIFYING_TOKEN_ACCEPTED);
-        when(firstProvider.validate(INVALID_IDENTIFYING_TOKEN)).thenReturn(INVALID_IDENTIFYING_TOKEN);
-        when(firstProvider.validate(ANOTHER_IDENTIFYING_TOKEN)).thenReturn(ANOTHER_IDENTIFYING_TOKEN);
+        when(firstProvider.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID)).thenReturn(IDENTIFYING_TOKEN_ACCEPTED);
+        when(firstProvider.validate(INVALID_IDENTIFYING_TOKEN, CHARGING_STATION_ID)).thenReturn(INVALID_IDENTIFYING_TOKEN);
+        when(firstProvider.validate(ANOTHER_IDENTIFYING_TOKEN, CHARGING_STATION_ID)).thenReturn(ANOTHER_IDENTIFYING_TOKEN);
 
         secondProvider = mock(AuthorizationProvider.class);
-        when(secondProvider.validate(IDENTIFYING_TOKEN)).thenReturn(IDENTIFYING_TOKEN);
-        when(secondProvider.validate(INVALID_IDENTIFYING_TOKEN)).thenReturn(INVALID_IDENTIFYING_TOKEN);
-        when(secondProvider.validate(ANOTHER_IDENTIFYING_TOKEN)).thenReturn(IDENTIFYING_TOKEN_ACCEPTED);
+        when(secondProvider.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID)).thenReturn(IDENTIFYING_TOKEN);
+        when(secondProvider.validate(INVALID_IDENTIFYING_TOKEN, CHARGING_STATION_ID)).thenReturn(INVALID_IDENTIFYING_TOKEN);
+        when(secondProvider.validate(ANOTHER_IDENTIFYING_TOKEN, CHARGING_STATION_ID)).thenReturn(IDENTIFYING_TOKEN_ACCEPTED);
 
         service.setProviders(ImmutableSet.<AuthorizationProvider>builder()
                 .add(firstProvider)
@@ -55,17 +55,17 @@ public class SequentialIdentificationAuthorizationServiceTest {
 
     @Test
     public void testIsValidFirstProvider() {
-        assertTrue(service.validate(IDENTIFYING_TOKEN).isValid());
+        assertTrue(service.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID).isValid());
     }
 
     @Test
     public void testIsValidSecondProvider() {
-        assertTrue(service.validate(ANOTHER_IDENTIFYING_TOKEN).isValid());
+        assertTrue(service.validate(ANOTHER_IDENTIFYING_TOKEN, CHARGING_STATION_ID).isValid());
     }
 
     @Test
     public void testIsInvalidBothProviders() {
-        assertFalse(service.validate(INVALID_IDENTIFYING_TOKEN).isValid());
+        assertFalse(service.validate(INVALID_IDENTIFYING_TOKEN, CHARGING_STATION_ID).isValid());
     }
 
 }

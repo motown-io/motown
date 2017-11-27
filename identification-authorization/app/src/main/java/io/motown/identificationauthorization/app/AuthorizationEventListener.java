@@ -56,7 +56,7 @@ public class AuthorizationEventListener {
                            @MetaData(value = CorrelationToken.KEY, required = false) CorrelationToken correlationToken) {
     	IdentifyingToken identifyingToken = event.getIdentifyingToken();
     	
-    	identifyingToken = identificationAuthorizationService.validate(identifyingToken);
+    	identifyingToken = identificationAuthorizationService.validate(identifyingToken, event.getChargingStationId());
 
         CommandMessage commandMessage;
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());

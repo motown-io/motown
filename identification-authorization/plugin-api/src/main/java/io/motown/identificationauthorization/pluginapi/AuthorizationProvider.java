@@ -15,7 +15,10 @@
  */
 package io.motown.identificationauthorization.pluginapi;
 
+import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.IdentifyingToken;
+
+import javax.annotation.Nullable;
 
 /**
  * Should be implemented by every AuthorizationProvider used in the Identification Authorization add-on.
@@ -25,8 +28,10 @@ public interface AuthorizationProvider {
     /**
      * Returns a validated identifyingToken
      * 
-     * @param token
+     * @param token token to be authorized
+     * @param chargingStationId charging station id for which the validation should be executed
      * @return validated IdentifyingToken
      */
-	IdentifyingToken validate(IdentifyingToken token);
+	IdentifyingToken validate(IdentifyingToken token, @Nullable ChargingStationId chargingStationId);
+
 }

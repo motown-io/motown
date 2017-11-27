@@ -15,6 +15,7 @@
  */
 package io.motown.ocpi.authorization;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.IDENTIFYING_TOKEN;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -62,8 +63,8 @@ public class TokenValidatorTest {
 		when(ocpiRepository.findTokenByUid(IDENTIFYING_TOKEN.getToken()))
 				.thenReturn(getToken(IDENTIFYING_TOKEN.getToken(), Boolean.TRUE));
 
-		assertTrue(tokenValidator.validate(IDENTIFYING_TOKEN).isValid());
-		assertEquals(tokenValidator.validate(IDENTIFYING_TOKEN).getToken(), IDENTIFYING_TOKEN.getToken());
+		assertTrue(tokenValidator.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID).isValid());
+		assertEquals(tokenValidator.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID).getToken(), IDENTIFYING_TOKEN.getToken());
 	}
 
 	@Test
@@ -71,8 +72,8 @@ public class TokenValidatorTest {
 		when(ocpiRepository.findTokenByUid(IDENTIFYING_TOKEN.getToken()))
 				.thenReturn(getToken(IDENTIFYING_TOKEN.getToken(), Boolean.FALSE));
 
-		assertFalse(tokenValidator.validate(IDENTIFYING_TOKEN).isValid());
-		assertEquals(tokenValidator.validate(IDENTIFYING_TOKEN).getToken(), IDENTIFYING_TOKEN.getToken());
+		assertFalse(tokenValidator.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID).isValid());
+		assertEquals(tokenValidator.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID).getToken(), IDENTIFYING_TOKEN.getToken());
 	}
 
 }

@@ -15,6 +15,7 @@
  */
 package io.motown.sample.simple.authentication;
 
+import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.IdentifyingToken;
 import io.motown.domain.api.chargingstation.IdentifyingToken.AuthenticationStatus;
 import io.motown.domain.api.chargingstation.TextualToken;
@@ -22,6 +23,8 @@ import io.motown.identificationauthorization.pluginapi.AuthorizationProvider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nullable;
 
 /**
  * Dummy implementation of {@code AuthorizationProvider}, this service will always return 'true'
@@ -32,7 +35,7 @@ public class DummyIdentificationAuthorization implements AuthorizationProvider {
     private static final Logger LOG = LoggerFactory.getLogger(DummyIdentificationAuthorization.class);
 
     @Override
-    public IdentifyingToken validate(IdentifyingToken token) {
+    public IdentifyingToken validate(IdentifyingToken token, @Nullable ChargingStationId chargingStationId) {
     	return new TextualToken(token.getToken(), AuthenticationStatus.ACCEPTED, "MSP", "7007");
     }
 

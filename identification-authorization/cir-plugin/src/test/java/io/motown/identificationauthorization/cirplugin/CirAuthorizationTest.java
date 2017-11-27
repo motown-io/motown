@@ -15,7 +15,6 @@
  */
 package io.motown.identificationauthorization.cirplugin;
 
-import io.motown.domain.api.chargingstation.IdentifyingToken.AuthenticationStatus;
 import io.motown.identificationauthorization.cirplugin.cir.schema.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +22,7 @@ import org.mockito.ArgumentCaptor;
 
 import javax.xml.ws.Holder;
 
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.IDENTIFYING_TOKEN;
 import static io.motown.identificationauthorization.cirplugin.CirPluginTestUtils.*;
 import static org.junit.Assert.*;
@@ -49,7 +49,7 @@ public class CirAuthorizationTest {
     public void testIsValid() {
         when(serviceSoap.inquire(any(ArrayOfCard.class), any(Holder.class))).thenReturn(getInquireResult(true));
 
-        assertTrue(cirAuthorization.validate(IDENTIFYING_TOKEN).isValid());
+        assertTrue(cirAuthorization.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID).isValid());
 
         ArgumentCaptor<ArrayOfCard> arrayOfCardArgument = ArgumentCaptor.forClass(ArrayOfCard.class);
         ArgumentCaptor<Holder> holderArgument = ArgumentCaptor.forClass(Holder.class);
@@ -65,35 +65,35 @@ public class CirAuthorizationTest {
     public void testIsInvalid() {
         when(serviceSoap.inquire(any(ArrayOfCard.class), any(Holder.class))).thenReturn(getInquireResult(false));
 
-        assertFalse(cirAuthorization.validate(IDENTIFYING_TOKEN).isValid());
+        assertFalse(cirAuthorization.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID).isValid());
     }
 
     @Test
     public void testErrorStillProcessesResult() {
         when(serviceSoap.inquire(any(ArrayOfCard.class), any(Holder.class))).thenReturn(getInquireResultValidWithError());
 
-        assertTrue(cirAuthorization.validate(IDENTIFYING_TOKEN).isValid());
+        assertTrue(cirAuthorization.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID).isValid());
     }
 
     @Test
     public void testEmptyWebServiceResponse() {
         when(serviceSoap.inquire(any(ArrayOfCard.class), any(Holder.class))).thenReturn(null);
 
-        assertFalse(cirAuthorization.validate(IDENTIFYING_TOKEN).isValid());
+        assertFalse(cirAuthorization.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID).isValid());
     }
 
     @Test
     public void testWebServiceResponseEmptyArrayOfCards() {
         when(serviceSoap.inquire(any(ArrayOfCard.class), any(Holder.class))).thenReturn(new InquireResult());
 
-        assertFalse(cirAuthorization.validate(IDENTIFYING_TOKEN).isValid());
+        assertFalse(cirAuthorization.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID).isValid());
     }
 
     @Test
     public void testWebServiceException() {
         when(serviceSoap.inquire(any(ArrayOfCard.class), any(Holder.class))).thenThrow(new RuntimeException("Exception in WebService call"));
 
-        assertFalse(cirAuthorization.validate(IDENTIFYING_TOKEN).isValid());
+        assertFalse(cirAuthorization.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID).isValid());
     }
 
     @Test
@@ -101,11 +101,11 @@ public class CirAuthorizationTest {
         CirAuthorization unreachableCirAuthorization = new CirAuthorization();
         unreachableCirAuthorization.setCirService(new Service().getServiceSoap());
         unreachableCirAuthorization.setEndpoint("http://localhost");
-        assertFalse(cirAuthorization.validate(IDENTIFYING_TOKEN).isValid());
+        assertFalse(cirAuthorization.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID).isValid());
 
         // also test if cir service hasn't been set yet
         unreachableCirAuthorization.setCirService(null);
-        assertFalse(cirAuthorization.validate(IDENTIFYING_TOKEN).isValid());
+        assertFalse(cirAuthorization.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID).isValid());
     }
 
 }

@@ -15,6 +15,7 @@
  */
 package io.motown.identificationauthorization.cirplugin;
 
+import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.IdentifyingToken;
 import io.motown.domain.api.chargingstation.IdentifyingToken.AuthenticationStatus;
 import io.motown.domain.api.chargingstation.TextualToken;
@@ -24,6 +25,7 @@ import io.motown.identificationauthorization.pluginapi.AuthorizationProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Holder;
 
@@ -59,12 +61,12 @@ public class CirAuthorization implements AuthorizationProvider {
      * Validates the identification against the CIR service.
      *
      * @param identification identification to verify.
+     * @param chargingStationId charging station id for which the validation should be executed
      * @return The validated IdentifyingToken, status ACCEPTED if identification is valid according to CIR. If CIR cannot be reached or
      * CIR responded the identification is invalid, an empty authenticationStatus is returned.
      */
     @Override
-    public IdentifyingToken validate(IdentifyingToken identification) {
-
+    public IdentifyingToken validate(IdentifyingToken identification, @Nullable ChargingStationId chargingStationId) {
         InquireResult inquireResult = inquire(identification.getToken());
         if (inquireResult == null) {
             LOG.info("No result while querying CIR. Returning 'false' for identification: {}", identification);

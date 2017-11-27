@@ -15,6 +15,7 @@
  */
 package io.motown.ocpi.authorization;
 
+import io.motown.domain.api.chargingstation.ChargingStationId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ import io.motown.domain.api.chargingstation.TextualToken;
 import io.motown.identificationauthorization.pluginapi.AuthorizationProvider;
 import io.motown.ocpi.persistence.entities.Token;
 import io.motown.ocpi.persistence.repository.OcpiRepository;
+
+import javax.annotation.Nullable;
 
 /**
  * OCPI implementation for AuthorizationProvider
@@ -44,14 +47,13 @@ public class TokenValidator implements AuthorizationProvider {
 	/**
 	 * Validates the identification against the OCPI token database service.
 	 *
-	 * @param identification
-	 *            identification to verify.
+	 * @param identification identification to verify.
+	 * @param chargingStationId charging station id for which the validation should be executed
 	 * @return The validated IdentifyingToken, status ACCEPTED if identification
 	 *         is valid according to OCPI.
 	 */
 	@Override
-	public IdentifyingToken validate(IdentifyingToken identification) {
-
+	public IdentifyingToken validate(IdentifyingToken identification, @Nullable ChargingStationId chargingStationId) {
 		LOG.info("Handle authorization request on OCPI " + identification.getToken());
 		try {
 			String hiddenId = identification.getToken();

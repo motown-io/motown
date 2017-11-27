@@ -15,9 +15,13 @@
  */
 package io.motown.identificationauthorization.app;
 
+import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.chargingstation.IdentifyingToken;
 
+import javax.annotation.Nullable;
+
 public interface IdentificationAuthorizationService {
-    
-	IdentifyingToken validate(IdentifyingToken token);
+
+	IdentifyingToken validate(IdentifyingToken identifyingToken, @Nullable ChargingStationId chargingStationId);
+
 }
