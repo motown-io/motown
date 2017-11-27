@@ -116,6 +116,7 @@
         <module>identification-authorization/app</module>
         <module>identification-authorization/plugin-api</module>
         <module>identification-authorization/cir-plugin</module>
+        <module>identification-authorization/local-plugin</module>
         <module>identification-authorization/selective-authorization-service</module>
         <module>chargingstation-configuration/app</module>
         <module>chargingstation-configuration/view-model</module>
