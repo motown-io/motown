@@ -56,6 +56,8 @@ public class ConfigurationEventListener {
             IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
             ConfigureChargingStationCommand command = new ConfigureChargingStationCommand(event.getChargingStationId(), evses, identityContext);
+
+            LOG.info("Sending configure charging station command for charging station: {}", event.getChargingStationId());
             commandGateway.send(command);
         } else {
             LOG.info("No Evses found for vendor {} and model {}", attributes.get(AttributeMapKeys.VENDOR_ID), attributes.get(AttributeMapKeys.MODEL));
