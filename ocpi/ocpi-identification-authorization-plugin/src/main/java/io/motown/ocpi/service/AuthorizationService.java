@@ -21,8 +21,6 @@ import java.util.Date;
 import org.apache.http.client.methods.HttpGet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import io.motown.ocpi.AppConfig;
 import io.motown.ocpi.persistence.entities.Endpoint;
@@ -38,74 +36,25 @@ import io.motown.ocpi.response.TokenResponse;
  * @author bartwolfs
  *
  */
-@Component
 public class AuthorizationService extends BaseService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AuthorizationService.class);
 
 	/**
-	 * returns the formatted datetime the tokens where last synchronized
-	 *
-	 * @return
-	 */
-	public String getLastSyncDate(Integer subscriptionId) {
-		String lastSyncDate = null;
-		TokenSyncDate tokenSyncDate = ocpiRepository.getTokenSyncDate(subscriptionId);
-		if (tokenSyncDate != null) {
-			lastSyncDate = AppConfig.DATE_FORMAT.format(tokenSyncDate.getSyncDate());
-		} else {
-			tokenSyncDate = new TokenSyncDate();
-			tokenSyncDate.setSubscriptionId(subscriptionId);
-		}
-		tokenSyncDate.sync();
-		ocpiRepository.insertOrUpdate(tokenSyncDate);
-		return lastSyncDate;
-	}
-
-	/**
-	 * Inserts a token or updates it if an existing token is found with the same
-	 * uid and issuing-company
-	 *
-	 * @param tokenUpdate
-	 */
-	private void insertOrUpdateToken(io.motown.ocpi.dto.Token tokenUpdate, Integer subscriptionId) {
-
-		Token token = ocpiRepository.findTokenByUidAndIssuingCompany(tokenUpdate.uid, tokenUpdate.issuer);
-		if (token == null) {
-			token = new Token();
-			token.setUid(tokenUpdate.uid);
-			token.setSubscriptionId(subscriptionId);
-			token.setDateCreated(new Date());
-		}
-		token.setTokenType(tokenUpdate.type);
-		token.setAuthId(tokenUpdate.auth_id);
-		token.setVisualNumber(tokenUpdate.visual_number);
-		token.setIssuingCompany(tokenUpdate.issuer);
-		token.setValid(tokenUpdate.valid);
-		token.setWhitelist(tokenUpdate.whitelist);
-		token.setLanguageCode(tokenUpdate.languageCode);
-
-		try {
-			token.setLastUpdated(AppConfig.DATE_FORMAT.parse(tokenUpdate.last_updated));
-		} catch (ParseException e) {
-			throw new RuntimeException(e);
-		}
-		ocpiRepository.insertOrUpdate(token);
-	}
-
-	/**
 	 * Retrieves tokens from the enpoint passed as argument, and stores these in
 	 * the database
 	 *
-	 * @param tokenEndPoint
+	 * @param tokenEndPoint endpoint to use for retrieving tokens
 	 */
-	@Transactional
 	public void synchronizeTokens(Endpoint tokenEndPoint) {
 
-		String lastSyncDate = getLastSyncDate(tokenEndPoint.getSubscriptionId());
+	    Integer subscriptionId = tokenEndPoint.getSubscriptionId();
+	    String partnerAuthorizationToken = tokenEndPoint.getSubscription().getPartnerAuthorizationToken();
+		String lastSyncDate = getLastSyncDate(subscriptionId);
 
 		int totalCount = 1;
 		int numberRetrieved = 0;
+		Date startOfSync = new Date();
 
 		while (totalCount > numberRetrieved) {
 			String tokenUrl = tokenEndPoint.getUrl();
@@ -116,7 +65,7 @@ public class AuthorizationService extends BaseService {
 			}
 			LOG.info("Get tokens at endpoint: " + tokenUrl);
 
-			TokenResponse tokenResponse = (TokenResponse) doRequest(new HttpGet(tokenUrl), tokenEndPoint.getSubscription().getPartnerAuthorizationToken(), TokenResponse.class);
+			TokenResponse tokenResponse = (TokenResponse) doRequest(new HttpGet(tokenUrl), partnerAuthorizationToken, TokenResponse.class);
 
 			if (tokenResponse.totalCount == null) {
 				break;
@@ -127,10 +76,76 @@ public class AuthorizationService extends BaseService {
 			LOG.info("Inserting " + tokenResponse.data.size() + " tokens");
 
 			for (io.motown.ocpi.dto.Token token : tokenResponse.data) {
-				insertOrUpdateToken(token, tokenEndPoint.getSubscriptionId());
+				insertOrUpdateToken(token, subscriptionId);
 			}
 		}
+
+		updateLastSynchronizationDate(startOfSync, subscriptionId);
 		LOG.info("Number of tokens retrieved: " + numberRetrieved);
 	}
+
+    /**
+     * Returns the formatted datetime the tokens where last synchronized if it exists, otherwise null.
+     *
+     * @return last sync date if it exists, null otherwise
+     */
+    private String getLastSyncDate(Integer subscriptionId) {
+        String lastSyncDate = null;
+
+        TokenSyncDate tokenSyncDate = ocpiRepository.getTokenSyncDate(subscriptionId);
+        if (tokenSyncDate != null) {
+            lastSyncDate = AppConfig.DATE_FORMAT.format(tokenSyncDate.getSyncDate());
+        }
+
+        return lastSyncDate;
+    }
+
+    /**
+     * Updates the last sync date for the passed subscription.
+     *
+     * @param syncDate       date of the last sync
+     * @param subscriptionId the subscription that should be updated
+     */
+    private void updateLastSynchronizationDate(Date syncDate, Integer subscriptionId) {
+        TokenSyncDate tokenSyncDate = ocpiRepository.getTokenSyncDate(subscriptionId);
+
+        if (tokenSyncDate == null) {
+            tokenSyncDate = new TokenSyncDate();
+            tokenSyncDate.setSubscriptionId(subscriptionId);
+        }
+        tokenSyncDate.setSyncDate(syncDate);
+
+        ocpiRepository.insertOrUpdate(tokenSyncDate);
+    }
+
+    /**
+     * Inserts a token or updates it if an existing token is found with the same
+     * uid and issuing-company
+     *
+     * @param tokenUpdate
+     */
+    private void insertOrUpdateToken(io.motown.ocpi.dto.Token tokenUpdate, Integer subscriptionId) {
+        Token token = ocpiRepository.findTokenByUidAndIssuingCompany(tokenUpdate.uid, tokenUpdate.issuer);
+        if (token == null) {
+            token = new Token();
+            token.setUid(tokenUpdate.uid);
+            token.setSubscriptionId(subscriptionId);
+            token.setDateCreated(new Date());
+        }
+        token.setTokenType(tokenUpdate.type);
+        token.setAuthId(tokenUpdate.auth_id);
+        token.setVisualNumber(tokenUpdate.visual_number);
+        token.setIssuingCompany(tokenUpdate.issuer);
+        token.setValid(tokenUpdate.valid);
+        token.setWhitelist(tokenUpdate.whitelist);
+        token.setLanguageCode(tokenUpdate.languageCode);
+
+        try {
+            token.setLastUpdated(AppConfig.DATE_FORMAT.parse(tokenUpdate.last_updated));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        ocpiRepository.insertOrUpdate(token);
+    }
 
 }

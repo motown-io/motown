@@ -67,7 +67,7 @@ public class TokenSyncDate {
 		this.subscriptionId = subscriptionId;
 	}
 
-	public void sync() {
-		this.syncDate = new Date();
+	public void setSyncDate(Date syncDate) {
+		this.syncDate = syncDate;
 	}
 }

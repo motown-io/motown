@@ -18,12 +18,9 @@ package io.motown.ocpi.persistence.repository;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import io.motown.ocpi.persistence.entities.Endpoint;
 import io.motown.ocpi.persistence.entities.Subscription;
@@ -36,17 +33,23 @@ import io.motown.ocpi.persistence.entities.TokenSyncDate;
  * @author bartwolfs
  *
  */
-@Repository
 public class OcpiRepository {
 
-	@PersistenceContext
-	private EntityManager entityManager;
+    private EntityManagerFactory entityManagerFactory;
+
+	public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+		this.entityManagerFactory = entityManagerFactory;
+	}
+
+    private EntityManager getEntityManager() {
+        return entityManagerFactory.createEntityManager();
+    }
 
 	public List<Endpoint> findAllEndpoints() {
-		try {
+        EntityManager entityManager = getEntityManager();
+        try {
 			return entityManager.createQuery("SELECT endpoint FROM Endpoint AS endpoint", Endpoint.class)
 					.getResultList();
-
 		} finally {
 			entityManager.close();
 		}
@@ -58,7 +61,8 @@ public class OcpiRepository {
 	 * @return
 	 */
 	public List<Subscription> findAllSubscriptions() {
-		try {
+        EntityManager entityManager = getEntityManager();
+        try {
 			return entityManager
 					.createQuery("SELECT subscription FROM Subscription AS subscription", Subscription.class)
 					.getResultList();
@@ -75,7 +79,8 @@ public class OcpiRepository {
 	 * @return subscription if it can be found for this authorization token
 	 */
 	public Subscription findSubscriptionByAuthorizationToken(String authorizationToken) {
-		try {
+        EntityManager entityManager = getEntityManager();
+        try {
 			return entityManager
 					.createQuery(
 							"SELECT subscription FROM Subscription AS subscription WHERE authorizationToken = :authorizationToken",
@@ -96,7 +101,8 @@ public class OcpiRepository {
 	 * @return
 	 */
 	public Token findTokenByUid(String uid) {
-		try {
+        EntityManager entityManager = getEntityManager();
+        try {
 			return entityManager.createQuery("SELECT token FROM Token AS token WHERE uid = :uid", Token.class)
 					.setParameter("uid", uid).setMaxResults(1).getSingleResult();
 		} catch (NoResultException e) {
@@ -114,7 +120,8 @@ public class OcpiRepository {
 	 * @return
 	 */
 	public Token findTokenByUidAndIssuingCompany(String uid, String issuingCompany) {
-		try {
+        EntityManager entityManager = getEntityManager();
+        try {
 			return entityManager
 					.createQuery(
 							"SELECT token FROM Token AS token WHERE uid = :uid and issuingCompany = :issuingCompany",
@@ -135,6 +142,7 @@ public class OcpiRepository {
 	 * @return
 	 */
 	public Token findTokenByVisualNumber(String visualNumber) {
+        EntityManager entityManager = getEntityManager();
 		try {
 			return entityManager
 					.createQuery("SELECT token FROM Token AS token WHERE visualNumber = :visualNumber", Token.class)
@@ -155,7 +163,8 @@ public class OcpiRepository {
 	 * @return
 	 */
 	public TokenSyncDate getTokenSyncDate(Integer subscriptionId) {
-		try {
+        EntityManager entityManager = getEntityManager();
+        try {
 			List<TokenSyncDate> list = entityManager
 					.createQuery("SELECT syncDate FROM TokenSyncDate AS syncDate WHERE subscriptionId = :subscriptionId", TokenSyncDate.class).setMaxResults(1)
 					.setParameter("subscriptionId", subscriptionId)
@@ -176,9 +185,13 @@ public class OcpiRepository {
 	 * @param subscription
 	 * @return
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public Subscription insertOrUpdate(Subscription subscription) {
-		try {
+        EntityManager entityManager = getEntityManager();
+        EntityTransaction entityTransaction = null;
+
+        try {
+            entityTransaction = entityManager.getTransaction();
+            entityTransaction.begin();
 			Subscription persistedSubscription;
 			if (subscription.getId() == null) {
 				entityManager.persist(subscription);
@@ -187,8 +200,13 @@ public class OcpiRepository {
 				persistedSubscription = entityManager.merge(subscription);
 			}
 			entityManager.flush();
-			return persistedSubscription;
-
+            entityTransaction.commit();
+            return persistedSubscription;
+        } catch (Exception e) {
+            if (entityTransaction != null && entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+            throw e;
 		} finally {
 			entityManager.close();
 		}
@@ -198,21 +216,26 @@ public class OcpiRepository {
 	 * insertOrUpdate
 	 * 
 	 * @param token
-	 * @return
 	 */
-	@Transactional
-	public Token insertOrUpdate(Token token) {
-		try {
-			Token persistedToken;
+	public void insertOrUpdate(Token token) {
+        EntityManager entityManager = getEntityManager();
+        EntityTransaction entityTransaction = null;
+
+        try {
+            entityTransaction = entityManager.getTransaction();
+            entityTransaction.begin();
 			if (token.getId() == null) {
 				entityManager.persist(token);
-				persistedToken = token;
 			} else {
-				persistedToken = entityManager.merge(token);
+				entityManager.merge(token);
 			}
-			return persistedToken;
-
-		} finally {
+            entityTransaction.commit();
+        } catch (Exception e) {
+            if (entityTransaction != null && entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+            throw e;
+        } finally {
 			entityManager.close();
 		}
 	}
@@ -220,24 +243,29 @@ public class OcpiRepository {
 	/**
 	 * insertOrUpdate
 	 * 
-	 * @param tokenSyncDate
-	 * @return
+	 * @param tokenSyncDate token sync date
 	 */
-	@Transactional
-	public TokenSyncDate insertOrUpdate(TokenSyncDate tokenSyncDate) {
-		try {
-			TokenSyncDate persistedTokenSyncDate;
-			if (tokenSyncDate.getId() == null) {
-				entityManager.persist(tokenSyncDate);
-				persistedTokenSyncDate = tokenSyncDate;
-			} else {
-				persistedTokenSyncDate = entityManager.merge(tokenSyncDate);
-			}
-			return persistedTokenSyncDate;
+	public void insertOrUpdate(TokenSyncDate tokenSyncDate) {
+        EntityManager entityManager = getEntityManager();
+        EntityTransaction entityTransaction = null;
 
-		} finally {
-			entityManager.close();
-		}
+        try {
+            entityTransaction = entityManager.getTransaction();
+            entityTransaction.begin();
+            if (tokenSyncDate.getId() == null) {
+                entityManager.persist(tokenSyncDate);
+            } else {
+                entityManager.merge(tokenSyncDate);
+            }
+            entityTransaction.commit();
+        } catch (Exception e) {
+            if (entityTransaction != null && entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+            throw e;
+        } finally {
+            entityManager.close();
+        }
 	}
 
 }

@@ -36,7 +36,6 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.google.common.net.HttpHeaders;
@@ -75,8 +74,11 @@ public class BaseService {
 	@Value("${io.motown.ocpi.token.sync.pagesize:999}")
 	protected String PAGE_SIZE = "1000";
 
-	@Autowired
 	protected OcpiRepository ocpiRepository;
+
+	public void setOcpiRepository(OcpiRepository ocpiRepository) {
+		this.ocpiRepository = ocpiRepository;
+	}
 
 	/**
 	 * assertValid

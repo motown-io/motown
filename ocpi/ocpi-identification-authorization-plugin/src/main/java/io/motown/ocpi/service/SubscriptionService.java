@@ -25,7 +25,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.motown.ocpi.AppConfig;
@@ -50,7 +49,6 @@ import io.motown.ocpi.response.VersionsResponse;
  * @author bartwolfs
  *
  */
-@Component
 public class SubscriptionService extends BaseService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SubscriptionService.class);
