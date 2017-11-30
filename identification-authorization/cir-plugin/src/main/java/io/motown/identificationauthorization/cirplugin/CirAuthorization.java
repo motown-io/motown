@@ -67,6 +67,8 @@ public class CirAuthorization implements AuthorizationProvider {
      */
     @Override
     public IdentifyingToken validate(IdentifyingToken identification, @Nullable ChargingStationId chargingStationId) {
+        LOG.debug("validate({}, {})", identification.getToken(), chargingStationId);
+
         InquireResult inquireResult = inquire(identification.getToken());
         if (inquireResult == null) {
             LOG.info("No result while querying CIR. Returning 'false' for identification: {}", identification);
@@ -81,12 +83,15 @@ public class CirAuthorization implements AuthorizationProvider {
         if (inquireResult.getCards() != null && inquireResult.getCards().getCard() != null
                 && inquireResult.getCards().getCard().get(0) != null) {
         	Card card = inquireResult.getCards().getCard().get(0);
-        	if (card.isValid())
-        	{
+        	if (card.isValid()) {
+        	    LOG.debug("Token valid: {}", card.getCardID());
+
         		return new TextualToken(identification.getToken(), AuthenticationStatus.ACCEPTED, card.getProvider(), card.getExternalID());
-        	}
+        	} else {
+        	    LOG.debug("Token not valid: {}", card.getCardID());
+            }
         } else {
-            LOG.warn("CIR response didn't contain result. Returning 'false' for identification: {}", identification);
+            LOG.debug("Token not found: {}", identification.getToken());
         }
 
         return identification;

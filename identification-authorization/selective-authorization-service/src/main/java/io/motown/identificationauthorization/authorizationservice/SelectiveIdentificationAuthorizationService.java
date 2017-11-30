@@ -23,6 +23,8 @@ import io.motown.identificationauthorization.authorizationservice.persistence.en
 import io.motown.identificationauthorization.authorizationservice.persistence.repositories.ChargingStationRepository;
 import io.motown.identificationauthorization.pluginapi.AuthorizationProvider;
 import org.axonframework.eventhandling.annotation.EventHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -30,7 +32,9 @@ import java.util.Map;
 
 public class SelectiveIdentificationAuthorizationService implements IdentificationAuthorizationService {
 
-	private Map<String, AuthorizationProvider> providers;
+    private static final Logger LOG = LoggerFactory.getLogger(SelectiveIdentificationAuthorizationService.class);
+
+    private Map<String, AuthorizationProvider> providers;
 
 	private ChargingStationRepository repository;
 
@@ -62,16 +66,23 @@ public class SelectiveIdentificationAuthorizationService implements Identificati
 	@Override
 	public IdentifyingToken validate(IdentifyingToken token, @Nullable ChargingStationId chargingStationId) {
 		if (chargingStationId == null) {
+            LOG.warn("No charging station id passed to validation request for token {}", token.getToken());
 			return token;
 		}
 
         ChargingStation chargingStation = repository.findOne(chargingStationId.getId());
 
 		if (chargingStation == null) {
+		    LOG.warn("Charging station not found in repository: {}", chargingStationId);
 			return token;
 		}
 
 		List<String> chargingStationAuthorizationProviders = chargingStation.getAuthorizationProvidersAsList();
+
+		if (chargingStationAuthorizationProviders.isEmpty()) {
+		    LOG.warn("No authorization providers configured for charging station: {}", chargingStationId);
+		    return token;
+        }
 
         for (String authorizationProvider:chargingStationAuthorizationProviders) {
             AuthorizationProvider provider = providers.get(authorizationProvider);

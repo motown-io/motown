@@ -59,13 +59,17 @@ public class LocalAuthorization implements AuthorizationProvider {
 
         LocalToken localToken = tokenRepository.findToken(identifyingToken.getToken(), stationIdentifier);
 
-        if (localToken != null && localToken.isValid()) {
-            LOG.debug("validation success on local token {}", localToken.getHiddenId());
-            return new TextualToken(localToken.getHiddenId(), IdentifyingToken.AuthenticationStatus.ACCEPTED, null, localToken.getVisualId());
+        if (localToken != null) {
+            if (localToken.isValid()) {
+                LOG.debug("Token valid: {}", localToken.getHiddenId());
+                return new TextualToken(localToken.getHiddenId(), IdentifyingToken.AuthenticationStatus.ACCEPTED, null, localToken.getVisualId());
+            } else {
+                LOG.debug("Token not valid: {}", localToken.getHiddenId());
+            }
         } else {
-            LOG.debug("validation failed on token {}", identifyingToken.getToken());
-            return identifyingToken;
+            LOG.debug("Token not found: {}", identifyingToken.getToken());
         }
+        return identifyingToken;
     }
 
     public void setTokenRepository(TokenRepository tokenRepository) {

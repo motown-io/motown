@@ -54,7 +54,8 @@ public class TokenValidator implements AuthorizationProvider {
 	 */
 	@Override
 	public IdentifyingToken validate(IdentifyingToken identification, @Nullable ChargingStationId chargingStationId) {
-		LOG.info("Handle authorization request on OCPI " + identification.getToken());
+		LOG.debug("validate({}, {})", identification.getToken(), chargingStationId);
+
 		try {
 			String hiddenId = identification.getToken();
 			String visibleId = identification.getVisibleId();
@@ -65,18 +66,22 @@ public class TokenValidator implements AuthorizationProvider {
 				token = ocpiRepository.findTokenByVisualNumber(visibleId);
 			}
 
-			if (token != null && token.isValid()) {
-				LOG.debug("Authorization request for OCPI: " + token.toString());
+			if (token != null) {
+				if (token.isValid()) {
+					LOG.debug("Token valid: {}", token.getUid());
 
-				return new TextualToken(identification.getToken(), AuthenticationStatus.ACCEPTED,
-						token.getIssuingCompany(), token.getVisualNumber());
+					return new TextualToken(identification.getToken(), AuthenticationStatus.ACCEPTED,
+							token.getIssuingCompany(), token.getVisualNumber());
+				} else {
+					LOG.debug("Token not valid: {}", token.getUid());
+				}
+			} else {
+				LOG.debug("Token not found: {}", identification.getToken());
 			}
-			LOG.warn("No token found in OCPI database. Returning 'false' for identification: "
-					+ identification.toString());
-
 		} catch (Exception e) {
 			LOG.error("Exception OCPI authorization", e);
 		}
+
 		return identification;
 	}
 
