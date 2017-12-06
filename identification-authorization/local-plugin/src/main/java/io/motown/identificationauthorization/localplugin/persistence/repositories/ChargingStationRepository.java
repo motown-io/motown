@@ -57,7 +57,7 @@ public class ChargingStationRepository {
     public LocalAuthChargingStation findOne(String id) {
         EntityManager entityManager = getEntityManager();
         try {
-            return entityManager.createQuery("SELECT chargingStation FROM LocalAuthChargingStation AS chargingStation WHERE chargingStationId = :id", LocalAuthChargingStation.class)
+            return entityManager.createQuery("SELECT chargingStation FROM LocalAuthChargingStation AS chargingStation WHERE id = :id", LocalAuthChargingStation.class)
                     .setParameter("id", id).setMaxResults(1).getSingleResult();
         } catch (NoResultException e) {
             return null;

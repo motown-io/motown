@@ -67,7 +67,7 @@ public class LocalAuthorization implements AuthorizationProvider {
                 LOG.debug("Token not valid: {}", localToken.getHiddenId());
             }
         } else {
-            LOG.debug("Token not found: {}", identifyingToken.getToken());
+            LOG.debug("Token {} not found for charging station {}", identifyingToken.getToken(), chargingStationId);
         }
         return identifyingToken;
     }

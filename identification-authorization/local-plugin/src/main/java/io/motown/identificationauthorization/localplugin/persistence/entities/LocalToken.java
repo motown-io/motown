@@ -21,10 +21,8 @@ import java.util.Objects;
 
 @Entity
 public class LocalToken {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
+    @Id
     private String hiddenId;
 
     private String visualId;
@@ -42,10 +40,6 @@ public class LocalToken {
         this.hiddenId = hiddenId;
         this.visualId = visualId;
         this.valid = valid;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getHiddenId() {

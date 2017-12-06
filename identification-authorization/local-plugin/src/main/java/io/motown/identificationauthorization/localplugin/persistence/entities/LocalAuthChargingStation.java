@@ -24,10 +24,7 @@ import java.util.Set;
 public class LocalAuthChargingStation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String chargingStationId;
+    private String id;
 
     @ManyToMany
     private Set<LocalToken> localTokens = new HashSet<>();
@@ -36,17 +33,14 @@ public class LocalAuthChargingStation {
         // Private no-arg constructor for Hibernate.
     }
 
-    public LocalAuthChargingStation(String chargingStationId) {
-        this.chargingStationId = chargingStationId;
+    public LocalAuthChargingStation(String id) {
+        this.id = id;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public String getChargingStationId() {
-        return chargingStationId;
-    }
 
     public Set<LocalToken> getLocalTokens() {
         return localTokens;
@@ -54,7 +48,7 @@ public class LocalAuthChargingStation {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, chargingStationId);
+        return Objects.hash(id);
     }
 
     @Override
@@ -67,7 +61,6 @@ public class LocalAuthChargingStation {
         }
 
         final LocalAuthChargingStation other = (LocalAuthChargingStation) obj;
-        return Objects.equals(this.id, other.id) &&
-                Objects.equals(this.chargingStationId, other.chargingStationId);
+        return Objects.equals(this.id, other.id);
     }
 }

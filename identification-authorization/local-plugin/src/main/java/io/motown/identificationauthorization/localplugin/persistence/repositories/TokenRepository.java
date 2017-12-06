@@ -33,7 +33,7 @@ public class TokenRepository {
     public LocalToken findToken(String hiddenId, String chargingStationId) {
         EntityManager entityManager = getEntityManager();
         try {
-            return entityManager.createQuery("SELECT token FROM LocalToken AS token JOIN token.chargingStations cs WHERE hiddenId = :hiddenId and cs.chargingStationId = :chargingStationId", LocalToken.class)
+            return entityManager.createQuery("SELECT token FROM LocalToken AS token JOIN token.chargingStations cs WHERE hiddenId = :hiddenId and cs.id = :chargingStationId", LocalToken.class)
                     .setParameter("hiddenId", hiddenId)
                     .setParameter("chargingStationId", chargingStationId)
                     .setMaxResults(1).getSingleResult();
