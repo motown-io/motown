@@ -22,7 +22,7 @@
     <parent>
         <artifactId>samples-configuration-distributed</artifactId>
         <groupId>io.motown</groupId>
-        <version>0.9.4-SNAPSHOT</version>
+        <version>0.10.0</version>
     </parent>
     <artifactId>samples-configuration-distributed-ocpp-v15-soap</artifactId>
     <packaging>war</packaging>

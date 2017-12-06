@@ -22,7 +22,7 @@
     <parent>
         <artifactId>motown-io</artifactId>
         <groupId>io.motown</groupId>
-        <version>0.9.4-SNAPSHOT</version>
+        <version>0.10.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <groupId>io.motown.operator-api</groupId>
