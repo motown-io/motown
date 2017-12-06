@@ -36,6 +36,8 @@ public class SelectiveIdentificationAuthorizationService implements Identificati
 
     private Map<String, AuthorizationProvider> providers;
 
+    private String defaultAuthorizationProviders;
+
 	private ChargingStationRepository repository;
 
 	public void setProviders(Map<String, AuthorizationProvider> providers) {
@@ -52,7 +54,7 @@ public class SelectiveIdentificationAuthorizationService implements Identificati
 		ChargingStation chargingStation = repository.findOne(chargingStationId);
 
 		if (chargingStation == null) {
-			repository.createOrUpdate(new ChargingStation(chargingStationId));
+			repository.createOrUpdate(new ChargingStation(chargingStationId, defaultAuthorizationProviders));
 		}
 	}
 
@@ -96,6 +98,15 @@ public class SelectiveIdentificationAuthorizationService implements Identificati
         }
 
 		return token;
+	}
+
+    /**
+     * The value (comma-separated) for authorization providers that should be used for new charging stations.
+     *
+     * @param defaultAuthorizationProviders comma-separated list of authorization providers for new charging stations.
+     */
+	public void setDefaultAuthorizationProviders(String defaultAuthorizationProviders) {
+		this.defaultAuthorizationProviders = defaultAuthorizationProviders;
 	}
 
 }

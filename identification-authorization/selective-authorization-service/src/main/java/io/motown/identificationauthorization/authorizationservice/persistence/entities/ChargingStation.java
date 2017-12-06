@@ -40,6 +40,11 @@ public class ChargingStation {
         this.id = id;
     }
 
+    public ChargingStation(String id, String authorizationProviders) {
+        this(id);
+        this.authorizationProviders = authorizationProviders;
+    }
+
     public String getId() {
         return id;
     }

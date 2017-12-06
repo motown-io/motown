@@ -142,4 +142,16 @@ public class SelectiveIdentificationAuthorizationServiceTest {
         verify(chargingStationRepository, times(0)).createOrUpdate(new ChargingStation(CHARGING_STATION_ID.getId()));
     }
 
+
+    @Test
+    public void newChargingStationCreatedShouldSetAuthorizationProviders() {
+        when(chargingStationRepository.findOne(CHARGING_STATION_ID.getId())).thenReturn(null);
+        String defaultAuthProviders = "ocpi,cir";
+        service.setDefaultAuthorizationProviders(defaultAuthProviders);
+
+        service.onEvent(new ChargingStationCreatedEvent(CHARGING_STATION_ID, ImmutableSet.<UserIdentity>builder().add(USER_IDENTITY).build(), IDENTITY_CONTEXT));
+
+        verify(chargingStationRepository).createOrUpdate(new ChargingStation(CHARGING_STATION_ID.getId(), defaultAuthProviders));
+    }
+
 }
