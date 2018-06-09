@@ -19,11 +19,58 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
     <context:property-placeholder location="classpath:config.properties"
                                   ignore-resource-not-found="true"/>
+
+    <bean id="identificationAuthorizationChargingStationRepository"
+          class="io.motown.identificationauthorization.authorizationservice.persistence.repositories.ChargingStationRepository">
+        <property name="entityManagerFactory" ref="identificationAuthorizationEntityManagerFactory"/>
+    </bean>
+
+    <bean id="localIdentificationAuthorizationChargingStationRepository"
+          class="io.motown.identificationauthorization.localplugin.persistence.repositories.ChargingStationRepository">
+        <property name="entityManagerFactory" ref="identificationAuthorizationEntityManagerFactory"/>
+    </bean>
+
+    <bean id="localIdentificationAuthorizationTokenRepository"
+          class="io.motown.identificationauthorization.localplugin.persistence.repositories.TokenRepository">
+        <property name="entityManagerFactory" ref="identificationAuthorizationEntityManagerFactory"/>
+    </bean>
+
+    <bean id="identificationAuthorizationEntityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="identificationAuthorizationDataSource"/>
+        <property name="packagesToScan" value="io.motown.identificationauthorization"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="database" value="MYSQL"/>
+                <property name="generateDdl" value="true"/>
+            </bean>
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.enable_lazy_load_no_trans">true</prop>
+                <prop key="hibernate.show_sql">false</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="identificationAuthorizationEntityManagerFactory"/>
+    </bean>
+
+    <!--<jdbc:embedded-database id="identificationAuthorizationDataSource" type="HSQL"/>-->
+    <bean id="identificationAuthorizationDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost:3306/motown"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+    </bean>
 
     <bean class="io.motown.identificationauthorization.app.AuthorizationEventListener">
         <property name="commandGateway" ref="authorizationCommandGateway" />
@@ -31,22 +78,21 @@
         <property name="addOnIdentity" value="1" />
     </bean>
 
-    <bean id="identificationAuthorizationService" class="io.motown.identificationauthorization.app.SequentialIdentificationAuthorizationService">
+    <bean id="identificationAuthorizationService" class="io.motown.identificationauthorization.authorizationservice.SelectiveIdentificationAuthorizationService">
+        <property name="repository" ref="identificationAuthorizationChargingStationRepository"/>
+        <property name="defaultAuthorizationProviders" value="${io.motown.identificationauthorization.selectiveauthorization.default}"/>
         <property name="providers">
-            <set>
-                <!-- Using a dummy identification authentication for testing/demo's, this implementation will always return 'identification valid' -->
-                <bean class="io.motown.sample.simple.authentication.DummyIdentificationAuthorization" />
-
-                <!-- To enable CIR authentication, enable the lines below and enter a username/password and endpoint in the properties file. -->
-                <!--
-                <bean class="io.motown.identificationauthorization.cirplugin.CirAuthorization">
-                    <property name="username" value="${io.motown.identificationauthorization.cirplugin.cirservice.username}" />
-                    <property name="password" value="${io.motown.identificationauthorization.cirplugin.cirservice.password}" />
-                    <property name="endpoint" value="${io.motown.identificationauthorization.cirplugin.cirservice.endpoint}" />
-                </bean>
-                -->
-            </set>
+            <map>
+                <entry key="local" value-ref="localAuthorization"/>
+                <!--&lt;!&ndash; Using a dummy identification authentication for testing/demo's, this implementation will always return 'identification valid' &ndash;&gt;-->
+                <!--<bean class="io.motown.sample.simple.authentication.DummyIdentificationAuthorization" />-->
+            </map>
         </property>
+    </bean>
+
+    <bean id="localAuthorization" class="io.motown.identificationauthorization.localplugin.LocalAuthorization">
+        <property name="chargingStationRepository" ref="localIdentificationAuthorizationChargingStationRepository"/>
+        <property name="tokenRepository" ref="localIdentificationAuthorizationTokenRepository"/>
     </bean>
 
     <bean id="beanValidationInterceptor" class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor"/>

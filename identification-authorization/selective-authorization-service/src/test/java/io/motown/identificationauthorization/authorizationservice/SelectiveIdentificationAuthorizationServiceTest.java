@@ -38,7 +38,7 @@ public class SelectiveIdentificationAuthorizationServiceTest {
 
     private SelectiveIdentificationAuthorizationService service;
 
-    private AuthorizationProvider cirAuthProvider;
+    private AuthorizationProvider localAuthProvider;
 
     private AuthorizationProvider ocpiAuthProvider;
 
@@ -50,11 +50,11 @@ public class SelectiveIdentificationAuthorizationServiceTest {
     public void setup() {
         service = new SelectiveIdentificationAuthorizationService();
 
-        cirAuthProvider = mock(AuthorizationProvider.class);
+        localAuthProvider = mock(AuthorizationProvider.class);
         ocpiAuthProvider = mock(AuthorizationProvider.class);
 
         service.setProviders(ImmutableMap.<String, AuthorizationProvider>builder()
-                .put("cir", cirAuthProvider)
+                .put("local", localAuthProvider)
                 .put("ocpi", ocpiAuthProvider)
                 .build());
 
@@ -67,24 +67,24 @@ public class SelectiveIdentificationAuthorizationServiceTest {
 
     @Test
     public void oneAuthProviderIsChecked() {
-        when(cirAuthProvider.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID)).thenReturn(IDENTIFYING_TOKEN_ACCEPTED);
+        when(localAuthProvider.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID)).thenReturn(IDENTIFYING_TOKEN_ACCEPTED);
         when(chargingStation.getAuthorizationProvidersAsList()).thenReturn(
-                Arrays.asList("cir")
+                Arrays.asList("local")
         );
 
         assertTrue(service.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID).isValid());
 
-        when(cirAuthProvider.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID)).thenReturn(IDENTIFYING_TOKEN_INVALID);
+        when(localAuthProvider.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID)).thenReturn(IDENTIFYING_TOKEN_INVALID);
 
         assertFalse(service.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID).isValid());
     }
 
     @Test
     public void secondAuthProviderIsCheckedIfFirstDoesNotValidate() {
-        when(cirAuthProvider.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID)).thenReturn(IDENTIFYING_TOKEN_INVALID);
+        when(localAuthProvider.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID)).thenReturn(IDENTIFYING_TOKEN_INVALID);
         when(ocpiAuthProvider.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID)).thenReturn(IDENTIFYING_TOKEN_ACCEPTED);
         when(chargingStation.getAuthorizationProvidersAsList()).thenReturn(
-                Arrays.asList("cir", "ocpi")
+                Arrays.asList("local", "ocpi")
         );
 
         assertTrue(service.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID).isValid());
@@ -92,7 +92,7 @@ public class SelectiveIdentificationAuthorizationServiceTest {
 
     @Test
     public void chargingStationHasNoAuthProvidersThenAuthShouldNotBeValid() {
-        when(cirAuthProvider.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID)).thenReturn(IDENTIFYING_TOKEN_ACCEPTED);
+        when(localAuthProvider.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID)).thenReturn(IDENTIFYING_TOKEN_ACCEPTED);
         when(ocpiAuthProvider.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID)).thenReturn(IDENTIFYING_TOKEN_ACCEPTED);
         when(chargingStation.getAuthorizationProvidersAsList()).thenReturn(
                 new ArrayList<String>()
@@ -103,7 +103,7 @@ public class SelectiveIdentificationAuthorizationServiceTest {
 
     @Test
     public void unknownAuthProviderShouldNotThrowException() {
-        when(cirAuthProvider.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID)).thenReturn(IDENTIFYING_TOKEN_ACCEPTED);
+        when(localAuthProvider.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID)).thenReturn(IDENTIFYING_TOKEN_ACCEPTED);
         when(ocpiAuthProvider.validate(IDENTIFYING_TOKEN, CHARGING_STATION_ID)).thenReturn(IDENTIFYING_TOKEN_ACCEPTED);
         when(chargingStation.getAuthorizationProvidersAsList()).thenReturn(
                 Arrays.asList("unknown", "auth", "providers")
@@ -142,11 +142,10 @@ public class SelectiveIdentificationAuthorizationServiceTest {
         verify(chargingStationRepository, times(0)).createOrUpdate(new ChargingStation(CHARGING_STATION_ID.getId()));
     }
 
-
     @Test
     public void newChargingStationCreatedShouldSetAuthorizationProviders() {
         when(chargingStationRepository.findOne(CHARGING_STATION_ID.getId())).thenReturn(null);
-        String defaultAuthProviders = "ocpi,cir";
+        String defaultAuthProviders = "ocpi,local";
         service.setDefaultAuthorizationProviders(defaultAuthProviders);
 
         service.onEvent(new ChargingStationCreatedEvent(CHARGING_STATION_ID, ImmutableSet.<UserIdentity>builder().add(USER_IDENTITY).build(), IDENTITY_CONTEXT));
