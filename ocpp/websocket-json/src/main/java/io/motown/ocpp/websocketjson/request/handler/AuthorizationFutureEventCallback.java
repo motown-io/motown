@@ -15,41 +15,24 @@
  */
 package io.motown.ocpp.websocketjson.request.handler;
 
-import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.AuthorizationResultEvent;
-import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.utils.axon.FutureEventCallback;
+import io.motown.ocpp.websocketjson.WebSocketWrapper;
+import io.motown.ocpp.websocketjson.schema.MessageProcUri;
 import io.motown.ocpp.websocketjson.schema.generated.v15.AuthorizeResponse;
 import io.motown.ocpp.websocketjson.schema.generated.v15.IdTagInfo;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
-import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
-import org.atmosphere.websocket.WebSocket;
 import org.axonframework.domain.EventMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 public class AuthorizationFutureEventCallback extends FutureEventCallback<AuthorizeResponse> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AuthorizationFutureEventCallback.class);
-
-    private WebSocket webSocket;
+    private WebSocketWrapper webSocketWrapper;
 
     private String callId;
 
-    private Gson gson;
-
-    private WampMessageHandler wampMessageHandler;
-
-    private ChargingStationId chargingStationId;
-
-    public AuthorizationFutureEventCallback(String callId, WebSocket webSocket, Gson gson, ChargingStationId chargingStationId, WampMessageHandler wampMessageHandler) {
-        this.webSocket = webSocket;
+    AuthorizationFutureEventCallback(String callId, WebSocketWrapper webSocketWrapper) {
+        this.webSocketWrapper = webSocketWrapper;
         this.callId = callId;
-        this.gson = gson;
-        this.chargingStationId = chargingStationId;
-        this.wampMessageHandler = wampMessageHandler;
     }
 
     @Override
@@ -68,7 +51,7 @@ public class AuthorizationFutureEventCallback extends FutureEventCallback<Author
 
             this.countDownLatch();
 
-            this.writeResult(response);
+            webSocketWrapper.sendResultMessage(new WampMessage(WampMessage.CALL_RESULT, callId, MessageProcUri.AUTHORIZE, response));
 
             return true;
         } else {
@@ -77,15 +60,4 @@ public class AuthorizationFutureEventCallback extends FutureEventCallback<Author
         }
     }
 
-    private void writeResult(AuthorizeResponse result) {
-        try {
-            String wampMessageRaw = new WampMessage(WampMessage.CALL_RESULT, callId, result).toJson(gson);
-            webSocket.write(wampMessageRaw);
-            if (this.wampMessageHandler != null) {
-                this.wampMessageHandler.handleWampCallResult(this.chargingStationId.getId(), wampMessageRaw, callId);
-            }
-        } catch (IOException e) {
-            LOG.error("IOException while writing to web socket.", e);
-        }
-    }
 }

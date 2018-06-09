@@ -19,9 +19,10 @@ import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.WebSocketWrapper;
+import io.motown.ocpp.websocketjson.schema.MessageProcUri;
 import io.motown.ocpp.websocketjson.schema.generated.v15.HeartbeatResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
-import org.atmosphere.websocket.WebSocket;
 
 import java.util.Date;
 
@@ -41,12 +42,12 @@ public class HeartbeatRequestHandler extends RequestHandler {
     }
 
     @Override
-    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
+    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocketWrapper webSocketWrapper) {
         domainService.heartbeat(chargingStationId, addOnIdentity);
 
         HeartbeatResponse response = new HeartbeatResponse();
         response.setCurrentTime(new Date());
 
-        writeResponse(webSocket, chargingStationId, response, callId, gson);
+        writeResponse(webSocketWrapper, response, callId, MessageProcUri.HEARTBEAT);
     }
 }

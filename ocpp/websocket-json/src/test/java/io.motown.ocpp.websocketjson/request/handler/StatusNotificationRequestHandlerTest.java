@@ -21,7 +21,9 @@ import io.motown.domain.api.chargingstation.EvseId;
 import io.motown.domain.api.chargingstation.StatusNotification;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.WebSocketWrapper;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Statusnotification;
+import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +36,7 @@ import java.util.UUID;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
+import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocketWrapper;
 import static junit.framework.Assert.assertNotNull;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
@@ -62,7 +65,7 @@ public class StatusNotificationRequestHandlerTest {
         requestPayload.setVendorId("");
         requestPayload.setVendorErrorCode("");
 
-        String response = handleRequest(requestPayload);
+        WampMessage response = handleRequest(requestPayload);
         verify(domainService).statusNotification(notNull(ChargingStationId.class), eq(EVSE_ID), any(StatusNotification.class), any(AddOnIdentity.class));
         assertNotNull(response);
     }
@@ -78,21 +81,21 @@ public class StatusNotificationRequestHandlerTest {
         requestPayload.setVendorId("");
         requestPayload.setVendorErrorCode("");
 
-        String response = handleRequest(requestPayload);
+        WampMessage response = handleRequest(requestPayload);
         //In case the timestamp is missing it has to be created ('time of receipt')
         verify(domainService).statusNotification(notNull(ChargingStationId.class), any(EvseId.class), any(StatusNotification.class), any(AddOnIdentity.class));
         assertNotNull(response);
     }
 
-    private String handleRequest(Statusnotification requestPayload) throws IOException {
+    private WampMessage handleRequest(Statusnotification requestPayload) throws IOException {
         String token = UUID.randomUUID().toString();
         StatusNotificationRequestHandler handler = new StatusNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY, null);
 
-        WebSocket webSocket = getMockWebSocket();
-        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
+        WebSocketWrapper webSocketWrapper = getMockWebSocketWrapper();
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocketWrapper);
 
-        ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(webSocket).write(argumentCaptor.capture());
+        ArgumentCaptor<WampMessage> argumentCaptor = ArgumentCaptor.forClass(WampMessage.class);
+        verify(webSocketWrapper).sendResultMessage(argumentCaptor.capture());
         return argumentCaptor.getValue();
     }
 

@@ -19,10 +19,11 @@ import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.WebSocketWrapper;
+import io.motown.ocpp.websocketjson.schema.MessageProcUri;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Firmwarestatusnotification;
 import io.motown.ocpp.websocketjson.schema.generated.v15.FirmwarestatusnotificationResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
-import org.atmosphere.websocket.WebSocket;
 
 public class FirmwareStatusNotificationRequestHandler extends RequestHandler {
 
@@ -40,7 +41,7 @@ public class FirmwareStatusNotificationRequestHandler extends RequestHandler {
     }
 
     @Override
-    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
+    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocketWrapper webSocketWrapper) {
         Firmwarestatusnotification request = gson.fromJson(payload, Firmwarestatusnotification.class);
 
         Firmwarestatusnotification.Status status = request.getStatus();
@@ -59,6 +60,6 @@ public class FirmwareStatusNotificationRequestHandler extends RequestHandler {
 
         domainService.firmwareStatusUpdate(chargingStationId, firmwareStatus, addOnIdentity);
 
-        writeResponse(webSocket, chargingStationId, new FirmwarestatusnotificationResponse(), callId, gson);
+        writeResponse(webSocketWrapper, new FirmwarestatusnotificationResponse(), callId, MessageProcUri.FIRMWARE_STATUS_NOTIFICATION);
     }
 }

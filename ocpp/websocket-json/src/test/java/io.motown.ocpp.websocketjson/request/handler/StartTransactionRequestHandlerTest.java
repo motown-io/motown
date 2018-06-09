@@ -27,9 +27,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
-import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.OCPPJ_RESERVATION_ID;
-import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
-import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
+import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -60,7 +58,7 @@ public class StartTransactionRequestHandlerTest {
         requestPayload.setMeterStart(meterStart);
         requestPayload.setReservationId(OCPPJ_RESERVATION_ID.getNumber());
 
-        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), getMockWebSocket());
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), getMockWebSocketWrapper());
 
         verify(domainService).authorize(eq(CHARGING_STATION_ID), eq(IDENTIFYING_TOKEN.getToken()), any(FutureEventCallback.class), eq(ADD_ON_IDENTITY));
     }
@@ -77,7 +75,7 @@ public class StartTransactionRequestHandlerTest {
         requestPayload.setTimestamp(FIVE_MINUTES_AGO);
         requestPayload.setMeterStart(meterStart);
 
-        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), getMockWebSocket());
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), getMockWebSocketWrapper());
 
         verify(domainService).authorize(eq(CHARGING_STATION_ID), eq(IDENTIFYING_TOKEN.getToken()), any(FutureEventCallback.class), eq(ADD_ON_IDENTITY));
     }

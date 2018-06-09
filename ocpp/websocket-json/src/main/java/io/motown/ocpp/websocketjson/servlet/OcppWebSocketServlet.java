@@ -49,7 +49,7 @@ public class OcppWebSocketServlet extends WebSocketStreamingHandlerAdapter {
     }
 
     @Override
-    public void onOpen(WebSocket webSocket) throws IOException {
+    public void onOpen(final WebSocket webSocket) throws IOException {
         final String chargingStationIdentifier = determineIdentifier(webSocket);
 
         ocppJsonService.addWebSocket(chargingStationIdentifier, webSocket);
@@ -58,7 +58,7 @@ public class OcppWebSocketServlet extends WebSocketStreamingHandlerAdapter {
             @Override
             public void onDisconnect(AtmosphereResourceEvent event) {
                 LOG.info("Client [{}] disconnected", chargingStationIdentifier);
-                ocppJsonService.removeWebSocket(chargingStationIdentifier);
+                ocppJsonService.closeAndRemoveWebSocket(chargingStationIdentifier, webSocket);
             }
         });
     }

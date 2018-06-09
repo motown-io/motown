@@ -21,8 +21,10 @@ import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.utils.AttributeMap;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.WebSocketWrapper;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Bootnotification;
 import io.motown.ocpp.websocketjson.schema.generated.v15.BootnotificationResponse;
+import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +38,7 @@ import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
+import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocketWrapper;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -64,9 +67,9 @@ public class BootNotificationRequestHandlerTest {
         when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), any(AttributeMap.class), any(AddOnIdentity.class)))
                 .thenReturn(new BootChargingStationResult(true, HEARTBEAT_INTERVAL, NOW));
 
-        String response = handleRequest();
+        WampMessage response = handleRequest();
         assertNotNull(response);
-        assertTrue(response.contains(BootnotificationResponse.Status.ACCEPTED.toString()));
+        assertTrue(response.toJson(gson).contains(BootnotificationResponse.Status.ACCEPTED.toString()));
     }
 
     @Test
@@ -74,13 +77,13 @@ public class BootNotificationRequestHandlerTest {
         when(domainService.bootChargingStation(any(ChargingStationId.class), anyString(), any(AttributeMap.class), any(AddOnIdentity.class)))
                 .thenReturn(new BootChargingStationResult(false, HEARTBEAT_INTERVAL, NOW));
 
-        String response = handleRequest();
+        WampMessage response = handleRequest();
 
         assertNotNull(response);
-        assertTrue(response.contains(BootnotificationResponse.Status.REJECTED.toString()));
+        assertTrue(response.toJson(gson).contains(BootnotificationResponse.Status.REJECTED.toString()));
     }
 
-    private String handleRequest() throws IOException {
+    private WampMessage handleRequest() throws IOException {
         String token = UUID.randomUUID().toString();
         BootNotificationRequestHandler handler = new BootNotificationRequestHandler(gson, domainService, ADD_ON_IDENTITY, null);
 
@@ -95,11 +98,11 @@ public class BootNotificationRequestHandlerTest {
         requestPayload.setMeterType("DBT NQC-ACDC");
         requestPayload.setMeterSerialNumber("gir.vat.mx.000e48");
 
-        WebSocket webSocket = getMockWebSocket();
-        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
+        WebSocketWrapper webSocketWrapper = getMockWebSocketWrapper();
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocketWrapper);
 
-        ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(webSocket).write(argumentCaptor.capture());
+        ArgumentCaptor<WampMessage> argumentCaptor = ArgumentCaptor.forClass(WampMessage.class);
+        verify(webSocketWrapper).sendResultMessage(argumentCaptor.capture());
         return argumentCaptor.getValue();
 
     }

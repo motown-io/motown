@@ -15,23 +15,18 @@
  */
 package io.motown.ocpp.websocketjson.request.handler;
 
-import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.AuthorizationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.domain.utils.axon.FutureEventCallback;
 import io.motown.ocpp.viewmodel.persistence.entities.Transaction;
+import io.motown.ocpp.websocketjson.WebSocketWrapper;
+import io.motown.ocpp.websocketjson.schema.MessageProcUri;
 import io.motown.ocpp.websocketjson.schema.generated.v15.IdTagInfo__;
 import io.motown.ocpp.websocketjson.schema.generated.v15.StarttransactionResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
-import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
-import org.atmosphere.websocket.WebSocket;
 import org.axonframework.domain.EventMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 /**
  * Future event callback for start transaction. Part of the flow of handling a start transaction is authorizing the
@@ -40,13 +35,9 @@ import java.io.IOException;
  */
 public class StartTransactionFutureEventCallback extends FutureEventCallback<AuthorizationResult> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(StartTransactionFutureEventCallback.class);
-
-    private WebSocket webSocket;
+    private WebSocketWrapper webSocketWrapper;
 
     private String callId;
-
-    private Gson gson;
 
     private ChargingStationId chargingStationId;
 
@@ -58,20 +49,16 @@ public class StartTransactionFutureEventCallback extends FutureEventCallback<Aut
 
     private AddOnIdentity addOnIdentity;
 
-    private WampMessageHandler wampMessageHandler;
-
-    public StartTransactionFutureEventCallback(String callId, WebSocket webSocket, Gson gson, ChargingStationId chargingStationId,
+    public StartTransactionFutureEventCallback(String callId, WebSocketWrapper webSocketWrapper, ChargingStationId chargingStationId,
                                                String protocolIdentifier, StartTransactionInfo startTransactionInfo, DomainService domainService,
-                                               AddOnIdentity addOnIdentity, WampMessageHandler wampMessageHandler) {
-        this.webSocket = webSocket;
+                                               AddOnIdentity addOnIdentity) {
+        this.webSocketWrapper = webSocketWrapper;
         this.callId = callId;
-        this.gson = gson;
         this.chargingStationId = chargingStationId;
         this.protocolIdentifier = protocolIdentifier;
         this.startTransactionInfo = startTransactionInfo;
         this.domainService = domainService;
         this.addOnIdentity = addOnIdentity;
-        this.wampMessageHandler = wampMessageHandler;
     }
 
     /**
@@ -114,15 +101,7 @@ public class StartTransactionFutureEventCallback extends FutureEventCallback<Aut
     }
 
     private void writeResult(StarttransactionResponse result) {
-        try {
-            String wampMessageRaw = new WampMessage(WampMessage.CALL_RESULT, callId, result).toJson(gson);
-            webSocket.write(wampMessageRaw);
-            if (this.wampMessageHandler != null) {
-                this.wampMessageHandler.handleWampCallResult(this.chargingStationId.getId(), wampMessageRaw, callId);
-            }
-        } catch (IOException e) {
-            LOG.error("IOException while writing to web socket.", e);
-        }
+        webSocketWrapper.sendResultMessage(new WampMessage(WampMessage.CALL_RESULT, callId, MessageProcUri.START_TRANSACTION, result));
     }
 
     /**

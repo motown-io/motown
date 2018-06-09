@@ -23,10 +23,11 @@ import io.motown.domain.utils.AttributeMapKeys;
 import io.motown.ocpp.viewmodel.domain.BootChargingStationResult;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.ocpp.websocketjson.OcppJsonService;
+import io.motown.ocpp.websocketjson.WebSocketWrapper;
+import io.motown.ocpp.websocketjson.schema.MessageProcUri;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Bootnotification;
 import io.motown.ocpp.websocketjson.schema.generated.v15.BootnotificationResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
-import org.atmosphere.websocket.WebSocket;
 
 public class BootNotificationRequestHandler extends RequestHandler {
 
@@ -44,7 +45,7 @@ public class BootNotificationRequestHandler extends RequestHandler {
     }
 
     @Override
-    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
+    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocketWrapper webSocketWrapper) {
         Bootnotification request = gson.fromJson(payload, Bootnotification.class);
 
         AttributeMap<String, String> attributes = new AttributeMap<String, String>().
@@ -65,6 +66,6 @@ public class BootNotificationRequestHandler extends RequestHandler {
         response.setCurrentTime(bootChargingStationResult.getTimeStamp());
         response.setHeartbeatInterval(bootChargingStationResult.getHeartbeatInterval());
 
-        writeResponse(webSocket, chargingStationId, response, callId, gson);
+        writeResponse(webSocketWrapper, response, callId, MessageProcUri.BOOT_NOTIFICATION);
     }
 }

@@ -18,7 +18,9 @@ package io.motown.ocpp.websocketjson.request.handler;
 import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.FirmwareStatus;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.WebSocketWrapper;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Firmwarestatusnotification;
+import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +32,8 @@ import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
+import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocketWrapper;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -54,11 +58,11 @@ public class FirmwareStatusNotificationRequestHandlerTest {
         Firmwarestatusnotification requestPayload = new Firmwarestatusnotification();
         requestPayload.setStatus(Firmwarestatusnotification.Status.DOWNLOADED);
 
-        WebSocket webSocket = getMockWebSocket();
-        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
+        WebSocketWrapper webSocketWrapper = getMockWebSocketWrapper();
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocketWrapper);
 
         verify(domainService).firmwareStatusUpdate(CHARGING_STATION_ID, FirmwareStatus.DOWNLOADED, ADD_ON_IDENTITY);
-        verify(webSocket).write(anyString());
+        verify(webSocketWrapper).sendResultMessage(any(WampMessage.class));
     }
 
     @Test
@@ -69,11 +73,11 @@ public class FirmwareStatusNotificationRequestHandlerTest {
         Firmwarestatusnotification requestPayload = new Firmwarestatusnotification();
         requestPayload.setStatus(Firmwarestatusnotification.Status.DOWNLOAD_FAILED);
 
-        WebSocket webSocket = getMockWebSocket();
-        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
+        WebSocketWrapper webSocketWrapper = getMockWebSocketWrapper();
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocketWrapper);
 
         verify(domainService).firmwareStatusUpdate(CHARGING_STATION_ID, FirmwareStatus.DOWNLOAD_FAILED, ADD_ON_IDENTITY);
-        verify(webSocket).write(anyString());
+        verify(webSocketWrapper).sendResultMessage(any(WampMessage.class));
     }
 
     @Test
@@ -84,11 +88,11 @@ public class FirmwareStatusNotificationRequestHandlerTest {
         Firmwarestatusnotification requestPayload = new Firmwarestatusnotification();
         requestPayload.setStatus(Firmwarestatusnotification.Status.INSTALLATION_FAILED);
 
-        WebSocket webSocket = getMockWebSocket();
-        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
+        WebSocketWrapper webSocketWrapper = getMockWebSocketWrapper();
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocketWrapper);
 
         verify(domainService).firmwareStatusUpdate(CHARGING_STATION_ID, FirmwareStatus.INSTALLATION_FAILED, ADD_ON_IDENTITY);
-        verify(webSocket).write(anyString());
+        verify(webSocketWrapper).sendResultMessage(any(WampMessage.class));
     }
 
     @Test
@@ -99,11 +103,11 @@ public class FirmwareStatusNotificationRequestHandlerTest {
         Firmwarestatusnotification requestPayload = new Firmwarestatusnotification();
         requestPayload.setStatus(Firmwarestatusnotification.Status.INSTALLED);
 
-        WebSocket webSocket = getMockWebSocket();
-        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
+        WebSocketWrapper webSocketWrapper = getMockWebSocketWrapper();
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocketWrapper);
 
         verify(domainService).firmwareStatusUpdate(CHARGING_STATION_ID, FirmwareStatus.INSTALLED, ADD_ON_IDENTITY);
-        verify(webSocket).write(anyString());
+        verify(webSocketWrapper).sendResultMessage(any(WampMessage.class));
     }
 
 }

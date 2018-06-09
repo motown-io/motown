@@ -33,6 +33,7 @@ import org.atmosphere.websocket.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URI;
@@ -58,7 +59,7 @@ public class OcppJsonService {
     /**
      * Map of sockets, key is charging station identifier.
      */
-    private Map<String, WebSocket> sockets = new HashMap<>();
+    private Map<String, WebSocketWrapper> sockets = new HashMap<>();
 
     /**
      * Map of response handlers, key is call id.
@@ -69,7 +70,7 @@ public class OcppJsonService {
         try {
             WampMessage wampMessage = wampMessageParser.parseMessage(chargingStationId, reader);
 
-            LOG.info("Received call from [{}]: {}", chargingStationId.getId(), wampMessage.getPayloadAsString());
+            LOG.info("Received call from [{}]: {}", chargingStationId.getId(), wampMessage.toJson(gson));
 
             if (WampMessage.CALL == wampMessage.getMessageType()) {
                 if (!schemaValidator.isValidRequest(wampMessage.getPayloadAsString(), wampMessage.getProcUri())) {
@@ -356,16 +357,13 @@ public class OcppJsonService {
     }
 
     private void sendWampMessage(WampMessage wampMessage, ChargingStationId chargingStationId) {
-        WebSocket webSocket = sockets.get(chargingStationId.getId());
-        if (webSocket != null) {
+        WebSocketWrapper webSocketWrapper = sockets.get(chargingStationId.getId());
+        if (webSocketWrapper != null) {
             try {
-                String wampMessageRaw = wampMessage.toJson(gson);
-                webSocket.write(wampMessageRaw);
-                if (this.wampMessageHandler != null) {
-                    this.wampMessageHandler.handleWampCall(chargingStationId.getId(), wampMessageRaw, wampMessage.getCallId());
-                }
-            } catch (IOException e) {
-                LOG.error("IOException while writing to web socket", e);
+                webSocketWrapper.sendMessage(wampMessage);
+            } catch (ChargePointCommunicationException e) {
+                closeAndRemoveWebSocket(chargingStationId.getId(), e.getWebSocket());
+                LOG.warn("Removed web socket for chargepoint [{}] due to errors", chargingStationId);
             }
         } else {
             LOG.error("No web socket found for charging station id [{}]", chargingStationId.getId());
@@ -435,19 +433,54 @@ public class OcppJsonService {
     }
 
     public void addWebSocket(String chargingStationIdentifier, WebSocket webSocket) {
-        WebSocket existingSocket = sockets.put(chargingStationIdentifier, webSocket);
+        WebSocketWrapper existingWrapper = sockets.get(chargingStationIdentifier);
 
-        if (existingSocket != null) {
-            existingSocket.close();
+        if (existingWrapper != null && !webSocket.equals(existingWrapper.getWebSocket())) {
+            LOG.info("Found existing websocket connection when adding new websocket for {}. Closing existing one", chargingStationIdentifier);
+            closeAndRemoveWebSocket(chargingStationIdentifier, existingWrapper.getWebSocket());
         }
+
+        sockets.put(chargingStationIdentifier,
+                new WebSocketWrapper(new ChargingStationId(chargingStationIdentifier), webSocket, wampMessageHandler, gson));
     }
 
-    public void removeWebSocket(String chargingStationIdentifier) {
-        sockets.remove(chargingStationIdentifier);
-    }
+    /**
+     * Close and remove a web socket from the set of sockets.
+     *
+     * By passing a webSocket object the caller can force this method to check if it's removing the handle that
+     * contains this web socket. If the parameter is null this method will close whatever it has for the identifier.
+     *
+     * @param chargingStationIdentifier charging station identifier for the socket
+     * @param webSocket                 if not null this method checks if the socket in the set contains this socket
+     */
+    public void closeAndRemoveWebSocket(String chargingStationIdentifier, @Nullable WebSocket webSocket) {
+        if (webSocket != null && webSocket.isOpen()) {
+            // received a web socket, close it no matter what
+            webSocket.close();
+        }
 
-    public void addResponseHandler(String callId, ResponseHandler responseHandler) {
-        responseHandlers.put(callId, responseHandler);
+        WebSocketWrapper existingWrapper = sockets.get(chargingStationIdentifier);
+
+        if (existingWrapper == null) {
+            LOG.info("Could not find websocket to remove for {}.", chargingStationIdentifier);
+            return;
+        }
+
+        if (webSocket == null || webSocket.equals(existingWrapper.getWebSocket())) {
+            if (existingWrapper.isOpen()) {
+                LOG.info("Websocket to remove was not closed for {}. Closing now and removing websocket...", chargingStationIdentifier);
+                existingWrapper.close();
+            }
+
+            WebSocketWrapper removedSocket = sockets.remove(chargingStationIdentifier);
+
+            // if the caller passed a web socket then only remove the web socket if it equals the passed web socket
+            if (webSocket != null && !webSocket.equals(removedSocket.getWebSocket())) {
+                // some other thread beat us to it (other thread added a new web socket to the set while we were in this method)
+                // we removed the new socket, we put it back and act like nothing happened...
+                sockets.put(chargingStationIdentifier, removedSocket);
+            }
+        }
     }
 
     public void addRequestHandler(MessageProcUri procUri, RequestHandler requestHandler) {

@@ -22,9 +22,9 @@ import io.motown.domain.utils.AttributeMap;
 import io.motown.domain.utils.AttributeMapKeys;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.domain.utils.axon.FutureEventCallback;
+import io.motown.ocpp.websocketjson.WebSocketWrapper;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Starttransaction;
 import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
-import org.atmosphere.websocket.WebSocket;
 
 public class StartTransactionRequestHandler extends RequestHandler {
 
@@ -45,7 +45,7 @@ public class StartTransactionRequestHandler extends RequestHandler {
     }
 
     @Override
-    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
+    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocketWrapper webSocketWrapper) {
         Starttransaction request = gson.fromJson(payload, Starttransaction.class);
 
         AttributeMap<String, String> attributes = new AttributeMap<String, String>().
@@ -54,8 +54,8 @@ public class StartTransactionRequestHandler extends RequestHandler {
         StartTransactionInfo startTransactionInfo = new StartTransactionInfo(new EvseId(request.getConnectorId()),
                 request.getMeterStart(), request.getTimestamp(), new TextualToken(request.getIdTag()), attributes);
 
-        FutureEventCallback futureEventCallback = new StartTransactionFutureEventCallback(callId, webSocket, gson, chargingStationId,
-                protocolIdentifier, startTransactionInfo, domainService, addOnIdentity, wampMessageHandler);
+        FutureEventCallback futureEventCallback = new StartTransactionFutureEventCallback(callId, webSocketWrapper, chargingStationId,
+                protocolIdentifier, startTransactionInfo, domainService, addOnIdentity);
 
         // futureEventCallback will handle authorize result and trigger a startTransaction command
         domainService.authorize(chargingStationId, request.getIdTag(), futureEventCallback, addOnIdentity);

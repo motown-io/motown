@@ -20,9 +20,9 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.domain.utils.axon.FutureEventCallback;
+import io.motown.ocpp.websocketjson.WebSocketWrapper;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Authorize;
 import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
-import org.atmosphere.websocket.WebSocket;
 
 public class AuthorizeRequestHandler extends RequestHandler {
 
@@ -40,8 +40,8 @@ public class AuthorizeRequestHandler extends RequestHandler {
     }
 
     @Override
-    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
-        FutureEventCallback futureEventCallback = new AuthorizationFutureEventCallback(callId, webSocket, gson, chargingStationId, wampMessageHandler);
+    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocketWrapper webSocketWrapper) {
+        FutureEventCallback futureEventCallback = new AuthorizationFutureEventCallback(callId, webSocketWrapper);
 
         Authorize request = gson.fromJson(payload, Authorize.class);
 

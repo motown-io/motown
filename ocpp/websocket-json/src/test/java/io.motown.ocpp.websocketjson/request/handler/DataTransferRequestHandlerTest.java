@@ -17,8 +17,10 @@ package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.WebSocketWrapper;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Datatransfer;
 import io.motown.ocpp.websocketjson.schema.generated.v15.DatatransferResponse;
+import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,6 +33,7 @@ import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
+import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocketWrapper;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -58,15 +61,15 @@ public class DataTransferRequestHandlerTest {
         requestPayload.setMessageId("GetChargeInstruction");
         requestPayload.setData("");
 
-        WebSocket webSocket = getMockWebSocket();
-        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
+        WebSocketWrapper webSocketWrapper = getMockWebSocketWrapper();
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocketWrapper);
 
-        ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(webSocket).write(argumentCaptor.capture());
-        String response = argumentCaptor.getValue();
+        ArgumentCaptor<WampMessage> argumentCaptor = ArgumentCaptor.forClass(WampMessage.class);
+        verify(webSocketWrapper).sendResultMessage(argumentCaptor.capture());
+        WampMessage response = argumentCaptor.getValue();
         assertNotNull(response);
 
-        assertTrue(response.contains(DatatransferResponse.Status.ACCEPTED.toString()));
+        assertTrue(response.toJson(gson).contains(DatatransferResponse.Status.ACCEPTED.toString()));
     }
 
 }

@@ -97,7 +97,7 @@ public class OcppJsonServiceTest {
 
         service.handleMessage(CHARGING_STATION_ID, new StringReader(wampMessage.toJson(gson)));
 
-        verify(handler).handleRequest(CHARGING_STATION_ID, callId, wampMessage.getPayloadAsString(), mockWebSocket);
+        verify(handler).handleRequest(eq(CHARGING_STATION_ID), eq(callId), eq(wampMessage.getPayloadAsString()), any(WebSocketWrapper.class));
     }
 
     @Test
@@ -113,7 +113,7 @@ public class OcppJsonServiceTest {
 
         service.handleMessage(CHARGING_STATION_ID, new StringReader(wampMessage.toJson(gson)));
 
-        verify(handler, never()).handleRequest(any(ChargingStationId.class), anyString(), anyString(), any(WebSocket.class));
+        verify(handler, never()).handleRequest(any(ChargingStationId.class), anyString(), anyString(), any(WebSocketWrapper.class));
     }
 
     @Test
@@ -157,14 +157,14 @@ public class OcppJsonServiceTest {
         WebSocket newWebSocket = getMockWebSocket();
         service.addWebSocket(CHARGING_STATION_ID.getId(), newWebSocket);
 
-        verify(webSocket).close();
+        verify(webSocket, times(2)).close();
     }
 
     @Test
     public void removeWebSocketFromServiceVerifyNoCalls() throws IOException {
         WebSocket webSocket = getMockWebSocket();
         service.addWebSocket(CHARGING_STATION_ID.getId(), webSocket);
-        service.removeWebSocket(CHARGING_STATION_ID.getId());
+        service.closeAndRemoveWebSocket(CHARGING_STATION_ID.getId(), null);
 
         // using 'cancelReservation' to trigger a write on the socket.. which should not occur
         service.cancelReservation(CHARGING_STATION_ID, RESERVATION_ID, CORRELATION_TOKEN);
@@ -220,6 +220,15 @@ public class OcppJsonServiceTest {
         verify(mockWebSocket).write(expectedMessage);
     }
 
+    @Test
+    public void chargePointCommunicationExceptionShouldCloseWebSocket() throws IOException {
+        when(mockWebSocket.write(anyString())).thenThrow(new IOException("unit test io exception"));
+
+        service.softReset(CHARGING_STATION_ID, CORRELATION_TOKEN);
+
+        // verify 'close' is called, because it's a mock it will be called twice ('isOpen' will always report true)
+        verify(mockWebSocket, times(2)).close();
+    }
 
     @Test
     public void hardResetRequest() throws IOException {

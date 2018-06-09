@@ -17,7 +17,9 @@ package io.motown.ocpp.websocketjson.request.handler;
 
 import com.google.gson.Gson;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.WebSocketWrapper;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Diagnosticsstatusnotification;
+import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import org.atmosphere.websocket.WebSocket;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +32,7 @@ import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocket;
+import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getMockWebSocketWrapper;
 import static junit.framework.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -54,12 +57,12 @@ public class DiagnosticsStatusNotificationRequestHandlerTest {
         Diagnosticsstatusnotification requestPayload = new Diagnosticsstatusnotification();
         requestPayload.setStatus(Diagnosticsstatusnotification.Status.UPLOADED);
 
-        WebSocket webSocket = getMockWebSocket();
-        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocket);
+        WebSocketWrapper webSocketWrapper = getMockWebSocketWrapper();
+        handler.handleRequest(CHARGING_STATION_ID, token, gson.toJson(requestPayload), webSocketWrapper);
 
-        ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(webSocket).write(argumentCaptor.capture());
-        String response = argumentCaptor.getValue();
+        ArgumentCaptor<WampMessage> argumentCaptor = ArgumentCaptor.forClass(WampMessage.class);
+        verify(webSocketWrapper).sendResultMessage(argumentCaptor.capture());
+        WampMessage response = argumentCaptor.getValue();
         assertNotNull(response);
     }
 

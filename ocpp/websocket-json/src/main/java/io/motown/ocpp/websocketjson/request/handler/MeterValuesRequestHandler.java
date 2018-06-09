@@ -19,12 +19,13 @@ import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.WebSocketWrapper;
+import io.motown.ocpp.websocketjson.schema.MessageProcUri;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Metervalues;
 import io.motown.ocpp.websocketjson.schema.generated.v15.MetervaluesResponse;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Value;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Value_;
 import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
-import org.atmosphere.websocket.WebSocket;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class MeterValuesRequestHandler extends RequestHandler {
     }
 
     @Override
-    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
+    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocketWrapper webSocketWrapper) {
         Metervalues request = gson.fromJson(payload, Metervalues.class);
 
         List<MeterValue> meterValues = new ArrayList<>();
@@ -72,7 +73,7 @@ public class MeterValuesRequestHandler extends RequestHandler {
 
         domainService.meterValues(chargingStationId, transactionId, new EvseId(request.getConnectorId()), meterValues, addOnIdentity);
 
-        writeResponse(webSocket, chargingStationId, new MetervaluesResponse(), callId, gson);
+        writeResponse(webSocketWrapper, new MetervaluesResponse(), callId, MessageProcUri.METERVALUES);
     }
 
 }

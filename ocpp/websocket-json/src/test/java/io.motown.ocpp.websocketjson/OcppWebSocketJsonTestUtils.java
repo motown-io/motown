@@ -120,9 +120,13 @@ public class OcppWebSocketJsonTestUtils {
 
         AtmosphereResource resource = mock(AtmosphereResource.class);
         when(resource.getRequest()).thenReturn(request);
-
+        when(webSocket.isOpen()).thenReturn(true);
         when(webSocket.resource()).thenReturn(resource);
         return webSocket;
+    }
+
+    public static WebSocketWrapper getMockWebSocketWrapper() {
+        return mock(WebSocketWrapper.class);
     }
 
     public static String createAcceptedCallResult(String callId) {

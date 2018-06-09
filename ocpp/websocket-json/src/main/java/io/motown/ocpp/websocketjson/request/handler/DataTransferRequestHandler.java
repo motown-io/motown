@@ -20,10 +20,11 @@ import io.motown.domain.api.chargingstation.ChargingStationId;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
 import io.motown.domain.utils.axon.FutureEventCallback;
+import io.motown.ocpp.websocketjson.WebSocketWrapper;
+import io.motown.ocpp.websocketjson.schema.MessageProcUri;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Datatransfer;
 import io.motown.ocpp.websocketjson.schema.generated.v15.DatatransferResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
-import org.atmosphere.websocket.WebSocket;
 
 public class DataTransferRequestHandler extends RequestHandler {
 
@@ -41,8 +42,8 @@ public class DataTransferRequestHandler extends RequestHandler {
     }
 
     @Override
-    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
-        FutureEventCallback futureEventCallback = new DataTransferFutureEventCallback(callId, webSocket, gson);
+    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocketWrapper webSocketWrapper) {
+        FutureEventCallback futureEventCallback = new DataTransferFutureEventCallback(callId, webSocketWrapper);
 
         Datatransfer request = gson.fromJson(payload, Datatransfer.class);
 
@@ -52,6 +53,7 @@ public class DataTransferRequestHandler extends RequestHandler {
         response.setStatus(DatatransferResponse.Status.ACCEPTED);
         response.setData(null);
 
-        writeResponse(webSocket, chargingStationId, response, callId, gson);
+        writeResponse(webSocketWrapper, response, callId, MessageProcUri.DATA_TRANSFER);
     }
+
 }

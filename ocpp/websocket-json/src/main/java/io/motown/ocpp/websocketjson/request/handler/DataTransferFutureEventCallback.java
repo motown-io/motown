@@ -15,33 +15,24 @@
  */
 package io.motown.ocpp.websocketjson.request.handler;
 
-import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.AuthorizationResultEvent;
 import io.motown.domain.api.chargingstation.IncomingDataTransferResultEvent;
 import io.motown.domain.utils.axon.FutureEventCallback;
 import io.motown.ocpp.viewmodel.domain.IncomingDataTransferResult;
+import io.motown.ocpp.websocketjson.WebSocketWrapper;
+import io.motown.ocpp.websocketjson.schema.MessageProcUri;
 import io.motown.ocpp.websocketjson.wamp.WampMessage;
-import org.atmosphere.websocket.WebSocket;
 import org.axonframework.domain.EventMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 public class DataTransferFutureEventCallback extends FutureEventCallback<IncomingDataTransferResult> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DataTransferFutureEventCallback.class);
-
-    private WebSocket webSocket;
+    private WebSocketWrapper webSocketWrapper;
 
     private String callId;
 
-    private Gson gson;
-
-    public DataTransferFutureEventCallback(String callId, WebSocket webSocket, Gson gson) {
-        this.webSocket = webSocket;
+    public DataTransferFutureEventCallback(String callId, WebSocketWrapper webSocketWrapper) {
+        this.webSocketWrapper = webSocketWrapper;
         this.callId = callId;
-        this.gson = gson;
     }
 
     @Override
@@ -57,7 +48,7 @@ public class DataTransferFutureEventCallback extends FutureEventCallback<Incomin
 
             this.countDownLatch();
 
-            this.writeResult(result);
+            webSocketWrapper.sendResultMessage(new WampMessage(WampMessage.CALL_RESULT, callId, MessageProcUri.DATA_TRANSFER, result));
 
             return true;
         } else {
@@ -66,11 +57,4 @@ public class DataTransferFutureEventCallback extends FutureEventCallback<Incomin
         }
     }
 
-    private void writeResult(IncomingDataTransferResult result) {
-        try {
-            webSocket.write(new WampMessage(WampMessage.CALL_RESULT, callId, result).toJson(gson));
-        } catch (IOException e) {
-            LOG.error("IOException while writing to web socket.", e);
-        }
-    }
 }

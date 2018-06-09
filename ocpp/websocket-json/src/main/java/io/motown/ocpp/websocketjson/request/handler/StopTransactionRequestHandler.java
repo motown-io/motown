@@ -19,9 +19,10 @@ import com.google.gson.Gson;
 import io.motown.domain.api.chargingstation.*;
 import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.WebSocketWrapper;
+import io.motown.ocpp.websocketjson.schema.MessageProcUri;
 import io.motown.ocpp.websocketjson.schema.generated.v15.*;
 import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
-import org.atmosphere.websocket.WebSocket;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class StopTransactionRequestHandler extends RequestHandler {
     }
 
     @Override
-    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
+    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocketWrapper webSocketWrapper) {
         Stoptransaction request = gson.fromJson(payload, Stoptransaction.class);
 
         List<MeterValue> meterValues = new ArrayList<>();
@@ -67,7 +68,7 @@ public class StopTransactionRequestHandler extends RequestHandler {
 
         domainService.stopTransaction(chargingStationId, transactionId, new TextualToken(request.getIdTag()), request.getMeterStop(), request.getTimestamp(), meterValues, addOnIdentity);
 
-        writeResponse(webSocket, chargingStationId, new StoptransactionResponse(), callId, gson);
+        writeResponse(webSocketWrapper, new StoptransactionResponse(), callId, MessageProcUri.STOP_TRANSACTION);
     }
 
 }

@@ -24,10 +24,11 @@ import io.motown.domain.api.security.AddOnIdentity;
 import io.motown.domain.utils.AttributeMap;
 import io.motown.domain.utils.AttributeMapKeys;
 import io.motown.ocpp.viewmodel.domain.DomainService;
+import io.motown.ocpp.websocketjson.WebSocketWrapper;
+import io.motown.ocpp.websocketjson.schema.MessageProcUri;
 import io.motown.ocpp.websocketjson.schema.generated.v15.Statusnotification;
 import io.motown.ocpp.websocketjson.schema.generated.v15.StatusnotificationResponse;
 import io.motown.ocpp.websocketjson.wamp.WampMessageHandler;
-import org.atmosphere.websocket.WebSocket;
 
 import java.util.Date;
 
@@ -47,7 +48,7 @@ public class StatusNotificationRequestHandler extends RequestHandler {
     }
 
     @Override
-    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocket webSocket) {
+    public void handleRequest(ChargingStationId chargingStationId, String callId, String payload, WebSocketWrapper webSocketWrapper) {
         Statusnotification request = gson.fromJson(payload, Statusnotification.class);
 
         String errorCode = request.getErrorCode() != null ? request.getErrorCode().toString() : null;
@@ -66,7 +67,7 @@ public class StatusNotificationRequestHandler extends RequestHandler {
                 new StatusNotification(getComponentStatusFromChargePointStatus(request.getStatus()), timestamp, attributes),
                 addOnIdentity);
 
-        writeResponse(webSocket, chargingStationId, new StatusnotificationResponse(), callId, gson);
+        writeResponse(webSocketWrapper, new StatusnotificationResponse(), callId, MessageProcUri.STATUS_NOTIFICATION);
     }
 
     /**
