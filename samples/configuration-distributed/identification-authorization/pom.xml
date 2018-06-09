@@ -93,11 +93,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.motown.identification-authorization</groupId>
-            <artifactId>identification-authorization-cir-plugin</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>io.motown.ocpi</groupId>
             <artifactId>ocpi-identification-authorization-plugin</artifactId>
             <version>${project.version}</version>

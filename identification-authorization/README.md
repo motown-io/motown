@@ -20,10 +20,6 @@ Authorization implementation using a OCPI connection. Check the OCPI module for 
 
 Authorization implementation with a (local) database of tokens. This does not contain an interface or API for maintaining these tokens. That can be done directly on the database, or a interface or API can be built on top of the database.
 
-# cir-plugin
-
-Authorization implementation against [CIR](https://eviolin.ev-services.net/cir/service.asmx).
-
 # selective-authorization-service
 
 Authorization service that will check a database table to see which authorization provider should be checked for which charging station and in which order. This service does not contain an interface or API for maintenance. That can be done directly on the database, or a interface or API can be built on top of the database.
