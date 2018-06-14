@@ -88,8 +88,8 @@ public class WebSocketWrapper {
             if (wampMessageHandler != null) {
                 wampMessageHandler.handleWampCallResult(
                         chargingStationId.getId(),
-                        getMessageType(wampMessage),
-                        wampMessageRaw
+                        wampMessageRaw,
+                        wampMessage.getCallId()
                 );
             }
         } catch (IOException e) {

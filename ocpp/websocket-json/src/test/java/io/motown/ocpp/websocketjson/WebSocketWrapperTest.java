@@ -168,7 +168,7 @@ public class WebSocketWrapperTest {
 
         wrapper.sendResultMessage(wampMessage);
 
-        verify(messageHandler).handleWampCallResult(CHARGING_STATION_ID.getId(), wampMessage.getProcUri().toString(), wampMessage.toJson(gson));
+        verify(messageHandler).handleWampCallResult(CHARGING_STATION_ID.getId(), wampMessage.toJson(gson), wampMessage.getCallId());
     }
 
     @Test
