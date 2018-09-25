@@ -22,7 +22,7 @@
     <parent>
         <artifactId>samples</artifactId>
         <groupId>io.motown</groupId>
-        <version>0.12.0</version>
+        <version>0.13.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>samples-incoming-datatransfer-handling</artifactId>
