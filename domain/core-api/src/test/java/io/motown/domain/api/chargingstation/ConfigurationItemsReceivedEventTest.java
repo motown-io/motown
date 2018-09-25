@@ -24,22 +24,27 @@ public class ConfigurationItemsReceivedEventTest {
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithChargingStationIdNull() {
-        new ConfigurationItemsReceivedEvent(null, CONFIGURATION_ITEMS, ROOT_IDENTITY_CONTEXT);
+        new ConfigurationItemsReceivedEvent(null, CONFIGURATION_ITEMS, REQUESTED_CONFIGURATION_KEYS, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithConfigurationItemNull() {
-        new ConfigurationItemsReceivedEvent(CHARGING_STATION_ID, null, ROOT_IDENTITY_CONTEXT);
+        new ConfigurationItemsReceivedEvent(CHARGING_STATION_ID, null, REQUESTED_CONFIGURATION_KEYS, ROOT_IDENTITY_CONTEXT);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullPointerExceptionThrownWhenCreatingEventWithRequestedConfigurationKeysNull() {
+        new ConfigurationItemsReceivedEvent(CHARGING_STATION_ID, CONFIGURATION_ITEMS, null, ROOT_IDENTITY_CONTEXT);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullPointerExceptionThrownWhenCreatingEventWithIdentityContextNull() {
-        new ConfigurationItemsReceivedEvent(CHARGING_STATION_ID, CONFIGURATION_ITEMS, null);
+        new ConfigurationItemsReceivedEvent(CHARGING_STATION_ID, CONFIGURATION_ITEMS, REQUESTED_CONFIGURATION_KEYS, null);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void unsupportedOperationExceptionThrownWhenModifyingConfigurationItems() {
-        new ConfigurationItemsReceivedEvent(CHARGING_STATION_ID, CONFIGURATION_ITEMS, ROOT_IDENTITY_CONTEXT).getConfigurationItems().add(new ConfigurationItem("foo", "bar"));
+        new ConfigurationItemsReceivedEvent(CHARGING_STATION_ID, CONFIGURATION_ITEMS, REQUESTED_CONFIGURATION_KEYS, ROOT_IDENTITY_CONTEXT).getConfigurationItems().add(new ConfigurationItem("foo", "bar"));
     }
 
     @Test

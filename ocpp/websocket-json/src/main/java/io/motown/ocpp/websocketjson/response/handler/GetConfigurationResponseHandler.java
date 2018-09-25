@@ -29,17 +29,22 @@ import io.motown.ocpp.websocketjson.wamp.WampMessage;
 import java.util.List;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class GetConfigurationResponseHandler extends ResponseHandler {
 
-    public GetConfigurationResponseHandler(CorrelationToken correlationToken) {
+    private Set<String> requestedKeys;
+
+    public GetConfigurationResponseHandler(CorrelationToken correlationToken, Set<String> requestedKeys) {
         this.setCorrelationToken(correlationToken);
+        this.requestedKeys = ImmutableSet.copyOf(checkNotNull(requestedKeys));
     }
 
     @Override
     public void handle(ChargingStationId chargingStationId, WampMessage wampMessage, Gson gson, DomainService domainService, AddOnIdentity addOnIdentity) {
         GetconfigurationResponse response = gson.fromJson(wampMessage.getPayloadAsString(), GetconfigurationResponse.class);
 
-        domainService.receiveConfigurationItems(chargingStationId, toConfigurationItems(response.getConfigurationKey()), addOnIdentity);
+        domainService.receiveConfigurationItems(chargingStationId, toConfigurationItems(response.getConfigurationKey()), requestedKeys, addOnIdentity);
     }
 
     /**

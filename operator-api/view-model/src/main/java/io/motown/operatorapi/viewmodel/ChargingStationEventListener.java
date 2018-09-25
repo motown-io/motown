@@ -197,7 +197,31 @@ public class ChargingStationEventListener {
 
         if (chargingStation != null) {
         	LOG.debug("found chargingstation: " + chargingStation.getId() + " setting configurationitems");
-            chargingStation.setConfItems(toConfigurationItemMap(event.getConfigurationItems()));
+            if (event.getRequestedKeys().isEmpty()) {
+                // no 'requested keys', we'll update the entire set
+                chargingStation.setConfItems(toConfigurationItemMap(event.getConfigurationItems()));
+            } else {
+                // only update/create the ones requested
+
+                Map<String, String> confItems = chargingStation.getConfItems();
+
+                for (String key : event.getRequestedKeys()) {
+                    boolean keyFound = false;
+                    for (ConfigurationItem confItem : event.getConfigurationItems()) {
+                        if (key.equals(confItem.getKey())) {
+                            LOG.debug("Updating configuration key [{}] with value [{}]", key, confItem.getValue());
+                            confItems.put(key, confItem.getValue());
+                            keyFound = true;
+                        }
+                    }
+                    if (!keyFound) {
+                        LOG.debug("Configuration key [{}] requested, but not found in the response, remove it from repository if if it exists", key);
+
+                        // key requested, but not found in the config values in the response, we'll remove it
+                        confItems.remove(key);
+                    }
+                }
+            }
             repository.createOrUpdate(chargingStation);
         }
     }

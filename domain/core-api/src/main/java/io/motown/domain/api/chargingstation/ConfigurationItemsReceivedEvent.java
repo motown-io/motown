@@ -37,18 +37,24 @@ public class ConfigurationItemsReceivedEvent {
 
     private final Set<ConfigurationItem> configurationItems;
 
+    private final Set<String> requestedKeys;
+
     private final IdentityContext identityContext;
 
     /**
      * Creates a {@code ConfigurationItemsReceivedEvent} with an identifier.
      *
      * @param chargingStationId the identifier of the charging station.
+     * @param configurationItems the configuration items received from the charging station.
+     * @param requestedKeys the configuration keys that were requested
      * @param identityContext   the identity context.
      * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
      */
-    public ConfigurationItemsReceivedEvent(ChargingStationId chargingStationId, Set<ConfigurationItem> configurationItems, IdentityContext identityContext) {
+    public ConfigurationItemsReceivedEvent(ChargingStationId chargingStationId, Set<ConfigurationItem> configurationItems,
+                                           Set<String> requestedKeys, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.configurationItems = ImmutableSet.copyOf(checkNotNull(configurationItems));
+        this.requestedKeys = ImmutableSet.copyOf(checkNotNull(requestedKeys));
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -68,6 +74,15 @@ public class ConfigurationItemsReceivedEvent {
      */
     public Set<ConfigurationItem> getConfigurationItems() {
         return configurationItems;
+    }
+
+    /**
+     * The configuration keys that were requested.
+     *
+     * @return an immutable {@link java.util.Map} of configuration items.
+     */
+    public Set<String> getRequestedKeys() {
+        return requestedKeys;
     }
 
     /**

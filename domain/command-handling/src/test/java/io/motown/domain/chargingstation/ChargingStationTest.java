@@ -211,8 +211,8 @@ public class ChargingStationTest {
     @Test
     public void testReceiveConfigurationItems() {
         fixture.given(CHARGING_STATION)
-                .when(new ReceiveConfigurationItemsCommand(CHARGING_STATION_ID, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT))
-                .expectEvents(new ConfigurationItemsReceivedEvent(CHARGING_STATION_ID, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT));
+                .when(new ReceiveConfigurationItemsCommand(CHARGING_STATION_ID, CONFIGURATION_ITEMS, REQUESTED_CONFIGURATION_KEYS, NULL_USER_IDENTITY_CONTEXT))
+                .expectEvents(new ConfigurationItemsReceivedEvent(CHARGING_STATION_ID, CONFIGURATION_ITEMS, REQUESTED_CONFIGURATION_KEYS, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test

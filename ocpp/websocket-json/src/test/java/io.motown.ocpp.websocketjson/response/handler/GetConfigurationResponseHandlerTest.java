@@ -32,6 +32,7 @@ import java.util.Set;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.ADD_ON_IDENTITY;
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.CHARGING_STATION_ID;
+import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.REQUESTED_CONFIGURATION_KEYS;
 import static io.motown.ocpp.websocketjson.OcppWebSocketJsonTestUtils.getGson;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -55,7 +56,7 @@ public class GetConfigurationResponseHandlerTest {
 
         CorrelationToken correlationToken = new CorrelationToken();
         token = correlationToken.getToken();
-        handler = new GetConfigurationResponseHandler(correlationToken);
+        handler = new GetConfigurationResponseHandler(correlationToken, REQUESTED_CONFIGURATION_KEYS);
     }
 
     @Test
@@ -74,8 +75,11 @@ public class GetConfigurationResponseHandlerTest {
         handler.handle(CHARGING_STATION_ID, message, gson, domainService, ADD_ON_IDENTITY);
 
         ArgumentCaptor<Set> configurationKeysCaptor = ArgumentCaptor.forClass(Set.class);
-        verify(domainService).receiveConfigurationItems(any(ChargingStationId.class), configurationKeysCaptor.capture(), eq(ADD_ON_IDENTITY));
+        ArgumentCaptor<Set> requestedConfigurationKeysCaptor = ArgumentCaptor.forClass(Set.class);
+        verify(domainService).receiveConfigurationItems(any(ChargingStationId.class), configurationKeysCaptor.capture(),
+                requestedConfigurationKeysCaptor.capture(), eq(ADD_ON_IDENTITY));
         assertEquals(configurationKeysCaptor.getValue().size(), 1);
+        assertEquals(requestedConfigurationKeysCaptor.getValue(), REQUESTED_CONFIGURATION_KEYS);
     }
 
 }

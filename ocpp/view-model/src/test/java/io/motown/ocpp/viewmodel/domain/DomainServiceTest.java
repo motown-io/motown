@@ -16,9 +16,6 @@
 package io.motown.ocpp.viewmodel.domain;
 
 import io.motown.domain.api.chargingstation.*;
-import io.motown.domain.api.security.AddOnIdentity;
-import io.motown.domain.api.security.IdentityContext;
-import io.motown.domain.api.security.NullUserIdentity;
 import io.motown.domain.utils.AttributeMap;
 import io.motown.domain.utils.AttributeMapKeys;
 import io.motown.domain.utils.axon.EventWaitingGateway;
@@ -287,8 +284,8 @@ public class DomainServiceTest {
 
     @Test
     public void testReceiveConfigurationItems() {
-        domainService.receiveConfigurationItems(CHARGING_STATION_ID, CONFIGURATION_ITEMS, ADD_ON_IDENTITY);
-        verify(gateway).send(new ReceiveConfigurationItemsCommand(CHARGING_STATION_ID, CONFIGURATION_ITEMS, NULL_USER_IDENTITY_CONTEXT));
+        domainService.receiveConfigurationItems(CHARGING_STATION_ID, CONFIGURATION_ITEMS, REQUESTED_CONFIGURATION_KEYS, ADD_ON_IDENTITY);
+        verify(gateway).send(new ReceiveConfigurationItemsCommand(CHARGING_STATION_ID, CONFIGURATION_ITEMS, REQUESTED_CONFIGURATION_KEYS, NULL_USER_IDENTITY_CONTEXT));
     }
 
     @Test(expected = IllegalStateException.class)

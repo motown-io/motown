@@ -29,6 +29,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Date;
+import java.util.Set;
 
 import static io.motown.domain.api.chargingstation.test.ChargingStationTestUtils.*;
 import static org.junit.Assert.*;
@@ -265,9 +266,31 @@ public class ChargingStationEventListenerTest {
         ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
         assertTrue(cs.getConfItems().isEmpty());
 
-        listener.handle(new ConfigurationItemsReceivedEvent(CHARGING_STATION_ID, CONFIGURATION_ITEMS, IDENTITY_CONTEXT));
+        listener.handle(new ConfigurationItemsReceivedEvent(CHARGING_STATION_ID, CONFIGURATION_ITEMS, REQUESTED_CONFIGURATION_KEYS, IDENTITY_CONTEXT));
         cs = repository.findOne(CHARGING_STATION_ID.getId());
-        assertFalse(cs.getConfItems().isEmpty());
+        assertEquals(CONFIGURATION_ITEMS.size(), cs.getConfItems().size());
+    }
+
+    @Test
+    public void testHandleConfigurationItemsReceivedEventShouldOnlyCreateUpdateRequestedKeys() {
+        ChargingStation cs = repository.findOne(CHARGING_STATION_ID.getId());
+        assertTrue(cs.getConfItems().isEmpty());
+        String key = "io.motown.sockets.amount";
+        String expectedValue = "2";
+        Set<ConfigurationItem> configurationItems = ImmutableSet.<ConfigurationItem>builder()
+                .add(new ConfigurationItem(key, expectedValue))
+                .add(new ConfigurationItem("io.motown.random.config.item", "true"))
+                .add(new ConfigurationItem("io.motown.another.random.config.item", "12"))
+                .add(new ConfigurationItem("io.motown.yet.another.one", "blue"))
+                .build();
+        Set<String> requestedConfigurationKeys = ImmutableSet.<String>builder()
+                .add(key)
+                .build();
+
+        listener.handle(new ConfigurationItemsReceivedEvent(CHARGING_STATION_ID, configurationItems, requestedConfigurationKeys, IDENTITY_CONTEXT));
+        cs = repository.findOne(CHARGING_STATION_ID.getId());
+        assertEquals(requestedConfigurationKeys.size(), cs.getConfItems().size());
+        assertEquals(expectedValue, cs.getConfItems().get(key));
     }
 
     @Test

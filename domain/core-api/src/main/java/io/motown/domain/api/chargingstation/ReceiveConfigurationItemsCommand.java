@@ -36,6 +36,8 @@ public class ReceiveConfigurationItemsCommand {
 
     private final Set<ConfigurationItem> configurationItems;
 
+    private final Set<String> requestedKeys;
+
     private final IdentityContext identityContext;
 
     /**
@@ -46,9 +48,10 @@ public class ReceiveConfigurationItemsCommand {
      * @param identityContext    the identity context.
      * @throws NullPointerException if {@code chargingStationId} or {@code identityContext} is {@code null}.
      */
-    public ReceiveConfigurationItemsCommand(ChargingStationId chargingStationId, Set<ConfigurationItem> configurationItems, IdentityContext identityContext) {
+    public ReceiveConfigurationItemsCommand(ChargingStationId chargingStationId, Set<ConfigurationItem> configurationItems, Set<String> requestedKeys, IdentityContext identityContext) {
         this.chargingStationId = checkNotNull(chargingStationId);
         this.configurationItems = ImmutableSet.copyOf(checkNotNull(configurationItems));
+        this.requestedKeys = ImmutableSet.copyOf(checkNotNull(requestedKeys));
         this.identityContext = checkNotNull(identityContext);
     }
 
@@ -71,6 +74,15 @@ public class ReceiveConfigurationItemsCommand {
     }
 
     /**
+     * The keys of the configuration items that were requested.
+     *
+     * @return an immutable {@link Set} of requested configuration keys.
+     */
+    public Set<String> getRequestedKeys() {
+        return requestedKeys;
+    }
+
+    /**
      * Gets the identity context.
      *
      * @return the identity context.
@@ -84,7 +96,7 @@ public class ReceiveConfigurationItemsCommand {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(chargingStationId, configurationItems, identityContext);
+        return Objects.hash(chargingStationId, configurationItems, requestedKeys, identityContext);
     }
 
     /**
@@ -99,7 +111,8 @@ public class ReceiveConfigurationItemsCommand {
             return false;
         }
         final ReceiveConfigurationItemsCommand other = (ReceiveConfigurationItemsCommand) obj;
-        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.configurationItems, other.configurationItems) && Objects.equals(this.identityContext, other.identityContext);
+        return Objects.equals(this.chargingStationId, other.chargingStationId) && Objects.equals(this.configurationItems, other.configurationItems)
+                && Objects.equals(this.requestedKeys, other.requestedKeys) && Objects.equals(this.identityContext, other.identityContext);
     }
 
     /**
@@ -110,6 +123,7 @@ public class ReceiveConfigurationItemsCommand {
         return toStringHelper(this)
                 .add("chargingStationId", chargingStationId)
                 .add("configurationItems", configurationItems)
+                .add("requestedKeys", requestedKeys)
                 .add("identityContext", identityContext)
                 .toString();
     }

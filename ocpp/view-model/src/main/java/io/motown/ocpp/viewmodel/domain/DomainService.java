@@ -144,10 +144,10 @@ public class DomainService {
         eventWaitingGateway.sendAndWaitForEvent(new AuthorizeCommand(chargingStationId, new TextualToken(idTag), identityContext), future, authorizationTimeoutInMillis);
     }
 
-    public void receiveConfigurationItems(ChargingStationId chargingStationId, Set<ConfigurationItem> configurationItems, AddOnIdentity addOnIdentity) {
+    public void receiveConfigurationItems(ChargingStationId chargingStationId, Set<ConfigurationItem> configurationItems, Set<String> requestedKeys, AddOnIdentity addOnIdentity) {
         IdentityContext identityContext = new IdentityContext(addOnIdentity, new NullUserIdentity());
 
-        ReceiveConfigurationItemsCommand command = new ReceiveConfigurationItemsCommand(chargingStationId, configurationItems, identityContext);
+        ReceiveConfigurationItemsCommand command = new ReceiveConfigurationItemsCommand(chargingStationId, configurationItems, requestedKeys, identityContext);
 
         commandGateway.send(command);
     }

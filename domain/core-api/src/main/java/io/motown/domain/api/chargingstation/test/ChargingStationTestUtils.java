@@ -410,6 +410,16 @@ public final class ChargingStationTestUtils {
             .build();
 
     /**
+     * The default map of requested configuration keys.
+     */
+    public static final Set<String> REQUESTED_CONFIGURATION_KEYS = ImmutableSet.<String>builder()
+            .add("io.motown.sockets.amount")
+            .add("io.motown.random.config.item")
+            .add("io.motown.another.random.config.item")
+            .add("io.motown.yet.another.one")
+            .build();
+
+    /**
      * A default list of connectors.
      */
     public static final List<Connector> CONNECTORS = ImmutableList.<Connector>builder()

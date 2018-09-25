@@ -43,7 +43,8 @@ public class Ocpp15RequestHandler implements OcppRequestHandler {
         LOG.info("Handling ConfigurationItemsRequestedEvent " + event.getChargingStationId());
         Map<String, String> configurationItemMap = chargingStationOcpp15Client.getConfiguration(event.getChargingStationId(), event.getKeys());
 
-        domainService.receiveConfigurationItems(event.getChargingStationId(), toConfigurationItems(configurationItemMap), addOnIdentity);
+        domainService.receiveConfigurationItems(event.getChargingStationId(), toConfigurationItems(configurationItemMap),
+                event.getKeys(), addOnIdentity);
     }
 
     /**
