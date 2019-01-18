@@ -102,7 +102,7 @@
     </filter>
     <filter-mapping>
         <filter-name>SecWebSocketVersionInterceptor</filter-name>
-        <servlet-name>AtmosphereServlet</servlet-name>
+        <url-pattern>/websockets/*</url-pattern>
     </filter-mapping>
     <servlet>
         <description>AtmosphereServlet</description>

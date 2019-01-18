@@ -48,7 +48,7 @@
 
     <filter-mapping>
         <filter-name>SecWebSocketVersionInterceptor</filter-name>
-        <servlet-name>AtmosphereServlet</servlet-name>
+        <url-pattern>/socket/*</url-pattern>
     </filter-mapping>
 
     <servlet>
