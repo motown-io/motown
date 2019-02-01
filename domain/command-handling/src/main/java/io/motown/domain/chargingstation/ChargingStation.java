@@ -25,6 +25,9 @@ import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
 public class ChargingStation extends AbstractAnnotatedAggregateRoot {
 
     private static final long serialVersionUID = -3089562761704323707L;
@@ -632,6 +635,20 @@ public class ChargingStation extends AbstractAnnotatedAggregateRoot {
         if (!commandAuthorization.isAuthorized(identityContext, this.authorizations.asMap(), commandClass)) {
             throw new IllegalStateException(identityContext + " is not authorized to execute " + commandClass);
         }
+    }
+
+    /**
+     * Ensures the transient fields are populated upon deserialization. This occurs when an aggregate is read from
+     * snapshot.
+     *
+     * @param in input stream with de serialized object
+     * @throws IOException if an I/O error occurs.
+     * @throws ClassNotFoundException if the class of a serialized object could not be found.
+     */
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+
+        commandAuthorization = new SimpleCommandAuthorization();
     }
 
 }
